@@ -122,6 +122,10 @@ else if cmd == "framework" {
   let q = input()
   print(json(framework.compile(read_file(q.dir + "/" + q.file))))
 }
+else if cmd == "framework-tree" {
+  let q = input()
+  print(json(framework.compile_tree(q.dir, q.id)))
+}
 else if cmd == "request" {
   let q = input()
   print(json({ ok: true, request: runs.request(q.base, q.pipeline, get(q, "vars", {}), get(q, "by", null), q.at, null) }))
@@ -144,6 +148,6 @@ else if cmd == "resume-of" {
   print(json(runs.resume_of(q.base, q.id)))
 }
 else {
-  eprint("unknown command \"" + cmd + "\": the commands are version, boxes, dag, erv, roundtrip, types, save-type, gate, gate-actions, frameworks, framework, request, event, list, read, resume-of (each <file.json>)")
+  eprint("unknown command \"" + cmd + "\": the commands are version, boxes, dag, erv, roundtrip, types, save-type, gate, gate-actions, frameworks, framework, framework-tree, request, event, list, read, resume-of (each <file.json>)")
   exit(1)
 }

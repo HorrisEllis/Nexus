@@ -18,7 +18,8 @@ test "its steps become a pipeline: in order unless they say what they wait on; e
   let t = c.pipeline.tasks
   expect c.pipeline.name == "framework: M (draft)", "not marked his: a draft"
   expect map(t, fn(x) = x.depends_on) == [[], ["a"], ["a"]]
-  expect t[1].takes == ["context"] and t[1].gives == ["gap"] and t[1].gate == { type: "node", with: { type: "gap" } }
+  expect t[1].takes == ["context"] and t[1].gives == ["gap"] and t[1].gate == { type: "node", with: { type: "gap" } }, "an agent's reply is gated on its node"
+  expect not has(t[2], "gate"), "a step that runs an engine step is checked by what it runs, unless it names a check"
   expect t[0].step.type == "agent" and t[0].step.config.agentKey == "claude" and t[0].step.config.await and find_text(t[0].step.config.prompt, "A.\nlook") >= 0
   expect find_text(t[1].step.config.prompt, "\{\{tasks.a.output\}\}") >= 0, "an agent is given what the steps it waits on gave"
   expect t[2].step == { type: "set" } and t[2].when.op == "=="
@@ -37,4 +38,51 @@ test "his framework (docs/innovation-toolkit.framework) compiles: its draft step
   expect c.ok, json(get(c, "problems", []))
   expect c.framework.status == "draft"
   expect c.pipeline.tasks[len(c.pipeline.tasks) - 1].id == "hostile"
+}
+
+// ── 2026-11-09: "Frameworks as steps. Or a framework as a step. Recursive. Fully programmable. Executable processes. Schemas for them." ──
+fn tree_dir(files: map): string {
+  let d = "/tmp/cos-fw-test-" + uid()
+  remove_path(d)
+  make_dir(d)
+  for k in keys(files) { write_file(d + "/" + k + ".framework", fw(json(files[k]))) }
+  return d
+}
+
+test "a framework as a step: a step that names a framework runs it (a framework step), any depth; the tree compiles children first" {
+  let d = tree_dir({
+    outer: { id: "outer", name: "Outer", agent: "claude", steps: [{ id: "think", framework: "mid", gives: ["synthesis"] }, { id: "check", gives: ["output"], run: { type: "set" } }] },
+    mid: { id: "mid", name: "Mid", steps: [{ id: "deep", framework: "inner", gives: ["context"] }] },
+    inner: { id: "inner", name: "Inner", status: "his", steps: [{ id: "look", gives: ["context"], run: { type: "set" } }] } })
+  let t = framework.compile_tree(d, "outer")
+  expect t.ok, json(get(t, "problems", []))
+  expect map(t.order, fn(n) = n.id) == ["inner", "mid", "outer"]
+  let outer = t.order[2].pipeline
+  expect outer.tasks[0].step == { type: "framework", config: { framework: "mid" } }
+  expect t.order[0].pipeline.name == "framework: Inner", "his: not a draft"
+  remove_path(d)
+}
+
+test "a framework that runs itself, directly or through others, is refused with the loop named; one that is not there is said" {
+  let d = tree_dir({
+    a: { id: "a", steps: [{ id: "s", framework: "b", gives: ["output"] }] },
+    b: { id: "b", steps: [{ id: "s", framework: "a", gives: ["output"] }] },
+    c: { id: "c", steps: [{ id: "s", framework: "ghost", gives: ["output"] }] } })
+  let t = framework.compile_tree(d, "a")
+  expect not t.ok and any(t.problems, fn(p) = find_text(p, "a framework runs itself: a → b → a") >= 0), json(t)
+  expect any(framework.compile_tree(d, "c").problems, fn(p) = find_text(p, "framework ghost is not found") >= 0)
+  remove_path(d)
+}
+
+test "fully programmable: a step runs one thing; execution defaults from the framework, a step's own wins; onFail is stop or continue" {
+  let c = framework.compile(fw(json({ id: "p", agent: "claude", execution: { retries: 2, onFail: "continue" }, steps: [
+    { id: "a", gives: ["context"] }, { id: "b", gives: ["gap"], retries: 0, onFail: "stop", pipeline: "some pipeline" } ] })))
+  expect c.ok, json(c)
+  expect [c.pipeline.tasks[0].retries, c.pipeline.tasks[0].onFail] == [2, "continue"]
+  expect [c.pipeline.tasks[1].retries, c.pipeline.tasks[1].onFail] == [0, "stop"] and c.pipeline.tasks[1].step == { type: "pipeline", config: { pipeline: "some pipeline" } }
+  let bad = framework.compile(fw(json({ id: "q", agent: "claude", steps: [{ id: "a", gives: ["x"], run: { type: "set" }, framework: "z" }, { id: "b", gives: ["y"], onFail: "explode" }, { id: "c", gives: ["y"], framework: "q" }] })))
+  expect not bad.ok
+  for want in ["it names more than one of run, framework, pipeline", "onFail is stop or continue", "the framework runs itself"] {
+    expect any(bad.problems, fn(p) = find_text(p, want) >= 0), want + " in " + json(bad.problems)
+  }
 }

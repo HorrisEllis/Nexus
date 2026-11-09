@@ -39,7 +39,13 @@ fn problems_of(fw: any): list {
       seen = push(seen, id)
       if len(get(s, "gives", [])) == 0 { ps = push(ps, "step " + id + ": it gives nothing (an output: a node type)") }
       for a in get(s, "after", []) { if index_of(map(steps, fn(x) = get(x, "id", "")), a) < 0 { ps = push(ps, "step " + id + ": waits on " + a + ", which is not a step") } }
-      if get(s, "run", null) == null and get(s, "agent", get(fw, "agent", null)) == null { ps = push(ps, "step " + id + ": an agent does it, but none is named (agent, on the framework or the step)") }
+      var runs = 0
+      for k in ["run", "framework", "pipeline"] { if get(s, k, null) != null { runs = runs + 1 } }
+      if runs > 1 { ps = push(ps, "step " + id + ": it names more than one of run, framework, pipeline — a step runs one thing") }
+      if runs == 0 and get(s, "agent", get(fw, "agent", null)) == null { ps = push(ps, "step " + id + ": an agent does it, but none is named (agent, on the framework or the step)") }
+      if get(s, "framework", null) != null and s.framework == get(fw, "id", "") { ps = push(ps, "step " + id + ": the framework runs itself") }
+      let of = get(s, "onFail", get(get(fw, "execution", {}), "onFail", "stop"))
+      if of != "stop" and of != "continue" { ps = push(ps, "step " + id + ": onFail is stop or continue, not " + str(of)) }
     }
   }
   return ps
@@ -53,13 +59,21 @@ fn task_of_step(fw: map, s: map, prev: any): map {
     if prev != null { after = [prev] }
   }
   var run = get(s, "run", null)
+  if run == null and get(s, "framework", null) != null { run = { type: "framework", config: { framework: s.framework } } }   // recursive: a framework as a step
+  if run == null and get(s, "pipeline", null) != null { run = { type: "pipeline", config: { pipeline: s.pipeline } } }
   if run == null {
     let given = join(map(after, fn(a) = "\{\{tasks." + a + ".output\}\}"), "\n\n")
     run = { type: "agent", config: { agentKey: get(s, "agent", get(fw, "agent", null)), await: true, prompt: "Framework: " + get(fw, "name", fw.id) + ". " + get(s, "section", s.id) + ".\n" + get(s, "does", "") + "\n\nWhat you are given:\n" + given + "\n\nGive: " + join(s.gives, ", ") + ", as one JSON object: a node envelope \{ envelope: 1, type, id, payload \} whose payload has the fields its schema (lib/node-schemas/schema.<type>) requires." } }
   }
+  // the default gate: an agent's reply must be a node of the type the step gives. A step that runs an engine step, a framework or a pipeline is
+  // checked by what it runs (a framework's own steps are gated); it can name its own check
+  let by_agent = get(s, "run", null) == null and get(s, "framework", null) == null and get(s, "pipeline", null) == null
   var check = get(s, "check", null)
-  if check == null { check = { type: "node", with: { type: s.gives[0] } } }
-  var t = { id: s.id, label: get(s, "section", s.id), depends_on: after, step: run, takes: get(s, "takes", []), gives: s.gives, gate: check }
+  if check == null and by_agent { check = { type: "node", with: { type: s.gives[0] } } }
+  let ex = get(fw, "execution", {})
+  var t = { id: s.id, label: get(s, "section", s.id), depends_on: after, step: run, takes: get(s, "takes", []), gives: s.gives,
+    retries: get(s, "retries", get(ex, "retries", 0)), onFail: get(s, "onFail", get(ex, "onFail", "stop")) }
+  if check != null { t.gate = check }
   if get(s, "when", null) != null { t.when = s.when }
   return t
 }
@@ -95,4 +109,40 @@ fn frameworks_in(dir: string): list {
     }
   }
   return out
+}
+
+// the frameworks a framework's steps run (recursive)
+fn uses(fw: map): list = unique(filter(map(get(fw, "steps", []), fn(s) = get(s, "framework", null)), fn(x) = x != null))
+
+// a framework by id, from the .framework files in a folder: { file, fw } or null
+fn find_framework(dir: string, id: string): any {
+  for f in list_dir(dir) {
+    if len(f) > 10 and slice(f, len(f) - 10, len(f)) == ".framework" {
+      let fw = block_of(read_file(dir + "/" + f))
+      if fw != null and get(fw, "id", null) == id { return { file: f, fw: fw } }
+    }
+  }
+  return null
+}
+
+// a framework and every framework its steps run, at any depth, children first: { ok, order: [{ id, file, pipeline }] } | { ok: false, problems }.
+// A framework that runs itself, directly or through others, is refused with the loop named; one that is not there, or only describes, is said.
+fn compile_tree(dir: string, id: string): map {
+  var order = []
+  var done_ids = []
+  var probs = []
+  fn visit(fid, path) {
+    if index_of(path, fid) >= 0 { probs = push(probs, "a framework runs itself: " + join(push(path, fid), " → ")); return null }
+    if index_of(done_ids, fid) >= 0 { return null }
+    let found = find_framework(dir, fid)
+    if found == null { probs = push(probs, "framework " + fid + " is not found (no .framework declares it)"); return null }
+    let ps = problems_of(found.fw)
+    if len(ps) > 0 { probs = push(probs, found.file + ": " + join(ps, "; ")); return null }
+    for u in uses(found.fw) { visit(u, push(path, fid)) }
+    done_ids = push(done_ids, fid)
+    order = push(order, { id: fid, file: found.file, status: get(found.fw, "status", "draft"), pipeline: to_pipeline(found.fw) })
+  }
+  visit(id, [])
+  if len(probs) > 0 { return { ok: false, problems: probs } }
+  return { ok: true, order: order }
 }

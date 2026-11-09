@@ -1,0 +1,74 @@
+envelope: 1
+uuid: nexus-export-schema-process_step
+type: schema
+id: process_step
+context: lib/node-schemas — shared node-type schema registry
+intent: null
+summary: null
+system: null
+tags: []
+exported_at: 1794210000000
+source: nexus.lib.node-export
+payload:
+  status: REAL
+  source: >-
+    Added 2026-11-09 with schema.process (his: "Recursive. Fully programmable. Executable processes. Schemas for them."). One step of an executable
+    process. It runs exactly one of: an engine step (run), another framework (framework: its id — recursive), a pipeline (pipeline), or, with none
+    named, an agent asked to do its section with what it takes. Compiled by cos/pipeline/framework.eg to one pipeline task.
+  fields:
+    id:
+      type: string
+      required: true
+      description: unique in its process
+    section:
+      type: string
+      required: false
+      description: the part of the method it comes from (a .framework's heading)
+    does:
+      type: string
+      required: false
+      description: what it does, in the method's own words (an agent's instructions when an agent does it)
+    takes:
+      type: list
+      required: false
+      description: the node types it takes from the steps it waits on
+    gives:
+      type: list
+      required: true
+      description: the node types it gives (at least one)
+    after:
+      type: list
+      required: false
+      description: the steps it waits on (default the step before it)
+    run:
+      type: object
+      required: false
+      description: an engine step (lib/automation/steps.js) — any type, so any process can be a step of this one
+    framework:
+      type: string
+      required: false
+      description: another framework this step runs, by id — recursive; a framework that runs itself, directly or through others, is refused
+    pipeline:
+      type: string
+      required: false
+      description: a pipeline this step runs, by name or id
+    agent:
+      type: string
+      required: false
+      description: who does it when an agent does it (the process's agent when not named)
+    check:
+      type: object
+      required: false
+      description: its gate (a typed gate, cos/pipeline/types/*.gatetype); default — it gave a node of its first type, with the fields its schema requires
+    when:
+      type: object
+      required: false
+      description: "{ left, op, value } — it runs only when this holds; false, it is skipped (and what only waits on it)"
+    retries:
+      type: number
+      required: false
+      description: how many times it is tried again before it fails (the process's execution.retries when not set)
+    onFail:
+      type: string
+      required: false
+      description: "stop | continue — what the process does when it fails"

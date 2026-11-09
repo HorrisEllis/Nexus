@@ -90,6 +90,7 @@ function createServer(sup, opts = {}) {
     dataDir: process.env.COS_MANAGER_DATA || path.join(root, 'cos', 'data', 'manager') });
   const { boxes, gates } = pipeline;
   automation.setGate((q) => pipeline.decideGate(q));
+  automation.setFramework((q) => pipeline.frameworkStep(q));   // a framework as a step: compiled here, with every framework it runs
   sup.on('ledger', (entry) => {
     broadcast('cos.ledger', { entry });
     // 2026-11-09 — James: "Also conditions, triggers, events, etc. migrate BrainOS' features to the engine." What COS records is an event the

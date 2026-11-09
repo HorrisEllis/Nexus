@@ -11,6 +11,9 @@ exported_at: 1789116323996
 source: nexus.lib.node-export
 payload:
   status: REAL
+  note_2026_11_09: >-
+    His .framework files (docs/*.framework, his method) are a different thing that shares the word: their executable form is schema.process (with
+    schema.process_step), checked and compiled by cos/pipeline/framework.eg. This schema stays Intelligence's generated .js skeleton, unchanged.
   source: >-
     intelligence/framework-builder.js's drop() — real metadata already written per generated
     framework, reshaped into the real node-export convention

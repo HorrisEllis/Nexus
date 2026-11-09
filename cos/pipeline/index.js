@@ -130,19 +130,31 @@ function createPipeline({ automation, idearium = null, call = null, dataDir } = 
   const fwDir = process.env.COS_FRAMEWORKS_DIR || path.join(root, 'docs');   // where .framework files are (docs/ in Nexus); a test points it at its own
   const frameworks = {
     list: async () => (await eg('frameworks', { dir: fwDir })).frameworks || [],
-    // compile and keep it in the engine as a pipeline (made, or brought up to date by name); a framework that only describes is refused, named
+    // a framework, and every framework its steps run (any depth, children first), kept in the engine as pipelines — made, or brought up to
+    // date by name; a loop, a missing one, or one that only describes is refused, named. → { ok, framework, pipeline: { id, name, steps }, tree }
+    async tree(id) {
+      const t = await eg('framework-tree', { dir: fwDir, id });
+      if (!t.ok) return { ok: false, code: t.problems ? 409 : 500, error: t.problems ? `${id} cannot run as a step: ${t.problems.join('; ')}` : t.error, problems: t.problems };
+      const P = await engineP(); let last = null; const tree = [];
+      for (const n of t.order) {
+        const have = P.list().find(x => x.name === n.pipeline.name || x.name === n.pipeline.name.replace(/ \(draft\)$/, '') || x.name === `${n.pipeline.name} (draft)`);
+        const r = have ? P.update(have.id, n.pipeline) : P.create(n.pipeline);
+        if (!r || r.ok === false) return { ok: false, code: 400, error: `${n.file}: ${(r && r.error) || 'the engine refused its pipeline'}`, problems: r && r.problems };
+        last = { id: (r.pipeline || r).id || (have && have.id), name: n.pipeline.name, steps: n.pipeline.tasks.length }; tree.push({ framework: n.id, file: n.file, status: n.status, pipeline: last.name, made: !have });
+      }
+      return { ok: true, framework: { id, status: tree[tree.length - 1].status }, pipeline: last, tree };
+    },
     async compile(file, { by } = {}) {
       if (!by) return { ok: false, code: 400, error: 'say who asks: { "by": "person" }' };
       if (!/^[\w.-]+\.framework$/.test(String(file))) return { ok: false, code: 400, error: 'name a .framework file' };
       const c = await eg('framework', { dir: fwDir, file });
       if (!c.ok) return { ok: false, code: c.problems ? 409 : 500, error: c.problems ? `${file} cannot run as a step: ${c.problems.join('; ')}` : c.error, problems: c.problems };
-      const P = await engineP(); const have = P.list().find(x => x.name === c.pipeline.name || x.name === c.pipeline.name.replace(/ \(draft\)$/, ''));
-      const r = have ? P.update(have.id, c.pipeline) : P.create(c.pipeline);
-      if (!r || r.ok === false) return { ok: false, code: 400, error: (r && r.error) || 'the engine refused the pipeline', problems: r && r.problems };
-      return { ok: true, framework: c.framework, pipeline: { id: (r.pipeline || r).id || (have && have.id), name: c.pipeline.name, steps: c.pipeline.tasks.length }, made: !have };
+      return frameworks.tree(c.framework.id);
     },
   };
-  return { boxes, gates, runs, frameworks, decideGate, onEvent, request, resume };
+  // the engine's framework step: compile the tree, name the pipeline to run
+  const frameworkStep = async ({ id }) => { const r = await frameworks.tree(id); return r.ok ? { ok: true, pipeline: r.pipeline.name } : { ok: false, error: r.error }; };
+  return { boxes, gates, runs, frameworks, frameworkStep, decideGate, onEvent, request, resume };
 }
 
 module.exports = { createPipeline, MODULE_ID: 'cos.pipeline', VERSION: '1.0.0' };

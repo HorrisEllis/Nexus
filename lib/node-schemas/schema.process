@@ -1,0 +1,62 @@
+envelope: 1
+uuid: nexus-export-schema-process
+type: schema
+id: process
+context: lib/node-schemas — shared node-type schema registry
+intent: null
+summary: null
+system: null
+tags: []
+exported_at: 1794210000000
+source: nexus.lib.node-export
+payload:
+  status: REAL
+  source: >-
+    Added 2026-11-09. James: "Frameworks as steps. Or a framework as a step. Recursive. Fully programmable. Executable processes. Schemas for
+    them." · 2026-11-08: "A .framework shouldn't just be a document describing what to do. It should be an executable, composable procedure with
+    defined inputs, outputs, contracts and execution behavior. That creates a common foundation for macros, pipelines, procedures and nested
+    workflows." One shape for every executable process: what it takes and gives, its contract, how it runs, and its steps (schema.process_step),
+    any of which can run another process — a framework as a step of a framework, at any depth. A .framework's executable block (```json
+    framework-steps) is one of these; cos/pipeline/framework.eg checks it against this and compiles it to a pipeline. Kept apart from
+    schema.framework, which is Intelligence's generated .js skeleton (intelligence/framework-builder.js): same word, a different thing.
+  fields:
+    id:
+      type: string
+      required: true
+      description: the process's id — what a step names to run it
+    name:
+      type: string
+      required: false
+      description: its name
+    kind:
+      type: string
+      required: false
+      description: framework | procedure | pipeline | macro | workflow (framework when it comes from a .framework)
+    status:
+      type: string
+      required: false
+      description: "draft (the coder's, his to correct) | his (his own, or corrected and kept)"
+    agent:
+      type: string
+      required: false
+      description: who does its steps that an agent does, unless a step names its own
+    takes:
+      type: list
+      required: false
+      description: the node types it needs to start (lib/node-schemas), handed in by the step that runs it
+    gives:
+      type: list
+      required: false
+      description: the node types it gives when it ends (its last steps give them)
+    contract:
+      type: object
+      required: false
+      description: "{ endState, conditions: [] } — what done means for it; a request through it is met only when every step's conditions hold"
+    execution:
+      type: object
+      required: false
+      description: "{ retries, onFail: stop | continue, timeoutMs, budget? } — the default for its steps; a step's own wins"
+    steps:
+      type: list
+      required: true
+      description: "[process_step] — at least one; a process with none only describes, and is refused as a step"

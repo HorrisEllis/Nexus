@@ -54,7 +54,7 @@
       "id": "cos.pipeline.framework",
       "file": "framework.eg",
       "lang": "emerge",
-      "does": "a .framework that declares its steps (a ```json framework-steps block beside its prose) compiles to a .pipeline that runs as a step of any other; one that only describes is refused, named",
+      "does": "a .framework that declares its steps (schema.process, schema.process_step) compiles to a .pipeline, with every framework its steps run (any depth, children first); a loop, a missing one, or one that only describes is refused, named; the engine's framework step runs it",
       "test": "test/framework.test.eg"
     },
     {
@@ -199,5 +199,15 @@
     "origin": "James, 2026-11-09: \"i meant the data that runs through the pipeline like idearium pipeline does, emerge, .contracts with .dag, .chunk, .context or any of the nodes.\" · \"look at the idearium pipeline, don't limit to just my request for the node types\"",
     "types": "every type in lib/node-schemas (77 with .context and .dag, added 2026-11-09)"
   },
-  "recursive": "a step that runs a pipeline (or a framework, compiled to one) starts a child request; the step names its children, the child its parent (request, step), at any depth (the engine's chain and MAX_DEPTH)"
+  "recursive": "a step that runs a pipeline (or a framework, compiled to one) starts a child request; the step names its children, the child its parent (request, step), at any depth (the engine's chain and MAX_DEPTH)",
+  "schemas": [
+    "lib/node-schemas/schema.process",
+    "lib/node-schemas/schema.process_step",
+    "lib/node-schemas/schema.context",
+    "lib/node-schemas/schema.dag"
+  ],
+  "gives_the_engine": [
+    "gateFn (a typed gate's verdict)",
+    "frameworkFn (a framework step: compile the tree, name the pipeline)"
+  ]
 }
