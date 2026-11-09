@@ -75,8 +75,23 @@ test "a type is checked before it decides: unknown kinds, actions, asks are refu
 }
 
 test "every shipped .gate file is a valid type" {
-  for f in ["check", "test", "verify", "context", "emerge", "options"] {
+  for f in ["check", "test", "verify", "context", "emerge", "options", "node"] {
     send gate.GateRunner.validate { type: parse_json(read_file("cos/pipeline/types/" + f + ".gatetype")) }
     expect last.ok, f + ": " + str(last.why)
   }
+}
+
+test "node: the data a step gave is a node of its type with the fields its schema requires; an undefined type is a gap" {
+  // James, 2026-11-09: "the data that runs through the pipeline like idearium pipeline does ... .contracts with .dag, .chunk, .context or any of the nodes"
+  let NODE = { id: "node", checks: [{ kind: "node", type: "\{\{with.type\}\}" }], on: {} }
+  let S = { contract: ["uuid", "forAgent", "intention", "endState"], chunk: ["uuid", "specUuid", "sectionId", "chunkIdx", "status"] }
+  fn d(w, out) { send gate.GateRunner.decide { type: NODE, with: w, output: out, context: {}, answers: {}, pipeline: "p", task: "t", schemas: S }; return last.value }
+  let good = { envelope: 1, type: "contract", id: "c1", payload: { uuid: "c1", forAgent: "cos", intention: "x", endState: "y" } }
+  expect d({ type: "contract" }, good).outcome == "open"
+  expect d({}, good).outcome == "open", "no type named: any node, checked against its own type"
+  let r = d({ type: "chunk" }, { uuid: "k", specUuid: "s" })
+  expect r.outcome == "closed" and find_text(r.why, "lacks sectionId, chunkIdx, status") >= 0, r.why
+  expect find_text(d({ type: "chunk" }, good).why, "gave a .contract, not a .chunk") >= 0
+  let g = d({ type: "vibe" }, { a: 1 })
+  expect g.outcome == "gap" and find_text(g.why, "no schema for .vibe") >= 0, g.why
 }

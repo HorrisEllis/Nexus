@@ -7,11 +7,11 @@ intent: null
 summary: 0 node(s), 0 crossing(s) — not ready
 system: idearium
 tags: []
-exported_at: 1794211812860
+exported_at: 1794212660273
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794211812860
-lastSeenAt: 1794211812860
+firstSeenAt: 1794212660273
+lastSeenAt: 1794212660273
 fingerprint: null
 payload:
   for: PC7_iterate_to_the_end_state
@@ -107,7 +107,10 @@ payload:
       - docs/2026-10-12-request-spine-phasemap.spec::RQ15_cells_in_parallel
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC5_programmable_gate_types
     unlocks: []
-    conflicts: []
+    conflicts:
+      - with: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC4_the_box_kinds_on_the_canvas
+        files:
+          - cos/manager/server.js
     dangling: []
     lines:
       - >-
@@ -118,6 +121,9 @@ payload:
         RQ15_cells_in_parallel, PC_D9_meta_autonomous_agnostic_nonlinear,
         PC5_programmable_gate_types · all upstream 68
       - 'needed by (0): —'
+      - >-
+        same files as PC4_the_box_kinds_on_the_canvas with no order between them:
+        cos/manager/server.js
     edges:
       - from: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC3_the_build_request_step
         kind: declared

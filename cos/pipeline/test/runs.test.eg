@@ -14,8 +14,10 @@ test "a request is files before it runs: its contract from the DAG, a step per s
   let id = runs.request(base, P, { v: 1 }, "person", 100, "e1")
   let d = base + "/pipeline/runs/active/" + id
   let r = parse_json(read_file(d + "/run.run"))
-  expect r.type == "run" and r.payload.request.vars == { v: 1 } and not r.payload.contract.met
-  expect map(r.payload.contract.conditions, fn(c) = c.step) == ["a", "b"] and r.payload.contract.conditions[1].after == ["a"]
+  expect r.type == "run" and r.payload.request.vars == { v: 1 } and r.payload.contract == "contract.contract"
+  let k = parse_json(read_file(d + "/contract.contract"))
+  expect k.type == "contract" and k.payload.uuid == id and k.payload.forAgent == "cos.pipeline" and not k.payload.met
+  expect map(k.payload.conditions, fn(c) = c.step) == ["a", "b"] and k.payload.conditions[1].after == ["a"]
   expect path_exists(d + "/steps/a.step") and path_exists(d + "/steps/b.step") and path_exists(d + "/gates/a.gate") and not path_exists(d + "/gates/b.gate")
   expect map(parse_json(read_file(d + "/dag.dag")).payload.boxes, fn(b) = b.id) == ["a", "a-gate", "b"]
   remove_path(base)
@@ -46,7 +48,8 @@ test "not met: it stays in active/ with its gates; a resume names what is met; w
   let d = base + "/pipeline/runs/active/" + id
   expect path_exists(d + "/gates/a.gate")
   let run = parse_json(read_file(d + "/run.run")).payload
-  expect run.phase == "not met" and find_text(run.contract.why, "b (failed: boom)") >= 0, run.contract.why
+  let k = parse_json(read_file(d + "/contract.contract")).payload
+  expect run.phase == "not met" and find_text(k.why, "b (failed: boom)") >= 0, k.why
   let q = runs.resume_of(base, id)
   expect q.ok and q.done == { a: "ok" } and q.vars == { v: 2 }
   let id2 = runs.request(base, P, {}, "person", 200, "e2")
@@ -61,5 +64,35 @@ test "listed and read back; an engine run with no request is said" {
   let rr = runs.read_request(base, id)
   expect rr.where == "active" and len(rr.steps) == 2 and len(rr.gates) == 1
   expect not ev(base, "automation.pipeline.task", { runId: "nobody", task: "a", status: "done" }).ok
+  remove_path(base)
+}
+
+test "the wires carry nodes: a step's output is a node file of its type; the next step took it; the DAG says what each wire carries" {
+  // James, 2026-11-09: "i meant the data that runs through the pipeline like idearium pipeline does, emerge, .contracts with .dag, .chunk, .context"
+  let base = fresh()
+  let Q = { id: "spine", tasks: [
+    { id: "ask", step: { type: "set" }, gives: ["context"] },
+    { id: "plan", depends_on: ["ask"], step: { type: "set" }, takes: ["context"], gives: ["contract"] },
+    { id: "cut", depends_on: ["plan"], step: { type: "set" }, takes: ["contract"], gives: ["chunk"] },
+    { id: "note", depends_on: ["plan"], step: { type: "set" } } ] }
+  let id = runs.request(base, Q, {}, "person", 100, "e1")
+  let d = base + "/pipeline/runs/active/" + id
+  let dag = parse_json(read_file(d + "/dag.dag")).payload
+  expect dag.for == id
+  expect find(dag.wires, fn(w) = w.from == "ask.out" and w.to == "plan.in").carries == ["context"]
+  expect find(dag.wires, fn(w) = w.from == "plan.out" and w.to == "cut.in").carries == ["contract"]
+  expect find(dag.wires, fn(w) = w.from == "plan.out" and w.to == "note.in").carries == ["contract"], "takes nothing named: all it is given"
+  ev(base, "automation.pipeline.task", { runId: "e1", task: "ask", status: "done", value: { for: id, items: [{ source: "idearium", ref: "atlas", text: "x" }] } })
+  ev(base, "automation.pipeline.task", { runId: "e1", task: "plan", status: "running" })
+  ev(base, "automation.pipeline.task", { runId: "e1", task: "plan", status: "done", value: { envelope: 1, type: "contract", id: "c1", payload: { uuid: "c1", forAgent: "cos", intention: "x", endState: "y" } } })
+  ev(base, "automation.pipeline.task", { runId: "e1", task: "cut", status: "running" })
+  let ctx = parse_json(read_file(d + "/nodes/ask/out.context"))
+  expect ctx.type == "context" and ctx.payload.items[0].source == "idearium"
+  expect parse_json(read_file(d + "/nodes/plan/out.contract")).payload.uuid == "c1", "a node given is kept as it is"
+  let plan = parse_json(read_file(d + "/steps/plan.step")).payload
+  expect plan.took == ["nodes/ask/out.context"] and plan.gave == ["nodes/plan/out.contract"]
+  expect parse_json(read_file(d + "/steps/cut.step")).payload.took == ["nodes/plan/out.contract"]
+  let rr = runs.read_request(base, id)
+  expect len(rr.nodes) == 2 and rr.contract.type == "contract"
   remove_path(base)
 }

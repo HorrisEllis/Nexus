@@ -411,3 +411,21 @@ spec:
 # refused). Rows: cos request, cos requests, cos request-show, cos request-resume (personOnly where it acts).
 # The extensions .gatetype, .run, .dag, .step, .gate are defined in cos/pipeline/registry.json (EQ5's definition, in the owner's registry).
 # Emerge grew for it (CIE14): list_dir, path_exists, make_dir, move_path, remove_path (each write on the ledger); natively they wait for CIE13.
+
+# ── ADDENDUM 2026-11-09 (0.60.468) — the data a request carries is nodes (his) ────────────────────────────────────────────────────────────────
+# James, 2026-11-09: "i meant the data that runs through the pipeline like idearium pipeline does, emerge, .contracts with .dag, .chunk, .context or
+# any of the nodes." · "look at the idearium pipeline, don't limit to just my request for the node types".
+# Read first: Idearium's pipelines pass nodes, not text: the request spine (docs/2026-10-12-request-spine-phasemap.spec: intent → context
+# obligations → gaps → the chunked .contract → the phase DAG → gated steps → cells), the spec engine's .chunk nodes (idearium/lib/chunk-nodes.js),
+# RAID's .contract (cortex/core/raid/contract-intake.js), the import pipeline (MAPPING → CHUNKING → VERIFYING → INDEXING → GRAPHING). The node types
+# are lib/node-schemas (75), every one an envelope (lib/node-export.js). Two he named were missing: .context (RQ7's answer, never kept as a node)
+# and .dag; both added (schema.context, schema.dag; KNOWN_TYPES).
+# Built (cos/pipeline/runs.eg, gate.eg; lib/automation/pipeline.js):
+#   - a task says what it takes and gives: takes / gives, node types from lib/node-schemas (any of them, not a fixed list);
+#   - a step's whole output becomes a node file of its type, nodes/<step>/out.<type>: the node itself when it gave one, else wrapped as what it
+#     gives, else an .output; each step file names the node files it took (from the steps it waits on, of the types it takes) and gave;
+#   - dag.dag (now a .dag node: for, boxes, wires) says what each wire carries;
+#   - the request's contract is a real .contract node (schema.contract: uuid, forAgent, intention, endState), contract.contract; run.run points at it;
+#   - a gate check `node` (and the shipped type node.gatetype): the step gave a node of the type named, with every field its schema requires; a
+#     type Nexus does not define is a gap. Emerge has no YAML reader (CIE14), so COS's door gives it each type's required fields.
+#   - the engine's task event carries the whole value for the host's files (value); COS strips it from the live stream (the preview stays).

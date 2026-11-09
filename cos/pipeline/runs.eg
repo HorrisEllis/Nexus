@@ -5,9 +5,14 @@
 //
 // One folder per request; where it is says what it is:
 //   <base>/pipeline/runs/active/<id>/     not met yet
-//     run.run          the request (pipeline, vars, by, at) and its contract: every step's conditions, from the DAG; met or not, and why
-//     dag.dag          the DAG: each step and, after a gated step, its gate, wired (box.eg)
-//     steps/<t>.step   one node per step: what it runs, what it waits on, its conditions, status, output, every verdict; kept until met
+//     run.run          the request (pipeline, vars, by, at) and where it stands
+//     contract.contract  its contract (lib/node-schemas/schema.contract): every step's conditions, from the DAG; met or not, and why
+//     dag.dag          the DAG: each step and, after a gated step, its gate, wired; each wire says the node types it carries
+//     steps/<t>.step   one node per step: what it runs, what it waits on, what it takes and gives, its conditions, status, every verdict,
+//                      the node files it was given (took) and gave; kept until met
+//     nodes/<t>/out.<type>  what a step gave, as a node of its type (.chunk, .contract, .context, .gap, .output … lib/node-schemas): the data the
+//                      wires carry. James, 2026-11-09: "i meant the data that runs through the pipeline like idearium pipeline does, emerge,
+//                      .contracts with .dag, .chunk, .context or any of the nodes." · "don't limit to just my request for the node types"
 //     gates/<t>.gate   the gate for this request: its type, settings, what it holds, its verdicts. Temporary
 //   <base>/pipeline/runs/done/<id>/       the contract met: the gates removed, the rest kept as the record (§0.3)
 // A request not met stays in active/ with its gates and resumes from its step files (what is met is not run again). What a gate learned carries to
@@ -19,6 +24,7 @@ fn active_dir(base: string): string = base + "/pipeline/runs/active"
 fn done_dir(base: string): string = base + "/pipeline/runs/done"
 fn safe(s: any): string = replace(replace(replace(str(s), "/", "_"), "\\", "_"), " ", "_")
 fn run_file(d: string): string = d + "/run.run"
+fn contract_file(d: string): string = d + "/contract.contract"
 fn step_file(d: string, t: string): string = d + "/steps/" + safe(t) + ".step"
 fn gate_file(d: string, t: string): string = d + "/gates/" + safe(t) + ".gate"
 fn parent(p: string): string { let parts = split(p, "/"); return join(take(parts, len(parts) - 1), "/") }
@@ -80,6 +86,27 @@ fn prior_context(base: string, pipeline_id: string, task: string, except: string
   return best.context
 }
 
+// the node types a step gives: what it says (gives), else .output (schema.output)
+fn gives_of(t: map): list {
+  let g = get(t, "gives", [])
+  if len(g) == 0 { return ["output"] }
+  return g
+}
+// what a wire carries: the types its source step gives (through its gate unchanged), narrowed to what the target takes when it says
+fn task_of(p: map, id: string): any = find(p.tasks, fn(t) = t.id == id)
+fn strip_gate(s: string): string {
+  if len(s) > 5 and slice(s, len(s) - 5, len(s)) == "-gate" { return slice(s, 0, len(s) - 5) }
+  return s
+}
+fn carries(p: map, w: map): list {
+  let src = task_of(p, strip_gate(split(w.from, ".")[0]))
+  let dst = task_of(p, split(w.to, ".")[0])
+  if src == null { return [] }
+  let give = gives_of(src)
+  if dst == null or len(get(dst, "takes", [])) == 0 { return give }
+  return filter(give, fn(x) = index_of(dst.takes, x) >= 0)
+}
+
 // a request: its files first (run.run, dag.dag, a .step per step, a .gate per typed gate); the engine runs it after
 fn request(base: string, p: map, vars: any, by: any, at: num, engine_run: any): string {
   let id = safe(p.id) + "-" + str(at) + "-" + uid()
@@ -91,11 +118,15 @@ fn request(base: string, p: map, vars: any, by: any, at: num, engine_run: any): 
   if engine_run != null { engine_runs = [engine_run] }
   put(run_file(d), node("run", id, get(p, "name", p.id) + ": a request", str(len(p.tasks)) + " steps · not met", {
     request: { pipeline: p.id, name: get(p, "name", p.id), vars: vars, varsSaid: said, by: by, at: at },
-    contract: { end: "every step met: it ran, and its gate opened (or it has none)", conditions: conditions, met: false, why: null },
-    phase: "running", engineRuns: engine_runs, startedAt: at, finishedAt: null }, "a request through a pipeline, kept until its contract is met (PC5)"))
+    contract: "contract.contract", phase: "running", engineRuns: engine_runs, startedAt: at, finishedAt: null }, "a request through a pipeline, kept until its contract is met (PC5)"))
+  // the contract as a real .contract node (schema.contract: uuid, forAgent, intention, endState required)
+  put(contract_file(d), node("contract", id, "the contract of " + get(p, "name", p.id), "not met", { uuid: id, forAgent: "cos.pipeline", intention: get(p, "name", p.id),
+    endState: "every step met: it ran, and its gate opened (or it has none)", conditions: conditions, dag: "dag.dag", met: false, why: null },
+    "what done means for this request, from its DAG; met only when every condition is"))
   for t in p.tasks {
     let label = get(t, "label", t.id)
     put(step_file(d, t.id), node("step", id + "." + t.id, label, "waiting", { run: id, task: t.id, label: label, step: t.step, after: get(t, "depends_on", []),
+      takes: get(t, "takes", []), gives: gives_of(t), took: [], gave: [],
       conditions: condition_of(t), status: "waiting", met: false, attempts: 0, output: null, error: null, verdicts: [], gateContext: null, gateAt: null },
       "one step of a request; kept until its conditions are met"))
     let g = get(t, "gate", null)
@@ -105,8 +136,9 @@ fn request(base: string, p: map, vars: any, by: any, at: num, engine_run: any): 
     }
   }
   let g = box.with_gates(box.to_boxes(p))
-  put(d + "/dag.dag", node("dag", id, get(p, "name", p.id) + ": its DAG", str(len(g.boxes)) + " boxes, " + str(len(g.wires)) + " wires", { boxes: g.boxes, wires: g.wires },
-    "the DAG of a request: each step and its gate, wired (box.eg)"))
+  let wires = map(g.wires, fn(w) = { from: w.from, to: w.to, carries: carries(p, w) })
+  put(d + "/dag.dag", node("dag", id, get(p, "name", p.id) + ": its DAG", str(len(g.boxes)) + " boxes, " + str(len(wires)) + " wires", { for: id, boxes: g.boxes, wires: wires },
+    "the DAG of a request: each step and its gate, wired; each wire with the node types it carries (box.eg)"))
   return id
 }
 
@@ -138,6 +170,38 @@ fn keep_last(xs: list, n: num): list {
   return xs
 }
 
+// the node a step gave: the node itself when the output is one (an envelope with its type), else wrapped as the type the step gives
+fn is_node(v: any): bool = type_of(v) == "map" and has(v, "envelope") and has(v, "type") and has(v, "payload")
+fn give_node(d: string, id: string, st: map, out: any, ok: bool, at: num): string {
+  var kind = st.gives[0]
+  var doc = null
+  if is_node(out) {
+    kind = out.type
+    doc = out
+  } else {
+    var payload = { ok: ok, value: out }
+    if kind != "output" and type_of(out) == "map" { payload = out }
+    doc = node(kind, id + "." + st.task, st.label + " gave", kind, payload, "what " + st.label + " gave, carried by its wires (" + str(at) + ")")
+  }
+  let rel = "nodes/" + safe(st.task) + "/out." + safe(kind)
+  put(d + "/" + rel, doc)
+  return rel
+}
+// the node files a step was given: what the steps it waits on gave, of the types it takes (all of them when it names none)
+fn took_of(d: string, st: map): list {
+  var out = []
+  for a in st.after {
+    let s = take_file(step_file(d, a))
+    if s != null {
+      for rel in get(s.payload, "gave", []) {
+        let kind = last_of(split(rel, "."))
+        if len(st.takes) == 0 or index_of(st.takes, kind) >= 0 { out = push(out, rel) }
+      }
+    }
+  }
+  return out
+}
+
 // the engine's events keep the files: a step as it changes; the request when it ends. pipeline: the pipeline, given with a start of its own
 fn on_event(base: string, kind: string, data: map, pipeline: any, at: num): map {
   if kind == "automation.pipeline.start" {
@@ -161,6 +225,13 @@ fn on_event(base: string, kind: string, data: map, pipeline: any, at: num): map 
     st.attempts = get(data, "attempts", st.attempts)
     if has(data, "output") { st.output = data.output }
     st.error = get(data, "error", null)
+    if data.status == "running" and len(st.took) == 0 { st.took = took_of(w.dir, st) }
+    if (data.status == "done" or data.status == "failed") and (has(data, "value") or has(data, "output")) {
+      var whole = get(data, "value", null)
+      if whole == null { whole = get(data, "output", null) }
+      if whole != null { st.gave = [give_node(w.dir, id, st, whole, data.status == "done", at)] }
+      if len(st.took) == 0 { st.took = took_of(w.dir, st) }
+    }
     st.met = data.status == "done" and gate_ok
     if g != null and (data.status == "done" or data.status == "failed") {
       var v = clone(g)
@@ -175,12 +246,15 @@ fn on_event(base: string, kind: string, data: map, pipeline: any, at: num): map 
   }
   if kind == "automation.pipeline.done" {
     var r = take_file(run_file(w.dir))
-    let steps = map(r.payload.contract.conditions, fn(c) = take_file(step_file(w.dir, c.step)))
+    var k = take_file(contract_file(w.dir))
+    let steps = map(k.payload.conditions, fn(c) = take_file(step_file(w.dir, c.step)))
     let unmet = filter(steps, fn(s) = s == null or not s.payload.met)
     r.payload.finishedAt = at
     if len(unmet) == 0 {
-      r.payload.contract.met = true
-      r.payload.contract.why = "every step ran and its gate opened"
+      k.payload.met = true
+      k.payload.why = "every step ran and its gate opened"
+      k.summary = "met"
+      put(contract_file(w.dir), k)
       r.payload.phase = "met"
       r.summary = str(len(steps)) + " steps · met"
       put(run_file(w.dir), r)
@@ -193,7 +267,9 @@ fn on_event(base: string, kind: string, data: map, pipeline: any, at: num): map 
     if held { ph = "held" }
     if data.status == "cancelled" { ph = "cancelled" }
     r.payload.phase = ph
-    r.payload.contract.why = "not met: " + join(map(unmet, fn(s) = why_unmet(s)), "; ")
+    k.payload.why = "not met: " + join(map(unmet, fn(s) = why_unmet(s)), "; ")
+    k.summary = ph
+    put(contract_file(w.dir), k)
     r.summary = str(len(steps) - len(unmet)) + " of " + str(len(steps)) + " steps met · " + ph
     put(run_file(w.dir), r)
     return { ok: true, request: id, met: false }
@@ -253,7 +329,7 @@ fn list_requests(base: string, which: string): list {
     let r = take_file(run_file(dir + "/" + n))
     if r != null {
       out = push(out, { id: n, phase: r.payload.phase, pipeline: r.payload.request.pipeline, name: r.payload.request.name, summary: r.summary,
-        startedAt: r.payload.startedAt, finishedAt: r.payload.finishedAt, met: r.payload.contract.met })
+        startedAt: r.payload.startedAt, finishedAt: r.payload.finishedAt, met: r.payload.phase == "met" })
     }
   }
   return reverse(sort_by(out, fn(x) = x.startedAt))
@@ -268,7 +344,10 @@ fn nodes_in(dir: string, ext: string): list {
 fn read_request(base: string, id: string): any {
   let w = where(base, id)
   if w == null { return null }
-  return { id: id, where: w.at, run: take_file(run_file(w.dir)), dag: take_file(w.dir + "/dag.dag"), steps: nodes_in(w.dir + "/steps", ".step"), gates: nodes_in(w.dir + "/gates", ".gate") }
+  var given = []
+  for t in list_dir(w.dir + "/nodes") { for f in list_dir(w.dir + "/nodes/" + t) { given = push(given, { path: "nodes/" + t + "/" + f, node: take_file(w.dir + "/nodes/" + t + "/" + f) }) } }
+  return { id: id, where: w.at, run: take_file(run_file(w.dir)), contract: take_file(contract_file(w.dir)), dag: take_file(w.dir + "/dag.dag"),
+    steps: nodes_in(w.dir + "/steps", ".step"), gates: nodes_in(w.dir + "/gates", ".gate"), nodes: given }
 }
 // what a resume needs: the pipeline, the vars, and every step already met with its output, so only the rest runs
 fn resume_of(base: string, id: string): map {

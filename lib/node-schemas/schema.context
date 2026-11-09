@@ -1,0 +1,37 @@
+envelope: 1
+uuid: nexus-export-schema-context
+type: schema
+id: context
+context: lib/node-schemas — shared node-type schema registry
+intent: null
+summary: null
+system: null
+tags: []
+exported_at: 1794200000000
+source: nexus.lib.node-export
+payload:
+  status: REAL
+  source: >-
+    Added 2026-11-09. James: "i meant the data that runs through the pipeline like idearium pipeline does, emerge, .contracts with .dag, .chunk,
+    .context or any of the nodes." · "look at the idearium pipeline, don't limit to just my request for the node types". The request spine
+    (docs/2026-10-12-request-spine-phasemap.spec RQ7_the_context_obligations) asks every source at once for what a request needs; nothing kept that
+    answer as a node: the type was missing from this directory. A .context is what a step was given to work from: each item with where it came
+    from, and each obligation found or left as a gap (an unfound fact is a named gap, never a guess: M1). Written by cos/pipeline/runs.eg into a
+    request's nodes/; read by the next step and its gate.
+  fields:
+    for:
+      type: string
+      required: true
+      description: what this context is for — a request id, or <request>.<step>
+    items:
+      type: list
+      required: true
+      description: "[{ source (the system or node it came from), ref (its id or path), text (what was taken, or a summary), cites? }]"
+    obligations:
+      type: list
+      required: false
+      description: "[{ need (what must be known), status: found | gap, source? }] — RQ7's checklist; a gap is asked, never guessed"
+    hash:
+      type: string
+      required: false
+      description: sha256 of the items, so a step can say exactly which context it ran on

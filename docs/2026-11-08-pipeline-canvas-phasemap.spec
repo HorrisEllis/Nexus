@@ -476,3 +476,13 @@ expanded_2026_11_09_module:
       The logic of a request's files is Emerge (§17.13); where Emerge lacked folders, Emerge was grown (CIE14), not worked around. The door keeps only
       what Emerge cannot do yet: start a process, open a socket (CIE13, CIE10). The engine stays shared (AE_D2): a request's files are COS's, tied to
       an engine run by the start event's meta.
+
+# ── ADDENDUM 2026-11-09 (0.60.468) — PC5 and PC4 expanded: the wires carry nodes (his) ────────────────────────────────────────────────────────
+# James, 2026-11-09: "i meant the data that runs through the pipeline like idearium pipeline does, emerge, .contracts with .dag, .chunk, .context or
+# any of the nodes." · "look at the idearium pipeline, don't limit to just my request for the node types".
+expanded_2026_11_09_nodes:
+  PC5_programmable_gate_types: "the node check and node.gatetype: a step's data is a node of its type, checked against lib/node-schemas; an undefined type is a gap"
+  PC4_the_box_kinds_on_the_canvas: "what the wires carry is now data: each wire of a request's dag.dag names its node types, each step names the node files it took and gave (nodes/<step>/out.<type>); the canvas draws these"
+  files_2026_11_09: [cos/pipeline/runs.eg, cos/pipeline/gate.eg, cos/pipeline/cli.eg, cos/pipeline/index.js, cos/pipeline/types/node.gatetype (new), cos/pipeline/registry.json (config), cos/pipeline/test/gate.test.eg, cos/pipeline/test/runs.test.eg, lib/automation/pipeline.js, lib/node-schemas/schema.context (new), lib/node-schemas/schema.dag (new), lib/node-export.js, cos/manager/server.js, tests/modules/test-cos-pipeline.test.js]
+  proof: "eg gate 8/8, runs 5/5; test-cos-pipeline 9/9 (CP-08: .context → .contract → .chunk through COS's real engine; a .chunk missing its fields closes its gate, named)"
+  open: "the steps that make these nodes from Idearium's own tools (RQ7 context, RQ9 the chunked contract, RQ12 the phase DAG) as pipeline steps by route: the next slice, after his go"

@@ -14,6 +14,9 @@
  *   CP-04  not the same every time: three requests, the same reason: closed, closed, gap (held), learned through the step files, not the gates
  *   CP-05  an emerge gate hands Emerge the gap with its why and its task, and holds the request
  *   CP-06  his own gate type is checked in Emerge and kept; an agent's refused; a bad one named; a shipped id left alone
+ *   CP-08  the data a request carries is nodes: a step gives a .context, the next takes it and gives a .contract, a node gate checks it
+ *          against its schema; each is a file in nodes/, each step names what it took and gave, the DAG what each wire carries; a .chunk
+ *          missing its schema's fields closes the gate, named (James: "the data that runs through the pipeline like idearium pipeline does")
  *   CP-07  an engine with no gate host refuses a typed gate, said; command rows for agents and copilot
  */
 require('../../lib/test-sandbox.js').ensure();
@@ -52,7 +55,7 @@ const eg = (...a) => require('child_process').spawnSync(process.execPath, [path.
   const TEST = { type: 'test', with: { owner: 'tester', route: 'POST /api/tests/run', expect: 'passed' } };
   try {
     await T('CP-00', 'Emerge\'s own tests: the box shape (with its dag hook) and the gate', () => {
-      for (const [f, n] of [['cos/pipeline/test/box.test.eg', 10], ['cos/pipeline/test/gate.test.eg', 7], ['cos/pipeline/test/runs.test.eg', 4]]) { const r = eg('test', f); assert.strictEqual(r.status, 0, r.stdout + r.stderr); assert.match(r.stdout, new RegExp(`${n} passed, 0 failed`)); }
+      for (const [f, n] of [['cos/pipeline/test/box.test.eg', 10], ['cos/pipeline/test/gate.test.eg', 8], ['cos/pipeline/test/runs.test.eg', 5]]) { const r = eg('test', f); assert.strictEqual(r.status, 0, r.stdout + r.stderr); assert.match(r.stdout, new RegExp(`${n} passed, 0 failed`)); }
     });
 
     await T('CP-01', 'one folder with its registry; the shipped .gatetype files listed; a try decides and does nothing', async () => {
@@ -60,7 +63,7 @@ const eg = (...a) => require('child_process').spawnSync(process.execPath, [path.
       assert.deepStrictEqual(reg.extensions.map(e => e.ext), ['.gatetype', '.run', '.dag', '.step', '.gate']);
       for (const c of reg.components) assert.ok(fs.existsSync(path.join(ROOT, 'cos/pipeline', c.file)), c.file);
       const ts = (await req(M, 'GET', '/api/cos/gate-types')).body.types;
-      assert.deepStrictEqual(ts.map(t => t.id).sort(), ['check', 'context', 'emerge', 'options', 'test', 'verify']);
+      assert.deepStrictEqual(ts.map(t => t.id).sort(), ['check', 'context', 'emerge', 'node', 'options', 'test', 'verify']);
       const d = (await req(M, 'POST', '/api/cos/gate-types/check/try', { output: 'failed', with: { contains: 'ok' } })).body.decision;
       assert.deepStrictEqual([d.outcome, d.why, d.actions], ['closed', 'the output does not contain "ok"', [{ do: 'retry', said: 'not done: a try' }]]);
       assert.ok(!fs.existsSync(RUNS), 'a try writes nothing');
@@ -72,8 +75,10 @@ const eg = (...a) => require('child_process').spawnSync(process.execPath, [path.
       passing = false;   // held at the test, so the files can be read before it is met
       const r = await ask(pid, { v: 'good' }); const dir = path.join(RUNS, 'active', r.request);
       const run = J(path.join(dir, 'run.run'));
-      assert.deepStrictEqual([run.type, run.payload.request.pipeline, run.payload.request.vars, run.payload.contract.met], ['run', pid, { v: 'good' }, false]);
-      assert.deepStrictEqual(run.payload.contract.conditions.map(c => [c.step, c.after, c.gate && c.gate.type]), [['a', [], 'test'], ['b', ['a'], 'context']]);
+      assert.deepStrictEqual([run.type, run.payload.request.pipeline, run.payload.request.vars], ['run', pid, { v: 'good' }]);
+      const k = J(path.join(dir, 'contract.contract'));
+      assert.deepStrictEqual([k.type, k.payload.met], ['contract', false], 'the contract is a real .contract node');
+      assert.deepStrictEqual(k.payload.conditions.map(c => [c.step, c.after, c.gate && c.gate.type]), [['a', [], 'test'], ['b', ['a'], 'context']]);
       for (const f of ['steps/a.step', 'steps/b.step', 'gates/a.gate', 'gates/b.gate']) assert.ok(fs.existsSync(path.join(dir, f)), f);
       const dag = await wait(() => fs.existsSync(path.join(dir, 'dag.dag')) && J(path.join(dir, 'dag.dag')));
       assert.deepStrictEqual(dag.payload.boxes.map(b => b.id), ['a', 'a-gate', 'b', 'b-gate'], 'the DAG: compartment, gate, compartment, gate');
@@ -81,7 +86,7 @@ const eg = (...a) => require('child_process').spawnSync(process.execPath, [path.
       assert.deepStrictEqual([x.where, x.run.payload.phase], ['active', 'not met']);
       passing = true;
       const r2 = await ask(pid, { v: 'good' }); tested2 = r2.request; const y = await ended(r2.request);
-      assert.deepStrictEqual([y.where, y.run.payload.contract.met, y.run.payload.phase], ['done', true, 'met']);
+      assert.deepStrictEqual([y.where, y.contract.payload.met, y.run.payload.phase], ['done', true, 'met']);
       const done = path.join(RUNS, 'done', r2.request);
       assert.ok(!fs.existsSync(path.join(RUNS, 'active', r2.request)) && !fs.existsSync(path.join(done, 'gates')), 'moved to done/, its gates removed');
       const a = J(path.join(done, 'steps/a.step')).payload; assert.deepStrictEqual([a.met, a.verdicts.slice(-1)[0].outcome], [true, 'open']);
@@ -93,7 +98,7 @@ const eg = (...a) => require('child_process').spawnSync(process.execPath, [path.
     await T('CP-03', 'not met: it stays with its gates and verdicts; resumed from its step files, what was met is not run again; then met', async () => {
       const pid = await make('resumes', [{ id: 'a', step: SET('{{vars.v}}') }, { id: 'b', depends_on: ['a'], step: SET('{{vars.v}}'), gate: TEST }]);
       passing = false; const r = await ask(pid, { v: 'good' }); const x = await ended(r.request);
-      assert.deepStrictEqual([x.where, x.run.payload.phase], ['active', 'not met']); assert.match(x.run.payload.contract.why, /b \(failed/);
+      assert.deepStrictEqual([x.where, x.run.payload.phase], ['active', 'not met']); assert.match(x.contract.payload.why, /b \(failed/);
       const dir = path.join(RUNS, 'active', r.request);
       assert.deepStrictEqual([J(path.join(dir, 'steps/a.step')).payload.met, J(path.join(dir, 'steps/b.step')).payload.met], [true, false]);
       assert.strictEqual(J(path.join(dir, 'gates/b.gate')).payload.verdicts.slice(-1)[0].outcome, 'closed', 'the gate is kept: the request did not finish');
@@ -132,6 +137,28 @@ const eg = (...a) => require('child_process').spawnSync(process.execPath, [path.
       const bad = await req(M, 'POST', '/api/cos/gate-types', { type: { id: 'bad', checks: [{ kind: 'vibes' }], on: { open: [{ do: 'dance' }] } }, by: 'person' });
       assert.strictEqual(bad.status, 400); assert.ok(bad.body.problems.some(p => /vibes/.test(p)) && bad.body.problems.some(p => /dance/.test(p)));
       assert.strictEqual((await req(M, 'POST', '/api/cos/gate-types', { type: { ...mine, id: 'check' }, by: 'person' })).status, 409);
+    });
+
+
+    await T('CP-08', 'the data is nodes: .context → .contract → .chunk on the wires, each a file, checked against its schema at the gate', async () => {
+      const pid = await make('spine', [
+        { id: 'ask', step: { type: 'set', config: { assign: { for: 'the request', items: '{{vars.items}}' } } }, gives: ['context'] },
+        { id: 'plan', depends_on: ['ask'], step: { type: 'set', config: { assign: { uuid: 'c-1', forAgent: 'cos.pipeline', intention: 'build the parser', endState: 'its tests pass' } } }, takes: ['context'], gives: ['contract'],
+          gate: { type: 'node', with: { type: 'contract' } } },
+        { id: 'cut', depends_on: ['plan'], step: { type: 'set', config: { assign: { uuid: 'k-1', specUuid: 's-1' } } }, takes: ['contract'], gives: ['chunk'],
+          gate: { type: 'node', with: { type: 'chunk' } } }]);
+      const r = await ask(pid, { items: 'the atlas' }); const x = await ended(r.request);
+      const dir = path.join(RUNS, 'active', r.request);
+      const dag = J(path.join(dir, 'dag.dag')).payload;
+      assert.deepStrictEqual(dag.wires.map(w => [w.from, w.to, w.carries]).sort((a, b) => (a[0] + a[1]).localeCompare(b[0] + b[1])), [['ask.out', 'plan.in', ['context']], ['plan.out', 'plan-gate.in', ['contract']], ['plan-gate.out', 'cut.in', ['contract']], ['cut.out', 'cut-gate.in', ['chunk']]].sort((a, b) => (a[0] + a[1]).localeCompare(b[0] + b[1])));
+      const ctx = J(path.join(dir, 'nodes/ask/out.context')); assert.deepStrictEqual([ctx.type, ctx.payload.items], ['context', 'the atlas']);
+      const con = J(path.join(dir, 'nodes/plan/out.contract')); assert.deepStrictEqual([con.type, con.payload.endState], ['contract', 'its tests pass']);
+      const plan = J(path.join(dir, 'steps/plan.step')).payload;
+      assert.deepStrictEqual([plan.took, plan.gave, plan.met], [['nodes/ask/out.context'], ['nodes/plan/out.contract'], true]);
+      const cut = J(path.join(dir, 'steps/cut.step')).payload;
+      assert.deepStrictEqual([cut.took, cut.met], [['nodes/plan/out.contract'], false]);
+      assert.match(cut.verdicts.slice(-1)[0].why, /the \.chunk lacks sectionId, chunkIdx, status/);
+      assert.strictEqual(x.run.payload.phase, 'not met'); assert.ok(x.nodes.some(n => n.path === 'nodes/cut/out.chunk'), 'what it gave is kept, to be seen');
     });
 
     await T('CP-07', 'an engine with no gate host refuses a typed gate, said; command rows for agents and copilot', async () => {

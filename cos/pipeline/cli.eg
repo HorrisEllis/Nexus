@@ -88,7 +88,7 @@ else if cmd == "gate" {
     let ps = gate.problems(ty)
     if len(ps) > 0 { print(json({ ok: true, verdict: { outcome: "closed", open: false, why: "gate type \"" + ty.id + "\" is not valid: " + join(ps, "; "), saw: [], actions: [], calls: [] } })) }
     else {
-      let dq = { type: ty, with: get(g, "with", {}), output: get(q.q, "output", ""), pipeline: get(q.q, "pipelineId", "try"), task: get(q.q, "task", "try") }
+      let dq = { type: ty, with: get(g, "with", {}), output: get(q.q, "output", ""), pipeline: get(q.q, "pipelineId", "try"), task: get(q.q, "task", "try"), schemas: get(q, "schemas", {}) }
       let pl = gate.plan(dq)
       if len(pl.asks) > 0 and get(q, "answers", null) == null { print(json({ ok: true, asks: pl.asks })) }
       else {
@@ -98,6 +98,7 @@ else if cmd == "gate" {
         var d = clone(dq)
         d.context = ctx
         d.answers = get(q, "answers", {})
+        d.schemas = get(q, "schemas", {})
         let v = gate.decide(d)
         let f = gate.flags(v.outcome, v.actions)
         let verdict = { type: ty.id, outcome: v.outcome, open: f.open, why: v.why, saw: push_each(v.saw, pl.unset), retry: f.retry, stop: f.stop, held: f.held,
