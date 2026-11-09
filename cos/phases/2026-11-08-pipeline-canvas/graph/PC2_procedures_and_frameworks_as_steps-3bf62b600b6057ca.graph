@@ -1,0 +1,333 @@
+envelope: 1
+uuid: nexus-export-graph-phase:PC2_procedures_and_frameworks_as_steps:3bf62b600b6057ca
+type: graph
+id: phase:PC2_procedures_and_frameworks_as_steps:3bf62b600b6057ca
+context: dependency graph of phase PC2_procedures_and_frameworks_as_steps
+intent: null
+summary: 35 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1794229862857
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794229862857
+lastSeenAt: 1794229862857
+fingerprint: null
+payload:
+  for: PC2_procedures_and_frameworks_as_steps
+  kind: phase
+  repo: null
+  hash: 3bf62b600b6057ca
+  nodes:
+    - path: cos/manager/automation-door.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/manager/server.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/pipeline/cli.eg
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/pipeline/framework.eg
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/pipeline/index.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/pipeline/registry.json
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/pipeline/test/framework.test.eg
+      role: changes
+      exists: true
+      system: cos
+    - path: lib/automation/engine.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/automation/steps.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/node-export.js
+      role: changes
+      exists: true
+      system: lib
+    - path: tests/modules/test-cos-pipeline.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: architect/schemas/index.js
+      role: used-by
+      exists: true
+      system: architect
+    - path: clear-glass/schemas/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: copilot/lib/inject-config.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/schemas/index.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/tool-runtime.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: cortex/core/raid/contract-intake.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/schemas/index.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/self-heal/failure-mode-forensics.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/tools/table-materializer.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: diagnostic/schemas/index.js
+      role: used-by
+      exists: true
+      system: diagnostic
+    - path: guardian/lib/agent-facts.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: guardian/lib/agent-model-nodes.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: cos/manager/autopilot-door.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/proposals.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/supervisor.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/usage.js
+      role: uses
+      exists: true
+      system: cos
+    - path: lib/automation/cron.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/automation/dom.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/automation/pipeline.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/automation/routes.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/automation/scripts.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/automation/template.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/raid-port.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/test-sandbox.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/automation/steps.js
+      to: lib/automation/cron.js
+      kind: requires
+    - from: lib/automation/engine.js
+      to: lib/automation/template.js
+      kind: requires
+    - from: lib/automation/engine.js
+      to: lib/automation/dom.js
+      kind: requires
+    - from: lib/automation/engine.js
+      to: lib/automation/scripts.js
+      kind: requires
+    - from: lib/automation/engine.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: lib/automation/engine.js
+      to: lib/automation/pipeline.js
+      kind: requires
+    - from: cos/manager/automation-door.js
+      to: lib/raid-port.js
+      kind: requires
+    - from: cos/manager/automation-door.js
+      to: lib/automation/routes.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/supervisor.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/proposals.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/usage.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/autopilot-door.js
+      kind: requires
+    - from: architect/schemas/index.js
+      to: lib/node-export.js
+      kind: requires
+    - from: clear-glass/schemas/index.js
+      to: lib/node-export.js
+      kind: requires
+    - from: copilot/lib/inject-config.js
+      to: lib/node-export.js
+      kind: requires
+    - from: copilot/schemas/index.js
+      to: lib/node-export.js
+      kind: requires
+    - from: copilot/tool-runtime.js
+      to: lib/node-export.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: lib/node-export.js
+      kind: requires
+    - from: cortex/schemas/index.js
+      to: lib/node-export.js
+      kind: requires
+    - from: cortex/self-heal/failure-mode-forensics.js
+      to: lib/node-export.js
+      kind: requires
+    - from: cortex/tools/table-materializer.js
+      to: lib/node-export.js
+      kind: requires
+    - from: diagnostic/schemas/index.js
+      to: lib/node-export.js
+      kind: requires
+    - from: guardian/lib/agent-facts.js
+      to: lib/node-export.js
+      kind: requires
+    - from: guardian/lib/agent-model-nodes.js
+      to: lib/node-export.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 16
+    deps:
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC1_one_box_shape
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D2_frameworks_as_procedures
+      - docs/2026-11-01-procedures-phasemap.spec::PD4_the_procedure_library
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC4_the_box_kinds_on_the_canvas
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC5_programmable_gate_types
+    dependents: []
+    upstream:
+      - docs/2026-10-28-first-principles-phasemap.spec::FP1_where_a_request_opens
+      - docs/2026-10-28-first-principles-phasemap.spec::FP2_which_option_is_meant
+      - docs/2026-10-28-first-principles-phasemap.spec::FP3_is_the_gate_open
+      - docs/2026-10-28-gated-flows-phasemap.spec::FG2_dropdown_choose
+      - docs/2026-10-28-gated-flows-phasemap.spec::FG_D1_gate_is_a_step_field
+      - docs/2026-10-28-gated-flows-phasemap.spec::FG_D2_choice_is_read_back
+      - docs/2026-10-28-gated-flows-phasemap.spec::GF1_every_field_found_by_its_section
+      - docs/2026-10-28-gated-flows-phasemap.spec::GF2_every_editor_page_known
+      - docs/2026-10-28-gated-flows-phasemap.spec::GF3_text_and_lists_filled_and_read_back
+      - docs/2026-10-28-gated-flows-phasemap.spec::GF4_friction_goes_to_his_site_keys
+      - docs/2026-10-28-gated-flows-phasemap.spec::GG1_every_part_gated
+      - docs/2026-10-28-gated-flows-phasemap.spec::GM1_the_fill_menu_model
+      - docs/2026-10-28-gated-flows-phasemap.spec::GM2_fill_only_what_is_ticked
+      - docs/2026-10-28-gated-flows-phasemap.spec::KB1_choose_waits_and_keys
+      - docs/2026-10-28-gated-flows-phasemap.spec::KB2_site_keys
+      - docs/2026-10-28-gated-flows-phasemap.spec::KB3_site_keys_ui
+      - docs/2026-10-28-gated-flows-phasemap.spec::KB4_gates_on_macro_steps
+      - docs/2026-10-28-gated-flows-phasemap.spec::UG1_one_gate_for_every_element
+      - docs/2026-10-29-pipelines-phasemap.spec::PA4_a_gate_after_every_step
+      - docs/2026-10-29-pipelines-phasemap.spec::PL1_pipeline_core
+      - docs/2026-10-29-pipelines-phasemap.spec::PL6_the_gate_step
+      - docs/2026-10-29-pipelines-phasemap.spec::PL_D1_a_task_is_one_engine_step
+      - docs/2026-10-29-pipelines-phasemap.spec::PL_D2_pipelines_live_in_the_engine_that_runs_them
+      - docs/2026-10-29-pipelines-phasemap.spec::PL_D4_a_gate_is_a_pipeline_block
+      - docs/2026-11-01-eravos-orchestration-tools-phasemap.spec::EO0_the_domain_and_its_door
+      - docs/2026-11-01-eravos-orchestration-tools-phasemap.spec::EO1_flow_tools
+      - docs/2026-11-01-eravos-orchestration-tools-phasemap.spec::EO2_cos_tools
+      - docs/2026-11-01-eravos-orchestration-tools-phasemap.spec::EO3_work_tools
+      - docs/2026-11-01-eravos-orchestration-tools-phasemap.spec::EO5_opened_from_cos
+      - docs/2026-11-01-eravos-orchestration-tools-phasemap.spec::EO_D0_one_door
+      - docs/2026-11-01-macro-blocks-phasemap.spec::MB1_the_gate_between
+      - docs/2026-11-01-macro-blocks-phasemap.spec::MB2_the_blocks_ui
+      - docs/2026-11-01-macro-blocks-phasemap.spec::MB3_one_shape_with_pipelines
+      - docs/2026-11-01-macro-blocks-phasemap.spec::MB_D0_blocks_and_gates
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC12_the_survey
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC1_task_nodes
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC4_deploy_to_any_system
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC_D0_one_console_in_cos
+      - docs/2026-11-01-procedures-phasemap.spec::PD1_procedure_nodes_and_commands
+      - docs/2026-11-01-procedures-phasemap.spec::PD4_the_procedure_library
+      - docs/2026-11-01-procedures-phasemap.spec::PD_D0_a_procedure_is_a_node_file
+      - docs/2026-11-01-procedures-phasemap.spec::PD_D0_addendum_one_procedure_type
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC1_one_box_shape
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC4_the_box_kinds_on_the_canvas
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC5_programmable_gate_types
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D0_reuse_first
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D10_the_canvas_is_the_surface_tools_are_made
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D1_gates_as_compartments
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D2_frameworks_as_procedures
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D4_language
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D8_options_not_neat_boxes
+    downstream: []
+    blockedBy:
+      - docs/2026-11-01-procedures-phasemap.spec::PD4_the_procedure_library
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC4_the_box_kinds_on_the_canvas
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC5_programmable_gate_types
+    unlocks: []
+    conflicts:
+      - with: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC3_the_build_request_step
+        files:
+          - cos/manager/server.js
+      - with: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC7_iterate_to_the_end_state
+        files:
+          - cos/manager/server.js
+    dangling: []
+    lines:
+      - >-
+        layer 16 · blocked by PD4_the_procedure_library, PC4_the_box_kinds_on_the_canvas,
+        PC5_programmable_gate_types
+      - >-
+        depends on (5): PC1_one_box_shape, PC_D2_frameworks_as_procedures,
+        PD4_the_procedure_library, PC4_the_box_kinds_on_the_canvas, PC5_programmable_gate_types ·
+        all upstream 51
+      - 'needed by (0): —'
+      - 'same files as PC3_the_build_request_step with no order between them: cos/manager/server.js'
+      - 'same files as PC7_iterate_to_the_end_state with no order between them: cos/manager/server.js'
+    edges:
+      - from: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC1_one_box_shape
+        kind: declared
+      - from: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D2_frameworks_as_procedures
+        kind: declared
+      - from: docs/2026-11-01-procedures-phasemap.spec::PD4_the_procedure_library
+        kind: declared
+      - from: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC4_the_box_kinds_on_the_canvas
+        kind: inferred
+      - from: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC5_programmable_gate_types
+        kind: inferred

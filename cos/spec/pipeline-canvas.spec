@@ -429,3 +429,16 @@ spec:
 #   - a gate check `node` (and the shipped type node.gatetype): the step gave a node of the type named, with every field its schema requires; a
 #     type Nexus does not define is a gap. Emerge has no YAML reader (CIE14), so COS's door gives it each type's required fields.
 #   - the engine's task event carries the whole value for the host's files (value); COS strips it from the live stream (the preview stays).
+
+# ── ADDENDUM 2026-11-09 (0.60.471) — a framework as a step, recursive; executable processes have schemas (his) ─────────────────────────────────
+# James, 2026-11-09: "Frameworks as steps. Or a framework as a step. Recursive. Fully programmable. Executable processes. Schemas for them."
+# - schema.process (one shape for every executable process: id, name, kind, status, agent, takes, gives, contract, execution, steps) and
+#   schema.process_step (id, section, does, takes, gives, after, run | framework | pipeline, agent, check, when, retries, onFail); KNOWN_TYPES.
+#   schema.framework stays Intelligence's generated .js skeleton (same word, a different thing), with a note pointing here.
+# - The engine has a framework step (lib/automation/steps.js 'framework'; engine.js frameworkFn, a host hook): the host compiles the framework
+#   and every framework its steps run, at any depth, children first (cos/pipeline/framework.eg compile_tree), keeps them as pipelines, and the
+#   step runs as a pipeline step (the same chain, MAX_DEPTH, a child request linked to its parent).
+# - A framework's step runs exactly one thing: run (any engine step), framework (recursive), pipeline, or an agent. A framework that runs itself,
+#   directly or through others, is refused with the loop named, when compiled and when run.
+# - Programmable execution: the framework's execution { retries, onFail } is its steps' default; a step's own wins. The default gate (a node of
+#   the type it gives) applies where an agent does the step; a step that runs something else is checked by what it runs, or by its own check.

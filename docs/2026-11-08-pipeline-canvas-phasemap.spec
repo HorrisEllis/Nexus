@@ -506,3 +506,11 @@ built_2026_11_09_pc2b:
       gate before it, Section 1 the loop around it (PC7), Section 11 somatic and his); "agent": "claude" is the coder's draft too. It compiles to a
       9-step DAG ending in hostile verification. Which Sections are steps, what each gives and who does them: his to correct.
     files: [cos/pipeline/framework.eg (new), cos/pipeline/test/framework.test.eg (new), cos/pipeline/cli.eg, cos/pipeline/index.js, cos/pipeline/runs.eg, cos/pipeline/registry.json (config), cos/manager/server.js, cos/manager/contract.json (config), lib/automation/engine.js, lib/automation/pipeline.js, idearium/cli/route-commands.js, docs/innovation-toolkit.framework, tests/modules/test-cos-pipeline.test.js]
+
+# ── ADDENDUM 2026-11-09 (0.60.471) — PC2 expanded: a framework as a step, recursive; schemas for executable processes (his) ───────────────────────
+# James, 2026-11-09: "Frameworks as steps. Or a framework as a step. Recursive. Fully programmable. Executable processes. Schemas for them."
+expanded_2026_11_09_recursive:
+  PC2_procedures_and_frameworks_as_steps:
+    built: "schema.process, schema.process_step; the engine's framework step (frameworkFn); compile_tree (children first, loops refused named); execution defaults; the default node gate only where an agent does the step"
+    files: [lib/node-schemas/schema.process (new), lib/node-schemas/schema.process_step (new), lib/node-schemas/schema.framework, lib/node-export.js, lib/automation/steps.js, lib/automation/engine.js, cos/manager/automation-door.js, cos/manager/server.js, cos/pipeline/framework.eg, cos/pipeline/cli.eg, cos/pipeline/index.js, cos/pipeline/registry.json (config), cos/pipeline/test/framework.test.eg, tests/modules/test-cos-pipeline.test.js]
+    proof: "eg framework 7/7; test-cos-pipeline 13/13 (CP-12: pipeline → outer → mid → inner, each request linked; a loop of frameworks refused when compiled and when run)"

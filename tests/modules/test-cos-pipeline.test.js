@@ -22,6 +22,8 @@
  *          workflows listening; an agent's event is refused
  *   CP-11  recursive and meta: a .framework that declares its steps compiles to a pipeline in the engine; one that only describes is refused,
  *          named; a pipeline runs it as a step; the child request and its parent step are linked both ways, its nodes in its own files
+ *   CP-12  a framework as a step, recursive: a pipeline's framework step runs outer → mid → inner, each a request linked to its parent; a loop
+ *          of frameworks is refused when compiled and when run, named; the schemas process and process_step are registered
  *   CP-07  an engine with no gate host refuses a typed gate, said; command rows for agents and copilot
  */
 require('../../lib/test-sandbox.js').ensure();
@@ -61,7 +63,7 @@ const eg = (...a) => require('child_process').spawnSync(process.execPath, [path.
   const TEST = { type: 'test', with: { owner: 'tester', route: 'POST /api/tests/run', expect: 'passed' } };
   try {
     await T('CP-00', 'Emerge\'s own tests: the box shape (with its dag hook) and the gate', () => {
-      for (const [f, n] of [['cos/pipeline/test/box.test.eg', 10], ['cos/pipeline/test/gate.test.eg', 8], ['cos/pipeline/test/runs.test.eg', 5], ['cos/pipeline/test/framework.test.eg', 4]]) { const r = eg('test', f); assert.strictEqual(r.status, 0, r.stdout + r.stderr); assert.match(r.stdout, new RegExp(`${n} passed, 0 failed`)); }
+      for (const [f, n] of [['cos/pipeline/test/box.test.eg', 10], ['cos/pipeline/test/gate.test.eg', 8], ['cos/pipeline/test/runs.test.eg', 5], ['cos/pipeline/test/framework.test.eg', 7]]) { const r = eg('test', f); assert.strictEqual(r.status, 0, r.stdout + r.stderr); assert.match(r.stdout, new RegExp(`${n} passed, 0 failed`)); }
     });
 
     await T('CP-01', 'one folder with its registry; the shipped .gatetype files listed; a try decides and does nothing', async () => {
@@ -229,6 +231,34 @@ const eg = (...a) => require('child_process').spawnSync(process.execPath, [path.
       assert.deepStrictEqual(child.nodes.map(n => n.path).sort(), ['nodes/bind/out.contract', 'nodes/look/out.context']);
       assert.strictEqual(child.run.payload.phase, 'met');
       assert.strictEqual((await req(M, 'POST', '/api/cos/frameworks/method.framework/pipeline', { by: 'agent:copilot' })).status, 403);
+    });
+
+    await T('CP-12', 'a framework as a step, recursive: pipeline → outer → mid → inner, linked; a loop of frameworks refused, named', async () => {
+      // James, 2026-11-09: "Frameworks as steps. Or a framework as a step. Recursive. Fully programmable. Executable processes. Schemas for them."
+      const F = path.join(tmp, 'frameworks'); fs.mkdirSync(F, { recursive: true });
+      const put = (id, o) => fs.writeFileSync(path.join(F, `${id}.framework`), `# ${id}\nits prose.\n\`\`\`json framework-steps\n${JSON.stringify(o)}\n\`\`\`\n`);
+      put('outer', { id: 'outer', name: 'Outer', status: 'his', steps: [{ id: 'think', framework: 'mid', gives: ['synthesis'] }, { id: 'close', gives: ['output'], run: { type: 'set', config: { assign: { ok: 'true' } } } }] });
+      put('mid', { id: 'mid', name: 'Mid', status: 'his', steps: [{ id: 'deep', framework: 'inner', gives: ['context'] }] });
+      put('inner', { id: 'inner', name: 'Inner', status: 'his', steps: [{ id: 'look', gives: ['context'], run: { type: 'set', config: { assign: { for: 'x', items: 'y' } } } }] });
+      put('loopa', { id: 'loopa', steps: [{ id: 's', framework: 'loopb', gives: ['output'] }] });
+      put('loopb', { id: 'loopb', steps: [{ id: 's', framework: 'loopa', gives: ['output'] }] });
+      const pid = await make('runs-a-framework', [{ id: 'go', step: { type: 'framework', config: { framework: 'outer' } } }]);
+      const r = await ask(pid, {}); const x = await ended(r.request);
+      assert.deepStrictEqual([x.where, x.run.payload.phase], ['done', 'met'], JSON.stringify(x.steps.map(s => [s.payload.task, s.payload.status, s.payload.error])));
+      const childOf = async (reqId, step) => { const q = (await req(M, 'GET', `/api/cos/pipeline/requests/${reqId}`)).body; const s = q.steps.find(z => z.payload.task === step); return { q, kids: (s && s.payload.children) || [] }; };
+      const a = await childOf(r.request, 'go'); assert.strictEqual(a.kids.length, 1, 'the pipeline step started outer');
+      const b = await childOf(a.kids[0], 'think'); assert.strictEqual(b.kids.length, 1, 'outer started mid');
+      const c = await childOf(b.kids[0], 'deep'); assert.strictEqual(c.kids.length, 1, 'mid started inner');
+      const inner = (await req(M, 'GET', `/api/cos/pipeline/requests/${c.kids[0]}`)).body;
+      assert.deepStrictEqual(inner.run.payload.parent, { request: b.kids[0], step: 'deep' });
+      assert.deepStrictEqual(inner.nodes.map(n => n.path), ['nodes/look/out.context'], 'the deepest framework\'s data, in its own files');
+      const no = await req(M, 'POST', '/api/cos/frameworks/loopa.framework/pipeline', { by: 'person' });
+      assert.strictEqual(no.status, 409); assert.match(no.body.error, /a framework runs itself: loopa → loopb → loopa/);
+      const lp = await make('runs-a-loop', [{ id: 'go', step: { type: 'framework', config: { framework: 'loopa' } } }]);
+      const y = await ended((await ask(lp, {})).request);
+      assert.match(y.steps[0].payload.error || '', /a framework runs itself/);
+      const N = require(path.join(ROOT, 'lib/node-export.js')); assert.ok(N.KNOWN_TYPES.includes('process') && N.KNOWN_TYPES.includes('process_step'));
+      for (const t of ['process', 'process_step']) assert.ok(fs.existsSync(path.join(ROOT, 'lib/node-schemas', `schema.${t}`)), t);
     });
 
     await T('CP-07', 'an engine with no gate host refuses a typed gate, said; command rows for agents and copilot', async () => {
