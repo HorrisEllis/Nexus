@@ -9,6 +9,10 @@ contextBridge.exposeInMainWorld('cosStart', {
   install: () => ipcRenderer.invoke('cos:install'),   // CA5: Install Nexus from GitHub
   restart: (project) => ipcRenderer.invoke('cos:restart', String(project || 'nexus')),   // MG35b: Nexus runs but does not answer
   onStarting: (fn) => ipcRenderer.on('cos:starting', (_e, t) => fn(t)),
+  // SC7 (expanded 2026-11-08, Settings › Startup and services): how COS itself starts. The exe owns these settings (cos/app/settings.js) and
+  // names its own options; the page shows what it is given and asks for one change at a time, which the exe applies as the tray menu does.
+  startup: () => ipcRenderer.invoke('cos:startup'),
+  setStartup: (key, value) => ipcRenderer.invoke('cos:setStartup', String(key), value),
 });
 // CE7 — "Also make it borderless.": the window has no frame unless he chose Windows' one, so the page is told, and its top bar becomes where the
 // window is dragged (cos/ui/shell/page.css). In a browser the same page has no mark and is unchanged. The overlay's height rides on the mark.

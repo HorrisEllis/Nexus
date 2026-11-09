@@ -237,7 +237,7 @@ const SERVER = (envVar, def) => `const http=require('http');const PORT=parseInt(
       await page.goto(`http://127.0.0.1:${U}/shell/#/overview`); await page.waitForSelector('#gear');
       await page.evaluate(() => document.getElementById('gear').click());
       // clicked straight away, while the shell may still be loading its contract (the case that once left the stage empty)
-      const F = `document.querySelector('iframe[data-page="updates"]')`;
+      const F = `(document.querySelector('iframe[data-page="settings"]').contentDocument.querySelector('iframe[data-page="updates"]'))`;   // SC7 2026-11-08: the gear opens Settings › Update
       try { await wait(async () => page.evaluate(`(() => { const f = ${F}; const d = f && f.contentDocument; return !!(d && d.getElementById('settings') && !d.getElementById('settings').hidden && d.querySelector('#policy button')); })()`), 15000); }
       catch (e) { throw new Error('updates page: ' + await page.evaluate(`(() => { const f = ${F}; const d = f && f.contentDocument; return JSON.stringify({ hash: location.hash, frame: !!f, title: document.getElementById('crumb-title').textContent, settings: d && d.getElementById('settings') && d.getElementById('settings').hidden, body: d && d.body && d.body.innerText.slice(0, 300), stage: [...document.querySelectorAll('iframe')].map(f => f.dataset.page + ':' + f.getAttribute('src')).join(' ') }); })()`)); }
       assert.strictEqual(await page.evaluate(`${F}.contentDocument.querySelector('#policy button[aria-checked="true"]').dataset.v`), 'auto');
@@ -248,7 +248,8 @@ const SERVER = (envVar, def) => `const http=require('http');const PORT=parseInt(
       await wait(() => require(path.join(ROOT, 'lib/nexus-update.js')).getPolicy({ root: tmp }).policy === 'notify');
       assert.strictEqual(await page.evaluate(`${F}.contentDocument.querySelector('#policy button[aria-checked="true"]').dataset.v`), 'notify', 'read back on the page');
       assert.ok(await page.evaluate(`!!${F}.contentDocument.querySelector('#history .empty')`), 'the history says it is empty');
-      assert.ok(await page.evaluate(() => !!document.querySelector('#nav-main a[data-page="updates"]')), 'Updates is in the rail');
+      // SC7 expanded 2026-11-08 — James: "updates should move to a update tab." Updates is a tab of Settings now (in the rail's foot); its own route still opens it
+      assert.ok(await page.evaluate(() => !document.querySelector('#nav-main a[data-page="updates"]') && !!document.querySelector('#nav-foot a[data-page="settings"]')), 'Updates moved into Settings, which is in the rail');
       assert.deepStrictEqual(errors, [], 'no page error'); ui.close();
     });
     await browser.close();

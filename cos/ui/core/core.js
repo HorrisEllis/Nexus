@@ -13,7 +13,10 @@
 (function () {
   'use strict';
   const state = { id: null, page: null, contract: null, routes: [], listens: new Set(), emits: new Set(), handlers: new Map(), pending: new Map(), seq: 0 };
-  const inFrame = window.parent && window.parent !== window;
+  // SC7 (2026-11-08): the shell is the top frame; a page can sit one frame deeper (a tab of Settings), so a page speaks to the top, and the
+  // shell answers it there (m.source). For a page in the shell's own frame, top is its parent: nothing changes.
+  const shellWin = window.top;
+  const inFrame = shellWin && shellWin !== window;
 
   const toRe = (p) => new RegExp('^' + p.replace(/[.+?^${}()|[\]\\]/g, '\\$&').replace(/\/\*$/, '(?:/.+)?').replace(/:[a-zA-Z]+/g, '[^/]+') + '$');
   const pathOnly = (p) => p.split('?')[0];
@@ -34,7 +37,7 @@
     if (!state.page) throw new Refused(`page "${id}" is not in the manager's contract: the shell does not load undeclared pages`);
     state.routes = (state.page.routes || []).map(s => { const [method, path] = s.split(' '); return { method, path, re: toRe(path) }; });
     state.listens = new Set(state.page.listens || []); state.emits = new Set(state.page.emits || []);
-    if (inFrame) window.parent.postMessage({ type: 'cos.ready', page: id, listens: [...state.listens] }, location.origin);
+    if (inFrame) shellWin.postMessage({ type: 'cos.ready', page: id, listens: [...state.listens] }, location.origin);
     return state.page;
   }
 
@@ -66,7 +69,7 @@
   }
   function emit(event, data) {
     if (!state.emits.has(event)) { refuse(`this page does not declare that it emits "${event}".`); return false; }
-    if (inFrame) window.parent.postMessage({ type: 'cos.emit', page: state.id, event, data }, location.origin);
+    if (inFrame) shellWin.postMessage({ type: 'cos.emit', page: state.id, event, data }, location.origin);
     else if (event === 'cos.ui.navigate') location.href = `/${data.to}`;
     return true;
   }
@@ -81,7 +84,7 @@
   function confirm({ title, body = '', act = 'Confirm', danger = false }) {
     if (!inFrame) return Promise.resolve(window.confirm(`${title}\n\n${body}`));
     const id = `c${++state.seq}`;
-    return new Promise((res) => { state.pending.set(id, res); window.parent.postMessage({ type: 'cos.confirm', id, title, body, act, danger }, location.origin); });
+    return new Promise((res) => { state.pending.set(id, res); shellWin.postMessage({ type: 'cos.confirm', id, title, body, act, danger }, location.origin); });
   }
   const notice = (level, text) => (state.emits.has('cos.ui.notice') ? emit('cos.ui.notice', { level, text }) : console.log(`[${level}] ${text}`));
   const navigate = (to) => emit('cos.ui.navigate', { to });
@@ -133,6 +136,6 @@
 
   // SC5 0.60.380 — the shell's keys (Ctrl+K Go to, Ctrl+` the command line) reach it from inside a page's frame too: found driving the
   // console in Clear Glass, where a key pressed with focus in a page never reached the shell (Ctrl+K had the same gap since MG18)
-  if (inFrame) addEventListener('keydown', (e) => { if ((e.ctrlKey || e.metaKey) && (e.key === 'k' || e.key === 'K' || e.key === '`')) { e.preventDefault(); window.parent.postMessage({ type: 'cos.key', key: e.key.toLowerCase() }, location.origin); } });
+  if (inFrame) addEventListener('keydown', (e) => { if ((e.ctrlKey || e.metaKey) && (e.key === 'k' || e.key === 'K' || e.key === '`')) { e.preventDefault(); shellWin.postMessage({ type: 'cos.key', key: e.key.toLowerCase() }, location.origin); } });
   window.COS = { page, call, on, emit, confirm, notice, navigate, h, icon, esc, ago, dur, clock, say, down, param, stateLabel, Refused, Down, get contract() { return state.contract; }, get self() { return state.page; } };
 })();

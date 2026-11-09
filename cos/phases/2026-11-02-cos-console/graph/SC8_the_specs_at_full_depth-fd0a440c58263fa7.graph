@@ -7,11 +7,11 @@ intent: null
 summary: 5 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793940675902
+exported_at: 1794194542902
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793940675902
-lastSeenAt: 1793940675902
+firstSeenAt: 1794194542902
+lastSeenAt: 1794194542902
 fingerprint: null
 payload:
   for: SC8_the_specs_at_full_depth
@@ -46,12 +46,14 @@ payload:
   crossings: []
   ready: true
   dag:
-    layer: 5
+    layer: 7
     deps:
       - docs/2026-11-02-cos-console-phasemap.spec::SC7_the_updates_section
       - docs/2026-11-02-cos-disk-phasemap.spec::DK7_snapshots_inside_the_disk
     dependents: []
     upstream:
+      - docs/2026-11-02-cos-console-phasemap.spec::SC11_the_console_tab
+      - docs/2026-11-02-cos-console-phasemap.spec::SC14_each_system_opens_in_its_own_window
       - docs/2026-11-02-cos-console-phasemap.spec::SC1_the_bell
       - docs/2026-11-02-cos-console-phasemap.spec::SC2_configuration_per_system
       - docs/2026-11-02-cos-console-phasemap.spec::SC3_system_command_line
@@ -76,8 +78,8 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - layer 5
-      - 'depends on (2): SC7_the_updates_section, DK7_snapshots_inside_the_disk · all upstream 18'
+      - layer 7
+      - 'depends on (2): SC7_the_updates_section, DK7_snapshots_inside_the_disk · all upstream 20'
       - 'needed by (0): —'
     edges:
       - from: docs/2026-11-02-cos-console-phasemap.spec::SC7_the_updates_section

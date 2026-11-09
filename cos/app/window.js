@@ -50,4 +50,19 @@ function frameOptions(frame = 'none') {
   return { titleBarStyle: 'hidden', titleBarOverlay: { color: '#00000000', symbolColor: '#e6e8ef', height: OVERLAY_HEIGHT } };
 }
 
-module.exports = { windowTarget, cockpitUp, allowedUrl, cockpitUrl, frameOptions, OVERLAY_HEIGHT, COCKPIT_PORT, MODULE_ID: 'cos.app.window', VERSION: '1.0.0' };
+// SC7 (expanded 2026-11-08) — Settings › Startup and services: COS's own startup options, named by their owner (the exe, §5.15), with the tray
+// menu's words (desktop/main.js buildTray). applies: what the exe re-applies after a change (the logon task, the service), or null. The page
+// draws what it is given: a switch (bool) or a choice (choices), and names none of them.
+const STARTUP = Object.freeze([
+  { key: 'startWithWindows', label: 'Start COS with Windows', about: 'a logon task with admin rights; or the login item, if the approval is declined', kind: 'bool', applies: 'logon' },
+  { key: 'startElevated', label: 'Start with admin rights', about: 'the logon task runs with the highest privileges (one approval)', kind: 'bool', applies: 'logon' },
+  { key: 'startHidden', label: 'Start in the tray', about: 'started at logon, COS goes to the tray instead of opening its window', kind: 'bool', applies: null },
+  { key: 'runAsService', label: 'Run Nexus as a Windows service', about: 'NexusCOS, through nssm.exe: systems stay up with no one signed in; windowed systems start when you sign in', kind: 'bool', applies: 'service' },
+  { key: 'onClose', label: 'Closing the window', about: 'the tray keeps every system running; quitting stops what COS started', kind: 'choice', choices: [{ value: 'tray', label: 'hides it to the tray' }, { value: 'quit', label: 'quits COS' }], applies: null },
+  { key: 'onMinimize', label: 'Minimizing the window', about: 'where the window goes', kind: 'choice', choices: [{ value: 'taskbar', label: 'the taskbar' }, { value: 'tray', label: 'the tray' }], applies: null },
+]);
+function startupOptions(settings = {}) {
+  return { owner: 'cos.app', options: STARTUP.map(o => ({ ...o, value: settings[o.key] === undefined ? null : settings[o.key] })), applied: { logon: settings.logonApplied || null, service: settings.serviceApplied || null } };
+}
+
+module.exports = { startupOptions, STARTUP, windowTarget, cockpitUp, allowedUrl, cockpitUrl, frameOptions, OVERLAY_HEIGHT, COCKPIT_PORT, MODULE_ID: 'cos.app.window', VERSION: '1.0.0' };

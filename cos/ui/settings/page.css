@@ -1,0 +1,8 @@
+/* cos/ui/settings/page.css — Settings' tabs and its stage (SC7, expanded 2026-11-08); the tabs look as the approved preview (settings-preview/) */
+.st-page { display: flex; flex-direction: column; min-height: 100vh; box-sizing: border-box; }
+.st-tabs { display: flex; gap: 4px; margin: 6px 0 14px; flex-wrap: wrap; }
+.st-tabs button { padding: 7px 14px; border-radius: 8px; border: 1px solid rgba(255,255,255,.08); background: transparent; color: inherit; font: inherit; font-size: 13px; opacity: .75; cursor: pointer; }
+.st-tabs button[aria-selected="true"] { opacity: 1; border-color: rgba(120,200,255,.5); background: rgba(120,200,255,.08); }
+.st-stage { display: flex; min-height: 520px; }
+.st-stage iframe { flex: 1; border: 0; overflow: hidden; width: 100%; min-height: 520px; background: transparent; display: none; }
+.st-stage iframe.on { display: block; }

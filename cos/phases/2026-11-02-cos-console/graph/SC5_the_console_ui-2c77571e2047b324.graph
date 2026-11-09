@@ -7,11 +7,11 @@ intent: null
 summary: 8 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793889272974
+exported_at: 1794194542829
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793889272974
-lastSeenAt: 1793889272974
+firstSeenAt: 1794194542829
+lastSeenAt: 1794194542829
 fingerprint: null
 payload:
   for: SC5_the_console_ui
@@ -88,7 +88,6 @@ payload:
       - docs/2026-11-02-cos-console-phasemap.spec::SC9_the_zip_dropzone_updater
     blockedBy: []
     unlocks:
-      - docs/2026-11-02-cos-console-phasemap.spec::SC7_the_updates_section
       - docs/2026-11-02-cos-console-phasemap.spec::SC11_the_console_tab
     conflicts: []
     dangling: []
@@ -99,7 +98,7 @@ payload:
         SC4_add_a_system · all upstream 9
       - >-
         needed by (2): SC7_the_updates_section, SC11_the_console_tab · all downstream 8 · finishing
-        it unlocks SC7_the_updates_section, SC11_the_console_tab
+        it unlocks SC11_the_console_tab
     edges:
       - from: docs/2026-11-02-cos-console-phasemap.spec::SC1_the_bell
         kind: declared

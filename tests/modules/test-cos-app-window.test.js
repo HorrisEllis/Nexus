@@ -96,7 +96,8 @@ async function test(id, d, fn) { try { await fn(); console.log(`  ✓ ${id} ${d}
     assert.ok(/Versions & manual update/.test(m) && /Start COS with Windows/.test(m) && /Start in the tray/.test(m) && /Admin rights at startup/.test(m));
     assert.ok(/applyLogon\(\)\.catch/.test(m) && /process\.argv\.includes\('--hidden'\)/.test(m));
     const sp = fs.readFileSync(path.join(ROOT, 'cos/app/desktop/starting-preload.js'), 'utf8');
-    assert.deepStrictEqual([...sp.matchAll(/ipcRenderer\.invoke\('cos:(\w+)'/g)].map(x => x[1]), ['starting', 'openVersions', 'start', 'install', 'restart'], 'the cockpit\'s window gets five calls, nothing else (CA5 added install; MG35b 0.60.418 added restart: Nexus runs but does not answer)');
+    assert.deepStrictEqual([...sp.matchAll(/ipcRenderer\.invoke\('cos:(\w+)'/g)].map(x => x[1]), ['starting', 'openVersions', 'start', 'install', 'restart', 'startup', 'setStartup'], 'the cockpit\'s window gets seven calls, nothing else (CA5 added install; MG35b 0.60.418 added restart: Nexus runs but does not answer; SC7 2026-11-08 added startup and setStartup: Settings › Startup and services, only the options the exe names)');
+    assert.ok(/h\('setStartup'[^\n]*startupOptions\(ctl\.settings\(\)\.settings\)\.options\.find/.test(m), 'setStartup changes only an option the exe itself names');
     const B = require(path.join(ROOT, 'scripts/build-cos-app.js'));
     for (const f of ['cos/app/window.js', 'cos/app/logon.js', 'cos/app/desktop/starting.html', 'cos/app/desktop/starting-preload.js']) assert.ok(B.FILES.includes(f), `${f} staged into the exe`);
   });
