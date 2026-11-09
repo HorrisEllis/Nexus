@@ -1,0 +1,123 @@
+# Idearium's build pipeline — James, 2026-11-08: "First one. Like pipelines." · "hooking in idearium. The pipeline in idearium is meant to be shown on the canvas.
+# Gates are inbetween steps. So compartment, gate, compartment, gate." (OC9; AE_D7). Each step is an api step to nexus://idearium (COS routes it).
+envelope: 1
+uuid: nexus-export-pipeline-idearium-build
+type: pipeline
+id: idearium-build
+context: Idearium › pipelines (served at GET /api/pipelines, run by COS)
+intent: >-
+  Idearium's build pipeline: what is ready, whether a phase already covers it, the phase mapped, its DAG whole, its graph, the build, closed on
+  evidence, logged in the ledger. Each step calls Idearium by its own route (nexus://idearium); a gate stands after every step: compartment, gate,
+  compartment, gate.
+summary: 8 tasks · Idearium's own routes
+system: idearium
+tags:
+  - pipeline
+  - idearium
+  - build
+  - bundled
+exported_at: 1794193416622
+source: idearium/pipelines
+occurrences: 1
+payload:
+  id: idearium-build
+  format: nexus-pipeline
+  version: 1
+  name: Idearium build pipeline
+  description: >-
+    Idearium's build pipeline: what is ready, whether a phase already covers it, the phase mapped, its DAG whole, its graph, the build, closed on
+    evidence, logged in the ledger. Each step calls Idearium by its own route (nexus://idearium); a gate stands after every step: compartment, gate,
+    compartment, gate.
+  vars:
+    repo: ''
+    phase: ''
+    files: ''
+    does: ''
+    why: ''
+  settings:
+    parallel: 1
+  tasks:
+    - id: ready
+      label: What can be built now
+      depends_on: []
+      step:
+        type: api
+        config:
+          url: nexus://idearium/api/phases/next
+          method: GET
+      gate: &ref_0
+        contains: '"ok":true'
+    - id: covered
+      label: Does a phase already cover it
+      depends_on:
+        - ready
+      step:
+        type: api
+        config:
+          url: nexus://idearium/api/phases/ledger/covers
+          method: POST
+          body: '{"files":"{{vars.files}}","does":"{{vars.does}}"}'
+      gate: *ref_0
+    - id: map
+      label: The phase is mapped
+      depends_on:
+        - covered
+      step:
+        type: api
+        config:
+          url: nexus://idearium/api/repos/{{vars.repo}}/phases/map
+          method: GET
+      gate: *ref_0
+    - id: dag
+      label: Its DAG is whole
+      depends_on:
+        - map
+      step:
+        type: api
+        config:
+          url: nexus://idearium/api/repos/{{vars.repo}}/phases/dag?phase={{vars.phase}}
+          method: GET
+      gate: *ref_0
+    - id: graph
+      label: 'Its graph: files, crossings'
+      depends_on:
+        - dag
+      step:
+        type: api
+        config:
+          url: nexus://idearium/api/repos/{{vars.repo}}/phases/graph?phase={{vars.phase}}
+          method: GET
+      gate: *ref_0
+    - id: build
+      label: Build the phase
+      depends_on:
+        - graph
+      step:
+        type: api
+        config:
+          url: nexus://idearium/api/repos/{{vars.repo}}/phases/build
+          method: POST
+          body: '{"phase":"{{vars.phase}}"}'
+      gate: *ref_0
+    - id: evidence
+      label: Closed on evidence
+      depends_on:
+        - build
+      step:
+        type: api
+        config:
+          url: nexus://idearium/api/repos/{{vars.repo}}/phases/evidence
+          method: POST
+          body: '{"phase":"{{vars.phase}}"}'
+      gate: *ref_0
+    - id: ledger
+      label: Logged in the phase ledger
+      depends_on:
+        - evidence
+      step:
+        type: api
+        config:
+          url: nexus://idearium/api/phases/ledger/log
+          method: POST
+          body: '{"phase":"{{vars.phase}}","event":"built","why":"{{vars.why}}","by":"pipeline"}'
+      gate: *ref_0

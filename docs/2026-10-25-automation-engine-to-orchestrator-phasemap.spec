@@ -279,6 +279,27 @@ phases:
   # The UI (AE5, COS's Workflows page) waits on his critique of the preview shown 2026-11-08 (edit here or on ERAVOS's canvas; the page's name;
   # whether the Pipelines page merges into it).
   # ── ADDENDUM 2026-11-08 — the architecture of COS's automation, his ──
+  AE_D7_one_engine_in_cos_brainos_stripped:
+    status: "DECIDED 2026-11-09 by James; one reading to confirm (below)"
+    his_words: >-
+      James, 2026-11-08/09: "BrainOS looks horrible. It was supposed to be the canvas remember? With only the automation tools for steps. What happened to that. Each system needs to have what it needs to function. So no, don’t move it." · "Merge automation engine and BrainOS backend into the orchastrator then into cos using the canvas." · "Into cos backend. One agnostic automation engine. Like stripping the features from BrainOS, its ui is bad. Also hooking in idearium. The pipeline in idearium is meant to be shown on the canvas. Gates are inbetween steps. So compartment, gate, compartment, gate."
+    context: >-
+      Asked, side by side: (a) the engine stays shared in lib/automation (AE_D2, his "No clearglass keeps its"), (b) COS and Clear Glass each their
+      own copy, (c) Clear Glass uses COS's engine by route; and BrainOS (lib/ui/brainos) migrated: its editor to COS's tab, its canvas to ERAVOS.
+    chosen: >-
+      One agnostic automation engine in COS's backend (the supervisor, AE_D6); ERAVOS's canvas is where its steps show (BrainOS was meant to be that
+      canvas, with only the automation tools for steps). BrainOS's features are stripped into the engine and its UI dropped. Idearium's pipeline is
+      shown on the canvas, a gate between steps: compartment, gate, compartment, gate.
+    reading_to_confirm: >-
+      "Each system needs to have what it needs to function. So no, don't move it." read as: Clear Glass keeps its own engine for its browser work (his
+      11-08 AE_D2 stands), so lib/automation is not moved out from under it. The other reading — move nothing of BrainOS — is not taken, since he then
+      says to strip it.
+    found_2026_11_09: >-
+      BrainOS (lib/ui/brainos, 6 files, 2,685 lines) never had a backend of its own: its own header says "NO NEW BACKEND — every capability below is
+      a thin client over clear-glass/src/mesh/automation-engine.js". Its step set (agent, command, condition, delay, http, notify, trigger) is all in
+      the engine COS runs (24 kinds). Its other half, the agent mesh (/agent-mesh/routes), is Clear Glass's own system, reached by its routes. So
+      nothing is stripped into the engine; BrainOS's UI is archived (§0.3) when its last reader moves (idearium/lib/flow-sources.js, BX).
+    by_the_axioms: "§5.9/§5.15 (each system has what it needs; reached by routes), §8.6 (nothing rebuilt that the engine has), §0.3 (archived, not deleted)"
   AE_D6_the_supervisor_is_the_orchestrator:
     status: "DECIDED 2026-11-08 by James — supersedes AE_D5's \"Cos ui is the orchestrator. Is nexus.\" (kept below, §0.3)"
     his_words: >-

@@ -419,3 +419,8 @@ handoff_2026_11_08: >-
 #   package"); COS's Pipelines page shows no kind word.
 # - The 3D studio layout he liked is the Workshop spec's later phases (ERAVOS specs/eravos.workshop.spec); the flat W1 is what is built.
 # - Still his: the name (Step or Compartment; he said "eravos already uses compartments … thats find actually").
+
+# ── ADDENDUM 2026-11-09 (0.60.463) — gates stand between steps on the canvas ──
+# James: "Gates are inbetween steps. So compartment, gate, compartment, gate." box.eg with_gates: a step's gate becomes its own box after it; the
+# step's wires out leave from its gate. Idearium's build pipeline opens as 16 tools (8 steps, 8 gates) and 15 wires, no faults
+# (cos/ui/automation/preview/idearium-on-canvas.png). eg test 9/9, test-pipeline-box 6/6 (PB-06).

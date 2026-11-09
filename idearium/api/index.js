@@ -3537,6 +3537,7 @@ const ROUTE_CAP = {
   'system.homes': CAPS.READ_IDEAS,   // 0.60.129 DB17
   'system.sovereign': CAPS.READ_IDEAS,   // 0.60.133 IM1
   'system.tables': CAPS.READ_IDEAS,   // 0.60.250 SV1 — which system writes and reads which table of the shared store
+  'pipeline.list': CAPS.READ_IDEAS, 'pipeline.show': CAPS.READ_IDEAS,   // 0.60.463 — Idearium's own .pipeline files (idearium/pipelines), read by COS through these routes
   'procedure.list': CAPS.READ_IDEAS, 'procedure.show': CAPS.READ_IDEAS, 'procedure.run': CAPS.ADMIN,   // 0.60.354 PD1 — a procedure can change Nexus's code (behind his yes)
   'update.check': CAPS.READ_IDEAS, 'update.history': CAPS.READ_IDEAS, 'update.apply': CAPS.ADMIN, 'update.keep-local': CAPS.ADMIN, 'update.rollback': CAPS.ADMIN, 'update.restart': CAPS.ADMIN, 'update.policy.get': CAPS.READ_IDEAS, 'update.policy.set': CAPS.ADMIN, 'update.auto': CAPS.READ_IDEAS, 'update.backup': CAPS.ADMIN,   /* 0.60.363 UP13 — a backup of Nexus before an update */   // 0.60.252 UP3 — changing Nexus's own code is an admin act
   'system.shape': CAPS.READ_IDEAS,   // 0.60.138 IM5
@@ -3854,6 +3855,8 @@ function matchRoute(method, url) {
     ['GET',    ['api','system','homes'], 'system.homes'],
     ['GET',    ['api','system','sovereign'], 'system.sovereign'],
     ['GET',    ['api','system','tables'], 'system.tables'],
+    ['GET',    ['api','pipelines'], 'pipeline.list'],                // 0.60.463 — James, 2026-11-08: "hooking in idearium. The pipeline in idearium is meant to be shown on the canvas."
+    ['GET',    ['api','pipelines',':id'], 'pipeline.show'],
     ['GET',    ['api','procedures'], 'procedure.list'],              // 0.60.354 PD1 — the .procedure library (idearium/procedures)
     ['GET',    ['api','procedures',':id'], 'procedure.show'],
     ['POST',   ['api','procedures',':id','run'], 'procedure.run'],   // { yes } — his yes passes its confirm steps; the CLI row refuses --yes to an agent
@@ -6317,6 +6320,20 @@ async function handle(req, res, route, query, body) {
     }
     // 0.60.354 PD1 — James, 2026-11-01: "a command like a batch but a .framework or .macro that me and copilot can use" · ".procedure".
     // Idearium serves the library it holds (idearium/procedures, §5.15); lib/automation/procedure.js runs it with exec = the one command door.
+    // 0.60.463 — Idearium's pipelines are its own: real .pipeline node files in idearium/pipelines/ (the shared node envelope, type pipeline), served
+    // here so COS's engine (the orchestrator) imports them by route and ERAVOS shows them on its canvas. James, 2026-11-08: "Into cos backend. One
+    // agnostic automation engine." · "hooking in idearium. The pipeline in idearium is meant to be shown on the canvas. Gates are inbetween steps."
+    case 'pipeline.list': case 'pipeline.show': {
+      const dir = process.env.NEXUS_PIPELINES_DIR || path.join(path.dirname(_fileURLToPath(import.meta.url)), '..', 'pipelines');
+      const files = (() => { try { return fs.readdirSync(dir).filter(f => f.endsWith('.pipeline')).sort(); } catch (_) { return []; } })();
+      const yaml = _require('js-yaml');
+      const read = (f) => { const text = fs.readFileSync(path.join(dir, f), 'utf8'); let n = null; try { n = yaml.load(text); } catch (e) { return { id: f.replace(/\.pipeline$/, ''), file: f, bad: e.message, text }; }
+        const p = (n && n.payload) || {}; return { id: f.replace(/\.pipeline$/, ''), file: f, name: p.name || f, about: p.description || '', steps: (p.tasks || []).length, text }; };
+      if (action === 'pipeline.list') return ok(res, { dir, pipelines: files.map(read).map(({ text, ...x }) => x) });
+      const f = files.find(x => x.replace(/\.pipeline$/, '') === String(params.id || ''));
+      if (!f) return err(res, 404, `no pipeline ${params.id} — pipelines lists them`);
+      return ok(res, { pipeline: read(f) });
+    }
     case 'procedure.list': case 'procedure.show': case 'procedure.run': {
       const RP = _require('../../lib/repo-procedures.js');   // his 0.60.118 .procedure, extended (PD1): one type, one module
       const dir = process.env.NEXUS_PROCEDURES_DIR || path.join(path.dirname(_fileURLToPath(import.meta.url)), '..', 'procedures');   // the env: a test's own folder

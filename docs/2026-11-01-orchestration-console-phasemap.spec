@@ -168,7 +168,13 @@ phases:
     proof: "MOD-OC-CONSOLE's acceptance, in Clear Glass"
 
   OC9_templates:
-    status: OPEN
+    status: "OPEN — Idearium's build pipeline BUILT 0.60.463 (idearium/pipelines/idearium-build.pipeline; GET /api/pipelines; cos automation import-from idearium; test-pipeline-box PB-06)"
+    expanded_2026_11_09: >-
+      James, 2026-11-08/09: "BrainOS looks horrible. It was supposed to be the canvas remember? With only the automation tools for steps. What happened to that. Each system needs to have what it needs to function. So no, don’t move it." · "Merge automation engine and BrainOS backend into the orchastrator then into cos using the canvas." · "Into cos backend. One agnostic automation engine. Like stripping the features from BrainOS, its ui is bad. Also hooking in idearium. The pipeline in idearium is meant to be shown on the canvas. Gates are inbetween steps. So compartment, gate, compartment, gate."
+      Built: Idearium's build pipeline as a real .pipeline in Idearium's own folder, served by Idearium (GET /api/pipelines, /api/pipelines/:id; row
+      idearium-pipelines), imported by COS's engine by route (cos automation systems-pipelines idearium | import-from idearium idearium-build).
+      Eight steps, each an api step to nexus://idearium (what is ready, ledger covers, the phase map, its DAG, its graph, build, evidence, the
+      ledger), a gate after each. On ERAVOS's canvas: 16 tools, compartment, gate, compartment, gate (box.eg with_gates), 15 wires, no faults.
     expanded_2026_11_08_ip: >-
       James, 2026-11-08: "First one. Like pipelines. Which can use the .frameworks for procedures." (PC_D6 answered (a), docs/2026-11-08-pipeline-
       canvas-phasemap.spec.) The first template is Idearium's build pipeline: idea → spec → phases → each phase specced → build, as a .pipeline whose
