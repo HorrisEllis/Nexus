@@ -19,7 +19,7 @@ payload:
   repo:
     url: https://github.com/HorrisEllis/emerge
     commit: f02324025d60b9fe8a38e201f65770e2f13f0079
-    lockedAt: '2026-11-07'
+    lockedAt: '2026-11-09'
     path: emerge/
     note: >-
       the snapshot changes only by a new lock (scripts/emerge-lock.js --write). Since 2026-11-05 (EAS_D6, his "A": Emerge is a system in Nexus, emerge/ its
@@ -178,6 +178,66 @@ payload:
       emerge/core/seed.js: 6cf719883a3fb4f7458fca5d870ec1e838359d2408ce1915844d388d62b301d1
       emerge/core/transition.js: db1972f0205978cd7b028c8adea82b0c5efd861c0a7e22a84bcdc7fffe8bb772
       emerge/data/baseline/.gitkeep: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+      emerge/data/ledger/2026-11-01T10-06-40-930Z/events.jsonl: 7fe94b7125e61f01a2f4e5f577dd327ea39ba15ed13cedc3e3f43cc42755e938
+      emerge/data/ledger/2026-11-01T10-06-44-827Z/events.jsonl: 6caf5d52d68f108c628c1e59346a24172beebbe563378687601b5a09be7fe10e
+      emerge/data/ledger/2026-11-01T10-06-45-192Z/events.jsonl: 06780ffb43804be7adb6bbb9633c677e06d5f5854f83c984da7a5cb89067325f
+      emerge/data/ledger/2026-11-01T10-06-46-188Z/events.jsonl: 1b27fd938fb6c84b1b44c9939988d12a8f8a2f706e119d369c0be0b666f4da3b
+      emerge/data/ledger/2026-11-01T10-06-48-787Z/events.jsonl: f0285f8b6c59a308dfb80d15ea5bd12a5556302bc59e09bf2f6981007f604900
+      emerge/data/ledger/2026-11-01T10-07-00-059Z/events.jsonl: 8261e485966630ac9d49dff2c911bf711def6a61ee746d391e6a5d447a45be1f
+      emerge/data/ledger/2026-11-01T10-07-00-399Z/events.jsonl: f199d028a7b52e5fe6c5b4ad393bd2df1e283e97246ea35df377a450c3d2d638
+      emerge/data/ledger/2026-11-01T10-07-01-351Z/events.jsonl: ccb5ae13b8791aeae0e813eb63fa2db49f8cb09353fb61af319e9130d1bb1f15
+      emerge/data/ledger/2026-11-01T10-07-03-999Z/events.jsonl: 4ac0ee8937626f81d732ea135824044dc0abd7070e3a284d5c0866681f13850a
+      emerge/data/ledger/2026-11-01T10-13-08-964Z/events.jsonl: d314cc4560970a6e58bc7c3051f55dc4c0de73c10578e64fa6022eb7ccf2d4e5
+      emerge/data/ledger/2026-11-01T10-13-28-323Z/events.jsonl: 8f8ca03d8ca72e0df9abc9b17f9427a11a3386f1395d27589a9537b3d7f4c1b6
+      emerge/data/ledger/2026-11-01T15-52-56-006Z/events.jsonl: bc9b635aadd97556cc77464fa97dcd1a416bd54e180d2a525411becef38a030c
+      emerge/data/ledger/2026-11-01T23-11-41-939Z/events.jsonl: b0d307e8d9b9f75ea2178afdfb2482ecc350f752cd964d3095f14e104dedf89e
+      emerge/data/ledger/2026-11-08T11-51-28-522Z/events.jsonl: 6b16b4950198cd22219ec1849d26920d6fc60d374b658cb305859dd777953ef8
+      emerge/data/ledger/2026-11-08T14-12-27-194Z/events.jsonl: 0395fc89fd270827b0aa9db7ffe35796cf71f220d69a12344ec58544cd27b326
+      emerge/data/ledger/2026-11-08T14-17-23-554Z/events.jsonl: d71be573a4dc10544ed4e0519b2328d669a7a25b930a5c88e79bb57586d3c3f6
+      emerge/data/ledger/2026-11-08T14-18-00-566Z/events.jsonl: eea06cc38dce284f991c12b5f8ec5908cd9f294b6d239081cf8d75e6641a8e5f
+      emerge/data/ledger/2026-11-08T14-21-51-140Z/events.jsonl: c6f04ebf0ce20b3c1b7d69ef494bd20aa26709353ff569e7fa119d00f8bc895d
+      emerge/data/ledger/2026-11-08T14-31-00-888Z/events.jsonl: 40962846913e95bae24d371ca706bdadb92eb89bc10c622d2d7df8b0cc57de8e
+      emerge/data/ledger/2026-11-08T14-38-36-104Z/events.jsonl: c983ff178e8c04f1f743cf4a8d6eaf0eae24781d423b3cfe9eb22b63e60889ad
+      emerge/data/ledger/2026-11-08T14-41-44-430Z/events.jsonl: a9ec41155dba16f94771e610844cafb5f553ef6389b788a36069c459fa2d949e
+      emerge/data/ledger/2026-11-08T14-44-27-759Z/events.jsonl: 615413e2292d688e1c18e521575feeeff753f308925e7f1211b29f1b9ec29e19
+      emerge/data/ledger/2026-11-08T14-49-34-405Z/events.jsonl: 139e358c0841b7ecfe98281a1ce0b826e575cf28f4be859e85ca6adf95c613e8
+      emerge/data/ledger/2026-11-08T16-57-55-004Z/events.jsonl: 6f419557f994c6f7c1834c225cf1bdd6eeec68e46c26bcb0049226c1cc92b8be
+      emerge/data/ledger/2026-11-08T17-06-25-086Z/events.jsonl: 275c2123c92b4ea1884e3906d1c5076fd3d2baad9098dbc869b60da1d275d2c4
+      emerge/data/ledger/2026-11-08T22-31-45-405Z/events.jsonl: 76064f983da32de5309eccddc9425c11fe6893bb339b140fa098e5d3cecd4611
+      emerge/data/ledger/2026-11-08T22-31-45-559Z/events.jsonl: a29ebe62450c93709990e618d033ff5a0d8daa5054fe05e1db59fa9ffffc7598
+      emerge/data/ledger/2026-11-08T22-31-45-636Z/events.jsonl: f663dd5e849c75a84e84fc8c110a0aebaf404230434db20fee2d9ec086da1af7
+      emerge/data/ledger/2026-11-08T22-39-47-627Z/events.jsonl: 405069c4dea059fb9be8883d8a3b1a46567b52405e3f959401162e0a4b88ab41
+      emerge/data/ledger/2026-11-08T22-39-47-703Z/events.jsonl: 527deb0aa27d450d5d7f12631c0ca85e2e038b1bd4a9de44235a460e41591260
+      emerge/data/ledger/2026-11-09T03-06-16-769Z/events.jsonl: f3ec00027dc4a8a3413fad739f75410ccec31ffc236b13c93162bff2cd981c56
+      emerge/data/ledger/2026-11-09T03-06-16-986Z/events.jsonl: 82241f225ad68e15d882ab69da14c602c9d6dc12cc929c91078784350177e5eb
+      emerge/data/ledger/2026-11-09T03-06-18-325Z/events.jsonl: 4b546a8bc39fc1ac01912cda0d2b86ad08a11ec2129432fabf3a5fa4d9a98796
+      emerge/data/ledger/2026-11-09T03-06-19-508Z/events.jsonl: fe1a6304ff858d7530297e08a1d80be6a76418658320231f963928d5dad33f0b
+      emerge/data/ledger/2026-11-09T03-22-22-681Z/events.jsonl: b57814ca6a8d8c70ea515e7cf7328c8e83658fb9eb5dbcdcdad363439b21645f
+      emerge/data/ledger/2026-11-09T03-22-22-795Z/events.jsonl: 4e065369822539822b8d38832d3362f20471ed3abcdb436c748dd63a589623e4
+      emerge/data/ledger/2026-11-09T03-22-22-875Z/events.jsonl: d49b6a5db4cb401a5373ae53e99524e797e90f519bee396cc16e3d2ca3d88bc3
+      emerge/data/ledger/2026-11-09T03-50-28-302Z/events.jsonl: 25cb48d66dae00f6615d8865e5f1751df4a0a65c43ad58a262f1d9798609e0aa
+      emerge/data/node-index/nodes_bundle.json: 1a860a7eb682808870cc353370170e75660f8f2e8ecb1298c02f9f79a762a421
+      emerge/data/node-index/nodes_bundle_ledger.jsonl: 66be570590160dc8a923d35feb7749cc20861c1f1fb8c32aa495ece820632da6
+      emerge/data/node-index/nodes_capability.json: 13fef49118779a2115783d32a314f681cfb6889bd32afedeafd98155313ee77d
+      emerge/data/node-index/nodes_capability_ledger.jsonl: 481b5b2098c3e6f62e1a20e921f2098309990b1aaf7d7bd74d31274cb6069552
+      emerge/data/node-index/nodes_command.json: a45d68cb43e7e0c75913c94218a36d4e23107f3e9e15e1e8e138420ee25f3b25
+      emerge/data/node-index/nodes_command_ledger.jsonl: 3f9316ccb9cab6a714cc35630749e20bbfd177d4314eb0cb20585eabf5d0ade1
+      emerge/data/node-index/nodes_component.json: 36cab5bdeb05a673ce026f1d7fe706369d75f959243ba030d2a8786cd1da9706
+      emerge/data/node-index/nodes_component_ledger.jsonl: af71934c2710638cb199d22a53d0021d218f0e3ab7cf67eff1eb00fb43c05bba
+      emerge/data/node-index/nodes_event.json: a6812e4c6136dc0e40bcee1b75e41fd51a6b4f00aac5e2f89097f764b37bb791
+      emerge/data/node-index/nodes_event_ledger.jsonl: 5c844b5d4aef5cf458fdf4371dc056bdbdeac03d6964f8a177f307c95e315043
+      emerge/data/node-index/nodes_hook.json: 3075662a3ad8ddcab148856018c67501ecc014cdf974c35d2a283a397bfb3029
+      emerge/data/node-index/nodes_hook_ledger.jsonl: dcfe7ae811cc907eea311fef5fd43305e9a7fa95cbd8ca178f617090a90e772a
+      emerge/data/node-index/nodes_module.json: 276ca165e14cf75d55edb1abdc45ad8f70b699647c6c4323c636580fff374c4f
+      emerge/data/node-index/nodes_module_ledger.jsonl: 059d2ef9785583e0fc1e4dbf4880bc791222e21c2a1aa913e06e0f7dc7b7ac95
+      emerge/data/node-index/nodes_route.json: 9707db149b321a77356afcde7ab8fe1b38a938d18af300dbd2d655159cccdeba
+      emerge/data/node-index/nodes_route_ledger.jsonl: f3a920fc4f9de43162cc2b57a0b58efc3bf5746d45676b0644fc5320c07a55d9
+      emerge/data/nodes/bundle/emerge.compiler.spec.bundle: 5c94070a6fed753d3c2726cd9843b920e0e310bf56e16df7ac0ed3c4de260f98
+      emerge/data/nodes/bundle/emerge.core.count.bundle: a590998d5fc2bfe647c4c2175dd05df5990ff7c4abf0b9656bf8142caa5329f7
+      emerge/data/nodes/bundle/emerge.core.observe.bundle: a47118aa17e9f098166820423a291eeea23a79cebb4c87c76462ba5499fe0673
+      emerge/data/nodes/bundle/emerge.handoff.move.bundle: 9eb56d9d42c48ceff1a33f56c9462a2e5954ba08552065bad3c23562b4164c67
+      emerge/data/nodes/bundle/emerge.lang.code.bundle: 4cbf699868c59dcd338f64d8d56f24eb469fbc37ee097ccbdd93cbe5e908f836
+      emerge/data/nodes/bundle/emerge.modules.nest.bundle: a61381a8e3b9df78ef33d342a778b02d028cb0d81ec8160c1784841926410bc8
       emerge/data/nodes/capability/emerge.compiler.spec.capability: b5b03cde4bf7596151df05a4f28d1dd0a20aa07dabb00da66dfa4e11995317ec
       emerge/data/nodes/capability/emerge.core.observe.capability: d20c68b8dccf9e7caee91f89e322bc1c5acf1cb69044b57ce251bf4308b96ee4
       emerge/data/nodes/capability/emerge.handoff.move.capability: 51adee0deca04e57ea27d2f0fa66e5c691bcc32152167300ad9e375a8bf7de6e
@@ -252,7 +312,7 @@ payload:
       emerge/input/.gitkeep: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
       emerge/interaction-contract.json: 0579212e16f31d08b9ff922fd382609afc9a400e422843b03fb21aa84d8b62bc
       emerge/jaa-store.js: e816dceb72039995ba4a40a4c834d82910a1c913c918c6617947b3e5577f6329
-      emerge/lang/MAP.md: e7943ff2902032f3d9a84eec5c92d1c255c75db6bcd7a69b7cc2a010d1cc64ad
+      emerge/lang/MAP.md: 28bc5a613e5a4b9806183f3c977cf2600e00aeb5fc68199887caac0e37bc3369
       emerge/lang/README.md: 99891c98d4e2d2b93148f8f53a16e531659fbb39821ef4e0296ca1ce975169b4
       emerge/lang/bootstrap.js: 80edec662a9a8af59e903ccf404c8fbebacbc28ff321262a95562a89fb847fd3
       emerge/lang/build-loader.js: dcbcb454abea34eb49f7c701b1167d13050b5195c4d3bc589791b0a207602123
@@ -299,9 +359,9 @@ payload:
       emerge/lang/ledger.js: 258c7a45d0af50be69449d8a2c8c6eb5c762065cb382a7297c24b6a603711e7b
       emerge/lang/lexer.js: a5175f00c4e8daae4c23dac25b28451b935f17d45526cbfec006b31b18e452e7
       emerge/lang/map.js: 0814f101854c4806637104248a4bfdfc1de99021b8377db416d627cc15e931b0
-      emerge/lang/native/bin/emerge: 745c1c8ab6e1dfe1ece1f94166633cb8630cc2dc83c4300822c6b07c554a7e81
+      emerge/lang/native/bin/emerge: 02f9730dc89f73787e9465e5f80ad281b866e7a8bc1763d4944c1acd16272bb5
       emerge/lang/native/bin/emerge.sha256: 2472deed27a5dc61e2ef4274ed1c15d2b33e90505e40835dc374a642cbd8e9e7
-      emerge/lang/native/check_env_text.eg: 76c3883cc96fab2c754f48beda02293c24f5d202584904d0c0b14f413ed1fab4
+      emerge/lang/native/check_env_text.eg: 4550c612a7a9e17068629f01c5134cb05d9f8a6de55a59c45ca2bb957a7d79be
       emerge/lang/native/codegen.eg: a0659953a2704534b79ba414a6a053003138604fac5b206cf07e1e2ec285a7e4
       emerge/lang/native/contract_text.eg: 622fca918dddbd8e09c6536e8ad6b9469f825e62db887688ef6ee83a56de7737
       emerge/lang/native/debug_text.eg: ef120bd428b0e4450f07beb7e0c7bc4bf3e96d19261dd066ea2fe813470c1b98
@@ -327,7 +387,7 @@ payload:
       emerge/lang/native/world_text.eg: 6711eea1607e79b29c83450a78e82c77a7df6d570507bd8bcb9cadf27a00a4f6
       emerge/lang/native/x64.eg: e0ab26508f708c05cb4c27bed288db92e9a4802c99618f52f745e5a7e6044e17
       emerge/lang/parser.js: 3e2f3348d2ffe45042c187974256aa8bcdad43b18958ca12e1341ecbec7e7634
-      emerge/lang/runtime.js: 8a2e18cb11a1b196aa4f5b93d3eb6d4011b9aa19fc3f6944b4e1bda72711efa8
+      emerge/lang/runtime.js: e51199cfd5308510364bf7c770c284d3fa5b1e815f199d70246013ce2f341f29
       emerge/lang/say/say.eg: 2bfdb4ec5556eec969736722958bdd05940d5950c69aa2ba6e091ecb3a388c66
       emerge/lang/say/taught.eg: 01ccaa67647c10d0bee09729bedeee18a5841993c35c8ac070d90c3ed9bc9b0d
       emerge/lang/say/words.eg: 98b4efade48a8c5b26c77caa5c0cf90a6d5c7558b23682c5d5d0dc39a520a092

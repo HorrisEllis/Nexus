@@ -1,0 +1,173 @@
+{
+  "id": "cos.pipeline",
+  "owner": "cos",
+  "version": "1.0.0",
+  "about": "COS's pipeline module: the box shape, the gates, and every request kept as files until its contract is met (PC1, PC5; cos/spec/pipeline-canvas.spec)",
+  "origin": "James, 2026-11-09: \"No. Terrible folder structure. This needs to be a module.\" · \"Needs to use actual physical files in the backend, the steps. Like the dag and contract, and the relevant nodes. Like each step needs to be persistent until the contract and conditions for the request from the dag have been met.\" · \"The gates are temporary unless it didn't finish.\"",
+  "entry": "index.js",
+  "components": [
+    {
+      "id": "cos.automation.box",
+      "file": "box.eg",
+      "lang": "emerge",
+      "hooks": {
+        "in": [
+          "boxes",
+          "tasks",
+          "procedure",
+          "steps",
+          "dag",
+          "erv",
+          "validate"
+        ],
+        "out": [
+          "answer"
+        ]
+      },
+      "test": "test/box.test.eg"
+    },
+    {
+      "id": "cos.gate.runner",
+      "file": "gate.eg",
+      "lang": "emerge",
+      "hooks": {
+        "in": [
+          "decide",
+          "plan",
+          "validate"
+        ],
+        "out": [
+          "answer"
+        ]
+      },
+      "also": "flags, all_types, save_type",
+      "test": "test/gate.test.eg"
+    },
+    {
+      "id": "cos.pipeline.runs",
+      "file": "runs.eg",
+      "lang": "emerge",
+      "does": "a request kept as files: request, on_event, gate_context, gate_verdict, record_actions, list_requests, read_request, resume_of",
+      "test": "test/runs.test.eg"
+    },
+    {
+      "id": "cos.pipeline.cli",
+      "file": "cli.eg",
+      "lang": "emerge",
+      "does": "the module's one command line: boxes, dag, erv, roundtrip, types, save-type, gate, gate-actions, request, event, list, read, resume-of"
+    },
+    {
+      "id": "cos.pipeline",
+      "file": "index.js",
+      "lang": "js",
+      "door": "starts Emerge (until COS's manager is Emerge, CIE13), makes the HTTP calls a gate asks for (no sockets in Emerge until CIE10), takes the engine's events in order; no logic"
+    }
+  ],
+  "routes": [
+    "GET /api/cos/boxes",
+    "GET /api/cos/procedures",
+    "GET /api/cos/gate-types",
+    "GET /api/cos/gate-types/:id",
+    "POST /api/cos/gate-types",
+    "POST /api/cos/gate-types/:id/try",
+    "POST /api/cos/pipeline/requests",
+    "GET /api/cos/pipeline/requests",
+    "GET /api/cos/pipeline/requests/:id",
+    "POST /api/cos/pipeline/requests/:id/resume"
+  ],
+  "commands": [
+    "cos boxes",
+    "cos erv",
+    "cos procedures",
+    "cos gate-types",
+    "cos gate-try",
+    "cos request",
+    "cos requests",
+    "cos request-show",
+    "cos request-resume"
+  ],
+  "events": {
+    "listens": [
+      "automation.pipeline.start",
+      "automation.pipeline.task",
+      "automation.pipeline.done"
+    ],
+    "gives": [
+      "the engine's gateFn: a typed gate's verdict"
+    ]
+  },
+  "extensions": [
+    {
+      "ext": ".gatetype",
+      "is": "one kind of gate: what decides (checks), what it asks its owners first (asks), what it holds, what it does on open, closed or gap",
+      "schema": "GateType (cos/spec/pipeline-canvas.spec)",
+      "kind": "node",
+      "format": "JSON",
+      "writers": [
+        "shipped: cos/pipeline/types",
+        "him: POST /api/cos/gate-types (COS's data)"
+      ],
+      "readers": [
+        "gate.eg",
+        "gate.eg"
+      ]
+    },
+    {
+      "ext": ".run",
+      "is": "a request through a pipeline and its contract: every step's conditions from the DAG; met or not, and why",
+      "schema": "node envelope, type run",
+      "kind": "node",
+      "format": "JSON",
+      "writers": [
+        "runs.eg"
+      ],
+      "readers": [
+        "runs.eg",
+        "GET /api/cos/pipeline/requests/:id"
+      ]
+    },
+    {
+      "ext": ".dag",
+      "is": "a request's DAG: each step and, after a gated step, its gate, wired",
+      "schema": "node envelope, type dag: { boxes: Box[], wires: Wire[] }",
+      "kind": "node",
+      "format": "JSON",
+      "writers": [
+        "runs.eg (box.eg's with_gates)"
+      ],
+      "readers": [
+        "GET /api/cos/pipeline/requests/:id",
+        "the canvas (PC4)"
+      ]
+    },
+    {
+      "ext": ".step",
+      "is": "one step of a request: what it runs, what it waits on, its conditions, status, output, every verdict, what its gate learned; kept until met",
+      "schema": "node envelope, type step",
+      "kind": "node",
+      "format": "JSON",
+      "writers": [
+        "runs.eg"
+      ],
+      "readers": [
+        "runs.eg (resume, a gate's memory)",
+        "GET /api/cos/pipeline/requests/:id"
+      ]
+    },
+    {
+      "ext": ".gate",
+      "is": "a gate for one request: its type, settings, what it holds, its verdicts; removed when the request is met, kept when it is not",
+      "schema": "node envelope, type gate",
+      "kind": "node",
+      "format": "JSON",
+      "writers": [
+        "runs.eg"
+      ],
+      "readers": [
+        "runs.eg",
+        "GET /api/cos/pipeline/requests/:id"
+      ]
+    }
+  ],
+  "data": "<COS data>/pipeline/: runs/active/<id>/, runs/done/<id>/, gate-types/ (never committed)"
+}

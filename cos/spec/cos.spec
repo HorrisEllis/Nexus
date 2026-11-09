@@ -421,3 +421,10 @@ spec:
 # James: "cos needs to be a nested compartment" · asked where: "Its own system (16th)". lib/nexus-self/systems.js lists cos
 # (dirs [cos], no process); in Idearium it is the nested repo nexus/cos in its own compartment under nexus. Its atlas is
 # docs/atlases/cos-atlas.md. The glue that reaches COS stays core's: lib/cos-bridge.js, lib/cos-run.js, lib/repo-run.js.
+
+## ADDENDUM 2026-11-09 — the pipeline canvas makes all of Nexus programmable (his idea, specced in cos/spec/pipeline-canvas.spec)
+James, 2026-11-09: "This is a major feature of nexus. Like huge. This can make debugging, contracts being built. The process that the system uses,
+copilot uses for its tools, this makes all of nexus programmable. Also visual debugging, emerges coding per gate. Gates can hold context, test,
+verify, gates would do a lot. But not the same everytime." · "Also log this somewhere. So it doesn't get burried."
+COS is the engine and the gates' owner; ERAVOS is the canvas. The whole idea and what is built: cos/spec/pipeline-canvas.spec, ADDENDUM 2026-11-09.
+

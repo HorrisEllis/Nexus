@@ -7,11 +7,11 @@ intent: null
 summary: PC1_one_box_shape (library) — 6 file(s)
 system: idearium
 tags: []
-exported_at: 1794157585136
+exported_at: 1794211812839
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794157585136
-lastSeenAt: 1794157585136
+firstSeenAt: 1794211812839
+lastSeenAt: 1794211812839
 fingerprint: null
 payload:
   id: PC1_one_box_shape
@@ -39,4 +39,4 @@ payload:
   blocks:
     - MOD-PC-BOX
   spec: cos/spec/pipeline-canvas.spec
-  graph: 179dc9546d22dbad
+  graph: 801180a2fba97866

@@ -20,7 +20,7 @@
       "automation.pipeline.done"
     ],
     "origin": "AE7 (2026-11-08), James: \"Then an api that eravos can use for the step. So needs full cli commands, events, nodes.\"",
-    "pipelines": "AE5 (0.60.462): automation.pipeline.start { pipelineId, runId } \u00b7 automation.pipeline.task { pipelineId, runId, task, label, status, ms?, error? } \u00b7 automation.pipeline.done { pipelineId, runId, status } \u00b7 automation.pipeline.created { pipelineId, name }"
+    "pipelines": "AE5 (0.60.462): automation.pipeline.start { pipelineId, runId } \u00b7 automation.pipeline.task { pipelineId, runId, task, label, status, ms?, error?, output? (what passed, a preview), gate? { type, outcome: open|closed|gap, why, saw, held, actions } \u2014 PC4/PC5 0.60.466 } \u00b7 automation.pipeline.done { pipelineId, runId, status } \u00b7 automation.pipeline.created { pipelineId, name }"
   },
   "for_eravos": {
     "about": "How ERAVOS (or any system) uses COS's automation engine as a step, by route only (\u00a75.10): never its files.",
@@ -427,12 +427,59 @@
       "method": "GET",
       "path": "/api/cos/boxes",
       "in": "?pipeline=<id> | ?procedure=<id> [&as=erv]",
-      "out": "{ kind, graph: { boxes: Box[], wires: Wire[] }, ok, problems, unchecked, source } \u2014 the step as boxes, from Emerge's box shape (cos/automation/box.eg); PC1; with as=erv: { erv, name } \u2014 an ERAVOS project (one eravos.agents.box per step, dataflow wires), opened by ERAVOS\u2019s own Open"
+      "out": "{ kind, graph: { boxes: Box[], wires: Wire[] }, ok, problems, unchecked, source } \u2014 the step as boxes, from Emerge's box shape (cos/pipeline/box.eg); PC1; with as=erv: { erv, name } \u2014 an ERAVOS project (one eravos.agents.box per step, dataflow wires), opened by ERAVOS\u2019s own Open"
     },
     {
       "method": "GET",
       "path": "/api/cos/procedures",
       "out": "{ procedures } \u2014 Idearium's procedures, read by its route (GET /api/procedures); PC1"
+    },
+    {
+      "method": "GET",
+      "path": "/api/cos/gate-types",
+      "out": "{ types: GateType[] } \u2014 the shipped .gatetype files (cos/pipeline/types) and his own (PC5)"
+    },
+    {
+      "method": "GET",
+      "path": "/api/cos/gate-types/:id",
+      "out": "{ type: GateType }"
+    },
+    {
+      "method": "POST",
+      "path": "/api/cos/gate-types",
+      "in": "{ type: GateType, by }",
+      "out": "{ ok, type } \u2014 his; checked in Emerge first (problems named); an agent\u2019s refused (403)",
+      "personAct": true
+    },
+    {
+      "method": "POST",
+      "path": "/api/cos/gate-types/:id/try",
+      "in": "{ output, with?, context? }",
+      "out": "{ decision: { outcome, why, saw, actions (not done), options } } \u2014 nothing runs, nothing is kept"
+    },
+    {
+      "method": "POST",
+      "path": "/api/cos/pipeline/requests",
+      "in": "{ pipeline, vars?, by }",
+      "out": "{ request, engineRun } \u2014 the request as files first (run.run, dag.dag, steps/*.step, gates/*.gate), then the engine runs it; an agent\u2019s refused (403)",
+      "personAct": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/cos/pipeline/requests",
+      "out": "{ requests[] } \u2014 ?state=active (not met) | done (met)"
+    },
+    {
+      "method": "GET",
+      "path": "/api/cos/pipeline/requests/:id",
+      "out": "{ run, dag, steps, gates, where } \u2014 the request\u2019s files, read"
+    },
+    {
+      "method": "POST",
+      "path": "/api/cos/pipeline/requests/:id/resume",
+      "in": "{ by }",
+      "out": "{ request, engineRun, alreadyMet[] } \u2014 from its step files: what is met is not run again",
+      "personAct": true
     }
   ],
   "door": {

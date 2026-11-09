@@ -1,0 +1,139 @@
+// cos/pipeline/cli.eg — COS's pipeline module, one command line (PC1, PC5; cos/pipeline/registry.json): eg run cos/pipeline/cli.eg <command> <file.json>
+// James, 2026-11-09: "This needs to be a module." · "follow claude.md i thought we chose to move on and use .eg, emerge for code?"
+// The box shape (boxes, dag, erv, roundtrip), the gates (gate, types, save-type, try) and the requests as files (request, event, list, read,
+// resume-of, gate-actions). COS's door (cos/pipeline/index.js) only starts this, makes the HTTP calls a gate asks for, and passes the engine's
+// events in order. Every answer is one line of JSON on stdout. An unknown command is refused and the commands named (§1.2).
+use "./box.eg" as box
+use "./gate.eg" as gate
+use "./runs.eg" as runs
+
+wire box.BoxShape.answer -> "box.answer"
+var last = null
+on "box.answer" (a) { last = a }
+
+fn push_each(a: list, b: list): list {
+  var out = a
+  for x in b { out = push(out, x) }
+  return out
+}
+
+let a = args()
+var cmd = "help"
+if len(a) > 0 { cmd = a[0] }
+fn input(): map {
+  if len(a) < 2 { raise("usage: eg run cos/pipeline/cli.eg " + cmd + " <file.json>") }
+  return parse_json(read_file(a[1]))
+}
+
+if cmd == "version" { print(box.BoxShape.version) }
+else if cmd == "boxes" {
+  // a pipeline (it has tasks) or a procedure (it has steps) → { kind, graph, ok, problems, unchecked }
+  let p = input()
+  var kind = "procedure"
+  if has(p, "tasks") { kind = "pipeline" ; send box.BoxShape.boxes { pipeline: p } } else { send box.BoxShape.procedure { procedure: p } }
+  let g = last.value
+  send box.BoxShape.validate { graph: g, known: {} }
+  print(json({ kind: kind, kinds: box.KINDS, graph: g, ok: last.ok, problems: last.value.problems, unchecked: last.value.unchecked }))
+}
+else if cmd == "dag" {
+  // a pipeline → its DAG as a run keeps it: { boxes, wires }, a gate box after each gated step (cos/pipeline/runs.js dag.dag)
+  let p = input()
+  send box.BoxShape.boxes { pipeline: p }
+  send box.BoxShape.dag { graph: last.value }
+  print(json(last.value))
+}
+else if cmd == "erv" {
+  // a pipeline or a procedure → an ERAVOS project (.erv as JSON, which is YAML): one Box tool per step, the wires between them
+  let p = input()
+  if has(p, "tasks") { send box.BoxShape.boxes { pipeline: p } } else { send box.BoxShape.procedure { procedure: p } }
+  let g = last.value
+  send box.BoxShape.erv { graph: g, name: get(p, "name", get(p, "id", "pipeline")) }
+  print(json(last.value))
+}
+else if cmd == "roundtrip" {
+  // a pipeline: tasks → boxes → tasks; a procedure: steps → boxes → steps. Prints { kind, same, boxes, wires, problems }.
+  let p = input()
+  if has(p, "tasks") {
+    send box.BoxShape.boxes { pipeline: p }
+    let g = last.value
+    send box.BoxShape.validate { graph: g, known: {} }
+    let v = last.value
+    send box.BoxShape.tasks { graph: g }
+    print(json({ kind: "pipeline", same: last.value == p.tasks, boxes: len(g.boxes), wires: len(g.wires), problems: v.problems }))
+  } else {
+    send box.BoxShape.procedure { procedure: p }
+    let g = last.value
+    send box.BoxShape.validate { graph: g, known: {} }
+    let v = last.value
+    send box.BoxShape.steps { graph: g }
+    print(json({ kind: "procedure", same: last.value == get(p, "steps", []), boxes: len(g.boxes), wires: len(g.wires), problems: v.problems }))
+  }
+}
+else if cmd == "types" {
+  let q = input()
+  print(json({ ok: true, types: gate.all_types(q.shipped, q.mine) }))
+}
+else if cmd == "save-type" {
+  let q = input()
+  print(json(gate.save_type(q.shipped, q.mine, get(q, "type", null), get(q, "by", null))))
+}
+else if cmd == "gate" {
+  // a typed gate after a step: its type from the files, what it holds from the request's files, what it asks first (asks, when not answered yet),
+  // then its verdict, kept on the request's files (not on a try)
+  let q = input()
+  let g = q.q.gate
+  let ty = gate.type_of_id(q.shipped, q.mine, g.type)
+  if ty == null { print(json({ ok: true, verdict: { outcome: "closed", open: false, why: "no gate type \"" + str(g.type) + "\"", saw: [], actions: [], calls: [] } })) }
+  else {
+    let ps = gate.problems(ty)
+    if len(ps) > 0 { print(json({ ok: true, verdict: { outcome: "closed", open: false, why: "gate type \"" + ty.id + "\" is not valid: " + join(ps, "; "), saw: [], actions: [], calls: [] } })) }
+    else {
+      let dq = { type: ty, with: get(g, "with", {}), output: get(q.q, "output", ""), pipeline: get(q.q, "pipelineId", "try"), task: get(q.q, "task", "try") }
+      let pl = gate.plan(dq)
+      if len(pl.asks) > 0 and get(q, "answers", null) == null { print(json({ ok: true, asks: pl.asks })) }
+      else {
+        var ctx = get(q, "context", null)
+        if ctx == null and not get(q, "dry", false) { ctx = runs.gate_context(q.base, q.q.runId, dq.pipeline, dq.task) }
+        if ctx == null { ctx = {} }
+        var d = clone(dq)
+        d.context = ctx
+        d.answers = get(q, "answers", {})
+        let v = gate.decide(d)
+        let f = gate.flags(v.outcome, v.actions)
+        let verdict = { type: ty.id, outcome: v.outcome, open: f.open, why: v.why, saw: push_each(v.saw, pl.unset), retry: f.retry, stop: f.stop, held: f.held,
+          actions: v.actions, calls: f.calls, unbuilt: f.unbuilt, options: v.options, next: v.context }
+        if not get(q, "dry", false) { runs.gate_verdict(q.base, q.q.runId, dq.task, verdict, q.at) }
+        print(json({ ok: true, verdict: verdict }))
+      }
+    }
+  }
+}
+else if cmd == "gate-actions" {
+  let q = input()
+  print(json(runs.record_actions(q.base, q.runId, q.task, q.actions)))
+}
+else if cmd == "request" {
+  let q = input()
+  print(json({ ok: true, request: runs.request(q.base, q.pipeline, get(q, "vars", {}), get(q, "by", null), q.at, null) }))
+}
+else if cmd == "event" {
+  let q = input()
+  print(json(runs.on_event(q.base, q.kind, q.data, get(q, "pipeline", null), q.at)))
+}
+else if cmd == "list" {
+  let q = input()
+  print(json({ ok: true, requests: runs.list_requests(q.base, get(q, "which", "active")) }))
+}
+else if cmd == "read" {
+  let q = input()
+  let r = runs.read_request(q.base, q.id)
+  if r == null { print(json({ ok: false, code: 404, error: "no request \"" + q.id + "\"" })) } else { print(json({ ok: true, request: r })) }
+}
+else if cmd == "resume-of" {
+  let q = input()
+  print(json(runs.resume_of(q.base, q.id)))
+}
+else {
+  eprint("unknown command \"" + cmd + "\": the commands are version, boxes, dag, erv, roundtrip, types, save-type, gate, gate-actions, request, event, list, read, resume-of (each <file.json>)")
+  exit(1)
+}

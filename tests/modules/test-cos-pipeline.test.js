@@ -1,0 +1,151 @@
+'use strict';
+/**
+ * tests/modules/test-cos-pipeline.test.js — COS's pipeline module (cos/pipeline/): programmable gates (PC5) and requests kept as files.
+ * Map: docs/2026-11-08-pipeline-canvas-phasemap.spec PC5 · Spec: cos/spec/pipeline-canvas.spec MOD-PC-GATE-TYPES, MOD-PC-RUNS.
+ * James, 2026-11-09: "Gates can hold context, test, verify, gates would do a lot. But not the same everytime." · "This needs to be a module." ·
+ * "Needs to use actual physical files in the backend, the steps. Like the dag and contract, and the relevant nodes. Like each step needs to be
+ * persistent until the contract and conditions for the request from the dag have been met." · "The gates are temporary unless it didn't finish."
+ *
+ *   CP-00  Emerge's own tests: the box shape (with its dag hook) and the gate
+ *   CP-01  the module is one folder with its registry; the shipped .gatetype files are listed; a try decides and does nothing
+ *   CP-02  a request is files before it runs (run.run with its contract, dag.dag, a .step per step, a .gate per gated step); met, it moves to
+ *          done/, its gates removed, its steps kept as the record; the run's events carry what passed and each verdict (the canvas's wires)
+ *   CP-03  not met: it stays in active/ with its gates and every verdict; resumed from its step files, what was met is not run again; then met
+ *   CP-04  not the same every time: three requests, the same reason: closed, closed, gap (held), learned through the step files, not the gates
+ *   CP-05  an emerge gate hands Emerge the gap with its why and its task, and holds the request
+ *   CP-06  his own gate type is checked in Emerge and kept; an agent's refused; a bad one named; a shipped id left alone
+ *   CP-07  an engine with no gate host refuses a typed gate, said; command rows for agents and copilot
+ */
+require('../../lib/test-sandbox.js').ensure();
+const assert = require('assert'), fs = require('fs'), os = require('os'), path = require('path'), http = require('http');
+const ROOT = path.join(__dirname, '..', '..');
+const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'cos-pipeline-'));
+process.env.COS_MANAGER_DATA = path.join(tmp, 'data');
+const RUNS = path.join(tmp, 'data', 'pipeline', 'runs');
+
+let passed = 0, failed = 0;
+async function T(id, d, fn) { try { await fn(); console.log(`  ✓ ${id} ${d}`); passed++; } catch (e) { console.error(`  ✗ ${id} ${d}\n    ${(e.stack || e.message).split('\n').slice(0, 6).join('\n    ')}`); failed++; } }
+const req = (port, method, p, body) => new Promise((res, rej) => { const data = body === undefined ? null : Buffer.from(JSON.stringify(body));
+  const q = http.request({ host: '127.0.0.1', port, path: p, method, headers: data ? { 'Content-Type': 'application/json', 'Content-Length': data.length } : {} }, (r) => { let t = ''; r.on('data', c => t += c); r.on('end', () => { try { res({ status: r.statusCode, body: JSON.parse(t || '{}') }); } catch (e) { rej(new Error(t)); } }); });
+  q.on('error', rej); if (data) q.write(data); q.end(); });
+const wait = async (fn, ms = 20000) => { const until = Date.now() + ms; while (Date.now() < until) { const v = await fn(); if (v) return v; await new Promise(r => setTimeout(r, 100)); } throw new Error(`timed out: ${String(fn).slice(0, 140)}`); };
+const stand = (handler) => new Promise((res) => { const s = http.createServer((q, r) => { let t = ''; q.on('data', c => t += c); q.on('end', () => handler(q, r, t)); }); s.listen(0, '127.0.0.1', () => res(s)); });
+const J = (f) => JSON.parse(fs.readFileSync(f, 'utf8'));
+const eg = (...a) => require('child_process').spawnSync(process.execPath, [path.join(ROOT, 'emerge/emerge/lang/eg.js'), ...a], { cwd: ROOT, encoding: 'utf8' });
+
+(async () => {
+  console.log('\n⬢  COS: the pipeline module (gates, requests as files)\n');
+  let passing = true; const tested = [], handed = [];
+  const tester = await stand((q, r, t) => { if (q.url === '/api/tests/run') { tested.push(t); r.end(passing && /good/.test(t) ? '{"result":"3 passed"}' : '{"result":"1 failed"}'); } else r.end('{"ok":true}'); });
+  const emerge = await stand((q, r, t) => { if (q.url === '/handoff') { handed.push(JSON.parse(t)); r.end('{"ok":true,"state":"queued"}'); } else r.end('{"ok":true}'); });
+  const { createSupervisor } = require(path.join(ROOT, 'cos/manager/supervisor.js'));
+  const sup = createSupervisor({ root: tmp, ledgerFile: path.join(tmp, 'ledger.jsonl'), log: () => {}, declarations: [
+    { name: 'tester', system: 'tester', cmd: process.execPath, args: ['-e', ''], healthUrl: `http://127.0.0.1:${tester.address().port}/health` },
+    { name: 'emerge', system: 'emerge', cmd: process.execPath, args: ['-e', ''], healthUrl: `http://127.0.0.1:${emerge.address().port}/health` }] });
+  const mgr = await require(path.join(ROOT, 'cos/manager/server.js')).listen(sup, 0, { root: ROOT }); const M = mgr.address().port;
+  const events = []; const es = http.get({ host: '127.0.0.1', port: M, path: '/api/cos/events' }, (r) => { let buf = ''; r.on('data', (c) => { buf += c; let i; while ((i = buf.indexOf('\n\n')) >= 0) { const blk = buf.slice(0, i); buf = buf.slice(i + 2);
+    const ev = (/^event: (.+)$/m.exec(blk) || [])[1], d = (/^data: (.+)$/m.exec(blk) || [])[1]; if (ev && d) { try { events.push({ ev, data: JSON.parse(d) }); } catch (_) {} } } }); });
+  const make = async (name, tasks) => { const r = await req(M, 'POST', '/api/cos/automation/pipelines', { name, tasks, by: 'person' }); assert.ok(r.body.ok, JSON.stringify(r.body)); return (r.body.pipeline || r.body).id; };
+  const ask = async (pipeline, vars) => { const r = await req(M, 'POST', '/api/cos/pipeline/requests', { pipeline, vars, by: 'person' }); assert.ok(r.body.ok, JSON.stringify(r.body)); return r.body; };
+  const ended = async (id) => wait(async () => { const x = (await req(M, 'GET', `/api/cos/pipeline/requests/${id}`)).body; return x.ok && x.run.payload.finishedAt ? x : null; });
+  const SET = (v) => ({ type: 'set', config: { assign: { v } } });
+  const TEST = { type: 'test', with: { owner: 'tester', route: 'POST /api/tests/run', expect: 'passed' } };
+  try {
+    await T('CP-00', 'Emerge\'s own tests: the box shape (with its dag hook) and the gate', () => {
+      for (const [f, n] of [['cos/pipeline/test/box.test.eg', 10], ['cos/pipeline/test/gate.test.eg', 7], ['cos/pipeline/test/runs.test.eg', 4]]) { const r = eg('test', f); assert.strictEqual(r.status, 0, r.stdout + r.stderr); assert.match(r.stdout, new RegExp(`${n} passed, 0 failed`)); }
+    });
+
+    await T('CP-01', 'one folder with its registry; the shipped .gatetype files listed; a try decides and does nothing', async () => {
+      const reg = J(path.join(ROOT, 'cos/pipeline/registry.json'));
+      assert.deepStrictEqual(reg.extensions.map(e => e.ext), ['.gatetype', '.run', '.dag', '.step', '.gate']);
+      for (const c of reg.components) assert.ok(fs.existsSync(path.join(ROOT, 'cos/pipeline', c.file)), c.file);
+      const ts = (await req(M, 'GET', '/api/cos/gate-types')).body.types;
+      assert.deepStrictEqual(ts.map(t => t.id).sort(), ['check', 'context', 'emerge', 'options', 'test', 'verify']);
+      const d = (await req(M, 'POST', '/api/cos/gate-types/check/try', { output: 'failed', with: { contains: 'ok' } })).body.decision;
+      assert.deepStrictEqual([d.outcome, d.why, d.actions], ['closed', 'the output does not contain "ok"', [{ do: 'retry', said: 'not done: a try' }]]);
+      assert.ok(!fs.existsSync(RUNS), 'a try writes nothing');
+    });
+
+    let tested2;
+    await T('CP-02', 'a request is files before it runs; met, it moves to done/, gates removed, steps kept; events carry the request through', async () => {
+      const pid = await make('tested', [{ id: 'a', step: SET('{{vars.v}}'), gate: TEST }, { id: 'b', depends_on: ['a'], step: SET('next'), gate: { type: 'context' } }]);
+      passing = false;   // held at the test, so the files can be read before it is met
+      const r = await ask(pid, { v: 'good' }); const dir = path.join(RUNS, 'active', r.request);
+      const run = J(path.join(dir, 'run.run'));
+      assert.deepStrictEqual([run.type, run.payload.request.pipeline, run.payload.request.vars, run.payload.contract.met], ['run', pid, { v: 'good' }, false]);
+      assert.deepStrictEqual(run.payload.contract.conditions.map(c => [c.step, c.after, c.gate && c.gate.type]), [['a', [], 'test'], ['b', ['a'], 'context']]);
+      for (const f of ['steps/a.step', 'steps/b.step', 'gates/a.gate', 'gates/b.gate']) assert.ok(fs.existsSync(path.join(dir, f)), f);
+      const dag = await wait(() => fs.existsSync(path.join(dir, 'dag.dag')) && J(path.join(dir, 'dag.dag')));
+      assert.deepStrictEqual(dag.payload.boxes.map(b => b.id), ['a', 'a-gate', 'b', 'b-gate'], 'the DAG: compartment, gate, compartment, gate');
+      const x = await ended(r.request);
+      assert.deepStrictEqual([x.where, x.run.payload.phase], ['active', 'not met']);
+      passing = true;
+      const r2 = await ask(pid, { v: 'good' }); tested2 = r2.request; const y = await ended(r2.request);
+      assert.deepStrictEqual([y.where, y.run.payload.contract.met, y.run.payload.phase], ['done', true, 'met']);
+      const done = path.join(RUNS, 'done', r2.request);
+      assert.ok(!fs.existsSync(path.join(RUNS, 'active', r2.request)) && !fs.existsSync(path.join(done, 'gates')), 'moved to done/, its gates removed');
+      const a = J(path.join(done, 'steps/a.step')).payload; assert.deepStrictEqual([a.met, a.verdicts.slice(-1)[0].outcome], [true, 'open']);
+      assert.match(JSON.stringify(a.output), /good/);
+      const ev = events.find(e => e.ev === 'automation.pipeline.task' && e.data.runId === r2.engineRun && e.data.task === 'a' && e.data.status === 'done');
+      assert.ok(ev && ev.data.gate.outcome === 'open' && /good/.test(JSON.stringify(ev.data.output)), 'the event carries what passed and the verdict');
+    });
+
+    await T('CP-03', 'not met: it stays with its gates and verdicts; resumed from its step files, what was met is not run again; then met', async () => {
+      const pid = await make('resumes', [{ id: 'a', step: SET('{{vars.v}}') }, { id: 'b', depends_on: ['a'], step: SET('{{vars.v}}'), gate: TEST }]);
+      passing = false; const r = await ask(pid, { v: 'good' }); const x = await ended(r.request);
+      assert.deepStrictEqual([x.where, x.run.payload.phase], ['active', 'not met']); assert.match(x.run.payload.contract.why, /b \(failed/);
+      const dir = path.join(RUNS, 'active', r.request);
+      assert.deepStrictEqual([J(path.join(dir, 'steps/a.step')).payload.met, J(path.join(dir, 'steps/b.step')).payload.met], [true, false]);
+      assert.strictEqual(J(path.join(dir, 'gates/b.gate')).payload.verdicts.slice(-1)[0].outcome, 'closed', 'the gate is kept: the request did not finish');
+      passing = true; const n = tested.length;
+      const z = (await req(M, 'POST', `/api/cos/pipeline/requests/${r.request}/resume`, { by: 'person' })).body; assert.ok(z.ok, JSON.stringify(z));
+      assert.deepStrictEqual(z.alreadyMet, ['a']);
+      const y = await ended(r.request); assert.deepStrictEqual([y.where, y.run.payload.phase], ['done', 'met']);
+      assert.strictEqual(tested.length, n + 1, 'only b ran again');
+      const er = (await req(M, 'GET', `/api/cos/automation/pipeline-runs/${z.engineRun}`)).body; const eru = er.run || er;
+      assert.strictEqual(eru.tasks.a.met, 'earlier');
+      assert.strictEqual((await req(M, 'POST', `/api/cos/pipeline/requests/${r.request}/resume`, { by: 'agent:copilot' })).status, 403);
+    });
+
+    await T('CP-04', 'not the same every time: three requests, one reason: closed, closed, gap (held) — learned through the step files', async () => {
+      const pid = await make('learns', [{ id: 'a', step: SET('{{vars.v}}'), gate: { type: 'check', with: { contains: 'ok' } } }]);
+      const outs = [];
+      for (let i = 0; i < 3; i++) { const r = await ask(pid, { v: 'nope' }); const x = await ended(r.request); const s = x.steps.find(s => s.payload.task === 'a').payload; outs.push(s.verdicts.slice(-1)[0].outcome + (x.run.payload.phase === 'held' ? '+held' : '')); }
+      assert.deepStrictEqual(outs, ['closed', 'closed', 'gap+held']);
+      const r = await ask(pid, { v: 'ok now' }); const y = await ended(r.request); assert.strictEqual(y.where, 'done');
+      assert.strictEqual(J(path.join(RUNS, 'done', r.request, 'steps/a.step')).payload.gateContext.streak, 0, 'a pass resets what it learned');
+    });
+
+    await T('CP-05', 'an emerge gate hands Emerge the gap with its why and its task, and holds the request', async () => {
+      const pid = await make('builds', [{ id: 'parse', step: SET('no code yet'), gate: { type: 'emerge', with: { contains: 'fn ', what: 'a parser for .gatetype files' } } }]);
+      const r = await ask(pid, {}); const x = await ended(r.request);
+      assert.strictEqual(x.run.payload.phase, 'held');
+      assert.deepStrictEqual(handed[0], { kind: 'build.gap', from: 'cos.gate', what: 'a parser for .gatetype files', why: 'the output does not contain "fn "', pipeline: pid, task: 'parse' });
+      assert.ok(x.gates[0].payload.verdicts[0].actions.some(a => a.do === 'route' && a.ok && a.to === 'emerge POST /handoff'));
+    });
+
+    await T('CP-06', 'his own gate type is checked in Emerge and kept; an agent\'s refused; a bad one named; a shipped id left alone', async () => {
+      const mine = { id: 'long-enough', about: 'more than 20 characters', checks: [{ kind: 'holds', longerThan: 20 }], on: { closed: [{ do: 'stop' }] } };
+      assert.strictEqual((await req(M, 'POST', '/api/cos/gate-types', { type: mine, by: 'agent:copilot' })).status, 403);
+      const ok = await req(M, 'POST', '/api/cos/gate-types', { type: mine, by: 'person' }); assert.ok(ok.body.ok, JSON.stringify(ok.body));
+      assert.ok(fs.existsSync(path.join(tmp, 'data', 'pipeline', 'gate-types', 'long-enough.gatetype')));
+      const bad = await req(M, 'POST', '/api/cos/gate-types', { type: { id: 'bad', checks: [{ kind: 'vibes' }], on: { open: [{ do: 'dance' }] } }, by: 'person' });
+      assert.strictEqual(bad.status, 400); assert.ok(bad.body.problems.some(p => /vibes/.test(p)) && bad.body.problems.some(p => /dance/.test(p)));
+      assert.strictEqual((await req(M, 'POST', '/api/cos/gate-types', { type: { ...mine, id: 'check' }, by: 'person' })).status, 409);
+    });
+
+    await T('CP-07', 'an engine with no gate host refuses a typed gate, said; command rows for agents and copilot', async () => {
+      const { AutomationEngine } = require(path.join(ROOT, 'lib/automation/engine.js')); const { Pipelines } = require(path.join(ROOT, 'lib/automation/pipeline.js'));
+      const P = new Pipelines(new AutomationEngine({}), { dir: path.join(tmp, 'bare') });
+      const c = P.create({ name: 'bare', tasks: [{ id: 'a', step: SET('x'), gate: { type: 'check' } }] }); assert.ok(c.ok, JSON.stringify(c));
+      const r = await P.run((c.pipeline || c).id, { wait: true }); assert.match(r.run.tasks.a.gate.why, /this engine has no gate types/);
+      const SPEC = (await import(require('url').pathToFileURL(path.join(ROOT, 'idearium/cli/route-commands.js')).href)).SPEC;
+      for (const k of ['cos.gate-types', 'cos.gate-try', 'cos.request', 'cos.requests', 'cos.request-show', 'cos.request-resume']) assert.ok(SPEC.some(s => s.key === k), k);
+      assert.ok(SPEC.find(s => s.key === 'cos.request').personOnly() && SPEC.find(s => s.key === 'cos.request-resume').personOnly(), 'an agent proposes; running is his');
+    });
+  } finally {
+    es.destroy(); mgr.close(); sup.shutdown({ by: 'test' }); tester.close(); emerge.close();
+    fs.rmSync(tmp, { recursive: true, force: true });
+  }
+  console.log(`\n  ${passed} passed, ${failed} failed\n`); process.exit(failed ? 1 : 0);
+})();

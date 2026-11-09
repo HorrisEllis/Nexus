@@ -1,0 +1,131 @@
+envelope: 1
+uuid: nexus-export-graph-phase:PC7_iterate_to_the_end_state:c24486dd95be4b0d
+type: graph
+id: phase:PC7_iterate_to_the_end_state:c24486dd95be4b0d
+context: dependency graph of phase PC7_iterate_to_the_end_state
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1794211812860
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794211812860
+lastSeenAt: 1794211812860
+fingerprint: null
+payload:
+  for: PC7_iterate_to_the_end_state
+  kind: phase
+  repo: null
+  hash: c24486dd95be4b0d
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    layer: 16
+    deps:
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC3_the_build_request_step
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC6_intelligence_watches_the_runs
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ15_cells_in_parallel
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D9_meta_autonomous_agnostic_nonlinear
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC5_programmable_gate_types
+    dependents: []
+    upstream:
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ0_the_inventory_proved
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ10_anchors_and_the_diff_reconciled
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ11_spec_and_registry_reconciled
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ12_the_phase_dag
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ13_the_work_surface_and_provenance
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ14_the_spine_end_to_end
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ15_cells_in_parallel
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ1_the_verifier_library
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ2_the_generation_failure_vocabulary_and_index
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ3_repair_with_the_checks_own_words
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ4_escalate_on_the_checks_and_keep_the_lesson
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ5_the_small_model_baseline
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ6_one_intent_map
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ7_the_context_obligations
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ8_the_gap_is_a_question
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ9_the_chunked_contract
+      - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE_D4_the_hub_structural
+      - docs/2026-10-28-first-principles-phasemap.spec::FP1_where_a_request_opens
+      - docs/2026-10-28-first-principles-phasemap.spec::FP2_which_option_is_meant
+      - docs/2026-10-28-first-principles-phasemap.spec::FP3_is_the_gate_open
+      - docs/2026-10-28-gated-flows-phasemap.spec::FG2_dropdown_choose
+      - docs/2026-10-28-gated-flows-phasemap.spec::FG_D1_gate_is_a_step_field
+      - docs/2026-10-28-gated-flows-phasemap.spec::FG_D2_choice_is_read_back
+      - docs/2026-10-28-gated-flows-phasemap.spec::GF1_every_field_found_by_its_section
+      - docs/2026-10-28-gated-flows-phasemap.spec::GF2_every_editor_page_known
+      - docs/2026-10-28-gated-flows-phasemap.spec::GF3_text_and_lists_filled_and_read_back
+      - docs/2026-10-28-gated-flows-phasemap.spec::GF4_friction_goes_to_his_site_keys
+      - docs/2026-10-28-gated-flows-phasemap.spec::GG1_every_part_gated
+      - docs/2026-10-28-gated-flows-phasemap.spec::GM1_the_fill_menu_model
+      - docs/2026-10-28-gated-flows-phasemap.spec::GM2_fill_only_what_is_ticked
+      - docs/2026-10-28-gated-flows-phasemap.spec::KB1_choose_waits_and_keys
+      - docs/2026-10-28-gated-flows-phasemap.spec::KB2_site_keys
+      - docs/2026-10-28-gated-flows-phasemap.spec::KB3_site_keys_ui
+      - docs/2026-10-28-gated-flows-phasemap.spec::KB4_gates_on_macro_steps
+      - docs/2026-10-28-gated-flows-phasemap.spec::UG1_one_gate_for_every_element
+      - docs/2026-10-29-pipelines-phasemap.spec::PA4_a_gate_after_every_step
+      - docs/2026-10-29-pipelines-phasemap.spec::PL1_pipeline_core
+      - docs/2026-10-29-pipelines-phasemap.spec::PL6_the_gate_step
+      - docs/2026-10-29-pipelines-phasemap.spec::PL_D1_a_task_is_one_engine_step
+      - docs/2026-10-29-pipelines-phasemap.spec::PL_D2_pipelines_live_in_the_engine_that_runs_them
+      - docs/2026-10-29-pipelines-phasemap.spec::PL_D4_a_gate_is_a_pipeline_block
+      - docs/2026-11-01-macro-blocks-phasemap.spec::MB1_the_gate_between
+      - docs/2026-11-01-macro-blocks-phasemap.spec::MB2_the_blocks_ui
+      - docs/2026-11-01-macro-blocks-phasemap.spec::MB3_one_shape_with_pipelines
+      - docs/2026-11-01-macro-blocks-phasemap.spec::MB_D0_blocks_and_gates
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC12_the_survey
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC1_task_nodes
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC4_deploy_to_any_system
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC8_the_console
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC_D0_one_console_in_cos
+      - docs/2026-11-01-procedures-phasemap.spec::PD1_procedure_nodes_and_commands
+      - docs/2026-11-01-procedures-phasemap.spec::PD4_the_procedure_library
+      - docs/2026-11-01-procedures-phasemap.spec::PD_D0_a_procedure_is_a_node_file
+      - docs/2026-11-01-procedures-phasemap.spec::PD_D0_addendum_one_procedure_type
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC1_one_box_shape
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC2_procedures_and_frameworks_as_steps
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC3_the_build_request_step
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC5_programmable_gate_types
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC6_intelligence_watches_the_runs
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D0_reuse_first
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D10_the_canvas_is_the_surface_tools_are_made
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D1_gates_as_compartments
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D2_frameworks_as_procedures
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D3_when_a_step_becomes_a_build_request
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D4_language
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D5_emerge_writes_the_code
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D8_options_not_neat_boxes
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D9_meta_autonomous_agnostic_nonlinear
+    downstream: []
+    blockedBy:
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC3_the_build_request_step
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC6_intelligence_watches_the_runs
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ15_cells_in_parallel
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC5_programmable_gate_types
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - >-
+        layer 16 · blocked by PC3_the_build_request_step, PC6_intelligence_watches_the_runs,
+        RQ15_cells_in_parallel, PC5_programmable_gate_types
+      - >-
+        depends on (5): PC3_the_build_request_step, PC6_intelligence_watches_the_runs,
+        RQ15_cells_in_parallel, PC_D9_meta_autonomous_agnostic_nonlinear,
+        PC5_programmable_gate_types · all upstream 68
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC3_the_build_request_step
+        kind: declared
+      - from: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC6_intelligence_watches_the_runs
+        kind: declared
+      - from: docs/2026-10-12-request-spine-phasemap.spec::RQ15_cells_in_parallel
+        kind: declared
+      - from: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D9_meta_autonomous_agnostic_nonlinear
+        kind: declared
+      - from: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC5_programmable_gate_types
+        kind: inferred

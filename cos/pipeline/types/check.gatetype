@@ -1,0 +1,8 @@
+{
+  "id": "check",
+  "about": "the output holds what the step should give (with: contains, lacks, equals, startsWith, notEmpty). The same reason three times in a row is a gap, not a flake.",
+  "madeBy": "shipped",
+  "checks": [{ "kind": "holds", "notEmpty": true, "contains": "{{with.contains}}" }],
+  "gapAfter": 3,
+  "on": { "open": [{ "do": "note" }], "closed": [{ "do": "retry" }], "gap": [{ "do": "hold" }] }
+}

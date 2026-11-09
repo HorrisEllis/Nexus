@@ -7,11 +7,11 @@ intent: null
 summary: 28 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1794157585140
+exported_at: 1794211812844
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794157585140
-lastSeenAt: 1794157585140
+firstSeenAt: 1794211812844
+lastSeenAt: 1794211812844
 fingerprint: null
 payload:
   for: PC2_procedures_and_frameworks_as_steps
@@ -212,7 +212,8 @@ payload:
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC1_one_box_shape
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D2_frameworks_as_procedures
       - docs/2026-11-01-procedures-phasemap.spec::PD4_the_procedure_library
-    dependents: []
+    dependents:
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC5_programmable_gate_types
     upstream:
       - docs/2026-10-29-pipelines-phasemap.spec::PL1_pipeline_core
       - docs/2026-10-29-pipelines-phasemap.spec::PL_D1_a_task_is_one_engine_step
@@ -228,25 +229,22 @@ payload:
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D0_reuse_first
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D2_frameworks_as_procedures
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D4_language
-    downstream: []
+    downstream:
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC4_the_box_kinds_on_the_canvas
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC5_programmable_gate_types
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC6_intelligence_watches_the_runs
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC7_iterate_to_the_end_state
     blockedBy:
       - docs/2026-11-01-procedures-phasemap.spec::PD4_the_procedure_library
     unlocks: []
-    conflicts:
-      - with: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC5_programmable_gate_types
-        files:
-          - lib/automation/steps.js
-          - lib/automation/engine.js
+    conflicts: []
     dangling: []
     lines:
       - layer 4 · blocked by PD4_the_procedure_library
       - >-
         depends on (3): PC1_one_box_shape, PC_D2_frameworks_as_procedures, PD4_the_procedure_library
         · all upstream 14
-      - 'needed by (0): —'
-      - >-
-        same files as PC5_programmable_gate_types with no order between them:
-        lib/automation/steps.js, lib/automation/engine.js
+      - 'needed by (1): PC5_programmable_gate_types · all downstream 4'
     edges:
       - from: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC1_one_box_shape
         kind: declared

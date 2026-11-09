@@ -1,0 +1,8 @@
+{
+  "id": "verify",
+  "about": "the step's contract: what it gave must hold (with: contains) and must not be what it gave last time (it did something). Two closes for one reason are a gap.",
+  "madeBy": "shipped",
+  "checks": [{ "kind": "holds", "notEmpty": true, "contains": "{{with.contains}}" }, { "kind": "changed" }],
+  "gapAfter": 2,
+  "on": { "open": [{ "do": "note" }], "closed": [{ "do": "retry" }], "gap": [{ "do": "hold" }] }
+}

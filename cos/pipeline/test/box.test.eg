@@ -1,4 +1,4 @@
-// cos/automation/test/box.test.eg — PC1_one_box_shape (MOD-PC-BOX). eg test cos/automation/test/box.test.eg
+// cos/pipeline/test/box.test.eg — PC1_one_box_shape (MOD-PC-BOX). eg test cos/pipeline/test/box.test.eg
 // James, 2026-11-08: "steps as boxes, with wires as the flow into the hooks of gates" · "using emerge as the language".
 use "../box.eg" as box
 
@@ -73,7 +73,7 @@ test "BoxShape is in Emerge's component registry, and its hooks are what it offe
   var rec = null
   for c in components().components { if c.id == "cos.automation.box" { rec = c } }
   expect rec != null and rec.namespace == "cos"
-  expect box.BoxShape.hooks.in == ["boxes", "tasks", "procedure", "steps", "erv", "validate"]
+  expect box.BoxShape.hooks.in == ["boxes", "tasks", "procedure", "steps", "dag", "erv", "validate"]
   expect box.BoxShape.hooks.out == ["answer"]
   expect box.KINDS == ["gate", "system", "agent", "macro", "pipeline", "procedure", "tool", "build"]
 }
@@ -106,4 +106,14 @@ test "an ERAVOS project (.erv): one Step per step and a gate box after each gate
   expect any(wl, fn(w) = w.from[0] == "overview-gate" and w.to[0] == "pricing") and not any(wl, fn(w) = w.from[0] == "overview" and w.to[0] == "pricing")
   expect len(wl) == 5
   expect tl[1].state.extra.box.args.gate == { notEmpty: true } and tl[2].state.extra.kinds == box.KINDS
+}
+
+test "the DAG a run keeps: each step, and after a gated step its gate, wired through it" {
+  send box.BoxShape.boxes { pipeline: P }
+  send box.BoxShape.dag { graph: last.value }
+  let d = last.value
+  expect map(d.boxes, fn(b) = b.id) == ["overview", "overview-gate", "pricing", "check", "read"]
+  expect d.boxes[1].kind == "gate" and d.boxes[1].args.gate == { notEmpty: true }
+  expect any(d.wires, fn(w) = w.from == "overview.out" and w.to == "overview-gate.in")
+  expect any(d.wires, fn(w) = w.from == "overview-gate.out" and w.to == "pricing.in")
 }
