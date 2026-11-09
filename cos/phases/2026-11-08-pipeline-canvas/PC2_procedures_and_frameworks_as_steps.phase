@@ -1,0 +1,38 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-08-pipeline-canvas-phasemap.spec::PC2_procedures_and_frameworks_as_steps
+type: phase
+id: docs_2026-11-08-pipeline-canvas-phasemap.spec::PC2_procedures_and_frameworks_as_steps
+context: >-
+  pipeline phase PC2_procedures_and_frameworks_as_steps of
+  docs/2026-11-08-pipeline-canvas-phasemap.spec
+intent: null
+summary: PC2_procedures_and_frameworks_as_steps (library) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1794214669844
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794214669844
+lastSeenAt: 1794214669844
+fingerprint: null
+payload:
+  id: PC2_procedures_and_frameworks_as_steps
+  map: docs/2026-11-08-pipeline-canvas-phasemap.spec
+  repo: null
+  layer: library
+  status: >-
+    "OPEN — slice a BUILT 0.60.45x (the engine's 'procedure' step, AE7, OA-08); slice b, the
+    .framework as a procedure, open"
+  files:
+    - lib/automation/steps.js
+    - lib/automation/engine.js
+    - idearium/api/index.js
+    - tests/modules/test-pipeline-box.test.js
+  depends_on:
+    - PC1_one_box_shape
+    - PC_D2_frameworks_as_procedures
+    - PD4_the_procedure_library
+  blocks:
+    - MOD-PC-PROCEDURE-STEP
+  spec: cos/spec/pipeline-canvas.spec
+  graph: a1ab5f73789ca07f

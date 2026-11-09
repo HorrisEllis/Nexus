@@ -486,3 +486,23 @@ expanded_2026_11_09_nodes:
   files_2026_11_09: [cos/pipeline/runs.eg, cos/pipeline/gate.eg, cos/pipeline/cli.eg, cos/pipeline/index.js, cos/pipeline/types/node.gatetype (new), cos/pipeline/registry.json (config), cos/pipeline/test/gate.test.eg, cos/pipeline/test/runs.test.eg, lib/automation/pipeline.js, lib/node-schemas/schema.context (new), lib/node-schemas/schema.dag (new), lib/node-export.js, cos/manager/server.js, tests/modules/test-cos-pipeline.test.js]
   proof: "eg gate 8/8, runs 5/5; test-cos-pipeline 9/9 (CP-08: .context → .contract → .chunk through COS's real engine; a .chunk missing its fields closes its gate, named)"
   open: "the steps that make these nodes from Idearium's own tools (RQ7 context, RQ9 the chunked contract, RQ12 the phase DAG) as pipeline steps by route: the next slice, after his go"
+
+# ── ADDENDUM 2026-11-09 (0.60.470) — PC2 slice b built: frameworks as steps; requests recursive (his) ─────────────────────────────────────────
+# James, 2026-11-09: "you did the .frameworks right? .macros? .pipeline? like for steps? its meant to be recursive and meta."
+# Checked first, said to him: .macro, .pipeline, .procedure and workflows were steps already; .framework was not (PC2 slice b open); a pipeline step
+# started a child run, but the child's request did not know its parent and the parent step did not name its child.
+built_2026_11_09_pc2b:
+  PC2_procedures_and_frameworks_as_steps:
+    status: "slice b BUILT 0.60.470 — eg framework 4/4; test-cos-pipeline 12/12 (CP-11)"
+    built: >-
+      Meta: a .framework that declares its steps (a ```json framework-steps block beside its prose, never replacing it) compiles to a .pipeline
+      (cos/pipeline/framework.eg): each step a task with takes, gives, a node gate of its type, a condition, what it waits on, and — when it names no
+      run — an agent step (agentKey, await) asked to do its section with what it takes. That pipeline runs as a step of any other. A framework that
+      only describes is refused, named (409): "it only describes: it declares no steps". GET /api/cos/frameworks, POST /api/cos/frameworks/:file/
+      pipeline; rows cos frameworks, cos framework-compile.
+      Recursive: a step that runs a pipeline passes itself as the child's parent (the engine's __parent, meta.parent); the child request names its
+      parent request and step, the step names its children, at any depth.
+      His framework: docs/innovation-toolkit.framework gains a DRAFT executable block (the coder's, from Sections 2–10's own words; Section 0 is the
+      gate before it, Section 1 the loop around it (PC7), Section 11 somatic and his); "agent": "claude" is the coder's draft too. It compiles to a
+      9-step DAG ending in hostile verification. Which Sections are steps, what each gives and who does them: his to correct.
+    files: [cos/pipeline/framework.eg (new), cos/pipeline/test/framework.test.eg (new), cos/pipeline/cli.eg, cos/pipeline/index.js, cos/pipeline/runs.eg, cos/pipeline/registry.json (config), cos/manager/server.js, cos/manager/contract.json (config), lib/automation/engine.js, lib/automation/pipeline.js, idearium/cli/route-commands.js, docs/innovation-toolkit.framework, tests/modules/test-cos-pipeline.test.js]

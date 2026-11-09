@@ -358,3 +358,24 @@ The framework is the hypothesis; Nexus is the empirical artifact. Direct corresp
 - invariants are the skeleton → map-before-build, reuse-before-build (docs/CLAUDE.md rule 1 & 2)
 - end-state as directional vector → the phasemap `order:` and the DAG's critical path
 - Erosmancer (the creative, embodied self) → ErosmancerOS
+
+## Steps — executable (2026-11-09, the CODER'S DRAFT, his to correct; the prose above is his and unchanged)
+James, 2026-11-08: "A .framework shouldn't just be a document describing what to do. It should be an executable, composable procedure with defined
+inputs, outputs, contracts and execution behavior." · 2026-11-09: "you did the .frameworks right? ... its meant to be recursive and meta."
+Which Sections are steps and what each must give are his to say (PC2 slice b). This draft takes each step's words from its Section's heading and
+text. Left out of the steps, said: Section 0 decides whether to run the framework at all (a gate before it, his call); Section 1 is the loop around
+the rest (PC7: run again until the end state holds); Section 11 is somatic — the body's check is his, no agent can do it. "agent": "claude" is the coder's draft too: who does the steps is his.
+```json framework-steps
+{ "id": "innovation-toolkit", "name": "The Innovation Toolkit", "status": "draft", "agent": "claude",
+  "steps": [
+    { "id": "priming", "section": "Section 2 — Priming & alignment", "does": "Set the end-state (a directional vector, not a destination), determine the invariants, the conditions to replicate.", "takes": [], "gives": ["context"] },
+    { "id": "gap", "section": "Section 3 — Finding the gap / framing the problem", "does": "Frame first: what solving it looks like, downstream effects, worth it. Note every variable from what is true; map the invariants, primitives and principles in the overlap: the boundary of the constraint field is the signal.", "takes": ["context"], "gives": ["gap"] },
+    { "id": "constraints", "section": "Section 4 — Constraints & deconstruct", "does": "Find the constraints; zoom in recursively to bedrock; throw away everything that is not an invariant; the desired outcome and its conditions.", "takes": ["context", "gap"], "gives": ["contract"], "after": ["priming", "gap"] },
+    { "id": "reframe", "section": "Section 5 — Framing (reframe) & horizontal contamination", "does": "Reframe; import one unrelated system and ask what it would do here, structurally; steal the process, not the insight.", "takes": ["gap", "contract"], "gives": ["synthesis"], "after": ["gap", "constraints"] },
+    { "id": "leverage", "section": "Section 6 — Map the leverage", "does": "Leverage = Tension × Weight × f(Slope); the redirect potential; recursive contrast analysis where it is urgent and high-leverage, only the highest-weight aspects where it is not.", "takes": ["contract", "synthesis"], "gives": ["synthesis"], "after": ["constraints", "reframe"] },
+    { "id": "outside-box", "section": "Section 7 — Outside-the-box thinking", "does": "Rotate the idea: the imaginative, engineering, relational, structural, cross-domain, temporal, sensory and meta prompts; find the one black swan.", "takes": ["synthesis"], "gives": ["hypothesis"] },
+    { "id": "sandbox", "section": "Section 8 — Creative-sandbox principle", "does": "Use the contrast's tension; experimental belief; expand with what-ifs and feed the outputs back as new tension until out of ideas.", "takes": ["hypothesis"], "gives": ["hypothesis"] },
+    { "id": "outside-mind", "section": "Section 9 — Outside-the-mind innovation", "does": "Take an observable fact and scale it up; externalize to synthesize.", "takes": ["hypothesis"], "gives": ["idea"] },
+    { "id": "hostile", "section": "Section 10 — Hostile verification", "does": "Attack it before integrating: the weakest assumption, what holds the most weight, where it could fail silently, the opposite. Integrate only what survives.", "takes": ["idea", "hypothesis", "contract"], "gives": ["output"], "after": ["outside-mind", "sandbox", "constraints"] }
+  ] }
+```
