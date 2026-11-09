@@ -611,3 +611,12 @@ orchastrator as the engine, which need to be cos now. Then emerge needs to get d
 - **The handoff** is `handoff_2026_11_08` in docs/2026-11-08-pipeline-canvas-phasemap.spec.
 - **The root CLAUDE.md is now the distillation, and this file is no longer imported into every session.** It stays whole, the full contract, and
   sessions open the part they need. The previous root file is docs/_archive/CLAUDE.root.before-2026-11-08.md.
+
+## ADDENDUM 2026-11-09 — data lives in each system's own data folder; Cortex keeps the books (his)
+James, 2026-11-09, after the coder read "never commit data/**" as covering cortex/data/: "No. The data folder and cortex. Are not it. Data is stored in
+the relevant systems data folder. Cortex is the book keeper."
+- Each system keeps its data in its own data folder (`<system>/data/`), as it owns its code (§5.9). The rule "never commit data/**" is about the shared
+  root `data/` folder; a system's own data folder is that system's to keep.
+- Cortex is the book keeper: the ledgers, the failure modes, the records of what happened are Cortex's, reached by its routes.
+- Readings to confirm: which files in a system's data folder are committed (the 15 cortex/data/nodes/failure_mode files are; three more written by
+  the coder's test runs on 2026-11-09 were left uncommitted and asked about), and that each request COS keeps is booked with Cortex too.

@@ -20,7 +20,8 @@
       "automation.pipeline.done"
     ],
     "origin": "AE7 (2026-11-08), James: \"Then an api that eravos can use for the step. So needs full cli commands, events, nodes.\"",
-    "pipelines": "AE5 (0.60.462): automation.pipeline.start { pipelineId, runId } \u00b7 automation.pipeline.task { pipelineId, runId, task, label, status, ms?, error?, output? (what passed, a preview), gate? { type, outcome: open|closed|gap, why, saw, held, actions } \u2014 PC4/PC5 0.60.466 } \u00b7 automation.pipeline.done { pipelineId, runId, status } \u00b7 automation.pipeline.created { pipelineId, name }"
+    "pipelines": "AE5 (0.60.462): automation.pipeline.start { pipelineId, runId } \u00b7 automation.pipeline.task { pipelineId, runId, task, label, status, ms?, error?, output? (what passed, a preview), gate? { type, outcome: open|closed|gap, why, saw, held, actions } \u2014 PC4/PC5 0.60.466 } \u00b7 automation.pipeline.done { pipelineId, runId, status } \u00b7 automation.pipeline.created { pipelineId, name }",
+    "triggers_hear": "BrainOS migrated, 2026-11-09 (his: \"Also conditions, triggers, events, etc. migrate BrainOS\u2019 features to the engine.\"): an event trigger hears cos.ledger (subject \"<system> <kind>\"), pipeline.request.met | held | not_met | cancelled (subject: the pipeline\u2019s name), pipeline.gate.closed | gap (subject \"<pipeline>/<task>\"), any event a system sends by POST /api/cos/automation/events, and Clear Glass\u2019s own (page.visited, download.done, app.start) where it runs. A pipeline step can carry a condition (when: { left, op, value }); false, it is skipped, and so are the steps after it unless a step they wait on ran."
   },
   "for_eravos": {
     "about": "How ERAVOS (or any system) uses COS's automation engine as a step, by route only (\u00a75.10): never its files.",
@@ -433,6 +434,13 @@
       "method": "GET",
       "path": "/api/cos/procedures",
       "out": "{ procedures } \u2014 Idearium's procedures, read by its route (GET /api/procedures); PC1"
+    },
+    {
+      "method": "POST",
+      "path": "/api/cos/automation/events",
+      "in": "{ name, payload?, by: person | system:<name> }",
+      "out": "{ started } \u2014 the workflows an event started (their trigger: When something happens); an agent\u2019s refused (403)",
+      "personAct": true
     },
     {
       "method": "GET",

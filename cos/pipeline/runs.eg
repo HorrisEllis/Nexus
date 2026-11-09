@@ -208,7 +208,7 @@ fn on_event(base: string, kind: string, data: map, pipeline: any, at: num): map 
     let meta = get(data, "meta", null)
     if meta != null and get(meta, "request", null) != null { attach(base, meta.request, data.runId); return { ok: true, request: meta.request } }
     if pipeline == null { return { ok: false, why: "a run started without its pipeline: no files" } }
-    return { ok: true, request: request(base, pipeline, null, "the engine", at, data.runId) }
+    return { ok: true, request: request(base, pipeline, get(data, "vars", null), "the engine", at, data.runId) }
   }
   let id = folder_of(base, get(data, "runId", ""))
   if id == null { return { ok: false, why: "no request holds this run" } }
@@ -232,7 +232,8 @@ fn on_event(base: string, kind: string, data: map, pipeline: any, at: num): map 
       if whole != null { st.gave = [give_node(w.dir, id, st, whole, data.status == "done", at)] }
       if len(st.took) == 0 { st.took = took_of(w.dir, st) }
     }
-    st.met = data.status == "done" and gate_ok
+    st.met = (data.status == "done" and gate_ok) or data.status == "skipped"
+    if data.status == "skipped" { st.skipped = get(data, "note", "skipped") }
     if g != null and (data.status == "done" or data.status == "failed") {
       var v = clone(g)
       v.at = at
@@ -260,7 +261,7 @@ fn on_event(base: string, kind: string, data: map, pipeline: any, at: num): map 
       put(run_file(w.dir), r)
       remove_path(w.dir + "/gates")
       move_path(w.dir, done_dir(base) + "/" + id)
-      return { ok: true, request: id, met: true }
+      return { ok: true, request: id, met: true, phase: "met", pipeline: r.payload.request.pipeline, name: r.payload.request.name }
     }
     let held = any(unmet, fn(s) = held_now(s))
     var ph = "not met"
@@ -272,7 +273,7 @@ fn on_event(base: string, kind: string, data: map, pipeline: any, at: num): map 
     put(contract_file(w.dir), k)
     r.summary = str(len(steps) - len(unmet)) + " of " + str(len(steps)) + " steps met · " + ph
     put(run_file(w.dir), r)
-    return { ok: true, request: id, met: false }
+    return { ok: true, request: id, met: false, phase: ph, pipeline: r.payload.request.pipeline, name: r.payload.request.name, why: k.payload.why }
   }
   return { ok: false, why: "not an event of a request: " + kind }
 }

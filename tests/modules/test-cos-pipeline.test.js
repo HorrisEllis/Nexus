@@ -17,6 +17,9 @@
  *   CP-08  the data a request carries is nodes: a step gives a .context, the next takes it and gives a .contract, a node gate checks it
  *          against its schema; each is a file in nodes/, each step names what it took and gave, the DAG what each wire carries; a .chunk
  *          missing its schema's fields closes the gate, named (James: "the data that runs through the pipeline like idearium pipeline does")
+ *   CP-09  BrainOS's conditions on a pipeline step: when false it is skipped, said, and so is what only waits on it; a join runs; the request is met
+ *   CP-10  BrainOS's triggers and events in the engine: a held request, a gate gap, a COS ledger row and an event a system sends each start the
+ *          workflows listening; an agent's event is refused
  *   CP-07  an engine with no gate host refuses a typed gate, said; command rows for agents and copilot
  */
 require('../../lib/test-sandbox.js').ensure();
@@ -60,7 +63,7 @@ const eg = (...a) => require('child_process').spawnSync(process.execPath, [path.
 
     await T('CP-01', 'one folder with its registry; the shipped .gatetype files listed; a try decides and does nothing', async () => {
       const reg = J(path.join(ROOT, 'cos/pipeline/registry.json'));
-      assert.deepStrictEqual(reg.extensions.map(e => e.ext), ['.gatetype', '.run', '.dag', '.step', '.gate']);
+      assert.deepStrictEqual(reg.extensions.map(e => e.ext), ['.gatetype', '.run', '.dag', '.step', '.gate', '.contract']);
       for (const c of reg.components) assert.ok(fs.existsSync(path.join(ROOT, 'cos/pipeline', c.file)), c.file);
       const ts = (await req(M, 'GET', '/api/cos/gate-types')).body.types;
       assert.deepStrictEqual(ts.map(t => t.id).sort(), ['check', 'context', 'emerge', 'node', 'options', 'test', 'verify']);
@@ -159,6 +162,43 @@ const eg = (...a) => require('child_process').spawnSync(process.execPath, [path.
       assert.deepStrictEqual([cut.took, cut.met], [['nodes/plan/out.contract'], false]);
       assert.match(cut.verdicts.slice(-1)[0].why, /the \.chunk lacks sectionId, chunkIdx, status/);
       assert.strictEqual(x.run.payload.phase, 'not met'); assert.ok(x.nodes.some(n => n.path === 'nodes/cut/out.chunk'), 'what it gave is kept, to be seen');
+    });
+
+    await T('CP-09', 'conditions: a step whose when is false is skipped, said; what only waits on it too; a join runs; the request is met', async () => {
+      // James, 2026-11-09: "Also conditions, triggers, events, etc. migrate BrainOS' features to the engine."
+      const pid = await make('branches', [
+        { id: 'size', step: SET('{{vars.n}}') },
+        { id: 'big', depends_on: ['size'], step: SET('big'), when: { left: '{{vars.n}}', op: '>', value: 10 } },
+        { id: 'after-big', depends_on: ['big'], step: SET('after') },
+        { id: 'small', depends_on: ['size'], step: SET('small'), when: { left: '{{vars.n}}', op: '<=', value: 10 } },
+        { id: 'join', depends_on: ['after-big', 'small'], step: SET('joined') }]);
+      const r = await ask(pid, { n: 3 }); const x = await ended(r.request);
+      assert.deepStrictEqual([x.where, x.run.payload.phase], ['done', 'met'], JSON.stringify(x.contract && x.contract.payload.why));
+      const st = Object.fromEntries(x.steps.map(s => [s.payload.task, s.payload]));
+      assert.deepStrictEqual(['size', 'big', 'after-big', 'small', 'join'].map(t => st[t].status), ['done', 'skipped', 'skipped', 'done', 'done']);
+      assert.match(st.big.skipped, /its condition is false: 3 > 10/);
+      assert.match(st['after-big'].skipped, /every step it waits on was skipped/);
+      const bad = await req(M, 'POST', '/api/cos/automation/pipelines', { name: 'bad-when', tasks: [{ id: 'a', step: SET('x'), when: { left: 1, op: 'vibes', value: 2 } }], by: 'person' });
+      assert.ok(!bad.body.ok && /when's op "vibes" is not one of/.test(bad.body.error), JSON.stringify(bad.body));
+    });
+
+    await T('CP-10', 'triggers and events: a held request, a gate gap, a ledger row and a system\'s event each start the workflows listening', async () => {
+      const wf = async (event, match) => { const r = await req(M, 'POST', '/api/cos/automation/workflows', { name: `on ${event}`, status: 'active', by: 'person',
+        steps: [{ type: 'trigger', config: { kind: 'event', event, ...(match ? { match } : {}), cooldownMs: 0 } }, { type: 'set', config: { assign: { heard: event } } }] });
+        assert.ok(r.body.ok !== false, JSON.stringify(r.body)); return (r.body.workflow || r.body).id; };
+      const runsOf = async (id) => ((await req(M, 'GET', `/api/cos/automation/workflows/${id}/runs`)).body.runs || []);
+      const onHeld = await wf('pipeline.request.held'), onGap = await wf('pipeline.gate.gap'), onCustom = await wf('versionium.committed'), onLedger = await wf('cos.ledger', 'tester *');
+      const pid = await make('gappy', [{ id: 'a', step: SET('nope'), gate: { type: 'check', with: { contains: 'ok' } } }]);
+      for (let i = 0; i < 3; i++) await ended((await ask(pid, { })).request);   // closed, closed, gap → held
+      await wait(async () => (await runsOf(onGap)).length >= 1 && (await runsOf(onHeld)).length >= 1);
+      const sent = await req(M, 'POST', '/api/cos/automation/events', { name: 'versionium.committed', payload: { name: 'main' }, by: 'system:versionium' });
+      assert.deepStrictEqual([sent.body.ok, sent.body.started], [true, 1]);
+      await wait(async () => (await runsOf(onCustom)).length >= 1);
+      sup.start('tester', { by: 'test' });   // a ledger row: "tester start"
+      await wait(async () => (await runsOf(onLedger)).length >= 1);
+      assert.strictEqual((await req(M, 'POST', '/api/cos/automation/events', { name: 'x.y', by: 'agent:copilot' })).status, 403);
+      const SPEC = (await import(require('url').pathToFileURL(path.join(ROOT, 'idearium/cli/route-commands.js')).href)).SPEC;
+      assert.ok(SPEC.find(s => s.key === 'cos.event').personOnly());
     });
 
     await T('CP-07', 'an engine with no gate host refuses a typed gate, said; command rows for agents and copilot', async () => {
