@@ -61,7 +61,7 @@ function createServer(sup, opts = {}) {
   // AE6 slice a (docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec) — James, 2026-11-06: "Have cos be the orchastrator complelelt."
   // COS runs the automation engine (moved from the orchestrator) and streams its run events on /api/cos/events
   const automation = require('./automation-door.js');
-  automation.setBus((type, data) => { if (data && data.value !== undefined) { const { value, ...rest } = data; broadcast(type, rest); } else broadcast(type, data); if (pipeline && /^automation\.pipeline\./.test(type)) pipeline.onEvent(type, data); });   // the whole value goes to the request's files, the stream keeps the preview   // 2026-11-09: a request's files follow its run (cos/pipeline/runs.js)
+  automation.setBus((type, data) => { if (data && (data.value !== undefined || data.vars !== undefined)) { const { value, vars, ...rest } = data; broadcast(type, rest); } else broadcast(type, data); if (pipeline && /^automation\.pipeline\./.test(type)) pipeline.onEvent(type, data); });   // the whole value goes to the request's files, the stream keeps the preview   // 2026-11-09: a request's files follow its run (cos/pipeline/runs.js)
   let pipeline = null;
   // the api step's nexus://<system>: the address of a system COS declares, from its health URL (never a fixed port)
   automation.setResolver((name) => { const d = sup.declarations().find(x => x.name === name || x.system === name); try { return d && d.healthUrl ? new URL(d.healthUrl).origin : null; } catch (_) { return null; } });
@@ -90,7 +90,12 @@ function createServer(sup, opts = {}) {
     dataDir: process.env.COS_MANAGER_DATA || path.join(root, 'cos', 'data', 'manager') });
   const { boxes, gates } = pipeline;
   automation.setGate((q) => pipeline.decideGate(q));
-  sup.on('ledger', (entry) => broadcast('cos.ledger', { entry }));
+  sup.on('ledger', (entry) => {
+    broadcast('cos.ledger', { entry });
+    // 2026-11-09 — James: "Also conditions, triggers, events, etc. migrate BrainOS' features to the engine." What COS records is an event the
+    // engine's triggers hear: cos.ledger, its subject "<system> <kind>" (a trigger matches it: "idearium crash*", "* restart")
+    try { if (entry && !/^automation\./.test(String(entry.kind || ''))) automation.engine().emitEvent('cos.ledger', { name: `${entry.system || 'cos'} ${entry.kind || ''}`.trim(), system: entry.system || null, kind: entry.kind || null, by: entry.by || null }); } catch (_) {}
+  });
   // 2026-11-05 SC11 — James: "cos needs the console from the autopilot. like a console tab". Every line a system prints, on the stream as
   // cos.console, in batches every 200 ms; a burst past 500 lines in one batch says how many it dropped (never silently).
   let _lines = [], _dropped = 0, _lineTimer = null;
@@ -202,6 +207,15 @@ function createServer(sup, opts = {}) {
       // PC1 — James, 2026-11-08: "cli commands, agent tools, copilot commands, inject nodes to agents. keep going. i want this built and added to cos ui."
       if (m === 'GET' && p === '/api/cos/boxes') { const r = await boxes.of({ pipeline: u.searchParams.get('pipeline'), procedure: u.searchParams.get('procedure'), as: u.searchParams.get('as') }); return send(res, r.ok ? 200 : (r.code || 500), r); }
       // PC5 — COS's gate types: list, read, make (his; an agent's is refused, named), try one on an output (one step at a time), what a gate holds
+      // 2026-11-09 — an event from any system, for the engine's triggers ("When something happens"): a person's, or a system's (by: system:<name>);
+      // an agent's is refused (it proposes): an event starts workflows
+      if (m === 'POST' && p === '/api/cos/automation/events') {
+        const by = String(body.by || ''); if (!by) return send(res, 400, { ok: false, error: 'say who sends it: { "by": "person" | "system:<name>" }' });
+        if (/^agent:/.test(by)) return send(res, 403, { ok: false, error: 'an agent proposes; an event that starts workflows is a person\'s or a system\'s' });
+        if (!/^[a-z][\w.-]{0,80}$/i.test(String(body.name || ''))) return send(res, 400, { ok: false, error: 'name the event: letters, digits, . - _' });
+        const started = automation.engine().emitEvent(String(body.name), { ...(body.payload && typeof body.payload === 'object' ? body.payload : {}), from: by });
+        return send(res, 200, { ok: true, name: body.name, started });
+      }
       if (m === 'GET' && p === '/api/cos/gate-types') return send(res, 200, { ok: true, types: await gates.types() });
       { const gm = /^\/api\/cos\/gate-types\/([\w-]+)(\/try)?$/.exec(p);
         if (gm && m === 'GET' && !gm[2]) { const t = await gates.get(gm[1]); return send(res, t ? 200 : 404, t ? { ok: true, type: t } : { ok: false, error: `no gate type "${gm[1]}"` }); }

@@ -449,3 +449,28 @@ order: >-
 # AE5 expanded: Automation is COS's one tab for automation. Done now: Pipelines (PC1), Hub (OC8a), Deployments (OC4a) off the rail, kept by route.
 # To build after his go on cos/ui/automation/preview/one-tab.png: the hub's slots as one status line; deployments as Runs with where each ran
 # (take / refuse / recall there); Run here · Run on a system on a pipeline; Start at boot only in Settings (removed from Supervision).
+
+# ── ADDENDUM 2026-11-09 (0.60.469) — BrainOS's conditions, triggers and events, in the engine (AE5 expanded; AE_D7) ─────────────────────────────
+# James, 2026-11-09: "No. The data folder and cortex. Are not it. Data is stored in the relevant systems data folder. Cortex is the book keeper. Also
+# conditions, triggers, events, etc. migrate BrainOS' features to the engine."
+# Read first (lib/ui/brainos/brainos-automation.js, its own header): BrainOS has no backend; it drove the engine's routes, and named what the engine
+# lacked: no event-driven trigger source, no schedule apart from intervalMs, branch with no real race or merge. Since then the engine gained manual,
+# every, daily, cron, event and webhook triggers and 17 condition ops; what was still missing, found 2026-11-09: in COS nothing ever reached the
+# engine's emitEvent (only Clear Glass fires page.visited, download.done, app.start), so an event trigger in COS never fired; a pipeline step had no
+# condition; a pipeline started by a trigger or a workflow's pipeline step kept no vars, so its request could not be resumed.
+expanded_2026_11_09_brainos:
+  AE5_ui_and_cleanup:
+    built: >-
+      (1) conditions on pipeline steps: when { left, op, value } (the engine's own _compare, its 17 ops); false → skipped, said with what it saw;
+      a step whose every step it waits on was skipped is skipped; a join runs; a run with only done and skipped steps is ok; a skipped step is met
+      in the request's files. (2) events into the engine: cos.ledger (subject "<system> <kind>"), pipeline.request.met | held | not_met |
+      cancelled, pipeline.gate.closed | gap, and any event a system sends by POST /api/cos/automation/events (an agent's refused); COS's and the
+      pipeline's events wait 10 s between starts of one trigger by default (a workflow that restarts a system cannot loop on its own ledger row).
+      (3) the start event carries the run's vars (kept off COS's live stream), so a pipeline started anywhere is a request with files that resumes.
+    files: [lib/automation/pipeline.js, lib/automation/engine.js, cos/manager/server.js, cos/manager/contract.json (config), cos/pipeline/index.js, cos/pipeline/runs.eg, idearium/cli/route-commands.js, tests/modules/test-cos-pipeline.test.js]
+    proof: "test-cos-pipeline 11/11 (CP-09 conditions, CP-10 triggers and events); the engine's own tests unchanged"
+    open: "branch race / merge (BrainOS's named gap): first-of and all-of joins on a pipeline step; BrainOS's screen archived once ERAVOS's canvas shows these (his)"
+  data_rule_2026_11_09: >-
+    His: "Data is stored in the relevant systems data folder. Cortex is the book keeper." COS's requests are kept in COS's own data folder
+    (COS_MANAGER_DATA, cos/data/manager/pipeline/); reading TO CONFIRM: what each request did is booked with Cortex (its ledger, by route) as well —
+    not built yet.

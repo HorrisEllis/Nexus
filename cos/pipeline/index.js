@@ -91,13 +91,22 @@ function createPipeline({ automation, idearium = null, call = null, dataDir } = 
     save: (type, { by } = {}) => eg('save-type', { shipped, mine, type, by }),
     decide: ({ pipelineId = 'try', task = 'try', gate: g = {}, output = '', context = {} } = {}) => gate({ pipelineId, task, runId: null, gate: g, output }, { dry: true, context }),
   };
-  const decideGate = (q) => inOrder(() => gate(q));
+  // 2026-11-09 — James: "Also conditions, triggers, events, etc. migrate BrainOS' features to the engine." What the module sees is an event the
+  // engine's triggers hear (a workflow "When something happens"): a gate that closed or found a gap, a request met, held or not met.
+  const fire = (name, payload) => { try { const E = automation.engine(); if (E && typeof E.emitEvent === 'function') E.emitEvent(name, payload); } catch (_) {} };
+  const decideGate = (q) => inOrder(async () => {
+    const v = await gate(q);
+    if (v && (v.outcome === 'gap' || v.outcome === 'closed')) fire(`pipeline.gate.${v.outcome}`, { name: `${q.pipelineId}/${q.task}`, pipelineId: q.pipelineId, task: q.task, type: v.type, why: v.why });
+    return v;
+  });
 
   // ── a request, kept as files ──
   const onEvent = (type, data) => inOrder(async () => {
     const needsPipeline = type === 'automation.pipeline.start' && !(data.meta && data.meta.request);
     const pipeline = needsPipeline ? await getPipeline(data.pipelineId) : null;
-    await eg('event', { base: dataDir, kind: type, data, pipeline, at: Date.now() });
+    const r = await eg('event', { base: dataDir, kind: type, data, pipeline, at: Date.now() });
+    // a request's end is an event the engine's triggers hear: pipeline.request.met | held | not_met | cancelled (subject: the pipeline's name)
+    if (type === 'automation.pipeline.done' && r && r.ok && r.phase) fire(`pipeline.request.${String(r.phase).replace(/ /g, '_')}`, { name: r.name, pipelineId: r.pipeline, request: r.request, why: r.why || null });
   });
   const runs = {
     // reads wait their turn too, so they see every event that came before them
