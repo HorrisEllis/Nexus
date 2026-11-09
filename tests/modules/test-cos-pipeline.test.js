@@ -20,6 +20,8 @@
  *   CP-09  BrainOS's conditions on a pipeline step: when false it is skipped, said, and so is what only waits on it; a join runs; the request is met
  *   CP-10  BrainOS's triggers and events in the engine: a held request, a gate gap, a COS ledger row and an event a system sends each start the
  *          workflows listening; an agent's event is refused
+ *   CP-11  recursive and meta: a .framework that declares its steps compiles to a pipeline in the engine; one that only describes is refused,
+ *          named; a pipeline runs it as a step; the child request and its parent step are linked both ways, its nodes in its own files
  *   CP-07  an engine with no gate host refuses a typed gate, said; command rows for agents and copilot
  */
 require('../../lib/test-sandbox.js').ensure();
@@ -27,6 +29,7 @@ const assert = require('assert'), fs = require('fs'), os = require('os'), path =
 const ROOT = path.join(__dirname, '..', '..');
 const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'cos-pipeline-'));
 process.env.COS_MANAGER_DATA = path.join(tmp, 'data');
+process.env.COS_FRAMEWORKS_DIR = path.join(tmp, 'frameworks');
 const RUNS = path.join(tmp, 'data', 'pipeline', 'runs');
 
 let passed = 0, failed = 0;
@@ -58,7 +61,7 @@ const eg = (...a) => require('child_process').spawnSync(process.execPath, [path.
   const TEST = { type: 'test', with: { owner: 'tester', route: 'POST /api/tests/run', expect: 'passed' } };
   try {
     await T('CP-00', 'Emerge\'s own tests: the box shape (with its dag hook) and the gate', () => {
-      for (const [f, n] of [['cos/pipeline/test/box.test.eg', 10], ['cos/pipeline/test/gate.test.eg', 8], ['cos/pipeline/test/runs.test.eg', 5]]) { const r = eg('test', f); assert.strictEqual(r.status, 0, r.stdout + r.stderr); assert.match(r.stdout, new RegExp(`${n} passed, 0 failed`)); }
+      for (const [f, n] of [['cos/pipeline/test/box.test.eg', 10], ['cos/pipeline/test/gate.test.eg', 8], ['cos/pipeline/test/runs.test.eg', 5], ['cos/pipeline/test/framework.test.eg', 4]]) { const r = eg('test', f); assert.strictEqual(r.status, 0, r.stdout + r.stderr); assert.match(r.stdout, new RegExp(`${n} passed, 0 failed`)); }
     });
 
     await T('CP-01', 'one folder with its registry; the shipped .gatetype files listed; a try decides and does nothing', async () => {
@@ -199,6 +202,33 @@ const eg = (...a) => require('child_process').spawnSync(process.execPath, [path.
       assert.strictEqual((await req(M, 'POST', '/api/cos/automation/events', { name: 'x.y', by: 'agent:copilot' })).status, 403);
       const SPEC = (await import(require('url').pathToFileURL(path.join(ROOT, 'idearium/cli/route-commands.js')).href)).SPEC;
       assert.ok(SPEC.find(s => s.key === 'cos.event').personOnly());
+    });
+
+    await T('CP-11', 'recursive and meta: a .framework compiles to a pipeline; a pipeline runs it as a step; the two requests linked both ways', async () => {
+      // James, 2026-11-09: "you did the .frameworks right? .macros? .pipeline? like for steps? its meant to be recursive and meta."
+      const F = path.join(tmp, 'frameworks'); fs.mkdirSync(F, { recursive: true });
+      fs.writeFileSync(path.join(F, 'prose.framework'), '# a method\nOnly what to do, in words.\n');
+      fs.copyFileSync(path.join(ROOT, 'docs/innovation-toolkit.framework'), path.join(F, 'innovation-toolkit.framework'));
+      fs.writeFileSync(path.join(F, 'method.framework'), '# a small method\nits prose.\n```json framework-steps\n' + JSON.stringify({ id: 'method', name: 'Method', status: 'his', steps: [
+        { id: 'look', section: 'Look', gives: ['context'], run: { type: 'set', config: { assign: { for: 'the request', items: 'what is true' } } } },
+        { id: 'bind', section: 'Bind', takes: ['context'], gives: ['contract'], run: { type: 'set', config: { assign: { uuid: 'c-9', forAgent: 'cos', intention: 'x', endState: 'y' } } } }] }) + '\n```\n');
+      const list = (await req(M, 'GET', '/api/cos/frameworks')).body.frameworks;
+      assert.deepStrictEqual(list.map(f => [f.file, f.runs]).sort(), [['innovation-toolkit.framework', true], ['method.framework', true], ['prose.framework', false]]);
+      const no = await req(M, 'POST', '/api/cos/frameworks/prose.framework/pipeline', { by: 'person' });
+      assert.strictEqual(no.status, 409); assert.match(no.body.error, /cannot run as a step: it only describes/);
+      const draft = await req(M, 'POST', '/api/cos/frameworks/innovation-toolkit.framework/pipeline', { by: 'person' });
+      assert.deepStrictEqual([draft.body.ok, draft.body.pipeline.name, draft.body.pipeline.steps], [true, 'framework: The Innovation Toolkit (draft)', 9]);
+      const made = await req(M, 'POST', '/api/cos/frameworks/method.framework/pipeline', { by: 'person' }); assert.ok(made.body.ok, JSON.stringify(made.body));
+      const outer = await make('uses-a-method', [{ id: 'think', step: { type: 'pipeline', config: { pipeline: 'framework: Method' } } }, { id: 'after', depends_on: ['think'], step: SET('done') }]);
+      const r = await ask(outer, {}); const x = await ended(r.request);
+      assert.deepStrictEqual([x.where, x.run.payload.phase], ['done', 'met'], JSON.stringify(x.contract && x.contract.payload.why));
+      const think = x.steps.find(s => s.payload.task === 'think').payload;
+      assert.strictEqual((think.children || []).length, 1, 'the step names the request it started');
+      const child = (await req(M, 'GET', `/api/cos/pipeline/requests/${think.children[0]}`)).body;
+      assert.deepStrictEqual(child.run.payload.parent, { request: r.request, step: 'think' }, 'the child names its parent request and step');
+      assert.deepStrictEqual(child.nodes.map(n => n.path).sort(), ['nodes/bind/out.contract', 'nodes/look/out.context']);
+      assert.strictEqual(child.run.payload.phase, 'met');
+      assert.strictEqual((await req(M, 'POST', '/api/cos/frameworks/method.framework/pipeline', { by: 'agent:copilot' })).status, 403);
     });
 
     await T('CP-07', 'an engine with no gate host refuses a typed gate, said; command rows for agents and copilot', async () => {

@@ -51,6 +51,13 @@
       "test": "test/runs.test.eg"
     },
     {
+      "id": "cos.pipeline.framework",
+      "file": "framework.eg",
+      "lang": "emerge",
+      "does": "a .framework that declares its steps (a ```json framework-steps block beside its prose) compiles to a .pipeline that runs as a step of any other; one that only describes is refused, named",
+      "test": "test/framework.test.eg"
+    },
+    {
       "id": "cos.pipeline.cli",
       "file": "cli.eg",
       "lang": "emerge",
@@ -73,7 +80,9 @@
     "POST /api/cos/pipeline/requests",
     "GET /api/cos/pipeline/requests",
     "GET /api/cos/pipeline/requests/:id",
-    "POST /api/cos/pipeline/requests/:id/resume"
+    "POST /api/cos/pipeline/requests/:id/resume",
+    "GET /api/cos/frameworks",
+    "POST /api/cos/frameworks/:file/pipeline"
   ],
   "commands": [
     "cos boxes",
@@ -189,5 +198,6 @@
     "about": "what a request carries: each step's output as a node of its type in nodes/<step>/out.<type>; a step declares takes/gives (lib/node-schemas: chunk, contract, context, gap, intent, hypothesis, crystal, output … any of them); each wire in dag.dag says what it carries; each step file names what it took and gave",
     "origin": "James, 2026-11-09: \"i meant the data that runs through the pipeline like idearium pipeline does, emerge, .contracts with .dag, .chunk, .context or any of the nodes.\" · \"look at the idearium pipeline, don't limit to just my request for the node types\"",
     "types": "every type in lib/node-schemas (77 with .context and .dag, added 2026-11-09)"
-  }
+  },
+  "recursive": "a step that runs a pipeline (or a framework, compiled to one) starts a child request; the step names its children, the child its parent (request, step), at any depth (the engine's chain and MAX_DEPTH)"
 }

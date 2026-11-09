@@ -1,0 +1,98 @@
+// cos/pipeline/framework.eg — a .framework that declares its steps compiles to a .pipeline, so it runs as a step of any other (PC2 slice b;
+// cos/spec/pipeline-canvas.spec MOD-PC-PROCEDURE-STEP).
+// James, 2026-11-08: "A .framework shouldn't just be a document describing what to do. It should be an executable, composable procedure with
+// defined inputs, outputs, contracts and execution behavior. That creates a common foundation for macros, pipelines, procedures and nested
+// workflows." · 2026-11-09: "you did the .frameworks right? .macros? .pipeline? like for steps? its meant to be recursive and meta."
+//
+// Meta: a framework is not a fourth engine. Its executable steps (a JSON block beside the prose, never replacing it) become a pipeline's tasks —
+// each with what it takes and gives (node types), its gate (by default: it gave a node of its type), its condition (when), what it waits on — and
+// that pipeline runs as a step of any other, nested, at any depth (the engine's chain and MAX_DEPTH). A framework with no steps only describes:
+// it is refused as a step, and the refusal names what is missing (§1.2).
+//
+// The executable block: a fenced code block opened with ```json framework-steps:
+//   { "id", "name", "status": "draft" | "his", "agent"?, "steps": [{ "id", "section", "does", "agent"?, "takes": [types], "gives": [types], "after": [ids]?,
+//     "run": <an engine step>?, "check": <a gate>?, "when": { left, op, value }? }] }
+// A step with no run asks an agent to do its section, given what it takes; the agent's reply is what it gives.
+
+let OPEN = "```json framework-steps"
+
+fn block_of(text: string): any {
+  let at = find_text(text, OPEN)
+  if at < 0 { return null }
+  let rest = slice(text, at + len(OPEN), len(text))
+  let end = find_text(rest, "```")
+  if end < 0 { return null }
+  return parse_json(slice(rest, 0, end))
+}
+
+fn problems_of(fw: any): list {
+  if fw == null { return ["it only describes: it declares no steps (no ```json framework-steps block: each step's section, what it takes and gives, its check)"] }
+  var ps = []
+  if type_of(get(fw, "id", null)) != "string" { ps = push(ps, "the framework has no id") }
+  let steps = get(fw, "steps", [])
+  if type_of(steps) != "list" or len(steps) == 0 { ps = push(ps, "it declares no steps") }
+  var seen = []
+  for s in steps {
+    let id = get(s, "id", null)
+    if type_of(id) != "string" { ps = push(ps, "a step has no id") } else {
+      if index_of(seen, id) >= 0 { ps = push(ps, "step " + id + ": the id is used twice") }
+      seen = push(seen, id)
+      if len(get(s, "gives", [])) == 0 { ps = push(ps, "step " + id + ": it gives nothing (an output: a node type)") }
+      for a in get(s, "after", []) { if index_of(map(steps, fn(x) = get(x, "id", "")), a) < 0 { ps = push(ps, "step " + id + ": waits on " + a + ", which is not a step") } }
+      if get(s, "run", null) == null and get(s, "agent", get(fw, "agent", null)) == null { ps = push(ps, "step " + id + ": an agent does it, but none is named (agent, on the framework or the step)") }
+    }
+  }
+  return ps
+}
+
+// one framework step → one pipeline task
+fn task_of_step(fw: map, s: map, prev: any): map {
+  var after = get(s, "after", null)
+  if after == null {
+    after = []
+    if prev != null { after = [prev] }
+  }
+  var run = get(s, "run", null)
+  if run == null {
+    let given = join(map(after, fn(a) = "\{\{tasks." + a + ".output\}\}"), "\n\n")
+    run = { type: "agent", config: { agentKey: get(s, "agent", get(fw, "agent", null)), await: true, prompt: "Framework: " + get(fw, "name", fw.id) + ". " + get(s, "section", s.id) + ".\n" + get(s, "does", "") + "\n\nWhat you are given:\n" + given + "\n\nGive: " + join(s.gives, ", ") + ", as one JSON object: a node envelope \{ envelope: 1, type, id, payload \} whose payload has the fields its schema (lib/node-schemas/schema.<type>) requires." } }
+  }
+  var check = get(s, "check", null)
+  if check == null { check = { type: "node", with: { type: s.gives[0] } } }
+  var t = { id: s.id, label: get(s, "section", s.id), depends_on: after, step: run, takes: get(s, "takes", []), gives: s.gives, gate: check }
+  if get(s, "when", null) != null { t.when = s.when }
+  return t
+}
+
+fn to_pipeline(fw: map): map {
+  var tasks = []
+  var prev = null
+  for s in fw.steps {
+    tasks = push(tasks, task_of_step(fw, s, prev))
+    prev = s.id
+  }
+  var name = "framework: " + get(fw, "name", fw.id)
+  if get(fw, "status", "draft") == "draft" { name = name + " (draft)" }
+  return { name: name, description: "compiled from the .framework " + fw.id + " (cos/pipeline/framework.eg); its steps: " + str(len(tasks)), tasks: tasks }
+}
+
+// a .framework file → { ok, pipeline } | { ok: false, problems }
+fn compile(text: string): map {
+  let fw = block_of(text)
+  let ps = problems_of(fw)
+  if len(ps) > 0 { return { ok: false, problems: ps } }
+  return { ok: true, framework: { id: fw.id, name: get(fw, "name", fw.id), status: get(fw, "status", "draft"), steps: len(fw.steps) }, pipeline: to_pipeline(fw) }
+}
+
+// the .framework files in a folder: { file, id?, runs: bool, why? }
+fn frameworks_in(dir: string): list {
+  var out = []
+  for f in list_dir(dir) {
+    if len(f) > 10 and slice(f, len(f) - 10, len(f)) == ".framework" {
+      let c = compile(read_file(dir + "/" + f))
+      if c.ok { out = push(out, { file: f, id: c.framework.id, name: c.framework.name, status: c.framework.status, steps: c.framework.steps, runs: true }) }
+      else { out = push(out, { file: f, runs: false, why: join(c.problems, "; ") }) }
+    }
+  }
+  return out
+}

@@ -202,13 +202,41 @@ fn took_of(d: string, st: map): list {
   return out
 }
 
+// the engine's own chain keys (__pipelineChain, __parent) are not the request's vars
+fn without_meta_vars(v: any): any {
+  if type_of(v) != "map" { return v }
+  var out = {}
+  for k in keys(v) { if k != "__pipelineChain" and k != "__parent" { out[k] = v[k] } }
+  return out
+}
+// a child request and the step that started it: the step names its children, the child its parent (request, step), at any depth
+fn link(base: string, child: string, parent: map) {
+  let pid = folder_of(base, get(parent, "engineRun", ""))
+  if pid == null { return null }
+  let pd = where(base, pid).dir
+  var s = take_file(step_file(pd, parent.task))
+  if s != null {
+    s.payload.children = push(get(s.payload, "children", []), child)
+    put(step_file(pd, parent.task), s)
+  }
+  let cd = where(base, child).dir
+  var r = take_file(run_file(cd))
+  r.payload.parent = { request: pid, step: parent.task }
+  put(run_file(cd), r)
+}
+
 // the engine's events keep the files: a step as it changes; the request when it ends. pipeline: the pipeline, given with a start of its own
 fn on_event(base: string, kind: string, data: map, pipeline: any, at: num): map {
   if kind == "automation.pipeline.start" {
     let meta = get(data, "meta", null)
     if meta != null and get(meta, "request", null) != null { attach(base, meta.request, data.runId); return { ok: true, request: meta.request } }
     if pipeline == null { return { ok: false, why: "a run started without its pipeline: no files" } }
-    return { ok: true, request: request(base, pipeline, get(data, "vars", null), "the engine", at, data.runId) }
+    let child = request(base, pipeline, without_meta_vars(get(data, "vars", null)), "the engine", at, data.runId)
+    // James, 2026-11-09: "its meant to be recursive and meta." A run started by a step of another request is that request's child: linked both ways
+    var parent = null
+    if meta != null { parent = get(meta, "parent", null) }
+    if parent != null { link(base, child, parent) }
+    return { ok: true, request: child }
   }
   let id = folder_of(base, get(data, "runId", ""))
   if id == null { return { ok: false, why: "no request holds this run" } }

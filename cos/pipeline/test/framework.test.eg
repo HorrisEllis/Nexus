@@ -1,0 +1,40 @@
+// cos/pipeline/test/framework.test.eg — a .framework that declares its steps compiles to a .pipeline (PC2 slice b). eg test cos/pipeline/test/framework.test.eg
+// James, 2026-11-09: "you did the .frameworks right? .macros? .pipeline? like for steps? its meant to be recursive and meta."
+use "../framework.eg" as framework
+
+let FENCE = "```"
+fn fw(body: string): string = "# a method\nprose, his.\n" + FENCE + "json framework-steps\n" + body + "\n" + FENCE + "\n"
+
+test "a framework that only describes is refused, and the refusal says what is missing" {
+  let c = framework.compile("# a method\nOnly prose: what to do, in words.\n")
+  expect not c.ok
+  expect find_text(c.problems[0], "it only describes: it declares no steps") >= 0, json(c.problems)
+}
+
+test "its steps become a pipeline: in order unless they say what they wait on; each takes, gives, and is gated on giving a node of its type" {
+  let c = framework.compile(fw(json({ id: "m", name: "M", agent: "claude", steps: [{ id: "a", section: "A", does: "look", gives: ["context"] }, { id: "b", section: "B", takes: ["context"], gives: ["gap"] },
+    { id: "c", gives: ["output"], after: ["a"], run: { type: "set" }, when: { left: "x", op: "==", value: "x" } }] })))
+  expect c.ok, json(c)
+  let t = c.pipeline.tasks
+  expect c.pipeline.name == "framework: M (draft)", "not marked his: a draft"
+  expect map(t, fn(x) = x.depends_on) == [[], ["a"], ["a"]]
+  expect t[1].takes == ["context"] and t[1].gives == ["gap"] and t[1].gate == { type: "node", with: { type: "gap" } }
+  expect t[0].step.type == "agent" and t[0].step.config.agentKey == "claude" and t[0].step.config.await and find_text(t[0].step.config.prompt, "A.\nlook") >= 0
+  expect find_text(t[1].step.config.prompt, "\{\{tasks.a.output\}\}") >= 0, "an agent is given what the steps it waits on gave"
+  expect t[2].step == { type: "set" } and t[2].when.op == "=="
+}
+
+test "refused, named: no id, a step that gives nothing, a wait on a step that is not there, an id twice" {
+  let c = framework.compile(fw(json({ steps: [{ id: "a", gives: [] }, { id: "a", gives: ["x"], after: ["ghost"] }] })))
+  expect not c.ok
+  for want in ["an agent does it, but none is named", "has no id", "step a: it gives nothing", "the id is used twice", "waits on ghost, which is not a step"] {
+    expect any(c.problems, fn(p) = find_text(p, want) >= 0), want + " in " + json(c.problems)
+  }
+}
+
+test "his framework (docs/innovation-toolkit.framework) compiles: its draft steps, a DAG that ends in hostile verification" {
+  let c = framework.compile(read_file("docs/innovation-toolkit.framework"))
+  expect c.ok, json(get(c, "problems", []))
+  expect c.framework.status == "draft"
+  expect c.pipeline.tasks[len(c.pipeline.tasks) - 1].id == "hostile"
+}

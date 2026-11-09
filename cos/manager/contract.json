@@ -466,6 +466,18 @@
       "out": "{ decision: { outcome, why, saw, actions (not done), options } } \u2014 nothing runs, nothing is kept"
     },
     {
+      "method": "GET",
+      "path": "/api/cos/frameworks",
+      "out": "{ frameworks: [{ file, id?, name?, status?, steps?, runs, why? }] } \u2014 each .framework, and whether it can run as a step"
+    },
+    {
+      "method": "POST",
+      "path": "/api/cos/frameworks/:file/pipeline",
+      "in": "{ by }",
+      "out": "{ framework, pipeline: { id, name, steps }, made } \u2014 compiled to a pipeline in the engine (made or brought up to date); one that only describes is refused, named (409); an agent\u2019s refused (403)",
+      "personAct": true
+    },
+    {
       "method": "POST",
       "path": "/api/cos/pipeline/requests",
       "in": "{ pipeline, vars?, by }",
