@@ -1,0 +1,285 @@
+envelope: 1
+uuid: nexus-export-graph-phase:PC3_the_build_request_step:64c265d1001957a6
+type: graph
+id: phase:PC3_the_build_request_step:64c265d1001957a6
+context: dependency graph of phase PC3_the_build_request_step
+intent: null
+summary: 31 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1794211880618
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794211880618
+lastSeenAt: 1794211880618
+fingerprint: null
+payload:
+  for: PC3_the_build_request_step
+  kind: phase
+  repo: null
+  hash: 64c265d1001957a6
+  nodes:
+    - path: cos/manager/contract.json
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/manager/hub.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/manager/server.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/pipeline/build-request.eg
+      role: changes
+      exists: false
+      system: cos
+    - path: idearium/cli/route-commands.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: tests/modules/run-all.js
+      role: changes
+      exists: true
+      system: null
+    - path: tests/modules/test-pipeline-build-step.test.js
+      role: changes
+      exists: false
+      system: null
+    - path: diagnostic/tests/causality.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/cli/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: tests/modules/test-cg-agent-doors.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-cos-compartment-template.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-drawbridge-registry.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-eros-hooks.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-nexus-update.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-node-registry-system.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-release-deliver.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-sovereign-systems.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-system-boundary.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cos/disk/disk.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/disk/vdisk.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/add-system.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/autopilot-door.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/deploy.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/notices.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/proposals.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/resources.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/supervisor.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/system-config.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/updates.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/usage.js
+      role: uses
+      exists: true
+      system: cos
+  edges:
+    - from: cos/manager/server.js
+      to: cos/manager/supervisor.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/proposals.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/usage.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/autopilot-door.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/resources.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/updates.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/notices.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/system-config.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/add-system.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/deploy.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/disk/disk.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/disk/vdisk.js
+      kind: requires
+    - from: diagnostic/tests/causality.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: idearium/cli/index.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-cg-agent-doors.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-cos-compartment-template.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-drawbridge-registry.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-eros-hooks.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-nexus-update.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-node-registry-system.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-release-deliver.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-sovereign-systems.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-system-boundary.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 4
+    deps:
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC1_one_box_shape
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D3_when_a_step_becomes_a_build_request
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D5_emerge_writes_the_code
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D10_the_canvas_is_the_surface_tools_are_made
+      - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE_D4_the_hub_structural
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC8_the_console
+    dependents:
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC7_iterate_to_the_end_state
+    upstream:
+      - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE_D4_the_hub_structural
+      - docs/2026-10-29-pipelines-phasemap.spec::PL1_pipeline_core
+      - docs/2026-10-29-pipelines-phasemap.spec::PL_D1_a_task_is_one_engine_step
+      - docs/2026-10-29-pipelines-phasemap.spec::PL_D2_pipelines_live_in_the_engine_that_runs_them
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC1_task_nodes
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC4_deploy_to_any_system
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC8_the_console
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC_D0_one_console_in_cos
+      - docs/2026-11-01-procedures-phasemap.spec::PD1_procedure_nodes_and_commands
+      - docs/2026-11-01-procedures-phasemap.spec::PD_D0_a_procedure_is_a_node_file
+      - docs/2026-11-01-procedures-phasemap.spec::PD_D0_addendum_one_procedure_type
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC1_one_box_shape
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D0_reuse_first
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D10_the_canvas_is_the_surface_tools_are_made
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D3_when_a_step_becomes_a_build_request
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D4_language
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D5_emerge_writes_the_code
+    downstream:
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC7_iterate_to_the_end_state
+    blockedBy:
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC8_the_console
+    unlocks: []
+    conflicts:
+      - with: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC5_programmable_gate_types
+        files:
+          - cos/manager/server.js
+          - cos/manager/contract.json
+          - idearium/cli/route-commands.js
+          - tests/modules/run-all.js
+    dangling: []
+    lines:
+      - layer 4 · blocked by OC8_the_console
+      - >-
+        depends on (6): PC1_one_box_shape, PC_D3_when_a_step_becomes_a_build_request,
+        PC_D5_emerge_writes_the_code, PC_D10_the_canvas_is_the_surface_tools_are_made,
+        AE_D4_the_hub_structural, OC8_the_console · all upstream 17
+      - 'needed by (1): PC7_iterate_to_the_end_state'
+      - >-
+        same files as PC5_programmable_gate_types with no order between them: cos/manager/server.js,
+        cos/manager/contract.json, idearium/cli/route-commands.js, tests/modules/run-all.js
+    edges:
+      - from: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC1_one_box_shape
+        kind: declared
+      - from: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D3_when_a_step_becomes_a_build_request
+        kind: declared
+      - from: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D5_emerge_writes_the_code
+        kind: declared
+      - from: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D10_the_canvas_is_the_surface_tools_are_made
+        kind: declared
+      - from: docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE_D4_the_hub_structural
+        kind: declared
+      - from: docs/2026-11-01-orchestration-console-phasemap.spec::OC8_the_console
+        kind: declared

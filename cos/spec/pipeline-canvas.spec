@@ -182,7 +182,7 @@ spec:
     - id: MOD-PC-BOX
       name: box
       uuid: cos-pipeline-canvas-box-v1-0000-2026-1108-001
-      path: cos/automation/box.eg
+      path: cos/pipeline/box.eg   # 2026-11-09: moved into the module (was cos/automation/box.eg)
       phase: PC1_one_box_shape
       description: >-
         One Box and Wire shape over every kind. toBox/fromBox convert an engine pipeline task (IF-PIPELINE-CORE, IF-STEP-TYPES), a procedure step
@@ -216,7 +216,7 @@ spec:
     - id: MOD-PC-BUILD-STEP
       name: build-step
       uuid: cos-pipeline-canvas-build-step-v1-0000-2026-1108-001
-      path: cos/automation/build-request.js
+      path: cos/pipeline/build-request.eg   # 2026-11-09: in the module, in Emerge (was planned as cos/automation/build-request.js)
       phase: PC3_the_build_request_step
       description: >-
         A build box: a BuildRequest held as a COS proposal (IF-COS-DOOR-PC, verb build); taken, filed as a RAID contract by Cortex's route
@@ -235,7 +235,7 @@ spec:
     - id: MOD-PC-GATE-TYPES
       name: gate-types
       uuid: cos-pipeline-canvas-gate-types-v1-0000-2026-1108-001
-      path: cos/gate/types.js
+      path: cos/pipeline/gate.eg   # 2026-11-09: the module, in Emerge; its types cos/pipeline/types/*.gatetype (planned as cos/gate/types.js)
       phase: PC5_programmable_gate_types
       description: >-
         Gate types as COS has compartment types: list, get, propose (an agent's held), validate against GateType; the starter types are files in
@@ -249,6 +249,23 @@ spec:
       behavioral_contracts: ["the old onClosed words still run unchanged", "options are shown, never picked for him"]
       error_paths: ["an invalid type → refused, named", "an action's owner down → said, the next action runs"]
       acceptance: ["a gate type runs a stand-in test route, logs a fault by route, offers options; a pick branches the run; an agent's type held; the old words unchanged"]
+
+    - id: MOD-PC-RUNS
+      name: pipeline-runs
+      uuid: cos-pipeline-canvas-runs-v1-0000-2026-1109-001
+      path: cos/pipeline/runs.eg
+      phase: PC5_programmable_gate_types
+      description: >-
+        A request through a pipeline kept as files until its contract is met (James, 2026-11-09: "Like each step needs to be persistent until the
+        contract and conditions for the request from the dag have been met." · "The gates are temporary unless it didn't finish."). <COS data>/pipeline/
+        runs/active/<id>/: run.run (the request and its contract), dag.dag, steps/<t>.step, gates/<t>.gate; met → gates removed, moved to done/.
+      deps: [{ name: box }, { name: gate-types }, { name: engine }]
+      schema_refs: [GateType]
+      exports: ["request(base, pipeline, vars, by, at, engineRun) → id", "on_event(base, kind, data, pipeline, at)", "gate_context · gate_verdict · record_actions", "list_requests · read_request · resume_of", "routes POST|GET /api/cos/pipeline/requests, GET /api/cos/pipeline/requests/:id, POST /api/cos/pipeline/requests/:id/resume"]
+      gate_pipeline: ["GATE-PC5-004: the files are written before the engine runs", "GATE-PC5-005: a request leaves active/ only when every step is met"]
+      behavioral_contracts: ["what is met is not run again on a resume", "a gate's learning reaches the next request through the step files", "every file is a node envelope in JSON"]
+      error_paths: ["an engine run no request holds → said, no file", "a request started by the engine's own route has no vars → it cannot be resumed as it was, said"]
+      acceptance: ["eg test cos/pipeline/test/runs.test.eg 4/4", "test-cos-pipeline CP-02, CP-03, CP-04"]
 
     - id: MOD-PC-WATCH
       name: pipeline-watch
@@ -270,7 +287,7 @@ spec:
     - id: MOD-PC-LOOP
       name: end-state-loop
       uuid: cos-pipeline-canvas-loop-v1-0000-2026-1108-001
-      path: cos/automation/loop.eg
+      path: cos/pipeline/loop.eg   # 2026-11-09: in the module (was planned as cos/automation/loop.eg)
       phase: PC7_iterate_to_the_end_state
       description: >-
         The loop toward a project's end state (James, 2026-11-08: "build anything it doesn't have, iterate until it reaches the end state"): run, find
@@ -341,3 +358,56 @@ spec:
 # James, 2026-11-08: "I don't need a copy. It's going to be the same." · "the canvas is what the visual surface is, and then the tools are what to
 # make for it. So that way, if it needs a tool, it can be made. If it's missing something, it can be built." IF-ERAVOS-SDK and MOD-PC-CANVAS now
 # name ERAVOS's own repository (Eravos-Canvas:<path>). A missing tool is a build request (MOD-PC-BUILD-STEP) whose output is an ERAVOS tool.
+
+# ── ADDENDUM 2026-11-09 (0.60.466) — THE IDEA, kept whole so it is not buried: the visual canvas makes all of Nexus programmable ────────────
+# James, 2026-11-09, asked where the visual canvas for the pipeline is: "Rules and macros. Okay so where is the visual canvas for the pipeline.
+# This is a major feature of nexus. Like huge. This can make debugging, contracts being built. The process that the system uses, copilot uses for
+# its tools, this makes all of nexus programmable. Also visual debugging, emerges coding per gate. Gates can hold context, test, verify, gates would
+# do a lot. But not the same everytime." · "Look at the cos ui phases. Also log this somewhere. So it doesn't get burried. I feel like most of my
+# big ideas get lost. Spec it." · "Okay. So build this."
+# What it is, in his words and the phases that carry it:
+#   - one canvas (ERAVOS, PC4) where every process Nexus runs is drawn as compartments and gates: the system's own processes, copilot's tools, macros,
+#     rules, pipelines, procedures, frameworks. Drawing it is programming Nexus.
+#   - visual debugging: the wires carry the actual request (PC4); a stopped run shows the gate it stopped at and why.
+#   - contracts being built: a gate's verify is a contract's test; a gap is a build request (PC3), a RAID contract.
+#   - Emerge coding per gate: a gate that finds a gap hands Emerge the gap to write the code for (the emerge type, built 0.60.466).
+#   - gates hold context, test, verify, and are not the same every time: a gate keeps what it saw across runs and decides from it (built 0.60.466).
+# Built in 0.60.466 (MOD-PC-GATE-TYPES, PC5 slice a):
+#   - cos/gate/gate.eg: GateRunner (Emerge): plan (the asks, filled), decide (open | closed | gap, from checks, answers and its context), validate.
+#     Checks: holds (notEmpty, contains, lacks, equals, startsWith, longerThan), answer (an owner's route answered, and holds), changed (not what
+#     it gave last time), a check marked gap. A reason that closes it gapAfter times running becomes a gap. {{with.x}}, {{output}}, {{why}},
+#     {{pipeline}}, {{task}} filled; a setting left unset is no check.
+#   - cos/gate/types/*.gate: check, test, verify, context, emerge, options (his own in COS's data, made by POST /api/cos/gate-types).
+#   - cos/manager/gates.js: the door: reads the types, makes the planned calls on each owner by route, keeps each gate's context, does the
+#     actions (note, retry, stop, skip, hold, route; branch and notify said as PC5b).
+#   - the engine: a task's gate { type, with } is the host's to decide (gateFn); an engine with none refuses it, said. The verdict rides on the
+#     task and on automation.pipeline.task with what passed (the wires' data, PC4).
+#   - routes GET /api/cos/gate-types[/:id], POST /api/cos/gate-types, POST /api/cos/gate-types/:id/try, GET /api/cos/gates/:pipeline/:task;
+#     rows cos gate-types, cos gate-try, cos gate-context.
+# The .gate extension (EQ5's definition, its registry not built yet: written here until it is): what a file of it is: one GateType; schema:
+#   GateType (above); owner: cos; written by: shipped with COS (cos/gate/types) and by him (POST /api/cos/gate-types → COS's data); read by:
+#   cos/manager/gates.js and Emerge's cos/gate/gate.eg; kind: node (data, JSON).
+# Gaps in Emerge found: starts_with and matches are handler keywords, not callable; no regex function (CIE14). Typed gates have no "matches".
+# Open, in order: PC5b (options chosen by him resume a held run; branch; notify), PC4 live (the run's events on ERAVOS's canvas: needs COS to let
+# ERAVOS's address in, his decision), the canvas preview to him before PC4's UI. "Rules and macros": what he means asked of him (rules and
+# macros in the one Automation tab, or on the canvas).
+
+
+# ── ADDENDUM 2026-11-09 (0.60.466, the same release) — one module, in Emerge; every request kept as files ─────────────────────────────────────
+# James, 2026-11-09: "The gates are temporary unless it didn't finish." · "No. Terrible folder structure. This needs to be a module." · "Needs to use
+# actual physical files in the backend, the steps. Like the dag and contract, and the relevant nodes. Like each step needs to be persistent until the
+# contract and conditions for the request from the dag have been met." · "follow claude.md i thought we chose to move on and use .eg, emerge for code?"
+# Superseding the paths above (kept, §0.3): cos/automation/, cos/gate/, cos/manager/boxes.js and the gates door are now ONE module, cos/pipeline/:
+#   box.eg (the box shape; gains the dag hook) · gate.eg (decide, plan, validate; flags; the type files) · runs.eg (MOD-PC-RUNS, below) ·
+#   cli.eg (the module's one command line) · types/*.gatetype · test/{box,gate,runs}.test.eg · registry.json (its own registry, §5.16) ·
+#   index.js (the one door: starts Emerge, makes a gate's HTTP calls, takes the engine's events in order; no logic).
+# MOD-PC-RUNS (cos/pipeline/runs.eg): a request is files before it runs and until its contract is met:
+#   <COS data>/pipeline/runs/active/<id>/run.run (the request and its contract: every step's conditions from the DAG), dag.dag (box.eg's
+#   with_gates), steps/<t>.step (one node per step: conditions, status, output, verdicts, what its gate learned), gates/<t>.gate (this request's
+#   gate: type, settings, what it holds, its verdicts and what its calls got back). Met → gates removed, the folder moved to runs/done/<id>/.
+#   Not met (failed, held, a gap, cancelled) → stays in active/ with its gates, and resumes from its step files (what is met is not run again:
+#   the engine's run(id, { done, meta })). A gate's learning carries to the next request through the step files, so gates stay temporary.
+# Routes: POST|GET /api/cos/pipeline/requests, GET /api/cos/pipeline/requests/:id, POST /api/cos/pipeline/requests/:id/resume (his; an agent's
+# refused). Rows: cos request, cos requests, cos request-show, cos request-resume (personOnly where it acts).
+# The extensions .gatetype, .run, .dag, .step, .gate are defined in cos/pipeline/registry.json (EQ5's definition, in the owner's registry).
+# Emerge grew for it (CIE14): list_dir, path_exists, make_dir, move_path, remove_path (each write on the ledger); natively they wait for CIE13.

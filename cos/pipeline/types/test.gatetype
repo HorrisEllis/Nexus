@@ -1,0 +1,9 @@
+{
+  "id": "test",
+  "about": "runs a test by its owner's route (with: owner, route, expect) and opens only when the test passes; a route that is not there is a gap (the capability is missing).",
+  "madeBy": "shipped",
+  "asks": [{ "id": "run", "owner": "{{with.owner}}", "route": "{{with.route}}", "body": { "output": "{{output}}" } }],
+  "checks": [{ "kind": "answer", "ask": "run", "contains": "{{with.expect}}" }],
+  "gapAfter": 2,
+  "on": { "open": [{ "do": "note" }], "closed": [{ "do": "stop" }], "gap": [{ "do": "hold" }] }
+}

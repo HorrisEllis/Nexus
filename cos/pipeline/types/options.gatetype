@@ -1,0 +1,8 @@
+{
+  "id": "options",
+  "about": "when it closes, the run holds and you choose: retry, skip this step, or stop (options are better than neat boxes).",
+  "madeBy": "shipped",
+  "checks": [{ "kind": "holds", "notEmpty": true, "contains": "{{with.contains}}" }],
+  "on": { "open": [{ "do": "note" }], "closed": [{ "do": "hold" }] },
+  "options": [{ "label": "Retry the step", "actions": [{ "do": "retry" }] }, { "label": "Skip it and go on", "actions": [{ "do": "skip" }] }, { "label": "Stop the run", "actions": [{ "do": "stop" }] }]
+}

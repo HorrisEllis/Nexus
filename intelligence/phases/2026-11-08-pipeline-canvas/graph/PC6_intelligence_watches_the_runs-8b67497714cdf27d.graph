@@ -7,11 +7,11 @@ intent: null
 summary: 21 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1794148904519
+exported_at: 1794211812857
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794148904519
-lastSeenAt: 1794148904519
+firstSeenAt: 1794211812857
+lastSeenAt: 1794211812857
 fingerprint: null
 payload:
   for: PC6_intelligence_watches_the_runs
@@ -205,12 +205,15 @@ payload:
       - docs/2026-11-01-orchestration-console-phasemap.spec::OC4_deploy_to_any_system
       - docs/2026-11-01-orchestration-console-phasemap.spec::OC_D0_one_console_in_cos
       - docs/2026-11-01-procedures-phasemap.spec::PD1_procedure_nodes_and_commands
+      - docs/2026-11-01-procedures-phasemap.spec::PD4_the_procedure_library
       - docs/2026-11-01-procedures-phasemap.spec::PD_D0_a_procedure_is_a_node_file
       - docs/2026-11-01-procedures-phasemap.spec::PD_D0_addendum_one_procedure_type
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC1_one_box_shape
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC2_procedures_and_frameworks_as_steps
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC5_programmable_gate_types
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D0_reuse_first
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D1_gates_as_compartments
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D2_frameworks_as_procedures
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D4_language
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D8_options_not_neat_boxes
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D9_meta_autonomous_agnostic_nonlinear
@@ -225,7 +228,7 @@ payload:
       - layer 15 · blocked by PC5_programmable_gate_types
       - >-
         depends on (3): PC1_one_box_shape, PC5_programmable_gate_types,
-        PC_D9_meta_autonomous_agnostic_nonlinear · all upstream 42
+        PC_D9_meta_autonomous_agnostic_nonlinear · all upstream 45
       - 'needed by (1): PC7_iterate_to_the_end_state'
     edges:
       - from: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC1_one_box_shape

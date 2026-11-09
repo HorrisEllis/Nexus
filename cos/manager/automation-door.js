@@ -99,12 +99,15 @@ function buildHooks({ guardianFn = _guardian, raidDecideFn = _raidDecide, cgFn =
 // the api step's nexus://<system>: COS's manager gives the address of each system it declares (setResolver at boot)
 let _resolver = null;
 function setResolver(fn) { _resolver = typeof fn === 'function' ? fn : null; return _resolver; }
+// PC5 (2026-11-09) — a typed gate is decided by COS's gates (cos/pipeline/gates.js → Emerge's cos/pipeline/gate.eg), given at boot
+let _gateHost = null;
+function setGate(fn) { _gateHost = typeof fn === 'function' ? fn : null; return _gateHost; }
 
 let _engine = null;
 /** engine() — the one engine instance, built with COS's real hooks. Lazy, so a bare import does not start the tick. */
 function engine() {
   if (_engine) return _engine;
-  _engine = new AutomationEngine({ ...buildHooks(), resolveSystemFn: (name) => (_resolver ? _resolver(name) : null) });
+  _engine = new AutomationEngine({ ...buildHooks(), resolveSystemFn: (name) => (_resolver ? _resolver(name) : null), gateFn: (q) => (_gateHost ? _gateHost(q) : { outcome: 'closed', open: false, why: 'COS gave the engine no gates', saw: [], actions: [] }) });
   _engine.start();
   return _engine;
 }
@@ -114,4 +117,4 @@ async function handle({ method, url, body = {}, headers = {}, rawBody = '' } = {
   return require('../../lib/automation/routes.js').handle(engine(), { method, url, body, headers, rawBody }, {});
 }
 
-module.exports = { engine, handle, buildHooks, setBus, setResolver, _dispatchAgent, _cg, _guardian, _raidDecide, CG_PORT, GUARDIAN_PORT };
+module.exports = { engine, handle, buildHooks, setBus, setResolver, setGate, _dispatchAgent, _cg, _guardian, _raidDecide, CG_PORT, GUARDIAN_PORT };

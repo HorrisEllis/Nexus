@@ -1218,6 +1218,32 @@ function createRuntime(opts = {}) {
     append('write', { path: p, bytes: Buffer.byteLength(text) });
     return null;
   });
+  // ── folders (2026-11-09, CIE14: found writing COS's pipeline module — James: "follow claude.md i thought we chose to move on and use .eg, emerge
+  // for code?" · §17.13 "lack of capability is an opportunity to build it"). A request kept as files needs a folder listed, made, moved and removed.
+  // Each write is on the ledger, as write_file is. Natively these wait for CIE13 (the native runtime's files), said by the native checker.
+  def('list_dir', 1, p => {
+    needStr(p, 'list_dir');
+    try { return fs.readdirSync(p).sort(); } catch (e) { if (e.code === 'ENOENT') return []; err(`list_dir: ${e.code || e.message} ${p}`); }
+  });
+  def('path_exists', 1, p => fs.existsSync(needStr(p, 'path_exists')));
+  def('make_dir', 1, p => {
+    noLens('make_dir'); needStr(p, 'make_dir');
+    try { fs.mkdirSync(p, { recursive: true }); } catch (e) { err(`make_dir: ${e.code || e.message} ${p}`); }
+    append('mkdir', { path: p });
+    return null;
+  });
+  def('move_path', 2, (a, b) => {
+    noLens('move_path'); needStr(a, 'move_path'); needStr(b, 'move_path');
+    try { fs.mkdirSync(require('path').dirname(b), { recursive: true }); fs.renameSync(a, b); } catch (e) { err(`move_path: ${e.code || e.message} ${a} -> ${b}`); }
+    append('move', { from: a, to: b });
+    return null;
+  });
+  def('remove_path', 1, p => {
+    noLens('remove_path'); needStr(p, 'remove_path');
+    try { fs.rmSync(p, { recursive: true, force: true }); } catch (e) { err(`remove_path: ${e.code || e.message} ${p}`); }
+    append('remove', { path: p });
+    return null;
+  });
   // ── bytes (CIE-EG §3) ──
   const needBytes = (v, who) => { if (!(v instanceof EBytes)) err(`${who} needs bytes, got ${typeOf(v)}`); return v.b; };
   const byteList = (v, acc, who) => {

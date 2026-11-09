@@ -1,0 +1,298 @@
+// cos/pipeline/runs.eg — a request through a pipeline, kept as physical files (MOD-PC-RUNS, PC5; cos/spec/pipeline-canvas.spec).
+// James, 2026-11-09: "Needs to use actual physical files in the backend, the steps. Like the dag and contract, and the relevant nodes. Like each step
+// needs to be persistent until the contract and conditions for the request from the dag have been met." · "The gates are temporary unless it didn't
+// finish." · "follow claude.md i thought we chose to move on and use .eg, emerge for code?"
+//
+// One folder per request; where it is says what it is:
+//   <base>/pipeline/runs/active/<id>/     not met yet
+//     run.run          the request (pipeline, vars, by, at) and its contract: every step's conditions, from the DAG; met or not, and why
+//     dag.dag          the DAG: each step and, after a gated step, its gate, wired (box.eg)
+//     steps/<t>.step   one node per step: what it runs, what it waits on, its conditions, status, output, every verdict; kept until met
+//     gates/<t>.gate   the gate for this request: its type, settings, what it holds, its verdicts. Temporary
+//   <base>/pipeline/runs/done/<id>/       the contract met: the gates removed, the rest kept as the record (§0.3)
+// A request not met stays in active/ with its gates and resumes from its step files (what is met is not run again). What a gate learned carries to
+// the next request through the step files, so the gates themselves stay temporary. Every file is a node envelope (as .task, .pipeline), written as
+// JSON (which is YAML), so Emerge reads it back. Time comes in from the caller (at): Emerge has no clock yet (CIE13).
+use "./box.eg" as box
+
+fn active_dir(base: string): string = base + "/pipeline/runs/active"
+fn done_dir(base: string): string = base + "/pipeline/runs/done"
+fn safe(s: any): string = replace(replace(replace(str(s), "/", "_"), "\\", "_"), " ", "_")
+fn run_file(d: string): string = d + "/run.run"
+fn step_file(d: string, t: string): string = d + "/steps/" + safe(t) + ".step"
+fn gate_file(d: string, t: string): string = d + "/gates/" + safe(t) + ".gate"
+fn parent(p: string): string { let parts = split(p, "/"); return join(take(parts, len(parts) - 1), "/") }
+
+// ── a readable file: JSON with two-space indents (json() is one line) ──
+fn pretty(v: any, ind: string): string {
+  let t = type_of(v)
+  if t == "map" {
+    if len(keys(v)) == 0 { return "\{\}" }
+    let inner = ind + "  "
+    return "\{\n" + join(map(keys(v), fn(k) = inner + json(k) + ": " + pretty(v[k], inner)), ",\n") + "\n" + ind + "\}"
+  }
+  if t == "list" {
+    if len(v) == 0 { return "[]" }
+    let inner = ind + "  "
+    return "[\n" + join(map(v, fn(x) = inner + pretty(x, inner)), ",\n") + "\n" + ind + "]"
+  }
+  return json(v)
+}
+fn put(p: string, doc: map) { make_dir(parent(p)); write_file(p, pretty(doc, "") + "\n") }
+fn take_file(p: string): any {
+  if not path_exists(p) { return null }
+  return parse_json(read_file(p))
+}
+fn node(kind: string, id: string, intent: string, summary: string, payload: map, context: string): map =
+  { envelope: 1, uuid: "cos-pipeline-" + kind + "-" + id, type: kind, id: id, context: context, intent: intent, summary: summary, system: "cos", tags: ["pipeline"], payload: payload }
+
+// where a request is: { state: active | done, dir } or null
+fn where(base: string, id: string): any {
+  if path_exists(run_file(active_dir(base) + "/" + safe(id))) { return { at: "active", dir: active_dir(base) + "/" + safe(id) } }
+  if path_exists(run_file(done_dir(base) + "/" + safe(id))) { return { at: "done", dir: done_dir(base) + "/" + safe(id) } }
+  return null
+}
+
+fn condition_of(t: map): map {
+  let g = get(t, "gate", null)
+  if g == null { return { gate: null } }
+  if has(g, "type") { return { gate: { type: g.type, with: get(g, "with", {}) } } }
+  return { gate: { keys: g } }
+}
+
+// what a step's gate learned last time: the newest other request of this pipeline whose step file holds a gate context
+fn prior_context(base: string, pipeline_id: string, task: string, except: string): map {
+  var best = null
+  for dir in [active_dir(base), done_dir(base)] {
+    for n in list_dir(dir) {
+      if n != except {
+        let r = take_file(run_file(dir + "/" + n))
+        if r != null and r.payload.request.pipeline == pipeline_id {
+          let s = take_file(step_file(dir + "/" + n, task))
+          if s != null and get(s.payload, "gateContext", null) != null {
+            if best == null or s.payload.gateAt > best.at { best = { at: s.payload.gateAt, context: s.payload.gateContext } }
+          }
+        }
+      }
+    }
+  }
+  if best == null { return {} }
+  return best.context
+}
+
+// a request: its files first (run.run, dag.dag, a .step per step, a .gate per typed gate); the engine runs it after
+fn request(base: string, p: map, vars: any, by: any, at: num, engine_run: any): string {
+  let id = safe(p.id) + "-" + str(at) + "-" + uid()
+  let d = active_dir(base) + "/" + id
+  let conditions = map(p.tasks, fn(t) = { step: t.id, after: get(t, "depends_on", []), gate: condition_of(t).gate })
+  var said = null
+  if vars == null { said = "not given: started by the engine's own route" }
+  var engine_runs = []
+  if engine_run != null { engine_runs = [engine_run] }
+  put(run_file(d), node("run", id, get(p, "name", p.id) + ": a request", str(len(p.tasks)) + " steps · not met", {
+    request: { pipeline: p.id, name: get(p, "name", p.id), vars: vars, varsSaid: said, by: by, at: at },
+    contract: { end: "every step met: it ran, and its gate opened (or it has none)", conditions: conditions, met: false, why: null },
+    phase: "running", engineRuns: engine_runs, startedAt: at, finishedAt: null }, "a request through a pipeline, kept until its contract is met (PC5)"))
+  for t in p.tasks {
+    let label = get(t, "label", t.id)
+    put(step_file(d, t.id), node("step", id + "." + t.id, label, "waiting", { run: id, task: t.id, label: label, step: t.step, after: get(t, "depends_on", []),
+      conditions: condition_of(t), status: "waiting", met: false, attempts: 0, output: null, error: null, verdicts: [], gateContext: null, gateAt: null },
+      "one step of a request; kept until its conditions are met"))
+    let g = get(t, "gate", null)
+    if g != null and has(g, "type") {
+      put(gate_file(d, t.id), node("gate", id + "." + t.id, "the gate after " + label, "not reached", { run: id, after: t.id, type: g.type, with: get(g, "with", {}),
+        context: prior_context(base, p.id, t.id, id), verdicts: [] }, "a gate for this request only: removed when the request is met, kept when it is not"))
+    }
+  }
+  let g = box.with_gates(box.to_boxes(p))
+  put(d + "/dag.dag", node("dag", id, get(p, "name", p.id) + ": its DAG", str(len(g.boxes)) + " boxes, " + str(len(g.wires)) + " wires", { boxes: g.boxes, wires: g.wires },
+    "the DAG of a request: each step and its gate, wired (box.eg)"))
+  return id
+}
+
+// the request an engine run belongs to: the active request whose run.run names it
+fn folder_of(base: string, engine_run: string): any {
+  for n in list_dir(active_dir(base)) {
+    let r = take_file(run_file(active_dir(base) + "/" + n))
+    if r != null and index_of(get(r.payload, "engineRuns", []), engine_run) >= 0 { return n }
+  }
+  return null
+}
+
+fn attach(base: string, id: string, engine_run: string) {
+  let w = where(base, id)
+  if w == null { return null }
+  var r = take_file(run_file(w.dir))
+  if index_of(r.payload.engineRuns, engine_run) < 0 { r.payload.engineRuns = push(r.payload.engineRuns, engine_run) }
+  r.payload.phase = "running"
+  r.payload.finishedAt = null
+  put(run_file(w.dir), r)
+}
+
+fn last_of(xs: list): any {
+  if len(xs) == 0 { return null }
+  return xs[len(xs) - 1]
+}
+fn keep_last(xs: list, n: num): list {
+  if len(xs) > n { return drop(xs, len(xs) - n) }
+  return xs
+}
+
+// the engine's events keep the files: a step as it changes; the request when it ends. pipeline: the pipeline, given with a start of its own
+fn on_event(base: string, kind: string, data: map, pipeline: any, at: num): map {
+  if kind == "automation.pipeline.start" {
+    let meta = get(data, "meta", null)
+    if meta != null and get(meta, "request", null) != null { attach(base, meta.request, data.runId); return { ok: true, request: meta.request } }
+    if pipeline == null { return { ok: false, why: "a run started without its pipeline: no files" } }
+    return { ok: true, request: request(base, pipeline, null, "the engine", at, data.runId) }
+  }
+  let id = folder_of(base, get(data, "runId", ""))
+  if id == null { return { ok: false, why: "no request holds this run" } }
+  let w = where(base, id)
+  if kind == "automation.pipeline.task" {
+    let f = step_file(w.dir, data.task)
+    var s = take_file(f)
+    if s == null { return { ok: false, why: "no step " + data.task } }
+    var st = s.payload
+    let g = get(data, "gate", null)
+    var gate_ok = true
+    if st.conditions.gate != null and g != null { gate_ok = g.outcome == "open" }
+    st.status = data.status
+    st.attempts = get(data, "attempts", st.attempts)
+    if has(data, "output") { st.output = data.output }
+    st.error = get(data, "error", null)
+    st.met = data.status == "done" and gate_ok
+    if g != null and (data.status == "done" or data.status == "failed") {
+      var v = clone(g)
+      v.at = at
+      v.engineRun = data.runId
+      st.verdicts = keep_last(push(st.verdicts, v), 20)
+    }
+    s.payload = st
+    if st.met { s.summary = "met" } else { s.summary = data.status }
+    put(f, s)
+    return { ok: true, request: id }
+  }
+  if kind == "automation.pipeline.done" {
+    var r = take_file(run_file(w.dir))
+    let steps = map(r.payload.contract.conditions, fn(c) = take_file(step_file(w.dir, c.step)))
+    let unmet = filter(steps, fn(s) = s == null or not s.payload.met)
+    r.payload.finishedAt = at
+    if len(unmet) == 0 {
+      r.payload.contract.met = true
+      r.payload.contract.why = "every step ran and its gate opened"
+      r.payload.phase = "met"
+      r.summary = str(len(steps)) + " steps · met"
+      put(run_file(w.dir), r)
+      remove_path(w.dir + "/gates")
+      move_path(w.dir, done_dir(base) + "/" + id)
+      return { ok: true, request: id, met: true }
+    }
+    let held = any(unmet, fn(s) = held_now(s))
+    var ph = "not met"
+    if held { ph = "held" }
+    if data.status == "cancelled" { ph = "cancelled" }
+    r.payload.phase = ph
+    r.payload.contract.why = "not met: " + join(map(unmet, fn(s) = why_unmet(s)), "; ")
+    r.summary = str(len(steps) - len(unmet)) + " of " + str(len(steps)) + " steps met · " + ph
+    put(run_file(w.dir), r)
+    return { ok: true, request: id, met: false }
+  }
+  return { ok: false, why: "not an event of a request: " + kind }
+}
+fn held_now(s: any): bool {
+  if s == null { return false }
+  let v = last_of(s.payload.verdicts)
+  if v == null { return false }
+  return get(v, "held", false)
+}
+fn why_unmet(s: any): string {
+  if s == null { return "?" }
+  var e = ""
+  if s.payload.error != null { e = ": " + str(s.payload.error) }
+  return s.payload.task + " (" + s.payload.status + e + ")"
+}
+
+// the gate during a request: what it holds comes from its file (or what that step's gate learned last time) and goes back to it, and to the step
+fn gate_context(base: string, engine_run: string, pipeline_id: string, task: string): map {
+  let id = folder_of(base, engine_run)
+  if id != null {
+    let g = take_file(gate_file(where(base, id).dir, task))
+    if g != null { return get(g.payload, "context", {}) }
+  }
+  var except = ""
+  if id != null { except = id }
+  return prior_context(base, pipeline_id, task, except)
+}
+fn gate_verdict(base: string, engine_run: string, task: string, v: map, at: num): map {
+  let id = folder_of(base, engine_run)
+  if id == null { return { ok: false, why: "no request holds this run" } }
+  let d = where(base, id).dir
+  let verdict = { at: at, engineRun: engine_run, outcome: v.outcome, why: get(v, "why", null), saw: get(v, "saw", []), held: get(v, "held", false), actions: get(v, "actions", []) }
+  var g = take_file(gate_file(d, task))
+  if g != null {
+    g.payload.context = get(v, "next", g.payload.context)
+    g.payload.verdicts = keep_last(push(g.payload.verdicts, verdict), 20)
+    g.summary = v.outcome
+    put(gate_file(d, task), g)
+  }
+  var s = take_file(step_file(d, task))
+  if s != null and get(v, "next", null) != null {
+    s.payload.gateContext = v.next
+    s.payload.gateAt = at
+    put(step_file(d, task), s)
+  }
+  return { ok: true, request: id }
+}
+
+fn list_requests(base: string, which: string): list {
+  var dir = active_dir(base)
+  if which == "done" { dir = done_dir(base) }
+  var out = []
+  for n in list_dir(dir) {
+    let r = take_file(run_file(dir + "/" + n))
+    if r != null {
+      out = push(out, { id: n, phase: r.payload.phase, pipeline: r.payload.request.pipeline, name: r.payload.request.name, summary: r.summary,
+        startedAt: r.payload.startedAt, finishedAt: r.payload.finishedAt, met: r.payload.contract.met })
+    }
+  }
+  return reverse(sort_by(out, fn(x) = x.startedAt))
+}
+fn nodes_in(dir: string, ext: string): list {
+  var out = []
+  for f in list_dir(dir) {
+    if len(f) > len(ext) and slice(f, len(f) - len(ext), len(f)) == ext { out = push(out, take_file(dir + "/" + f)) }
+  }
+  return out
+}
+fn read_request(base: string, id: string): any {
+  let w = where(base, id)
+  if w == null { return null }
+  return { id: id, where: w.at, run: take_file(run_file(w.dir)), dag: take_file(w.dir + "/dag.dag"), steps: nodes_in(w.dir + "/steps", ".step"), gates: nodes_in(w.dir + "/gates", ".gate") }
+}
+// what a resume needs: the pipeline, the vars, and every step already met with its output, so only the rest runs
+fn resume_of(base: string, id: string): map {
+  let r = read_request(base, id)
+  if r == null { return { ok: false, code: 404, error: "no request \"" + id + "\"" } }
+  if r.where != "active" { return { ok: false, code: 409, error: "request \"" + id + "\" is met: nothing to resume" } }
+  if r.run.payload.request.vars == null { return { ok: false, code: 409, error: "this request was started by the engine's own route: its vars were not given, so it cannot be resumed as it was" } }
+  var met = {}
+  for s in r.steps { if s.payload.met { met[s.payload.task] = s.payload.output } }
+  return { ok: true, pipeline: r.run.payload.request.pipeline, vars: r.run.payload.request.vars, done: met }
+}
+
+// what a gate's actions got back (the door made the calls): kept on the gate's last verdict and the step's, so a stopped request shows why
+fn record_actions(base: string, engine_run: string, task: string, acts: list): map {
+  let id = folder_of(base, engine_run)
+  if id == null { return { ok: false, why: "no request holds this run" } }
+  let d = where(base, id).dir
+  var g = take_file(gate_file(d, task))
+  if g != null and len(g.payload.verdicts) > 0 {
+    var vs = g.payload.verdicts
+    var v = clone(vs[len(vs) - 1])
+    v.actions = acts
+    g.payload.verdicts = push(take(vs, len(vs) - 1), v)
+    put(gate_file(d, task), g)
+  }
+  return { ok: true, request: id }
+}

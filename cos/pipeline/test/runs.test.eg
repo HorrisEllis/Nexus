@@ -1,0 +1,65 @@
+// cos/pipeline/test/runs.test.eg — a request kept as files (MOD-PC-RUNS, PC5). eg test cos/pipeline/test/runs.test.eg
+// James, 2026-11-09: "Like each step needs to be persistent until the contract and conditions for the request from the dag have been met." · "The
+// gates are temporary unless it didn't finish."
+use "../runs.eg" as runs
+
+let P = { id: "gig", name: "Gig", tasks: [
+  { id: "a", step: { type: "set" }, gate: { type: "check", with: { contains: "ok" } } },
+  { id: "b", depends_on: ["a"], step: { type: "set" } } ] }
+fn fresh(): string { let b = "/tmp/cos-runs-test-" + uid(); remove_path(b); return b }
+fn ev(base, kind, data) = runs.on_event(base, kind, data, null, 1000)
+
+test "a request is files before it runs: its contract from the DAG, a step per step, a gate per typed gate, the DAG" {
+  let base = fresh()
+  let id = runs.request(base, P, { v: 1 }, "person", 100, "e1")
+  let d = base + "/pipeline/runs/active/" + id
+  let r = parse_json(read_file(d + "/run.run"))
+  expect r.type == "run" and r.payload.request.vars == { v: 1 } and not r.payload.contract.met
+  expect map(r.payload.contract.conditions, fn(c) = c.step) == ["a", "b"] and r.payload.contract.conditions[1].after == ["a"]
+  expect path_exists(d + "/steps/a.step") and path_exists(d + "/steps/b.step") and path_exists(d + "/gates/a.gate") and not path_exists(d + "/gates/b.gate")
+  expect map(parse_json(read_file(d + "/dag.dag")).payload.boxes, fn(b) = b.id) == ["a", "a-gate", "b"]
+  remove_path(base)
+}
+
+test "met: every step done and its gate open → moved to done/, the gates removed, the steps kept" {
+  let base = fresh()
+  let id = runs.request(base, P, {}, "person", 100, "e1")
+  ev(base, "automation.pipeline.task", { runId: "e1", task: "a", status: "done", output: "ok", gate: { type: "check", outcome: "open" } })
+  ev(base, "automation.pipeline.task", { runId: "e1", task: "b", status: "done", output: "next" })
+  let r = ev(base, "automation.pipeline.done", { runId: "e1", status: "ok" })
+  expect r.met
+  let d = base + "/pipeline/runs/done/" + id
+  expect path_exists(d + "/run.run") and not path_exists(d + "/gates") and path_exists(d + "/steps/a.step")
+  expect not path_exists(base + "/pipeline/runs/active/" + id)
+  expect parse_json(read_file(d + "/run.run")).payload.phase == "met"
+  remove_path(base)
+}
+
+test "not met: it stays in active/ with its gates; a resume names what is met; what a gate learned reaches the next request" {
+  let base = fresh()
+  let id = runs.request(base, P, { v: 2 }, "person", 100, "e1")
+  ev(base, "automation.pipeline.task", { runId: "e1", task: "a", status: "done", output: "ok", gate: { type: "check", outcome: "open" } })
+  runs.gate_verdict(base, "e1", "a", { outcome: "open", next: { runs: 1, streak: 0 } }, 150)
+  ev(base, "automation.pipeline.task", { runId: "e1", task: "b", status: "failed", error: "boom" })
+  let r = ev(base, "automation.pipeline.done", { runId: "e1", status: "failed" })
+  expect not r.met
+  let d = base + "/pipeline/runs/active/" + id
+  expect path_exists(d + "/gates/a.gate")
+  let run = parse_json(read_file(d + "/run.run")).payload
+  expect run.phase == "not met" and find_text(run.contract.why, "b (failed: boom)") >= 0, run.contract.why
+  let q = runs.resume_of(base, id)
+  expect q.ok and q.done == { a: "ok" } and q.vars == { v: 2 }
+  let id2 = runs.request(base, P, {}, "person", 200, "e2")
+  expect parse_json(read_file(base + "/pipeline/runs/active/" + id2 + "/gates/a.gate")).payload.context == { runs: 1, streak: 0 }
+  remove_path(base)
+}
+
+test "listed and read back; an engine run with no request is said" {
+  let base = fresh()
+  let id = runs.request(base, P, {}, "person", 100, "e1")
+  expect map(runs.list_requests(base, "active"), fn(x) = x.id) == [id]
+  let rr = runs.read_request(base, id)
+  expect rr.where == "active" and len(rr.steps) == 2 and len(rr.gates) == 1
+  expect not ev(base, "automation.pipeline.task", { runId: "nobody", task: "a", status: "done" }).ok
+  remove_path(base)
+}

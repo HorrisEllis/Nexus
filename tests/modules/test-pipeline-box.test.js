@@ -4,19 +4,19 @@ require('../../lib/test-sandbox.js').ensure();
 /**
  * tests/modules/test-pipeline-box.test.js — PC1_one_box_shape (docs/2026-11-08-pipeline-canvas-phasemap.spec), MOD-PC-BOX (cos/spec/pipeline-canvas.spec).
  * James, 2026-11-08: "steps as boxes, with wires as the flow into the hooks of gates" · "using emerge as the language".
- * The box shape is written in Emerge (cos/automation/box.eg); this file only runs Emerge's own tools on it for the Nexus suite. It is also the
+ * The box shape is written in Emerge (cos/pipeline/box.eg); this file only runs Emerge's own tools on it for the Nexus suite. It is also the
  * TEMPORARY harness that converts the tree's YAML node files to JSON, because Emerge has no YAML reader yet (CIE14, found 2026-11-08); it goes
  * when parse_yaml lands.
- *   PB-01  eg check passes on box.eg and cli.eg; eg test passes on cos/automation/test/box.test.eg
+ *   PB-01  eg check passes on box.eg and cli.eg; eg test passes on cos/pipeline/test/box.test.eg
  *   PB-02  every .pipeline and .procedure node in the tree round-trips through the box shape unchanged (PCS-002: no second store)
  *   PB-03  §1.2: an unknown command is refused (exit 1) and the commands named
- *   PB-04  §17.13: the box shape is .eg; no .js in cos/automation/
+ *   PB-04  §17.13: the shape and the deciding are .eg; the module's only JavaScript is its named doors (files, routes, processes) until CIE10/CIE13
  *   PB-06  Idearium's own pipeline (idearium/pipelines): its real route, COS's import-from command, the .erv as compartment, gate, compartment, gate
  *   PB-05  through COS (James, 2026-11-08: "i want this built and added to cos ui"): GET /api/cos/boxes for a pipeline made in COS's engine and
  *          for a procedure read from Idearium by its route; the command rows; the Pipelines page in Clear Glass through the real cockpit
  */
 const assert = require('assert'), fs = require('fs'), os = require('os'), path = require('path'), { spawnSync } = require('child_process');
-const ROOT = path.join(__dirname, '..', '..'), EG = path.join(ROOT, 'emerge/emerge/lang/eg.js'), DIR = path.join(ROOT, 'cos/automation');
+const ROOT = path.join(__dirname, '..', '..'), EG = path.join(ROOT, 'emerge/emerge/lang/eg.js'), DIR = path.join(ROOT, 'cos/pipeline');   // 2026-11-09: one module (James: "Terrible folder structure. This needs to be a module.")
 const yaml = require('js-yaml');
 let passed = 0, failed = 0;
 function test(id, d, fn) { try { fn(); console.log(`  ✓ ${id} ${d}`); passed++; } catch (e) { console.error(`  ✗ ${id} ${d}\n    ${(e.stack || e.message).split('\n').slice(0, 4).join('\n    ')}`); failed++; } }
@@ -53,8 +53,10 @@ test('PB-03', 'an unknown command is refused, the commands named', () => {
   const r = eg('run', path.join(DIR, 'cli.eg'), 'nope'); assert.strictEqual(r.status, 1); assert.match(r.stderr, /the commands are version, boxes/);
 });
 
-test('PB-04', 'the box shape is Emerge: no .js in cos/automation/', () => {
-  const js = walk(DIR).filter(f => f.endsWith('.js')); assert.deepStrictEqual(js, []);
+test('PB-04', 'the shape and the deciding are Emerge; the module\'s only JavaScript is its one door', () => {
+  for (const f of ['box.eg', 'gate.eg', 'runs.eg', 'cli.eg']) assert.ok(fs.existsSync(path.join(DIR, f)), f);
+  const js = walk(DIR).filter(f => f.endsWith('.js')).map(f => path.relative(DIR, f)).sort();
+  assert.deepStrictEqual(js, ['index.js'], 'the module is Emerge; its one door is index.js (starting Emerge, HTTP, the events in order). A new .js here is a new door: write it in Emerge (§17.13)');
 });
 
 (async () => {

@@ -209,7 +209,7 @@ phases:
     depends_on: [PC1_one_box_shape, PC_D3_when_a_step_becomes_a_build_request, PC_D5_emerge_writes_the_code, PC_D10_the_canvas_is_the_surface_tools_are_made, AE_D4_the_hub_structural, OC8_the_console]
     spec: cos/spec/pipeline-canvas.spec
     blocks: [MOD-PC-BUILD-STEP]
-    files: [cos/automation/build-request.js, cos/manager/server.js, cos/manager/contract.json, cos/manager/hub.js, idearium/cli/route-commands.js, tests/modules/test-pipeline-build-step.test.js, tests/modules/run-all.js]
+    files: [cos/pipeline/build-request.eg, cos/manager/server.js, cos/manager/contract.json, cos/manager/hub.js, idearium/cli/route-commands.js, tests/modules/test-pipeline-build-step.test.js, tests/modules/run-all.js]
     requires: [node, "Cortex answering RAID's contract routes (2a)"]
     does: >-
       His "a step can also be a build request, like a gap, or error or bottleneck". A build box carries a BuildRequest: { from: gap|error|bottleneck,
@@ -283,7 +283,7 @@ phases:
     depends_on: [PC3_the_build_request_step, PC6_intelligence_watches_the_runs, RQ15_cells_in_parallel, PC_D9_meta_autonomous_agnostic_nonlinear]
     spec: cos/spec/pipeline-canvas.spec
     blocks: [MOD-PC-LOOP]
-    files: [cos/automation/loop.eg, cos/manager/server.js, cos/manager/contract.json, idearium/cli/route-commands.js, tests/modules/test-pipeline-loop.test.js]
+    files: [cos/pipeline/loop.eg, cos/manager/server.js, cos/manager/contract.json, idearium/cli/route-commands.js, tests/modules/test-pipeline-loop.test.js]
     requires: [node, "Idearium answering the project's end state by route", "Emerge answering its build route"]
     does: >-
       His "build anything it doesn't have, iterate until it reaches the end state." A loop pipeline: read the project's end state from Idearium (its
@@ -451,3 +451,28 @@ expanded_2026_11_09:
     frameworks, pipelines, stepwise procedures or repeatable systems": the loop runs one step, its gate names the gap, the gap becomes a build
     request (PC3), and the next step is built only when the gate opens — as Idearium builds a project phase by phase. Agnostic (PC_D9): the same
     loop over a macro, a .framework (PC2 slice b), a pipeline, a procedure (OC9 templates).
+
+# ── ADDENDUM 2026-11-09 (0.60.466) — PC5 slice a built ───────────────────────────────────────────────────────────────────────────────────────
+# James, 2026-11-09: "Gates can hold context, test, verify, gates would do a lot. But not the same everytime." · "Okay. So build this."
+built_2026_11_09:
+  PC5_programmable_gate_types:
+    status: "slice a BUILT 0.60.466 — eg test cos/gate/test/gate.test.eg 7/7; test-gate-types 6/6. Open: PC5b (his option resumes a held run; branch; notify)"
+    files_built: [cos/gate/gate.eg (new), cos/gate/cli.eg (new), cos/gate/test/gate.test.eg (new), cos/gate/types/check.gate (new), cos/gate/types/test.gate (new), cos/gate/types/verify.gate (new), cos/gate/types/context.gate (new), cos/gate/types/emerge.gate (new), cos/gate/types/options.gate (new), cos/manager/gates.js (new), cos/manager/server.js, cos/manager/automation-door.js, cos/manager/contract.json (config), lib/automation/engine.js, lib/automation/pipeline.js, idearium/cli/route-commands.js, tests/modules/test-gate-types.test.js (new), tests/modules/run-all.js]
+    prerequisite_met: "the .gate extension defined (cos/spec/pipeline-canvas.spec ADDENDUM 2026-11-09), in COS's spec until EQ5's registry exists"
+    decided_by_his_axioms: >-
+      Where the deciding lives: Emerge (§17.13, his "using emerge as the language"); COS's door only calls and keeps (§5.15: each owner by its route).
+      Clear Glass's engine keeps its own instance and refuses a typed gate, said, rather than reaching into COS (AE_D2, §5.9).
+
+# ── ADDENDUM 2026-11-09 (0.60.466) — PC5 expanded: one module in Emerge; a request kept as files until met (his) ──────────────────────────────
+# James, 2026-11-09: "The gates are temporary unless it didn't finish." · "No. Terrible folder structure. This needs to be a module." · "Needs to use
+# actual physical files in the backend, the steps. Like the dag and contract, and the relevant nodes. Like each step needs to be persistent until the
+# contract and conditions for the request from the dag have been met." · "follow claude.md i thought we chose to move on and use .eg, emerge for code?"
+expanded_2026_11_09_module:
+  PC5_programmable_gate_types:
+    status: "slice a BUILT 0.60.466 as the module cos/pipeline/ — eg tests box 10/10, gate 7/7, runs 4/4; test-cos-pipeline 8/8; test-pipeline-box 6/6"
+    files_now: [cos/pipeline/box.eg, cos/pipeline/gate.eg, cos/pipeline/runs.eg (new), cos/pipeline/cli.eg, cos/pipeline/index.js (the one door), cos/pipeline/registry.json (config), cos/pipeline/types/*.gatetype, cos/pipeline/test/box.test.eg, cos/pipeline/test/gate.test.eg, cos/pipeline/test/runs.test.eg (new), emerge/emerge/lang/runtime.js, emerge/emerge/lang/MAP.md, emerge/emerge/lang/native/check_env_text.eg, emerge/emerge/lang/native/bin/emerge, lib/automation/pipeline.js, cos/manager/server.js, cos/manager/contract.json (config), idearium/cli/route-commands.js, tests/modules/test-cos-pipeline.test.js (new), tests/modules/test-pipeline-box.test.js]
+    superseded_files: "cos/automation/{box.eg,cli.eg,test}, cos/gate/*, cos/manager/boxes.js, cos/manager/gates.js and a JavaScript runs.js written the same day: moved into the module or rewritten in Emerge (§17.13, his reminder)"
+    decided_by_his_axioms: >-
+      The logic of a request's files is Emerge (§17.13); where Emerge lacked folders, Emerge was grown (CIE14), not worked around. The door keeps only
+      what Emerge cannot do yet: start a process, open a socket (CIE13, CIE10). The engine stays shared (AE_D2): a request's files are COS's, tied to
+      an engine run by the start event's meta.

@@ -61,16 +61,35 @@ function createServer(sup, opts = {}) {
   // AE6 slice a (docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec) — James, 2026-11-06: "Have cos be the orchastrator complelelt."
   // COS runs the automation engine (moved from the orchestrator) and streams its run events on /api/cos/events
   const automation = require('./automation-door.js');
-  automation.setBus((type, data) => broadcast(type, data));
+  automation.setBus((type, data) => { broadcast(type, data); if (pipeline && /^automation\.pipeline\./.test(type)) pipeline.onEvent(type, data); });   // 2026-11-09: a request's files follow its run (cos/pipeline/runs.js)
+  let pipeline = null;
   // the api step's nexus://<system>: the address of a system COS declares, from its health URL (never a fixed port)
   automation.setResolver((name) => { const d = sup.declarations().find(x => x.name === name || x.system === name); try { return d && d.healthUrl ? new URL(d.healthUrl).origin : null; } catch (_) { return null; } });
-  // PC1 — the box shape, through COS's door (cos/manager/boxes.js → Emerge's cos/automation/box.eg); Idearium's procedures by its route
+  // PC1 — the box shape, through COS's door (cos/pipeline/boxes.js → Emerge's cos/pipeline/box.eg); Idearium's procedures by its route
   const _ideariumGet = (pth) => new Promise((resolve, reject) => {
     const d = sup.declarations().find(x => x.name === 'idearium'); let o; try { o = new URL(d && d.healthUrl).origin; } catch (_) { return reject(new Error('idearium declares no address')); }
     const q = http.get(o + pth, { timeout: 10000 }, (r) => { let t = ''; r.on('data', c => t += c); r.on('end', () => { try { const j = JSON.parse(t || '{}'); r.statusCode >= 400 ? resolve(null) : resolve(j); } catch (e) { reject(e); } }); });
     q.on('timeout', () => q.destroy(new Error('no answer in 10 s'))); q.on('error', reject);
   });
-  const boxes = require('./boxes.js').createBoxes({ automation, idearium: _ideariumGet });
+  // PC5 (2026-11-09) — James: "Gates can hold context, test, verify, gates would do a lot. But not the same everytime." COS's gates: the types are
+  // files, the deciding is Emerge's (cos/pipeline/gate.eg); a gate's calls reach each owner by its declared address (§5.15), 'cos' is this manager
+  const _systemCall = (owner, method, pth, body) => new Promise((resolve) => {
+    let origin = null;
+    if (owner === 'cos') origin = `http://127.0.0.1:${(srvRef.server && srvRef.server.address() && srvRef.server.address().port) || 0}`;
+    else { const d = sup.declarations().find(x => x.name === owner || x.system === owner); try { origin = d && d.healthUrl ? new URL(d.healthUrl).origin : null; } catch (_) {} }
+    if (!origin) return resolve({ error: `${owner} is not declared to COS, or declares no address` });
+    const data = body === undefined ? null : Buffer.from(JSON.stringify(body));
+    const q = http.request(origin + pth, { method, timeout: 20000, headers: { 'X-Nexus-Caller': 'cos-gate', ...(data ? { 'Content-Type': 'application/json', 'Content-Length': data.length } : {}) } }, (r) => {
+      let t = ''; r.setEncoding('utf8'); r.on('data', c => { if (t.length < 65536) t += c; }); r.on('end', () => resolve({ status: r.statusCode, body: t.slice(0, 4096) })); });
+    q.on('timeout', () => q.destroy(new Error('no answer in 20 s'))); q.on('error', (e) => resolve({ error: e.code || e.message }));
+    if (data) q.write(data); q.end();
+  });
+  const srvRef = {};
+  // 2026-11-09 — James: "This needs to be a module." COS's pipeline module (cos/pipeline/): the box shape, the gates, requests kept as files
+  pipeline = require('../pipeline/index.js').createPipeline({ automation, idearium: _ideariumGet, call: _systemCall,
+    dataDir: process.env.COS_MANAGER_DATA || path.join(root, 'cos', 'data', 'manager') });
+  const { boxes, gates } = pipeline;
+  automation.setGate((q) => pipeline.decideGate(q));
   sup.on('ledger', (entry) => broadcast('cos.ledger', { entry }));
   // 2026-11-05 SC11 — James: "cos needs the console from the autopilot. like a console tab". Every line a system prints, on the stream as
   // cos.console, in batches every 200 ms; a burst past 500 lines in one batch says how many it dropped (never silently).
@@ -83,7 +102,7 @@ function createServer(sup, opts = {}) {
     for (const v of sup.list()) { now.set(v.name, `${v.state}|${v.pid}`); if (last.get(v.name) !== `${v.state}|${v.pid}`) broadcast('cos.system.state', { name: v.name, state: v.state, pid: v.pid }); }
     last = now; }, 1000); if (watch.unref) watch.unref();
   const beat = setInterval(() => { for (const r of streams) { try { r.write(': beat\n\n'); } catch (_) {} } }, 15000); if (beat.unref) beat.unref();
-  return http.createServer(async (req, res) => {
+  const server = http.createServer(async (req, res) => {
     const u = new URL(req.url, 'http://x'), p = u.pathname.replace(/\/+$/, ''), m = req.method;
     let body = {}, rawBody = '';
     if ((m === 'POST' || m === 'PATCH') && p.startsWith('/api/cos')) { let raw = ''; for await (const c of req) raw += c; rawBody = raw; try { body = raw ? JSON.parse(raw) : {}; } catch (_) { return send(res, 400, { ok: false, error: 'the body is not JSON' }); } }
@@ -182,6 +201,18 @@ function createServer(sup, opts = {}) {
       // OC8a — James, 2026-11-08: "a hub for the automation pipeline, workflows, tasks ... queues, contracts, dag, it should all be there, waiting to be wired in."
       // PC1 — James, 2026-11-08: "cli commands, agent tools, copilot commands, inject nodes to agents. keep going. i want this built and added to cos ui."
       if (m === 'GET' && p === '/api/cos/boxes') { const r = await boxes.of({ pipeline: u.searchParams.get('pipeline'), procedure: u.searchParams.get('procedure'), as: u.searchParams.get('as') }); return send(res, r.ok ? 200 : (r.code || 500), r); }
+      // PC5 — COS's gate types: list, read, make (his; an agent's is refused, named), try one on an output (one step at a time), what a gate holds
+      if (m === 'GET' && p === '/api/cos/gate-types') return send(res, 200, { ok: true, types: await gates.types() });
+      { const gm = /^\/api\/cos\/gate-types\/([\w-]+)(\/try)?$/.exec(p);
+        if (gm && m === 'GET' && !gm[2]) { const t = await gates.get(gm[1]); return send(res, t ? 200 : 404, t ? { ok: true, type: t } : { ok: false, error: `no gate type "${gm[1]}"` }); }
+        if (gm && m === 'POST' && gm[2]) { if (!(await gates.get(gm[1]))) return send(res, 404, { ok: false, error: `no gate type "${gm[1]}"` }); return send(res, 200, { ok: true, decision: await gates.decide({ pipelineId: body.pipeline || 'try', task: body.task || 'try', gate: { type: gm[1], with: body.with || {} }, context: body.context || {}, output: body.output == null ? '' : body.output, dry: true }) }); } }
+      if (m === 'POST' && p === '/api/cos/gate-types') { const r = await gates.save(body.type, { by: body.by }); return send(res, r.ok ? 200 : (r.code || 400), r); }
+      // 2026-11-09 — a request through a pipeline, kept as files until its contract is met (cos/pipeline/runs.js): ask, list, read, resume
+      if (m === 'POST' && p === '/api/cos/pipeline/requests') { if (/^agent:/.test(String(body.by || ''))) return send(res, 403, { ok: false, error: 'an agent proposes a request; running one is a person\'s or a rule\'s' }); const r = await pipeline.request({ pipeline: body.pipeline, vars: body.vars || {}, by: body.by }); return send(res, r.ok ? 200 : (r.code || 400), r); }
+      if (m === 'GET' && p === '/api/cos/pipeline/requests') return send(res, 200, { ok: true, state: u.searchParams.get('state') || 'active', requests: await pipeline.runs.list({ state: u.searchParams.get('state') || 'active' }) });
+      { const rm = /^\/api\/cos\/pipeline\/requests\/([\w.-]+)(\/resume)?$/.exec(p);
+        if (rm && m === 'GET' && !rm[2]) { const r = await pipeline.runs.read(rm[1]); return send(res, r ? 200 : 404, r ? { ok: true, ...r } : { ok: false, error: `no request "${rm[1]}"` }); }
+        if (rm && m === 'POST' && rm[2]) { if (/^agent:/.test(String(body.by || ''))) return send(res, 403, { ok: false, error: 'an agent proposes; resuming is a person\'s' }); const r = await pipeline.resume(rm[1], { by: body.by }); return send(res, r.ok ? 200 : (r.code || 400), r); } }
       if (m === 'GET' && p === '/api/cos/procedures') { const r = await boxes.procedures(); return send(res, r.ok ? 200 : (r.code || 500), r); }
       if (m === 'GET' && p === '/api/cos/hub') return send(res, 200, { ok: true, ...(await hub.read()) });
       // AE6 slice a — the automation engine's door: workflows, runs, log, pipelines, macros, triggers, webhooks (lib/automation/routes.js)
@@ -235,6 +266,8 @@ function createServer(sup, opts = {}) {
       return send(res, 404, { ok: false, error: `no route ${m} ${p}` });
     } catch (e) { return send(res, /no system/.test(e.message) ? 404 : 500, { ok: false, error: e.message }); }
   });
+  srvRef.server = server;   // PC5: a gate's call to 'cos' reaches this manager on its own port
+  return server;
 }
 
 function listen(sup, port = Number(process.env.COS_MANAGER_PORT) || 7799, opts = {}) {

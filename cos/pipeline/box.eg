@@ -1,4 +1,4 @@
-// cos/automation/box.eg — one box shape for every step on the canvas (MOD-PC-BOX, phase PC1_one_box_shape; cos/spec/pipeline-canvas.spec).
+// cos/pipeline/box.eg — one box shape for every step on the canvas (MOD-PC-BOX, phase PC1_one_box_shape; cos/spec/pipeline-canvas.spec).
 // James, 2026-11-08: "steps as boxes, with wires as the flow into the hooks of gates as compartments. boxes can  be gates, systems, agents, macros,
 // pipelines, tools" · "using emerge as the language" · "Hard corded has to earn its place and a node or api call is better than static."
 // A Box is { id, kind, ref, hooks: { in, out }, contract: { requires, gives }, gate, args }; a Wire is { from: "<box>.<hook>", to: "<box>.<hook>" }.
@@ -190,7 +190,7 @@ fn to_erv(g0: map, name: string): map {
       state: { params: { kind: b.kind, ref: b.ref, step: b.id, state: "" }, extra: { box: b, kinds: KINDS, last: null } } })
   }
   let wires = map(g.wires, fn(w) = { from: [split(w.from, ".")[0], "step.hook.out"], to: [split(w.to, ".")[0], "step.hook.in"], type: "dataflow" })
-  return { erv: 1, name: name, app: "Nexus (cos/automation/box.eg)", workspace: "1.0.0", layers: [
+  return { erv: 1, name: name, app: "Nexus (cos/pipeline/box.eg)", workspace: "1.0.0", layers: [
     { id: "view", kind: "canvas", label: "Canvas view", on: true, locked: false, data: { x: 0, y: 0, z: 1 } },
     { id: "tools", kind: "group", label: "Tools", on: true, locked: false, layers: tools },
     { id: "wires", kind: "wires", label: "Wires", on: true, locked: false, data: wires } ] }
@@ -217,6 +217,11 @@ component BoxShape {
 
   in steps(q: { graph: map }) {
     emit out answer { hook: "steps", ok: true, value: boxes_to_steps(q.graph), why: null }
+  }
+
+  // 2026-11-09 — the DAG a run keeps as its file (cos/pipeline/runs.js dag.dag): each step and, after a gated step, its gate, wired
+  in dag(q: { graph: map }) {
+    emit out answer { hook: "dag", ok: true, value: with_gates(q.graph), why: null }
   }
 
   in erv(q: { graph: map, name: string }) {

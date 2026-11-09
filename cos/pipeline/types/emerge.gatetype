@@ -1,0 +1,9 @@
+{
+  "id": "emerge",
+  "about": "builds what is missing: the output must hold (with: contains); when it is a gap, Emerge is handed the gap to write the code for (POST /handoff, kind build.gap), and the run holds for you.",
+  "madeBy": "shipped",
+  "checks": [{ "kind": "holds", "notEmpty": true, "contains": "{{with.contains}}" }],
+  "gapAfter": 1,
+  "on": { "open": [{ "do": "note" }], "closed": [{ "do": "retry" }],
+    "gap": [{ "do": "route", "owner": "emerge", "ref": "POST /handoff", "body": { "kind": "build.gap", "from": "cos.gate", "what": "{{with.what}}", "why": "{{why}}", "pipeline": "{{pipeline}}", "task": "{{task}}" } }, { "do": "hold" }] }
+}

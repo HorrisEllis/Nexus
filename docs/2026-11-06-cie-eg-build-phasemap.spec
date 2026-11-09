@@ -524,3 +524,14 @@ order: "CIE1 built. Then, his CIE_D1: CIE2 → CIE3 → CIE4 → CIE5 → (CIE6,
 # CIE14 grows (gaps found): a fn declared inside a block is not native (lifted in the port); json was not native (closed). Still open and known:
 # a module fn with defaults called through its module with fewer arguments; a module as a value natively. Found: emerge.cos's lock takes in
 # whatever is on the writing disk (untracked data/ ledgers, the gitignored lang/build/previous/); re-locked for code files only, those kept.
+
+# ── ADDENDUM 2026-11-09 (0.60.466) — CIE14 expanded: a gap found writing COS's gates (PC5) ───────────────────────────────────────────────────
+# Found while writing cos/gate/gate.eg (James, 2026-11-09: "emerges coding per gate"): starts_with and matches are handler keywords (on "x*"), so a
+# program cannot call them; there is no regex function at all. Worked around with slice and find_text; typed gates have no "matches" check until
+# Emerge has one (a callable prefix test and a pattern match, named so they do not collide with the handler keywords).
+
+# ── ADDENDUM 2026-11-09 (0.60.466) — CIE14 expanded: folders, built ───────────────────────────────────────────────────────────────────────────
+# James, 2026-11-09: "follow claude.md i thought we chose to move on and use .eg, emerge for code?" A request kept as files needs folders; Emerge had
+# read_file and write_file only. Built in lang/runtime.js: list_dir, path_exists, make_dir, move_path, remove_path (writes on the ledger as write_file
+# is). MAP.md and native/check_env_text.eg regenerated; native/bin/emerge rebuilt with itself (stage 1 = stage 2, byte for byte). Natively the five
+# are known to the checker; their native runtime waits for CIE13. Still open from this list: a callable prefix test and a pattern match.

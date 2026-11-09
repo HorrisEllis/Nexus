@@ -7,11 +7,11 @@ intent: null
 summary: PC3_the_build_request_step (integration) — 7 file(s)
 system: idearium
 tags: []
-exported_at: 1794149067825
+exported_at: 1794211880618
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794149067825
-lastSeenAt: 1794149067825
+firstSeenAt: 1794211880618
+lastSeenAt: 1794211880618
 fingerprint: null
 payload:
   id: PC3_the_build_request_step
@@ -20,7 +20,7 @@ payload:
   layer: integration
   status: OPEN
   files:
-    - cos/automation/build-request.js
+    - cos/pipeline/build-request.eg
     - cos/manager/server.js
     - cos/manager/contract.json
     - cos/manager/hub.js
@@ -37,4 +37,4 @@ payload:
   blocks:
     - MOD-PC-BUILD-STEP
   spec: cos/spec/pipeline-canvas.spec
-  graph: 22d8d9864ef4e450
+  graph: 64c265d1001957a6

@@ -1,0 +1,82 @@
+// cos/pipeline/test/gate.test.eg — PC5_programmable_gate_types (MOD-PC-GATE-TYPES). eg test cos/pipeline/test/gate.test.eg
+// James, 2026-11-09: "Gates can hold context, test, verify, gates would do a lot. But not the same everytime." · 2026-11-08: "Can use the gates to
+// build one step at a time, discover gaps."
+use "../gate.eg" as gate
+
+wire gate.GateRunner.answer -> "gate.answer"
+var last = null
+on "gate.answer" (a) { last = a }
+
+let CHECK = { id: "check", checks: [{ kind: "holds", notEmpty: true, contains: "\{\{with.contains\}\}" }], gapAfter: 3,
+  on: { open: [{ do: "note" }], closed: [{ do: "retry" }], gap: [{ do: "hold" }] } }
+let VERIFY = { id: "verify", checks: [{ kind: "holds", contains: "\{\{with.contains\}\}" }, { kind: "changed" }], gapAfter: 2, on: {} }
+let TEST = { id: "test", asks: [{ id: "run", owner: "\{\{with.owner\}\}", route: "\{\{with.route\}\}", body: { output: "\{\{output\}\}" } }],
+  checks: [{ kind: "answer", ask: "run", contains: "\{\{with.expect\}\}" }], on: {} }
+let EMERGE = { id: "emerge", checks: [{ kind: "holds", contains: "\{\{with.contains\}\}", gap: true }],
+  on: { gap: [{ do: "route", owner: "emerge", ref: "POST /handoff", body: { kind: "build.gap", why: "\{\{why\}\}", task: "\{\{task\}\}" } }, { do: "hold" }] } }
+
+fn decide(ty, w, out, ctx, answers) {
+  send gate.GateRunner.decide { type: ty, with: w, output: out, context: ctx, answers: answers, pipeline: "p1", task: "t1" }
+  return last
+}
+
+test "a check holds or closes with why; a setting left unset is no check at all" {
+  expect decide(CHECK, { contains: "ok" }, "all ok", {}, {}).value.outcome == "open"
+  let c = decide(CHECK, { contains: "ok" }, "failed", {}, {}).value
+  expect c.outcome == "closed" and c.why == "the output does not contain \"ok\"", c.why
+  expect c.actions == [{ do: "retry" }]
+  expect decide(CHECK, {}, "anything", {}, {}).value.outcome == "open", "contains unset: only notEmpty checks"
+}
+
+test "not the same every time: the same reason again and again becomes a gap; it holds what it saw" {
+  var ctx = {}
+  var outs = []
+  for i in range(3) { let r = decide(CHECK, { contains: "ok" }, "failed", ctx, {}).value; outs = push(outs, r.outcome); ctx = r.context }
+  expect outs == ["closed", "closed", "gap"], json(outs)
+  expect ctx.runs == 3 and ctx.streak == 3 and ctx.last == "failed" and len(ctx.history) == 3
+  expect decide(CHECK, { contains: "ok" }, "ok now", ctx, {}).value.context.streak == 0, "open resets the streak"
+}
+
+test "verify: the output must have changed since last time (it did something)" {
+  let first = decide(VERIFY, { contains: "v" }, "v1", {}, {}).value
+  expect first.outcome == "open"
+  let again = decide(VERIFY, { contains: "v" }, "v1", first.context, {}).value
+  expect again.outcome == "closed" and again.why == "the output is the same as last time", again.why
+  expect decide(VERIFY, { contains: "v" }, "v2", first.context, {}).value.outcome == "open"
+}
+
+test "test: the plan says what COS asks (filled); the answer decides; a route its owner lacks is said" {
+  send gate.GateRunner.plan { type: TEST, with: { owner: "idearium", route: "POST /api/tests/run", expect: "passed" }, output: "x", pipeline: "p1", task: "t1" }
+  expect last.value.asks == [{ id: "run", owner: "idearium", route: "POST /api/tests/run", body: { output: "x" } }], json(last.value)
+  send gate.GateRunner.plan { type: TEST, with: {}, output: "x", pipeline: "p1", task: "t1" }
+  expect len(last.value.asks) == 0 and len(last.value.unset) == 1
+  let w = { expect: "passed" }
+  expect decide(TEST, w, "x", {}, { run: { status: 200, body: "3 passed" } }).value.outcome == "open"
+  let r = decide(TEST, w, "x", {}, { run: { status: 404, body: "" } }).value
+  expect r.outcome == "closed" and find_text(r.why, "answered 404") >= 0, r.why
+}
+
+test "emerge: a gap hands Emerge what closed, filled with the why and the task, then holds" {
+  let r = decide(EMERGE, { contains: "fn " }, "no code", {}, {}).value
+  expect r.outcome == "gap"
+  expect r.actions[0].body == { kind: "build.gap", why: "the output does not contain \"fn \"", task: "t1" }, json(r.actions)
+  expect r.actions[1] == { do: "hold" }
+}
+
+test "a type is checked before it decides: unknown kinds, actions, asks are refused, named" {
+  send gate.GateRunner.validate { type: { id: "bad", checks: [{ kind: "vibes" }, { kind: "answer", ask: "nowhere" }], asks: [{ id: "a", route: "fetch it" }],
+    on: { maybe: [], open: [{ do: "dance" }, { do: "route" }] } } }
+  expect not last.ok
+  let ps = last.value.problems
+  for want in ["check kind \"vibes\"", "ask \"nowhere\"", "route is \"<METHOD> /path\"", "name the system that serves it", "on.maybe is not an outcome", "\"dance\" is not an action", "a route action names its owner"] {
+    expect any(ps, fn(p) = find_text(p, want) >= 0), want + " in " + json(ps)
+  }
+  for ty in [CHECK, VERIFY, TEST, EMERGE] { send gate.GateRunner.validate { type: ty }; expect last.ok, ty.id + ": " + str(last.why) }
+}
+
+test "every shipped .gate file is a valid type" {
+  for f in ["check", "test", "verify", "context", "emerge", "options"] {
+    send gate.GateRunner.validate { type: parse_json(read_file("cos/pipeline/types/" + f + ".gatetype")) }
+    expect last.ok, f + ": " + str(last.why)
+  }
+}

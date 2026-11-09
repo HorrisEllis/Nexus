@@ -6,6 +6,28 @@ The rows will be written and read by `emerge/emerge/lang/cie/bench.eg` (EQ2, doc
 then they are written by hand.
 
 
+## 2026-11-09 — the pipeline module in Emerge: gates that learn, requests kept as files (PC5 slice a, 0.60.466)
+- **His words:** "Gates can hold context, test, verify, gates would do a lot. But not the same everytime." · "This needs to be a module." · "Needs to
+  use actual physical files in the backend, the steps." · "follow claude.md i thought we chose to move on and use .eg, emerge for code?" (2026-11-09)
+- **Framework:** his gates (a gate after every step; a gap is a build request) and his rule that new code is Emerge (§17.13).
+- **When:** 2026-11-09, about 03:00–08:30 UTC, across a worker restart.
+- **Method:** the logic written in Emerge and proved by its own test blocks; then through COS's real routes with stand-in systems for a test runner
+  and Emerge's handoff (tests/modules/test-cos-pipeline.test.js).
+- **Code:** cos/pipeline/: box.eg (moved, +dag hook), gate.eg 239, runs.eg 298, cli.eg 139, tests 266 (.eg lines added about 840). JavaScript:
+  index.js 115 (the one door), replacing cos/manager/boxes.js 50; a 94-line gates.js and a 150-line runs.js written the same day in JavaScript
+  were rewritten in Emerge after his reminder. Emerge grew 5 builtins (runtime.js +30 JS lines: Emerge's own interpreter, CIE4–CIE12's to remove).
+- **Speed and counts:** eg tests box 10/10, gate 7/7, runs 4/4 (each about 0.1 s); test-cos-pipeline 8/8 in 11.0 s (every request write and gate
+  is one Emerge process, about 80 ms; a gate that asks first is two). Emerge's own suites: lang 166/166, differential 19/19, selfhost 16/16, native
+  as run in the release. The native compiler rebuilt itself: stage 1 = stage 2.
+- **Failed runs, and what each taught:** (1) `{{` in an Emerge string is interpolation (write `\{`); (2) `starts_with`, `matches` and `skip` are
+  keywords; (3) the test's "broken" contains "ok"; (4) the set step takes `assign`; (5) the door looked for Emerge under COS's data root; (6) a read
+  after a resume raced the queued event (reads now wait their turn); (7) the native checker's environment drifted from the runtime (regenerated).
+- **Gaps found in Emerge:** no folders (built: list_dir, path_exists, make_dir, move_path, remove_path); no callable prefix or pattern match; no clock
+  (time comes in from the caller, CIE13).
+- **What came of it:** a gate decides open, closed or gap and learns across requests through the step files (closed, closed, gap: CP-04); a
+  request's files exist before it runs and stay until its contract is met (CP-02, CP-03); a resume does not re-run what was met (CP-03); a gap hands
+  Emerge the build with its why (CP-05).
+
 ## 2026-11-08 — a Nexus pipeline on ERAVOS's own canvas (PC4 slice a, 0.60.456)
 - **Measured:** Emerge coding, and ERAVOS as Nexus's build surface.
 - **His words:** "eravos is the build surface for nexus. that way if something needs to be built, we can make a tool for eravos. not rebuild it."
