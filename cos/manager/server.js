@@ -61,7 +61,7 @@ function createServer(sup, opts = {}) {
   // AE6 slice a (docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec) — James, 2026-11-06: "Have cos be the orchastrator complelelt."
   // COS runs the automation engine (moved from the orchestrator) and streams its run events on /api/cos/events
   const automation = require('./automation-door.js');
-  automation.setBus((type, data) => { broadcast(type, data); if (pipeline && /^automation\.pipeline\./.test(type)) pipeline.onEvent(type, data); });   // 2026-11-09: a request's files follow its run (cos/pipeline/runs.js)
+  automation.setBus((type, data) => { if (data && data.value !== undefined) { const { value, ...rest } = data; broadcast(type, rest); } else broadcast(type, data); if (pipeline && /^automation\.pipeline\./.test(type)) pipeline.onEvent(type, data); });   // the whole value goes to the request's files, the stream keeps the preview   // 2026-11-09: a request's files follow its run (cos/pipeline/runs.js)
   let pipeline = null;
   // the api step's nexus://<system>: the address of a system COS declares, from its health URL (never a fixed port)
   automation.setResolver((name) => { const d = sup.declarations().find(x => x.name === name || x.system === name); try { return d && d.healthUrl ? new URL(d.healthUrl).origin : null; } catch (_) { return null; } });

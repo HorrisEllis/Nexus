@@ -1,0 +1,8 @@
+{
+  "id": "node",
+  "about": "the step gave a node of its type (with: type — chunk, contract, context, gap … lib/node-schemas), with every field that type's schema requires; a type Nexus does not define is a gap.",
+  "madeBy": "shipped",
+  "checks": [{ "kind": "node", "type": "{{with.type}}" }],
+  "gapAfter": 2,
+  "on": { "open": [{ "do": "note" }], "closed": [{ "do": "retry" }], "gap": [{ "do": "hold" }] }
+}

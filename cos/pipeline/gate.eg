@@ -8,7 +8,7 @@
 // gap names a missing capability at once. Pure: COS's door (cos/pipeline/gates.js) makes the calls and keeps the context; this decides.
 // Reached only through its in hooks (CIE-EG §5.2); every answer leaves by the one out hook, answer.
 
-let CHECKS = ["holds", "answer", "changed", "always"]
+let CHECKS = ["holds", "answer", "changed", "node", "always"]
 let ACTIONS = ["note", "route", "retry", "stop", "skip", "hold", "branch", "notify"]
 let OUTCOMES = ["open", "closed", "gap"]
 
@@ -58,6 +58,24 @@ fn answer_why(c: map, answers: map): any {
   if get(c, "contains", null) != null and find_text(str(get(a, "body", "")), str(c.contains)) < 0 { return "asked \"" + id + "\": the answer does not contain \"" + str(c.contains) + "\"" }
   return null
 }
+// node: the step gave a node of the type named (or of any type, when none is), with every field its schema requires (lib/node-schemas,
+// given in as schemas: { <type>: [required fields] }). A type with no schema is a gap: something is named that Nexus does not define.
+fn node_why(c: map, raw: any, schemas: map): any {
+  var kind = get(c, "type", null)
+  var payload = raw
+  if type_of(raw) == "map" and has(raw, "envelope") and has(raw, "payload") {
+    if kind != null and raw.type != kind { return "it gave a ." + str(raw.type) + ", not a ." + kind }
+    kind = raw.type
+    payload = raw.payload
+  }
+  if kind == null { return "it gave no node (an envelope with its type), and the check names no type" }
+  if not has(schemas, kind) { return "no schema for ." + kind + " (lib/node-schemas): a node type Nexus does not define" }
+  if type_of(payload) != "map" { return "a ." + kind + " is fields, not " + type_of(payload) }
+  let missing = filter(schemas[kind], fn(f) = not has(payload, f))
+  if len(missing) > 0 { return "the ." + kind + " lacks " + join(missing, ", ") + " (its schema requires them)" }
+  return null
+}
+
 fn check_why(c: map, out: string, ctx: map, answers: map): any {
   if c.kind == "holds" { return holds_why(c, out) }
   if c.kind == "answer" { return answer_why(c, answers) }
@@ -72,7 +90,10 @@ fn check_why(c: map, out: string, ctx: map, answers: map): any {
 // the same reason closed it gapAfter times in a row (it is not a flake: something is missing).
 fn decide(q: map): map {
   let w = get(q, "with", {})
-  let out = str(get(q, "output", ""))
+  let raw = get(q, "output", "")
+  var out = ""
+  if type_of(raw) == "string" { out = raw } else { out = json(raw) }
+  let schemas = get(q, "schemas", {})
   let top = { output: preview(out), pipeline: get(q, "pipeline", null), task: get(q, "task", null), why: null }
   let ty = fill(q.type, w, top)
   let ctx = get(q, "context", {})
@@ -81,13 +102,14 @@ fn decide(q: map): map {
   var why = null
   var saw = []
   for c in get(ty, "checks", []) {
-    let r = check_why(c, out, ctx, answers)
+    var r = null
+    if c.kind == "node" { r = node_why(c, raw, schemas) } else { r = check_why(c, out, ctx, answers) }
     if r == null { saw = push(saw, c.kind + ": holds") } else {
       saw = push(saw, c.kind + ": " + r)
       if why == null {
         why = r
         outcome = "closed"
-        if get(c, "gap", false) { outcome = "gap" }
+        if get(c, "gap", false) or (c.kind == "node" and find_text(r, "no schema for") == 0) { outcome = "gap" }
       }
     }
   }
@@ -108,8 +130,8 @@ fn decide(q: map): map {
   let next = { runs: get(ctx, "runs", 0) + 1, last: preview(out), lastOutcome: outcome, lastWhy: why, streak: streak, history: hist, held: held }
   // the actions, filled again now that the why is known (an action can carry it: the gap handed to Emerge says what closed)
   var acts = []
-  let raw = get(q.type, "on", {})
-  if has(raw, outcome) { acts = fill(raw[outcome], w, { output: top.output, pipeline: top.pipeline, task: top.task, why: why }) }
+  let ons = get(q.type, "on", {})
+  if has(ons, outcome) { acts = fill(ons[outcome], w, { output: top.output, pipeline: top.pipeline, task: top.task, why: why }) }
   return { outcome: outcome, why: why, saw: saw, actions: acts, context: next, options: get(ty, "options", []) }
 }
 
@@ -217,7 +239,7 @@ component GateRunner {
   intent = "a gate decides open, closed or gap from its type, what it holds and what it was told; the same type decides differently as it learns"
   state { checks: CHECKS, actions: ACTIONS }
 
-  in decide(q: { type: map, with: map, output: any, context: map, answers: map, pipeline: any, task: any }) {
+  in decide(q: { type: map, with: map, output: any, context: map, answers: map, pipeline: any, task: any, schemas: any }) {
     let ps = problems(q.type)
     if len(ps) > 0 { emit out answer { hook: "decide", ok: false, value: { problems: ps }, why: join(ps, "; ") } } else {
       emit out answer { hook: "decide", ok: true, value: decide(q), why: null }

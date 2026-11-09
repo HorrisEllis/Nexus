@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-schema-dag
+type: schema
+id: dag
+context: lib/node-schemas — shared node-type schema registry
+intent: null
+summary: null
+system: null
+tags: []
+exported_at: 1794200000000
+source: nexus.lib.node-export
+payload:
+  status: REAL
+  source: >-
+    Added 2026-11-09. James: ".contracts with .dag, .chunk, .context or any of the nodes." A request's DAG through a pipeline: each step and,
+    after a gated step, its gate (cos/pipeline/box.eg with_gates), and every wire with the node types it carries. Kept apart from .graph
+    (a phase's dependency graph of files, lib/phase-graph.js): a .dag is the flow of one request, a .graph is a phase's reach in the code.
+    Written by cos/pipeline/runs.eg (dag.dag in a request's folder).
+  fields:
+    for:
+      type: string
+      required: true
+      description: the request id
+    boxes:
+      type: list
+      required: true
+      description: "[Box] — { id, kind, ref, label, hooks, contract: { requires, gives }, gate, args } (cos/spec/pipeline-canvas.spec)"
+    wires:
+      type: list
+      required: true
+      description: "[{ from: '<box>.out', to: '<box>.in', carries: [node types] }] — what flows along each wire"

@@ -18,6 +18,14 @@ function createPipeline({ automation, idearium = null, call = null, dataDir } = 
   const root = path.join(__dirname, '..', '..');   // Emerge and this module are where Nexus is, whatever data root COS was given
   const EG = path.join(root, 'emerge/emerge/lang/eg.js'), CLI = path.join(__dirname, 'cli.eg');
   const shipped = path.join(__dirname, 'types'), mine = path.join(dataDir, 'pipeline', 'gate-types');
+  // the node types Nexus defines and the fields each requires (lib/node-schemas, YAML): read here because Emerge has no YAML reader yet (CIE14)
+  let _schemas = null;
+  const schemas = () => {
+    if (_schemas) return _schemas;
+    const dir = path.join(root, 'lib', 'node-schemas'), out = {};
+    try { const y = require('js-yaml'); for (const f of fs.readdirSync(dir)) if (f.startsWith('schema.')) { try { const d = y.load(fs.readFileSync(path.join(dir, f), 'utf8')); const fl = (d && d.payload && d.payload.fields) || {}; out[f.slice(7)] = Object.keys(fl).filter(k => fl[k] && fl[k].required); } catch (_) {} } } catch (_) {}
+    return (_schemas = out);
+  };
   const eg = (cmd, obj) => new Promise((resolve) => {
     const f = path.join(os.tmpdir(), `cos-pipeline-${process.pid}-${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}.json`);
     fs.writeFileSync(f, JSON.stringify(obj));
@@ -66,7 +74,7 @@ function createPipeline({ automation, idearium = null, call = null, dataDir } = 
 
   // ── the gates ──
   async function gate(q, { dry = false, context = null } = {}) {
-    const base = { base: dataDir, shipped, mine, q, at: Date.now(), dry, ...(context ? { context } : {}) };
+    const base = { base: dataDir, shipped, mine, q, at: Date.now(), dry, schemas: schemas(), ...(context ? { context } : {}) };
     let r = await eg('gate', base);
     if (r.ok && r.asks) r = await eg('gate', { ...base, answers: await answer(r.asks), at: Date.now() });
     if (!r.ok) return { outcome: 'closed', open: false, why: r.error, saw: [], actions: [] };
