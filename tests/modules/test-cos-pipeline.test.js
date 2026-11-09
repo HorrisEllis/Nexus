@@ -24,6 +24,8 @@
  *          named; a pipeline runs it as a step; the child request and its parent step are linked both ways, its nodes in its own files
  *   CP-12  a framework as a step, recursive: a pipeline's framework step runs outer → mid → inner, each a request linked to its parent; a loop
  *          of frameworks is refused when compiled and when run, named; the schemas process and process_step are registered
+ *   CP-13  every kind by name from a framework's step: a pipeline (its request linked), a workflow, a macro (Clear Glass's: without it running,
+ *          the step fails and says so, and onFail continue goes on); schema.pipeline, schema.macro say where they sit
  *   CP-07  an engine with no gate host refuses a typed gate, said; command rows for agents and copilot
  */
 require('../../lib/test-sandbox.js').ensure();
@@ -63,7 +65,7 @@ const eg = (...a) => require('child_process').spawnSync(process.execPath, [path.
   const TEST = { type: 'test', with: { owner: 'tester', route: 'POST /api/tests/run', expect: 'passed' } };
   try {
     await T('CP-00', 'Emerge\'s own tests: the box shape (with its dag hook) and the gate', () => {
-      for (const [f, n] of [['cos/pipeline/test/box.test.eg', 10], ['cos/pipeline/test/gate.test.eg', 8], ['cos/pipeline/test/runs.test.eg', 5], ['cos/pipeline/test/framework.test.eg', 7]]) { const r = eg('test', f); assert.strictEqual(r.status, 0, r.stdout + r.stderr); assert.match(r.stdout, new RegExp(`${n} passed, 0 failed`)); }
+      for (const [f, n] of [['cos/pipeline/test/box.test.eg', 10], ['cos/pipeline/test/gate.test.eg', 8], ['cos/pipeline/test/runs.test.eg', 5], ['cos/pipeline/test/framework.test.eg', 8]]) { const r = eg('test', f); assert.strictEqual(r.status, 0, r.stdout + r.stderr); assert.match(r.stdout, new RegExp(`${n} passed, 0 failed`)); }
     });
 
     await T('CP-01', 'one folder with its registry; the shipped .gatetype files listed; a try decides and does nothing', async () => {
@@ -259,6 +261,29 @@ const eg = (...a) => require('child_process').spawnSync(process.execPath, [path.
       assert.match(y.steps[0].payload.error || '', /a framework runs itself/);
       const N = require(path.join(ROOT, 'lib/node-export.js')); assert.ok(N.KNOWN_TYPES.includes('process') && N.KNOWN_TYPES.includes('process_step'));
       for (const t of ['process', 'process_step']) assert.ok(fs.existsSync(path.join(ROOT, 'lib/node-schemas', `schema.${t}`)), t);
+    });
+
+    await T('CP-13', 'every kind by name: a framework runs a pipeline, a workflow and a macro (Clear Glass down: said; onFail continue goes on)', async () => {
+      // James, 2026-11-09: "Also .pipelines and .macros. Is it done?"
+      const F = path.join(tmp, 'frameworks'); fs.mkdirSync(F, { recursive: true });
+      await make('leaf-pipe', [{ id: 'one', step: SET('from a pipeline') }]);
+      const w = await req(M, 'POST', '/api/cos/automation/workflows', { name: 'leaf-wf', status: 'active', by: 'person', steps: [{ type: 'set', config: { assign: { from: 'a workflow' } } }] });
+      assert.ok(w.body.ok !== false, JSON.stringify(w.body));
+      fs.writeFileSync(path.join(F, 'mix.framework'), '# mix\n```json framework-steps\n' + JSON.stringify({ id: 'mix', name: 'Mix', status: 'his', steps: [
+        { id: 'p', pipeline: 'leaf-pipe', gives: ['output'] },
+        { id: 'w', workflow: 'leaf-wf', gives: ['output'] },
+        { id: 'm', macro: 'choose category', gives: ['output'], onFail: 'continue' }] }) + '\n```\n');
+      const pid = await make('runs-every-kind', [{ id: 'go', step: { type: 'framework', config: { framework: 'mix' } }, onFail: 'continue' }]);
+      const r = await ask(pid, {}); const x = await ended(r.request);
+      const go = x.steps[0].payload; assert.strictEqual(go.children.length, 1);
+      const mix = (await req(M, 'GET', `/api/cos/pipeline/requests/${go.children[0]}`)).body;
+      const st = Object.fromEntries(mix.steps.map(s => [s.payload.task, s.payload]));
+      assert.deepStrictEqual([st.p.status, st.w.status, st.m.status], ['done', 'done', 'failed'], JSON.stringify(Object.values(st).map(s => [s.task, s.status, s.error])));
+      assert.strictEqual((st.p.children || []).length, 1, 'the pipeline it ran is a child request');
+      assert.match(st.m.error, /Clear Glass/, 'the macro says what it needs');
+      const y = require('js-yaml');
+      assert.match(y.load(fs.readFileSync(path.join(ROOT, 'lib/node-schemas/schema.macro'), 'utf8')).payload.note_2026_11_09, /a leaf/);
+      assert.match(y.load(fs.readFileSync(path.join(ROOT, 'lib/node-schemas/schema.pipeline'), 'utf8')).payload.fields.tasks.description, /step.type may also be framework/);
     });
 
     await T('CP-07', 'an engine with no gate host refuses a typed gate, said; command rows for agents and copilot', async () => {

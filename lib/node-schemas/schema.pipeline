@@ -50,7 +50,11 @@ payload:
       description: >-
         [{ id, label, depends_on: [task ids], step: { type, config } (one engine step: macro, workflow, pipeline, gate, agent, command …),
         gate?: { notEmpty, contains, equals, matches, element: { gateId | selector | xpath, value | equals | matches | shows | checked | text |
-        visible | gone | url } }, retries: 0..5, onFail: stop | continue }]
+        visible | gone | url } }, retries: 0..5, onFail: stop | continue }]. Added 2026-11-09 (his: "Also .pipelines and .macros. Is it
+        done?"): step.type may also be framework (a .framework, compiled by its host, recursive) or procedure; gate may be a typed gate
+        { type, with } (cos/pipeline/types/*.gatetype, decided in Emerge); takes / gives: node types (lib/node-schemas) — the wires carry them;
+        when: { left, op, value } — the task runs only when it holds (else skipped, and what only waits on it). A pipeline is a process
+        (schema.process, kind pipeline): its tasks are its steps.
     requires:
       type: object
       required: false

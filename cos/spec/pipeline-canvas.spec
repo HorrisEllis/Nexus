@@ -442,3 +442,11 @@ spec:
 #   directly or through others, is refused with the loop named, when compiled and when run.
 # - Programmable execution: the framework's execution { retries, onFail } is its steps' default; a step's own wins. The default gate (a node of
 #   the type it gives) applies where an agent does the step; a step that runs something else is checked by what it runs, or by its own check.
+
+# ── ADDENDUM 2026-11-09 (0.60.472) — .pipeline and .macro: every kind of process, by name, as a step (his) ───────────────────────────────────────
+# James, 2026-11-09: "Also .pipelines and .macros. Is it done?" Checked, said: pipelines ran as steps and nested (pipeline ↔ framework); macros ran as
+# steps through Clear Glass; but a framework's step could reach a macro, a procedure or a workflow only through a generic run, and schema.pipeline
+# and schema.macro did not say where they sit. Built: a framework step names any kind — framework, pipeline, macro (with params), procedure,
+# workflow, or run (any engine step) — and runs exactly one; schema.process_step has each; schema.pipeline's tasks carry today's fields (framework
+# and procedure steps, typed gates, takes / gives, when) and say a pipeline is a process; schema.macro says a macro is a process and a leaf (Clear
+# Glass's page actions: it runs as a step of anything, and composes upward). Proof: eg framework 8/8; test-cos-pipeline 14/14 (CP-13).

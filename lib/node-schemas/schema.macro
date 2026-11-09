@@ -11,6 +11,10 @@ exported_at: 1789116324006
 source: nexus.lib.node-export
 payload:
   status: REAL
+  note_2026_11_09: >-
+    A macro is a process (schema.process, kind macro) and a leaf: its steps are Clear Glass page actions (click, type, scroll, wait …), run by
+    Clear Glass's driver; it runs as a step of any other process (the engine's macro step; a framework step's macro: <name>), and composes upward
+    (a pipeline or a framework runs macros), not downward. His: "Also .pipelines and .macros. Is it done?"
   source: >-
     lib/agent-tools/tools/clear-glass/macro.js — the real macro record (create action), James:
     "clear-glass: .macro" pointed here directly

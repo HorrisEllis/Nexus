@@ -31,7 +31,9 @@ payload:
     kind:
       type: string
       required: false
-      description: framework | procedure | pipeline | macro | workflow (framework when it comes from a .framework)
+      description: >-
+        framework | procedure | pipeline | macro | workflow (framework when it comes from a .framework). Each is a step of any other: a
+        framework, a pipeline and a workflow compose (they run others, recursively); a macro is a leaf (Clear Glass's page actions)
     status:
       type: string
       required: false

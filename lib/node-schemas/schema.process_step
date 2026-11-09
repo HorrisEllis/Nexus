@@ -12,9 +12,10 @@ source: nexus.lib.node-export
 payload:
   status: REAL
   source: >-
-    Added 2026-11-09 with schema.process (his: "Recursive. Fully programmable. Executable processes. Schemas for them."). One step of an executable
-    process. It runs exactly one of: an engine step (run), another framework (framework: its id — recursive), a pipeline (pipeline), or, with none
-    named, an agent asked to do its section with what it takes. Compiled by cos/pipeline/framework.eg to one pipeline task.
+    Added 2026-11-09 with schema.process (his: "Recursive. Fully programmable. Executable processes. Schemas for them." · "Also .pipelines and
+    .macros."). One step of an executable process. It runs exactly one of: an engine step (run), another framework (framework: its id —
+    recursive), a pipeline, a macro, a procedure, a workflow (each by name), or, with none named, an agent asked to do its section with what it
+    takes. Compiled by cos/pipeline/framework.eg to one pipeline task.
   fields:
     id:
       type: string
@@ -51,7 +52,23 @@ payload:
     pipeline:
       type: string
       required: false
-      description: a pipeline this step runs, by name or id
+      description: "a pipeline this step runs, by name or id (recursive: a pipeline can run frameworks and pipelines)"
+    macro:
+      type: string
+      required: false
+      description: a Clear Glass macro this step runs, by name (its page actions; params with it)
+    params:
+      type: object
+      required: false
+      description: a macro's params
+    procedure:
+      type: string
+      required: false
+      description: one of Idearium's procedures, by id
+    workflow:
+      type: string
+      required: false
+      description: a workflow of the engine, by id or name
     agent:
       type: string
       required: false
