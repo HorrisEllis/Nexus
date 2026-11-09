@@ -31,6 +31,8 @@
  *   CP-15  a phase planned into its own .pipeline, end state first (its proof is the contract's outcome): context, dag, build, evidence, ledger,
  *          each an Idearium route with a gate; with chunks, a build step per file; build-next plans and runs the next ready phase to met;
  *          Idearium's real phases/one serves a real phase whole
+ *   CP-16  every pipeline a physical node file, imported: a system's own (fetched by its route, kept as a file first), COS's planned ones
+ *          (written as their node file first); an unchanged file is left, a changed one updates in place (same id); all in the engine's list
  *   CP-07  an engine with no gate host refuses a typed gate, said; command rows for agents and copilot
  */
 require('../../lib/test-sandbox.js').ensure();
@@ -63,9 +65,14 @@ const eg = (...a) => require('child_process').spawnSync(process.execPath, [path.
   // Idearium, stood in: one phase whole, the queue, and the routes a planned pipeline calls (each answers ok, and is recorded)
   const PH = { key: 'docs/x-phasemap.spec::XY1_a_phase', id: 'XY1_a_phase', map: 'docs/x-phasemap.spec', does: 'make the parser', files: ['lib/a.js', 'lib/b.js'], depends_on: [], proof: 'test-parser 3/3' };
   const idCalls = [];
+  let ideaSteps = 1;   // Idearium's own pipeline, as its node file says it (a step more when it changes)
+  const IDEA_NODE = (n) => { const NE = require(path.join(ROOT, 'lib/node-export.js')); return NE.toYaml(NE.wrap('pipeline', 'idea-one', { id: 'idea-one', format: 'nexus-pipeline', version: 1, name: 'Idea one',
+    tasks: Array.from({ length: n }, (_, i) => ({ id: `s${i + 1}`, depends_on: i ? [`s${i}`] : [], step: { type: 'set', config: { assign: { v: String(i) } } } })) })); };
   const ideariumStand = await stand((q, r, t) => { idCalls.push(`${q.method} ${q.url}`); r.setHeader('content-type', 'application/json');
     if (q.url.startsWith('/api/phases/one')) return r.end(JSON.stringify({ ok: true, ...PH }));
     if (q.url.startsWith('/api/phases/next')) return r.end(JSON.stringify({ ok: true, queue: [{ key: PH.key, id: PH.id }] }));
+    if (q.url === '/api/pipelines') return r.end(JSON.stringify({ ok: true, pipelines: [{ id: 'idea-one', name: 'Idea one' }] }));
+    if (q.url === '/api/pipelines/idea-one') return r.end(JSON.stringify({ ok: true, pipeline: { text: IDEA_NODE(ideaSteps) } }));
     r.end('{"ok":true}'); });
   const emerge = await stand((q, r, t) => { if (q.url === '/handoff') { handed.push(JSON.parse(t)); r.end('{"ok":true,"state":"queued"}'); } else r.end('{"ok":true}'); });
   const { createSupervisor } = require(path.join(ROOT, 'cos/manager/supervisor.js'));
@@ -342,6 +349,26 @@ const eg = (...a) => require('child_process').spawnSync(process.execPath, [path.
       const o = await api._route('GET', '/api/phases/one?key=' + encodeURIComponent('docs/2026-11-08-pipeline-canvas-phasemap.spec::PC7_iterate_to_the_end_state'), {});
       const body = o.json || o.body || o; assert.ok(body.ok !== false, JSON.stringify(body).slice(0, 300));
       assert.strictEqual(body.id, 'PC7_iterate_to_the_end_state'); assert.match(String(body.proof), /stand-in project/); assert.ok(body.files.length > 0);
+    });
+
+    await T('CP-16', 'every pipeline a physical node file, imported: a system\'s own, COS\'s planned; unchanged left, changed updated in place', async () => {
+      // James, 2026-11-09: "Every pipeline should be in the automation tab imported by a physical node fil"
+      const NODES = path.join(tmp, 'data', 'pipeline', 'nodes');
+      const a = (await req(M, 'POST', '/api/cos/pipeline/sync', { by: 'person' })).body;
+      assert.ok(a.ok, JSON.stringify(a));
+      const idea = a.files.find(f => f.name === 'Idea one'); assert.ok(idea && idea.ok, JSON.stringify(a.files));
+      assert.ok(fs.existsSync(path.join(NODES, 'from-idearium', 'idea-one.pipeline')), 'Idearium\'s pipeline kept as a file first');
+      assert.ok(a.systems.some(x => x.system === 'idearium' && x.ok) && a.systems.some(x => x.system === 'clear-glass' && !x.ok), 'a system not there is said');
+      const planned = a.files.find(f => f.name === 'build: XY1_a_phase'); assert.ok(planned && /build-xy1-a-phase\.pipeline$/.test(planned.file), 'the planned pipeline came from its own node file');
+      const again = (await req(M, 'POST', '/api/cos/pipeline/sync', { by: 'person' })).body;
+      assert.strictEqual(again.files.find(f => f.name === 'Idea one').action, 'unchanged');
+      ideaSteps = 2;
+      const third = (await req(M, 'POST', '/api/cos/pipeline/sync', { by: 'person' })).body; const t = third.files.find(f => f.name === 'Idea one');
+      assert.deepStrictEqual([t.action, t.pipelineId], ['updated', idea.pipelineId], 'a changed file updates the same pipeline');
+      const list = (await req(M, 'GET', '/api/cos/automation/pipelines')).body.pipelines;
+      const inEngine = list.find(p => p.name === 'Idea one'); assert.ok(inEngine && inEngine.tasks.length === 2, 'in the Automation tab\'s list, as its file now says');
+      const src = (await req(M, 'GET', '/api/cos/pipeline/sources')).body.sources; assert.ok(src.some(x => x.name === 'Idea one' && /from-idearium/.test(x.file)));
+      assert.strictEqual((await req(M, 'POST', '/api/cos/pipeline/sync', { by: 'agent:copilot' })).status, 403);
     });
 
     await T('CP-07', 'an engine with no gate host refuses a typed gate, said; command rows for agents and copilot', async () => {

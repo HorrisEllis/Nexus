@@ -91,6 +91,8 @@ function createServer(sup, opts = {}) {
   const { boxes, gates } = pipeline;
   automation.setGate((q) => pipeline.decideGate(q));
   automation.setFramework((q) => pipeline.frameworkStep(q));   // a framework as a step: compiled here, with every framework it runs
+  // every pipeline a physical node file, imported at start (a system that does not answer yet is said; its last files are kept)
+  if (!opts.noPipelineSync) { const t = setTimeout(() => { pipeline.sync().catch(() => {}); }, 1500); if (t.unref) t.unref(); }
   sup.on('ledger', (entry) => {
     broadcast('cos.ledger', { entry });
     // 2026-11-09 — James: "Also conditions, triggers, events, etc. migrate BrainOS' features to the engine." What COS records is an event the
@@ -227,6 +229,10 @@ function createServer(sup, opts = {}) {
       if (m === 'GET' && p === '/api/cos/frameworks') return send(res, 200, { ok: true, frameworks: await pipeline.frameworks.list() });
       { const fm = /^\/api\/cos\/frameworks\/([\w.-]+)\/pipeline$/.exec(p);
         if (fm && m === 'POST') { if (/^agent:/.test(String(body.by || ''))) return send(res, 403, { ok: false, error: 'an agent proposes; compiling a framework into the engine is a person\'s' }); const r = await pipeline.frameworks.compile(fm[1], { by: body.by }); return send(res, r.ok ? 200 : (r.code || 400), r); } }
+      // 2026-11-09 — James: "Every pipeline should be in the automation tab imported by a physical node fil". Every source .pipeline file imported
+      // (shipped, COS's own, each system's by its route — kept as a file first); sources: which file each pipeline came from
+      if (m === 'POST' && p === '/api/cos/pipeline/sync') { if (/^agent:/.test(String(body.by || ''))) return send(res, 403, { ok: false, error: 'an agent proposes; importing is a person\'s or a system\'s' }); return send(res, 200, await pipeline.sync()); }
+      if (m === 'GET' && p === '/api/cos/pipeline/sources') return send(res, 200, { ok: true, sources: pipeline.sources() });
       // 2026-11-09 — James: "They build upon request, dynamically" · "It's end state first reasoning." A phase planned into its own .pipeline (end state
       // first), kept in the engine; with run, a request through it. build-next: the next phase Nexus can build, planned and run.
       if (m === 'POST' && (p === '/api/cos/pipeline/plan' || p === '/api/cos/pipeline/build-next')) {
