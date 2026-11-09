@@ -535,3 +535,12 @@ order: "CIE1 built. Then, his CIE_D1: CIE2 → CIE3 → CIE4 → CIE5 → (CIE6,
 # read_file and write_file only. Built in lang/runtime.js: list_dir, path_exists, make_dir, move_path, remove_path (writes on the ledger as write_file
 # is). MAP.md and native/check_env_text.eg regenerated; native/bin/emerge rebuilt with itself (stage 1 = stage 2, byte for byte). Natively the five
 # are known to the checker; their native runtime waits for CIE13. Still open from this list: a callable prefix test and a pattern match.
+
+# ── ADDENDUM 2026-11-09 (0.60.473) — CIE14: the brace trap closed (his) ──────────────────────────────────────────────────────────────────────
+# James, 2026-11-09, asked "Did it code stably?" and told: stable (every mistake caught at check time, none at run time), but a brace in a string
+# failed four times in one day: "Yes fix it." Built, in both lexers so the interpreter and the native compiler agree (lang/lexer.js,
+# native/front.eg): {{ is a literal {, }} a literal } (as Python's and C#'s strings), so JSON and templates are written as they read ("{{with.x}}",
+# "{{}}", "{{\"k\": {n}}}"); \{ \} still work; each brace error now says "write {{ or \{ for a literal brace". The native compiler was rebuilt with
+# itself (its new source uses only \{ escapes, so the old compiler could build it): stage 2 = stage 3, byte for byte. Nothing in the tree relied on
+# {{ opening an interpolation of a map (checked). Proof: lang 168/168 (two new cases), native 109/109, differential 19/19, selfhost 16/16,
+# bootstrap 11/11; cos/pipeline's eg tests and test-cos-pipeline 14/14 unchanged.

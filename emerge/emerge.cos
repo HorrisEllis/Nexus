@@ -216,6 +216,12 @@ payload:
       emerge/data/ledger/2026-11-09T03-22-22-795Z/events.jsonl: 4e065369822539822b8d38832d3362f20471ed3abcdb436c748dd63a589623e4
       emerge/data/ledger/2026-11-09T03-22-22-875Z/events.jsonl: d49b6a5db4cb401a5373ae53e99524e797e90f519bee396cc16e3d2ca3d88bc3
       emerge/data/ledger/2026-11-09T03-50-28-302Z/events.jsonl: 25cb48d66dae00f6615d8865e5f1751df4a0a65c43ad58a262f1d9798609e0aa
+      emerge/data/ledger/2026-11-09T08-10-12-804Z/events.jsonl: ef9f9ce0d331d7f22b32a63e7cbfce36b69895d8345aa58e4a732de8834663ac
+      emerge/data/ledger/2026-11-09T08-11-20-569Z/events.jsonl: 4f21a2cb18459b4d1a031521385eddf833d4359590942f1c71d8eb109e19c50d
+      emerge/data/ledger/2026-11-09T08-24-20-214Z/events.jsonl: cb24c7d437ec07bc4a61023e1d07c92ef8664e6da9243f4be8a38703fe7048d8
+      emerge/data/ledger/2026-11-09T08-25-56-812Z/events.jsonl: 45076f754b32a8376436c23a43f582c77d5cd8e761c758884a98db4b5c991e04
+      emerge/data/ledger/2026-11-09T08-57-49-788Z/events.jsonl: 3f0c02c2d4d8efd412f1bcf4053752c905374bac295168eeab08c45d5b897233
+      emerge/data/ledger/2026-11-09T13-11-02-612Z/events.jsonl: d6498487476946bb2e19fe738346adac9bccd708497f592e7f04b19310019668
       emerge/data/node-index/nodes_bundle.json: 1a860a7eb682808870cc353370170e75660f8f2e8ecb1298c02f9f79a762a421
       emerge/data/node-index/nodes_bundle_ledger.jsonl: 66be570590160dc8a923d35feb7749cc20861c1f1fb8c32aa495ece820632da6
       emerge/data/node-index/nodes_capability.json: 13fef49118779a2115783d32a314f681cfb6889bd32afedeafd98155313ee77d
@@ -313,7 +319,7 @@ payload:
       emerge/interaction-contract.json: 0579212e16f31d08b9ff922fd382609afc9a400e422843b03fb21aa84d8b62bc
       emerge/jaa-store.js: e816dceb72039995ba4a40a4c834d82910a1c913c918c6617947b3e5577f6329
       emerge/lang/MAP.md: 28bc5a613e5a4b9806183f3c977cf2600e00aeb5fc68199887caac0e37bc3369
-      emerge/lang/README.md: 99891c98d4e2d2b93148f8f53a16e531659fbb39821ef4e0296ca1ce975169b4
+      emerge/lang/README.md: 89fd0af2a42aff323fb521663b0a1ced6fe6dc3f99b18c0f14e7e575379f9f96
       emerge/lang/bootstrap.js: 80edec662a9a8af59e903ccf404c8fbebacbc28ff321262a95562a89fb847fd3
       emerge/lang/build-loader.js: dcbcb454abea34eb49f7c701b1167d13050b5195c4d3bc589791b0a207602123
       emerge/lang/build/current/BUILD.json: 82f79289fd2142d3f88c46e3c90416884a4338fc75b0335f419345a4764e7e5a
@@ -357,9 +363,9 @@ payload:
       emerge/lang/learn/learn.eg: 6f32465e1e11d296a9ad0964918013df89d0aac028493ff8733e058f8a89611e
       emerge/lang/learn/learn.node: c414ecc57a5f2bb741477c02a8e8aea283ca04a810039158bcb75cdd1247aae5
       emerge/lang/ledger.js: 258c7a45d0af50be69449d8a2c8c6eb5c762065cb382a7297c24b6a603711e7b
-      emerge/lang/lexer.js: a5175f00c4e8daae4c23dac25b28451b935f17d45526cbfec006b31b18e452e7
+      emerge/lang/lexer.js: 88037412e29ce4be502844a21c19e9614611fc4c871ddf51d42fa331fe59a0bf
       emerge/lang/map.js: 0814f101854c4806637104248a4bfdfc1de99021b8377db416d627cc15e931b0
-      emerge/lang/native/bin/emerge: 02f9730dc89f73787e9465e5f80ad281b866e7a8bc1763d4944c1acd16272bb5
+      emerge/lang/native/bin/emerge: 1cd6ffa31651c9338c1a7ba7acc4b958160ca06c4dd48aaec933a8183ff427fc
       emerge/lang/native/bin/emerge.sha256: 2472deed27a5dc61e2ef4274ed1c15d2b33e90505e40835dc374a642cbd8e9e7
       emerge/lang/native/check_env_text.eg: 4550c612a7a9e17068629f01c5134cb05d9f8a6de55a59c45ca2bb957a7d79be
       emerge/lang/native/codegen.eg: a0659953a2704534b79ba414a6a053003138604fac5b206cf07e1e2ec285a7e4
@@ -369,7 +375,7 @@ payload:
       emerge/lang/native/elf.eg: 6cde0b848c06618474392eb5638d599082fdbbdf617b172c57562a2124c18516
       emerge/lang/native/embed.eg: d5d91204dbb3796042e6a5bd5a47ab46a6e994c7c6815da2488205e762aeebac
       emerge/lang/native/emerge.eg: c7e88a10121f8166ef0fddf7bb729288a452c1d5ef201506a88c0a0e84439c5f
-      emerge/lang/native/front.eg: 1daece47a38511226990d14a8b93afe1fb9dd63428d78e0fbce6cc694b128da2
+      emerge/lang/native/front.eg: 7a9fa5f22cfa08f876094b276f88a7b0a155f9074afa68d612297d5ddbcd7104
       emerge/lang/native/hello: ee9b52b8c13131c2a6221baca663c0006960b348aa40bebea3a03f6f29e1fe73
       emerge/lang/native/hello.exe: 40ebae4595da614a1ab436968d2adb136ca5015415b0b9da7853bdb33a01ed3c
       emerge/lang/native/json.eg: 87a715c3099af633c4851973e655741cd6416fbbd5a995123315fbb0461b9efc
@@ -396,7 +402,7 @@ payload:
       emerge/lang/test/differential.test.js: daa5efb3bdcf8dded88077e0a3cbdf3ee4e26b2616a566342d60fad248392f87
       emerge/lang/test/harness.js: dad8cfe30193fc54c95b78a30617e1608c5e4d49c2ac9b241985c1e3c61f8b8c
       emerge/lang/test/ide.test.js: 3ed66893b0ff36ced7901c79ec4142e587cb3a1f898ef1167065266fbc2c343a
-      emerge/lang/test/lang.test.js: 076d67877bf2dd4f12541a2e3bf83bb534616702d9f416ab09336b1bd0f0ba82
+      emerge/lang/test/lang.test.js: d83b13730559b82c3998658c214c9a9d66ec1857c114de214e24981986765b93
       emerge/lang/test/learn.test.js: 11108ab4bbaae852fc490f9f9e621710169d2b9fcfd55c6b63388e07c30d5884
       emerge/lang/test/ledger.test.js: 69f33e267c4750a1755dd501dfc84e95f468f3fc414be457519c1251b97982a9
       emerge/lang/test/native.test.js: 9127840297dd5cf9b1ab154b692ee5fddd0f1ca7a16978776f674bdf2f1bca50

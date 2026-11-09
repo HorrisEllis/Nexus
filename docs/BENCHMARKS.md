@@ -6,6 +6,18 @@ The rows will be written and read by `emerge/emerge/lang/cie/bench.eg` (EQ2, doc
 then they are written by hand.
 
 
+## 2026-11-09 — Emerge's brace trap closed: {{ and }} are literal braces (CIE14, 0.60.473)
+- **His words:** "Did it code stably?" · "Yes fix it." (2026-11-09)
+- **Measured first, from the day's own runs:** writing about 1,000 lines of .eg for cos/pipeline, about nine mistakes were caught by Emerge's
+  checker with line and column, none got through to a wrong result at run time; the brace in a string was the top one (4 of the 9).
+- **Method:** the rule in both lexers (lang/lexer.js, native/front.eg) so the interpreter and the native compiler agree; the native compiler
+  rebuilt with itself until it reproduced itself.
+- **Code:** lexer.js +4 lines; front.eg +12 lines (.eg); error messages say how to write a literal brace; README.
+- **Counts:** lang 168/168 (+2), native 109/109, differential 19/19, selfhost 16/16, bootstrap 11/11; stage 2 = stage 3.
+- **Failed runs, and what each taught:** none in the change itself; one bootstrap care: the compiler's new source had to use \{ only, because the
+  old compiler builds it.
+- **What came of it:** JSON and templates read as written in Emerge strings; the most common trap for him and for small models is gone.
+
 ## 2026-11-09 — the pipeline module in Emerge: gates that learn, requests kept as files (PC5 slice a, 0.60.466)
 - **His words:** "Gates can hold context, test, verify, gates would do a lot. But not the same everytime." · "This needs to be a module." · "Needs to
   use actual physical files in the backend, the steps." · "follow claude.md i thought we chose to move on and use .eg, emerge for code?" (2026-11-09)
