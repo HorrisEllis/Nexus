@@ -875,7 +875,7 @@
       "title": "Deployments",
       "path": "deployments/",
       "route": "#/deployments",
-      "nav": "main",
+      "nav": "none",
       "built": true,
       "phase": "OC4_deploy_to_any_system",
       "routes": [
@@ -886,14 +886,16 @@
       ],
       "listens": [],
       "emits": [],
-      "about": "deploy a task, an agent or a pipeline to any system, through a COS proposal: every deployment, its state and result, and Recall. Tasks run on their target system today; agent and pipeline runners are OC4b."
+      "about": "deploy a task, an agent or a pipeline to any system, through a COS proposal: every deployment, its state and result, and Recall. Tasks run on their target system today; agent and pipeline runners are OC4b.",
+      "navBefore": "main",
+      "offRail": "Off the rail 2026-11-09 \u2014 James: \"There's supposed to be one fucking tab. Why are you adding three tabs to do the same thing?\" \u00b7 \"Yeah. It should all exist in one tab.\" Its route and its routes stay (agents, the CLI, ERAVOS); its content folds into Automation (AE5)."
     },
     {
       "id": "hub",
       "title": "Hub",
       "path": "hub/",
       "route": "#/hub",
-      "nav": "main",
+      "nav": "none",
       "built": true,
       "phase": "OC8_the_console",
       "routes": [
@@ -901,14 +903,16 @@
       ],
       "listens": [],
       "emits": [],
-      "about": "COS as the hub of all automation: workflows, pipelines, tasks, queues, RAID, contracts, the DAG, and the slots still waiting (agents, a DAG per input, context, gaps, hypotheses, experiments), each with its owner and the phase that wires it"
+      "about": "COS as the hub of all automation: workflows, pipelines, tasks, queues, RAID, contracts, the DAG, and the slots still waiting (agents, a DAG per input, context, gaps, hypotheses, experiments), each with its owner and the phase that wires it",
+      "navBefore": "main",
+      "offRail": "Off the rail 2026-11-09 \u2014 James: \"There's supposed to be one fucking tab. Why are you adding three tabs to do the same thing?\" \u00b7 \"Yeah. It should all exist in one tab.\" Its route and its routes stay (agents, the CLI, ERAVOS); its content folds into Automation (AE5)."
     },
     {
       "id": "pipelines",
       "title": "Pipelines",
       "path": "pipelines/",
       "route": "#/pipelines",
-      "nav": "main",
+      "nav": "none",
       "built": true,
       "phase": "PC1_one_box_shape",
       "routes": [
@@ -918,7 +922,9 @@
       ],
       "listens": [],
       "emits": [],
-      "about": "every pipeline and procedure as boxes and wires, drawn from the DAG: each box's kind, ref and gate, every fault named. Read-only: the editing canvas is ERAVOS's (PC4), shown to him as a preview first"
+      "about": "every pipeline and procedure as boxes and wires, drawn from the DAG: each box's kind, ref and gate, every fault named. Read-only: the editing canvas is ERAVOS's (PC4), shown to him as a preview first",
+      "navBefore": "main",
+      "offRail": "Off the rail 2026-11-09 \u2014 James: \"There's supposed to be one fucking tab. Why are you adding three tabs to do the same thing?\" \u00b7 \"Yeah. It should all exist in one tab.\" Its route and its routes stay (agents, the CLI, ERAVOS); its content folds into Automation (AE5)."
     }
   ],
   "planned": [

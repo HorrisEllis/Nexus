@@ -1,0 +1,32 @@
+<!doctype html>
+<!-- PREVIEW ONLY (2026-11-09) — Automation as the one tab. James, 2026-11-09: "There's supposed to be one fucking tab." · "Yeah. It should all exist in
+     one tab." Hub → one status line (the parts of automation that answer); Deployments → Runs (a run has a place: COS, or a system); Pipelines
+     (the read-only boxes) → gone (the canvas is ERAVOS's); Start at boot → Settings only. Illustrative data: built, every row is read from COS's routes. -->
+<html lang="en" data-theme="nexus" data-accent="cycle"><head><meta charset="utf-8"><title>Automation · COS (preview)</title>
+<link rel="stylesheet" href="../../core/theme.css"><link rel="stylesheet" href="../../core/core.css"><link rel="stylesheet" href="../engine.css">
+<style>
+.status { display: flex; gap: 14px; align-items: center; font-size: 12.5px; padding: 8px 12px; border: 1px solid rgba(255,255,255,.07); border-radius: 10px; margin: 4px 0 12px; }
+.status .d { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 6px; background: #34d399; } .status .d.off { background: #f87171; }
+.status span { opacity: .85 } .status .why { opacity: .55; margin-left: auto; }
+.tabs { display: flex; gap: 4px; margin: 0 0 12px; } .tab { padding: 7px 14px; border-radius: 8px; border: 1px solid rgba(255,255,255,.08); font-size: 13px; opacity: .75; } .tab.on { opacity: 1; border-color: rgba(120,200,255,.5); background: rgba(120,200,255,.08); } .tab b { font-weight: 400; opacity: .6; margin-left: 6px; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; } th { text-align: left; font-weight: 500; opacity: .5; font-size: 11.5px; padding: 6px 8px; } td { padding: 9px 8px; border-top: 1px solid rgba(255,255,255,.06); }
+.pill { font: 11px ui-monospace, monospace; padding: 2px 8px; border-radius: 10px; border: 1px solid rgba(255,255,255,.15); } .ok { color: #34d399; border-color: rgba(52,211,153,.4); } .run { color: #38bdf8; border-color: rgba(56,189,248,.4); } .held { color: #fbbf24; border-color: rgba(251,191,36,.4); } .bad { color: #f87171; border-color: rgba(248,113,113,.4); }
+.btn.sm { padding: 3px 9px; font-size: 12px; } .note { font-size: 12px; opacity: .55; margin-top: 10px; } .where { opacity: .8 } .mono { font-family: ui-monospace, monospace; font-size: 12px; opacity: .7; }
+</style></head><body class="cos-page">
+<header class="page-head"><div><span class="eyebrow">Compartment OS · automation</span><h1 class="title">Automation</h1>
+<p class="lede">Everything COS's engine runs, in one place: pipelines, workflows, every run (here or on a system), the log, and how COS supervises.</p></div>
+<div class="actions"><span class="btn">⇪ Import .pipeline</span></div></header>
+<div class="status"><span><i class="d"></i>engine</span><span><i class="d"></i>queues</span><span><i class="d"></i>DAG</span><span><i class="d"></i>RAID</span><span><i class="d off"></i>contracts</span><span class="why">contracts: its owner did not answer just now</span></div>
+<div class="tabs"><span class="tab">Pipelines<b>4</b></span><span class="tab">Workflows<b>2</b></span><span class="tab on">Runs<b>6</b></span><span class="tab">Log</span><span class="tab">Supervision</span></div>
+<section class="panel"><div class="panel-head"><h2>Runs</h2><span class="tag">newest first · here and on systems</span></div><div class="panel-body">
+<table><tr><th>What</th><th>Where</th><th>State</th><th>Took</th><th></th></tr>
+<tr><td>build pipeline <span class="mono">· step 4 of 8, its gate open</span></td><td class="where">COS</td><td><span class="pill run">running</span></td><td>1m 12s</td><td><span class="btn sm">Stop</span></td></tr>
+<tr><td>a task <span class="mono">· sent by an agent</span></td><td class="where">system two</td><td><span class="pill held">waits for your yes</span></td><td>—</td><td><span class="btn sm">Take</span> <span class="btn sm">Refuse</span></td></tr>
+<tr><td>gig flow</td><td class="where">system one</td><td><span class="pill ok">done</span></td><td>38s</td><td><span class="btn sm">Recall</span></td></tr>
+<tr><td>update check</td><td class="where">COS</td><td><span class="pill ok">done</span></td><td>4s</td><td></td></tr>
+<tr><td>build pipeline <span class="mono">· step 6: the gate closed — a gap</span></td><td class="where">COS</td><td><span class="pill bad">stopped at a gate</span></td><td>2m 40s</td><td><span class="btn sm">Open</span></td></tr>
+<tr><td>a task</td><td class="where">system three</td><td><span class="pill ok">done</span></td><td>9s</td><td><span class="btn sm">Recall</span></td></tr>
+</table>
+<p class="note">A run's place is where it ran: COS's own engine, or a system it was sent to (what Deployments was). Sending one is on the pipeline itself: Run here · Run on a system ▾.</p>
+</div></section>
+</body></html>
