@@ -442,3 +442,10 @@ order: >-
 # Port), built and run by emerge.exe. The JS in lib/automation/ is archived when the .eg engine passes its tests (§0.3). Until CIE10 and CIE13
 # land, the .eg engine runs under Emerge's interpreter behind COS's route; no new JavaScript is written for it.
 # AE6's depends_on grows by PIL2_contracts; CIE10 and CIE13 are what make it run without Node.
+
+# ── ADDENDUM 2026-11-09 (0.60.465) — one tab (his) ─────────────────────────────────────────────────────────────────────────────────────────────
+# James, 2026-11-09: "Okay now automation and pipelines have 2 tabs for some reason… Deployments? Hub? What is this noise? There's supposed to be one
+# fucking tab. Why are you adding three tabs to do the same thing?" · "Yeah. It should all exist in one tab."
+# AE5 expanded: Automation is COS's one tab for automation. Done now: Pipelines (PC1), Hub (OC8a), Deployments (OC4a) off the rail, kept by route.
+# To build after his go on cos/ui/automation/preview/one-tab.png: the hub's slots as one status line; deployments as Runs with where each ran
+# (take / refuse / recall there); Run here · Run on a system on a pipeline; Start at boot only in Settings (removed from Supervision).
