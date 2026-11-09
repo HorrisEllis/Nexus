@@ -42,6 +42,9 @@ function createPipeline({ automation, idearium = null, call = null, dataDir } = 
     const [method, p] = String(route).split(' ');
     try { return await call(owner, method, p, method === 'GET' ? undefined : body); } catch (e) { return { error: e.message }; }
   };
+  // RAID's contract, by Cortex's route (Cortex keeps the books); Cortex down breaks nothing: what it did not take is said in the request's files
+  const raid = async (method, p, body) => { const a = await ask('cortex', `${method} /api/raid/contracts/v2${p}`, body); if (a.error) return { ok: false, why: `Cortex did not answer: ${a.error}` }; let j = {}; try { j = JSON.parse(a.body || '{}'); } catch (_) {} return a.status < 400 ? { ok: true, ...j } : { ok: false, why: `Cortex answered ${a.status}${j.error ? `: ${j.error}` : ''}` }; };
+  const book = async (id, payload) => { const b = await raid('POST', '', { id, payload, by: 'system:cos' }); await eg('booked', { base: dataDir, id, ok: !!b.ok, why: b.ok ? 'booked with Cortex (RAID)' : b.why }); return b; };
   const answer = async (asks) => { const a = {}; for (const x of asks) a[x.id] = await ask(x.owner, x.route, x.body); return a; };
   const getPipeline = async (id) => {
     const r = await automation.handle({ method: 'GET', url: `/automation/pipelines/${encodeURIComponent(id)}`, body: {}, headers: {} });
@@ -104,19 +107,24 @@ function createPipeline({ automation, idearium = null, call = null, dataDir } = 
   const onEvent = (type, data) => inOrder(async () => {
     const needsPipeline = type === 'automation.pipeline.start' && !(data.meta && data.meta.request);
     const pipeline = needsPipeline ? await getPipeline(data.pipelineId) : null;
-    const r = await eg('event', { base: dataDir, kind: type, data, pipeline, at: Date.now() });
+    // the run's end: RAID's verdict first (its evidence went in with each step met), then the files
+    let raidView = null;
+    if (type === 'automation.pipeline.done') { const id = (await eg('read-id', { base: dataDir, engineRun: data.runId })).request; if (id) { const v = await raid('GET', `/${id}`); if (v.ok) raidView = { complete: !!v.complete, why: v.why || [] }; } }
+    const r = await eg('event', { base: dataDir, kind: type, data: raidView ? { ...data, raid: raidView } : data, pipeline, at: Date.now() });
+    if (type === 'automation.pipeline.start' && r && r.ok && r.contract) await book(r.request, r.contract);
+    if (type === 'automation.pipeline.task' && r && r.ok && r.met) await raid('POST', `/${r.request}/evidence`, { key: `step:${r.task}`, value: 'met', by: 'system:cos' });
     // a request's end is an event the engine's triggers hear: pipeline.request.met | held | not_met | cancelled (subject: the pipeline's name)
     if (type === 'automation.pipeline.done' && r && r.ok && r.phase) fire(`pipeline.request.${String(r.phase).replace(/ /g, '_')}`, { name: r.name, pipelineId: r.pipeline, request: r.request, why: r.why || null });
   });
   const runs = {
     // reads wait their turn too, so they see every event that came before them
     list: ({ state = 'active' } = {}) => inOrder(async () => (await eg('list', { base: dataDir, which: state })).requests || []),
-    read: (id) => inOrder(async () => { const r = await eg('read', { base: dataDir, id }); return r.ok ? r.request : null; }),
+    read: (id) => inOrder(async () => { const r = await eg('read', { base: dataDir, id }); if (!r.ok) return null; const v = await raid('GET', `/${id}`); return { ...r.request, raid: v.ok ? { complete: v.complete, why: v.why, gates: v.gates } : { reached: false, why: v.why } }; }),
   };
   async function request({ pipeline, vars = {}, by } = {}) {
     if (!by) return { ok: false, code: 400, error: 'say who asks: { "by": "person" }' };
     const p = await getPipeline(pipeline); if (!p) return { ok: false, code: 404, error: `no pipeline "${pipeline}"` };
-    const made = await inOrder(() => eg('request', { base: dataDir, pipeline: p, vars, by, at: Date.now() })); if (!made.ok) return made;
+    const made = await inOrder(async () => { const m = await eg('request', { base: dataDir, pipeline: p, vars, by, at: Date.now() }); if (m.ok) await book(m.request, m.contract); return m; }); if (!made.ok) return made;
     const r = await (await engineP()).run(p.id, { vars, wait: false, meta: { request: made.request } });
     return r.ok ? { ok: true, request: made.request, engineRun: r.runId } : { ok: false, code: 400, error: r.error, request: made.request };
   }

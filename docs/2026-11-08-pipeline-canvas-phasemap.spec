@@ -514,3 +514,24 @@ expanded_2026_11_09_recursive:
     built: "schema.process, schema.process_step; the engine's framework step (frameworkFn); compile_tree (children first, loops refused named); execution defaults; the default node gate only where an agent does the step"
     files: [lib/node-schemas/schema.process (new), lib/node-schemas/schema.process_step (new), lib/node-schemas/schema.framework, lib/node-export.js, lib/automation/steps.js, lib/automation/engine.js, cos/manager/automation-door.js, cos/manager/server.js, cos/pipeline/framework.eg, cos/pipeline/cli.eg, cos/pipeline/index.js, cos/pipeline/registry.json (config), cos/pipeline/test/framework.test.eg, tests/modules/test-cos-pipeline.test.js]
     proof: "eg framework 7/7; test-cos-pipeline 13/13 (CP-12: pipeline → outer → mid → inner, each request linked; a loop of frameworks refused when compiled and when run)"
+
+# ── ADDENDUM 2026-11-09 (0.60.474) — one contract, RAID's; every thing Nexus does, one step and gate at a time (his) ───────────────────────────────
+# James, 2026-11-09: "All of it. Not just this systems. Litterally from input to an end state. Frameworks for copilot step by step. Coding one
+# chunking at a time, one primitive at a time. This is meant to completely reduce the amount of code drastically. Look at idearium" · then, read
+# with two readings side by side ((a) one contract, RAID's executable .contract v2 by Cortex's route, the pipeline as orchestrator — the coder's
+# recommendation; (b) one contract, COS's): "Yes. This makes nexus programmable. Every point of failure can be mapped. Bottle neck made explicit.
+# Every. Thing nexus does, end state first, step by step, each gate checks, if it fails becomes a gap to fix to get the pipeline moving again.
+# Basically copilot is meant to take an input. This is all written down. Nexus builds from what I ask. Litterally anything nexus does could be run
+# in the pipeline. One step and gate at a time." Read as (a), said to him.
+decisions_2026_11_09:
+  PC_D11_one_contract_raids:
+    status: "DECIDED 2026-11-09 by James (his yes; read as (a), the coder's recommendation, said)"
+    chosen: "a request's contract is RAID's executable .contract v2 (cortex/core/raid/contract-gates.js), booked with Cortex by route; COS's pipeline orchestrates and keeps the request's files; the contract.contract written that morning is gone"
+    axioms: ["§5.15 each system reached by its routes", "§9.1 / §5.2 RAID the one write authority for contracts", "§8.6 reuse before build: RAID's packet, split, budget, staleness already exist", "his 2026-11-09 'Cortex is the book keeper'"]
+built_2026_11_09_raid:
+  - "cortex/core/raid/contract-v2-door.js (new) and cortex/boot.js: POST /api/raid/contracts/v2, GET /:id, POST /:id/evidence (moves the contract as far as its evidence; a gate is checked only once its evidence is recorded), POST /:id/gates/:gate/check | split, GET /:id/gates/:gate/packet. Files in Cortex's own data folder (cortex/data/contracts/v2/, not committed: .gitignore)."
+  - "cos/pipeline: each request's contract drafted in Emerge (runs.eg contract_of: one task gate per step, passing on step:<id>) and booked by the door; a step met is its evidence; met is RAID's answer, COS's own steps when Cortex is not reached (said: verdict.by), the booking's answer in run.run contract.booked / why."
+  - "Proof: test-raid-contract-door 3/3; test-cos-pipeline 15/15 (CP-14: booked per request, evidence per step, RAID's verdict; Cortex down breaks nothing, said); eg runs 6/6; test-contract-gates 20/20 unchanged."
+next_in_order:
+  - "a step's agent is handed RAID's packet for its gate (the smallest context); a gate too big for its agent is split by RAID (split, budget): one chunk, one primitive at a time — reuse first (a verified primitive: crystal, Pillar)"
+  - "the input-to-end-state framework for copilot: input → intent → context.find → the contract drafted → split → each gate's writer (the free web agents through Guardian) → eg check / eg test gates → evidence → RAID's status → the loop (PC7) until the end state holds; a failure becomes a gap (PC3)"

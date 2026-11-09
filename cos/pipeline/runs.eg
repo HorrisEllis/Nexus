@@ -6,7 +6,8 @@
 // One folder per request; where it is says what it is:
 //   <base>/pipeline/runs/active/<id>/     not met yet
 //     run.run          the request (pipeline, vars, by, at) and where it stands
-//     contract.contract  its contract (lib/node-schemas/schema.contract): every step's conditions, from the DAG; met or not, and why
+//     its contract is RAID's (2026-11-09, his yes to one contract): a .contract v2 booked with Cortex by route (one task gate per step, passing on
+//     the evidence step:<id>), named in run.run as contract.raid; "met" is RAID's answer when Cortex is reached, COS's own steps when it is not (said)
 //     dag.dag          the DAG: each step and, after a gated step, its gate, wired; each wire says the node types it carries
 //     steps/<t>.step   one node per step: what it runs, what it waits on, what it takes and gives, its conditions, status, every verdict,
 //                      the node files it was given (took) and gave; kept until met
@@ -24,7 +25,6 @@ fn active_dir(base: string): string = base + "/pipeline/runs/active"
 fn done_dir(base: string): string = base + "/pipeline/runs/done"
 fn safe(s: any): string = replace(replace(replace(str(s), "/", "_"), "\\", "_"), " ", "_")
 fn run_file(d: string): string = d + "/run.run"
-fn contract_file(d: string): string = d + "/contract.contract"
 fn step_file(d: string, t: string): string = d + "/steps/" + safe(t) + ".step"
 fn gate_file(d: string, t: string): string = d + "/gates/" + safe(t) + ".gate"
 fn parent(p: string): string { let parts = split(p, "/"); return join(take(parts, len(parts) - 1), "/") }
@@ -107,6 +107,24 @@ fn carries(p: map, w: map): list {
   return filter(give, fn(x) = index_of(dst.takes, x) >= 0)
 }
 
+// the request's contract, as RAID's executable .contract v2 (cortex/core/raid/contract-gates.js): its outcome, and one task gate per step that
+// passes on the evidence COS records when the step is met (step:<id>); a gate waits on the gates of the steps it waits on
+fn contract_of(id: string, p: map, by: any): map {
+  let gates = map(p.tasks, fn(t) = { id: safe(t.id), type: "task", depends_on: map(get(t, "depends_on", []), fn(x) = safe(x)), requires: [],
+    pass_when: [{ evidence: "step:" + t.id }], actions: [] })
+  return { v: 2, outcome: { what: get(p, "name", p.id) + ": request " + id, why: "asked by " + str(by), done_when: [] }, refs: {}, invariants: [], gaps: [],
+    gates: gates, failure: { retry_limit: 3 } }
+}
+// what Cortex answered when the contract was booked
+fn booked(base: string, id: string, ok: bool, why: any) {
+  let w = where(base, id)
+  if w == null { return null }
+  var r = take_file(run_file(w.dir))
+  r.payload.contract.booked = ok
+  r.payload.contract.why = why
+  put(run_file(w.dir), r)
+}
+
 // a request: its files first (run.run, dag.dag, a .step per step, a .gate per typed gate); the engine runs it after
 fn request(base: string, p: map, vars: any, by: any, at: num, engine_run: any): string {
   let id = safe(p.id) + "-" + str(at) + "-" + uid()
@@ -117,12 +135,9 @@ fn request(base: string, p: map, vars: any, by: any, at: num, engine_run: any): 
   var engine_runs = []
   if engine_run != null { engine_runs = [engine_run] }
   put(run_file(d), node("run", id, get(p, "name", p.id) + ": a request", str(len(p.tasks)) + " steps · not met", {
-    request: { pipeline: p.id, name: get(p, "name", p.id), vars: vars, varsSaid: said, by: by, at: at },
-    contract: "contract.contract", phase: "running", engineRuns: engine_runs, startedAt: at, finishedAt: null }, "a request through a pipeline, kept until its contract is met (PC5)"))
-  // the contract as a real .contract node (schema.contract: uuid, forAgent, intention, endState required)
-  put(contract_file(d), node("contract", id, "the contract of " + get(p, "name", p.id), "not met", { uuid: id, forAgent: "cos.pipeline", intention: get(p, "name", p.id),
-    endState: "every step met: it ran, and its gate opened (or it has none)", conditions: conditions, dag: "dag.dag", met: false, why: null },
-    "what done means for this request, from its DAG; met only when every condition is"))
+    request: { pipeline: p.id, name: get(p, "name", p.id), vars: vars, varsSaid: said, by: by, at: at }, conditions: conditions,
+    contract: { raid: id, booked: null, why: "not booked yet" }, phase: "running", engineRuns: engine_runs, startedAt: at, finishedAt: null },
+    "a request through a pipeline, kept until its contract (RAID's) is met (PC5)"))
   for t in p.tasks {
     let label = get(t, "label", t.id)
     put(step_file(d, t.id), node("step", id + "." + t.id, label, "waiting", { run: id, task: t.id, label: label, step: t.step, after: get(t, "depends_on", []),
@@ -232,11 +247,12 @@ fn on_event(base: string, kind: string, data: map, pipeline: any, at: num): map 
     if meta != null and get(meta, "request", null) != null { attach(base, meta.request, data.runId); return { ok: true, request: meta.request } }
     if pipeline == null { return { ok: false, why: "a run started without its pipeline: no files" } }
     let child = request(base, pipeline, without_meta_vars(get(data, "vars", null)), "the engine", at, data.runId)
+    let contract = contract_of(child, pipeline, "the engine")
     // James, 2026-11-09: "its meant to be recursive and meta." A run started by a step of another request is that request's child: linked both ways
     var parent = null
     if meta != null { parent = get(meta, "parent", null) }
     if parent != null { link(base, child, parent) }
-    return { ok: true, request: child }
+    return { ok: true, request: child, contract: contract }
   }
   let id = folder_of(base, get(data, "runId", ""))
   if id == null { return { ok: false, why: "no request holds this run" } }
@@ -271,19 +287,25 @@ fn on_event(base: string, kind: string, data: map, pipeline: any, at: num): map 
     s.payload = st
     if st.met { s.summary = "met" } else { s.summary = data.status }
     put(f, s)
-    return { ok: true, request: id }
+    return { ok: true, request: id, task: data.task, met: st.met }
   }
   if kind == "automation.pipeline.done" {
+    // met: RAID's answer (the door asked Cortex and hands it in as raid), else COS's own steps, said
     var r = take_file(run_file(w.dir))
-    var k = take_file(contract_file(w.dir))
-    let steps = map(k.payload.conditions, fn(c) = take_file(step_file(w.dir, c.step)))
+    let steps = map(r.payload.conditions, fn(c) = take_file(step_file(w.dir, c.step)))
     let unmet = filter(steps, fn(s) = s == null or not s.payload.met)
+    let raid = get(data, "raid", null)
+    var met = len(unmet) == 0
+    var why = "every step ran and its gate opened"
+    var by = "COS's own steps (Cortex was not reached: the contract's books wait)"
+    if raid != null {
+      met = raid.complete
+      why = join(raid.why, "; ")
+      by = "RAID's contract (Cortex)"
+    } else if not met { why = "not met: " + join(map(unmet, fn(s) = why_unmet(s)), "; ") }
     r.payload.finishedAt = at
-    if len(unmet) == 0 {
-      k.payload.met = true
-      k.payload.why = "every step ran and its gate opened"
-      k.summary = "met"
-      put(contract_file(w.dir), k)
+    r.payload.contract.verdict = { met: met, why: why, by: by }
+    if met {
       r.payload.phase = "met"
       r.summary = str(len(steps)) + " steps · met"
       put(run_file(w.dir), r)
@@ -296,12 +318,9 @@ fn on_event(base: string, kind: string, data: map, pipeline: any, at: num): map 
     if held { ph = "held" }
     if data.status == "cancelled" { ph = "cancelled" }
     r.payload.phase = ph
-    k.payload.why = "not met: " + join(map(unmet, fn(s) = why_unmet(s)), "; ")
-    k.summary = ph
-    put(contract_file(w.dir), k)
     r.summary = str(len(steps) - len(unmet)) + " of " + str(len(steps)) + " steps met · " + ph
     put(run_file(w.dir), r)
-    return { ok: true, request: id, met: false, phase: ph, pipeline: r.payload.request.pipeline, name: r.payload.request.name, why: k.payload.why }
+    return { ok: true, request: id, met: false, phase: ph, pipeline: r.payload.request.pipeline, name: r.payload.request.name, why: why }
   }
   return { ok: false, why: "not an event of a request: " + kind }
 }
@@ -375,7 +394,7 @@ fn read_request(base: string, id: string): any {
   if w == null { return null }
   var given = []
   for t in list_dir(w.dir + "/nodes") { for f in list_dir(w.dir + "/nodes/" + t) { given = push(given, { path: "nodes/" + t + "/" + f, node: take_file(w.dir + "/nodes/" + t + "/" + f) }) } }
-  return { id: id, where: w.at, run: take_file(run_file(w.dir)), contract: take_file(contract_file(w.dir)), dag: take_file(w.dir + "/dag.dag"),
+  return { id: id, where: w.at, run: take_file(run_file(w.dir)), contract: get(take_file(run_file(w.dir)).payload, "contract", null), dag: take_file(w.dir + "/dag.dag"),
     steps: nodes_in(w.dir + "/steps", ".step"), gates: nodes_in(w.dir + "/gates", ".gate"), nodes: given }
 }
 // what a resume needs: the pipeline, the vars, and every step already met with its output, so only the rest runs

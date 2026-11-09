@@ -44,3 +44,4 @@ emerge/emerge/data/ledger/
 emerge/emerge/data/node-index/
 emerge/emerge/data/nodes/bundle/
 _artifacts/
+cortex/data/contracts/

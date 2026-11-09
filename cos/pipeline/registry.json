@@ -179,18 +179,18 @@
     },
     {
       "ext": ".contract",
-      "is": "the request's contract (lib/node-schemas/schema.contract, the shared type): every step's conditions from the DAG; met or not, and why",
+      "is": "the request's contract: RAID's executable .contract v2, booked with Cortex by route (one task gate per step, passing on step:<id> evidence); COS keeps only its id and the verdict",
       "schema": "schema.contract",
       "kind": "node",
       "format": "JSON",
       "writers": [
-        "runs.eg"
+        "Cortex (cortex/core/raid/contract-v2-door.js), asked by cos/pipeline/index.js"
       ],
       "readers": [
-        "runs.eg",
-        "GET /api/cos/pipeline/requests/:id"
+        "Cortex's /api/raid/contracts/v2/:id",
+        "GET /api/cos/pipeline/requests/:id (RAID's view)"
       ],
-      "owner": "lib/node-schemas (shared); the request's copy is cos.pipeline's"
+      "owner": "cortex (RAID) — Cortex keeps the books"
     }
   ],
   "data": "<COS data>/pipeline/: runs/active/<id>/, runs/done/<id>/, gate-types/ (never committed)",
@@ -209,5 +209,8 @@
   "gives_the_engine": [
     "gateFn (a typed gate's verdict)",
     "frameworkFn (a framework step: compile the tree, name the pipeline)"
+  ],
+  "reaches": [
+    "cortex: POST /api/raid/contracts/v2, POST /api/raid/contracts/v2/:id/evidence, GET /api/raid/contracts/v2/:id"
   ]
 }

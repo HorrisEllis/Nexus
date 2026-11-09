@@ -128,7 +128,17 @@ else if cmd == "framework-tree" {
 }
 else if cmd == "request" {
   let q = input()
-  print(json({ ok: true, request: runs.request(q.base, q.pipeline, get(q, "vars", {}), get(q, "by", null), q.at, null) }))
+  let id = runs.request(q.base, q.pipeline, get(q, "vars", {}), get(q, "by", null), q.at, null)
+  print(json({ ok: true, request: id, contract: runs.contract_of(id, q.pipeline, get(q, "by", null)) }))
+}
+else if cmd == "read-id" {
+  let q = input()
+  print(json({ ok: true, request: runs.folder_of(q.base, q.engineRun) }))
+}
+else if cmd == "booked" {
+  let q = input()
+  runs.booked(q.base, q.id, q.ok, get(q, "why", null))
+  print(json({ ok: true }))
 }
 else if cmd == "event" {
   let q = input()
@@ -148,6 +158,6 @@ else if cmd == "resume-of" {
   print(json(runs.resume_of(q.base, q.id)))
 }
 else {
-  eprint("unknown command \"" + cmd + "\": the commands are version, boxes, dag, erv, roundtrip, types, save-type, gate, gate-actions, frameworks, framework, framework-tree, request, event, list, read, resume-of (each <file.json>)")
+  eprint("unknown command \"" + cmd + "\": the commands are version, boxes, dag, erv, roundtrip, types, save-type, gate, gate-actions, frameworks, framework, framework-tree, request, booked, read-id, event, list, read, resume-of (each <file.json>)")
   exit(1)
 }
