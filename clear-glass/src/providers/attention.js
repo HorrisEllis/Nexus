@@ -24,7 +24,7 @@
  */
 
 const MODULE_ID = 'clear-glass.provider-attention';
-const VERSION = '1.4.0';   // 1.4.0 (0.60.204): a window with its own sign-in popup open is the person's · 1.3.0 (0.60.71): picks use the Guardian picker (traverse one element at a time) · 1.2.0 (0.60.50, SP2): a pick records its semantic address and its role must fit the field · 1.1.0 (0.60.2): the COS window, Clear Glass's selector check, x/y/z anchors, accounts
+const VERSION = '1.5.0';   // 1.5.0 (0.60.467): a sign-in in progress (an identity provider's page, or the provider's own OAuth handoff or callback) is never sent back · 1.4.0 (0.60.204): a window with its own sign-in popup open is the person's · 1.3.0 (0.60.71): picks use the Guardian picker (traverse one element at a time) · 1.2.0 (0.60.50, SP2): a pick records its semantic address and its role must fit the field · 1.1.0 (0.60.2): the COS window, Clear Glass's selector check, x/y/z anchors, accounts
 const ST = require('../page/semantic-tree.js');
 const SIGNIN_RE = /\/(login|log-in|signin|sign-in|sign_in|auth|authenticate|oauth|sso|u\/login)(\/|$|\?|#)/i;
 
@@ -331,6 +331,26 @@ function createAttentionHandler({ providerHost, assign, getProvider = null, acco
   };
   const _onSignin = (url) => SIGNIN_RE.test(String(url || '')) || /accounts\.google\.com|login\.microsoftonline\.com|login\.live\.com|auth\.openai\.com|auth0\.openai\.com|appleid\.apple\.com|challenges\.cloudflare\.com/.test(String(url || ''));
   const _def = (id) => { try { return getProvider ? getProvider(id) : null; } catch (_) { return null; } };
+  // 0.60.467 — James, 2026-11-09: "clearglass is having a login loop with chatgpt, like when i click log in with google, it loops back to the login
+  // page. over and over, when i use the guardian agents menu in clearglass to open chatgpt." Continue with Google goes chatgpt.com/auth/login_with →
+  // auth.openai.com → accounts.google.com → chatgpt.com/api/auth/callback. Each of those is a sign-in page, so a tab the person was not seen to be
+  // using (opened from the Guardian agents menu, focus still there) was sent back to the chat mid-sign-in, and the chat sent it to its login page:
+  // the loop. A sign-in in progress is never navigated: any page off the provider's own hosts (the identity provider's), and the provider's own
+  // OAuth handoff and callback. Only the provider's own signed-out landing page is still sent back to the chat (§0.60.2, 0.60.321 kept).
+  // (A narrower fix, recognizing only chatgpt.com/auth/login_with, was offered by another assistant; the run showed the tab was also sent back
+  // from auth.openai.com and accounts.google.com, so it would still have looped.)
+  const IDENTITY_RE = /(^|\.)(accounts\.google\.com|login\.microsoftonline\.com|login\.live\.com|appleid\.apple\.com)$/i;
+  const LANDING_RE = /^\/(log-in|login|sign-in|signin|create-account|log-in-or-create-account)(\/|$)/i;   // a sign-in page a visitor lands on
+  const _signingIn = (url, def) => {
+    let u; try { u = new URL(String(url || '')); } catch (_) { return false; }
+    const host = u.hostname.toLowerCase();
+    if (IDENTITY_RE.test(host)) return true;                                       // Google's, Microsoft's or Apple's own page: mid-sign-in
+    if (/^\/(auth\/login_with|api\/auth\/callback|auth\/callback)(\/|$)/i.test(u.pathname)) return true;   // the provider's OAuth handoff or callback
+    const hosts = def && Array.isArray(def.hosts) && def.hosts.length ? def.hosts : (() => { try { return [new URL(def.url).hostname.toLowerCase()]; } catch (_) { return []; } })();
+    const own = hosts.some(h => host === h || host.endsWith('.' + h));
+    if (!own && !LANDING_RE.test(u.pathname)) return true;                       // the provider's sign-in service, past its landing (auth.openai.com/authorize …)
+    return false;
+  };
   function _accountInfo(providerId) {
     const sw = accounts && accounts();
     if (!sw) return {};
@@ -414,7 +434,8 @@ function createAttentionHandler({ providerHost, assign, getProvider = null, acco
     if (_active.has(win.id)) { _active.get(win.id).rec = full0; return { ok: true, window: which, already: true }; }
     // §0.60.2 — James: "chatgpt doesn't need a login currently." A provider whose chat works signed out
     // (registry loginOptional) is first sent back to its chat; the person is asked only if it lands on a sign-in page again.
-    if (rec.reason === 'signin' && def && def.loginOptional && def.url && !rec.askAnyway && !_personUsing(win)) {
+    const nowUrl0 = (() => { try { return win.webContents.getURL(); } catch (_) { return ''; } })();
+    if (rec.reason === 'signin' && def && def.loginOptional && def.url && !rec.askAnyway && !_personUsing(win) && !_signingIn(nowUrl0, def)) {
       // §0.60.7 — FLAP FIX. A signed-out ChatGPT chat is a normal page: the userscript reports "signed-out" on every load,
       // and reloading it here dropped the NCP connection, which reloaded the page, which reported again — a reload every ~3 s.
       // If the tab is already off any sign-in page there is nothing to go back to: leave it alone. And never reload the same
