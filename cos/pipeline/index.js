@@ -145,10 +145,10 @@ function createPipeline({ automation, idearium = null, call = null, dataDir } = 
       if (!t.ok) return { ok: false, code: t.problems ? 409 : 500, error: t.problems ? `${id} cannot run as a step: ${t.problems.join('; ')}` : t.error, problems: t.problems };
       const P = await engineP(); let last = null; const tree = [];
       for (const n of t.order) {
-        const have = P.list().find(x => x.name === n.pipeline.name || x.name === n.pipeline.name.replace(/ \(draft\)$/, '') || x.name === `${n.pipeline.name} (draft)`);
-        const r = have ? P.update(have.id, n.pipeline) : P.create(n.pipeline);
-        if (!r || r.ok === false) return { ok: false, code: 400, error: `${n.file}: ${(r && r.error) || 'the engine refused its pipeline'}`, problems: r && r.problems };
-        last = { id: (r.pipeline || r).id || (have && have.id), name: n.pipeline.name, steps: n.pipeline.tasks.length }; tree.push({ framework: n.id, file: n.file, status: n.status, pipeline: last.name, made: !have });
+        const v = P.validate(n.pipeline); if (!v.ok) return { ok: false, code: 400, error: `${n.file}: ${v.problems.join('; ')}`, problems: v.problems };
+        const file = writeNode(n.pipeline, { from: 'cos (framework)' });   // the node file first; the engine's copy is imported from it
+        const sy = await syncFile(file, { from: 'cos (framework)' }); if (!sy.ok) return { ok: false, code: 400, error: `${n.file}: ${sy.why}` };
+        last = { id: sy.pipelineId, name: n.pipeline.name, steps: n.pipeline.tasks.length, file: sy.file }; tree.push({ framework: n.id, file: n.file, status: n.status, pipeline: last.name, node: sy.file, made: sy.action === 'imported' });
       }
       return { ok: true, framework: { id, status: tree[tree.length - 1].status }, pipeline: last, tree };
     },
@@ -160,6 +160,67 @@ function createPipeline({ automation, idearium = null, call = null, dataDir } = 
       return frameworks.tree(c.framework.id);
     },
   };
+  // ── every pipeline a physical .pipeline node file, imported into the engine (his, 2026-11-09: "Every pipeline should be in the automation tab
+  // imported by a physical node fil"). Sources: COS's shipped folder, COS's own nodes folder (what it writes: planned phases, compiled frameworks, and
+  // a copy of each system's own, fetched by its route — registry.json pipelineSources). A file new or changed is imported (made, or updated by name,
+  // keeping its id); one unchanged is left. JavaScript here because the files are YAML and Emerge has no YAML reader yet (CIE14).
+  const NE = require(path.join(root, 'lib/node-export.js')), AN = require(path.join(root, 'lib/automation-nodes.js'));
+  const shippedDir = path.join(__dirname, 'pipelines'), nodesDir = path.join(dataDir, 'pipeline', 'nodes'), syncedFile = path.join(nodesDir, '.synced.json');
+  const slug = (s) => String(s).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 80) || 'pipeline';
+  const sha = (t) => require('crypto').createHash('sha256').update(t).digest('hex');
+  // a pipeline COS made, written as its node file first (the file is the pipeline; the engine's copy is imported from it)
+  function writeNode(p, { from = 'cos' } = {}) {
+    const id = slug(p.name); fs.mkdirSync(nodesDir, { recursive: true });
+    const file = path.join(nodesDir, `${id}.pipeline`);
+    fs.writeFileSync(file, NE.toYaml(NE.wrap('pipeline', id, { id, format: 'nexus-pipeline', version: 1, ...p }, { context: `written by COS's pipeline module (${from})`, intent: p.description || p.name, tags: ['pipeline', from] })));
+    return file;
+  }
+  async function syncFile(file, { from = 'cos', state = null } = {}) {
+    const st = state || (() => { try { return JSON.parse(fs.readFileSync(syncedFile, 'utf8')); } catch (_) { return {}; } })();
+    const text = fs.readFileSync(file, 'utf8'); const key = path.relative(root, file);
+    let doc; try { doc = AN.parse(text); } catch (e) { return { file: key, ok: false, why: `not a node file: ${e.message}` }; }
+    const h = sha(JSON.stringify(doc.payload));   // the pipeline itself, not the envelope's export time: a file fetched again is unchanged unless it is
+    if (doc.type !== 'pipeline') return { file: key, ok: false, why: `a .${doc.type}, not a .pipeline` };
+    const P = await engineP(); const name = doc.payload.name;
+    const have = P.list({ includeArchived: true }).find(x => x.name === name);
+    let out;
+    if (have && st[key] && st[key].sha === h) out = { file: key, ok: true, name, pipelineId: have.id, action: 'unchanged' };
+    else if (have) { const r = P.update(have.id, doc.payload); out = r && r.ok === false ? { file: key, ok: false, name, why: r.error } : { file: key, ok: true, name, pipelineId: have.id, action: 'updated' }; }
+    else { const r = await AN.importNode(automation.engine(), text, {}); const id = r && (r.pipeline ? (r.pipeline.id || r.pipeline) : r.id); out = r && r.ok !== false ? { file: key, ok: true, name, pipelineId: id || (P.list().find(x => x.name === name) || {}).id, action: 'imported' } : { file: key, ok: false, name, why: (r && r.error) || 'the engine refused it' }; }
+    if (out.ok) { st[key] = { sha: h, name, pipelineId: out.pipelineId, from, at: Date.now() }; if (!state) { fs.mkdirSync(nodesDir, { recursive: true }); fs.writeFileSync(syncedFile, JSON.stringify(st, null, 2) + '\n'); } }
+    return { ...out, from };
+  }
+  async function sync() {
+    const st = (() => { try { return JSON.parse(fs.readFileSync(syncedFile, 'utf8')); } catch (_) { return {}; } })();
+    const results = [], fetched = [];
+    // each system's own pipelines, by its route, kept as a file first (a system down is said, its files kept from last time)
+    let reg = {}; try { reg = JSON.parse(fs.readFileSync(path.join(__dirname, 'registry.json'), 'utf8')).pipelineSources || {}; } catch (_) {}
+    for (const src of reg.systems || []) {
+      const [lm, lp] = src.list.split(' '); const l = await ask(src.system, `${lm} ${lp}`);
+      if (l.error || l.status >= 400) { fetched.push({ system: src.system, ok: false, why: l.error || `answered ${l.status}` }); continue; }
+      let list = []; try { list = (JSON.parse(l.body || '{}')[src.listKey || 'pipelines']) || []; } catch (_) {}
+      let n = 0;
+      for (const it of list) {
+        const id = it.id || it.name; if (!id) continue;
+        const [nm, np] = src.node.split(' '); const g = await ask(src.system, `${nm} ${np.replace(':id', encodeURIComponent(id))}`);
+        if (g.error || g.status >= 400) continue;
+        let j = {}; try { j = JSON.parse(g.body || '{}'); } catch (_) {}
+        const text = String(src.textAt).split('.').reduce((o, k) => (o ? o[k] : undefined), j);
+        if (typeof text !== 'string') continue;
+        const dir = path.join(nodesDir, `from-${slug(src.system)}`); fs.mkdirSync(dir, { recursive: true });
+        fs.writeFileSync(path.join(dir, `${slug(id)}.pipeline`), text); n++;
+      }
+      fetched.push({ system: src.system, ok: true, files: n });
+    }
+    const files = [];
+    const walk = (d, from) => { let names = []; try { names = fs.readdirSync(d, { withFileTypes: true }); } catch (_) {} for (const e of names) { if (e.isDirectory()) walk(path.join(d, e.name), e.name.replace(/^from-/, '')); else if (e.name.endsWith('.pipeline')) files.push({ file: path.join(d, e.name), from }); } };
+    walk(shippedDir, 'cos (shipped)'); walk(nodesDir, 'cos');
+    for (const f of files) results.push(await syncFile(f.file, { from: f.from, state: st }));
+    fs.mkdirSync(nodesDir, { recursive: true }); fs.writeFileSync(syncedFile, JSON.stringify(st, null, 2) + '\n');
+    return { ok: true, files: results, systems: fetched, imported: results.filter(r => r.action === 'imported').length, updated: results.filter(r => r.action === 'updated').length, failed: results.filter(r => !r.ok) };
+  }
+  const sources = () => { try { return Object.entries(JSON.parse(fs.readFileSync(syncedFile, 'utf8'))).map(([file, v]) => ({ file, ...v })); } catch (_) { return []; } };
+
   // ── a request planned into its own .pipeline, end state first (plan.eg) — his "They build upon request, dynamically" ──
   const ideariumRoute = async (method, p, body) => { const a = await ask('idearium', `${method} ${p}`, body); if (a.error) return { ok: false, why: `Idearium did not answer: ${a.error}` }; let j = {}; try { j = JSON.parse(a.body || '{}'); } catch (_) {} return a.status < 400 ? { ok: true, ...j } : { ok: false, why: `Idearium answered ${a.status}${j.error ? `: ${j.error}` : ''}` }; };
   async function planPhase({ key, repo = '', chunks = false, framework = null, run = false, by } = {}) {
@@ -168,10 +229,10 @@ function createPipeline({ automation, idearium = null, call = null, dataDir } = 
     if (!ph.ok) return { ok: false, code: 404, error: ph.why };
     const out = await eg('plan-phase', { phase: ph, opts: { repo, chunks: !!chunks, ...(framework ? { framework } : {}) } });
     if (!out.ok) return { ok: false, code: 500, error: out.error || 'Emerge did not plan it' };
-    const P = await engineP(); const have = P.list().find(x => x.name === out.pipeline.name);
-    const made = have ? P.update(have.id, out.pipeline) : P.create(out.pipeline);
-    if (!made || made.ok === false) return { ok: false, code: 400, error: (made && made.error) || 'the engine refused the planned pipeline', problems: made && made.problems };
-    const pipeline = { id: (made.pipeline || made).id || (have && have.id), name: out.pipeline.name, endState: out.pipeline.endState, steps: out.pipeline.tasks.map(t => t.id) };
+    const v = (await engineP()).validate(out.pipeline); if (!v.ok) return { ok: false, code: 400, error: `the planned pipeline is not valid: ${v.problems.join('; ')}`, problems: v.problems };
+    const file = writeNode(out.pipeline, { from: 'cos (planned)' });   // the node file first; the engine's copy is imported from it
+    const sy = await syncFile(file, { from: 'cos (planned)' }); if (!sy.ok) return { ok: false, code: 400, error: sy.why };
+    const pipeline = { id: sy.pipelineId, name: out.pipeline.name, endState: out.pipeline.endState, steps: out.pipeline.tasks.map(t => t.id), file: sy.file };
     if (!run) return { ok: true, phase: ph.key, pipeline };
     const r = await request({ pipeline: pipeline.id, vars: { repo }, by });
     return r.ok ? { ok: true, phase: ph.key, pipeline, request: r.request, engineRun: r.engineRun } : { ...r, phase: ph.key, pipeline };
@@ -185,7 +246,7 @@ function createPipeline({ automation, idearium = null, call = null, dataDir } = 
   }
   // the engine's framework step: compile the tree, name the pipeline to run
   const frameworkStep = async ({ id }) => { const r = await frameworks.tree(id); return r.ok ? { ok: true, pipeline: r.pipeline.name } : { ok: false, error: r.error }; };
-  return { boxes, gates, runs, frameworks, frameworkStep, decideGate, onEvent, request, resume, planPhase, buildNext };
+  return { boxes, gates, runs, frameworks, frameworkStep, decideGate, onEvent, request, resume, planPhase, buildNext, sync, sources };
 }
 
 module.exports = { createPipeline, MODULE_ID: 'cos.pipeline', VERSION: '1.0.0' };

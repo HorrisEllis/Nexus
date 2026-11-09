@@ -58,6 +58,12 @@
       "test": "test/framework.test.eg"
     },
     {
+      "id": "cos.pipeline.plan",
+      "file": "plan.eg",
+      "lang": "emerge",
+      "does": "a phase planned into its own .pipeline, end state first (context, framework, dag, build per file, evidence, ledger)"
+    },
+    {
       "id": "cos.pipeline.cli",
       "file": "cli.eg",
       "lang": "emerge",
@@ -82,7 +88,11 @@
     "GET /api/cos/pipeline/requests/:id",
     "POST /api/cos/pipeline/requests/:id/resume",
     "GET /api/cos/frameworks",
-    "POST /api/cos/frameworks/:file/pipeline"
+    "POST /api/cos/frameworks/:file/pipeline",
+    "POST /api/cos/pipeline/plan",
+    "POST /api/cos/pipeline/build-next",
+    "POST /api/cos/pipeline/sync",
+    "GET /api/cos/pipeline/sources"
   ],
   "commands": [
     "cos boxes",
@@ -93,7 +103,13 @@
     "cos request",
     "cos requests",
     "cos request-show",
-    "cos request-resume"
+    "cos request-resume",
+    "cos plan",
+    "cos build-next",
+    "cos pipeline-sync",
+    "cos pipeline-sources",
+    "cos frameworks",
+    "cos framework-compile"
   ],
   "events": {
     "listens": [
@@ -212,5 +228,28 @@
   ],
   "reaches": [
     "cortex: POST /api/raid/contracts/v2, POST /api/raid/contracts/v2/:id/evidence, GET /api/raid/contracts/v2/:id"
-  ]
+  ],
+  "pipelineSources": {
+    "about": "every pipeline is a physical .pipeline node file, imported into COS's engine (his, 2026-11-09: \"Every pipeline should be in the automation tab imported by a physical node fil\"): COS's shipped ones, COS's own written ones, and each system's own, fetched by its route and kept as a file first",
+    "folders": [
+      "cos/pipeline/pipelines (shipped with COS)",
+      "<COS data>/pipeline/nodes (written by COS: planned phases, compiled frameworks, other systems' copies)"
+    ],
+    "systems": [
+      {
+        "system": "idearium",
+        "list": "GET /api/pipelines",
+        "listKey": "pipelines",
+        "node": "GET /api/pipelines/:id",
+        "textAt": "pipeline.text"
+      },
+      {
+        "system": "clear-glass",
+        "list": "GET /automation/pipelines",
+        "listKey": "pipelines",
+        "node": "GET /automation/pipelines/:id/node",
+        "textAt": "text"
+      }
+    ]
+  }
 }

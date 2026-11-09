@@ -489,3 +489,19 @@ decisions_2026_11_09:
     status: "DIRECTION 2026-11-09 — read from his answer as a yes to the split, TO CONFIRM (he answered with the goal, not a pick)"
     supersedes_in_part: "AE_D4's 'COS's hub is the hub of all automation': COS's hub page becomes a view of RAID's books and COS's runs (kept, §0.3)"
     built_toward_it: "0.60.474 (each request's contract is RAID's), 0.60.475 (a request planned into its own .pipeline, end state first)"
+
+# ── ADDENDUM 2026-11-09 (0.60.476) — AE5 expanded: every pipeline a physical node file, imported into the Automation tab (his) ───────────────────
+# James, 2026-11-09: "Every pipeline should be in the automation tab imported by a physical node fil"
+# Read first: the engine already keeps each pipeline as a .pipeline node file in its own folder (PN2); its "bundled" import (lib/automation/
+# routes.js) takes a system's files once each, never again; a planned or compiled pipeline (0.60.470–0.60.475) went into the engine directly;
+# other systems' pipelines came only by a hand-run import-from.
+expanded_2026_11_09_nodes:
+  AE5_ui_and_cleanup:
+    built: >-
+      cos/pipeline/index.js sync(): every .pipeline node file is imported — COS's shipped folder (cos/pipeline/pipelines), COS's own nodes folder
+      (<COS data>/pipeline/nodes: what it writes), and each system's own pipelines fetched by its route (registry.json pipelineSources: Idearium,
+      Clear Glass), kept as a file first (nodes/from-<system>/). A new file is imported, a changed one updates the same pipeline (same id), an
+      unchanged one is left (judged on the pipeline, not the envelope's export time). A planned phase and a compiled framework are written as their
+      node file first and imported from it. At COS's start (1.5 s after), on demand (POST /api/cos/pipeline/sync; rows cos pipeline-sync, cos
+      pipeline-sources). JavaScript (the door): the files are YAML, Emerge has no YAML reader yet (CIE14).
+    proof: "test-cos-pipeline 17/17 (CP-16)"

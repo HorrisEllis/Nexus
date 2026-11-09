@@ -479,6 +479,18 @@
     },
     {
       "method": "POST",
+      "path": "/api/cos/pipeline/sync",
+      "in": "{ by }",
+      "out": "{ files: [{ file, name, pipelineId, action: imported | updated | unchanged }], systems, imported, updated, failed } \u2014 every pipeline imported from its physical .pipeline node file",
+      "personAct": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/cos/pipeline/sources",
+      "out": "{ sources: [{ file, name, pipelineId, from, sha, at }] } \u2014 the node file each pipeline came from"
+    },
+    {
+      "method": "POST",
       "path": "/api/cos/pipeline/plan",
       "in": "{ key: <map>::<phase>, repo?, chunks?, framework?, run?, by }",
       "out": "{ phase, pipeline: { id, name, endState, steps }, request? } \u2014 a phase planned into its own .pipeline, end state first; run: a request through it (an agent\u2019s run refused)",
