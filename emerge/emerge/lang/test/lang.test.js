@@ -55,6 +55,9 @@ t('malformed number is an error', () => compileErr('let n = 12abc', 'malformed n
 t('unexpected character is an error with location', () => compileErr('let x = 1\nlet y = @', 'unexpected character "@"', 2));
 t('interpolation may hold strings and indexing', () => assert.strictEqual(out('let m = {k: "v"}\nprint("<{m["k"]}>")'), '<v>\n'));
 t('\\{ is a literal brace', () => assert.strictEqual(out('print("\\{x\\}")'), '{x}\n'));
+// 2026-11-09 (CIE14) — James: "Yes fix it." {{ and }} are literal braces; JSON and templates read as written, an interpolation still works inside
+t('{{ and }} are literal braces; an interpolation inside JSON still works', () => assert.strictEqual(out('let n = 2\nprint("{{with.x}} {{}} a{n}b {{\\"k\\": {n}}}")'), '{with.x} {} a2b {"k": 2}\n'));
+t('a brace mistake says how to write a literal one', () => compileErr('print("{")', 'write {{ or \\{ for a literal brace', 1));
 
 section('parser');
 t('comparisons do not chain', () => compileErr('let x = 1 < 2 < 3', 'do not chain'));

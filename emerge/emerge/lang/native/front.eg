@@ -248,6 +248,19 @@ fn lex_range(start, end, line0, col0) {
           col += 2
           skip
         }
+        // 2026-11-09 (CIE14) — \{\{ is a literal brace, \}\} too, as lang/lexer.js (his: "Yes fix it.")
+        if dch == 123 and byte_at(i + 1, end) == 123 {
+          buf[len(buf)] = 123
+          i += 2
+          col += 2
+          skip
+        }
+        if dch == 125 and byte_at(i + 1, end) == 125 {
+          buf[len(buf)] = 125
+          i += 2
+          col += 2
+          skip
+        }
         if dch == 123 {
           if len(buf) > 0 {
             parts[len(parts)] = utf8(bytes(buf))
@@ -261,7 +274,7 @@ fn lex_range(start, end, line0, col0) {
           var lvl = 1
           while i < end and lvl > 0 {
             let xb = src[i]
-            if xb == 10 { syntax_error("unterminated interpolation", el, ec - 1) }
+            if xb == 10 { syntax_error("unterminated interpolation — write \{\{ or \\\{ for a literal brace", el, ec - 1) }
             if xb == 34 {
               i += 1
               col += 1
@@ -285,13 +298,13 @@ fn lex_range(start, end, line0, col0) {
             i += 1
             col += cw(xb)
           }
-          if lvl != 0 { syntax_error("unterminated interpolation", el, ec - 1) }
+          if lvl != 0 { syntax_error("unterminated interpolation — write \{\{ or \\\{ for a literal brace", el, ec - 1) }
           var blank = true
           for k in s..i {
             let b = src[k]
             if b != 32 and b != 9 and b != 13 and b != 10 { blank = false }
           }
-          if blank { syntax_error("empty interpolation \{\} — write \\\{ for a literal brace", el, ec - 1) }
+          if blank { syntax_error("empty interpolation \{\} — write \{\{ or \\\{ for a literal brace", el, ec - 1) }
           let sub = lex_range(s, i, el, ec)
           var inner = []
           for st in sub {
@@ -302,7 +315,7 @@ fn lex_range(start, end, line0, col0) {
           col += 1
           skip
         }
-        if dch == 125 { syntax_error("unmatched \} in string — write \\\} for a literal brace", line, col) }
+        if dch == 125 { syntax_error("unmatched \} in string — write \}\} or \\\} for a literal brace", line, col) }
         buf[len(buf)] = dch
         i += 1
         col += cw(dch)

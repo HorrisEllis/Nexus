@@ -114,6 +114,10 @@ function lex(src, file = '<input>', startLine = 1, startCol = 1) {
           if (!(e in ESCAPES)) err(`unknown escape \\${e === undefined ? '' : e}`);
           buf += ESCAPES[e]; adv(2); continue;
         }
+        // 2026-11-09 (CIE14) — James: "Yes fix it." {{ is a literal {, }} a literal } (as Python's and C#'s strings): JSON and templates are
+        // written as they read ("{{with.x}}", "{{}}"). \{ and \} still work. Found: the brace trap failed four times in one day of writing Emerge.
+        if (d === '{' && src[i + 1] === '{') { buf += '{'; adv(2); continue; }
+        if (d === '}' && src[i + 1] === '}') { buf += '}'; adv(2); continue; }
         if (d === '{') {
           // interpolation: find the matching } (skipping nested strings), lex the inside as tokens
           if (buf) { parts.push(buf); buf = ''; }
@@ -123,7 +127,7 @@ function lex(src, file = '<input>', startLine = 1, startCol = 1) {
           let lvl = 1;
           while (i < src.length && lvl > 0) {
             const x = src[i];
-            if (x === '\n') err('unterminated interpolation', el, ec - 1);
+            if (x === '\n') err('unterminated interpolation — write {{ or \\{ for a literal brace', el, ec - 1);
             if (x === '"') { // skip a nested string
               adv();
               while (i < src.length && src[i] !== '"') { if (src[i] === '\\') adv(); if (src[i] === '\n') err('unterminated string', el, ec); adv(); }
@@ -133,15 +137,15 @@ function lex(src, file = '<input>', startLine = 1, startCol = 1) {
             else if (x === '}') { lvl--; if (lvl === 0) break; }
             adv();
           }
-          if (lvl !== 0) err('unterminated interpolation', el, ec - 1);
+          if (lvl !== 0) err('unterminated interpolation — write {{ or \\{ for a literal brace', el, ec - 1);
           const inner = src.slice(s, i);
-          if (!inner.trim()) err('empty interpolation {} — write \\{ for a literal brace', el, ec - 1);
+          if (!inner.trim()) err('empty interpolation {} — write {{ or \\{ for a literal brace', el, ec - 1);
           const sub = lex(inner, file, el, ec).filter(t => t.t !== 'NL');
           parts.push(sub);
           adv(); // the closing }
           continue;
         }
-        if (d === '}') err('unmatched } in string — write \\} for a literal brace');
+        if (d === '}') err('unmatched } in string — write }} or \\} for a literal brace');
         buf += d; adv();
       }
       if (buf || !parts.length) parts.push(buf);

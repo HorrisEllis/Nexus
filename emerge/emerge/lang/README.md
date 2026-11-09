@@ -156,7 +156,7 @@ dispatch queue and the ledger. Changing *those* still means editing the compiler
 ```eg
 // values: num, string, bool, null, list, map, fn
 let name = "Emerge"
-print("hello from {name}")                    // {expr} interpolates; \{ is a literal brace
+print("hello from {name}")                    // {expr} interpolates; {{ and }} (or \{ \}) are literal braces
 
 fn square(x: num): num = x * x                // annotations are optional and checked at run time
 let squares = 1..6 |> map(square)             // a |> f(b) is f(a, b);  1..6 is [1, 2, 3, 4, 5]
