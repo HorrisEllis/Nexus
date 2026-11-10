@@ -7,11 +7,11 @@ intent: null
 summary: 9 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1794214669854
+exported_at: 1794352479552
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794214669854
-lastSeenAt: 1794214669854
+firstSeenAt: 1794352479552
+lastSeenAt: 1794352479552
 fingerprint: null
 payload:
   for: PC5_programmable_gate_types
@@ -93,6 +93,7 @@ payload:
     dependents:
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC4_the_box_kinds_on_the_canvas
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC6_intelligence_watches_the_runs
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC8_operate_a_pipeline
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC2_procedures_and_frameworks_as_steps
     upstream:
       - docs/2026-10-28-first-principles-phasemap.spec::FP1_where_a_request_opens
@@ -140,10 +141,12 @@ payload:
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC4_the_box_kinds_on_the_canvas
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC6_intelligence_watches_the_runs
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC7_iterate_to_the_end_state
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC8_operate_a_pipeline
     blockedBy:
       - docs/2026-11-01-macro-blocks-phasemap.spec::MB3_one_shape_with_pipelines
     unlocks:
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC6_intelligence_watches_the_runs
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC8_operate_a_pipeline
     conflicts:
       - with: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC3_the_build_request_step
         files:
@@ -159,9 +162,9 @@ payload:
         PC_D8_options_not_neat_boxes, MB3_one_shape_with_pipelines, PA4_a_gate_after_every_step ·
         all upstream 40
       - >-
-        needed by (3): PC4_the_box_kinds_on_the_canvas, PC6_intelligence_watches_the_runs,
-        PC2_procedures_and_frameworks_as_steps · all downstream 4 · finishing it unlocks
-        PC6_intelligence_watches_the_runs
+        needed by (4): PC4_the_box_kinds_on_the_canvas, PC6_intelligence_watches_the_runs,
+        PC8_operate_a_pipeline, PC2_procedures_and_frameworks_as_steps · all downstream 5 ·
+        finishing it unlocks PC6_intelligence_watches_the_runs, PC8_operate_a_pipeline
       - >-
         same files as PC3_the_build_request_step with no order between them: cos/manager/server.js,
         cos/manager/contract.json, idearium/cli/route-commands.js, tests/modules/run-all.js

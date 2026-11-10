@@ -12,6 +12,8 @@ relational field" · "This will be huge. It’s all heading towards something ma
    PC3, PC5, then the canvas preview shown to him).
 2. **Emerge done:** the JavaScript removed (docs/2026-11-06-cie-eg-build-phasemap.spec; next CIE8 slice c).
 3. **WARP 2 and the constraint relational field** (EM2, RF1, CF1; CIE_D5). Sigma measures deviation and delta measures gaps (CF1, thread T4).
+**Refined 2026-11-10 (his):** "so pipeline working needs to happen. then cos optimized." Within item 1: the pipeline in COS operable (execute, see,
+change, manage, diagnose, export, test; PC8, PC_D13), then COS optimised (heartbeat not polling PR6, deltas PR4, load balancing CP6).
 Money matters now ("I need to be paid, at all."). The Fiverr autofill is built (clear-glass/userscripts/); its first live run is his.
 
 ## Law

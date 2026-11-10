@@ -132,6 +132,17 @@ decisions:
     james: '"cos is going to be the entire meta system for nexus."'
     context: "Said with: COS replaces polling with each system's heartbeat (PR6), the pipeline builds Nexus, and every step measured. COS as the orchestrator of compartments was specced the same day (cos/spec/pipeline-canvas.spec)."
     chosen: "COS is Nexus's meta system: it runs, watches, measures and rebuilds the systems; the pipeline is its piping"
+  PC_D13_the_pipeline_works_first_then_cos_optimised:
+    status: "DECIDED 2026-11-10 (his)"
+    james: '"okay but the pipeline in the automation engine in cos needs to be able to execute, or manage the pipeline. thats what its for. seeing, changing, managing, diagnosing, exporting, testing, agnostic. the pipeline is going to be huge. like we can use it to record each step in raids decision, dynamically building each step, as it goes. it all needs to be visable. creating copilot tools, frameworks, macros, agnostic in every way. all of nexus programmable and visable and then completed contracts can become replayable pipeline nodes." · "so pipeline working needs to happen. then cos optimized"'
+    context: >-
+      Said after the coder laid out what Nexus needs to build itself on his machine (a Lenovo all-in-one: i3-1215U, 7.7 GB, memory at 91%, disk
+      at 99%): on-demand systems, heap caps, the heartbeat with its deltas (PR6, PR4), load balancing (CP6f) and the PC7 loop. He put the
+      pipeline first.
+    chosen: >-
+      First, the pipeline in COS's automation engine works and is operable: execute, see, change, manage, diagnose, export and test, for any
+      kind of step (copilot tools, frameworks, macros). RAID's decisions are recorded as steps as they are made, everything is visible, and a
+      completed contract becomes a replayable pipeline node (PC7). Then COS is optimised (PR6, PR4, CP6, on-demand and heap caps).
   PC_D0_reuse_first:
     status: "DECIDED 2026-11-08 by his axioms"
     chosen: >-
@@ -598,3 +609,23 @@ built_2026_11_09_plan:
     # Adds: Idearium's build runs as pipeline steps end to end (0.60.475 planned each phase into its own .pipeline; this makes the building itself
     # the pipeline's, not Idearium's loop beside it); a contract met becomes a .macro of its steps, replayable to rebuild or reconstruct what it
     # built (the snapshots of "every step snapshotted, any run replayed", cos/spec/pipeline-canvas.spec).
+  PC8_operate_a_pipeline:
+    status: OPEN
+    james: '"seeing, changing, managing, diagnosing, exporting, testing, agnostic." · "record each step in raids decision, dynamically building each step, as it goes. it all needs to be visable."'
+    depends_on: [PC_D13_the_pipeline_works_first_then_cos_optimised, PC5_programmable_gate_types]
+    files: [lib/automation/pipeline.js, lib/automation/routes.js, lib/automation/engine.js, cos/manager/automation-door.js, cos/pipeline/runs.eg, cos/pipeline/cli.eg, cos/ui/automation/engine.js, cos/ui/automation/page.js, idearium/cli/route-commands.js]
+    requires: [node]
+    prerequisites: ["the census of 2026-11-10 (below)"]
+    census_2026_11_10: >-
+      The engine (lib/automation/routes.js) already: lists, creates, validates, gets, updates, archives, runs, starts and cancels pipelines and
+      workflows; keeps runs and their history; runs one step; imports; saves .pipeline node files. COS's Emerge module (cos/pipeline/*.eg)
+      gives the box shape, gates, runs kept as files, planning, and frameworks as steps. Missing: pause, resume and retry of a step; a test
+      (dry) run; a diagnosis per failed step; the run's live state on the boxes (PC4's next slice); a delta per step (PC6); RAID's decisions shown
+      as steps of the run (each request is booked with RAID gate by gate since 0.60.474, but the decisions are not steps); a met contract
+      replayed as a node (PC7).
+    does: >-
+      A pipeline is operable from COS, the way a person and an agent would want it: run, pause, resume and retry a step; test it dry, the steps
+      planned and their gates checked with nothing changed; see each step's state live; diagnose a failed step (its gate, its input, its output,
+      its error, and the step before it); export a run as files; and every RAID decision taken during a run added to the run as a step, as it
+      happens. Backend, then route, then command row, then UI (the Automation tab), in the same phase.
+    proof: "a pipeline paused mid-run, resumed and finished; a failed step retried after a fix; a dry run that changes nothing; a failed step diagnosed in one view; a run exported and re-imported; a run whose RAID decisions appear as steps; each shown in the Automation tab through Clear Glass"
