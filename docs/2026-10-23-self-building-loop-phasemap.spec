@@ -458,3 +458,19 @@ phases_addendum_2026_11_03:
       (TB1, PF1 …), each pair for him to merge into one that expands. CLI: `phases ledger [system]`, `phases check <map>`.
     proof: "the ledger lists Clear Glass's 483; a fixture phase whose files match an existing one is refused with that phase named; TB1 and PF1 listed as duplicate ids"
     proof_added_2026_11_06: "an event logged is read back in the phase's history and in the Phases tab's Ledger view; a phase not in any map cannot be logged as built; an unknown event is refused"
+  SL12_the_working_agreement_distilled:
+    status: "BUILT 2026-11-08 (another session, at his ask that day) — the root CLAUDE.md is the distillation; asked again 2026-11-10, what more is his to say"
+    james: '2026-11-08: "Synthesize the Claude.md with the most important parts to save your context window." · 2026-11-10: "find claude.md and synthesis what's the most important to save context. this isn't linear, i dont think that way."'
+    depends_on: [SL11_the_phase_ledger_and_its_gate]
+    files: [CLAUDE.md, docs/CLAUDE.md, docs/_archive/CLAUDE.root.before-2026-11-08.md]
+    requires: []
+    prerequisites: []
+    does: >-
+      Found 2026-11-10, before writing anything: on 2026-11-08 the root CLAUDE.md became the distillation (60 lines, grouped by idea: the order,
+      Law, Sovereignty, How work is done, His voice and proof, Where to read more). docs/CLAUDE.md (the full 622-line agreement) stopped loading
+      every session and is kept whole (docs/CLAUDE.md addendum 2026-11-08). The coder's second draft, written before this was found, was dropped
+      unmerged, so there are not two contracts. Recorded here because the 2026-11-08 synthesis had no phase.
+    to_confirm: >-
+      What he wants beyond the 2026-11-08 distillation. Two readings: (a) it is done, and his 2026-11-10 ask was for the session's own context;
+      (b) the root file should change further, regrouped or shortened, or holding today's decision that COS is the meta system (PC_D12).
+    proof: "CLAUDE.md is 60 lines and loads alone; docs/CLAUDE.md is whole; the root's previous version is archived"

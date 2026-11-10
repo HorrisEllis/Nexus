@@ -7,11 +7,11 @@ intent: null
 summary: 19 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793997647020
+exported_at: 1794349649824
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793997647020
-lastSeenAt: 1793997647020
+firstSeenAt: 1794349649824
+lastSeenAt: 1794349649824
 fingerprint: null
 payload:
   for: PIL1_pillar_stands
@@ -181,11 +181,16 @@ payload:
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::RF1_relational_field
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::WS6_workshop_parts_and_modes
       - docs/2026-10-05-spec-workshop-rebuild-phasemap.spec::RS6d_saved_through_the_gates
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG38_the_orchestrator_into_cos
       - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE5_ui_and_cleanup
       - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE6_the_engine_moves_into_cos
+      - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE7_eravos_reaches_the_engine
+      - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE9_each_tool_carries_its_dag
       - docs/2026-11-01-build-from-cos-phasemap.spec::BC2_the_editor
       - docs/2026-11-01-build-from-cos-phasemap.spec::BC4_build_from_cos
       - docs/2026-11-01-build-from-cos-phasemap.spec::BC6_the_universal_compiler
+      - docs/2026-11-01-eravos-orchestration-tools-phasemap.spec::EO4_measure_tools
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP11_the_diagnostic_map
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE13_native_system_primitives
       - docs/2026-11-06-emerge-is-the-replacement-phasemap.spec::EQ1_the_crystal_memory
       - docs/2026-11-06-emerge-is-the-replacement-phasemap.spec::EQ3_reference_nodes
@@ -194,6 +199,7 @@ payload:
       - docs/2026-11-06-pillar-phasemap.spec::PIL4_three_identities
       - docs/2026-11-06-pillar-phasemap.spec::PIL5_the_duplicates_census
       - docs/2026-11-06-pillar-phasemap.spec::PIL6_the_small_model_bench
+      - docs/2026-11-07-eravos-as-a-system-phasemap.spec::ERV5_the_visual_coding_and_debug_environment
     blockedBy: []
     unlocks:
       - docs/2026-11-06-pillar-phasemap.spec::PIL2_contracts
@@ -204,7 +210,7 @@ payload:
       - >-
         depends on (4): PIL_D0_the_name_is_pillar, PIL_D1_the_shape_he_brought,
         PIL_D2_a_process_or_a_library, PIL_D3_written_in_emerge
-      - 'needed by (1): PIL2_contracts · all downstream 42 · finishing it unlocks PIL2_contracts'
+      - 'needed by (1): PIL2_contracts · all downstream 48 · finishing it unlocks PIL2_contracts'
     edges:
       - from: docs/2026-11-06-pillar-phasemap.spec::PIL_D0_the_name_is_pillar
         kind: declared

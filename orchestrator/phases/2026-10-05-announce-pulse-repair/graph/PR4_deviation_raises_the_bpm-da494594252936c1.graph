@@ -7,11 +7,11 @@ intent: null
 summary: 15 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792878421645
+exported_at: 1794349635948
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792878421645
-lastSeenAt: 1792878421645
+firstSeenAt: 1794349635948
+lastSeenAt: 1794349635948
 fingerprint: null
 payload:
   for: PR4_deviation_raises_the_bpm
@@ -137,20 +137,25 @@ payload:
     layer: 3
     deps:
       - docs/2026-10-05-announce-pulse-repair-phasemap.spec::PR3_negative_space_for_missed_heartbeats
-    dependents: []
+    dependents:
+      - docs/2026-10-05-announce-pulse-repair-phasemap.spec::PR6_cos_listens_never_polls
     upstream:
       - docs/2026-10-05-announce-pulse-repair-phasemap.spec::PR1_the_announced_registry_is_the_list
       - docs/2026-10-05-announce-pulse-repair-phasemap.spec::PR2_the_diagnostic_listens_not_polls
       - docs/2026-10-05-announce-pulse-repair-phasemap.spec::PR3_negative_space_for_missed_heartbeats
-    downstream: []
+    downstream:
+      - docs/2026-10-05-announce-pulse-repair-phasemap.spec::PR6_cos_listens_never_polls
     blockedBy: []
-    unlocks: []
+    unlocks:
+      - docs/2026-10-05-announce-pulse-repair-phasemap.spec::PR6_cos_listens_never_polls
     conflicts: []
     dangling: []
     lines:
       - layer 3 · ready
       - 'depends on (1): PR3_negative_space_for_missed_heartbeats · all upstream 3'
-      - 'needed by (0): —'
+      - >-
+        needed by (1): PR6_cos_listens_never_polls · finishing it unlocks
+        PR6_cos_listens_never_polls
     edges:
       - from: docs/2026-10-05-announce-pulse-repair-phasemap.spec::PR3_negative_space_for_missed_heartbeats
         kind: declared

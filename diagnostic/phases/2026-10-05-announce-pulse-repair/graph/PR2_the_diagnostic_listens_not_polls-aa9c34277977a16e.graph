@@ -7,11 +7,11 @@ intent: null
 summary: 16 node(s), 5 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792787676775
+exported_at: 1794349635942
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787676775
-lastSeenAt: 1792787676775
+firstSeenAt: 1794349635942
+lastSeenAt: 1794349635942
 fingerprint: null
 payload:
   for: PR2_the_diagnostic_listens_not_polls
@@ -170,6 +170,7 @@ payload:
       - docs/2026-10-05-announce-pulse-repair-phasemap.spec::PR3_negative_space_for_missed_heartbeats
       - docs/2026-10-05-announce-pulse-repair-phasemap.spec::PR4_deviation_raises_the_bpm
       - docs/2026-10-05-announce-pulse-repair-phasemap.spec::PR5_repair_for_real
+      - docs/2026-10-05-announce-pulse-repair-phasemap.spec::PR6_cos_listens_never_polls
     blockedBy: []
     unlocks:
       - docs/2026-10-05-announce-pulse-repair-phasemap.spec::PR3_negative_space_for_missed_heartbeats
@@ -179,7 +180,7 @@ payload:
       - layer 1
       - 'depends on (1): PR1_the_announced_registry_is_the_list'
       - >-
-        needed by (1): PR3_negative_space_for_missed_heartbeats · all downstream 3 · finishing it
+        needed by (1): PR3_negative_space_for_missed_heartbeats · all downstream 4 · finishing it
         unlocks PR3_negative_space_for_missed_heartbeats
     edges:
       - from: docs/2026-10-05-announce-pulse-repair-phasemap.spec::PR1_the_announced_registry_is_the_list

@@ -7,18 +7,20 @@ intent: null
 summary: PIL2_contracts (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1793997647025
+exported_at: 1794349649829
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793997647025
-lastSeenAt: 1793997647025
+firstSeenAt: 1794349649829
+lastSeenAt: 1794349649829
 fingerprint: null
 payload:
   id: PIL2_contracts
   map: docs/2026-11-06-pillar-phasemap.spec
   repo: null
   layer: null
-  status: OPEN
+  status: >-
+    BUILT   # 0.60.453, 2026-11-08: 15 contracts; Relation open (its source is ERAVOS's spec, not in
+    this repository)
   files:
     - pillar/contracts/contracts.eg
     - pillar/test/contracts.test.eg
@@ -28,4 +30,4 @@ payload:
   blocks:
     - MOD-PIL-CONTRACTS
   spec: pillar/spec/pillar.spec
-  graph: 6b0aa556c3e9437a
+  graph: 10f3a1b9777b7ffe

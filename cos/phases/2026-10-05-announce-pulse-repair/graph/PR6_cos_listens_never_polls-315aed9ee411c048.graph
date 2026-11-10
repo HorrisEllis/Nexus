@@ -1,0 +1,225 @@
+envelope: 1
+uuid: nexus-export-graph-phase:PR6_cos_listens_never_polls:315aed9ee411c048
+type: graph
+id: phase:PR6_cos_listens_never_polls:315aed9ee411c048
+context: dependency graph of phase PR6_cos_listens_never_polls
+intent: null
+summary: 29 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1794349635952
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794349635952
+lastSeenAt: 1794349635952
+fingerprint: null
+payload:
+  for: PR6_cos_listens_never_polls
+  kind: phase
+  repo: null
+  hash: 315aed9ee411c048
+  nodes:
+    - path: cos/archetype/nexus-system.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/archetype/nexus-system/lib/heartbeat.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/archetype/registry.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/manager/server.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/manager/supervisor.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/ui/deployments/page.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/ui/hub/page.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/ui/overview/page.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/ui/shell/page.js
+      role: changes
+      exists: true
+      system: cos
+    - path: lib/pulse-watch.js
+      role: changes
+      exists: false
+      system: lib
+    - path: cos/archetype/detector.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/archetype/genesis-catalog.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/archetype/index.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/archetype/nexus-system/lib/system.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/blueprint/index.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/blueprint/registry.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/cli/commands/blueprint.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/disk/disk.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/add-system.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/autopilot-door.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/deploy.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/hub.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/notices.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/proposals.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/resources.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/suspend.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/system-config.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/updates.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/usage.js
+      role: uses
+      exists: true
+      system: cos
+  edges:
+    - from: cos/manager/supervisor.js
+      to: cos/manager/suspend.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/proposals.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/usage.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/autopilot-door.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/resources.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/updates.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/notices.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/system-config.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/add-system.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/deploy.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/hub.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/disk/disk.js
+      kind: requires
+    - from: cos/archetype/nexus-system/lib/system.js
+      to: cos/archetype/nexus-system/lib/heartbeat.js
+      kind: requires
+    - from: cos/archetype/genesis-catalog.js
+      to: cos/archetype/nexus-system.js
+      kind: requires
+    - from: cos/archetype/detector.js
+      to: cos/archetype/registry.js
+      kind: requires
+    - from: cos/archetype/index.js
+      to: cos/archetype/registry.js
+      kind: requires
+    - from: cos/blueprint/index.js
+      to: cos/archetype/registry.js
+      kind: requires
+    - from: cos/blueprint/registry.js
+      to: cos/archetype/registry.js
+      kind: requires
+    - from: cos/cli/commands/blueprint.js
+      to: cos/archetype/registry.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 4
+    deps:
+      - docs/2026-10-05-announce-pulse-repair-phasemap.spec::PR3_negative_space_for_missed_heartbeats
+      - docs/2026-10-05-announce-pulse-repair-phasemap.spec::PR4_deviation_raises_the_bpm
+    dependents: []
+    upstream:
+      - docs/2026-10-05-announce-pulse-repair-phasemap.spec::PR1_the_announced_registry_is_the_list
+      - docs/2026-10-05-announce-pulse-repair-phasemap.spec::PR2_the_diagnostic_listens_not_polls
+      - docs/2026-10-05-announce-pulse-repair-phasemap.spec::PR3_negative_space_for_missed_heartbeats
+      - docs/2026-10-05-announce-pulse-repair-phasemap.spec::PR4_deviation_raises_the_bpm
+    downstream: []
+    blockedBy:
+      - docs/2026-10-05-announce-pulse-repair-phasemap.spec::PR4_deviation_raises_the_bpm
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 4 · blocked by PR4_deviation_raises_the_bpm
+      - >-
+        depends on (2): PR3_negative_space_for_missed_heartbeats, PR4_deviation_raises_the_bpm · all
+        upstream 4
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-05-announce-pulse-repair-phasemap.spec::PR3_negative_space_for_missed_heartbeats
+        kind: declared
+      - from: docs/2026-10-05-announce-pulse-repair-phasemap.spec::PR4_deviation_raises_the_bpm
+        kind: declared

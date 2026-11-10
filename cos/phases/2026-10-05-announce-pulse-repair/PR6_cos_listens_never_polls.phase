@@ -1,0 +1,38 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-05-announce-pulse-repair-phasemap.spec::PR6_cos_listens_never_polls
+type: phase
+id: docs_2026-10-05-announce-pulse-repair-phasemap.spec::PR6_cos_listens_never_polls
+context: pipeline phase PR6_cos_listens_never_polls of docs/2026-10-05-announce-pulse-repair-phasemap.spec
+intent: null
+summary: PR6_cos_listens_never_polls (?) — 10 file(s)
+system: idearium
+tags: []
+exported_at: 1794349635953
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794349635953
+lastSeenAt: 1794349635953
+fingerprint: null
+payload:
+  id: PR6_cos_listens_never_polls
+  map: docs/2026-10-05-announce-pulse-repair-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/manager/supervisor.js
+    - cos/manager/server.js
+    - cos/archetype/nexus-system/lib/heartbeat.js
+    - cos/archetype/nexus-system.js
+    - cos/archetype/registry.js
+    - cos/ui/shell/page.js
+    - cos/ui/overview/page.js
+    - cos/ui/hub/page.js
+    - cos/ui/deployments/page.js
+    - lib/pulse-watch.js
+  depends_on:
+    - PR3_negative_space_for_missed_heartbeats
+    - PR4_deviation_raises_the_bpm
+  blocks: []
+  spec: null
+  graph: 315aed9ee411c048

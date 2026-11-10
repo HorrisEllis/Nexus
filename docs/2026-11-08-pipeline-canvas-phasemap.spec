@@ -127,6 +127,11 @@ decisions:
       One canvas, ERAVOS, in its own repository; no copy in Nexus (ERV_D1, ERV_D2). The canvas is the visual surface; every box kind is an ERAVOS
       tool, made for it (an orchestration domain beside dataflow, agents and coding). A tool the canvas lacks is not worked around: it is a build
       request (PC3) whose output is an ERAVOS tool from ERAVOS's own tool template, tested, then registered in ERAVOS's registry (ERV2).
+  PC_D12_cos_is_the_meta_system:
+    status: "DECIDED 2026-11-10 (his)"
+    james: '"cos is going to be the entire meta system for nexus."'
+    context: "Said with: COS replaces polling with each system's heartbeat (PR6), the pipeline builds Nexus, and every step measured. COS as the orchestrator of compartments was specced the same day (cos/spec/pipeline-canvas.spec)."
+    chosen: "COS is Nexus's meta system: it runs, watches, measures and rebuilds the systems; the pipeline is its piping"
   PC_D0_reuse_first:
     status: "DECIDED 2026-11-08 by his axioms"
     chosen: >-
@@ -236,6 +241,8 @@ phases:
       gate says what it saw. Saved, it is the .pipeline file (PC1). It is never a picture of a run that did not happen: state comes from the engine's
       run.
     proof: "in Clear Glass (glass.js): a pipeline drawn with a gate, a procedure and a nested pipeline is saved, reopened the same, run, and each box shows its real state; the nested box opens its own canvas"
+    # ── EXPANDED 2026-11-10 — James, 2026-11-10: "each step can be used as a progress status, with an indicator or bar."
+    # Adds: a running pipeline shows each step's state, and a bar whose expected length is the step's baseline delta (PC6).
 
   PC5_programmable_gate_types:
     status: OPEN
@@ -275,6 +282,12 @@ phases:
       Each finding is a record with its evidence and offers a build box (PC3) in its place, held for him. A gate type "watch" (PC5) asks Intelligence
       at any box. Its own route: GET /api/intelligence/pipelines/findings.
     proof: "on stand-in runs: a box 5× slower than its history is an anomaly; the box most waited on is the bottleneck; a gap answer is a gap; each offers a build box, held"
+    # ── EXPANDED 2026-11-10 — James, 2026-11-10: "the pipeline could handle this also, make it explicit, each event a step. each step measured by a delta, which
+    # could be used for the timing in between each step agnostically, to establish a baseline. then we could add support for the supervisers load
+    # balancer to establish base runtime behavior and sigmas to optimize. sigmas and deltas are domain agnostic." · "then be optimized overtime."
+    # Adds: every event is a step; each step records its delta (the time since the previous); a baseline per step and its sigma, learned over runs;
+    # the supervisor's load balancer (CP6f) reads the baseline as base runtime behaviour; a step past its sigma is a finding, and the run is
+    # optimised over time from them.
   PC7_iterate_to_the_end_state:
     status: OPEN
     expanded_2026_11_08_measure: >-
@@ -523,6 +536,9 @@ expanded_2026_11_09_recursive:
 # Every. Thing nexus does, end state first, step by step, each gate checks, if it fails becomes a gap to fix to get the pipeline moving again.
 # Basically copilot is meant to take an input. This is all written down. Nexus builds from what I ask. Litterally anything nexus does could be run
 # in the pipeline. One step and gate at a time." Read as (a), said to him.
+    # ── EXPANDED 2026-11-10 — James, 2026-11-10: "i also want my framework to be able to be read and used in pipeline."
+    # Adds: his Innovation Toolkit (docs/innovation-toolkit.framework) readable as a framework step, its sections as procedures, the way PC2 runs
+    # a .framework today. Which sections become steps is his to say (to confirm).
 decisions_2026_11_09:
   PC_D11_one_contract_raids:
     status: "DECIDED 2026-11-09 by James (his yes; read as (a), the coder's recommendation, said)"
@@ -577,3 +593,8 @@ built_2026_11_09_plan:
 # <system>.heartbeat, a pulse with a health snapshot) for resources and presence, and adds a system that starts beating — no polling. As built,
 # COS's UI polls /api/cos/systems and /api/cos/usage every 5 s (cos/ui/shell/page.js, overview); lib/heartbeat.js polls /health; few systems
 # emit a heartbeat. Both are phases to write (map first), then the pipeline can build them.
+    # ── EXPANDED 2026-11-10 — James, 2026-11-10: "i've been trying to get the pipeline to build nexus now. like how idearium is meant to build in the pipeline,
+    # should be added mostly. just map this." · "each contract when fullfilled could become a replayable macro to rebuild or reconstruct."
+    # Adds: Idearium's build runs as pipeline steps end to end (0.60.475 planned each phase into its own .pipeline; this makes the building itself
+    # the pipeline's, not Idearium's loop beside it); a contract met becomes a .macro of its steps, replayable to rebuild or reconstruct what it
+    # built (the snapshots of "every step snapshotted, any run replayed", cos/spec/pipeline-canvas.spec).
