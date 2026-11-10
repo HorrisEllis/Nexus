@@ -46,9 +46,11 @@ async function run() {
 
   // EAS4f 2026-11-05 (his EAS_D9, "Emerge calls back by route"): the build is Emerge's, asked through its door, never its files.
   // Was: "build() now requires and calls emerge/compiler/pipeline.js's compile() directly" (kept, §0.3: the in-process require it checked is gone).
-  test('EM-003', 'build() asks Emerge\'s door (POST /compiler/build) with Cortex\'s host routes; no require of lib/emerge', () => {
+  // 2026-11-07 CIE8 (his CIE_D7, "yeah move it, until we have something to slot in the gap it will leave"): the spec compiler moved to Idearium,
+  // so build() asks Idearium's door. Was: "asks Emerge's door (POST /compiler/build)" (kept, §0.3).
+  test('EM-003', 'build() asks Idearium\'s door (POST /api/spec-compiler/build) with Cortex\'s host routes; no require of lib/emerge', () => {
     assert.ok(!/require\(['"]\.\.\/lib\/emerge\//.test(src), 'no in-process require of lib/emerge');
-    assert.ok(/nx\.post\('emerge', '\/compiler\/build'/.test(src), 'the door');
+    assert.ok(/nx\.post\('idearium', '\/api\/spec-compiler\/build'/.test(src), 'the door');
     assert.ok(/\/api\/emerge-host\/preflight/.test(src) && /\/api\/emerge-host\/writeback/.test(src), 'Cortex named by its routes');
   });
 

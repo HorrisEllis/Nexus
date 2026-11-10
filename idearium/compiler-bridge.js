@@ -229,12 +229,13 @@ export async function compileIdeariumSpec(spec, outputDir, options = {}) {
     const skipCortex = options.skipCortex ?? false;
     let result;
     try {
-      result = await nx.post('emerge', '/compiler/compile', {
+      // 2026-11-07 CIE8 (his CIE_D7, "yeah move it"): the spec compiler is Idearium's own now, run in-process. Was Emerge's door POST /compiler/compile.
+      result = await require('./spec-engine/spec-compiler/lib/compiler.js').compile({
         spec: yamlSpec, name: path.basename(specFile), tier: options.tier ?? 1, skipWriteback: skipCortex,
         ...(skipCortex ? {} : { host: cortexHost() }),
-      }, { timeout: 120000 });
+      });
     } catch (e) {
-      return { ok: false, error: `the spec compiler is Emerge's (its door, :4900), and it did not answer: ${e.message}`, step: 'compile-door', extraction };
+      return { ok: false, error: `the spec compiler (Idearium's, spec-engine/spec-compiler) failed: ${e.message}`, step: 'compile', extraction };
     }
     if (result && result.ok) {
       for (const [rel, text] of Object.entries(result.files || {})) {
