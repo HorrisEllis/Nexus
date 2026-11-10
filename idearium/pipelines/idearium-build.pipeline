@@ -29,7 +29,7 @@ payload:
     evidence, logged in the ledger. Each step calls Idearium by its own route (nexus://idearium); a gate stands after every step: compartment, gate,
     compartment, gate.
   vars:
-    repo: ''
+    repo: nexus   # 2026-11-10: Nexus's own repo (Idearium reads "nexus" as it); another repo's uuid builds that repo
     phase: ''
     files: ''
     does: ''
