@@ -30,11 +30,12 @@ function run() {
   test('SCE-002', 'it now points at the real, current, kept core — emerge/compiler/pipeline.js', () => {
     const src = fs.readFileSync(path.join(ROOT, 'lib/system-check.js'), 'utf8');
     // EAS4g 2026-11-05: lib/emerge archived; the kept core is Emerge's own (was lib/emerge/compiler/pipeline.js, kept in the history)
-    assert.ok(/emerge:\s*'emerge\/emerge\/compiler\/pipeline\.js'/.test(src));
+    // 2026-11-07 CIE8: the spec compiler moved to Idearium (his CIE_D7), so Emerge's entry is its server.js. Was the compiler's pipeline.js (§0.3).
+    assert.ok(/emerge:\s*'emerge\/emerge\/server\.js'/.test(src));
   });
 
   test('SCE-003', 'the real, current entry file genuinely exists on disk — the fix points at something real, not another guess', () => {
-    assert.ok(fs.existsSync(path.join(ROOT, 'emerge', 'emerge', 'compiler', 'pipeline.js')));
+    assert.ok(fs.existsSync(path.join(ROOT, 'emerge', 'emerge', 'server.js')));   // 2026-11-07 CIE8: was emerge/emerge/compiler/pipeline.js
   });
 
   test('SCE-004', 'the archived consumer.js is confirmed gone from its old live location — confirms the retirement this fix accounts for actually happened', () => {

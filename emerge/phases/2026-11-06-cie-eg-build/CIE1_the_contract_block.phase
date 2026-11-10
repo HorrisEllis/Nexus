@@ -7,11 +7,11 @@ intent: null
 summary: CIE1_the_contract_block (?) — 10 file(s)
 system: idearium
 tags: []
-exported_at: 1794075154330
+exported_at: 1794349253331
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794075154330
-lastSeenAt: 1794075154330
+firstSeenAt: 1794349253331
+lastSeenAt: 1794349253331
 fingerprint: null
 payload:
   id: CIE1_the_contract_block
@@ -35,4 +35,4 @@ payload:
   blocks:
     - MOD-CONTRACT
   spec: emerge/emerge/spec/cie-eg.spec
-  graph: 776d45a503b18886
+  graph: c6102fd9e2b0fd68

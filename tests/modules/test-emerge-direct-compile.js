@@ -62,8 +62,11 @@ async function run() {
     assert.ok(fs.existsSync(path.join(__dirname, '../../_archive/2026-09-06-emerge-consumer-retired/consumer.js')));
   });
 
-  test('EM-006', 'emerge/compiler/ itself is untouched — the real, load-bearing part James said to keep', () => {
-    assert.ok(fs.existsSync(path.join(__dirname, '..', '..', 'emerge', 'emerge', 'compiler', 'pipeline.js')));
+  // 2026-11-07 CIE8 (his CIE_D7, "yeah move it"): the compiler he said to keep lives on in Idearium; Emerge's copy is archived.
+  // Was: "emerge/compiler/ itself is untouched" (kept, §0.3).
+  test('EM-006', 'the spec compiler is kept, in Idearium (moved from emerge/compiler, his CIE_D7), and Emerge\'s copy is archived', () => {
+    assert.ok(fs.existsSync(path.join(__dirname, '..', '..', 'idearium', 'spec-engine', 'spec-compiler', 'compiler', 'pipeline.js')));
+    assert.ok(fs.existsSync(path.join(__dirname, '..', '..', '_archive', '2026-11-07-emerge-spec-compiler-moved', 'compiler', 'pipeline.js')));
   });
 
   test('EM-007', 'autopilot.js no longer spawns emerge/consumer.js as a kernel', () => {
