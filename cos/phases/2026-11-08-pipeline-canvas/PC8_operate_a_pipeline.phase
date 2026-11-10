@@ -1,0 +1,37 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-08-pipeline-canvas-phasemap.spec::PC8_operate_a_pipeline
+type: phase
+id: docs_2026-11-08-pipeline-canvas-phasemap.spec::PC8_operate_a_pipeline
+context: pipeline phase PC8_operate_a_pipeline of docs/2026-11-08-pipeline-canvas-phasemap.spec
+intent: null
+summary: PC8_operate_a_pipeline (?) — 9 file(s)
+system: idearium
+tags: []
+exported_at: 1794352479567
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794352479567
+lastSeenAt: 1794352479567
+fingerprint: null
+payload:
+  id: PC8_operate_a_pipeline
+  map: docs/2026-11-08-pipeline-canvas-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/automation/pipeline.js
+    - lib/automation/routes.js
+    - lib/automation/engine.js
+    - cos/manager/automation-door.js
+    - cos/pipeline/runs.eg
+    - cos/pipeline/cli.eg
+    - cos/ui/automation/engine.js
+    - cos/ui/automation/page.js
+    - idearium/cli/route-commands.js
+  depends_on:
+    - PC_D13_the_pipeline_works_first_then_cos_optimised
+    - PC5_programmable_gate_types
+  blocks: []
+  spec: null
+  graph: 28ed41e906bd35fa

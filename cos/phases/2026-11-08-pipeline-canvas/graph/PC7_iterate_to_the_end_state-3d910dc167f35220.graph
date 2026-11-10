@@ -7,11 +7,11 @@ intent: null
 summary: 34 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1794234861443
+exported_at: 1794352479562
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794234861443
-lastSeenAt: 1794234861443
+firstSeenAt: 1794352479562
+lastSeenAt: 1794352479562
 fingerprint: null
 payload:
   for: PC7_iterate_to_the_end_state
@@ -322,7 +322,13 @@ payload:
       - docs/2026-10-12-request-spine-phasemap.spec::RQ15_cells_in_parallel
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC2_procedures_and_frameworks_as_steps
     unlocks: []
-    conflicts: []
+    conflicts:
+      - with: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC8_operate_a_pipeline
+        files:
+          - idearium/cli/route-commands.js
+          - cos/pipeline/cli.eg
+          - cos/pipeline/runs.eg
+          - lib/automation/pipeline.js
     dangling: []
     lines:
       - >-
@@ -333,6 +339,10 @@ payload:
         RQ15_cells_in_parallel, PC_D9_meta_autonomous_agnostic_nonlinear,
         PC2_procedures_and_frameworks_as_steps · all upstream 75
       - 'needed by (0): —'
+      - >-
+        same files as PC8_operate_a_pipeline with no order between them:
+        idearium/cli/route-commands.js, cos/pipeline/cli.eg, cos/pipeline/runs.eg,
+        lib/automation/pipeline.js
     edges:
       - from: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC3_the_build_request_step
         kind: declared
