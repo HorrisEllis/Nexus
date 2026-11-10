@@ -68,7 +68,8 @@
   async function ervIt(p) { try { const r = await api('GET', '/api/cos/boxes?as=erv&pipeline=' + encodeURIComponent(p.id)); download((p.name || p.id) + '.erv', JSON.stringify(r.erv, null, 1), 'text/yaml');
     say('ok', 'Saved ' + (p.name || p.id) + '.erv — open it in ERAVOS (Start › Open, or drop it on the canvas)'); } catch (e) { say('bad', e.message); } }
   $('ae-import').addEventListener('change', async (ev) => { const f = ev.target.files && ev.target.files[0]; if (!f) return; ev.target.value = '';
-    try { const text = await f.text(); const r = await api('POST', A('/import'), { text, by: 'person' }); say('ok', 'Imported ' + f.name + (r.pipeline ? ' as ' + (r.pipeline.name || r.pipeline.id) : '')); await pipes(); if (r.pipeline && r.pipeline.id) open(r.pipeline.id); }
+    // 2026-11-10: a pipeline drawn on ERAVOS's canvas (.erv) is made into a .pipeline by COS (box.eg from_erv), then shown like any other
+    try { const text = await f.text(); const r = /\.erv$/i.test(f.name) ? await api('POST', '/api/cos/pipeline/from-erv', { text, by: 'person' }) : await api('POST', A('/import'), { text, by: 'person' }); say('ok', 'Imported ' + f.name + (r.pipeline ? ' as ' + (r.pipeline.name || r.pipeline.id) : '')); await pipes(); if (r.pipeline && r.pipeline.id) open(r.pipeline.id); }
     catch (e) { say('bad', f.name + ': ' + e.message); } });
 
   // ── workflows, runs, log ──

@@ -23,7 +23,7 @@ const backupFn = BACKUP_URL ? (body) => new Promise((resolve) => {
   let r;
   try {
     if (op === 'check') r = U.check({ root, fetch: opts.fetch !== false });
-    else if (op === 'apply') r = await U.applyBacked({ root, confirm: opts.confirm === true, by: opts.by || 'person', backupFn });
+    else if (op === 'apply') r = await U.applyBacked({ root, confirm: opts.confirm === true, by: opts.by || 'person', backupFn, resolve: opts.resolve === 'fix' ? 'fix' : null, backupWith: opts.backupWith === 'git' ? 'git' : null });   // UP14: his answers to a conflict and to no backup
     else if (op === 'keep-local') r = await U.keepLocalBacked({ root, confirm: opts.confirm === true, by: opts.by || 'person', backupFn });
     else if (op === 'rollback') r = U.rollback({ root, confirm: opts.confirm === true, by: opts.by || 'person' });   // SC7
     else r = { ok: false, error: `unknown op "${op}" (check, apply, keep-local, rollback)` };

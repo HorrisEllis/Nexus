@@ -265,8 +265,8 @@
     {
       "method": "POST",
       "path": "/api/cos/update/apply",
-      "in": "{ by, mode: update | keep-local }",
-      "out": "the update applied (a backup first, asked of Idearium), then each changed system restarted by itself; Clear Glass waits for him (waitForHim); keep-local keeps local commits on local/<date> first (CE2, CE3, 2026-11-02)"
+      "in": "{ by, mode: update | keep-local, resolve?: fix, backupWith?: git }",
+      "out": "the update applied (a backup first, asked of Idearium), then each changed system restarted by itself; Clear Glass waits for him (waitForHim); keep-local keeps local commits on local/<date> first (CE2, CE3, 2026-11-02). UP14 (2026-11-10): a conflict (edits here to files GitHub changed, or commits GitHub lacks) answers 409 { ask: conflict, conflict { text, files, commits, fix } }; resolve: fix keeps his on local/<date> and takes GitHub's. No backup answers 409 { ask: no-backup }; backupWith: git backs up as a backup/<date> branch plus a patch of uncommitted edits"
     },
     {
       "method": "POST",
@@ -475,6 +475,13 @@
       "path": "/api/cos/frameworks/:file/pipeline",
       "in": "{ by }",
       "out": "{ framework, pipeline: { id, name, steps }, made } \u2014 compiled to a pipeline in the engine (made or brought up to date); one that only describes is refused, named (409); an agent\u2019s refused (403)",
+      "personAct": true
+    },
+    {
+      "method": "POST",
+      "path": "/api/cos/pipeline/from-erv",
+      "in": "{ text: <.erv YAML> | erv: <object>, name?, by }",
+      "out": "{ pipeline { id, name }, action: imported | updated, file, steps, skipped } \u2014 a pipeline drawn on ERAVOS's canvas (Step tools, gate tools, wires) made into its .pipeline node file and imported (box.eg from_erv); 422 names what is missing (2026-11-10)",
       "personAct": true
     },
     {

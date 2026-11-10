@@ -49,8 +49,7 @@
     if (u.busy) lines.push(h('p', { class: 'state-line warn' }, `An update is running (${u.busy.mode}).`));
     const acts = h('div', { class: 'acts' });
     if (behind && !u.busy) {
-      if (u.local && u.local.count) acts.append(h('button', { class: 'btn primary', id: 'keep', onclick: () => apply('keep-local') }, 'Keep mine and update'));
-      else acts.append(h('button', { class: 'btn primary', id: 'update', onclick: () => apply('update') }, 'Update now'));
+      acts.append(h('button', { class: 'btn primary', id: 'update', onclick: () => apply('update') }, 'Update now'));
     }
     lines.push(acts);
     // CE2b (0.60.417) — James, 2026-11-06: "updates need to restart cos." · on Clear Glass: "Ask me first". What the update changed that would close
@@ -88,8 +87,25 @@
     const u = S.u, ps = u.perSystem || {};
     const body = `${esc(u.current)} → ${esc(u.latest)}. A backup first${mode === 'keep-local' ? `, your ${u.local.count} commit(s) kept on a local/&lt;date&gt; branch` : ''}; then ${ps.restart && ps.restart.length ? `${esc(ps.restart.join(', '))} restart by themselves` : 'no restart'}${ps.waitForHim && ps.waitForHim.length ? `; ${esc(ps.waitForHim.join(', '))} waits for you` : ''}.`;
     if (!await COS.confirm({ title: mode === 'keep-local' ? 'Keep mine and update?' : 'Update Nexus now?', body, act: mode === 'keep-local' ? 'Keep mine and update' : 'Update now' })) return;
-    try { const r = await COS.call('POST', '/api/cos/update/apply', { by: 'person', mode }); COS.notice('ok', `Updated to ${(r.to && r.to.version) || u.latest}${r.restarted && r.restarted.length ? `; restarted ${r.restarted.map(x => x.name).join(', ')}` : ''}`); }
-    catch (err) { if (!err.refused) COS.notice('err', err.message); }
+    // UP14 (2026-11-10) — James: "If there's a conflict, prompt me to ask if I want to fix it or not." The update comes back with an ask: a
+    // conflict (fix it: yours kept on a branch, GitHub's taken) or no backup (Idearium did not answer: back up with git instead). Each is asked
+    // here; his yes sends it again with the answer, his no leaves the folder as it is.
+    const send = { by: 'person', mode };
+    for (let i = 0; i < 3; i++) {
+      try { const r = await COS.call('POST', '/api/cos/update/apply', send); COS.notice('ok', `Updated to ${(r.to && r.to.version) || u.latest}${r.keptOn ? `; yours kept on ${r.keptOn}` : ''}${r.restarted && r.restarted.length ? `; restarted ${r.restarted.map(x => x.name).join(', ')}` : ''}`); break; }
+      catch (err) {
+        const b = err.body || {};
+        if (b.ask === 'conflict' && !send.resolve) {
+          if (!await COS.confirm({ title: 'Conflict — fix it?', body: `${esc(b.conflict.text)}.<br><br>Fix it: ${esc(b.conflict.fix)}. A backup comes first.<br>Leave it: nothing changes; Nexus stays at ${esc(u.current)}.`, act: 'Fix it and update' })) { COS.notice('info', 'Left as it is: not updated'); break; }
+          send.resolve = 'fix'; continue;
+        }
+        if (b.ask === 'no-backup' && !send.backupWith) {
+          if (!await COS.confirm({ title: 'No backup — use git instead?', body: `${esc(b.error)}<br><br>Back up with git instead: a <code>backup/&lt;date&gt;</code> branch at this commit, your uncommitted edits saved as a patch in <code>_archive/update/</code>.`, act: 'Back up with git and update' })) { COS.notice('info', 'Not updated: no backup'); break; }
+          send.backupWith = 'git'; continue;
+        }
+        if (!err.refused) COS.notice('err', err.message); break;
+      }
+    }
     load();
   }
 

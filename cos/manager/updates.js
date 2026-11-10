@@ -80,13 +80,13 @@ function createUpdates(sup, { root = path.resolve(__dirname, '..', '..'), emit =
     if (!c || !c.ok) return c || { ok: false, error: 'no answer' };
     return { ...c, perSystem: perSystem(c.systems || [], !!c.lockChanged), busy: running, pending: asks };
   }
-  async function apply({ mode = 'update', by = 'person' } = {}) {
+  async function apply({ mode = 'update', by = 'person', resolve = null, backupWith = null } = {}) {
     if (running) return { ok: false, busy: running, error: `an update is already running (${running.mode}, since ${new Date(running.at).toLocaleTimeString()})` };
     if (!['update', 'keep-local'].includes(mode)) return { ok: false, error: `mode must be update or keep-local, not "${mode}"` };
     running = { mode, by, at: Date.now() }; emit('cos.update', { phase: 'started', mode, by });
     try {
-      const r = await run(mode === 'keep-local' ? 'keep-local' : 'apply', { confirm: true, by });
-      if (!r || !r.ok || r.action === 'none') { emit('cos.update', { phase: r && r.ok ? 'none' : 'refused', mode, error: r && r.error, why: r && r.why }); return r; }
+      const r = await run(mode === 'keep-local' ? 'keep-local' : 'apply', { confirm: true, by, resolve, backupWith });   // UP14: a conflict or no backup comes back as an ask (r.ask) for his answer
+      if (!r || !r.ok || r.action === 'none') { emit('cos.update', { phase: r && r.ok ? 'none' : r && r.ask ? 'ask' : 'refused', mode, ask: (r && r.ask) || null, error: r && r.error, why: r && r.why }); return r; }
       const lockChanged = !!(r.npm && (r.npm.ran || /changed,/.test(r.npm.why || '')));
       const ps = perSystem(r.systems || [], lockChanged);
       const { restarted, settled: done } = await afterWrite(ps, { to: r.to && r.to.version, by, label: 'update' });

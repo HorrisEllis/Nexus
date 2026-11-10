@@ -1,6 +1,6 @@
 {
   "name": "nexus",
-  "version": "0.60.476",
+  "version": "0.60.478",
   "author": "James Brooks (Erosmancer)",
   "license": "MIT",
   "private": true,
@@ -19,7 +19,8 @@
     "test:all": "node tests/brutal.test.js && node tests/pipeline.test.js && node tests/kernel.test.js && node tests/full.test.js && node tests/modules/run-all.js",
     "test:int": "node tests/integration.test.js",
     "start": "node orchestrator/orchestrator.js",
-    "update": "node scripts/update.js",
+    "update": "node lib/nexus-update.js update",
+    "update:plain": "node scripts/update.js",
     "start:all": "node lib/nexus/autopilot.js",
     "start:core": "node lib/nexus/autopilot.js --only=orchestrator,bridge,cortex,guardian",
     "autopilot": "node lib/nexus/autopilot.js",

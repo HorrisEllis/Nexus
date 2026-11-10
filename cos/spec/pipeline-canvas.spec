@@ -450,3 +450,52 @@ spec:
 # workflow, or run (any engine step) — and runs exactly one; schema.process_step has each; schema.pipeline's tasks carry today's fields (framework
 # and procedure steps, typed gates, takes / gives, when) and say a pipeline is a process; schema.macro says a macro is a process and a leaf (Clear
 # Glass's page actions: it runs as a step of anything, and composes upward). Proof: eg framework 8/8; test-cos-pipeline 14/14 (CP-13).
+
+# ── ADDENDUM 2026-11-10 — pipelines are all the piping in Nexus (his direction; nothing built by this addendum) ─────────────────────────────────
+# James, 2026-11-10: "I’m not asking for it. I’m saying that’s what pipelines are going to be. All of the piping in nexus. Like data moving through
+# wires from hook to hook." · "The infrastructure needs work and it needs decoupled still but this pipeline can get nexus doing all this itself."
+# Before it, the same day: "The pipeline can make every process and event, visible in nexus. Cause and effect. Emergence. Every step of coding, or
+# debugging, or a macro. Any scale for any system for, or any ai" · 2026-11-09: "The pipeline we build could be runtime processes. Ai contracts.
+# Event driven pipelines for fault and failure node detection." · "The flight recorder and Virginium. Like snapshotting each gate for reversibility."
+#
+# Direction, recorded so it is not buried: the pipeline is not a feature beside Nexus's wiring, it IS the wiring. Every movement of data between
+# systems is a wire carrying a typed node from one hook to another (a gate's hooks, PC_D1; the wire's `carries`, 0.60.468), on the one engine, with
+# a gate on it. That is how every process and event becomes visible (cause → effect), checkable (gate), and reversible (checkpoint at each pass).
+#
+# What already stands on it (coder's reading, checked 2026-11-10):
+# - the engine, typed wires and gates, requests as files, RAID's contract per request, frameworks/pipelines/macros as steps (0.60.464–0.60.476);
+# - GS1 (contract-gates.js schedule): a checkpoint at each gate PASS, rewind to that gate's last-known-good on a writing FAILED, scoped to the gate's
+#   file — built, but only inside Idearium's phase build (in-process versioning hooks), so only a pipeline's build step has it;
+# - Diagnostic (senses, traces), Intelligence (causal graph, patterns), the flight recorder (reads Idearium runs only), Versionium (whole-commit
+#   restore by route; file-scoped restore only in-process, lib/repo-history.js restoreFile).
+# What the direction needs, and is the infrastructure he names (not built, not ordered):
+# - decoupling: each system's hooks reached only through its own routes and component registry (§5.9–§5.16), so a wire can join any two hooks —
+#   GS1's versioning and the file-scoped restore are in-process today and need routes before COS can wire them;
+# - every system's events onto wires (Diagnostic's events have no listener today), so faults become event-driven pipelines;
+# - a checkpoint per gate for every step, not only builds (GS1 reused, request-scoped, never whole-commit), and the flight record per request
+#   composed from the request files, RAID evidence, Versionium and Diagnostic — no second store;
+# - then Nexus plans and runs that work through its own pipelines (plan.eg, build-next), one step and gate at a time.
+# Open, his: healing ownership (Diagnostic, or Cortex's self-heal kept with its scope stated); "Virginium" read as Versionium; the order.
+# James, 2026-11-10, after it: "Like cos is the orchastrator for compartments in cos. That’s what make it standout. Similar to VMware but more meta,
+# interconnected, ai automation, versioning. Possibility is endless" — COS's identity as he states it: the orchestrator of compartments, as a
+# hypervisor manages machines, with what a hypervisor lacks: compartments wired to each other (the pipeline), automated by AI under contracts
+# (RAID), and every state versioned (Versionium). Coder's note: the comparison holds for orchestration and snapshots; isolation as strong as a
+# hypervisor's (memory, CPU, a crash kept inside) is not claimed — a compartment today is a process and a folder, kept apart by sovereignty.
+
+# ── ADDENDUM 2026-11-10 — every step snapshotted, any run replayed (his direction; nothing built by this addendum) ──────────────────────────────
+# James, 2026-11-10: "Each step can be snapshotted per diff, change, or what ever other uses in the pipeline. Then can create a .pipeline or macro to
+# replay or reconstruct it. The system has immense backup methods. Snapshots. Specs. Ledgers. Nodes for persistent storage. Gates for persistent
+# progress. Chunks to reduce complexity and hold context, to reduce load on agents. Look at all agent problems right now and nexus."
+# Coder's reading: a request already keeps each step as a file (steps/<t>.step: what it took and gave) and, inside builds, a Versionium commit at
+# each passing gate (GS1). Replay = a .pipeline generated from a finished request's step files (same steps, same inputs, its gates); reconstruct =
+# restoring the checkpoint a step passed at. Neither is built: the snapshot per COS-level step is the gap named in the 2026-11-10 addendum above.
+
+# ── ADDENDUM 2026-11-10 — everything through the pipeline; Nexus builds itself (his direction; nothing built by this addendum) ──────────────────
+# James, 2026-11-10: "Everything needs to be run through the pipeline. As steps per event? Nexus is meant to build itself."
+# As built (coder checked): the engine starts a WORKFLOW on a named event (a trigger step; engine.emitEvent); a pipeline starts on an event only
+# through a workflow whose step is that pipeline. Events that reach the engine: COS's ledger entries (cos.ledger) and POST /api/cos/automation/
+# events; the systems' own events (Diagnostic's, Cortex's bus) do not. Self-building pieces: plan (a phase → its .pipeline), build-next, RAID's
+# contract per request, GS1 inside builds. Missing: a pipeline naming its own trigger; the systems' events on COS's bus into the engine; standing
+# pipelines for "a gate failed → its gap → a build request" and "a phase is ready → build-next"; per-step snapshots and replay (above).
+# Readings of "steps per event", his to settle: (a) every event starts a pipeline whose steps are gated; (b) every event is a step of one running
+# pipeline (the event stream itself is the pipeline). Coder recommends (a), with (b) as the flight record: every event is also recorded as a step.

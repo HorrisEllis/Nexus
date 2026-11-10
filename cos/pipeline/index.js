@@ -246,7 +246,24 @@ function createPipeline({ automation, idearium = null, call = null, dataDir } = 
   }
   // the engine's framework step: compile the tree, name the pipeline to run
   const frameworkStep = async ({ id }) => { const r = await frameworks.tree(id); return r.ok ? { ok: true, pipeline: r.pipeline.name } : { ok: false, error: r.error }; };
-  return { boxes, gates, runs, frameworks, frameworkStep, decideGate, onEvent, request, resume, planPhase, buildNext, sync, sources };
+  // 2026-11-10 — James: "Also needs to be able to create pipelines. That's what the canvas is for." · "I want to program it myself using the pipeline
+  // instead of needing you." A pipeline drawn on ERAVOS's canvas (its .erv: Step tools and wires) comes back as a .pipeline: Emerge reads it
+  // (box.eg from_erv), the node file is written first and imported from it (the same as every pipeline). The .erv is YAML; it is read here
+  // because Emerge has no YAML reader yet (CIE14). A name already used updates that pipeline (keeping its id).
+  async function fromErv({ text = null, erv = null, name = null, by = 'person' } = {}) {
+    let e = erv;
+    if (!e) { try { e = require('js-yaml').load(String(text || '')); } catch (err) { return { ok: false, code: 400, error: `not an .erv (YAML): ${err.message}` }; } }
+    if (!e || typeof e !== 'object' || !Array.isArray(e.layers)) return { ok: false, code: 400, error: 'not an .erv: it has no layers (save it from ERAVOS: Start › Save as .erv)' };
+    if (name) e = { ...e, name };
+    const r = await eg('from-erv', e);
+    if (!r || r.ok !== true) return { ok: false, code: 422, error: (r && r.problems && r.problems.length) ? r.problems.join('; ') : (r && r.error) || 'Emerge could not read the canvas', problems: (r && r.problems) || [], skipped: (r && r.skipped) || [] };
+    const file = writeNode(r.pipeline, { from: 'canvas' });
+    const s = await syncFile(file, { from: 'canvas' });
+    if (!s.ok) return { ok: false, code: 422, error: s.why || 'the engine refused it', file: path.relative(root, file) };
+    return { ok: true, pipeline: { id: s.pipelineId, name: s.name }, action: s.action, file: path.relative(root, file), steps: r.pipeline.tasks.length, skipped: r.skipped, by };
+  }
+
+  return { boxes, gates, runs, frameworks, frameworkStep, decideGate, onEvent, request, resume, planPhase, buildNext, sync, sources, fromErv };
 }
 
 module.exports = { createPipeline, MODULE_ID: 'cos.pipeline', VERSION: '1.0.0' };

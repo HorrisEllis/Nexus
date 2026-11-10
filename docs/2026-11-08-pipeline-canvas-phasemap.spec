@@ -550,3 +550,14 @@ built_2026_11_09_plan:
       Idearium route with a gate. COS: POST /api/cos/pipeline/plan (plan, and run with run) and POST /api/cos/pipeline/build-next (the next phase
       Nexus can build, planned and run); rows cos plan, cos build-next (running is his; an agent proposes). The engine keeps a pipeline's endState.
     files: [cos/pipeline/plan.eg (new), cos/pipeline/cli.eg, cos/pipeline/index.js, cos/pipeline/runs.eg, cos/manager/server.js, cos/manager/contract.json (config), idearium/api/index.js, idearium/cli/route-commands.js, lib/automation/pipeline.js, tests/modules/test-cos-pipeline.test.js]
+
+# ── ADDENDUM 2026-11-10 (0.60.478) — PC4 slice a: the way back — a pipeline drawn on the canvas becomes a .pipeline ──
+# James, 2026-11-10: "Also needs to be able to create pipelines. That's what the canvas is for." · "I want to program it myself using the pipeline
+# instead of needing you." The canvas could open a pipeline (box.eg to_erv) but nothing came back. Built: box.eg from_erv (Emerge): Step tools →
+# tasks (one from a pipeline gives its task back; one drawn new is made from its kind and what it names: macro, pipeline, procedure, agent, system,
+# build → a framework, tool → an engine step type or a step as JSON); a gate tool after a step is its gate (JSON, or text the output must contain);
+# wires are dependencies; a tool that is not a step is left out, named; ERAVOS's re-saved labels ("Step") are no rename. COS: POST
+# /api/cos/pipeline/from-erv, row cos pipeline-from-erv, the Automation tab's Import takes .erv; the node file is written first and imported (a
+# name used again updates the same pipeline). Proof: eg box 14/14; test-cos-pipeline CP-17 (drawn → imported → in the engine, gated, wired;
+# updated; 422 names what is missing; an agent's 403). Still PC4 (OPEN, preview first): the Step tool's face for choosing kind and what it names,
+# saving straight to COS from ERAVOS, and each box's live state while it runs.

@@ -196,6 +196,113 @@ fn to_erv(g0: map, name: string): map {
     { id: "wires", kind: "wires", label: "Wires", on: true, locked: false, data: wires } ] }
 }
 
+// 2026-11-10 — the way back: an ERAVOS project drawn on the canvas → the engine's pipeline. James: "Also needs to be able to create pipelines. That's
+// what the canvas is for." · "I want to program it myself using the pipeline instead of needing you." A Step tool that came from a pipeline gives
+// its task back (edits to its label, Names and kind on the canvas win); one drawn new is made from what it says: its kind and what it names. A gate
+// tool after a step is that step's gate again (a new one says its check in Names, as JSON, else as text the output must contain). Wires are the
+// dependencies. Tools that are not steps (an instrument on the same canvas) are left out and named.
+fn step_for(kind: string, ref: string): map {
+  if kind == "macro" { return { type: "macro", config: { name: ref } } }
+  if kind == "pipeline" { return { type: "pipeline", config: { pipeline: ref } } }
+  if kind == "procedure" { return { type: "procedure", config: { procedure: ref } } }
+  if kind == "agent" { return { type: "agent", config: { agentKey: ref, await: true } } }
+  if kind == "system" { return { type: "command", config: { command: ref } } }
+  if kind == "build" { return { type: "framework", config: { framework: ref } } }
+  // a tool: Names is the engine's step type (api, script, browser, …), or a step as JSON
+  if len(ref) > 0 and slice(ref, 0, 1) == "\{" { return parse_json(ref) }
+  return { type: ref, config: {} }
+}
+fn gate_of(ref: string): map {
+  if len(ref) > 0 and slice(ref, 0, 1) == "\{" { return parse_json(ref) }
+  return { contains: ref }
+}
+fn drop_key(m: map, k: string): map {
+  var o = {}
+  for x in keys(m) { if x != k { o[x] = m[x] } }
+  return o
+}
+fn layer_of(e: map, id: string): any = find(get(e, "layers", []), fn(l) = get(l, "id", "") == id)
+fn from_erv(e: map): map {
+  var tools = []
+  let tl = layer_of(e, "tools")
+  if tl != null { tools = get(tl, "layers", []) }
+  var wl = layer_of(e, "wires")
+  var raw = []
+  if wl != null { raw = get(wl, "data", []) }
+  var steps = []
+  var skipped = []
+  var problems = []
+  for t in tools {
+    if get(t, "tool", "") != "eravos.agents.step" { skipped = push(skipped, get(t, "label", get(t, "id", "?"))) }
+    else if get(t, "on", true) == false { skipped = push(skipped, get(t, "label", t.id) + " (switched off)") }
+    else { steps = push(steps, t) }
+  }
+  let ids = map(steps, fn(t) = t.id)
+  var gates = {}
+  for t in steps {
+    let pr = get(get(t, "state", {}), "params", {})
+    if get(pr, "kind", "") == "gate" { gates[t.id] = true }
+  }
+  // the wires between steps; a gate tool is folded into the step before it
+  var before = {}
+  for w in raw {
+    let f = w.from[0]
+    let to = w.to[0]
+    if index_of(ids, f) >= 0 and index_of(ids, to) >= 0 and has(gates, to) { before[to] = f }
+  }
+  var boxes = []
+  var stepgate = {}
+  for t in steps {
+    let st = get(t, "state", {})
+    let pr = get(st, "params", {})
+    let box0 = get(get(st, "extra", {}), "box", null)
+    let kind = get(pr, "kind", "tool")
+    let ref = str(get(pr, "ref", ""))
+    if kind == "gate" {
+      let after = get(before, t.id, null)
+      if after == null { problems = push(problems, "the gate " + get(t, "label", t.id) + " is not wired after a step") }
+      else {
+        var g = null
+        if box0 != null and get(box0, "args", null) != null and has(box0.args, "gate") and (ref == "" or ref == "gate") { g = box0.args.gate } else { g = gate_of(ref) }
+        stepgate[after] = g
+      }
+    } else {
+      var task = null
+      if box0 != null and get(get(box0, "args", {}), "task", null) != null and get(box0, "kind", "") == kind and get(box0, "ref", "") == ref { task = clone(box0.args.task) }
+      else {
+        if ref == "" { problems = push(problems, "the step " + get(t, "label", t.id) + " names nothing (Names is empty)") }
+        task = { id: t.id, step: step_for(kind, ref) }
+        if box0 != null and get(get(box0, "args", {}), "task", null) != null { task.id = box0.args.task.id }
+      }
+      // its label: as the file had it, unless renamed on the canvas (ERAVOS saves a tool's own name, "Step", as its label: that is no rename)
+      let lab = get(t, "label", "")
+      let named = lab != "" and lab != "Step"
+      if box0 == null { if named { task.label = lab } else { if str(get(pr, "step", "")) != "" { task.label = str(pr.step) } } }
+      else { if named and lab != get(box0, "label", null) { task.label = lab } }
+      boxes = push(boxes, { id: t.id, task: task })
+    }
+  }
+  // the id a tool carries on the canvas → the task's id in the file
+  var tid = {}
+  for b in boxes { tid[b.id] = b.task.id }
+  var tasks = []
+  for b in boxes {
+    var deps = []
+    for w in raw {
+      var f = w.from[0]
+      if has(gates, f) { f = get(before, f, "") }
+      if w.to[0] == b.id and has(tid, f) and index_of(deps, tid[f]) < 0 { deps = push(deps, tid[f]) }
+    }
+    var t = b.task
+    t.depends_on = deps
+    // a gate tool wired after it is its gate; with none (deleted on the canvas), the step has no gate
+    if has(stepgate, b.id) { t.gate = stepgate[b.id] } else { if has(t, "gate") { t = drop_key(t, "gate") } }
+    tasks = push(tasks, t)
+  }
+  if len(tasks) == 0 { problems = push(problems, "no steps: put Step tools on the canvas and wire them") }
+  return { ok: len(problems) == 0, problems: problems, skipped: skipped, pipeline: { name: get(e, "name", "pipeline"), description: "drawn on the canvas (cos/pipeline/box.eg from_erv)", tasks: tasks } }
+}
+
 component BoxShape {
   id = "cos.automation.box"
   namespace = "cos"
@@ -226,6 +333,13 @@ component BoxShape {
 
   in erv(q: { graph: map, name: string }) {
     emit out answer { hook: "erv", ok: true, value: to_erv(q.graph, q.name), why: null }
+  }
+
+  in from_erv(q: { erv: map }) {
+    let r = from_erv(q.erv)
+    var why = null
+    if not r.ok { why = join(r.problems, "; ") }
+    emit out answer { hook: "from_erv", ok: r.ok, value: r, why: why }
   }
 
   in validate(q: { graph: map, known: map }) {

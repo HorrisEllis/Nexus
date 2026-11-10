@@ -52,6 +52,11 @@ else if cmd == "erv" {
   send box.BoxShape.erv { graph: g, name: get(p, "name", get(p, "id", "pipeline")) }
   print(json(last.value))
 }
+else if cmd == "from-erv" {
+  // 2026-11-10 — an ERAVOS project drawn on the canvas (as JSON) → { ok, problems, skipped, pipeline }: the way back, so a pipeline is made there
+  send box.BoxShape.from_erv { erv: input() }
+  print(json(last.value))
+}
 else if cmd == "roundtrip" {
   // a pipeline: tasks → boxes → tasks; a procedure: steps → boxes → steps. Prints { kind, same, boxes, wires, problems }.
   let p = input()

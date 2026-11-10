@@ -175,3 +175,12 @@ decisions_addendum_2026_11_02:
       An Agents page in COS (its own .html, MG_D18) that reads through each system's routes, never their files (§5.9): first who the agents
       are and what each is doing now (Copilot's suite, Idearium's repo agents, the proposals), and address one agent with a prompt; then the
       round table with its CLI (it needs a route first, in its owning system); then deploying an agent to a system (MG_D17's drones).
+
+# ── ADDENDUM 2026-11-10 (0.60.477) — CE3 expanded: a conflict is asked, never a dead end (his) ───────────────────────────────────────────────────
+# James, 2026-11-10: "It won’t let me update. The manual update feature doesn’t work well either. I need the update to be able to pull the latest
+# version. If there’s a conflict, prompt me to ask if I want to fix it or not." · "I can’t get cos updated".
+# CE3 kept local commits only when nothing else was in the way; edits here to files GitHub changed left the popup with no button, and no backup
+# from Idearium refused every update. Expanded: lib/nexus-update.js says a conflict (edits and/or commits) as ask: conflict, before any backup;
+# resolve: fix keeps his on local/<date> (edits committed there) and takes GitHub's (git reset --keep). No backup is ask: no-backup; backupWith: git
+# backs up as a backup/<date> branch + a patch. Asked in COS's popup and Updates page, and in a terminal (npm run update). Coder's reading of
+# "fix it", to confirm: keep yours on a branch, take GitHub's — a merge of both is possible, his call. Proof: UP-15, CU-02.
