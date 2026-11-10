@@ -17,3 +17,10 @@
 .ae-log { font: 11.5px/1.6 ui-monospace, monospace; white-space: pre-wrap; opacity: .85; max-height: 520px; overflow: auto; }
 .page-head.sub { margin-top: 0; } .title.sm { font-size: 20px; }
 @media (max-width: 860px) { .ae-grid { grid-template-columns: 1fr; } }
+
+/* PC8 slice a (2026-11-10) — a step's delta against its baseline, and the decisions taken during it */
+.ae-bar { display: inline-block; width: 90px; height: 6px; border-radius: 3px; background: var(--line, #2a2f3a); overflow: hidden; vertical-align: middle; }
+.ae-bar-fill { display: block; height: 100%; background: var(--accent, #5aa9ff); }
+.ae-bar.off .ae-bar-fill { background: var(--warn, #e0a030); }
+.ae-base { display: block; font-size: 12px; }
+.ae-decision { display: flex; gap: 8px; font-size: 12px; padding-left: 12px; }

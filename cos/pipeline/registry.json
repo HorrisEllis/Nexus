@@ -74,7 +74,8 @@
       "file": "index.js",
       "lang": "js",
       "door": "starts Emerge (until COS's manager is Emerge, CIE13), makes the HTTP calls a gate asks for (no sockets in Emerge until CIE10), takes the engine's events in order; no logic"
-    }
+    },
+    {"id": "cos.automation.baseline", "file": "baseline.eg", "lang": "emerge", "hooks": {"in": ["baseline"], "out": ["answer"]}, "test": "test/baseline.test.eg", "phase": "PC8_operate_a_pipeline", "why": "James, 2026-11-10: \"each step measured by a delta ... to establish a baseline.\""}
   ],
   "routes": [
     "GET /api/cos/boxes",
@@ -92,7 +93,8 @@
     "POST /api/cos/pipeline/plan",
     "POST /api/cos/pipeline/build-next",
     "POST /api/cos/pipeline/sync",
-    "GET /api/cos/pipeline/sources"
+    "GET /api/cos/pipeline/sources",
+    "GET /api/cos/pipeline/baseline"
   ],
   "commands": [
     "cos boxes",
@@ -109,7 +111,8 @@
     "cos pipeline-sync",
     "cos pipeline-sources",
     "cos frameworks",
-    "cos framework-compile"
+    "cos framework-compile",
+    "cos pipeline-baseline"
   ],
   "events": {
     "listens": [

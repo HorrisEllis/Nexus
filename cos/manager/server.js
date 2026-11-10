@@ -235,6 +235,8 @@ function createServer(sup, opts = {}) {
       if (m === 'POST' && p === '/api/cos/pipeline/from-erv') { if (/^agent:/.test(String(body.by || ''))) return send(res, 403, { ok: false, error: 'an agent proposes; making a pipeline from the canvas is a person\'s' }); const r = await pipeline.fromErv({ text: body.text, erv: body.erv, name: body.name, by: body.by || 'person' }); return send(res, r.ok ? 200 : r.code || 422, r); }
       if (m === 'POST' && p === '/api/cos/pipeline/sync') { if (/^agent:/.test(String(body.by || ''))) return send(res, 403, { ok: false, error: 'an agent proposes; importing is a person\'s or a system\'s' }); return send(res, 200, await pipeline.sync()); }
       if (m === 'GET' && p === '/api/cos/pipeline/sources') return send(res, 200, { ok: true, sources: pipeline.sources() });
+      // PC8 slice a (2026-11-10): a delta and a baseline per step, and the decisions of the latest run (cos/pipeline/baseline.eg)
+      if (m === 'GET' && p === '/api/cos/pipeline/baseline') { const r = await pipeline.baseline({ pipeline: u.searchParams.get('pipeline'), limit: u.searchParams.get('limit') }); return send(res, r.ok === false ? (r.code || 500) : 200, r); }
       // 2026-11-09 — James: "They build upon request, dynamically" · "It's end state first reasoning." A phase planned into its own .pipeline (end state
       // first), kept in the engine; with run, a request through it. build-next: the next phase Nexus can build, planned and run.
       if (m === 'POST' && (p === '/api/cos/pipeline/plan' || p === '/api/cos/pipeline/build-next')) {

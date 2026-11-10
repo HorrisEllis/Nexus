@@ -610,7 +610,7 @@ built_2026_11_09_plan:
     # the pipeline's, not Idearium's loop beside it); a contract met becomes a .macro of its steps, replayable to rebuild or reconstruct what it
     # built (the snapshots of "every step snapshotted, any run replayed", cos/spec/pipeline-canvas.spec).
   PC8_operate_a_pipeline:
-    status: OPEN
+    status: OPEN   # slice a BUILT 0.60.481 (a delta and a baseline per step; RAID's decisions as steps; the bar)
     james: '"seeing, changing, managing, diagnosing, exporting, testing, agnostic." · "record each step in raids decision, dynamically building each step, as it goes. it all needs to be visable."'
     depends_on: [PC_D13_the_pipeline_works_first_then_cos_optimised, PC5_programmable_gate_types]
     files: [lib/automation/pipeline.js, lib/automation/routes.js, lib/automation/engine.js, cos/manager/automation-door.js, cos/pipeline/runs.eg, cos/pipeline/cli.eg, cos/ui/automation/engine.js, cos/ui/automation/page.js, idearium/cli/route-commands.js]
@@ -629,3 +629,17 @@ built_2026_11_09_plan:
       its error, and the step before it); export a run as files; and every RAID decision taken during a run added to the run as a step, as it
       happens. Backend, then route, then command row, then UI (the Automation tab), in the same phase.
     proof: "a pipeline paused mid-run, resumed and finished; a failed step retried after a fix; a dry run that changes nothing; a failed step diagnosed in one view; a run exported and re-imported; a run whose RAID decisions appear as steps; each shown in the Automation tab through Clear Glass"
+    # ── 2026-11-10, slice a BUILT 0.60.481 — his "do it. build it." ──
+    # - Each step's delta: the engine (lib/automation/pipeline.js) keeps a step's startedAt, finishedAt and waitMs (the delta after the steps it
+    #   waits on), beside its ms.
+    # - The baseline in Emerge: cos/pipeline/baseline.eg gives a step's mean, its sigma from three runs (his "Three = an invariant"), its latest
+    #   delta and its z, and the wait's own baseline. It is served at GET /api/cos/pipeline/baseline (the manager's contract), with the command
+    #   row `cos pipeline-baseline`.
+    # - RAID's decisions as steps: _dispatchAgent hands RAID's choice back with the answer (asked, chose, command, why, at; RAID down said). The
+    #   agent step and runStep pass it on; the run keeps it as run.decisions and on its task, and streams automation.pipeline.decision as it
+    #   happens.
+    # - The Automation tab: each step has a bar against its baseline, the baseline and wait in words, "slower/faster than usual" past 2 sigma, and
+    #   RAID's decisions under the step they were taken in.
+    # - Two execFile calls in cos/pipeline/index.js got windowsHide (SC16).
+    # Next slices: pause, resume and retry; the dry run; the diagnosis view; export of a run.
+    slice_a_built: "0.60.481"

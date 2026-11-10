@@ -8,6 +8,7 @@ use "./gate.eg" as gate
 use "./runs.eg" as runs
 use "./framework.eg" as framework
 use "./plan.eg" as plan
+use "./baseline.eg" as baseline
 
 wire box.BoxShape.answer -> "box.answer"
 var last = null
@@ -28,6 +29,9 @@ fn input(): map {
 }
 
 if cmd == "version" { print(box.BoxShape.version) }
+else if cmd == "baseline" {   // PC8 slice a: { runs: [the engine's saved runs] } → a delta and a baseline per step
+  print(json(baseline.baseline(input().runs ?? [])))
+}
 else if cmd == "boxes" {
   // a pipeline (it has tasks) or a procedure (it has steps) → { kind, graph, ok, problems, unchecked }
   let p = input()
@@ -168,6 +172,6 @@ else if cmd == "resume-of" {
   print(json(runs.resume_of(q.base, q.id)))
 }
 else {
-  eprint("unknown command \"" + cmd + "\": the commands are version, boxes, dag, erv, roundtrip, types, save-type, gate, gate-actions, frameworks, framework, framework-tree, plan-phase, request, booked, read-id, event, list, read, resume-of (each <file.json>)")
+  eprint("unknown command \"" + cmd + "\": the commands are version, baseline, boxes, dag, erv, roundtrip, types, save-type, gate, gate-actions, frameworks, framework, framework-tree, plan-phase, request, booked, read-id, event, list, read, resume-of (each <file.json>)")
   exit(1)
 }

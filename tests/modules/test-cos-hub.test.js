@@ -137,6 +137,14 @@ const stand = async (answers) => { const hits = []; const s = http.createServer(
       const done = await until(() => [...document.querySelectorAll('.ae-step')].every(e => e.dataset.state === 'done') && document.querySelectorAll('.ae-step').length === 2, 15000);
       if (process.env.HB_SHOTS) await page.screenshot({ path: path.join(process.env.HB_SHOTS, 'cos-automation.png'), fullPage: true });
       assert.ok(done, 'the run shown live to done: ' + await page.evaluate(() => [...document.querySelectorAll('.ae-step')].map(e => e.dataset.state).join(',')));
+      // PC8 slice a (2026-11-10, his "each step can be used as a progress status, with an indicator or bar"): a third run, then the page shows
+      // each step's bar against its baseline, and the baseline over three runs (a sigma from three)
+      assert.match(await cl(`automation pipeline-run ${pid}`), /running .*run /);
+      let rl3 = ''; for (let k = 0; k < 60; k++) { await new Promise(r => setTimeout(r, 100)); rl3 = await cl(`automation runs ${pid}`); if ((rl3.match(/^(ok|done)\s/mg) || []).length >= 3) break; }
+      await page.evaluate((id) => document.querySelector(`[data-pipeline="${id}"]`).click(), pid);
+      const shown = await until(() => { const b = [...document.querySelectorAll('.ae-step .ae-base')].map(e => e.textContent); return document.querySelectorAll('.ae-step .ae-bar').length === 2 && b.length === 2 && b.every(t => /over 3 runs/.test(t)) ? b.join(' | ') : null; }, 10000);
+      if (process.env.HB_SHOTS) await page.screenshot({ path: path.join(process.env.HB_SHOTS, 'cos-automation-baseline.png'), fullPage: true });
+      assert.ok(shown, 'each step a bar and its baseline over 3 runs: ' + await page.evaluate(() => document.getElementById('ae-p-body').textContent.slice(0, 400)));
       const before = (await req(cp, 'GET', '/api/cos/automation/pipelines')).body.pipelines.length;
       const imp = await page.evaluate(async (text) => { const r = await fetch('/api/cos/automation/import', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ text, by: 'person', allowDuplicate: true }) }); return { status: r.status, body: await r.json() }; }, node.body.text);
       assert.ok(imp.status < 300 && imp.body.ok !== false, 'the exported .pipeline imports back: ' + JSON.stringify(imp.body).slice(0, 200));

@@ -7,6 +7,23 @@ then they are written by hand.
 
 
 
+
+## 2026-11-10 — each pipeline step measured, RAID's decisions as steps (PC8 slice a, 0.60.481)
+- **Measured:** his framework in COS's pipeline: deltas, a baseline, and "three = an invariant" before any sigma.
+- **Framework:** end state first (the page showing each step's bar over three runs, through Clear Glass), then backwards to the engine and Emerge.
+- **Method:** Emerge's baseline tested alone (4 cases); the engine's timing and RAID's decisions through a real run (OA-11); end to end through
+  COS's door (CP-19, three runs); the page in Clear Glass (HB-07, three runs, a screenshot).
+- **Result:** all green: baseline 4/4, OA 11/11, CP 20/20, HB 7/7, the automation suites, and the 8 suites that read COS's contract.
+- **Failed runs, and what each taught:**
+  - Emerge has no `?:` (the test helper rewritten);
+  - a `set` step takes `assign`, not name and value;
+  - the cockpit forwards only routes declared in the manager's contract (the page saw nothing until the route was declared there);
+  - 1 ms steps showed as "0.0 s" (durations under a second now in ms);
+  - rewriting two JSON files reflowed them, so the edits were redone as text.
+- **Lines:** .eg +93 (baseline.eg 52, its test 41); JavaScript +147 −20 across the engine, door, route, UI and tests (no new JS file; the
+  engine is JS until CIE13).
+- **Gaps found in Emerge:** still no `?:`; noted, not changed.
+
 ## 2026-11-10 — the spec compiler moved out of Emerge (CIE8 slices b–d, 0.60.480)
 - **Measured:** Emerge, under his CIE_D7 ("as long as its removed from emerge.").
 - **Framework:** end state first. Emerge's own outputs are the oracle: the copy in Idearium must give the same graph and the same files.

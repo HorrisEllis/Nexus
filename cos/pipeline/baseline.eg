@@ -1,0 +1,57 @@
+// cos/pipeline/baseline.eg — each step measured by a delta, a baseline per step learned over runs (PC8 slice a, PC6; cos/spec/pipeline-canvas.spec).
+// James, 2026-11-10: "each step measured by a delta, which could be used for the timing in between each step agnostically, to establish a
+// baseline." · "sigmas and deltas are domain agnostic." · "each step can be used as a progress status, with an indicator or bar."
+//
+//   baseline(runs) → { ok, runs, steps: { <step id>: { n, mean_ms, sigma_ms, last_ms, z, wait_mean_ms, wait_sigma_ms, last_wait_ms, status } } }
+//
+// A run is the engine's saved run (lib/automation/pipeline.js): tasks[id] = { status, ms, startedAt?, finishedAt?, waitMs? }. Only finished
+// steps (done or failed) count. ms is the step's delta: its own time. waitMs is the delta between it and the steps it waits on (when it
+// started, after the last of them finished): the timing between steps. A sigma needs three runs or more: his "Three = an invariant (not a
+// fact)" (docs/innovation-toolkit.framework, Part 3); below three, the mean is said and the sigma and z are null, never a guess.
+
+/** mean and population sigma of a list of nums; sigma null below three */
+fn stats(xs: list): map {
+  let n = len(xs)
+  if n == 0 { return { n: 0, mean: null, sigma: null } }
+  var s = 0
+  for x in xs { s += x }
+  let mean = s / n
+  if n < 3 { return { n: n, mean: mean, sigma: null } }
+  var v = 0
+  for x in xs { v += (x - mean) * (x - mean) }
+  return { n: n, mean: mean, sigma: sqrt(v / n) }
+}
+
+fn finished(t): bool = t != null and (t.status == "done" or t.status == "failed") and type_of(t.ms) == "num"
+
+/** runs oldest first by startedAt, so "last" is the latest */
+fn by_start(runs: list): list = sort_by(runs, fn(r) = r.startedAt ?? 0)
+
+fn baseline(runs: list): map {
+  let rs = by_start(runs)
+  var ms = {}
+  var waits = {}
+  var last = {}
+  for r in rs {
+    let tasks = r.tasks ?? {}
+    for id in keys(tasks) {
+      let t = tasks[id]
+      if finished(t) {
+        ms[id] = push(ms[id] ?? [], t.ms)
+        if type_of(t.waitMs) == "num" { waits[id] = push(waits[id] ?? [], t.waitMs) }
+        last[id] = t
+      }
+    }
+  }
+  var steps = {}
+  for id in keys(ms) {
+    let a = stats(ms[id])
+    let w = stats(waits[id] ?? [])
+    let l = last[id]
+    var z = null
+    if a.sigma != null and a.sigma > 0 { z = (l.ms - a.mean) / a.sigma }
+    steps[id] = { n: a.n, mean_ms: a.mean, sigma_ms: a.sigma, last_ms: l.ms, z: z,
+                  wait_mean_ms: w.mean, wait_sigma_ms: w.sigma, last_wait_ms: l.waitMs ?? null, status: l.status }
+  }
+  return { ok: true, runs: len(rs), steps: steps }
+}

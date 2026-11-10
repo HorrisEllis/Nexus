@@ -7,18 +7,20 @@ intent: null
 summary: PC8_operate_a_pipeline (?) — 9 file(s)
 system: idearium
 tags: []
-exported_at: 1794352479567
+exported_at: 1794353343314
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794352479567
-lastSeenAt: 1794352479567
+firstSeenAt: 1794353343314
+lastSeenAt: 1794353343314
 fingerprint: null
 payload:
   id: PC8_operate_a_pipeline
   map: docs/2026-11-08-pipeline-canvas-phasemap.spec
   repo: null
   layer: null
-  status: OPEN
+  status: >-
+    OPEN   # slice a BUILT 0.60.481 (a delta and a baseline per step; RAID's decisions as steps; the
+    bar)
   files:
     - lib/automation/pipeline.js
     - lib/automation/routes.js
@@ -34,4 +36,4 @@ payload:
     - PC5_programmable_gate_types
   blocks: []
   spec: null
-  graph: 28ed41e906bd35fa
+  graph: fe5a6475639b0e7e
