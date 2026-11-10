@@ -8,6 +8,21 @@ then they are written by hand.
 
 
 
+
+## 2026-11-10 — Nexus's memory at boot, measured, and fitted to his machine (0.60.482)
+- **Measured:** Nexus. Each system's resident memory, 25 s after it booted in a fresh sandbox, all 11 at once, each answering its /health.
+- **His machine (his Task Manager):** an i3-1215U, 7.7 GB, memory at 91%, disk at 99%.
+- **Result (MB):** architect 89, copilot 81, cortex 83, diagnostic 142, guardian 131, idearium 107, intelligence 126, loom 96, ollama 83,
+  orchestrator 138, versionium 149. Total 1,225.
+- **What it showed:**
+  - Nexus at idle is not what fills 7.7 GB;
+  - the risk is growth: every system was allowed a 1,024 MB heap, and all started at boot.
+- **What came of it:**
+  - six systems on demand (about 0.6 GB less at idle);
+  - heap limits of 384 or 512 MB, about 3–4x idle;
+  - a sleeping system woken through COS on first use.
+- **Not measured:** memory under load, or on his machine with his data. That is PR4/PR6's heartbeat, which will carry each system's own deltas.
+
 ## 2026-11-10 — each pipeline step measured, RAID's decisions as steps (PC8 slice a, 0.60.481)
 - **Measured:** his framework in COS's pipeline: deltas, a baseline, and "three = an invariant" before any sigma.
 - **Framework:** end state first (the page showing each step's bar over three runs, through Clear Glass), then backwards to the engine and Emerge.

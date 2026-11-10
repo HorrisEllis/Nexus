@@ -43,7 +43,9 @@
           "{{root}}/node_modules/"
         ],
         "about": "LM4's wall, declared by Loom (LM6, 2026-11-01): COS's supervisor starts it behind this; equal to the census's boundaryFor('loom')"
-      }
+      },
+      "onDemand": true,
+      "maxOldSpaceMB": 384
     }
   },
   "data": {

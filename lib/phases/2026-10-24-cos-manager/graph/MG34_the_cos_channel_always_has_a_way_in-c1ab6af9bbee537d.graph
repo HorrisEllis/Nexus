@@ -7,11 +7,11 @@ intent: null
 summary: 18 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793937427817
+exported_at: 1794354759273
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793937427817
-lastSeenAt: 1793937427817
+firstSeenAt: 1794354759273
+lastSeenAt: 1794354759273
 fingerprint: null
 payload:
   for: MG34_the_cos_channel_always_has_a_way_in
@@ -168,6 +168,7 @@ payload:
       - docs/2026-10-24-cos-manager-phasemap.spec::MG36_the_cockpit_is_the_window
       - docs/2026-10-24-cos-manager-phasemap.spec::MG37_starts_with_windows
       - docs/2026-11-01-tv-ui-cleanup-phasemap.spec::TV4_the_overview_idearium_and_cos
+      - docs/2026-11-02-cos-enterprise-phasemap.spec::CE2b_updates_restart_cos
       - docs/2026-11-02-cos-the-application-phasemap.spec::CA4_the_supervisor_as_a_windows_service
       - docs/2026-11-02-cos-the-application-phasemap.spec::CA5_cos_installs_nexus_from_github
       - docs/2026-11-02-cos-the-application-phasemap.spec::CA6_install_asks_where_and_npm_in_program_files
@@ -183,7 +184,7 @@ payload:
       - 'depends on (1): MG33_cos_ui_has_a_way_in · all upstream 9'
       - >-
         needed by (2): MG35_the_exe_starts_nexus, TV4_the_overview_idearium_and_cos · all downstream
-        9 · finishing it unlocks MG35_the_exe_starts_nexus, TV4_the_overview_idearium_and_cos
+        10 · finishing it unlocks MG35_the_exe_starts_nexus, TV4_the_overview_idearium_and_cos
     edges:
       - from: docs/2026-10-24-cos-manager-phasemap.spec::MG33_cos_ui_has_a_way_in
         kind: declared

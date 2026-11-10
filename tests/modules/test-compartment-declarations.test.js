@@ -34,6 +34,9 @@ test('CD-02', 'each declaration equals its kernel, field for field', () => {
   for (const k of kernels) {
     const d = decl.find(x => x.name === k.name);
     for (const f of FIELDS) {
+      // 2026-11-10 (his "Do it": Nexus fitted to his 8 GB all-in-one) — the two fields changed on purpose after the handover, read from the
+      // declaration itself: onDemand (six systems) and maxOldSpaceMB (all, about 3-4x the idle measured that day). Every other field still equals its kernel.
+      if (f === 'onDemand' || f === 'maxOldSpaceMB') continue;
       const want = k[f] === undefined || k[f] === null || (f === 'env' && !Object.keys(k[f]).length) ? undefined : k[f];
       assert.deepStrictEqual(d[f], want, `${k.name}.${f}`);
     }

@@ -430,6 +430,20 @@ phases:
     blocks: [MOD-MG-DECLARE]
     does: "every system's compartment.json carries its whole process, generated from today's boot list; orchestrator and architect get one; diagnostic's keeps its fields"
     proof: "the declarations reproduce autopilot's 13 processes field for field"
+    # ── EXPANDED 2026-11-10 (0.60.482) — Nexus fitted to his machine. James: "What’s the highest leverage. To get this working." · "Do it." ──
+    # His machine (Task Manager, 2026-11-10): a Lenovo all-in-one, i3-1215U, 7.7 GB, memory at 91%, disk at 99% (paging).
+    # - Measured first, at boot: the 11 Node systems use 1,225 MB together (architect 89, copilot 81, cortex 83, diagnostic 142, guardian 131,
+    #   idearium 107, intelligence 126, loom 96, ollama 83, orchestrator 138, versionium 149 MB). Every system started at boot, each allowed a
+    #   1,024 MB heap.
+    # - Declared now: architect, copilot, intelligence, loom, ollama and versionium start on demand and stop when idle (the supervisor's existing
+    #   onDemand), with 384 MB heaps. The core (cortex, diagnostic, guardian, idearium, orchestrator) always runs, with 512 MB heaps. Each limit is
+    #   about 3-4x its measured idle. His settings (COS's per-system settings: start.onDemand, memory.heap) still override.
+    # - lib/nexus-client.js wakes a sleeping system: a call refused by it asks COS to touch it (POST /api/cos/systems/<id>/touch), then retries
+    #   for up to 6 s. A health check never wakes; COS down leaves the first error. This is the interim until PR6, where a system announces it is up
+    #   by its first beat.
+    # Proof: test-call-system T-WAKE-1..4; test-cos-supervisor 8/8 (SV-08: cortex's 512 MB on its command line). Not this change, failing before
+    # and after: test-compartment-declarations CD-01 (intelligence-consumer retired 0.60.380) and CD-02 (cortex.args since DO3a). CD-02 now skips
+    # the two fields changed on purpose.
   MG15_the_supervisor_in_cos:
     status: BUILT 0.60.328
     depends_on: [MG0b_the_full_spec, MG_D4_cos_is_the_autopilot, MG_D13_the_supervisor_before_the_core_boot, MG15a_every_system_declares_its_process]

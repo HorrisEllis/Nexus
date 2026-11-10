@@ -46,6 +46,30 @@ const at = require(path.join(ROOT, 'lib/agent-tools'));
     assert.ok(!/(SYSTEMS|SYSTEM_MAP|ADDRESSES)\s*=\s*\{[^}]*:\s*\d{4}/.test(src), 'must not carry a hardcoded system→port map');
   });
 
+  // 2026-11-10 (his "Do it": Nexus fitted to his 8 GB all-in-one, six systems started on demand) — a call that finds a system asleep asks COS to
+  // wake it and tries again; a health check never wakes; COS unable to wake leaves the first error as it was. (A JS test: nexus-client is JS.)
+  const nx = require(path.join(ROOT, 'lib/nexus-client.js'));
+  const http = require('http');
+  const port = nx.resolve('loom').port;
+  await test('T-WAKE-1', 'a system asleep is woken through COS, and the call answers', async () => {
+    let woken = [], srv = null;
+    const prev = nx.setWaker(async (id) => { woken.push(id); srv = http.createServer((q, r) => { r.setHeader('content-type', 'application/json'); r.end(JSON.stringify({ ok: true, path: q.url })); }).listen(port, '127.0.0.1'); return { ok: true }; });
+    try { const r = await nx.get('loom', '/x', { wakeGapMs: 100 }); assert.deepStrictEqual(woken, ['loom']); assert.strictEqual(r.path, '/x'); }
+    finally { nx.setWaker(prev); if (srv) await new Promise(r => srv.close(r)); }
+  });
+  await test('T-WAKE-2', 'a health check never wakes a system COS keeps asleep', async () => {
+    let woken = 0; const prev = nx.setWaker(async () => { woken++; });
+    try { assert.strictEqual(await nx.health('loom'), false); assert.strictEqual(woken, 0); } finally { nx.setWaker(prev); }
+  });
+  await test('T-WAKE-3', 'COS unable to wake it: the first error stands, said as it was (§1.2)', async () => {
+    const prev = nx.setWaker(async () => { throw new Error('cos unreachable'); });
+    try { await assert.rejects(nx.get('loom', '/x', { wakeGapMs: 50 }), /loom unreachable .*ECONNREFUSED/); } finally { nx.setWaker(prev); }
+  });
+  await test('T-WAKE-4', 'woken but never answering: said, with how long it waited', async () => {
+    const prev = nx.setWaker(async () => ({ ok: true }));
+    try { await assert.rejects(nx.get('loom', '/x', { wakeGapMs: 20, wakeTries: 3 }), /COS was asked to wake loom, and it did not answer within/); } finally { nx.setWaker(prev); }
+  });
+
   _log(`\n${passed} passed, ${failed} failed`);
   process.exit(failed ? 1 : 0);
 })();

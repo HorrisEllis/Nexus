@@ -7,11 +7,11 @@ intent: null
 summary: 17 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1794155256033
+exported_at: 1794354759266
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794155256033
-lastSeenAt: 1794155256033
+firstSeenAt: 1794354759266
+lastSeenAt: 1794354759266
 fingerprint: null
 payload:
   for: MG38_the_orchestrator_into_cos
@@ -176,7 +176,6 @@ payload:
     downstream: []
     blockedBy:
       - docs/2026-10-24-cos-manager-phasemap.spec::MG_D5_cos_is_the_orchestrator
-      - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE6_the_engine_moves_into_cos
     unlocks: []
     conflicts:
       - with: docs/2026-10-24-cos-manager-phasemap.spec::MG20_add_deploy_connect
@@ -191,7 +190,7 @@ payload:
           - cos/manager/contract.json
     dangling: []
     lines:
-      - layer 7 · blocked by MG_D5_cos_is_the_orchestrator, AE6_the_engine_moves_into_cos
+      - layer 7 · blocked by MG_D5_cos_is_the_orchestrator
       - >-
         depends on (2): MG_D5_cos_is_the_orchestrator, AE6_the_engine_moves_into_cos · all upstream
         25
