@@ -481,3 +481,11 @@ spec:
 # hypervisor manages machines, with what a hypervisor lacks: compartments wired to each other (the pipeline), automated by AI under contracts
 # (RAID), and every state versioned (Versionium). Coder's note: the comparison holds for orchestration and snapshots; isolation as strong as a
 # hypervisor's (memory, CPU, a crash kept inside) is not claimed — a compartment today is a process and a folder, kept apart by sovereignty.
+
+# ── ADDENDUM 2026-11-10 — every step snapshotted, any run replayed (his direction; nothing built by this addendum) ──────────────────────────────
+# James, 2026-11-10: "Each step can be snapshotted per diff, change, or what ever other uses in the pipeline. Then can create a .pipeline or macro to
+# replay or reconstruct it. The system has immense backup methods. Snapshots. Specs. Ledgers. Nodes for persistent storage. Gates for persistent
+# progress. Chunks to reduce complexity and hold context, to reduce load on agents. Look at all agent problems right now and nexus."
+# Coder's reading: a request already keeps each step as a file (steps/<t>.step: what it took and gave) and, inside builds, a Versionium commit at
+# each passing gate (GS1). Replay = a .pipeline generated from a finished request's step files (same steps, same inputs, its gates); reconstruct =
+# restoring the checkpoint a step passed at. Neither is built: the snapshot per COS-level step is the gap named in the 2026-11-10 addendum above.
