@@ -7,18 +7,20 @@ intent: null
 summary: CIE8_spec_compiler_in_emerge (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1794074382607
+exported_at: 1794349253347
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794074382607
-lastSeenAt: 1794074382607
+firstSeenAt: 1794349253347
+lastSeenAt: 1794349253347
 fingerprint: null
 payload:
   id: CIE8_spec_compiler_in_emerge
   map: docs/2026-11-06-cie-eg-build-phasemap.spec
   repo: null
   layer: null
-  status: 'OPEN   # 2026-11-07: moved, not ported (his CIE_D7)'
+  status: >-
+    BUILT 0.60.480   # 2026-11-07: moved, not ported (his CIE_D7); slices a 0.60.444, b, c, d
+    0.60.480
   files:
     - emerge/emerge/compiler/kg-builder.js
     - emerge/emerge/compiler/pipeline.js
@@ -30,4 +32,4 @@ payload:
   blocks:
     - MOD-NATIVE-TOOLS
   spec: emerge/emerge/spec/cie-eg.spec
-  graph: f6140501aa78d458
+  graph: d05b72eec17b8a64

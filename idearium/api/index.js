@@ -3392,6 +3392,7 @@ const ROUTE_CAP = {
   'repo.versions.index': CAPS.READ_IDEAS, 'repo.versions.diff': CAPS.READ_IDEAS, 'repo.versions.tree': CAPS.READ_IDEAS,   // §0.60.7
   'repo.versions.restoreFile': CAPS.WRITE_IDEAS, 'repo.history.import': CAPS.WRITE_IDEAS,
   'phases.census': CAPS.READ_IDEAS,   // 0.60.188 CNS1 — reads only
+  'spec.compiler.compile': CAPS.READ_IDEAS, 'spec.compiler.check': CAPS.READ_IDEAS, 'spec.compiler.build': CAPS.WRITE_IDEAS, 'spec.compiler.run': CAPS.WRITE_IDEAS,   // 2026-11-07 CIE8, the spec compiler moved from Emerge (his CIE_D7)
   'phases.ledger': CAPS.READ_IDEAS, 'phases.ledger.history': CAPS.READ_IDEAS, 'phases.ledger.covers': CAPS.READ_IDEAS, 'phases.ledger.log': CAPS.WRITE_IDEAS,   // 0.60.419 SL11 the phase ledger
   'repo.changelog': CAPS.READ_IDEAS, 'ledger.out': CAPS.READ_IDEAS,   // 0.60.190 APV3/APV4 — read only
   'repo.releases.list': CAPS.READ_IDEAS, 'repo.releases.create': CAPS.WRITE_IDEAS, 'releases.list': CAPS.READ_IDEAS, 'releases.sync': CAPS.WRITE_IDEAS, 'releases.changes': CAPS.READ_IDEAS, 'releases.changelog': CAPS.READ_IDEAS, 'versionium.pending': CAPS.READ_IDEAS,   // §0.60.41 RN1 · 0.60.72 RN2 · 0.60.274
@@ -3943,6 +3944,10 @@ function _matchRoute(method, url) {
     ['GET',    ['api','phases','ledger','history'],                    'phases.ledger.history'],    // ?phase=
     ['POST',   ['api','phases','ledger','covers'],                     'phases.ledger.covers'],     // { files, does } → the phases to expand instead
     ['POST',   ['api','phases','ledger','log'],                        'phases.ledger.log'],        // { phase, event, why, by, version?, map? }
+    ['POST',   ['api','spec-compiler','compile'],                      'spec.compiler.compile'],   // 2026-11-07 CIE8 — the spec compiler, moved from Emerge's door (his CIE_D7)
+    ['POST',   ['api','spec-compiler','build'],                        'spec.compiler.build'],
+    ['POST',   ['api','spec-compiler','run'],                          'spec.compiler.run'],
+    ['POST',   ['api','spec-compiler','check'],                        'spec.compiler.check'],
     ['GET',    ['api','phases','next'],                                'phases.next'],
     ['GET',    ['api','phases','one'],                                 'phases.one'],               // 2026-11-09 one phase whole (does, files, proof, its block): what a pipeline is planned from              // §SL0 0.60.222 what can be built now, and why the rest cannot (lib/build-queue.js)
     ['GET',    ['api','repos',':uuid','phases','next'],                'repo.phases.next'],            // §SL0 0.60.222 the same, over one repo's maps
@@ -6225,6 +6230,13 @@ async function handle(req, res, route, query, body) {
       const limit = Math.max(1, Math.min(2000, parseInt(query.limit, 10) || 50));
       const group = query.group ? String(query.group) : null;
       return ok(res, { ...r, queue: r.queue.slice(0, limit), blocked: (group ? r.blocked.filter(b => b.group === group) : r.blocked).slice(0, group ? 2000 : limit), lines: _require('../../lib/build-queue.js').lines(r) });
+    }
+    case 'spec.compiler.compile': case 'spec.compiler.build': case 'spec.compiler.run': case 'spec.compiler.check': {
+      // 2026-11-07 CIE8 — James: "yeah move it, until we have something to slot in the gap it will leave" · "as long as its removed from emerge."
+      // The spec compiler is Idearium's now (idearium/spec-engine/spec-compiler); these are the routes Emerge's door served as /compiler/*.
+      const C = _require('../spec-engine/spec-compiler/lib/compiler.js');
+      try { return ok(res, await C[action.split('.').pop()](body || {})); }
+      catch (e) { return err(res, e.status || 500, e.message); }
     }
     case 'phases.ledger': case 'phases.ledger.history': case 'phases.ledger.covers': case 'phases.ledger.log': {
       // 0.60.419 SL11 — James, 2026-11-06: "we also need to add a phase ledger, to idearium, then add to claude.md to to always log in the ledger".
@@ -9995,7 +10007,7 @@ async function handle(req, res, route, query, body) {
         const d = action === 'emerge.status' ? await _nexusClient.get('emerge', '/status', { timeout: 10000 })
           : action === 'emerge.modules' ? await _nexusClient.get('emerge', '/modules', { timeout: 10000 })
           : action === 'emerge.module.new' ? await _nexusClient.post('emerge', '/modules', body || {}, { timeout: 30000 })
-          : action === 'emerge.compile' ? await _nexusClient.post('emerge', '/compiler/compile', body || {}, { timeout: 120000 })
+          : action === 'emerge.compile' ? await _require('../spec-engine/spec-compiler/lib/compiler.js').compile(body || {})   // 2026-11-07 CIE8: Idearium's own now (his CIE_D7); was Emerge's door POST /compiler/compile
           : await _nexusClient.post('emerge', `/lang/${params.op}`, body || {}, { timeout: 60000 });
         return ok(res, d || {});
       } catch (e) { return err(res, 502, `Emerge's door (:4900) did not answer: ${e.message} — COS starts it (npm run start:all), or: node emerge/server.js`); }

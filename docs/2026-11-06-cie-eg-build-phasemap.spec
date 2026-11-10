@@ -207,7 +207,7 @@ phases:
     proof: "observe.test and debug.test answers equal from the .eg"
 
   CIE8_spec_compiler_in_emerge:
-    status: OPEN   # 2026-11-07: moved, not ported (his CIE_D7)
+    status: BUILT 0.60.480   # 2026-11-07: moved, not ported (his CIE_D7); slices a 0.60.444, b, c, d 0.60.480
     depends_on: [CIE6_native_check, CIE_D7_the_spec_compiler_moves_to_idearium]
     spec: emerge/emerge/spec/cie-eg.spec
     blocks: [MOD-NATIVE-TOOLS]
@@ -243,6 +243,17 @@ phases:
     # batched into one program (the checker reports every error with its line).
     slice_a_built: "0.60.444"
 
+    # ── 2026-11-10, slices b, c and d BUILT 0.60.480. His words: "do it" (2026-11-07) · "Continue. I meant. merge other branches" (2026-11-10).
+    # b: the family copied to idearium/spec-engine/spec-compiler. Its own package.json is CommonJS inside Idearium's ES modules, and its version
+    #    starts at Emerge's at the move. Proven equal: kg-builder output on all 47 registered specs, cie-eg.spec's T0/T1 compile 28 of 28 files.
+    # c: Idearium serves POST /api/spec-compiler/compile|build|run|check. compiler-bridge, phase-specs and the emerge.compile action run it
+    #    in-process; guardian, copilot's module-builder, lib/build-pipeline and lib/spec-collect go through Idearium's door. The first pass was
+    #    lost uncommitted in a container restart and redone the same way.
+    # d: Emerge's copy archived with git mv (_archive/2026-11-07-emerge-spec-compiler-moved, 9,827 lines of JS). Emerge's door keeps its
+    #    /compiler/* nodes, answering 410 with the new route (lib/compiler.js, 12 lines). package.json scripts, event-taxonomy and the
+    #    registry entry are updated. Nexus's references are repointed: system-check (Emerge's entry is now server.js), diagnose, the substrate,
+    #    direct-compile, system-check and audit tests.
+    # Emerge's JavaScript: 23,026 → 13,213, by the move. That is code moved, not removed: Idearium carries it until his ground-up replacement.
   CIE9_tests_in_emerge:
     status: OPEN
     depends_on: [CIE5_native_test, CIE8_spec_compiler_in_emerge]

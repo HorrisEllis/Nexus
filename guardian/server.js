@@ -3079,7 +3079,8 @@ function handleExtendedRoutes(req, res, url, method) {
         if (!spec) { try { spec = fsx.readFileSync(specPath, 'utf8'); } catch (e) { pRes(res, 400, { ok:false, error:`spec not readable: ${e.message}` }); return; } }
         let r;
         try {
-          r = await nx.post('emerge', '/compiler/run', {
+          // 2026-11-07 CIE8 (his CIE_D7, "yeah move it"): the spec compiler is Idearium's now; was Emerge's door POST /compiler/* (kept in the record, §0.3)
+          r = await nx.post('idearium', '/api/spec-compiler/run', {
             spec, name: name || (specPath ? pth.basename(specPath) : 'spec.spec'), dryRun: !!dryRun,
             host:  { name: 'nexus-cortex', ping: nx.urlOf('cortex', '/api/emerge-host/ping'), preflight: nx.urlOf('cortex', '/api/emerge-host/preflight'), writeback: nx.urlOf('cortex', '/api/emerge-host/writeback') },
             model: { api: 'route', name: 'guardian', url: nx.urlOf('guardian', '/api/copilot/prompt'), extra: { provider, timeoutMs: 600000 } },

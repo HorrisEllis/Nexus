@@ -40,13 +40,11 @@ const _mapId = (map) => path.basename(String(map)).replace(/-phasemap\.spec$/, '
 
 /** the ids a spec declares (modules, schemas, interfaces, by id and by name), through emerge's own knowledge-graph builder */
 function specIds(specPath) {
-  // Emerge's door, its command line (EAS_D10): the same command as POST /compiler/check
-  const { spawnSync } = require('child_process');
-  const cli = path.join(ROOT, 'emerge', 'emerge', 'cli.js');
-  const out = spawnSync(process.execPath, [cli, 'check-spec', '--file', path.resolve(specPath)], { encoding: 'utf8', maxBuffer: 32 * 1024 * 1024, timeout: 60000, windowsHide: true });
-  if (out.error) throw new Error(`Emerge's door (its command line, ${cli}) did not run: ${out.error.message}`);
-  let r = null; try { r = JSON.parse(out.stdout); } catch (_) {}
-  if (!r || !r.ok) throw new Error(`the spec did not build: ${(r && r.error) || (out.stderr || '').trim().split('\n').pop() || 'Emerge returned nothing'}`);
+  // 2026-11-07 CIE8 (his CIE_D7, "yeah move it"): the spec compiler is Idearium's now, so its knowledge-graph check runs in-process, in this
+  // system (spec-compiler/lib/compiler.js checkSync, the same answer as POST /api/spec-compiler/check). Was: Emerge's command line
+  // (`node emerge/emerge/cli.js check-spec --file`, EAS_D10), kept in the record (§0.3).
+  const r = require('./spec-compiler/lib/compiler.js').checkSync({ file: path.resolve(specPath) });
+  if (!r || !r.ok) throw new Error(`the spec did not build: ${(r && r.error) || 'the spec compiler returned nothing'}`);
   return new Set(r.ids);
 }
 

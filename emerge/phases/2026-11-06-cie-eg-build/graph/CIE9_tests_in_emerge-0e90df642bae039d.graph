@@ -7,11 +7,11 @@ intent: null
 summary: 1 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1794074382608
+exported_at: 1794349253349
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794074382608
-lastSeenAt: 1794074382608
+firstSeenAt: 1794349253349
+lastSeenAt: 1794349253349
 fingerprint: null
 payload:
   for: CIE9_tests_in_emerge
@@ -58,8 +58,7 @@ payload:
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE12_windows
       - docs/2026-11-07-eravos-as-a-system-phasemap.spec::ERV5_the_visual_coding_and_debug_environment
       - docs/2026-11-07-wiring-harness-phasemap.spec::WH2_verified_reconstruction_coverage
-    blockedBy:
-      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE8_spec_compiler_in_emerge
+    blockedBy: []
     unlocks: []
     conflicts:
       - with: docs/2026-11-06-cie-eg-build-phasemap.spec::CIE13_native_system_primitives
@@ -67,7 +66,7 @@ payload:
           - emerge/emerge/spec/cie-eg.spec
     dangling: []
     lines:
-      - layer 9 · blocked by CIE8_spec_compiler_in_emerge
+      - layer 9 · ready
       - 'depends on (2): CIE5_native_test, CIE8_spec_compiler_in_emerge · all upstream 19'
       - 'needed by (1): CIE11_retire_the_interpreter · all downstream 4'
       - >-

@@ -698,7 +698,8 @@ Return the fixed spec only, starting with "spec:"`;
     // are written into this build's folder, as before. Emerge down is said, never a silent fallback (§1.2).
     const nx = require('../lib/nexus-client');
     try {
-      const result = await nx.post('emerge', '/compiler/build', {
+      // 2026-11-07 CIE8 (his CIE_D7, "yeah move it"): the spec compiler is Idearium's now; was Emerge's door POST /compiler/* (kept in the record, §0.3)
+      const result = await nx.post('idearium', '/api/spec-compiler/build', {
         spec, name: path.basename(specPath),
         host: { name: 'nexus-cortex', ping: nx.urlOf('cortex', '/api/emerge-host/ping'), preflight: nx.urlOf('cortex', '/api/emerge-host/preflight'), writeback: nx.urlOf('cortex', '/api/emerge-host/writeback') },
       }, { timeout: 180000 });

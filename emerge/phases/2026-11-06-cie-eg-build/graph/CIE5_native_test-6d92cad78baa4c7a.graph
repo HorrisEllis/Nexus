@@ -7,11 +7,11 @@ intent: null
 summary: 4 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1794074382601
+exported_at: 1794349253342
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794074382601
-lastSeenAt: 1794074382601
+firstSeenAt: 1794349253342
+lastSeenAt: 1794349253342
 fingerprint: null
 payload:
   for: CIE5_native_test
@@ -77,6 +77,9 @@ payload:
     blockedBy: []
     unlocks:
       - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE6_native_check
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE9_tests_in_emerge
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE10_the_door_in_emerge
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE13_native_system_primitives
     conflicts: []
     dangling: []
     lines:
@@ -84,7 +87,8 @@ payload:
       - 'depends on (1): CIE4_native_components · all upstream 15'
       - >-
         needed by (4): CIE6_native_check, CIE9_tests_in_emerge, CIE10_the_door_in_emerge,
-        CIE13_native_system_primitives · all downstream 10 · finishing it unlocks CIE6_native_check
+        CIE13_native_system_primitives · all downstream 10 · finishing it unlocks CIE6_native_check,
+        CIE9_tests_in_emerge, CIE10_the_door_in_emerge, CIE13_native_system_primitives
     edges:
       - from: docs/2026-11-06-cie-eg-build-phasemap.spec::CIE4_native_components
         kind: declared

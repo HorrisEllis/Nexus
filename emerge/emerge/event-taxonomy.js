@@ -2,7 +2,9 @@
 // event-taxonomy.js — the system's events, generated from its event nodes (data/nodes/event/), never hand-written.
 // The system events below are the ones the skeleton's own parts emit whether or not a node names them.
 // The compiler's own events (events-compiler.js, written from the code) are declared here too: one taxonomy, two sources.
-const COMPILER = require('./events-compiler.js');
+// 2026-11-07 CIE8: the spec compiler and its events (events-compiler.js) moved to Idearium (his CIE_D7); archived in
+// _archive/2026-11-07-emerge-spec-compiler-moved. Was: const COMPILER = require('./events-compiler.js'); (kept, §0.3).
+const COMPILER = {};
 
 const SYSTEM = ['emerge.heartbeat', 'emerge.node.changed', 'emerge.command.ran', 'emerge.listener.failed',
   // a handoff's life on the receiving side, and the receipts that come back (lib/handoff.js)

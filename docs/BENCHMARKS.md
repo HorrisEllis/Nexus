@@ -6,6 +6,24 @@ The rows will be written and read by `emerge/emerge/lang/cie/bench.eg` (EQ2, doc
 then they are written by hand.
 
 
+
+## 2026-11-10 — the spec compiler moved out of Emerge (CIE8 slices b–d, 0.60.480)
+- **Measured:** Emerge, under his CIE_D7 ("as long as its removed from emerge.").
+- **Framework:** end state first. Emerge's own outputs are the oracle: the copy in Idearium must give the same graph and the same files.
+- **Method:** kg-builder on every registered spec, both copies, with timestamps stripped (the original differs from itself only there); then
+  cie-eg.spec's T0/T1 compile, hashed file by file; then the 8 suites from Idearium; then the callers, then the archive.
+- **Result:**
+  - 47 of 47 graphs equal;
+  - 28 of 28 files equal;
+  - the suites at the same counts;
+  - the routes answer as Emerge's door did (substrate.spec: 94 ids, 0 black, 78 files);
+  - the old door answers 410 with the new route.
+- **Failed runs:**
+  - the first pass of the callers was lost uncommitted in a container restart, and redone;
+  - a stash, popped over a file the audit had rewritten, half-applied and was restored whole.
+- **Lines:** Emerge JavaScript 23,026 → 13,213 (9,827 archived, +12 for the stub). The code is moved, not removed.
+- **Tension meter, session 1 of 20 (continued):** 13,213 JS lines left (−9,813, by the move); 19 sessions left.
+
 ## 2026-11-09 — Emerge's brace trap closed: {{ and }} are literal braces (CIE14, 0.60.473)
 - **His words:** "Did it code stably?" · "Yes fix it." (2026-11-09)
 - **Measured first, from the day's own runs:** writing about 1,000 lines of .eg for cos/pipeline, about nine mistakes were caught by Emerge's
