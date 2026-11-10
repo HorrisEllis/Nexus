@@ -7,7 +7,7 @@
   'use strict';
   const $ = (id) => document.getElementById(id);
   const el = (t, a = {}, kids = []) => { const e = document.createElement(t); for (const [k, v] of Object.entries(a)) { if (k === 'text') e.textContent = v; else if (k.startsWith('on')) e.addEventListener(k.slice(2), v); else if (v != null) e.setAttribute(k, v); } for (const c of [].concat(kids)) if (c != null) e.appendChild(typeof c === 'string' ? document.createTextNode(c) : c); return e; };
-  const api = async (method, p, body) => { const r = await fetch(p, { method, headers: { 'Content-Type': 'application/json' }, ...(body !== undefined ? { body: JSON.stringify(body) } : {}) }); const j = await r.json().catch(() => ({ ok: false, error: `not JSON (${r.status})` })); if (!r.ok || j.ok === false) throw new Error(j.error || (j.problems || []).join('; ') || `${method} ${p}: ${r.status}`); return j; };
+  const api = async (method, p, body) => { const r = await fetch(p, { method, headers: { 'Content-Type': 'application/json' }, ...(body !== undefined ? { body: JSON.stringify(body) } : {}) }); const j = await r.json().catch(() => ({ ok: false, error: `not JSON (${r.status})` })); if (!r.ok || j.ok === false) { const e = new Error(j.error || (j.problems || []).join('; ') || `${method} ${p}: ${r.status}`); e.body = j; throw e; } return j; };
   const A = (p) => '/api/cos/automation' + p;
   const say = (cls, t) => { const m = $('ae-msg'); m.className = 'ae-msg ' + cls; m.textContent = t; };
   const ago = (t) => { if (!t) return ''; const s = Math.round((Date.now() - t) / 1000); return s < 60 ? s + ' s ago' : s < 3600 ? Math.round(s / 60) + ' min ago' : Math.round(s / 3600) + ' h ago'; };
@@ -51,10 +51,16 @@
     const head = run ? el('p', { class: 'muted', text: `run ${String(run.id).slice(0, 8)} · ${run.status} · started ${ago(run.startedAt)}${took(run) != null ? ' · ' + secs(took(run)) : ''}` }) : el('p', { class: 'muted', text: 'Not run yet.' });
     $('ae-p-body').replaceChildren(btns, head, steps);
   }
-  async function runIt(id) {
-    try { const r = await api('POST', A('/pipelines/' + encodeURIComponent(id) + '/run'), { by: 'person' }); const runId = r.runId || (r.run && r.run.id); say('ok', 'Running ' + (S.pipes.find(x => x.id === id) || {}).name);
+  // 2026-11-10: a value a step's address needs, left empty, is asked for before the run starts (the engine answers { needs }), never a broken
+  // address three steps in ("GET /api/repos//phases/map")
+  async function runIt(id, vars = {}) {
+    try { const r = await api('POST', A('/pipelines/' + encodeURIComponent(id) + '/run'), { by: 'person', vars }); const runId = r.runId || (r.run && r.run.id); say('ok', 'Running ' + (S.pipes.find(x => x.id === id) || {}).name);
       if (runId) { try { S.run = (await api('GET', A('/pipeline-runs/' + encodeURIComponent(runId)))).run; } catch (_) {} draw(S.pipes.find(x => x.id === id)); follow(runId); } }
-    catch (e) { say('bad', e.message); }
+    catch (e) {
+      const needs = (e.body && e.body.needs) || [];
+      if (needs.length) { const v = { ...vars }; for (const n of needs) { const a = window.prompt(`This run needs ${n} (it is part of a step's address):`, ''); if (a == null || !a.trim()) return say('bad', `Not run: ${n} was not given`); v[n] = a.trim(); } return runIt(id, v); }
+      say('bad', e.message);
+    }
   }
   async function stopIt(runId) { try { await api('POST', A('/pipeline-runs/' + encodeURIComponent(runId) + '/cancel'), { by: 'person' }); say('ok', 'Stopped'); } catch (e) { say('bad', e.message); } }
   function follow(runId) {

@@ -561,3 +561,19 @@ built_2026_11_09_plan:
 # name used again updates the same pipeline). Proof: eg box 14/14; test-cos-pipeline CP-17 (drawn → imported → in the engine, gated, wired;
 # updated; 422 names what is missing; an agent's 403). Still PC4 (OPEN, preview first): the Step tool's face for choosing kind and what it names,
 # saving straight to COS from ERAVOS, and each box's live state while it runs.
+
+# ── ADDENDUM 2026-11-10 (0.60.479) — the stuck build pipeline; RAID writes the first step; heartbeats, not polling (his) ─────────────────────────
+# James, 2026-11-10 (his screenshot): "it is stuck. The phase is mapped … GET http://127.0.0.1:4800/api/repos//phases/map → HTTP 404" · "need to get
+# the pipeline building nexus. also where are the pipeline files? needs to be a way to create the pipelines. its meant to be a visual way to run it
+# also. to see it running. i feel like raid should create the beginning step. raid can then use the agents to think for it? like above raid then
+# raid the contract hub to route." · "cos ui needs to use the heartbeat system from each system for the resource managenent. not polling. that way
+# polling doesn't need presence. cos can listen for them and add new ones. like in the genesis spec in idearim."
+# Fixed (0.60.479): Idearium's build pipeline ran with no repo, so its addresses read "repos//phases". (1) Idearium reads "nexus" (or "self") as
+# Nexus's own repo (its Nexus-self parent) in every /api/repos/:uuid route; the pipeline's repo is "nexus", and a planned phase defaults to it.
+# (2) The engine refuses to start a pipeline while a value a step's address needs is empty, naming it (needs); the Automation tab's Run asks for
+# it and runs. Proof: test-cos-pipeline CP-18.
+# Direction recorded, not built: (a) RAID writes the beginning step — a request reaches RAID, RAID's agents think it into the contract and the
+# first step (end state first), and RAID as the contract hub routes it (AE_D8); (b) COS listens for each system's heartbeat (genesis Domain 10:
+# <system>.heartbeat, a pulse with a health snapshot) for resources and presence, and adds a system that starts beating — no polling. As built,
+# COS's UI polls /api/cos/systems and /api/cos/usage every 5 s (cos/ui/shell/page.js, overview); lib/heartbeat.js polls /health; few systems
+# emit a heartbeat. Both are phases to write (map first), then the pipeline can build them.

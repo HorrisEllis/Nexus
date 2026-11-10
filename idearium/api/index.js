@@ -3578,7 +3578,19 @@ const ROUTE_CAP = {
 
 // ─── Router ──────────────────────────────────────────────────────────────────
 
+// 2026-11-10 — James: "need to get the pipeline building nexus." His Idearium build pipeline stopped at its third step: GET /api/repos//phases/map →
+// "repo not found" (no repo was given, and Nexus's own repo has a uuid no pipeline can know). "nexus" (or "self") names Nexus's own repo in every
+// /api/repos/:uuid/... route: the parent repo Nexus-self keeps (idearium/repo/nexus-self.js). Not imported yet → the uuid stays as given, and the
+// route says it is not found.
+function _selfRepoUuid() {
+  try { const r = getRepoLayer().list({ includeArchived: true }).find(x => x.nexusSelf && x.nexusSelf.role === 'parent'); return r ? r.uuid : null; } catch (_) { return null; }
+}
 function matchRoute(method, url) {
+  const m = _matchRoute(method, url);
+  if (m && m.params && (m.params.uuid === 'nexus' || m.params.uuid === 'self')) { const u = _selfRepoUuid(); if (u) m.params.uuid = u; }
+  return m;
+}
+function _matchRoute(method, url) {
   const clean = url.split('?')[0].replace(/\/+$/, '') || '/';
   const segs  = clean.split('/').filter(Boolean);
 

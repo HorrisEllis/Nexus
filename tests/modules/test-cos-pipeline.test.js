@@ -31,6 +31,8 @@
  *   CP-15  a phase planned into its own .pipeline, end state first (its proof is the contract's outcome): context, dag, build, evidence, ledger,
  *          each an Idearium route with a gate; with chunks, a build step per file; build-next plans and runs the next ready phase to met;
  *          Idearium's real phases/one serves a real phase whole
+ *   CP-18  (2026-11-10) a value a step's address needs, empty, is asked for before the run starts ({ needs }); given, it runs; Idearium's
+ *          build pipeline names Nexus's own repo ("nexus") and a planned phase defaults to it
  *   CP-17  (2026-11-10) a pipeline drawn on ERAVOS's canvas (.erv: Step tools, a gate tool, wires, YAML) is made into its .pipeline node file and
  *          imported; run, it runs; drawn again with the same name it updates the same pipeline; a step naming nothing is said (422); an agent's is a 403
  *   CP-16  every pipeline a physical node file, imported: a system's own (fetched by its route, kept as a file first), COS's planned ones
@@ -392,6 +394,20 @@ const eg = (...a) => require('child_process').spawnSync(process.execPath, [path.
       assert.strictEqual((await req(M, 'POST', '/api/cos/pipeline/from-erv', { text, by: 'agent:copilot' })).status, 403);
       const SPEC = (await import(require('url').pathToFileURL(path.join(ROOT, 'idearium/cli/route-commands.js')).href)).SPEC;
       assert.ok(SPEC.some(s => s.key === 'cos.pipeline-from-erv'));
+    });
+
+    await T('CP-18', 'an empty value in a step\'s address is asked for first (needs), never a broken address; "nexus" is the default repo', async () => {
+      // James, 2026-11-10: "it is stuck" — GET /api/repos//phases/map → 404
+      const { AutomationEngine } = require(path.join(ROOT, 'lib/automation/engine.js')); const { Pipelines } = require(path.join(ROOT, 'lib/automation/pipeline.js'));
+      const P = new Pipelines(new AutomationEngine({}), { dir: path.join(tmp, 'needs') });
+      const c = P.create({ name: 'needs', vars: { repo: 'nexus', phase: '' }, tasks: [{ id: 'a', step: SET('x') }, { id: 'b', depends_on: ['a'], step: { type: 'api', config: { url: 'http://127.0.0.1:9/api/repos/{{vars.repo}}/phases/dag?phase={{vars.phase}}', method: 'GET' } } }] });
+      const id = (c.pipeline || c).id;
+      const r = await P.run(id, { wait: true }); assert.strictEqual(r.ok, false); assert.deepStrictEqual(r.needs, ['phase']); assert.match(r.error, /give vars\.phase first/);
+      assert.deepStrictEqual(P.needs(P.get(id), { phase: 'PC4' }), [], 'given, nothing is needed');
+      const y = require('js-yaml').load(fs.readFileSync(path.join(ROOT, 'idearium/pipelines/idearium-build.pipeline'), 'utf8'));
+      assert.strictEqual(y.payload.vars.repo, 'nexus', 'Idearium\'s build pipeline names Nexus\'s own repo');
+      assert.match(fs.readFileSync(path.join(ROOT, 'cos/pipeline/plan.eg'), 'utf8'), /if r == "" \{ return "nexus" \}/);
+      assert.match(fs.readFileSync(path.join(ROOT, 'idearium/api/index.js'), 'utf8'), /m\.params\.uuid === 'nexus'/, 'Idearium reads "nexus" as its parent repo');
     });
 
     await T('CP-07', 'an engine with no gate host refuses a typed gate, said; command rows for agents and copilot', async () => {

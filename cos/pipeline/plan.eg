@@ -13,6 +13,12 @@
 // Each step is an Idearium route (nexus://idearium, COS routes it) with a gate after it; a gate that closes is a gap, and the request waits there.
 
 fn ok_gate(): map = { contains: "\"ok\":true" }
+// 2026-11-10: no repo named → Nexus's own ("nexus": Idearium reads it as its parent repo) — a blank broke every address ("repos//phases")
+fn plan_repo(opts: map): string {
+  let r = str(get(opts, "repo", ""))
+  if r == "" { return "nexus" }
+  return r
+}
 fn api(url: string, method: string, body: any): map {
   var c = { url: url, method: method }
   if body != null { c.body = json(body) }
@@ -57,5 +63,5 @@ fn phase_pipeline(ph: map, opts: map): map {
   tasks = push(tasks, { id: "ledger", label: "In the phase ledger", depends_on: ["evidence"],
     step: api("nexus://idearium/api/phases/ledger/log", "POST", { phase: id, map: ph.map, event: "built", why: "built by its own planned pipeline (COS)", by: "pipeline" }), gate: ok_gate() })
   return { name: "build: " + id, description: "planned from " + ph.map + "::" + id + ", end state first (cos/pipeline/plan.eg)",
-    endState: { says: end, from: ph.map + "::" + id }, vars: { repo: get(opts, "repo", ""), phase: id }, tasks: tasks }
+    endState: { says: end, from: ph.map + "::" + id }, vars: { repo: plan_repo(opts), phase: id }, tasks: tasks }
 }
