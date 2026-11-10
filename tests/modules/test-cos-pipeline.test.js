@@ -419,6 +419,25 @@ const eg = (...a) => require('child_process').spawnSync(process.execPath, [path.
       for (const k of ['cos.gate-types', 'cos.gate-try', 'cos.request', 'cos.requests', 'cos.request-show', 'cos.request-resume']) assert.ok(SPEC.some(s => s.key === k), k);
       assert.ok(SPEC.find(s => s.key === 'cos.request').personOnly() && SPEC.find(s => s.key === 'cos.request-resume').personOnly(), 'an agent proposes; running is his');
     });
+    // PC8 slice a (2026-11-10) — James: "each step measured by a delta, which could be used for the timing in between each step agnostically, to
+    // establish a baseline." Through COS's door, end to end: the engine keeps each run, Emerge (cos/pipeline/baseline.eg) gives the baseline.
+    await T('CP-19', 'a delta per step and its baseline across runs, from COS\'s door: below three runs no sigma; from three, a sigma and a z; the wait between steps', async () => {
+      const made = (await req(M, 'POST', '/api/cos/automation/pipelines', { name: 'pc8-baseline', tasks: [{ id: 'a', step: SET('x') }, { id: 'b', depends_on: ['a'], step: SET('y') }] })).body;
+      const id = (made.pipeline || made).id; assert.ok(id, JSON.stringify(made));
+      const none = (await req(M, 'GET', `/api/cos/pipeline/baseline?pipeline=${id}`)).body;
+      assert.strictEqual(none.ok, true, JSON.stringify(none)); assert.strictEqual(none.runs, 0); assert.deepStrictEqual(none.steps, {});
+      for (let i = 0; i < 2; i++) { const r = (await req(M, 'POST', `/api/cos/automation/pipelines/${id}/run?wait=1`, {})).body; assert.ok(r.ok !== false, JSON.stringify(r).slice(0, 300)); }
+      const two = (await req(M, 'GET', `/api/cos/pipeline/baseline?pipeline=${id}`)).body;
+      assert.strictEqual(two.runs, 2); assert.strictEqual(two.steps.a.n, 2); assert.strictEqual(two.steps.a.sigma_ms, null, 'below three runs: no sigma');
+      await req(M, 'POST', `/api/cos/automation/pipelines/${id}/run?wait=1`, {});
+      const three = (await req(M, 'GET', `/api/cos/pipeline/baseline?pipeline=${id}`)).body;
+      assert.strictEqual(three.steps.b.n, 3); assert.strictEqual(typeof three.steps.b.sigma_ms, 'number', 'from three runs: a sigma');
+      assert.strictEqual(typeof three.steps.b.wait_mean_ms, 'number', 'the wait after the step it waits on has its own baseline');
+      assert.ok(three.latestRun && Array.isArray(three.latestRun.decisions));
+      const bad = await req(M, 'GET', '/api/cos/pipeline/baseline'); assert.strictEqual(bad.status, 400);
+      const SPEC = (await import(require('url').pathToFileURL(path.join(ROOT, 'idearium/cli/route-commands.js')).href)).SPEC;
+      assert.ok(SPEC.some(s => s.key === 'cos.pipeline-baseline'), 'a command row, for agents and copilot');
+    });
   } finally {
     es.destroy(); mgr.close(); sup.shutdown({ by: 'test' }); tester.close(); emerge.close(); cortex.close(); ideariumStand.close();
     fs.rmSync(tmp, { recursive: true, force: true });

@@ -66,9 +66,15 @@ async function _raidDecide(intent) {
 async function _dispatchAgent(task, { guardianFn = _guardian, raidDecideFn = _raidDecide, awaitReply = false } = {}) {
   if (!task || !task.agentKey) return { ok: false, error: 'an agent step needs an agentKey' };
   let provider = task.agentKey, command = 'chat';
+  // PC8 slice a (2026-11-10, his "record each step in raids decision, dynamically building each step, as it goes"): RAID's decision is kept and
+  // handed back with the answer, so the run shows it as a step; RAID down is said in the decision, never hidden.
+  const decision = { by: 'raid', kind: 'agent.provider', asked: task.agentKey, chose: task.agentKey, command, why: null, at: Date.now() };
   try { const d = await raidDecideFn({ kind: 'agent', agentKey: task.agentKey, prompt: task.prompt, cluster: 'automation' });
-        if (d && d.ok !== false) { if (d.provider) provider = d.provider; if (d.command) command = d.command; } } catch (_) {}
-  return guardianFn('/command', { provider, command, prompt: task.prompt || '', ...(task.accountId ? { accountId: task.accountId } : {}) }, awaitReply ? 120000 : 20000);
+        if (d && d.ok !== false) { if (d.provider) provider = d.provider; if (d.command) command = d.command; decision.why = d.why || d.reason || d.rationale || null; }
+        else decision.why = (d && (d.error || d.why)) || 'RAID did not answer: the step kept the agent it asked for'; } catch (e) { decision.why = `RAID did not answer (${e.message}): the step kept the agent it asked for`; }
+  decision.chose = provider; decision.command = command;
+  const r = await guardianFn('/command', { provider, command, prompt: task.prompt || '', ...(task.accountId ? { accountId: task.accountId } : {}) }, awaitReply ? 120000 : 20000);
+  return r && typeof r === 'object' ? { ...r, decision } : { result: r, decision };
 }
 
 // §AE3 — the host injects its own event stream (setBus): COS's manager streams them on /api/cos/events; until then events are dropped, never thrown.
@@ -84,7 +90,8 @@ function buildHooks({ guardianFn = _guardian, raidDecideFn = _raidDecide, cgFn =
     // agent step, awaited: RAID → Guardian, and hand back the reply text (empty + reason when Guardian has none yet / is down)
     askAgentFn: async (task) => { const r = await _dispatchAgent(task, { guardianFn, raidDecideFn, awaitReply: true });
       const text = (r && (r.reply || r.text || r.output || (r.result && r.result.text))) || '';
-      return r && r.error ? { text, error: r.error } : { text }; },
+      const decision = r && r.decision;   // PC8 slice a: RAID's decision travels with the answer
+      return r && r.error ? { text, error: r.error, decision } : { text, decision }; },
     busEmit:   (type, data) => bus(type, data),
     browserFn: (a) => cgFn('/automation/driver', a),
     runMacroFn:(a) => cgFn('/automation/macro-run', a),

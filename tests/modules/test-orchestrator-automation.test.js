@@ -144,6 +144,44 @@ await t('OA-09', 'one api step reaches http, ws, tcp and nexus://<system> (its a
   web.close(); wss.close(); wsHttp.close(); silent.close(); silentHttp.close(); tcp.close();
 });
 
+// PC8 slice a (2026-11-10) — James: "record each step in raids decision, dynamically building each step, as it goes. it all needs to be visable." ·
+// "each step measured by a delta". A JS harness, said: it has to start the engine (JS) until COS's manager is Emerge (CIE13). The baseline itself is
+// checked in Emerge (cos/pipeline/test/baseline.test.eg).
+await t('OA-10', 'RAID\'s decision comes back with the agent\'s answer: what was asked, what RAID chose and why; RAID down is said, not hidden', async () => {
+  const g = fakeGuardian({ ok: true, reply: 'done' });
+  const r = await A._dispatchAgent({ agentKey: 'coder', prompt: 'x' }, { guardianFn: g, raidDecideFn: async () => ({ provider: 'claude', why: 'the cheapest that passes' }) });
+  assert.strictEqual(r.decision.by, 'raid'); assert.strictEqual(r.decision.asked, 'coder'); assert.strictEqual(r.decision.chose, 'claude');
+  assert.strictEqual(r.decision.why, 'the cheapest that passes'); assert.ok(r.decision.at > 0); assert.strictEqual(r.reply, 'done');
+  const down = await A._dispatchAgent({ agentKey: 'coder', prompt: 'x' }, { guardianFn: fakeGuardian({ ok: true }), raidDecideFn: raidDown });
+  assert.strictEqual(down.decision.chose, 'coder'); assert.match(down.decision.why, /RAID did not answer/);
+});
+
+await t('OA-11', 'a pipeline run keeps each step\'s start, finish and wait, and RAID\'s decisions become steps of the run, with an event as they happen', async () => {
+  const os = require('os'), fs = require('fs'), path = require('path');
+  const { AutomationEngine } = require('../../lib/automation/engine.js'); const { Pipelines } = require('../../lib/automation/pipeline.js');
+  const events = [];
+  const hooks = A.buildHooks({ guardianFn: fakeGuardian({ ok: true, reply: 'written' }), raidDecideFn: async () => ({ provider: 'claude', why: 'routing' }), busFn: (type, data) => events.push({ type, data }) });
+  const E = new AutomationEngine(hooks);
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'pc8-')); const P = new Pipelines(E, { dir });
+  const made = P.create({ name: 'pc8', tasks: [
+    { id: 'plan', step: { type: 'set', config: { assign: 'x = 1' } } },
+    { id: 'write', depends_on: ['plan'], step: { type: 'agent', config: { agentKey: 'coder', prompt: 'write it', await: true } } } ] });
+  assert.ok(made.ok, JSON.stringify(made));
+  const r = await P.run(made.pipeline.id, { wait: true });
+  const run = r.run || P.getRun(r.runId || (r.run && r.run.id));
+  assert.strictEqual(run.status, 'ok', JSON.stringify(run).slice(0, 400));
+  const w = run.tasks.write, pl = run.tasks.plan;
+  assert.ok(pl.startedAt && pl.finishedAt && w.startedAt && w.finishedAt, 'each step: when it started and finished');
+  assert.ok(w.startedAt >= pl.finishedAt && w.waitMs >= 0 && w.waitMs === w.startedAt - pl.finishedAt, 'the wait is the delta after the step it waits on');
+  assert.strictEqual(typeof w.ms, 'number');
+  assert.strictEqual(run.decisions.length, 1); assert.strictEqual(run.decisions[0].task, 'write'); assert.strictEqual(run.decisions[0].chose, 'claude');
+  assert.strictEqual(w.decisions[0].why, 'routing');
+  const ev = events.find(e => e.type === 'automation.pipeline.decision'); assert.ok(ev && ev.data.task === 'write' && ev.data.decision.chose === 'claude', 'the decision is streamed as it happens');
+  const saved = JSON.parse(fs.readFileSync(path.join(dir, 'runs', `${run.id}.json`), 'utf8'));
+  assert.strictEqual(saved.decisions.length, 1, 'kept with the run, for the baseline and the replay');
+  fs.rmSync(dir, { recursive: true, force: true });
+});
+
   console.log(`\n  ${p} passed, ${f} failed`);
   process.exitCode = f ? 1 : 0;
 })();

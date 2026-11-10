@@ -13,6 +13,7 @@
   const ago = (t) => { if (!t) return ''; const s = Math.round((Date.now() - t) / 1000); return s < 60 ? s + ' s ago' : s < 3600 ? Math.round(s / 60) + ' min ago' : Math.round(s / 3600) + ' h ago'; };
   const took = (r) => r && r.finishedAt && r.startedAt ? r.finishedAt - r.startedAt : null;
   const secs = (ms) => ms == null ? '' : (ms / 1000).toFixed(ms < 10000 ? 1 : 0) + ' s';
+  const dur = (ms) => ms == null ? '' : ms < 1000 ? (ms < 10 ? ms.toFixed(1) : Math.round(ms)) + ' ms' : secs(ms);   // PC8 slice a: a step's delta and baseline, readable at any size
   const download = (name, text, type) => { const a = el('a', { href: URL.createObjectURL(new Blob([text], { type: type || 'text/plain' })), download: name }); document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500); };
   const S = { tab: 'pipelines', pipes: [], sel: null, run: null, poll: null };
 
@@ -35,6 +36,8 @@
     const p = S.pipes.find(x => x.id === id); if (!p) return;
     $('ae-p-title').textContent = p.name || p.id; $('ae-p-tag').textContent = (p.tasks || []).length + ' steps';
     let last = null; try { const r = await api('GET', A('/pipeline-runs?pipelineId=' + encodeURIComponent(id) + '&limit=1')); last = (r.runs || [])[0] || null; } catch (_) {}
+    // PC8 slice a (2026-11-10, his "each step can be used as a progress status, with an indicator or bar"): each step's baseline over its runs
+    try { S.base = await api('GET', '/api/cos/pipeline/baseline?pipeline=' + encodeURIComponent(id)); } catch (_) { S.base = null; }
     S.run = last; draw(p);
     if (last && last.status === 'running') follow(last.id);
   }
@@ -45,9 +48,19 @@
       run && run.status === 'running' ? el('button', { class: 'btn', 'data-act': 'stop', onclick: () => stopIt(run.id), text: '■ Stop' }) : null,
       el('button', { class: 'btn', 'data-act': 'export', onclick: () => exportIt(p), text: '⇩ Export .pipeline' }),
       el('button', { class: 'btn', 'data-act': 'erv', onclick: () => ervIt(p), text: '⧉ Open on canvas (.erv)' })]);
-    const steps = el('div', { class: 'ae-steps' }, (p.tasks || []).map(k => { const r = t[k.id] || {}; const st = r.status || (run ? 'waiting' : '');
-      return el('div', { class: 'ae-step', 'data-step': k.id, 'data-state': st }, [el('span', { text: k.label || k.id }), el('span', { class: 'mono', text: secs(r.ms) }), el('span', { class: 'st ' + st, text: st || '—' }),
-        r.error ? el('span', { class: 'why', text: r.error }) : (k.depends_on || []).length ? el('span', { class: 'why', text: 'after ' + k.depends_on.join(', ') }) : null]); }));
+    const base = (S.base && S.base.steps) || {};
+    const steps = el('div', { class: 'ae-steps' }, (p.tasks || []).map(k => { const r = t[k.id] || {}; const st = r.status || (run ? 'waiting' : ''); const b = base[k.id];
+      // the bar: this step's delta against its baseline (a running step grows toward its usual time); no baseline yet → no bar, said by its absence
+      const ms = typeof r.ms === 'number' ? r.ms : (st === 'running' && r.startedAt ? Date.now() - r.startedAt : null);
+      const pct = b && b.mean_ms > 0 && ms != null ? Math.min(100, Math.round(ms / b.mean_ms * 100)) : null;
+      const off = b && typeof b.z === 'number' && Math.abs(b.z) > 2;
+      const bar = pct != null ? el('span', { class: 'ae-bar' + (off ? ' off' : ''), title: `${pct}% of its baseline`, 'data-pct': String(pct) }, [el('span', { class: 'ae-bar-fill', style: `width:${pct}%` })]) : null;
+      const baseTxt = b ? `baseline ${dur(b.mean_ms)}${b.sigma_ms != null ? ' ± ' + dur(b.sigma_ms) : ''} over ${b.n} run${b.n === 1 ? '' : 's'}${b.sigma_ms == null ? ' (a sigma from 3)' : ''}${b.wait_mean_ms != null && (k.depends_on || []).length ? ' · waits ' + dur(b.wait_mean_ms) : ''}${off ? ` · ${b.z > 0 ? 'slower' : 'faster'} than usual (z ${b.z.toFixed(1)})` : ''}` : '';
+      const decisions = (r.decisions || []).map(d => el('div', { class: 'ae-decision', 'data-by': d.by || '' }, [el('span', { class: 'mono', text: (d.by || 'decision').toUpperCase() }),
+        el('span', { text: d.kind === 'agent.provider' ? `chose ${d.chose}${d.asked && d.asked !== d.chose ? ' (asked for ' + d.asked + ')' : ''}` : `${d.kind || ''} ${d.chose || ''}` }), d.why ? el('span', { class: 'why', text: d.why }) : null]));
+      return el('div', { class: 'ae-step', 'data-step': k.id, 'data-state': st }, [el('span', { text: k.label || k.id }), el('span', { class: 'mono', text: dur(r.ms) }), bar, el('span', { class: 'st ' + st, text: st || '—' }),
+        r.error ? el('span', { class: 'why', text: r.error }) : (k.depends_on || []).length ? el('span', { class: 'why', text: 'after ' + k.depends_on.join(', ') }) : null,
+        baseTxt ? el('span', { class: 'ae-base muted', text: baseTxt }) : null, ...decisions]); }));
     const head = run ? el('p', { class: 'muted', text: `run ${String(run.id).slice(0, 8)} · ${run.status} · started ${ago(run.startedAt)}${took(run) != null ? ' · ' + secs(took(run)) : ''}` }) : el('p', { class: 'muted', text: 'Not run yet.' });
     $('ae-p-body').replaceChildren(btns, head, steps);
   }

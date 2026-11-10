@@ -1,0 +1,36 @@
+// cos/pipeline/test/baseline.test.eg — a delta per step, a baseline per step (PC8 slice a). eg test cos/pipeline/test/baseline.test.eg
+// James, 2026-11-10: "each step measured by a delta ... to establish a baseline." · "sigmas and deltas are domain agnostic."
+use "../baseline.eg" as B
+
+fn run(at, a, b) {
+  var bs = "done"
+  if b == null { bs = "waiting" }
+  return { startedAt: at, tasks: { a: { status: "done", ms: a, waitMs: 0 }, b: { status: bs, ms: b, waitMs: 5 } } }
+}
+
+test "below three runs the mean is said, the sigma and z are null: three = an invariant, never a guess" {
+  let r = B.baseline([run(1, 100, 10), run(2, 200, 20)])
+  expect r.ok and r.runs == 2
+  expect r.steps.a.n == 2 and r.steps.a.mean_ms == 150 and r.steps.a.sigma_ms == null and r.steps.a.z == null and r.steps.a.last_ms == 200
+}
+
+test "from three runs: the sigma, and how far the latest is from the baseline (z)" {
+  let r = B.baseline([run(1, 100, 10), run(2, 100, 10), run(3, 100, 10), run(4, 400, 10)])
+  // a: 100, 100, 100, 400 → mean 175, population sigma sqrt(16875) ≈ 129.9, z of the latest ≈ 1.732
+  expect r.steps.a.n == 4 and r.steps.a.mean_ms == 175
+  expect r.steps.a.sigma_ms > 129.9 and r.steps.a.sigma_ms < 129.91
+  expect r.steps.a.z > 1.73 and r.steps.a.z < 1.74
+  // b never deviates: sigma 0, so no z (no division by zero, no false alarm)
+  expect r.steps.b.sigma_ms == 0 and r.steps.b.z == null
+}
+
+test "the delta between steps (the wait) has its own baseline" {
+  let r = B.baseline([run(1, 1, 1), run(2, 1, 1), run(3, 1, 1)])
+  expect r.steps.b.wait_mean_ms == 5 and r.steps.b.wait_sigma_ms == 0 and r.steps.b.last_wait_ms == 5
+}
+
+test "only finished steps count; a step that never ran is not invented; runs are read oldest first" {
+  let r = B.baseline([run(3, 300, null), run(1, 100, 10), run(2, 200, 20)])
+  expect r.steps.a.last_ms == 300 and r.steps.b.n == 2 and r.steps.b.last_ms == 20
+  expect B.baseline([]).steps == {}
+}

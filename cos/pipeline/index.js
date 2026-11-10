@@ -29,7 +29,7 @@ function createPipeline({ automation, idearium = null, call = null, dataDir } = 
   const eg = (cmd, obj) => new Promise((resolve) => {
     const f = path.join(os.tmpdir(), `cos-pipeline-${process.pid}-${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}.json`);
     fs.writeFileSync(f, JSON.stringify(obj));
-    execFile(process.execPath, [EG, 'run', CLI, cmd, f], { cwd: root, timeout: 60000, maxBuffer: 16 << 20 }, (err, out, errOut) => {
+    execFile(process.execPath, [EG, 'run', CLI, cmd, f], { cwd: root, timeout: 60000, maxBuffer: 16 << 20, windowsHide: true }, (err, out, errOut) => {
       try { fs.unlinkSync(f); } catch (_) {}
       try { resolve(JSON.parse(String(out).trim().split('\n').pop())); }
       catch (_) { resolve({ ok: false, code: 500, error: `Emerge did not answer (${cmd}): ${String(errOut || (err && err.message) || out).trim().split('\n').pop()}` }); }
@@ -63,7 +63,7 @@ function createPipeline({ automation, idearium = null, call = null, dataDir } = 
         if (!p || !Array.isArray(p.steps)) return { ok: false, code: 404, error: `no procedure "${procedure}"` }; source = { procedure, name: p.name || procedure };
       } else return { ok: false, code: 400, error: 'name one: ?pipeline=<id> or ?procedure=<id>' };
       const f = path.join(os.tmpdir(), `cos-pipeline-src-${process.pid}-${Math.random().toString(36).slice(2)}.json`); fs.writeFileSync(f, JSON.stringify(p));
-      const out = await new Promise((resolve) => execFile(process.execPath, [EG, 'run', CLI, cmd, f], { cwd: root, timeout: 30000, maxBuffer: 16 << 20 }, (err, o, e) => {
+      const out = await new Promise((resolve) => execFile(process.execPath, [EG, 'run', CLI, cmd, f], { cwd: root, timeout: 30000, maxBuffer: 16 << 20, windowsHide: true }, (err, o, e) => {
         try { fs.unlinkSync(f); } catch (_) {}
         try { resolve(JSON.parse(String(o).trim().split('\n').pop())); } catch (_) { resolve({ ok: false, code: 500, error: `Emerge's box shape did not answer: ${String(e || (err && err.message)).trim().split('\n').pop()}` }); }
       }));
@@ -263,7 +263,19 @@ function createPipeline({ automation, idearium = null, call = null, dataDir } = 
     return { ok: true, pipeline: { id: s.pipelineId, name: s.name }, action: s.action, file: path.relative(root, file), steps: r.pipeline.tasks.length, skipped: r.skipped, by };
   }
 
-  return { boxes, gates, runs, frameworks, frameworkStep, decideGate, onEvent, request, resume, planPhase, buildNext, sync, sources, fromErv };
+  // PC8 slice a (2026-11-10) — James: "each step measured by a delta, which could be used for the timing in between each step agnostically, to
+  // establish a baseline." The engine keeps each run (lib/automation/pipeline.js: a step's ms, startedAt, finishedAt, waitMs, and the decisions
+  // taken during it); Emerge (baseline.eg) gives each step its baseline: mean, sigma (from three runs), the latest delta and its z.
+  async function baseline({ pipeline: id, limit = 200 } = {}) {
+    if (!id) return { ok: false, code: 400, error: 'name the pipeline: ?pipeline=<id>' };
+    const P = await engineP(); const runs = P && typeof P.runs === 'function' ? P.runs(id, Math.min(Number(limit) || 200, 1000)) : [];
+    const out = await eg('baseline', { runs: runs.map(r => ({ startedAt: r.startedAt, status: r.status, tasks: r.tasks || {} })) });
+    if (!out || out.ok === false) return out || { ok: false, code: 500, error: 'Emerge gave no baseline' };
+    const latest = runs[0] || null;   // newest first from the engine
+    return { ...out, pipeline: id, latestRun: latest ? { id: latest.id, status: latest.status, decisions: latest.decisions || [] } : null };
+  }
+
+  return { boxes, gates, runs, frameworks, frameworkStep, decideGate, onEvent, request, resume, planPhase, buildNext, sync, sources, fromErv, baseline };
 }
 
 module.exports = { createPipeline, MODULE_ID: 'cos.pipeline', VERSION: '1.0.0' };

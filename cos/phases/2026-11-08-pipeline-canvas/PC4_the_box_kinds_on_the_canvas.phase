@@ -7,11 +7,11 @@ intent: null
 summary: PC4_the_box_kinds_on_the_canvas (ui) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1794234103553
+exported_at: 1794353343297
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794234103553
-lastSeenAt: 1794234103553
+firstSeenAt: 1794353343297
+lastSeenAt: 1794353343297
 fingerprint: null
 payload:
   id: PC4_the_box_kinds_on_the_canvas
@@ -32,4 +32,4 @@ payload:
   blocks:
     - MOD-PC-CANVAS
   spec: cos/spec/pipeline-canvas.spec
-  graph: 340daf09acace921
+  graph: c2f415aad41058e5
