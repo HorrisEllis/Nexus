@@ -43,7 +43,9 @@
           "{{root}}/node_modules/"
         ],
         "about": "ollama's wall, declared by ollama (CP1a, 2026-11-01): COS's supervisor starts it behind this; equal to the census's boundaryFor('ollama'); enforce: it has no way out"
-      }
+      },
+      "onDemand": true,
+      "maxOldSpaceMB": 384
     }
   },
   "data": {
