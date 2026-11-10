@@ -8,6 +8,7 @@ require('../../lib/test-sandbox.js').ensure();
  *   CU-01  check: what GitHub has, per system — guardian restarts by itself, clear-glass waits for him; the git work runs in its own process
  *   CU-02  no backup, no update: refused, nothing moved, nothing restarted
  *   CU-03  update: a backup first (the stand-in answers), the fast-forward, guardian restarted by itself, clear-glass never; each step an event
+ *   CU-02  (UP14) the refusal is an ask: no-backup, for his answer
  *   CU-04  keep mine and update: a diverged install's local commit kept on local/<date>, the folder at GitHub's commit, guardian restarted
  *   CU-05  one at a time: a second update while one runs is refused, said
  *   CU-06  wired: COS's contract declares the routes and the event, the shell loads the popup as the tool, the server answers both routes
@@ -77,7 +78,7 @@ const supOf = () => { const restarted = []; return { restarted, list: () => ['gu
       const r = await up.apply({ mode: 'update', by: 'person' });
       assert.strictEqual(r.ok, false); assert.match(r.error, /no backup of Nexus was taken: the backup at .* did not answer/);
       assert.strictEqual(G(d, 'rev-parse', 'HEAD'), head); assert.deepStrictEqual(s.restarted, []);
-      assert.deepStrictEqual(ev.map(x => x.phase), ['started', 'refused']);
+      assert.deepStrictEqual(ev.map(x => x.phase), ['started', 'ask']); assert.strictEqual(r.ask, 'no-backup', 'UP14: asked (a git backup on his yes), not just refused');
     } finally { if (prev === undefined) delete process.env.COS_UPDATE_BACKUP_URL; else process.env.COS_UPDATE_BACKUP_URL = prev; }
   });
 

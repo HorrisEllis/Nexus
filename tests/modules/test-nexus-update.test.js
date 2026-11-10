@@ -19,6 +19,8 @@ require('../../lib/test-sandbox.js').ensure();
  *          the history row (his 'make sure it hooks into idearium versionium, to backup the system')
  *   UP-14  (CE3) keep mine and update: a diverged folder's local commits kept on local/<date>, the folder moved to GitHub's commit (git
  *          reset --keep), nothing lost; refused without confirm and without a backup; check says how many GitHub already has by content
+ *   UP-15  (UP14, 2026-11-10) a conflict is asked, never just refused: his edits and commits → ask conflict, nothing moved, no backup taken; fix
+ *          keeps both on local/<date> and takes GitHub's; no backup → ask no-backup; a git backup (branch + patch) on his yes; roll back still works
  *   UP-11  automatic: auto applies when idle and restarts what changed (never Clear Glass); not idle waits; notify only says; off nothing
  *   UP-08  the Updates page, driven in Clear Glass (glass.js) over the real lib/nexus-update.js: his words, Update, Roll back, history
  */
@@ -298,6 +300,34 @@ const BK = { ok: true, snapshot: 'test-backup-0001', created: true, files: 3 }; 
     const e = path.join(tmp, 'keep2'); G(tmp, 'clone', '-q', '--branch', 'main', origin, e); G(e, 'reset', '-q', '--hard', 'HEAD~1');
     G(e, 'cherry-pick', 'origin/main');
     const ce = U.check({ root: e, fetch: false }); assert.deepStrictEqual([ce.ahead, ce.local.onGitHub], [1, 1]);
+  });
+
+  await test('UP-15', 'a conflict is asked: fix keeps his edits and commits on a branch and takes GitHub\'s; no backup asks for a git backup', async () => {
+    const d = path.join(tmp, 'fix1'); G(tmp, 'clone', '-q', '--branch', 'main', origin, d); G(d, 'reset', '-q', '--hard', 'HEAD~1');
+    W(d, 'mine.js', 'his own\n'); G(d, 'add', 'mine.js'); G(d, 'commit', '-q', '-m', 'his local work');
+    W(d, 'a.js', 'his edit\n');   // an uncommitted edit to a file the update changes
+    const mine = G(d, 'rev-parse', 'HEAD');
+    let backedUp = 0; const bf = async () => { backedUp++; return BK; };
+    const q = await U.applyBacked({ root: d, confirm: true, fetch: false, runNpm: false, backupFn: bf });
+    assert.strictEqual(q.ok, false); assert.strictEqual(q.ask, 'conflict');
+    assert.deepStrictEqual([q.conflict.files, q.conflict.commits], [['a.js'], 1]); assert.match(q.conflict.text, /1 file changed here and on GitHub \(a\.js\); 1 commit here/);
+    assert.strictEqual(backedUp, 0, 'asked before any backup'); assert.strictEqual(G(d, 'rev-parse', 'HEAD'), mine, 'nothing moved');
+    assert.strictEqual(fs.readFileSync(path.join(d, 'a.js'), 'utf8'), 'his edit\n');
+    // no backup: asked, nothing moved
+    const nb = await U.applyBacked({ root: d, confirm: true, fetch: false, runNpm: false, resolve: 'fix', backupFn: async () => ({ ok: false, error: 'Idearium did not answer' }) });
+    assert.strictEqual(nb.ask, 'no-backup'); assert.match(nb.error, /Idearium did not answer/); assert.strictEqual(G(d, 'rev-parse', 'HEAD'), mine);
+    // his yes to both: a git backup, then fix
+    const r = await U.applyBacked({ root: d, confirm: true, fetch: false, runNpm: false, resolve: 'fix', backupWith: 'git', backupFn: bf });
+    assert.ok(r.ok, r.error); assert.strictEqual(r.action, 'updated'); assert.strictEqual(backedUp, 0, 'the git backup, not Idearium');
+    assert.match(r.backup.snapshot, /^git:backup\//); assert.match(r.backup.patch, /local\.patch$/);
+    assert.match(fs.readFileSync(path.join(d, r.backup.patch), 'utf8'), /\+his edit/, 'his uncommitted edit is in the backup patch');
+    assert.strictEqual(G(d, 'rev-parse', 'HEAD'), G(d, 'rev-parse', 'origin/main'), 'at GitHub\'s commit');
+    assert.strictEqual(fs.readFileSync(path.join(d, 'a.js'), 'utf8'), 'two\n', 'GitHub\'s version');
+    assert.strictEqual(G(d, 'show', `${r.keptOn}:a.js`), 'his edit', 'his edit kept on the branch'); assert.strictEqual(G(d, 'show', `${r.keptOn}:mine.js`), 'his own', 'his commit kept');
+    assert.strictEqual(G(d, 'rev-parse', `${r.keptOn}~1`), mine);
+    assert.strictEqual(G(d, 'symbolic-ref', '--short', 'HEAD'), 'main', 'still on his branch');
+    assert.strictEqual(U.check({ root: d, fetch: false }).upToDate, true, 'updates flow again');
+    const back = U.rollback({ root: d, confirm: true, runNpm: false }); assert.ok(back.ok, back.error); assert.strictEqual(G(d, 'rev-parse', 'HEAD'), mine, 'roll back returns to where it was');
   });
 
   try { fs.rmSync(tmp, { recursive: true, force: true }); } catch (_) {}

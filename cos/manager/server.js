@@ -293,7 +293,7 @@ function createServer(sup, opts = {}) {
       }
       // CE2b — his yes to an update's ask: { by: person, what: cos | <system> }; refused while the update is still writing, and never an agent's
       if (m === 'POST' && p === '/api/cos/update/restart') { if (!body.by) return send(res, 400, { ok: false, error: 'say who acts: { "by": "person" }' }); if (/^agent:/.test(String(body.by))) return send(res, 403, { ok: false, error: 'an agent proposes; restarting after an update is a person\'s' }); const r = await updates.restart({ what: body.what, by: body.by }); return send(res, r.ok ? 200 : r.code || 409, r); }
-      if (m === 'POST' && p === '/api/cos/update/apply') { if (!needBy()) return; const r = await updates.apply({ mode: body.mode || 'update', by: body.by }); return send(res, r.ok ? 200 : (r.busy ? 409 : 409), r); }   // CE2: mode update | keep-local; then each changed system restarted
+      if (m === 'POST' && p === '/api/cos/update/apply') { if (!needBy()) return; const r = await updates.apply({ mode: body.mode || 'update', by: body.by, resolve: body.resolve === 'fix' ? 'fix' : null, backupWith: body.backupWith === 'git' ? 'git' : null }); return send(res, r.ok ? 200 : 409, r); }   // CE2: mode update | keep-local; then each changed system restarted · UP14: his answer to a conflict (resolve: fix) or to no backup (backupWith: git)
       if (m === 'POST' && p === '/api/cos/boot') { if (!needBy()) return; return send(res, 200, { ok: true, ...(await sup.boot({ set: body.set, by: body.by })) }); }
       if (m === 'PATCH' && p === '/api/cos/policy') { if (!needBy()) return; return send(res, 200, { ok: true, policy: sup.setPolicy(body.patch || {}, { by: body.by }) }); }
       if (!p.startsWith('/api/cos') && door(req, res)) return;
