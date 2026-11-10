@@ -231,6 +231,8 @@ function createServer(sup, opts = {}) {
         if (fm && m === 'POST') { if (/^agent:/.test(String(body.by || ''))) return send(res, 403, { ok: false, error: 'an agent proposes; compiling a framework into the engine is a person\'s' }); const r = await pipeline.frameworks.compile(fm[1], { by: body.by }); return send(res, r.ok ? 200 : (r.code || 400), r); } }
       // 2026-11-09 — James: "Every pipeline should be in the automation tab imported by a physical node fil". Every source .pipeline file imported
       // (shipped, COS's own, each system's by its route — kept as a file first); sources: which file each pipeline came from
+      // 2026-11-10 — a pipeline drawn on the canvas: { text: <.erv>, name?, by } → the .pipeline node file written and imported (an agent's is a 403)
+      if (m === 'POST' && p === '/api/cos/pipeline/from-erv') { if (/^agent:/.test(String(body.by || ''))) return send(res, 403, { ok: false, error: 'an agent proposes; making a pipeline from the canvas is a person\'s' }); const r = await pipeline.fromErv({ text: body.text, erv: body.erv, name: body.name, by: body.by || 'person' }); return send(res, r.ok ? 200 : r.code || 422, r); }
       if (m === 'POST' && p === '/api/cos/pipeline/sync') { if (/^agent:/.test(String(body.by || ''))) return send(res, 403, { ok: false, error: 'an agent proposes; importing is a person\'s or a system\'s' }); return send(res, 200, await pipeline.sync()); }
       if (m === 'GET' && p === '/api/cos/pipeline/sources') return send(res, 200, { ok: true, sources: pipeline.sources() });
       // 2026-11-09 — James: "They build upon request, dynamically" · "It's end state first reasoning." A phase planned into its own .pipeline (end state

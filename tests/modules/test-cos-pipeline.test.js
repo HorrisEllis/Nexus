@@ -31,6 +31,8 @@
  *   CP-15  a phase planned into its own .pipeline, end state first (its proof is the contract's outcome): context, dag, build, evidence, ledger,
  *          each an Idearium route with a gate; with chunks, a build step per file; build-next plans and runs the next ready phase to met;
  *          Idearium's real phases/one serves a real phase whole
+ *   CP-17  (2026-11-10) a pipeline drawn on ERAVOS's canvas (.erv: Step tools, a gate tool, wires, YAML) is made into its .pipeline node file and
+ *          imported; run, it runs; drawn again with the same name it updates the same pipeline; a step naming nothing is said (422); an agent's is a 403
  *   CP-16  every pipeline a physical node file, imported: a system's own (fetched by its route, kept as a file first), COS's planned ones
  *          (written as their node file first); an unchanged file is left, a changed one updates in place (same id); all in the engine's list
  *   CP-07  an engine with no gate host refuses a typed gate, said; command rows for agents and copilot
@@ -91,7 +93,7 @@ const eg = (...a) => require('child_process').spawnSync(process.execPath, [path.
   const TEST = { type: 'test', with: { owner: 'tester', route: 'POST /api/tests/run', expect: 'passed' } };
   try {
     await T('CP-00', 'Emerge\'s own tests: the box shape (with its dag hook) and the gate', () => {
-      for (const [f, n] of [['cos/pipeline/test/box.test.eg', 10], ['cos/pipeline/test/gate.test.eg', 8], ['cos/pipeline/test/runs.test.eg', 6], ['cos/pipeline/test/framework.test.eg', 8]]) { const r = eg('test', f); assert.strictEqual(r.status, 0, r.stdout + r.stderr); assert.match(r.stdout, new RegExp(`${n} passed, 0 failed`)); }
+      for (const [f, n] of [['cos/pipeline/test/box.test.eg', 14], ['cos/pipeline/test/gate.test.eg', 8], ['cos/pipeline/test/runs.test.eg', 6], ['cos/pipeline/test/framework.test.eg', 8]]) { const r = eg('test', f); assert.strictEqual(r.status, 0, r.stdout + r.stderr); assert.match(r.stdout, new RegExp(`${n} passed, 0 failed`)); }
     });
 
     await T('CP-01', 'one folder with its registry; the shipped .gatetype files listed; a try decides and does nothing', async () => {
@@ -369,6 +371,27 @@ const eg = (...a) => require('child_process').spawnSync(process.execPath, [path.
       const inEngine = list.find(p => p.name === 'Idea one'); assert.ok(inEngine && inEngine.tasks.length === 2, 'in the Automation tab\'s list, as its file now says');
       const src = (await req(M, 'GET', '/api/cos/pipeline/sources')).body.sources; assert.ok(src.some(x => x.name === 'Idea one' && /from-idearium/.test(x.file)));
       assert.strictEqual((await req(M, 'POST', '/api/cos/pipeline/sync', { by: 'agent:copilot' })).status, 403);
+    });
+
+    await T('CP-17', 'a pipeline drawn on the canvas (.erv) becomes a .pipeline node file, imported, and runs; drawn again it updates; problems said', async () => {
+      // James, 2026-11-10: "Also needs to be able to create pipelines. That's what the canvas is for."
+      const step = (id, kind, ref, extra = {}) => ({ id, kind: 'tool', tool: 'eravos.agents.step', label: 'Step', on: true, state: { params: { kind, ref, step: id, state: '' }, extra: {} }, ...extra });
+      const erv = (ref2) => ({ erv: 1, name: 'Drawn on the canvas', layers: [{ id: 'view', kind: 'canvas', data: null },
+        { id: 'tools', kind: 'group', layers: [step('one', 'tool', JSON.stringify(SET('drawn'))), step('g', 'gate', JSON.stringify({ contains: 'drawn' })), step('two', 'tool', ref2)] },
+        { id: 'wires', kind: 'wires', data: [{ from: ['one', 'step.hook.out'], to: ['g', 'step.hook.in'] }, { from: ['g', 'step.hook.out'], to: ['two', 'step.hook.in'] }] }] });
+      const text = require('js-yaml').dump(erv(JSON.stringify(SET('two'))));
+      const r = (await req(M, 'POST', '/api/cos/pipeline/from-erv', { text, by: 'person' })).body;
+      assert.ok(r.ok, JSON.stringify(r)); assert.deepStrictEqual([r.action, r.steps], ['imported', 2]);
+      assert.ok(fs.existsSync(path.join(ROOT, r.file)) || fs.existsSync(path.join(tmp, 'data', 'pipeline', 'nodes', 'drawn-on-the-canvas.pipeline')), 'its node file written first');
+      const list = (await req(M, 'GET', '/api/cos/automation/pipelines')).body.pipelines; const p = list.find(x => x.name === 'Drawn on the canvas');
+      assert.ok(p && p.tasks.length === 2 && p.tasks[0].gate && p.tasks[0].gate.contains === 'drawn' && p.tasks[1].depends_on[0] === 'one', JSON.stringify(p && p.tasks));
+      const again = (await req(M, 'POST', '/api/cos/pipeline/from-erv', { text: require('js-yaml').dump(erv(JSON.stringify(SET('three')))), by: 'person' })).body;
+      assert.deepStrictEqual([again.action, again.pipeline.id], ['updated', r.pipeline.id], 'drawn again: the same pipeline, updated');
+      const bad = await req(M, 'POST', '/api/cos/pipeline/from-erv', { text: require('js-yaml').dump(erv('')), by: 'person' });
+      assert.strictEqual(bad.status, 422); assert.match(bad.body.error, /names nothing/);
+      assert.strictEqual((await req(M, 'POST', '/api/cos/pipeline/from-erv', { text, by: 'agent:copilot' })).status, 403);
+      const SPEC = (await import(require('url').pathToFileURL(path.join(ROOT, 'idearium/cli/route-commands.js')).href)).SPEC;
+      assert.ok(SPEC.some(s => s.key === 'cos.pipeline-from-erv'));
     });
 
     await T('CP-07', 'an engine with no gate host refuses a typed gate, said; command rows for agents and copilot', async () => {

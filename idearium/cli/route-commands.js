@@ -902,6 +902,8 @@ export const SPEC = [
     req: (a) => ({ system: 'idearium', method: 'GET', path: `/api/phases/one?key=${encodeURIComponent(String((a.args || [])[0] || ''))}` }) },
   { key: 'cos.pipeline-sync', repo: false, usage: 'cos pipeline-sync', about: 'import every pipeline from its physical .pipeline node file into COS\'s engine (the Automation tab): COS\'s shipped and written ones, and each system\'s own fetched by its route and kept as a file first',
     req: () => ({ system: 'cos', method: 'POST', path: '/api/cos/pipeline/sync', body: { by: 'person' } }) },
+  { key: 'cos.pipeline-from-erv', repo: false, usage: 'cos pipeline-from-erv <file.erv>', about: 'a pipeline drawn on ERAVOS\'s canvas (Step tools and wires, saved as .erv) made into a .pipeline node file and imported into COS\'s engine (the Automation tab); a name used already updates that pipeline',
+    req: (a) => ({ system: 'cos', method: 'POST', path: '/api/cos/pipeline/from-erv', body: { text: require('fs').readFileSync(String((a.args || [])[0] || ''), 'utf8'), by: 'person' } }) },
   { key: 'cos.pipeline-sources', repo: false, usage: 'cos pipeline-sources', about: 'which node file each pipeline in COS\'s engine was imported from, and when',
     req: () => ({ system: 'cos', method: 'GET', path: '/api/cos/pipeline/sources' }) },
   { key: 'cos.plan', repo: false, usage: 'cos plan <map path>::<phase id> [--repo <uuid>] [--chunks] [--framework <id>] [--run]', about: 'plan a phase into its own .pipeline, end state first (its proof is the contract\'s outcome): context, dag, build (one step per file with --chunks), evidence, ledger; --run runs it as a request',

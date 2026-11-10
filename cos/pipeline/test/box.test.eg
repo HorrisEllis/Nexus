@@ -73,7 +73,7 @@ test "BoxShape is in Emerge's component registry, and its hooks are what it offe
   var rec = null
   for c in components().components { if c.id == "cos.automation.box" { rec = c } }
   expect rec != null and rec.namespace == "cos"
-  expect box.BoxShape.hooks.in == ["boxes", "tasks", "procedure", "steps", "dag", "erv", "validate"]
+  expect box.BoxShape.hooks.in == ["boxes", "tasks", "procedure", "steps", "dag", "erv", "from_erv", "validate"]
   expect box.BoxShape.hooks.out == ["answer"]
   expect box.KINDS == ["gate", "system", "agent", "macro", "pipeline", "procedure", "tool", "build"]
 }
@@ -116,4 +116,64 @@ test "the DAG a run keeps: each step, and after a gated step its gate, wired thr
   expect d.boxes[1].kind == "gate" and d.boxes[1].args.gate == { notEmpty: true }
   expect any(d.wires, fn(w) = w.from == "overview.out" and w.to == "overview-gate.in")
   expect any(d.wires, fn(w) = w.from == "overview-gate.out" and w.to == "pricing.in")
+}
+
+// 2026-11-10 — the way back (from_erv). James: "Also needs to be able to create pipelines. That's what the canvas is for."
+fn erv_of(p: map): map {
+  send box.BoxShape.boxes { pipeline: p }
+  send box.BoxShape.erv { graph: last.value, name: p.name }
+  return clone(last.value)
+}
+fn tool_layer(e: map): map = find(e.layers, fn(l) = l.id == "tools")
+fn wire_layer(e: map): map = find(e.layers, fn(l) = l.id == "wires")
+
+test "the canvas back to the pipeline loses nothing: pipeline → .erv → pipeline gives the same tasks, gates folded back" {
+  send box.BoxShape.from_erv { erv: erv_of(P) }
+  expect last.ok, str(last.why)
+  expect last.value.pipeline.tasks == P.tasks
+  expect last.value.pipeline.name == "Gig"
+}
+
+test "a pipeline drawn new on the canvas: each step made from its kind and what it names; a gate tool after a step is its gate; wires are dependencies" {
+  let step = fn(id, kind, ref, label) = { id: id, kind: "tool", tool: "eravos.agents.step", label: label, on: true, state: { params: { kind: kind, ref: ref, step: id, state: "" }, extra: {} } }
+  let e = { erv: 1, name: "Mine", layers: [
+    { id: "tools", kind: "group", layers: [ step("t1", "macro", "open the gig page", "Open"), step("t2", "gate", "\{\"contains\":\"ok\"\}", "gate"),
+      step("t3", "agent", "copilot", "Write it"), step("t4", "tool", "api", "Post"), { id: "synth", tool: "eravos.music.supersaw", label: "Supersaw" } ] },
+    { id: "wires", kind: "wires", data: [ { from: ["t1", "step.hook.out"], to: ["t2", "step.hook.in"] }, { from: ["t2", "step.hook.out"], to: ["t3", "step.hook.in"] },
+      { from: ["t3", "step.hook.out"], to: ["t4", "step.hook.in"] } ] } ] }
+  send box.BoxShape.from_erv { erv: e }
+  expect last.ok, str(last.why)
+  let ts = last.value.pipeline.tasks
+  expect map(ts, fn(t) = t.id) == ["t1", "t3", "t4"], "the gate is not a step of its own"
+  expect ts[0].step == { type: "macro", config: { name: "open the gig page" } } and ts[0].gate == { contains: "ok" } and ts[0].label == "Open"
+  expect ts[1].step.type == "agent" and ts[1].depends_on == ["t1"], "the wire through the gate is a dependency on the step before it"
+  expect ts[2].step == { type: "api", config: {} } and ts[2].depends_on == ["t3"]
+  expect last.value.skipped == ["Supersaw"], "a tool that is not a step is left out, named"
+}
+
+test "an edit on the canvas reaches the file: a gate deleted, a step renamed; a step that names nothing is a problem" {
+  var e = erv_of(P)
+  var tl = tool_layer(e)
+  tl.layers = filter(tl.layers, fn(t) = t.id != "overview-gate")
+  tl.layers[1].label = "Prices"
+  var wl = wire_layer(e)
+  wl.data = filter(wl.data, fn(w) = w.from[0] != "overview-gate" and w.to[0] != "overview-gate")
+  wl.data = push(wl.data, { from: ["overview", "step.hook.out"], to: ["pricing", "step.hook.in"] })
+  wl.data = push(wl.data, { from: ["overview", "step.hook.out"], to: ["check", "step.hook.in"] })
+  send box.BoxShape.from_erv { erv: e }
+  expect last.ok, str(last.why)
+  expect has(last.value.pipeline.tasks[0], "gate") == false
+  expect last.value.pipeline.tasks[1].label == "Prices"
+  tl.layers = push(tl.layers, { id: "new", tool: "eravos.agents.step", label: "New", state: { params: { kind: "macro", ref: "" } } })
+  send box.BoxShape.from_erv { erv: e }
+  expect last.ok == false and find_text(last.why, "names nothing") >= 0
+}
+
+test "saved again by ERAVOS (every tool's label is its own name, Step): the steps keep their words" {
+  var e = erv_of(P)
+  var tl = tool_layer(e)
+  tl.layers = map(tl.layers, fn(t) = { id: t.id, kind: t.kind, tool: t.tool, label: "Step", on: true, state: t.state })
+  send box.BoxShape.from_erv { erv: e }
+  expect last.ok, str(last.why)
+  expect last.value.pipeline.tasks == P.tasks
 }

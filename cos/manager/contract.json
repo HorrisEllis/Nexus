@@ -479,6 +479,13 @@
     },
     {
       "method": "POST",
+      "path": "/api/cos/pipeline/from-erv",
+      "in": "{ text: <.erv YAML> | erv: <object>, name?, by }",
+      "out": "{ pipeline { id, name }, action: imported | updated, file, steps, skipped } \u2014 a pipeline drawn on ERAVOS's canvas (Step tools, gate tools, wires) made into its .pipeline node file and imported (box.eg from_erv); 422 names what is missing (2026-11-10)",
+      "personAct": true
+    },
+    {
+      "method": "POST",
       "path": "/api/cos/pipeline/sync",
       "in": "{ by }",
       "out": "{ files: [{ file, name, pipelineId, action: imported | updated | unchanged }], systems, imported, updated, failed } \u2014 every pipeline imported from its physical .pipeline node file",

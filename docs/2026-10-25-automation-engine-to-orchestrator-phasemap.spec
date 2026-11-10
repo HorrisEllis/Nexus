@@ -505,3 +505,19 @@ expanded_2026_11_09_nodes:
       node file first and imported from it. At COS's start (1.5 s after), on demand (POST /api/cos/pipeline/sync; rows cos pipeline-sync, cos
       pipeline-sources). JavaScript (the door): the files are YAML, Emerge has no YAML reader yet (CIE14).
     proof: "test-cos-pipeline 17/17 (CP-16)"
+
+# ── ADDENDUM 2026-11-10 (0.60.478) — AE_D8 in his words: COS the front door and the glue, RAID the contract hub; lib shared, config per system ──
+# James, 2026-11-10: "Also lib is for the shared components. Then we can have a config per system that uses it saved in the data folder per system.
+# So they can be dynamic per system. Cos is meant to be the glue. And the orchastrator, supervisor, and automation. The front door to the eco system.
+# Raid the supervisor, load balancer, compartment router, agent router, the contract hub." · "Like requests goes to raid? Then a contract is made per
+# compartment, this is all somewhere or written down in phase" · "I want to program it myself using the pipeline instead of needing you."
+# Where it was already written (the coder checked): 2026-07-21 "the request comes from co-pilot or one of the UIs, but goes to RAID" (AE_D8's
+# context above); CS_D8 (2026-10-23): RAID's always-on half (queue, contracts, gates, revert, routing) in the COS exe, its routing the load balancer;
+# request spine (2026-11-08): "raid creates compartments using a contract and the test and the dag for the stopping conditions"; CP6b/CP6f (BUILT
+# 0.60.413): RAID approves what COS does by rule and balances the machine. Built toward it: each COS request books one RAID contract (0.60.474).
+# Not built: a contract per compartment (today one per request, with a gate per step), RAID as agent router (lib/agent-router is its own), RAID in
+# the COS exe (CS11, LATER).
+# The lib / config reading (the coder's, to confirm): lib/ holds shared components only (no system's own code: §5.9); each system that uses one keeps
+# its settings for it in its own data folder (<system>/data/config/<component>.json), so the same component behaves differently per system.
+# Open, his: both COS and RAID are named supervisor. As built: COS supervises processes (starts, stops, restarts: cos/manager/supervisor.js); RAID
+# supervises decisions (approves COS's acts by rule, CP6b; says a contract is met). To confirm or correct.
