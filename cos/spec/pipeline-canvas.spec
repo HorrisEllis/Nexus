@@ -489,3 +489,13 @@ spec:
 # Coder's reading: a request already keeps each step as a file (steps/<t>.step: what it took and gave) and, inside builds, a Versionium commit at
 # each passing gate (GS1). Replay = a .pipeline generated from a finished request's step files (same steps, same inputs, its gates); reconstruct =
 # restoring the checkpoint a step passed at. Neither is built: the snapshot per COS-level step is the gap named in the 2026-11-10 addendum above.
+
+# ── ADDENDUM 2026-11-10 — everything through the pipeline; Nexus builds itself (his direction; nothing built by this addendum) ──────────────────
+# James, 2026-11-10: "Everything needs to be run through the pipeline. As steps per event? Nexus is meant to build itself."
+# As built (coder checked): the engine starts a WORKFLOW on a named event (a trigger step; engine.emitEvent); a pipeline starts on an event only
+# through a workflow whose step is that pipeline. Events that reach the engine: COS's ledger entries (cos.ledger) and POST /api/cos/automation/
+# events; the systems' own events (Diagnostic's, Cortex's bus) do not. Self-building pieces: plan (a phase → its .pipeline), build-next, RAID's
+# contract per request, GS1 inside builds. Missing: a pipeline naming its own trigger; the systems' events on COS's bus into the engine; standing
+# pipelines for "a gate failed → its gap → a build request" and "a phase is ready → build-next"; per-step snapshots and replay (above).
+# Readings of "steps per event", his to settle: (a) every event starts a pipeline whose steps are gated; (b) every event is a step of one running
+# pipeline (the event stream itself is the pipeline). Coder recommends (a), with (b) as the flight record: every event is also recorded as a step.
