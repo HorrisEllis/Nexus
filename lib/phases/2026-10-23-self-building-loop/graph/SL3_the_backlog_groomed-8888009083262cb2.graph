@@ -7,11 +7,11 @@ intent: null
 summary: 35 node(s), 4 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793938771873
+exported_at: 1794349653149
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793938771873
-lastSeenAt: 1793938771873
+firstSeenAt: 1794349653149
+lastSeenAt: 1794349653149
 fingerprint: null
 payload:
   for: SL3_the_backlog_groomed
@@ -271,6 +271,7 @@ payload:
     downstream:
       - docs/2026-10-23-self-building-loop-phasemap.spec::SL10_the_pipeline_simulated
       - docs/2026-10-23-self-building-loop-phasemap.spec::SL11_the_phase_ledger_and_its_gate
+      - docs/2026-10-23-self-building-loop-phasemap.spec::SL12_the_working_agreement_distilled
       - docs/2026-10-23-self-building-loop-phasemap.spec::SL8_the_agent_maps_what_nexus_cannot
       - docs/2026-10-23-self-building-loop-phasemap.spec::SL9_every_phase_a_node
     blockedBy: []
@@ -285,7 +286,7 @@ payload:
       - 'depends on (1): SL0_what_can_be_built_now'
       - >-
         needed by (3): SL8_the_agent_maps_what_nexus_cannot, SL9_every_phase_a_node,
-        SL11_the_phase_ledger_and_its_gate · all downstream 4 · finishing it unlocks
+        SL11_the_phase_ledger_and_its_gate · all downstream 5 · finishing it unlocks
         SL8_the_agent_maps_what_nexus_cannot, SL9_every_phase_a_node,
         SL11_the_phase_ledger_and_its_gate
     edges:

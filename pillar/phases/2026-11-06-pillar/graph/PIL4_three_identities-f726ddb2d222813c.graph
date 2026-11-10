@@ -7,11 +7,11 @@ intent: null
 summary: 2 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793997647031
+exported_at: 1794349649839
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793997647031
-lastSeenAt: 1793997647031
+firstSeenAt: 1794349649839
+lastSeenAt: 1794349649839
 fingerprint: null
 payload:
   for: PIL4_three_identities
@@ -59,16 +59,18 @@ payload:
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::FV1_client_jobs
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR8_crystallization
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::WS6_workshop_parts_and_modes
+      - docs/2026-11-01-eravos-orchestration-tools-phasemap.spec::EO4_measure_tools
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP11_the_diagnostic_map
       - docs/2026-11-06-pillar-phasemap.spec::PIL5_the_duplicates_census
-    blockedBy:
-      - docs/2026-11-06-pillar-phasemap.spec::PIL2_contracts
+      - docs/2026-11-07-eravos-as-a-system-phasemap.spec::ERV5_the_visual_coding_and_debug_environment
+    blockedBy: []
     unlocks: []
     conflicts: []
     dangling: []
     lines:
-      - layer 6 · blocked by PIL2_contracts
+      - layer 6 · ready
       - 'depends on (1): PIL2_contracts · all upstream 16'
-      - 'needed by (1): PIL5_the_duplicates_census · all downstream 6'
+      - 'needed by (1): PIL5_the_duplicates_census · all downstream 9'
     edges:
       - from: docs/2026-11-06-pillar-phasemap.spec::PIL2_contracts
         kind: declared

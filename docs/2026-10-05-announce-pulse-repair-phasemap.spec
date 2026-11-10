@@ -109,6 +109,9 @@ spec:
         Past a threshold its pulse quickens (10 s → down to 2 s, bounded), so the diagnostic sees it closer; it slows
         again as the deviation settles. The diagnostic records the deviation and the quickened beat.
       proof: "a fixture deviation past its threshold quickens the beat to the bound and back as it settles; the diagnostic records it"
+      # ── EXPANDED 2026-11-10 — James, 2026-11-10: "cos needs to replace polling completely with the heartbeat from each system." · "just needs to listen for the heartbeat. maybe deltas to establish a baseline." · "sigmas and deltas are domain agnostic."
+      # The baseline is learned from each system's own beats: the delta between beats, and its sigma. A deviation is measured against it (CIE7's
+      # observer already computes a z-score of each delta against a rolling baseline, T4).
 
     PR5_repair_for_real:
       layer: api
@@ -122,3 +125,22 @@ spec:
         beat closing the gap. Code repair, if he chooses it (see pushback): through the shadow space only, merged when its
         tests pass. Every attempt in the ledger; nothing silent.
       proof: "a fixture system that hangs is restarted through autopilot and its next beat closes the gap; a restart that does not bring it back is escalated, not repeated past the breaker"
+    PR6_cos_listens_never_polls:
+      layer: system
+      status: OPEN
+      james: 'cos needs to replace polling completely with the heartbeat from each system." · "just needs to listen for the heartbeat. maybe deltas to establish a baseline. · "the health check is redundant. also the main page keeps refreshing." · "cos is going to be the entire meta system for nexus."'
+      depends_on: [PR3_negative_space_for_missed_heartbeats, PR4_deviation_raises_the_bpm]
+      files: [cos/manager/supervisor.js, cos/manager/server.js, cos/archetype/nexus-system/lib/heartbeat.js, cos/archetype/nexus-system.js, cos/archetype/registry.js, cos/ui/shell/page.js, cos/ui/overview/page.js, cos/ui/hub/page.js, cos/ui/deployments/page.js, lib/pulse-watch.js]
+      requires: [node]
+      prerequisites: ["his reading of which page refreshes (to confirm)"]
+      does: >-
+        COS stops polling. Today: the supervisor probes each system's /health every 250 ms until it is up, at boot and spawn; its pages poll
+        /api/cos/systems and refresh every 5 s; the archetype declares an httpHealthCheck that nothing runs; and the heartbeat each system already
+        sends (archetype heartbeat.js) is heard only by the diagnostic (lib/pulse-watch.js). After: a system is up at its first beat; a missed beat
+        (PR3's negative space) is the only "down"; COS's pages take state from COS's event stream (server.js already streams, with its own 15 s
+        keep-alive) instead of a timer; the httpHealthCheck declarations are removed as the redundant check. The watchdog's resource sampling (CPU,
+        memory) stays: it reads the OS, not a system.
+      readings_to_confirm: >-
+        "the main page keeps refreshing" read as COS's shell page (it polls /api/cos/systems and refreshes its top every 5 s); another page is
+        possible, his to say. "the health check is redundant" read as the boot probes and the unrun httpHealthCheck beside the heartbeat.
+      proof: "a system marked up on its first beat with no /health request; a stopped beat marks it down within the negative-space window; no setInterval left in COS's pages for state; test-cos-* unchanged"

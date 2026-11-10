@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-23-self-building-loop-phasemap.spec::SL12_the_working_agreement_distilled
+type: phase
+id: docs_2026-10-23-self-building-loop-phasemap.spec::SL12_the_working_agreement_distilled
+context: >-
+  pipeline phase SL12_the_working_agreement_distilled of
+  docs/2026-10-23-self-building-loop-phasemap.spec
+intent: null
+summary: SL12_the_working_agreement_distilled (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1794349759890
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794349759890
+lastSeenAt: 1794349759890
+fingerprint: null
+payload:
+  id: SL12_the_working_agreement_distilled
+  map: docs/2026-10-23-self-building-loop-phasemap.spec
+  repo: null
+  layer: null
+  status: >-
+    "BUILT 2026-11-08 (another session, at his ask that day) — the root CLAUDE.md is the
+    distillation; asked again 2026-11-10, what more is his to say"
+  files:
+    - CLAUDE.md
+    - docs/CLAUDE.md
+    - docs/_archive/CLAUDE.root.before-2026-11-08.md
+  depends_on:
+    - SL11_the_phase_ledger_and_its_gate
+  blocks: []
+  spec: null
+  graph: b0b2c055b28364a7

@@ -1,0 +1,58 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SL12_the_working_agreement_distilled:b0b2c055b28364a7
+type: graph
+id: phase:SL12_the_working_agreement_distilled:b0b2c055b28364a7
+context: dependency graph of phase SL12_the_working_agreement_distilled
+intent: null
+summary: 3 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1794349759890
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794349759890
+lastSeenAt: 1794349759890
+fingerprint: null
+payload:
+  for: SL12_the_working_agreement_distilled
+  kind: phase
+  repo: null
+  hash: b0b2c055b28364a7
+  nodes:
+    - path: CLAUDE.md
+      role: changes
+      exists: true
+      system: null
+    - path: docs/_archive/CLAUDE.root.before-2026-11-08.md
+      role: changes
+      exists: true
+      system: null
+    - path: docs/CLAUDE.md
+      role: changes
+      exists: true
+      system: null
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-10-23-self-building-loop-phasemap.spec::SL11_the_phase_ledger_and_its_gate
+    dependents: []
+    upstream:
+      - docs/2026-10-23-self-building-loop-phasemap.spec::SL0_what_can_be_built_now
+      - docs/2026-10-23-self-building-loop-phasemap.spec::SL11_the_phase_ledger_and_its_gate
+      - docs/2026-10-23-self-building-loop-phasemap.spec::SL2_done_by_evidence
+      - docs/2026-10-23-self-building-loop-phasemap.spec::SL3_the_backlog_groomed
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 3
+      - 'depends on (1): SL11_the_phase_ledger_and_its_gate · all upstream 4'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-23-self-building-loop-phasemap.spec::SL11_the_phase_ledger_and_its_gate
+        kind: declared

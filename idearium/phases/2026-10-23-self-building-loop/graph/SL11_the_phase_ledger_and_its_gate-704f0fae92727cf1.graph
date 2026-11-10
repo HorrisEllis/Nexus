@@ -7,11 +7,11 @@ intent: null
 summary: 32 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793939050764
+exported_at: 1794349653168
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793939050764
-lastSeenAt: 1793939050764
+firstSeenAt: 1794349653168
+lastSeenAt: 1794349653168
 fingerprint: null
 payload:
   for: SL11_the_phase_ledger_and_its_gate
@@ -233,21 +233,26 @@ payload:
     deps:
       - docs/2026-10-23-self-building-loop-phasemap.spec::SL3_the_backlog_groomed
       - docs/2026-10-23-self-building-loop-phasemap.spec::SL2_done_by_evidence
-    dependents: []
+    dependents:
+      - docs/2026-10-23-self-building-loop-phasemap.spec::SL12_the_working_agreement_distilled
     upstream:
       - docs/2026-10-23-self-building-loop-phasemap.spec::SL0_what_can_be_built_now
       - docs/2026-10-23-self-building-loop-phasemap.spec::SL2_done_by_evidence
       - docs/2026-10-23-self-building-loop-phasemap.spec::SL3_the_backlog_groomed
-    downstream: []
+    downstream:
+      - docs/2026-10-23-self-building-loop-phasemap.spec::SL12_the_working_agreement_distilled
     blockedBy: []
-    unlocks: []
+    unlocks:
+      - docs/2026-10-23-self-building-loop-phasemap.spec::SL12_the_working_agreement_distilled
     conflicts: []
     dangling:
       - SL_D11_phases_expand
     lines:
       - layer 2
       - 'depends on (2): SL3_the_backlog_groomed, SL2_done_by_evidence · all upstream 3'
-      - 'needed by (0): —'
+      - >-
+        needed by (1): SL12_the_working_agreement_distilled · finishing it unlocks
+        SL12_the_working_agreement_distilled
       - 'DANGLING depends_on: SL_D11_phases_expand'
     edges:
       - from: docs/2026-10-23-self-building-loop-phasemap.spec::SL3_the_backlog_groomed

@@ -7,11 +7,11 @@ intent: null
 summary: 2 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793997647033
+exported_at: 1794349649843
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793997647033
-lastSeenAt: 1793997647033
+firstSeenAt: 1794349649843
+lastSeenAt: 1794349649843
 fingerprint: null
 payload:
   for: PIL5_the_duplicates_census
@@ -62,6 +62,9 @@ payload:
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::FV1_client_jobs
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::MR8_crystallization
       - docs/2026-10-02-emerge-field-memory-build-phasemap.spec::WS6_workshop_parts_and_modes
+      - docs/2026-11-01-eravos-orchestration-tools-phasemap.spec::EO4_measure_tools
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP11_the_diagnostic_map
+      - docs/2026-11-07-eravos-as-a-system-phasemap.spec::ERV5_the_visual_coding_and_debug_environment
     blockedBy:
       - docs/2026-11-06-pillar-phasemap.spec::PIL3_conformance
       - docs/2026-11-06-pillar-phasemap.spec::PIL4_three_identities
@@ -71,7 +74,7 @@ payload:
     lines:
       - layer 7 · blocked by PIL3_conformance, PIL4_three_identities
       - 'depends on (2): PIL3_conformance, PIL4_three_identities · all upstream 18'
-      - 'needed by (1): EM2_warp_his_own · all downstream 5'
+      - 'needed by (1): EM2_warp_his_own · all downstream 8'
     edges:
       - from: docs/2026-11-06-pillar-phasemap.spec::PIL3_conformance
         kind: declared

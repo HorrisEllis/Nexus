@@ -1,0 +1,105 @@
+envelope: 1
+uuid: nexus-export-graph-phase:PR5_repair_for_real:c5b91affd339fd7d
+type: graph
+id: phase:PR5_repair_for_real:c5b91affd339fd7d
+context: dependency graph of phase PR5_repair_for_real
+intent: null
+summary: 9 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1794349635950
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794349635950
+lastSeenAt: 1794349635950
+fingerprint: null
+payload:
+  for: PR5_repair_for_real
+  kind: phase
+  repo: null
+  hash: c5b91affd339fd7d
+  nodes:
+    - path: diagnostic/nexus-heal-loop.js
+      role: changes
+      exists: false
+      system: diagnostic
+    - path: lib/nexus/autopilot.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/shadow-space.js
+      role: changes
+      exists: true
+      system: lib
+    - path: tests/modules/test-shadow-space.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cos/workspace/index.js
+      role: uses
+      exists: true
+      system: cos
+    - path: lib/nexus-cli-interface.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus/core-duties.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/shadow.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/version.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/nexus/autopilot.js
+      to: lib/version.js
+      kind: requires
+    - from: lib/nexus/autopilot.js
+      to: lib/nexus/core-duties.js
+      kind: requires
+    - from: lib/nexus/autopilot.js
+      to: lib/nexus-cli-interface.js
+      kind: requires
+    - from: lib/shadow-space.js
+      to: cos/workspace/index.js
+      kind: requires
+    - from: lib/shadow-space.js
+      to: lib/shadow.js
+      kind: requires
+    - from: tests/modules/test-shadow-space.test.js
+      to: lib/shadow-space.js
+      kind: requires
+  crossings:
+    - from: lib/shadow-space.js
+      to: cos/workspace/index.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-10-05-announce-pulse-repair-phasemap.spec::PR3_negative_space_for_missed_heartbeats
+    dependents: []
+    upstream:
+      - docs/2026-10-05-announce-pulse-repair-phasemap.spec::PR1_the_announced_registry_is_the_list
+      - docs/2026-10-05-announce-pulse-repair-phasemap.spec::PR2_the_diagnostic_listens_not_polls
+      - docs/2026-10-05-announce-pulse-repair-phasemap.spec::PR3_negative_space_for_missed_heartbeats
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 3 · ready
+      - 'depends on (1): PR3_negative_space_for_missed_heartbeats · all upstream 3'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-05-announce-pulse-repair-phasemap.spec::PR3_negative_space_for_missed_heartbeats
+        kind: declared

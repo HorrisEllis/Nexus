@@ -88,6 +88,9 @@ phases:
     proof: "validate passes on every contract; a second contract for one meaning is refused (test-pillar)"
     # ── EXPANDED 2026-11-06 — the contract block it is written in is CIE1 (docs/2026-11-06-cie-eg-build-phasemap.spec) ──
     # James, 2026-11-06: "Next". PIL2's prerequisite "Emerge's contract block ... built in the language first" is now a phase, so it is a dependency.
+    # ── EXPANDED 2026-11-10 — James, 2026-11-10: "also each primitive in emerge should be it's own file."
+    # Reading to confirm: each of Pillar's primitives a file of its own (pillar/contracts/<primitive>.eg, as PIL2's files already plan), and
+    # Emerge's lang/core/primitives.eg split the same way. The second reading changes Emerge's bootstrap, so it is asked first.
 
   PIL3_conformance:
     status: OPEN

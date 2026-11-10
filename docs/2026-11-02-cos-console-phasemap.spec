@@ -317,6 +317,10 @@ phases_addendum_2026_11_04:
     files: [cos/manager/supervisor.js, cos/manager/autopilot-door.js, lib/nexus/core-duties.js, cos/app/desktop-systems.js, tests/modules/test-cos-hidden-windows.test.js, tests/modules/run-all.js]
     does: "Every process COS starts hides its console window (windowsHide); a windowed system (Electron: Clear Glass) is the one left as it was, so its own window shows. Their output is read in the Console tab (SC11), not in a window."
     proof: "the supervisor passes windowsHide: true for a node system and false for an Electron one; every spawn in the supervisor, the door's test runner and core-duties hides its window"
+    # ── EXPANDED 2026-11-10 — James, 2026-11-10: "also command prompt spamming my screen over and over is annoying." (with a screenshot of his taskbar)
+    # Found the same day: 232 files under cos, idearium, lib, guardian, copilot, cortex, orchestrator and clear-glass/src start processes and
+    # never mention windowsHide. Adds: every spawn and exec on Windows hidden (one helper, used everywhere), and a check that refuses a new one
+    # without it.
   SC9_the_zip_dropzone_updater:
     layer: ui
     status: OPEN

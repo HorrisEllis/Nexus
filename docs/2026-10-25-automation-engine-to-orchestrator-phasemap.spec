@@ -521,3 +521,6 @@ expanded_2026_11_09_nodes:
 # its settings for it in its own data folder (<system>/data/config/<component>.json), so the same component behaves differently per system.
 # Open, his: both COS and RAID are named supervisor. As built: COS supervises processes (starts, stops, restarts: cos/manager/supervisor.js); RAID
 # supervises decisions (approves COS's acts by rule, CP6b; says a contract is met). To confirm or correct.
+    # ── EXPANDED 2026-11-10 — James, 2026-11-10: "i want to run agents from the automation tab, look at the framework trial"
+    # Adds: an agent step started from the Automation tab, through RAID (AE3), its output shown in the run; the framework trial (T7, the blind
+    # test in docs/FRAMEWORK-THREADS.md; PIL6, the small-model bench) run from there as a pipeline, on his machine.
