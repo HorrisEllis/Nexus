@@ -1417,6 +1417,9 @@ const _handleNCPMessage = createNCPMessageHandler({
   extractToolCallsFromDOM: _extractToolCallsFromDOM,
   findActiveSeamCompartment: _findActiveSeamCompartment,
   retry: () => _jobRetryRef,   // 0.39.265 — guardian/lib/job-retry.js (late-bound)
+  // 0.60.494 — the DOM mutator's stream for the tab's own "no reply element" (late-bound: both are made further down)
+  answerFromLedger: (job) => (_chatTranscriptsRef ? _chatTranscriptsRef.ledgerReplyFor(job) : Promise.resolve(null)),
+  completeWith: (job, text, chatUrl, source) => _completeJobWith(job, text, chatUrl, source),
 });
 
 // §BUILT 2026-09-08 — James: "the listener for the tools... from the

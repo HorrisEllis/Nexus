@@ -82,6 +82,9 @@ function makeHandler(busEvents) {
     extractCodeBlocks,
     extractToolCallsFromDOM: () => [],
     findActiveSeamCompartment: () => null,
+    // 0.60.495 — the one way a job is completed from a source: the real handler's own GUARDIAN_COMPLETE (as guardian/server.js wires it)
+    completeWith: (job, text, chatUrl) => handler({ type: 'GUARDIAN_COMPLETE', jobId: job.id, provider: job.provider, text, chatUrl: chatUrl || undefined, source: 'transcript' }),
+    answerFromLedger: async () => null,
   });
   return { handler, jobs, busEvents };
 }
@@ -198,6 +201,50 @@ async function main() {
     const rows = jaaDB.query('chat_log', r => r.jobId === jobId, 100);
     const assistantRow = rows.find(r => r.role === 'assistant');
     assert.ok(!assistantRow, 'an empty real response must not produce a fabricated assistant log entry');
+  });
+
+  console.log('\n[4] 0.60.495 — the live stream is the first source of a job\'s answer');
+  process.env.GUARDIAN_STREAM_SETTLE_MS = '120';
+  const wait = (ms) => new Promise(r => setTimeout(r, ms));
+
+  await test('NCP-020', 'a transcript chunk saying the page stopped generating completes the job after the settle time, from the stream', async () => {
+    const ev = []; const { handler, jobs } = makeHandler(ev);
+    jobs.set('job-stream-1', { id: 'job-stream-1', provider: 'chatgpt', prompt: 'write it', command: 'ask', status: 'pending' });
+    handler({ type: 'GUARDIAN_CHUNK', jobId: 'job-stream-1', provider: 'chatgpt', text: 'the rep', full: 'the rep', source: 'transcript', generating: true });
+    await wait(200);
+    assert.strictEqual(jobs.get('job-stream-1').status, 'responding', 'still generating: not completed');
+    handler({ type: 'GUARDIAN_CHUNK', jobId: 'job-stream-1', provider: 'chatgpt', text: 'ly', full: 'the reply', source: 'transcript', generating: false });
+    assert.strictEqual(jobs.get('job-stream-1').status, 'responding', 'not before the settle time');
+    await wait(300);
+    assert.strictEqual(jobs.get('job-stream-1').status, 'complete', 'completed from the stream');
+    assert.ok(ev.some(e => e.type === 'guardian.job.complete' && e.data.jobId === 'job-stream-1'), 'said on the bus');
+  });
+
+  await test('NCP-021', 'a chunk that arrives inside the settle time starts the wait again; text that grew is what completes', async () => {
+    const { handler, jobs } = makeHandler([]);
+    jobs.set('job-stream-2', { id: 'job-stream-2', provider: 'gemini', prompt: 'p', command: 'ask', status: 'pending' });
+    handler({ type: 'GUARDIAN_CHUNK', jobId: 'job-stream-2', provider: 'gemini', text: 'a', full: 'a', source: 'transcript', generating: false });
+    await wait(60);
+    handler({ type: 'GUARDIAN_CHUNK', jobId: 'job-stream-2', provider: 'gemini', text: 'b', full: 'ab', source: 'transcript', generating: true });
+    await wait(250);
+    assert.strictEqual(jobs.get('job-stream-2').status, 'responding', 'generating again: the earlier wait is dropped');
+    handler({ type: 'GUARDIAN_CHUNK', jobId: 'job-stream-2', provider: 'gemini', text: 'c', full: 'abc', source: 'transcript', generating: false });
+    await wait(300);
+    assert.strictEqual(jobs.get('job-stream-2').status, 'complete');
+  });
+
+  await test('NCP-022', 'the tab says "no reply element": the reply the stream already carried completes the job; with no stream it fails as before', async () => {
+    const { handler, jobs } = makeHandler([]);
+    jobs.set('job-stream-3', { id: 'job-stream-3', provider: 'chatgpt', prompt: 'p', command: 'ask', status: 'pending' });
+    process.env.GUARDIAN_STREAM_SETTLE_MS = '60000';   // the settle wait must not be what completes it here
+    handler({ type: 'GUARDIAN_CHUNK', jobId: 'job-stream-3', provider: 'chatgpt', text: 'tool call', full: 'tool call', source: 'transcript', generating: false });
+    handler({ type: 'GUARDIAN_ERROR', jobId: 'job-stream-3', provider: 'chatgpt', gate: 'watch', error: 'no reply element found after 180s' });
+    assert.strictEqual(jobs.get('job-stream-3').status, 'complete');
+    jobs.set('job-stream-4', { id: 'job-stream-4', provider: 'chatgpt', prompt: 'p', command: 'ask', status: 'pending' });
+    handler({ type: 'GUARDIAN_ERROR', jobId: 'job-stream-4', provider: 'chatgpt', gate: 'watch', error: 'no reply element found after 180s' });
+    await wait(50);
+    assert.strictEqual(jobs.get('job-stream-4').status, 'error', 'nothing streamed and nothing in the ledger: the error stands');
+    process.env.GUARDIAN_STREAM_SETTLE_MS = '120';
   });
 
   console.log(`\n${passed} passed, ${failed} failed`);

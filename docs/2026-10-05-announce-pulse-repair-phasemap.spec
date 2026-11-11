@@ -91,7 +91,11 @@ spec:
       status: "DONE (0.39.342) — each beat a WARP 2 link expecting the next within interval × 1.5; a broken expectation is a gap naming the system and its last beat; a late beat recovers it; never-announced after a 60 s boot grace; the ledger rotated past 20000 entries. Found end to end and fixed: what broke during another system's beat was dropped."
       james: '"have the diagnostic system. use negative space reasoning for missed heartbeats."'
       depends_on: [PR2_the_diagnostic_listens_not_polls]
-      files: [lib/pulse-listener.js, lib/warp/core/Engine.js]
+      files: [lib/pulse-listener.js, lib/warp/core/Engine.js, orchestrator/orchestrator.js]
+      expanded_2026_11_10: >-
+        (0.60.488) The Orchestrator's own negative-space watch (orchestrator.js _armPulseWatch, 2026-09-20) asks COS, before it declares
+        a miss, whether COS stopped the system idle (on-demand, 0.60.482). Asleep by COS's rule is said once as pulse.asleep and is not
+        a miss; the watch rests until the next real beat. Anything else, COS unreachable included, stays a miss.
       does: >-
         Each beat is a WARP 2 link; each beat declares the next as an expectation (within the system's own interval
         plus grace). A broken expectation is a gap naming the system, its last beat and its last known state — the
@@ -144,3 +148,18 @@ spec:
         "the main page keeps refreshing" read as COS's shell page (it polls /api/cos/systems and refreshes its top every 5 s); another page is
         possible, his to say. "the health check is redundant" read as the boot probes and the unrun httpHealthCheck beside the heartbeat.
       proof: "a system marked up on its first beat with no /health request; a stopped beat marks it down within the negative-space window; no setInterval left in COS's pages for state; test-cos-* unchanged"
+
+## ADDENDUM 2026-11-10 — PR3 expanded: asleep by COS's rule is not a missed pulse (0.60.488)
+# James, 2026-11-10: "idearium is choking" · asked whether to fix the pulse monitor counting sleeping on-demand systems as missing: "Yes, fix it"
+# His log: "[orchestrator][pulse] 'versionium' missed 112 consecutive pulses" and "cfr.collapse: CFR coherence collapsed to 0.00", 22:43 to
+# 23:10, while Versionium was stopped idle by COS (0.60.482) and started again when asked. A true absence, a false fault.
+# Side by side: (a) the Orchestrator asks COS at the moment it would declare a miss; (b) COS tells the Orchestrator when it stops a system idle
+# (a new route on the Orchestrator, COS depending on it); (c) the stopping system says goodbye (COS stops it with a kill, which on Windows
+# gives the process no turn to speak). (a) taken, by his axioms: §0.1 evidence at the moment of deciding, §5.10 through COS's contract (GET
+# /api/cos/systems/:name, already served), §5.15 COS down breaks nothing (the miss stands as before), §1.2 said once and never silent,
+# §16.4 the smallest change. It asks once per would-be miss; it is not a poll, and PR6 (COS itself the listener) replaces it when built.
+# Only COS's idle stop counts as asleep. A system a person stopped in COS still reads as missing: whether that is a fault is his to say.
+# Proof: _asleepByCos run from the file against 7 stand-in answers and the live COS (Versionium up, nexus-wire unknown to COS), 9/9. No test
+# file: orchestrator.js is a server with no exports, and his rule is no new JavaScript; the check and its result are in the changelog.
+# Not yet seen on a real idle stop: the Orchestrator must be restarted, then Versionium left idle for 10 minutes.
+# Left: the diagnostic's watch (lib/pulse-listener.js, "missed its heartbeat") and the watchdog's OFFLINE line still fire for a sleeping system.

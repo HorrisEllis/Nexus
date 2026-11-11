@@ -7,11 +7,11 @@ intent: null
 summary: 36 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1794356140645
+exported_at: 1794383857761
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794356140645
-lastSeenAt: 1794356140645
+firstSeenAt: 1794383857761
+lastSeenAt: 1794383857761
 fingerprint: null
 payload:
   for: PC4_the_box_kinds_on_the_canvas
@@ -316,7 +316,10 @@ payload:
         files:
           - cos/pipeline/runs.eg
           - cos/pipeline/cli.eg
+          - cos/pipeline/index.js
           - lib/automation/pipeline.js
+          - cos/manager/server.js
+          - tests/modules/test-cos-pipeline.test.js
       - with: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC9_the_desktop_driver
         files:
           - cos/manager/server.js
@@ -336,7 +339,8 @@ payload:
       - 'same files as PC3_the_build_request_step with no order between them: cos/manager/server.js'
       - >-
         same files as PC8_operate_a_pipeline with no order between them: cos/pipeline/runs.eg,
-        cos/pipeline/cli.eg, lib/automation/pipeline.js
+        cos/pipeline/cli.eg, cos/pipeline/index.js, lib/automation/pipeline.js,
+        cos/manager/server.js, tests/modules/test-cos-pipeline.test.js
       - 'same files as PC9_the_desktop_driver with no order between them: cos/manager/server.js'
       - 'same files as PC10_our_own_remote_control with no order between them: cos/manager/server.js'
     edges:

@@ -73,14 +73,16 @@ function createServer(sup, opts = {}) {
   });
   // PC5 (2026-11-09) — James: "Gates can hold context, test, verify, gates would do a lot. But not the same everytime." COS's gates: the types are
   // files, the deciding is Emerge's (cos/pipeline/gate.eg); a gate's calls reach each owner by its declared address (§5.15), 'cos' is this manager
-  const _systemCall = (owner, method, pth, body) => new Promise((resolve) => {
+  // 0.60.489: max is how much of the answer the caller takes (a gate reads 4,096 characters; a list needs it whole). An answer longer than
+  // that says so (cut: true), so a caller never parses half an answer as a whole one.
+  const _systemCall = (owner, method, pth, body, max = 4096) => new Promise((resolve) => {
     let origin = null;
     if (owner === 'cos') origin = `http://127.0.0.1:${(srvRef.server && srvRef.server.address() && srvRef.server.address().port) || 0}`;
     else { const d = sup.declarations().find(x => x.name === owner || x.system === owner); try { origin = d && d.healthUrl ? new URL(d.healthUrl).origin : null; } catch (_) {} }
     if (!origin) return resolve({ error: `${owner} is not declared to COS, or declares no address` });
     const data = body === undefined ? null : Buffer.from(JSON.stringify(body));
     const q = http.request(origin + pth, { method, timeout: 20000, headers: { 'X-Nexus-Caller': 'cos-gate', ...(data ? { 'Content-Type': 'application/json', 'Content-Length': data.length } : {}) } }, (r) => {
-      let t = ''; r.setEncoding('utf8'); r.on('data', c => { if (t.length < 65536) t += c; }); r.on('end', () => resolve({ status: r.statusCode, body: t.slice(0, 4096) })); });
+      let t = '', total = 0; const cap = Math.max(65536, max); r.setEncoding('utf8'); r.on('data', c => { total += c.length; if (t.length < cap) t += c; }); r.on('end', () => resolve({ status: r.statusCode, body: t.slice(0, max), cut: total > max, length: total })); });
     q.on('timeout', () => q.destroy(new Error('no answer in 20 s'))); q.on('error', (e) => resolve({ error: e.code || e.message }));
     if (data) q.write(data); q.end();
   });

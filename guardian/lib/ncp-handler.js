@@ -86,6 +86,7 @@ function createNCPMessageHandler(deps) {
     physQueue, baseline, evLedger, activeQueues,
     extractCodeBlocks, extractToolCallsFromDOM, findActiveSeamCompartment,
     retry,   // 0.39.265 — optional () => guardian/lib/job-retry.js instance (late-bound)
+    answerFromLedger = null, completeWith = null,   // 0.60.494 — optional: the DOM mutator's stream, and the one way a job is completed
   } = deps;
   for (const [name, v] of Object.entries({
     ncp, bus, jaa, jobs, updateJob, cockpitBroadcast, physQueue, baseline,
@@ -173,6 +174,29 @@ function createNCPMessageHandler(deps) {
           // complete). Checked first: zero real strict-equality readers
           // of the old string anywhere in the codebase, safe rename.
           updateJob(jobId, { status: 'responding', lastChunk: Date.now() });
+          // 0.60.495 — James, 2026-11-11: "also the .response. dom mutator is supposed to stream live." · "Yes, build it." (and 0.39.278: "guardian
+          // is polling, but it shouldn't be, live streams the dom mutation live"). The page's MutationObserver already sends the job's reply as
+          // it changes (source 'transcript', with whether the page is still generating). That stream is now the first source of the job's
+          // answer: a chunk that says the page has stopped generating, with text, and no chunk after it for the settle time, completes the job
+          // from the stream. The older watch for a reply element still runs; whichever comes second finds the job complete and is ignored.
+          if (msg.source === 'transcript') {
+            updateJob(jobId, { streamFull: full || null, streamGenerating: msg.generating === true ? true : msg.generating === false ? false : null, streamChatUrl: msg.chatUrl || null });
+            const settle = _handleNCPMessage._settle || (_handleNCPMessage._settle = new Map());
+            const prev = settle.get(jobId); if (prev) clearTimeout(prev);
+            settle.delete(jobId);
+            if (msg.generating === false && full && String(full).trim() && typeof completeWith === 'function') {
+              const ms = Math.max(50, parseInt(process.env.GUARDIAN_STREAM_SETTLE_MS, 10) || 8000);
+              const t = setTimeout(() => {
+                settle.delete(jobId);
+                const j = jobs.get(jobId);
+                if (!j || j.status !== 'responding' || j.streamFull !== full) return;
+                console.log(`[guardian] ${jobId}: completed from the live stream — the page stopped generating and its reply (${String(full).length} chars) held for ${Math.round(ms / 1000)} s`);
+                completeWith(j, String(full), msg.chatUrl || j.chatUrl || null, 'transcript');
+              }, ms);
+              if (t.unref) t.unref();
+              settle.set(jobId, t);
+            }
+          }
           // 0.39.256 — reset: this chunk replaces the reply so far (a re-render, not a continuation); source: 'transcript' when the userscript's 500 ms transcript streamer sent it
           bus.emit('guardian.job.chunk', { jobId, text, full, provider, ...(msg.chatId ? { chatId: msg.chatId, turn: msg.turn ?? null, chatUrl: msg.chatUrl || null } : {}), anchor: msg.anchor || null, mutations: msg.mutations ?? null, generating: msg.generating ?? null, reset: !!msg.reset, source: msg.source || null, ...(typeof msg.thinking === 'string' && msg.thinking ? { thinking: msg.thinking, thinkingLen: msg.thinkingLen || msg.thinking.length } : {}) });
           cockpitBroadcast({ type: 'job.chunk', jobId, text, full, provider, ts: Date.now() });
@@ -649,6 +673,13 @@ function createNCPMessageHandler(deps) {
           console.log(`[guardian] ${jobId}: ignored a late error (${gate || 'no gate'}) — the job already completed`);
           break;
         }
+        // 0.60.494 — James, 2026-11-11, of ChatGPT's reply not found on its page after 180 s: "Why is it not hooked to the dom mutator". It was
+        // hooked on two roads only (0.60.191/0.60.192, guardian/lib/dispatcher.js: Guardian's own wait running out, and before a re-send). The
+        // road taken here, the tab itself saying it cannot find the reply element, never asked. Now it does: Clear Glass's live chat ledger
+        // (the DOM mutator's stream, kept by the download manager) is read first; the job's turn there, with the page no longer generating,
+        // completes the job. Nothing there: the error goes on exactly as before.
+        const _noReplyEl = jobId && (gate === 'watch' || /no reply element/i.test(String(error || '')));
+        const _failAsBefore = () => {
         if (jobId) {
           // ── SEAM queue routing ────────────────────────────────────────────
           // A provider-side error on a SEAM chunk isn't a content failure (no
@@ -663,7 +694,7 @@ function createNCPMessageHandler(deps) {
           const R = !seamQueue && typeof retry === 'function' ? retry() : null;
           if (R) {
             const r = R.onError(jobId, { gate, error, provider });
-            if (r.handled) break;
+            if (r.handled) return;
           }
           const job0 = jobs.get(jobId);
           const finalErr = R && job0 && job0.attempts && job0.attempts.length > 1 ? R.finalError(job0, error) : error;
@@ -671,6 +702,28 @@ function createNCPMessageHandler(deps) {
           bus.emit('guardian.job.error', { jobId, error: finalErr, gate, provider });
           cockpitBroadcast({ type: 'job.error', jobId, error: finalErr, ts: Date.now() });
         }
+        };
+        // 0.60.495 — and before the ledger, the stream this job already carried: text the page's observer sent, with the page not generating
+        const _js = _noReplyEl ? jobs.get(jobId) : null;
+        if (_js && _js.status !== 'complete' && _js.streamFull && String(_js.streamFull).trim() && _js.streamGenerating !== true && typeof completeWith === 'function') {
+          console.log(`[guardian] ${jobId}: the tab could not find the reply element, and the live stream already carried the reply (${String(_js.streamFull).length} chars) — completed from it`);
+          completeWith(_js, String(_js.streamFull), _js.streamChatUrl || _js.chatUrl || null, 'transcript');
+          break;
+        }
+        if (_noReplyEl && typeof answerFromLedger === 'function' && typeof completeWith === 'function' && jobs.get(jobId)) {
+          Promise.resolve().then(() => answerFromLedger(jobs.get(jobId))).catch(() => null).then((found) => {
+            const now = jobs.get(jobId);
+            if (found && found.text && now && now.status !== 'complete') {
+              console.log(`[guardian] ${jobId}: the tab could not find the reply element, and the reply is in Clear Glass's chat ledger (${found.source}) — completed from it`);
+              completeWith(now, found.text, found.chatUrl || null, found.source);
+              return;
+            }
+            if (!found) console.log(`[guardian] ${jobId}: the tab could not find the reply element; Clear Glass's chat ledger does not hold this job's reply either (or the page is still generating)`);
+            _failAsBefore();
+          }).catch((e) => { console.warn(`[guardian] ${jobId}: reading the chat ledger failed (${e.message}); the error goes on as before`); try { _failAsBefore(); } catch (_) {} });
+          break;
+        }
+        _failAsBefore();
         break;
       }
 

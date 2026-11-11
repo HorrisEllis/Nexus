@@ -119,7 +119,12 @@ spec:
     PF3_snapshot_names_changed_files:
       layer: library
       status: DONE (0.39.288)
-      files: [lib/nexus-self/store.js, idearium/api/index.js]
+      files: [lib/nexus-self/store.js, idearium/api/index.js, idearium/repo/nexus-self.js, tests/modules/test-nexus-self-incremental.test.js]
+      depends_on: [PF1_sync_names_its_slow_step, PF2_yielding_ingest]
+      expanded_2026_11_10: >-
+        (0.60.487) The snapshot is steps with two drivers, one code path (PF2's pattern): snapshot() blocks, for tests, apply and
+        the update backup; snapshotAsync() gives the event loop a turn every 40 ms and asks shouldPause at each turn. Stopped, the
+        files hashed so far are kept in index.json, no snapshot is written, and the sync ends saying why. Proof: NI-006.
       does: >-
         snapshot stats carry changed (content moved, not just mtime) and removed paths; the sync log prints them, so the
         file that churns on every boot of James's machine is named by the next boot.
@@ -898,3 +903,17 @@ spec:
 
 ## ADDENDUM 2026-10-02 — 1.9.0, SW1 built (0.39.294)
 # The spec workshop is built — its own map now carries it and what follows it (docs/2026-10-02-workshop-codex-rewind-phasemap.spec).
+
+## ADDENDUM 2026-11-10 — PF3 expanded: the snapshot yields and pauses (0.60.487)
+# James, 2026-11-10: "idearium is choking" · "Yes, fix it"
+# His log: "[idearium/nexus-self] sync took 147253ms — snapshot 85632ms · systems 58810ms · ... tree 12646 files, 12646 re-hashed", with
+# Idearium missing 9 pulses. Traced: the store (idearium/data/nexus-self) was new, its HEAD holding one snapshot, so nothing was reused; the
+# snapshot loop was synchronous; the guard (0.60.7, 0.60.205 L6) was asked before the sync and between systems, never inside the snapshot.
+# Side by side: (a) a worker thread for the hashing: off the loop entirely, but a second heap on a 7.7 GB machine at 10% free; (b) the same loop
+# in steps, yielding and pausable: no new memory, one code path with the blocking driver, resumable. (b) taken, by his axioms: §16.4 simple things
+# stay simple, §0.5 complexity earns its place, §1.2 a pause says why, §17.7 the cause and not the symptom, §8.6 PF2's pattern reused.
+# Sovereignty (§5.15): lib/nexus-self/store.js is used by Idearium alone in the running system and sits in lib/. Not moved here; it is a
+# finding for his rule of 2026-11-03 ("lib is not a directory for anything that a system uses").
+# Not measured on his real tree (§17.11): the proof is NI-006 on 400 files. Still blocking: walkLive, 4.2 s measured on his tree under load.
+# Found and left, outside this phase: the Orchestrator's pulse monitor counts an on-demand system asleep by design (0.60.482) as missing
+# (Versionium, 112 pulses, CFR to 0.00); test-nexus-self-and-cos-run DP-004 fails on lib/vector-memory.js, unchanged from the last commit.

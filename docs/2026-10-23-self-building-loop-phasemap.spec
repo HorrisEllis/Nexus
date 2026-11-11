@@ -474,3 +474,15 @@ phases_addendum_2026_11_03:
       What he wants beyond the 2026-11-08 distillation. Two readings: (a) it is done, and his 2026-11-10 ask was for the session's own context;
       (b) the root file should change further, regrouped or shortened, or holding today's decision that COS is the meta system (PC_D12).
     proof: "CLAUDE.md is 60 lines and loads alone; docs/CLAUDE.md is whole; the root's previous version is archived"
+
+# ── ADDENDUM 2026-11-10 (0.60.489) — SL0 expanded: the census is worked out once, off the event loop, and kept ──
+# James, 2026-11-10: "your supposed to be getting the pipeline working" · 2026-11-12: "it says phase not selected in the piplelube vital. its the next walll"
+# Measured on his machine: _queueFor (idearium/api/index.js) ran lib/phase-census.js on every GET /api/phases/next: git log 1.6 s, then every
+# phase (2,651) judged against every commit (1,616) and release, 7,474 ms and 13,575 ms on two runs, all in Idearium's event loop. Callers: the
+# build pipeline's first step (10 s limit), COS's phase chooser (8 s), Idearium's own rail.
+# Side by side: (a) keep the result only; the first call still holds the loop; (b) a worker only; every call still costs 7 s; (c) both, taken:
+# worked out in a worker thread, kept per signature (the maps' text, .git/HEAD and its log, lib/version.js, the count of changelogs), callers
+# meanwhile share the one run, kept 5 minutes at most because a build adds files without a commit. If the worker cannot run, it is worked out
+# in place and said. By his axioms: §17.7 the cause, §10.2 a projection is derived (and may be kept), §1.2, §17.11 (numbers below).
+# Live, after restarting Idearium through COS: first call 8,371 ms with /health answering 29 times beside it, slowest 959 ms; second call 804 ms
+# (the queue itself, lib/build-queue.js, still about 0.8 s in the loop). test-build-queue printed no result line when run here: not counted.

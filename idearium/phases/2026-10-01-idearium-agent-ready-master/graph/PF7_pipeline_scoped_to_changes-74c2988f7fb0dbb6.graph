@@ -7,11 +7,11 @@ intent: null
 summary: 19 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792787676376
+exported_at: 1794381885572
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787676376
-lastSeenAt: 1792787676376
+firstSeenAt: 1794381885572
+lastSeenAt: 1794381885572
 fingerprint: null
 payload:
   for: PF7_pipeline_scoped_to_changes
@@ -153,12 +153,15 @@ payload:
   crossings: []
   ready: true
   dag:
-    layer: 2
+    layer: 3
     deps:
       - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::PF5_in_place_spec_update
     dependents: []
     upstream:
       - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::PF1_sync_names_its_slow_step
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::PF2_yielding_ingest
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::PF3_snapshot_names_changed_files
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::PF4_manifest_meta_sidecar
       - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::PF5_in_place_spec_update
     downstream: []
     blockedBy: []
@@ -172,8 +175,8 @@ payload:
           - idearium/repo/import-pipeline.js
     dangling: []
     lines:
-      - layer 2 · ready
-      - 'depends on (1): PF5_in_place_spec_update · all upstream 2'
+      - layer 3 · ready
+      - 'depends on (1): PF5_in_place_spec_update · all upstream 5'
       - 'needed by (0): —'
       - >-
         same files as DT4b_registry_chunk_in_repo_chunking with no order between them:

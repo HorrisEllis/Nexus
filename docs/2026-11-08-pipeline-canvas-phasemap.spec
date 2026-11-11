@@ -627,7 +627,7 @@ built_2026_11_09_plan:
     status: OPEN   # slice a BUILT 0.60.481 (a delta and a baseline per step; RAID's decisions as steps; the bar); slice b BUILT 0.60.484 (pause, continue, retry from a step)
     james: '"seeing, changing, managing, diagnosing, exporting, testing, agnostic." · "record each step in raids decision, dynamically building each step, as it goes. it all needs to be visable."'
     depends_on: [PC_D13_the_pipeline_works_first_then_cos_optimised, PC5_programmable_gate_types]
-    files: [lib/automation/pipeline.js, lib/automation/routes.js, lib/automation/engine.js, cos/manager/automation-door.js, cos/pipeline/runs.eg, cos/pipeline/cli.eg, cos/ui/automation/engine.js, cos/ui/automation/page.js, idearium/cli/route-commands.js]
+    files: [lib/automation/pipeline.js, lib/automation/routes.js, lib/automation/engine.js, cos/manager/automation-door.js, cos/pipeline/runs.eg, cos/pipeline/cli.eg, cos/ui/automation/engine.js, cos/ui/automation/page.js, idearium/cli/route-commands.js, cos/pipeline/index.js, cos/manager/server.js, tests/modules/test-cos-pipeline.test.js, idearium/api/index.js, idearium/pipelines/idearium-build.pipeline, lib/nexus-client.js, lib/repo-agent.js, guardian/lib/ncp-handler.js, guardian/server.js, tests/modules/test-ncp-handler-sr3.js]
     requires: [node]
     prerequisites: ["the census of 2026-11-10 (below)"]
     census_2026_11_10: >-
@@ -714,3 +714,140 @@ built_2026_11_09_plan:
 # James, 2026-11-12: "it says phase not selected in the piplelube vital. its the next walll" · "i need you to release this time also"
 # Found: the tab asked for what a run needs (Idearium's build pipeline: its phase) with a browser prompt, which COS's app window never shows.
 # Fixed: asked in the page; a phase chosen from those that can be built now (GET /api/cos/pipeline/ready). Proof: HB-09, CP-20.
+
+# ── ADDENDUM 2026-11-10 (0.60.489) — PC8: the run form had no phases because COS read a cut answer as an empty one ──
+# James, 2026-11-10: "your supposed to be getting the pipeline working" · 2026-11-12: "it says phase not selected in the piplelube vital. its the next walll"
+# Found on his running COS: GET /api/cos/pipeline/ready answered { ok: true, phases: [] } while Idearium's GET /api/phases/next answered a queue.
+# Cause: cos/manager/server.js _systemCall kept 4,096 characters of any answer (right for a gate, wrong for a list); the queue is about 38,000;
+# cos/pipeline/index.js ideariumRoute swallowed the parse failure and went on with {}. HB-09 and CP-20 passed because the stand-in's answer was
+# 60 characters. Fixed: the caller says how much it takes (Idearium's routes: whole); a cut answer is marked; an answer that cannot be read is
+# said (§1.2, §0.0). The stand-in in test-cos-pipeline now answers at real size, so the old code fails that test.
+# Second cause, in Idearium (SL0, docs/2026-10-23-self-building-loop-phasemap.spec addendum of the same date): the census, 7 to 13 s per call.
+# Proof: test-cos-pipeline 20/21 (CP-13 expects Clear Glass down; it was running). Live: the pipeline's five reading steps (ready, covered, map,
+# dag, graph) each answered 200 through POST /api/cos/automation/step for IN0_baseline; ready in 876 ms after the fix (7,327 ms before).
+# Not done: COS's manager not restarted (his), so the chooser on his screen is still empty until then; build, evidence and ledger steps not run.
+
+# ── ADDENDUM 2026-11-11 (0.60.490) — PC8: the build pipeline run whole, four times; the wall is Idearium's heap in the build step ──
+# James, 2026-11-10: "your supposed to be getting the pipeline working" · 2026-11-11, asked whether to run the whole build pipeline on IN0_baseline: "Yes, run it"
+# Runs, through COS, phase IN0_baseline (docs/2026-10-19-infrastructure-spine-phasemap.spec), run ids c1162190, 259f2faa, 29c5bf85, 7f4d4ea9:
+#   1. ready · covered · map · dag · graph met (10 s). build: HTTP 409 "nexus/core has no repo yet — sync the nexus repo first".
+#      Cause: no system repo existed. The background sync has waited since boot: lib/prevention.js holds heavy work for 30% free memory after a
+#      critical reading, and his machine (7.7 GB) sat at 10 to 12%. Core was synced alone (POST /api/nexus-self/sync { only: [core] }): 156 s,
+#      5,365 files, Idearium's /health slowest 6.6 s (the yielding snapshot of 0.60.487 in use: 4.1 s of the 156), lowest free memory 10.5%.
+#   2–4. the same five steps met; build: the connection dropped after 22 to 28 s. Idearium had ended, exit 134, "Reached heap limit", at the
+#      512 MB of 0.60.482. Reproduced on a fresh process twice.
+# Made visible (§2.3, §16.2): _heapNote in idearium/api/index.js says the heap at each stage of a build. Run 4: asked 195 MB · before the
+# snapshot 210 · after the snapshot and the repair 402 · before the agent starts 407 · out of heap 4 s later (limit 512 old space).
+# Not traced further: which reads inside the snapshot keep 190 MB, and what the agent's start loads (the repo's indexes are cards.json 31 MB,
+# search.json 28 MB, glyphs 11, chunks 11, graph 10).
+# His to decide (a cost on his machine): (a) a larger heap for Idearium (idearium/compartment.json maxOldSpaceMB, 512 since 0.60.482; 1,024
+# before): quickest way to the next wall, up to 512 MB more on a machine at 11% free; (b) the build made to fit in 512 MB: its own phase,
+# size unknown until the two stages are traced. The coder's recommendation: (a) now, to reach the next wall, then (b) mapped.
+# Also found: the pipeline has no step that makes sure the owning system's repo is synced before build; a phase in any unsynced system stops
+# at the same 409. Cost of this session, said: Idearium was ended by the heap limit three times and restarted by COS each time.
+
+# ── ADDENDUM 2026-11-11 (0.60.491) — PC8: Idearium's heap back to 1,024 MB (his); the build step met; three walls after it ──
+# James, 2026-11-11, told Idearium ran out of its 512 MB heap in the build step: "Yeah what is up with that. It wasn’t like that before. It was in idearium. Can’t you raise it"
+# "It was in idearium" is read by the coder as: the build ran from Idearium before, and worked there. To confirm. The routes are the same
+# ones; what changed is the heap: 0.60.482 set 512 MB from idle use, and a build in core peaks at 538 MB.
+# Done: idearium/compartment.json maxOldSpaceMB 1024; COS's setting for Idearium 1,024 (from: his), read back. (docs/2026-10-24-cos-manager-
+# phasemap.spec's 0.60.482 expansion is corrected by this: a limit is set from the heaviest thing a system does, not its idle, §17.11.)
+# Run 5 (855786f3): six steps met, build included (20 s; heap 196 · 210 · 538 · 398 MB of 1,216). Lowest free memory 7.6%.
+# Walls found, in order, not fixed:
+#   1. evidence timed out (30 s). Idearium's POST /api/repos/:uuid/phases/evidence takes { map, limit, apply }, not the { phase } the step
+#      sends: it runs the tests of up to 10 open phases, whichever they are.
+#   2. the build step is met when the build has only started ("state":"building"); the pipeline goes on to evidence while it runs. Nothing
+#      waits for the run to end.
+#   3. the build itself ended contract-incomplete after 44 s: "gate b1.tree-census.js.1 is FAILED; gate b1.tree-census.js.2 is FAILED". Its
+#      ladder said: no Ollama ("ollama bridge unreachable … ECONNREFUSED 127.0.0.1:3749": the bridge is on demand and was asleep), so the
+#      chain's agents (gemini, chatgpt, claude, deepseek) through Clear Glass, which COS read as degraded. Why each gate failed: not traced.
+
+# ── ADDENDUM 2026-11-11 (0.60.492) — PC8: a build wakes the systems it needs; handoff ──
+# James, 2026-11-11: "Just get it working"
+# Wall 3 of 0.60.491 traced: the build's coder call goes through Copilot (:3750) and its ladder asks the Ollama bridge (:3749); both on demand
+# since 0.60.482, neither woken (lib/repo-agent.js raw HTTP; nexus-client touching 'ollama' where COS's name is 'ollama-bridge'). Fixed in
+# lib/repo-agent.js (_post) and lib/nexus-client.js (_waker, wake). Not proved by a build.
+# handoff_2026_11_11 (the session ended at his usage limit). Next, in order:
+#   1. run the pipeline again (POST /api/cos/automation/pipelines/<id>/run, vars repo nexus, phase IN0_baseline) and read the build's row
+#      (GET nexus://idearium/api/repos/nexus/phases/runs): does a coder answer now. Clear Glass read as degraded; the agents go through it.
+#   2. the client's wake waits 6 s; COS holds a start 15 s under its 10% memory floor: lengthen the wait (lib/nexus-client.js call).
+#   3. a step that waits for the build to end: designed, not written: a long-poll route in Idearium (the latest run of the phase, ended and
+#      landed by lib/flight-data.js flight), under 5 min per request (fetch's header limit), a task with retries in idearium-build.pipeline.
+#   4. evidence: Idearium's route takes the phase (filter in case 'repo.phases.evidence'), and says no when that phase did not close. It judges
+#      files in the live tree, and a Nexus build lands in the system's repo first: the pipeline needs his approval step between.
+#   5. COS's manager restarted (0.60.489's chooser); the other 16 system repos unsynced; a sync step before build.
+
+# ── ADDENDUM 2026-11-11 (0.60.493) — PC8: the first build lands through the pipeline; the wait step; evidence for one phase ──
+# James, 2026-11-11: "Just get it working" · "continue. get  it working"
+# Runs after 0.60.492, each read from Idearium's own record (GET /api/repos/nexus/flight/<run>):
+#   phrun-mwbvr9la, phrun-mwbvtg3v: 0 agent calls, contract-incomplete in about 35 s. Cause: the phase's contract file, kept from the first
+#     failed run, carried "failed it before, skipped: gemini, chatgpt, claude" (cortex/core/raid/contract-adapters.js, the .exclude evidence)
+#     though that failure was Copilot asleep. Archived beside itself, not deleted (§0.3). NOT fixed in code: an attempt where nothing was sent
+#     ("no-answer … nothing was sent to") should not count against the agent. Its own phase, to map (RAID's contract engine, Cortex's).
+#   phrun-mwbvx7hu: LANDED, 17 min. gemini provider-down · chatgpt "reply appears: no reply element found after 180s" (selector drift, Clear
+#     Glass's) · claude wrote scripts/tree-census.js. Copilot had been stopped idle again and was not up within the wait: the Emerge rung fell
+#     back to the JavaScript ladder.
+# Built (JavaScript changed in place; no new file):
+#   - Idearium: GET /api/repos/:uuid/phases/landed?phase=&waitMs= (held up to 270 s; ended and landed decided by lib/flight-data.js); command
+#     row `repo landed <repo> <phase>` (agents and copilot through nexus.command).
+#   - Idearium: POST …/phases/evidence { phase } judges that phase alone; 409 with the reason when it does not close.
+#   - idearium/pipelines/idearium-build.pipeline: task `landed` (retries 5) between build and evidence; evidence applies for its phase.
+#   - lib/nexus-client.js: a woken system is waited for 30 s (was 6).
+# Proof, live: run 5047dbb3 of the nine-step pipeline: ready · covered · map · dag · graph · build · landed met in 54 s (the build resumed its
+# kept contract, landed clean, 0 calls); evidence 409 "IN0_baseline is not closed on evidence: 1 of its files do not exist:
+# scripts/tree-census.js". The file is inject 35cf0043 in nexus/core, status proposed: a Nexus system's change waits for his approval (his,
+# 2026-10-24: "yes do it." to B, Nexus stays review). The coder did not approve it.
+# No test file added (his rule; the routes were proved on his running system, said here). test suites not re-run after this change.
+# Open: (1) his approval of the proposal, then the run retried from evidence; (2) a step in the pipeline that says "waits for your yes"
+# instead of evidence refusing; (3) the stale-contract cause; (4) COS restarted: the pipeline is in COS twice until then ("(imported)", id
+# 9dbc9c8f, the nine-step one; the eight-step original updates at COS's next sync); (5) 16 system repos unsynced; (6) chatgpt's reply
+# selector and gemini's sign-in, Clear Glass's.
+
+# ── ADDENDUM 2026-11-11 (0.60.494) — PC8: the DOM mutator on the tab's own "no reply element"; his approval applied; evidence needs a test ──
+# James, 2026-11-11, asked to approve scripts/tree-census.js and told ChatGPT's reply was not found on its page: "Yeah. Why is it not hooked to the dom mutator"
+# His question, answered from the code: the DOM mutator's stream was a fallback on two roads (guardian/lib/dispatcher.js, his 2026-10-21
+# "use those as fallback routes. node anchor, dom mutator." · "look in clearglass download manager"): the completion watch running out, and
+# before a re-send. The tab's own GUARDIAN_ERROR (gate watch: "no reply element found after 180s … selector drift, not a missing answer")
+# went through guardian/lib/ncp-handler.js to the retry (answerFirst: the job, its .response, a settled transcript) and never to the ledger.
+# Hooked: that road reads ledgerReplyFor first (guardian/server.js passes answerFromLedger and completeWith to the handler). Guardian's code;
+# recorded here because the build pipeline found it. Its own map (the 0.60.191/0.60.192 phase) is to be addended when found: not searched.
+# Not proved on a live job. Why ChatGPT's selectors drifted, and gemini's "provider down", are untouched.
+# His approval ("Yeah."): POST …/injects/35cf0043…/apply, approvedBy him. scripts/tree-census.js is in the live tree.
+# Run 78d4cc5a: build timed out at the api step's default 30 s (Idearium was still snapshotting). The pipeline file gives build 240 s.
+# Run aaa327d9 (pipeline 33f6dc5e): seven steps met in 36 s; evidence 409 "IN0_baseline is not closed on evidence: no test can check it (its
+# files are shared by more than 3 open phases, or no test reaches them)". The phase names no test; test-first was skipped (no planner ready:
+# "no Ollama model on the ladder to code the plan"; qwen2.5:0.5b is under the ladder's 3b floor).
+# His, by GV_D2 (2026-10-26, "the gate doesn't wait for me to accept it or not before it fails"): accept or reject a phase nothing can check.
+# Open: the pipeline's evidence step should hold for his verdict when there is no test, not fail; COS now holds three copies of this pipeline
+# (the 8-step original; two "(imported)", 9dbc9c8f without the build limit and 33f6dc5e with it): the coder's imports, to tidy with him.
+
+# ── ADDENDUM 2026-11-11 (after 0.60.494) — IN0_baseline accepted by him; what the live stream held; two things said ──
+# James, 2026-11-11: "Yes, accept it" · "also the .response. dom mutator is supposed to stream live."
+# Accepted: the verdict route refused (the run was not held for a verdict: it had landed on file checks), the close route said "proven on
+# file checks only: nothing ran", so his acceptance went through the status writer (POST …/phases/status, complete, his words as the reason;
+# apply apply-mwbxsmbd-353cc2). The map reads DONE 2026-11-11. The pipeline's own evidence and ledger steps did not do it: a phase with no
+# test has no road through them yet.
+# Said: IN0_baseline had been shelved by him on 2026-11-07 ("Those are all top of my head ideas"). Idearium's ready queue listed it first, the
+# coder ran it without reading its status, and the build moved it to IN PROGRESS. The queue offering a shelved phase is a fault to map.
+# His second sentence, checked against Clear Glass's chat ledger (lib/chat-ledger-client.js), not answered from memory:
+#   - gemini: 1 chat, updated 09:10:57, the user turn "Your task (step 1, attempt 13): Write ONE file: scripts/tree-…" and an assistant turn of
+#     8,473 characters. The DOM mutator did stream Gemini's reply live. The run's record says gemini was "provider-down" and credits claude,
+#     whose tab was on its sign-in page with no account. Which agent's text became the file is NOT settled: to trace before it is claimed.
+#   - chatgpt: 0 chats in the ledger. The stream held nothing for it, so 0.60.494's hook would not have saved that job.
+#   - by design (0.39.278, his "guardian is polling, but it shouldn't be, live streams the dom mutation live to the download manager") the
+#     ledger is the live layer and a .response is written per settled version. A job's own completion still comes from the userscript's
+#     watch (findResponseEl, 180 s), with the stream as a fallback. Making the stream the job's first source is not built: its own phase,
+#     Guardian's and Clear Glass's, to map with him.
+
+# ── ADDENDUM 2026-11-11 (0.60.495) — the live stream is the first source of a job's answer (his) ──
+# James, 2026-11-11: "also the .response. dom mutator is supposed to stream live." · asked whether to make the live stream the first source of a job's reply: "Yes, build it"
+# Side by side: (a) Guardian listens to Clear Glass's ledger for each job (a new listener between two systems, and the ledger has no event
+# stream today: it would be a poll); (b) the stream the page's observer already sends Guardian per job (GUARDIAN_CHUNK, source transcript,
+# generating) completes the job. (b) taken, by his axioms: §8.6 what exists is used, §16.4, §5.10 no new crossing; and it is not a poll.
+# Built in guardian/lib/ncp-handler.js: settle 8 s (GUARDIAN_STREAM_SETTLE_MS); the job keeps streamFull, streamGenerating; the tab's "no
+# reply element" completes from the stream first, then the ledger (0.60.494), then fails as before. Proof: NCP-020, NCP-021, NCP-022; 10/10.
+# Guardian's code, recorded here because the build pipeline found it; its own map (0.39.278's phase) to be addended when found.
+# Not proved on a live job. Open, from his screenshots: ChatGPT's tab signed out though labelled "as ChatGPT 1" (31 cookies restored); its
+# reply was a tool call ({"name":"idearium.code_map.tool",…}) that nothing read; Google's "Couldn't sign you in — This browser or app may
+# not be secure" inside Clear Glass: his sign-ins are his, and the coder does not work around a provider's sign-in check.
+# Also open: Clear Glass re-injects Claude's userscript every minute while its tab is on the sign-in page (15 times in 15 minutes, seen).

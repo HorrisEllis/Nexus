@@ -37,10 +37,10 @@ function createPipeline({ automation, idearium = null, call = null, dataDir } = 
   });
   let line = Promise.resolve();   // one at a time: the request's files change in the order the run did
   const inOrder = (fn) => { const p = line.then(fn, fn); line = p.catch(() => {}); return p; };
-  const ask = async (owner, route, body) => {
+  const ask = async (owner, route, body, max) => {
     if (!call) return { error: 'this COS was given no way to call a system' };
     const [method, p] = String(route).split(' ');
-    try { return await call(owner, method, p, method === 'GET' ? undefined : body); } catch (e) { return { error: e.message }; }
+    try { return await call(owner, method, p, method === 'GET' ? undefined : body, max); } catch (e) { return { error: e.message }; }
   };
   // RAID's contract, by Cortex's route (Cortex keeps the books); Cortex down breaks nothing: what it did not take is said in the request's files
   const raid = async (method, p, body) => { const a = await ask('cortex', `${method} /api/raid/contracts/v2${p}`, body); if (a.error) return { ok: false, why: `Cortex did not answer: ${a.error}` }; let j = {}; try { j = JSON.parse(a.body || '{}'); } catch (_) {} return a.status < 400 ? { ok: true, ...j } : { ok: false, why: `Cortex answered ${a.status}${j.error ? `: ${j.error}` : ''}` }; };
@@ -229,7 +229,11 @@ function createPipeline({ automation, idearium = null, call = null, dataDir } = 
   const sources = () => { try { return Object.entries(JSON.parse(fs.readFileSync(syncedFile, 'utf8'))).map(([file, v]) => ({ file, ...v })); } catch (_) { return []; } };
 
   // ── a request planned into its own .pipeline, end state first (plan.eg) — his "They build upon request, dynamically" ──
-  const ideariumRoute = async (method, p, body) => { const a = await ask('idearium', `${method} ${p}`, body); if (a.error) return { ok: false, why: `Idearium did not answer: ${a.error}` }; let j = {}; try { j = JSON.parse(a.body || '{}'); } catch (_) {} return a.status < 400 ? { ok: true, ...j } : { ok: false, why: `Idearium answered ${a.status}${j.error ? `: ${j.error}` : ''}` }; };
+  const ideariumRoute = async (method, p, body) => { const a = await ask('idearium', `${method} ${p}`, body, 4 * 1024 * 1024); if (a.error) return { ok: false, why: `Idearium did not answer: ${a.error}` }; let j = {}, unread = null; try { j = JSON.parse(a.body || '{}'); } catch (e) { unread = e.message; }
+    // 0.60.489 — his "the pipeline says no phase selected": Idearium's list of phases (about 38,000 characters) was cut to 4,096, did not parse, and was
+    // passed on as an empty answer. An answer that cannot be read is said (§1.2), never taken as empty.
+    if (unread && a.status < 400) return { ok: false, why: `Idearium's answer could not be read (${a.length || (a.body || '').length} characters${a.cut ? ', cut short' : ''}): ${unread}` };
+    return a.status < 400 ? { ok: true, ...j } : { ok: false, why: `Idearium answered ${a.status}${j.error ? `: ${j.error}` : ''}` }; };
   async function planPhase({ key, repo = '', chunks = false, framework = null, run = false, by } = {}) {
     if (!by) return { ok: false, code: 400, error: 'say who asks: { "by": "person" }' };
     const ph = await ideariumRoute('GET', `/api/phases/one?key=${encodeURIComponent(String(key || ''))}`);

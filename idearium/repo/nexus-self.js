@@ -238,8 +238,15 @@ export async function sync(rl, se, { only = null, force = false, log = () => {},
   const timing = {};
   let _tStep = Date.now();
   const lap = (k) => { const n = Date.now(); timing[k] = (timing[k] || 0) + (n - _tStep); _tStep = n; };
-  const snap0 = store.snapshot(liveRoot ? { liveRoot } : {});   // liveRoot: tests sync a small tree, never the real one
+  // 0.60.487 — James, 2026-11-10: "idearium is choking". The snapshot was one blocking loop (85 s on a first pass over 12,646
+  // files, no heartbeat). It gives the event loop a turn every 40 ms now and asks the memory guard as it goes; stopped, the
+  // files already hashed are kept and the sync says so and ends here (§1.2), to go on from there next round.
+  const snap0 = await store.snapshotAsync(liveRoot ? { liveRoot } : {}, { shouldPause });   // liveRoot: tests sync a small tree, never the real one
   lap('snapshot');
+  if (snap0.paused) {
+    log(`[${MODULE_ID}] snapshot paused after ${snap0.stats.files} file(s), ${snap0.stats.hashed} hashed — ${snap0.why}; it goes on from there next round`);
+    return { ok: true, paused: true, why: snap0.why, timing, stats0: snap0.stats, stats: snap0.stats, snapshot: null, snapshotCreated: false, systems: [], versions: [], restored: [], cleaned: { ideas: 0, specs: 0 }, ms: Date.now() - t0 };
+  }
   const snap = store.loadSnapshot(snap0.hash);
   lap('loadSnapshot');
   const comps = ensureCompartments();

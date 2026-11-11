@@ -1,0 +1,48 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-08-pipeline-canvas-phasemap.spec::PC8_operate_a_pipeline
+type: phase
+id: docs_2026-11-08-pipeline-canvas-phasemap.spec::PC8_operate_a_pipeline
+context: pipeline phase PC8_operate_a_pipeline of docs/2026-11-08-pipeline-canvas-phasemap.spec
+intent: null
+summary: PC8_operate_a_pipeline (?) — 18 file(s)
+system: idearium
+tags: []
+exported_at: 1794390850096
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794390850096
+lastSeenAt: 1794390850096
+fingerprint: null
+payload:
+  id: PC8_operate_a_pipeline
+  map: docs/2026-11-08-pipeline-canvas-phasemap.spec
+  repo: null
+  layer: null
+  status: >-
+    OPEN   # slice a BUILT 0.60.481 (a delta and a baseline per step; RAID's decisions as steps; the
+    bar); slice b BUILT 0.60.484 (pause, continue, retry from a step)
+  files:
+    - lib/automation/pipeline.js
+    - lib/automation/routes.js
+    - lib/automation/engine.js
+    - cos/manager/automation-door.js
+    - cos/pipeline/runs.eg
+    - cos/pipeline/cli.eg
+    - cos/ui/automation/engine.js
+    - cos/ui/automation/page.js
+    - idearium/cli/route-commands.js
+    - cos/pipeline/index.js
+    - cos/manager/server.js
+    - tests/modules/test-cos-pipeline.test.js
+    - idearium/api/index.js
+    - lib/nexus-client.js
+    - lib/repo-agent.js
+    - guardian/lib/ncp-handler.js
+    - guardian/server.js
+    - tests/modules/test-ncp-handler-sr3.js
+  depends_on:
+    - PC_D13_the_pipeline_works_first_then_cos_optimised
+    - PC5_programmable_gate_types
+  blocks: []
+  spec: null
+  graph: 4918bbc1addf1a8c

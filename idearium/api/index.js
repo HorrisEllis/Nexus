@@ -791,6 +791,42 @@ async function _phaseMapStart(repo, opts = {}) {
   return { ok: true, job: { running: true, startedAt: job.startedAt, maps: maps.length } };
 }
 
+// 0.60.489 — James, 2026-11-10: "your supposed to be getting the pipeline working". The census behind "what can be built now" judged every
+// phase against every commit on each call: 7 to 13 s measured on his machine, in Idearium's event loop. The build pipeline's first step
+// allows 10 s and COS's phase chooser 8 s, so both failed under load, and Idearium's heartbeat stopped while it ran. Now it is worked out
+// once for what it was worked out from (the maps' text, git's log, the releases), off the event loop in a worker, and kept. Callers that
+// arrive meanwhile share the one run. Kept at most 5 minutes, because a build adds files without a commit and the census reads them.
+const _CENSUS_KEEP_MS = 5 * 60 * 1000;
+const _censusKept = new Map();   // root -> { sig, at, census, pending }
+function _censusSig(root, maps) {
+  const st = (rel) => { try { const x = fs.statSync(path.join(root, rel)); return `${x.size}:${x.mtimeMs}`; } catch (_) { return '-'; } };
+  let rel = '-'; try { rel = String(fs.readdirSync(path.join(root, 'versionium', 'changelogs')).length); } catch (_) {}
+  const h = crypto.createHash('sha1');
+  for (const m of maps) { h.update(m.path); h.update('\0'); h.update(m.text); h.update('\0'); }
+  return [h.digest('hex'), st('.git/HEAD'), st('.git/logs/HEAD'), st('lib/version.js'), rel].join('|');
+}
+function _censusOffThread(root, maps) {
+  const { Worker } = _require('worker_threads');
+  return new Promise((resolve, reject) => {
+    const w = new Worker('const { parentPort, workerData } = require("worker_threads"); const C = require(workerData.mod); parentPort.postMessage(C.census({ root: workerData.root, system: null, maps: workerData.maps }));',
+      { eval: true, workerData: { mod: _require.resolve('../../lib/phase-census.js'), root, maps }, resourceLimits: { maxOldGenerationSizeMb: 256 } });
+    w.once('message', resolve); w.once('error', reject);
+    w.once('exit', (code) => { if (code !== 0) reject(new Error(`the census worker ended with code ${code}`)); });
+  });
+}
+async function _censusFor(root, maps, C) {
+  const sig = _censusSig(root, maps), k = _censusKept.get(root);
+  if (k && k.sig === sig && k.census && Date.now() - k.at < _CENSUS_KEEP_MS) return k.census;
+  if (k && k.sig === sig && k.pending) return k.pending;
+  const t0 = Date.now();
+  const pending = _censusOffThread(root, maps)
+    .catch((e) => { console.warn(`[idearium/phases] the census could not run in a worker (${e.message}); worked out here instead`); return C.census({ root, system: null, maps }); })
+    .then((census) => { _censusKept.set(root, { sig, at: Date.now(), census, pending: null }); console.log(`[idearium/phases] census worked out in ${Date.now() - t0}ms (${census.total} phases); kept until the maps, git or the releases change, 5 min at most`); return census; })
+    .catch((e) => { _censusKept.delete(root); throw e; });
+  _censusKept.set(root, { sig, at: 0, census: null, pending });
+  return pending;
+}
+
 // 0.60.222 SL0 — what can be built now over Nexus's maps (repo null) or one repo's (lib/build-queue.js, with the census and flights);
 // shared by GET …/phases/next and the loop (SL4)
 async function _queueFor(repo) {
@@ -808,7 +844,7 @@ async function _queueFor(repo) {
     repos = [repo];
   }
   let census = null, censusWhy = null;
-  try { census = C.census({ root, system: null, maps }); } catch (e) { censusWhy = e.message; }
+  try { census = await _censusFor(root, maps, C); } catch (e) { censusWhy = e.message; }
   const flights = [];
   for (const r of repos) { try { for (const f of FD.summary(_phaseRows(r.uuid)).flights || []) if (f.map && f.phase) flights.push({ key: `${f.map}::${f.phase}`, verdict: f.verdict, landed: !!f.landed, ended: f.ended || 0 }); } catch (_) {} }
   flights.sort((a, b) => (a.ended || 0) - (b.ended || 0));
@@ -1047,7 +1083,17 @@ function _underMapRoot(mapPath, expected, delivered) {
     return want.has(rest) && (p.startsWith(root || '\0') || rest.includes('/')) ? rest : p;
   });
 }
+// 0.60.490 — James, 2026-11-11: "Yes, run it". The first whole runs of the build pipeline ended with Idearium out of heap (512 MB) inside the
+// build step, with nothing in the log between the request and the crash. Each stage of a build now says how much heap is in use (§2.3 all
+// state observable, §16.2 a system explains itself), so the stage that takes it is named by the next run.
+function _heapNote(what) {
+  try {
+    const used = process.memoryUsage().heapUsed, limit = _require('v8').getHeapStatistics().heap_size_limit;
+    console.log(`[idearium/heap] ${what}: ${Math.round(used / 1048576)} MB in use of ${Math.round(limit / 1048576)} MB`);
+  } catch (_) {}
+}
 async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null, provider = null, note = '', replan = false, anyway = false, rebuild = false, startedBy = null }) {
+  _heapNote(`build ${phase}: asked`);
   const PH = await import('../repo/phases.js');
   const view = PH.managerView({ repo, repoDir: dir, runs: [] });
   const node = view.phases.find(p => p.map === map && p.phase_key === phase);
@@ -1180,6 +1226,7 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
     graphHash: phaseGraph.hash, graphFile: phaseGraphFile ? path.relative(IDEARIUM_DATA_DIR, phaseGraphFile).replace(/\\/g, '/') : null };   // §0.60.147 DG2 — the graph it was built against
   _emitLedger('idearium.phase.run.started', { runId, repoUuid: repo.uuid, map, phase, title: node.title || null, startedBy: base.startedBy, causedBy: base.startedBy.who });   // 0.60.190 APV4
 
+  _heapNote(`build ${phase}: before the snapshot`);
   // (1) snapshot first — never write without one
   const snapBody = { message: `before phase ${phase} (${map.split('/').pop()})`, causedBy: `idearium.phases.build:${runId}` };
   let snap = await _commitRepoSnapshotFor(target.uuid, snapBody);
@@ -1225,6 +1272,7 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
       note: `${rep.moved.length} file(s) with a chat label or a cut-short name moved out of the tree before building: ${rep.moved.map(m => m.from).slice(0, 5).join(', ')}`, moved: rep.moved, ts: Date.now() });
   } catch (_) { /* a repair that cannot run never stops the build; the guard at the write door still holds */ }
 
+  _heapNote(`build ${phase}: after the snapshot and the repair`);
   // (2) active (a map that will not take the edit is reported, not fatal)
   let statusNote = null;
   if (node.status !== 'active') {
@@ -1265,6 +1313,7 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
       { id: 'note', label: 'from James', text: note ? `FROM JAMES: ${note}` : '' }], win);
   } catch (_) { return null; } };
 
+  _heapNote(`build ${phase}: before the agent starts`);
   // (3) the agent, in the background — its reply can take minutes
   const RA = _require('../../lib/repo-agent.js');
   const PRt = _require('../../lib/pipeline-routing.js');
@@ -3523,7 +3572,7 @@ const ROUTE_CAP = {
   'repo.phases.verdict': CAPS.WRITE_IDEAS,   // §GV2 0.60.257 his verdict   // §SL4/SL5 — reads only
   'repo.funnel': CAPS.READ_IDEAS,   // §FN0 — reads only: the four answers for a request
   'repo.changes': CAPS.READ_IDEAS, 'repo.change.get': CAPS.READ_IDEAS,   // §FR1 0.60.114 — reads only: one record per change
-  'repo.flight': CAPS.READ_IDEAS, 'repo.flight.get': CAPS.READ_IDEAS, 'repo.failures': CAPS.READ_IDEAS, 'repo.failure.get': CAPS.READ_IDEAS,   // §FMR3 0.60.146 reads only
+  'repo.flight': CAPS.READ_IDEAS, 'repo.flight.get': CAPS.READ_IDEAS, 'repo.phases.landed': CAPS.READ_IDEAS, 'repo.failures': CAPS.READ_IDEAS, 'repo.failure.get': CAPS.READ_IDEAS,   // §FMR3 0.60.146 reads only
     // §FR6 0.60.144 — reads only: each run read whole (lib/flight-data.js)
   'repo.carve': CAPS.WRITE_IDEAS,   // §CV1 0.60.112 — makes a repo
   'raid.held': CAPS.READ_IDEAS, 'raid.held.unpark': CAPS.WRITE_IDEAS,   // §0.60.78 RT1
@@ -3977,6 +4026,7 @@ function _matchRoute(method, url) {
     ['POST',   ['api','repos',    ':uuid','funnel'],                'repo.funnel'],   // §FN0 { request, intent? } → dependencies, spec, phase, chunks (no model)
     ['GET',    ['api','repos',    ':uuid','thread'],                'repo.thread'],   // §RS9 — spec blocks ⇄ phases ⇄ runs ⇄ files
     ['GET',    ['api','repos',    ':uuid','phases','runs'],         'repo.phases.runs'],
+    ['GET',    ['api','repos',    ':uuid','phases','landed'],       'repo.phases.landed'],   // 0.60.493 ?phase=&waitMs= — waits for the phase's newest build to end; ok only when it landed
     ['GET',    ['api','repos',    ':uuid','phases','graph'],        'repo.phases.graph'],
     ['GET',    ['api','repos',    ':uuid','uploads'],               'repo.uploads.list'],     // §0.60.173 UP3 open uploads first, his learned rules
     ['POST',   ['api','repos',    ':uuid','uploads'],               'repo.uploads.create'],   // §0.60.173 UP3 { name, intent, contentBase64 } → planned, waits as needs-you
@@ -9787,6 +9837,29 @@ async function handle(req, res, route, query, body) {
       const runs = _phaseRuns(params.uuid);
       return ok(res, { repoUuid: params.uuid, runs: query.phase ? runs.filter(r => r.phase === query.phase) : runs });
     }
+    case 'repo.phases.landed': {
+      // 0.60.493 — James, 2026-11-11: "continue. get it working". The pipeline's build step is met when a build has only started; the steps
+      // after it ran while it was still going. This waits (a held request, under fetch's 5-minute header limit) until the phase's newest
+      // build has ended, and answers ok only when it landed (lib/flight-data.js decides ended and landed). Still going at the end of the
+      // wait: 409 "still building", so a task with retries asks again.
+      const repo = getRepoLayer().get(params.uuid);
+      if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
+      const phase = String(query.phase || '');
+      if (!phase) return err(res, 400, 'phase is required');
+      const FD = _require('../../lib/flight-data.js');
+      const until = Date.now() + Math.max(1000, Math.min(270000, parseInt(query.waitMs, 10) || 240000));
+      let f = null;
+      for (;;) {
+        const mine = (FD.summary(_phaseRows(repo.uuid)).flights || []).filter(x => x.phase === phase).sort((a, b) => (b.startedAt || 0) - (a.startedAt || 0));
+        f = mine[0] || null;
+        if (!f) return err(res, 404, `no build of ${phase} has been started here`);
+        if (f.landed || f.ended || Date.now() >= until) break;
+        await new Promise(r => setTimeout(r, 2000));
+      }
+      const said = { runId: f.runId, phase, state: f.state, landed: !!f.landed, ended: !!f.ended, verdict: f.verdict, why: f.why || null, calls: f.cost ? f.cost.calls : null, wallMs: f.wallMs };
+      if (f.landed) return ok(res, said);
+      return err(res, 409, f.ended ? `the build of ${phase} ended without landing: ${f.why || f.state}` : `still building ${phase} (${f.state}); ask again`, said);
+    }
     case 'repo.phases.closes': {
       const repo = getRepoLayer().get(params.uuid);
       if (!repo) return err(res, 404, `repo not found: ${params.uuid}`);
@@ -9807,7 +9880,9 @@ async function handle(req, res, route, query, body) {
       const root = m.scope && m.scope.source === 'nexus' ? _require('../../lib/nexus-self/systems.js').ROOT : _repoDiskDir(params.uuid);
       const b = body || {};
       const maps = (m.maps || []).filter(x => !b.map || x.path === b.map).map(x => ({ path: x.path, text: x.text || '' }));
-      const phases = Object.values(DAG.build(maps, {}).nodes).filter(n => !n.done && !n.decision).map(n => ({ key: n.key, map: n.map, id: n.id, files: n.files }));
+      // 0.60.493 — { phase } judges that phase alone. Before, the pipeline's step sent a phase and the route judged up to 10 open phases,
+      // whichever they were (30 s and more). Asked for one phase, it answers ok only when that phase closes (or would, on a dry run).
+      const phases = Object.values(DAG.build(maps, {}).nodes).filter(n => !n.done && !n.decision && (!b.phase || n.id === b.phase || n.key === b.phase)).map(n => ({ key: n.key, map: n.map, id: n.id, files: n.files }));
       const apply = b.apply === true;
       const r = await PC.byEvidence({ phases, root, repo, dryRun: !apply, setStatus: apply ? _phaseSetStatus : null, limit: Math.max(1, Math.min(500, parseInt(b.limit, 10) || 10)) });
       for (const c of r.closed) {
@@ -9815,7 +9890,15 @@ async function handle(req, res, route, query, body) {
         getIdeaOS().emit('idearium.phase.closed', { ...c, trigger: 'evidence' });
         _closeLog(repo.uuid, 'phase.closed', `${c.phase} closed — ${c.note}`, c.why);
       }
-      return ok(res, { ...r, ran: r.ran.map(x => ({ file: x.file, passed: x.passed, timedOut: !!x.timedOut, ms: x.ms, tail: x.passed ? undefined : x.tail })) });
+      const outE = { ...r, ran: r.ran.map(x => ({ file: x.file, passed: x.passed, timedOut: !!x.timedOut, ms: x.ms, tail: x.passed ? undefined : x.tail })) };
+      if (b.phase) {
+        const hit = (l) => (l || []).find(c => c.phase === b.phase || c.id === b.phase || c.key === b.phase);
+        if (!hit(r.closed) && !hit(r.wouldClose)) {
+          const o = hit(r.open);
+          return err(res, 409, `${b.phase} is not closed on evidence: ${o ? (o.why || `missing ${(o.missing || []).join(', ')}`) : phases.length ? 'not every file it names is in the tree yet (a build in a Nexus system lands as proposals first: they wait for approval)' : 'no open phase of that name (already done, or not in this repo\'s maps)'}`, outE);
+        }
+      }
+      return ok(res, outE);
     }
     case 'repo.phases.nodes': {
       // 0.60.229 SL9 — James, 2026-10-23: "decompose the phases into .phase with the dependancy graph per phase node. then move them into the

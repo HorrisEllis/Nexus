@@ -9,7 +9,7 @@ intent: >-
   Idearium's build pipeline: what is ready, whether a phase already covers it, the phase mapped, its DAG whole, its graph, the build, closed on
   evidence, logged in the ledger. Each step calls Idearium by its own route (nexus://idearium); a gate stands after every step: compartment, gate,
   compartment, gate.
-summary: 8 tasks · Idearium's own routes
+summary: 9 tasks · Idearium's own routes
 system: idearium
 tags:
   - pipeline
@@ -98,17 +98,34 @@ payload:
           url: nexus://idearium/api/repos/{{vars.repo}}/phases/build
           method: POST
           body: '{"phase":"{{vars.phase}}"}'
+          timeoutMs: 240000   # 0.60.494: the snapshot before a build took over 30 s once (run 78d4cc5a); the step gave up while Idearium was still starting it
+      gate: *ref_0
+    # 0.60.493 — James, 2026-11-11: "continue. get it working". The build step is met when the build has started; this one waits for it to end
+    # and is met only when it landed. One ask waits up to 4 minutes (fetch gives up on a silent request at 5); a build still going is asked
+    # again, 5 more times (about 24 minutes in all).
+    - id: landed
+      label: The build landed
+      depends_on:
+        - build
+      retries: 5
+      step:
+        type: api
+        config:
+          url: nexus://idearium/api/repos/{{vars.repo}}/phases/landed?phase={{vars.phase}}&waitMs=240000
+          method: GET
+          timeoutMs: 280000
       gate: *ref_0
     - id: evidence
       label: Closed on evidence
       depends_on:
-        - build
+        - landed
       step:
         type: api
         config:
           url: nexus://idearium/api/repos/{{vars.repo}}/phases/evidence
           method: POST
-          body: '{"phase":"{{vars.phase}}"}'
+          body: '{"phase":"{{vars.phase}}","apply":true}'
+          timeoutMs: 180000
       gate: *ref_0
     - id: ledger
       label: Logged in the phase ledger

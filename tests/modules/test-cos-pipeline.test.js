@@ -76,7 +76,8 @@ const eg = (...a) => require('child_process').spawnSync(process.execPath, [path.
     tasks: Array.from({ length: n }, (_, i) => ({ id: `s${i + 1}`, depends_on: i ? [`s${i}`] : [], step: { type: 'set', config: { assign: { v: String(i) } } } })) })); };
   const ideariumStand = await stand((q, r, t) => { idCalls.push(`${q.method} ${q.url}`); r.setHeader('content-type', 'application/json');
     if (q.url.startsWith('/api/phases/one')) return r.end(JSON.stringify({ ok: true, ...PH }));
-    if (q.url.startsWith('/api/phases/next')) return r.end(JSON.stringify({ ok: true, queue: [{ key: PH.key, id: PH.id }] }));
+    // an answer the size of his real one (about 38,000 characters): 0.60.489, COS cut it to 4,096 and read it as empty
+    if (q.url.startsWith('/api/phases/next')) return r.end(JSON.stringify({ ok: true, queue: [{ key: PH.key, id: PH.id }], lines: Array.from({ length: 400 }, (_, i) => `line ${i}: ${'x'.repeat(80)}`) }));
     if (q.url === '/api/pipelines') return r.end(JSON.stringify({ ok: true, pipelines: [{ id: 'idea-one', name: 'Idea one' }] }));
     if (q.url === '/api/pipelines/idea-one') return r.end(JSON.stringify({ ok: true, pipeline: { text: IDEA_NODE(ideaSteps) } }));
     r.end('{"ok":true}'); });

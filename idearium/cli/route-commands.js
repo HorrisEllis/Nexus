@@ -1113,6 +1113,10 @@ export const SPEC = [
       for (const c of d.changes) console.log(`  ${c.id.slice(0, 8)}  ${String(c.status).padEnd(9)} ${c.path}${c.lines ? ` +${c.lines.added} −${c.lines.removed}` : ''}  ${c.agent || ''}${c.goal ? ` — ${String(c.goal).slice(0, 60)}` : ''}${c.landed.length ? `  @${c.landed[0]}` : ''}${c.holes.length ? h.c.amber(`  missing: ${c.holes.join(', ')}`) : ''}`);
     } },
   // §FR6 0.60.144 — James: "we need to continue building the flight recorder. look at rfr2, and cfr for friction and tension."
+  { key: 'repo.phase-landed', repo: true, usage: 'repo landed <repo> <phase> [--wait ms]', about: 'waits for the phase\'s newest build to end and says whether it landed (0.60.493; the build pipeline\'s step after build)',
+    need: (a) => (a.args[0] ? null : '<phase>'),
+    req: (a) => ({ method: 'GET', path: `/api/repos/${a.repo.uuid}/phases/landed?phase=${encodeURIComponent(a.args[0])}${a.flags.wait ? `&waitMs=${parseInt(a.flags.wait, 10) || 240000}` : ''}` }),
+    print: (d, a, h) => { console.log(`${d.landed ? h.c.mint('landed') : h.c.amber(d.ended ? 'ended without landing' : 'still building')} · ${d.phase} · ${d.state}${d.why ? ` · ${d.why}` : ''}`); } },
   { key: 'repo.flight', repo: true, usage: 'repo flight <repo> [<run id>] [--limit n]', about: 'each agent run read whole: landed or stuck and why, the ladder of agents it climbed, what it cost, what was spent on attempts that never landed, friction and tension. With no run: every run, and the share of calls wasted',
     req: (a) => (a.args[0]
       ? { method: 'GET', path: `/api/repos/${a.repo.uuid}/flight/${encodeURIComponent(a.args[0])}` }

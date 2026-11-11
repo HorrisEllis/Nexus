@@ -6,14 +6,14 @@ context: >-
   pipeline phase PR3_negative_space_for_missed_heartbeats of
   docs/2026-10-05-announce-pulse-repair-phasemap.spec
 intent: null
-summary: PR3_negative_space_for_missed_heartbeats (?) — 2 file(s)
+summary: PR3_negative_space_for_missed_heartbeats (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792841754615
+exported_at: 1794382162688
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792841754615
-lastSeenAt: 1792841754615
+firstSeenAt: 1794382162688
+lastSeenAt: 1794382162688
 fingerprint: null
 payload:
   id: PR3_negative_space_for_missed_heartbeats
@@ -24,8 +24,9 @@ payload:
   files:
     - lib/pulse-listener.js
     - lib/warp/core/Engine.js
+    - orchestrator/orchestrator.js
   depends_on:
     - PR2_the_diagnostic_listens_not_polls
   blocks: []
   spec: null
-  graph: 886bec5cf828024d
+  graph: 2220438179efca0b

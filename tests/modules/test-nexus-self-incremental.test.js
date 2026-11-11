@@ -10,6 +10,7 @@
 //   NI-002  one changed file: the spec is updated IN PLACE (same uuid), only that chunk rewritten, its file too
 //   NI-003  a file added: the whole re-ingest runs (new spec uuid), the old one purged
 //   NI-004  the snapshot names which files' content changed (the sync log prints them)
+//   NI-006  the snapshot yields and pauses (0.60.487): the blocking one's hash; a pause keeps what was hashed
 //   NI-005  saveSpec writes manifest.meta.json; a cold reader takes it while the stamp matches, never after
 //           manifest.json was written some other way
 require('../../lib/test-sandbox.js').ensure();
@@ -121,6 +122,36 @@ async function main() {
     const r = JSON.parse(cold());
     assert.strictEqual(r.tag, null);
     assert.match(r.name, /edited by hand/);
+  });
+
+  await test('NI-006', 'the yielding snapshot is the blocking one, gives the loop its turns, and a pause keeps what was hashed', async () => {
+    const store = require('../../lib/nexus-self/store.js');
+    const big = fs.mkdtempSync(path.join(TMP, 'big-'));
+    for (let i = 0; i < 400; i++) { const f = path.join(big, 'lib', `f${i}.js`); fs.mkdirSync(path.dirname(f), { recursive: true }); fs.writeFileSync(f, `module.exports = ${i};\n`); }
+    const rootA = path.join(TMP, 'storeA'), rootB = path.join(TMP, 'storeB'), rootC = path.join(TMP, 'storeC');
+    const a = store.snapshot({ liveRoot: big, root: rootA });
+    let turns = 0; const tick = setInterval(() => turns++, 1);
+    const b = await store.snapshotAsync({ liveRoot: big, root: rootB }, { sliceMs: 0 });
+    clearInterval(tick);
+    assert.strictEqual(b.hash, a.hash, 'same tree, same hash');
+    assert.strictEqual(b.stats.hashed, 400);
+    assert.ok(turns > 0, 'timers ran while it hashed');
+    // stopped partway: no snapshot, the reason carried, the hashed files kept
+    let asked = 0;
+    const p1 = await store.snapshotAsync({ liveRoot: big, root: rootC }, { sliceMs: 0, shouldPause: () => (++asked >= 100 ? 'memory is low (test)' : null) });
+    assert.strictEqual(p1.paused, true); assert.strictEqual(p1.why, 'memory is low (test)');
+    assert.ok(p1.stats.hashed >= 100 && p1.stats.hashed < 400, `stopped partway (${p1.stats.hashed})`);
+    assert.strictEqual(store.head(rootC).hash, null, 'a paused pass writes no snapshot');
+    const p2 = await store.snapshotAsync({ liveRoot: big, root: rootC }, { sliceMs: 0 });
+    assert.strictEqual(p2.hash, a.hash);
+    assert.strictEqual(p2.stats.reused, p1.stats.hashed, 'the second pass reuses what the first hashed');
+    // and the sync itself ends there, saying why
+    const said = [];
+    fs.writeFileSync(path.join(live, 'lib', 'a.js'), 'module.exports = 99;\n');
+    const out = await NS.sync(rl, se, { only, liveRoot: live, shouldPause: () => 'memory is low (test)', log: (m) => said.push(m) });
+    // a tree this small is hashed inside one slice, so the guard between systems is the one that stops it; either way nothing is synced
+    assert.ok(out.paused === true || out.systems.length === 0, 'nothing is synced under a standing pause');
+    assert.ok(said.some(m => /paused/.test(m) && /memory is low/.test(m)), 'the pause is said, with its reason');
   });
 
   console.log(`\n  ${passed} passed, ${failed} failed`);

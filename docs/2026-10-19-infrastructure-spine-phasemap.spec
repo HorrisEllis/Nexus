@@ -29,7 +29,10 @@ phases:
 
   IN0_baseline:
     layer: foundation
-    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
+    # roadmap edit 2026-11-11: LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my hea -> IN PROGRESS 2026-11-11.
+    # roadmap edit 2026-11-11: IN PROGRESS 2026-11-11. -> DONE 2026-11-11.
+    status_previous: "IN PROGRESS 2026-11-11."
+    status: "DONE 2026-11-11."
     depends_on: []
     files: [scripts/tree-census.js]
     does: >-

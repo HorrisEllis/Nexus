@@ -9,11 +9,11 @@ intent: null
 summary: PC2_procedures_and_frameworks_as_steps (library) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1794234103537
+exported_at: 1794383857754
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794234103537
-lastSeenAt: 1794234103537
+firstSeenAt: 1794383857754
+lastSeenAt: 1794383857754
 fingerprint: null
 payload:
   id: PC2_procedures_and_frameworks_as_steps
@@ -35,4 +35,4 @@ payload:
   blocks:
     - MOD-PC-PROCEDURE-STEP
   spec: cos/spec/pipeline-canvas.spec
-  graph: 94ce522675cd9658
+  graph: 1d6ba0cb39252030

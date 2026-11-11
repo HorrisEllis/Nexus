@@ -543,7 +543,20 @@ const _eventLedger = _getEventLedger('orchestrator');
 // PULSE_MISS_THRESHOLD consecutive misses — the system never came back to
 // clear the count — is this real, worth-alerting negative space, not noise.
 const PULSE_MISS_THRESHOLD = 3;
-const _pulseWatch = new Map(); // systemId -> { timer, missed }
+const _pulseWatch = new Map(); // systemId -> { timer, missed, gen }
+
+// 0.60.488 — James, 2026-11-10: "Yes, fix it". Since 0.60.482 COS stops an on-demand system when it is idle and starts it again when it
+// is asked for. Its beat stops then by COS's rule, and this watch counted it as missing: Versionium, 112 pulses in his log, its CFR
+// coherence driven to 0.00. Before a miss is declared, COS is asked once, by its route (§5.10), whether it put the system to sleep.
+// Asked at the moment of deciding, never on a timer. COS down, or a name COS does not run: unknown is not asleep, the miss stands (§1.2).
+const _cosAsk = (systemId) => require('../lib/nexus-client.js').get('cos', `/api/cos/systems/${encodeURIComponent(systemId)}`, { timeout: 3000, noWake: true });
+async function _asleepByCos(systemId, ask = _cosAsk) {
+  try {
+    const r = await ask(systemId);
+    const s = r && r.system;
+    return !!(s && s.onDemand && (s.state === 'idle' || s.state === 'idling'));
+  } catch (_) { return false; }
+}
 
 function _armPulseWatch(systemId, intervalMs) {
   const prior = _pulseWatch.get(systemId);
@@ -553,11 +566,26 @@ function _armPulseWatch(systemId, intervalMs) {
   // a miss. Floored at 5s so a system declaring an unrealistically small
   // intervalMs can't make this fire on ordinary network jitter.
   const grace = Math.max(intervalMs || 10000, 5000) * 1.5;
-  const state = prior || { missed: 0, timer: null };
+  const state = prior || { missed: 0, timer: null, gen: 0 };
   state.missed = 0; // a real beat just arrived — negative space resets
-  const _tick = () => {
+  const gen = state.gen = (state.gen || 0) + 1;   // a beat that arrives while COS is being asked owns the watch from then on
+  const _tick = async () => {
     state.missed += 1;
     if (state.missed >= PULSE_MISS_THRESHOLD) {
+      const asleep = await _asleepByCos(systemId);
+      if (state.gen !== gen) return;
+      if (asleep) {
+        const e0 = SYSTEM_REGISTRY.get(systemId) || {};
+        SYSTEM_REGISTRY.set(systemId, { ...e0, pulseMissed: 0, asleep: true });
+        const p0 = { systemId, lastSeen: e0.lastSeen || null, by: 'cos', why: 'on-demand, stopped idle; it starts again when asked' };
+        console.log(`[orchestrator][pulse] '${systemId}' is asleep — COS stopped it idle and starts it when asked; not a missed pulse. Watching again from its next beat.`);
+        if (nexusBus) { try { nexusBus.emit('pulse.asleep', p0, { source: systemId }); } catch(_) {} }
+        const l0 = _getEventLedger(systemId);
+        if (l0) { try { l0.record('pulse.asleep', p0, { source: systemId, causedBy: null }); } catch(_) {} }
+        broadcast(JSON.stringify({ type: 'pulse.asleep', ...p0, ts: Date.now() }));
+        state.missed = 0; state.timer = null;
+        return;   // no timer: its next real beat arms the watch again
+      }
       const entry = SYSTEM_REGISTRY.get(systemId) || {};
       SYSTEM_REGISTRY.set(systemId, { ...entry, pulseMissed: state.missed });
       const payload = {
@@ -1890,7 +1918,7 @@ if (M==='GET' && u.pathname==='/nexus-bus/sse') {
 
       SYSTEM_REGISTRY.set(systemId, {
         ...existing, systemId, port, status, meta,
-        lastSeen: now, seq, pulseId, pulseMissed: 0,
+        lastSeen: now, seq, pulseId, pulseMissed: 0, asleep: false,
         _intervals: intervals,
         bpm: bpmHealth.bpm, targetBpm: bpmHealth.targetBpm,
         healthScore: bpmHealth.healthScore, healthComponents: bpmHealth.components,

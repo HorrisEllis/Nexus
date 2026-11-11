@@ -1,7 +1,29 @@
 {
  "store": "nexus.components",
  "version": 1,
- "components": {},
- "byContract": {},
- "byPrompt": {}
+ "components": {
+  "nexus-core.scripts.tree-census": {
+   "id": "nexus-core.scripts.tree-census",
+   "project": "nexus-core",
+   "path": "scripts/tree-census.js",
+   "latest": "1.0.0",
+   "versions": {
+    "1.0.0": {
+     "sha256": "ae3dc0c3e1ea34ea4705e58dd52511fb8efc7687ff6aa6aa42c36581235accf0",
+     "file": "tree-census.js",
+     "deps": 0,
+     "unresolved": 0,
+     "createdAt": "2026-11-11T09:13:25.724Z"
+    }
+   }
+  }
+ },
+ "byContract": {
+  "f63cb7ca178fb3e48af46e06eedbea35": [
+   "nexus-core.scripts.tree-census",
+   "1.0.0"
+  ]
+ },
+ "byPrompt": {},
+ "updatedAt": 1794390161497
 }

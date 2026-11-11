@@ -1,0 +1,28 @@
+{
+  "id": "nexus-core.scripts.tree-census",
+  "namespace": "nexus-core",
+  "name": "scripts.tree-census",
+  "version": "1.0.0",
+  "path": "scripts/tree-census.js",
+  "file": "tree-census.js",
+  "sha256": "ae3dc0c3e1ea34ea4705e58dd52511fb8efc7687ff6aa6aa42c36581235accf0",
+  "bytes": 8010,
+  "lang": "js",
+  "purpose": "Measures the project tree: size per system and per folder, file counts, largest files, generated files, unrequired files, and inline-quote count per file.",
+  "dependencies": {},
+  "unresolved": [],
+  "npm": [],
+  "assets": [],
+  "remote": [],
+  "builtBy": {
+    "repoUuid": "nexus-id-repo-89bcfaa8",
+    "phase": "IN0_baseline",
+    "agent": "claude",
+    "source": "contract-build"
+  },
+  "contracts": [
+    "f63cb7ca178fb3e48af46e06eedbea35"
+  ],
+  "prompts": [],
+  "createdAt": "2026-11-11T09:13:25.724Z"
+}
