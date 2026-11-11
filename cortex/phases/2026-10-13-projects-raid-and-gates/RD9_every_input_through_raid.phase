@@ -1,0 +1,38 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-13-projects-raid-and-gates-phasemap.spec::RD9_every_input_through_raid
+type: phase
+id: docs_2026-10-13-projects-raid-and-gates-phasemap.spec::RD9_every_input_through_raid
+context: >-
+  pipeline phase RD9_every_input_through_raid of
+  docs/2026-10-13-projects-raid-and-gates-phasemap.spec
+intent: null
+summary: RD9_every_input_through_raid (?) — 9 file(s)
+system: idearium
+tags: []
+exported_at: 1794373266364
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794373266364
+lastSeenAt: 1794373266364
+fingerprint: null
+payload:
+  id: RD9_every_input_through_raid
+  map: docs/2026-10-13-projects-raid-and-gates-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cortex/core/raid/input.js
+    - cortex/core/raid/envelope.js
+    - cortex/core/raid/router.js
+    - cortex/boot.js
+    - cortex/interaction-contract.json
+    - lib/node-export.js
+    - idearium/cli/route-commands.js
+    - cos/manager/cli.js
+    - tests/modules/test-raid-input.test.js
+  depends_on:
+    - RD0_raid_has_its_own_contract
+  blocks: []
+  spec: null
+  graph: 637fd23a80e43a10
