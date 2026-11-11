@@ -39,3 +39,8 @@
 /* PC8 slice b (2026-11-11): retry from a step */
 .ae-from { font-size: 11px; padding: 2px 8px; margin-left: 6px; }
 .st.paused { color: #e0a030; }
+
+/* 2026-11-12: what a run needs, asked in the page */
+.ae-needs { border: 1px solid #e0a030; border-radius: 8px; padding: 12px; margin-bottom: 12px; }
+.ae-need { display: grid; grid-template-columns: 90px 1fr; gap: 8px; align-items: center; margin: 6px 0; }
+.ae-need select, .ae-need input { padding: 6px 8px; background: transparent; color: inherit; border: 1px solid var(--line, #333); border-radius: 6px; }

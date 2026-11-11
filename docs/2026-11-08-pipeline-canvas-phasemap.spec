@@ -709,3 +709,8 @@ built_2026_11_09_plan:
 # again; from a step, it and every step after it: cos/pipeline/runs.eg retry_of). Routes, events (automation.pipeline.paused|continued),
 # commands (cos automation pause|continue, cos pipeline-retry), buttons. Fixed: a waited failed run answered "Invalid status code: failed".
 # Proof: OA-12, CP-20, HB-08, runs.test.eg 7/7. Next slices: a dry run; the diagnosis view; export of a run.
+
+# ── ADDENDUM 2026-11-12 (0.60.485) — PC8: the run form (his "the pipeline says no phase selected") ──────────────────────────────────────
+# James, 2026-11-12: "it says phase not selected in the piplelube vital. its the next walll" · "i need you to release this time also"
+# Found: the tab asked for what a run needs (Idearium's build pipeline: its phase) with a browser prompt, which COS's app window never shows.
+# Fixed: asked in the page; a phase chosen from those that can be built now (GET /api/cos/pipeline/ready). Proof: HB-09, CP-20.

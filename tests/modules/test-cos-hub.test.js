@@ -10,6 +10,7 @@ require('../../lib/test-sandbox.js').ensure();
  *   HB-03 the slots with no route yet are waiting and name the phase that wires them; COS's own slots answer in process
  *   HB-07 AE5: the Automation tab — a pipeline listed, run live to done, exported as a .pipeline, imported back; the supervisor's rules kept
  *   HB-08 PC8 slice b: Pause holds a run (the running step finishes), Continue finishes it; a failed run's Retry and "from here", retried to done
+ *   HB-09 (2026-11-12) a run that needs a value asks in the page, never a browser prompt ("no phase selected"), and runs with it
  *   HB-04 GET /api/cos/hub through the manager; the Hub page in Clear Glass through the real cockpit shows each slot and its state
  */
 const assert = require('assert'), fs = require('fs'), os = require('os'), path = require('path'), http = require('http'), net = require('net');
@@ -188,6 +189,30 @@ const stand = async (answers) => { const hits = []; const s = http.createServer(
       assert.ok(await until(() => /a already met, not run again/.test(document.getElementById('ae-msg').textContent)), 'said what was met: ' + await page.evaluate(() => document.getElementById('ae-msg').textContent));
       assert.ok(await until(() => [...document.querySelectorAll('.ae-step')].every(e => e.dataset.state === 'done')), 'retried to done');
     } finally { await browser.close(); flaky.close(); }
+  });
+  await test('HB-09', '2026-11-12 "no phase selected": a run that needs a value asks in the page (no browser prompt), and runs with what is given', async () => {
+    const seen = []; const tgt = http.createServer((q, r) => { seen.push(q.url); r.setHeader('content-type', 'application/json'); r.end('{"ok":true}'); });
+    await new Promise(x => tgt.listen(0, '127.0.0.1', x));
+    const id = (await req(mp, 'POST', '/api/cos/automation/pipelines', { name: 'needs a phase', vars: { phase: '' }, by: 'person',
+      tasks: [{ id: 'dag', label: 'Its DAG', step: { type: 'api', config: { url: `http://127.0.0.1:${tgt.address().port}/dag?phase={{vars.phase}}`, method: 'GET' } } }] })).body;
+    const pid = (id.pipeline || id).id; assert.ok(pid, JSON.stringify(id));
+    const glass = require(path.join(ROOT, 'clear-glass/src/driver/glass.js'));
+    let browser; try { browser = await glass.chromium.launch(); } catch (e) { tgt.close(); console.log(`  - HB-09 SKIPPED: the engine could not start (${e.message.split('\n')[0]})`); return; }
+    try {
+      const page = await browser.newPage({ viewport: { width: 1280, height: 860 } });
+      await page.goto(`http://127.0.0.1:${cp}/automation/index.html`);
+      const until = async (fn, arg, ms = 12000) => { const t = Date.now() + ms; while (Date.now() < t) { const v = await page.evaluate(fn, arg); if (v) return v; await new Promise(r => setTimeout(r, 120)); } return null; };
+      await until((i) => !!document.querySelector(`[data-pipeline="${i}"]`), pid);
+      await page.evaluate((i) => { window.prompt = () => { window.__prompted = true; return null; }; document.querySelector(`[data-pipeline="${i}"]`).click(); }, pid);
+      await until(() => document.querySelectorAll('.ae-step').length === 1);
+      await page.evaluate(() => document.querySelector('[data-act="run"]').click());
+      assert.ok(await until(() => !!document.querySelector('#ae-needs [data-need="phase"]')), 'the form asks for the phase');
+      assert.ok(!(await page.evaluate(() => window.__prompted)), 'no browser prompt');
+      if (process.env.HB_SHOTS) await page.screenshot({ path: path.join(process.env.HB_SHOTS, 'cos-automation-needs.png'), fullPage: true });
+      await page.evaluate(() => { document.querySelector('#ae-needs [data-need="phase"]').value = 'PC8_operate_a_pipeline'; document.querySelector('[data-act="needs-run"]').click(); });
+      assert.ok(await until(() => document.querySelector('.ae-step') && document.querySelector('.ae-step').dataset.state === 'done'), 'it ran');
+      assert.ok(seen.includes('/dag?phase=PC8_operate_a_pipeline'), 'with the phase given: ' + seen.join());
+    } finally { await browser.close(); tgt.close(); }
   });
   cockpit.close(); mgr.close(); cortex.s.close(); idearium.s.close(); sup.shutdown({ by: 'test' }); fs.rmSync(dir, { recursive: true, force: true });
   console.log(`\n  ${passed} passed, ${failed} failed\n`); process.exit(failed ? 1 : 0);

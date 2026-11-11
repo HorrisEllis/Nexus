@@ -267,6 +267,7 @@ function createServer(sup, opts = {}) {
       { const rm = /^\/api\/cos\/pipeline\/requests\/([\w.-]+)(\/resume)?$/.exec(p);
         if (rm && m === 'GET' && !rm[2]) { const r = await pipeline.runs.read(rm[1]); return send(res, r ? 200 : 404, r ? { ok: true, ...r } : { ok: false, error: `no request "${rm[1]}"` }); }
         if (rm && m === 'POST' && rm[2]) { if (/^agent:/.test(String(body.by || ''))) return send(res, 403, { ok: false, error: 'an agent proposes; resuming is a person\'s' }); const r = await pipeline.resume(rm[1], { by: body.by }); return send(res, r.ok ? 200 : (r.code || 400), r); } }
+      if (m === 'GET' && p === '/api/cos/pipeline/ready') { const r = await pipeline.ready({ limit: u.searchParams.get('limit') }); return send(res, r.ok ? 200 : (r.code || 502), r); }   // 2026-11-12: the phases that can be built now, for the run form
       // PC8 slice b (2026-11-11): a failed run retried, from its request's files; { from } runs that step and every step after it again
       { const rt = /^\/api\/cos\/pipeline\/runs\/([\w.-]+)\/retry$/.exec(p);
         if (rt && m === 'POST') { if (/^agent:/.test(String(body.by || ''))) return send(res, 403, { ok: false, error: 'an agent proposes; retrying is a person\'s' }); const r = await pipeline.retry(rt[1], { from: body.from || null, by: body.by }); return send(res, r.ok ? 200 : (r.code || 400), r); } }
