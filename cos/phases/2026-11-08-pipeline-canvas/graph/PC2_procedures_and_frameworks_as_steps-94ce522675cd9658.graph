@@ -7,11 +7,11 @@ intent: null
 summary: 35 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1794352479535
+exported_at: 1794355493052
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794352479535
-lastSeenAt: 1794352479535
+firstSeenAt: 1794355493052
+lastSeenAt: 1794355493052
 fingerprint: null
 payload:
   for: PC2_procedures_and_frameworks_as_steps
@@ -312,6 +312,9 @@ payload:
           - lib/automation/engine.js
           - cos/manager/automation-door.js
           - cos/pipeline/cli.eg
+      - with: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC9_the_desktop_driver
+        files:
+          - cos/manager/server.js
     dangling: []
     lines:
       - >-
@@ -326,6 +329,7 @@ payload:
       - >-
         same files as PC8_operate_a_pipeline with no order between them: lib/automation/engine.js,
         cos/manager/automation-door.js, cos/pipeline/cli.eg
+      - 'same files as PC9_the_desktop_driver with no order between them: cos/manager/server.js'
     edges:
       - from: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC1_one_box_shape
         kind: declared

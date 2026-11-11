@@ -504,6 +504,65 @@
       "out": "{ runs, steps: { <step>: { n, mean_ms, sigma_ms (from three runs), last_ms, z, wait_mean_ms, wait_sigma_ms, last_wait_ms, status } }, latestRun: { id, status, decisions } } \u2014 PC8 slice a (2026-11-10): each step measured by a delta, its baseline over runs (cos/pipeline/baseline.eg)"
     },
     {
+      "method": "GET",
+      "path": "/api/cos/desktop/state",
+      "out": "{ armed, mode: act|view, until, by, leftMs, backend, why } \u2014 PC9 (2026-11-11): the desktop driver, off until he arms it"
+    },
+    {
+      "method": "GET",
+      "path": "/api/cos/desktop/log",
+      "in": "?limit=<acts>",
+      "out": "{ acts: [{ at, verb, args, by, why, ok, reason? }] } \u2014 PC9: the latest acts of the desktop driver, newest last"
+    },
+    {
+      "method": "POST",
+      "path": "/api/cos/desktop/arm",
+      "in": "{ minutes (1-60), mode: act|view, by: 'person' }",
+      "out": "the state; only a person arms (403 otherwise) \u2014 PC9, localhost only; refused (409) unless armed"
+    },
+    {
+      "method": "POST",
+      "path": "/api/cos/desktop/disarm",
+      "in": "{ by }",
+      "out": "the state: the kill switch \u2014 PC9, localhost only; refused (409) unless armed"
+    },
+    {
+      "method": "POST",
+      "path": "/api/cos/desktop/screen",
+      "in": "{ by, why }",
+      "out": "{ width, height, file } \u2014 a PNG of the whole screen (allowed armed view-only) \u2014 PC9, localhost only; refused (409) unless armed"
+    },
+    {
+      "method": "POST",
+      "path": "/api/cos/desktop/move",
+      "in": "{ x, y, by, why }",
+      "out": "{ ok } \u2014 PC9, localhost only; refused (409) unless armed"
+    },
+    {
+      "method": "POST",
+      "path": "/api/cos/desktop/click",
+      "in": "{ x, y, button?: left|right, double?, by, why }",
+      "out": "{ ok } \u2014 PC9, localhost only; refused (409) unless armed"
+    },
+    {
+      "method": "POST",
+      "path": "/api/cos/desktop/type",
+      "in": "{ text, by, why }",
+      "out": "{ chars } \u2014 logged as its length, never its content \u2014 PC9, localhost only; refused (409) unless armed"
+    },
+    {
+      "method": "POST",
+      "path": "/api/cos/desktop/key",
+      "in": "{ keys: 'ctrl+s' | 'enter', by, why }",
+      "out": "{ ok } \u2014 PC9, localhost only; refused (409) unless armed"
+    },
+    {
+      "method": "POST",
+      "path": "/api/cos/desktop/scroll",
+      "in": "{ x, y, dy, by, why }",
+      "out": "{ ok } \u2014 PC9, localhost only; refused (409) unless armed"
+    },
+    {
       "method": "POST",
       "path": "/api/cos/pipeline/plan",
       "in": "{ key: <map>::<phase>, repo?, chunks?, framework?, run?, by }",
@@ -597,6 +656,7 @@
     ]
   },
   "events": {
+    "cos.desktop.act": "{ at, verb, args, by, why, ok, reason? } \u2014 every act of the desktop driver, or why it was refused (PC9, 2026-11-11)",
     "cos.ledger": "{ entry: SupervisorLedgerEntry } \u2014 every line the supervisor writes, as it is written",
     "cos.system.state": "{ name, state, pid } \u2014 a system's state changed",
     "cos.ui.navigate": "{ to } \u2014 a page asks the shell to open a route",

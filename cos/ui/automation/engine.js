@@ -21,7 +21,7 @@
   document.querySelectorAll('.ae-tab').forEach(b => b.addEventListener('click', () => show(b.dataset.tab)));
   function show(tab) { S.tab = tab; document.querySelectorAll('.ae-tab').forEach(b => b.classList.toggle('on', b.dataset.tab === tab));
     document.querySelectorAll('.ae-pane').forEach(p => { p.hidden = p.dataset.pane !== tab; });
-    if (tab === 'workflows') flows(); if (tab === 'runs') runs(); if (tab === 'log') log(); }
+    if (tab === 'workflows') flows(); if (tab === 'runs') runs(); if (tab === 'log') log(); desktop(tab === 'desktop'); }
 
   // ── pipelines ──
   async function pipes() {
@@ -104,6 +104,30 @@
   async function log() { try { const d = await api('GET', A('/log?limit=200')); const ls = (d.log || d.entries || d.lines || []).slice().reverse();
     $('ae-log').replaceChildren(el('div', { class: 'ae-log', text: ls.length ? ls.map(x => typeof x === 'string' ? x : `${x.ts ? new Date(x.ts).toLocaleTimeString() : ''} ${x.level || ''} ${x.message || x.text || JSON.stringify(x)}`).join('\n') : 'Nothing logged yet.' }));
   } catch (e) { $('ae-log').textContent = e.message; } }
+
+  // ── desktop (PC9 slice a, 2026-11-11): arm, disarm, and every act as it happens, heard on COS's event stream, never polled ──
+  const DD = { es: null, tick: null, st: null, acts: [] };
+  const ddLine = (x) => el('div', { class: 'dd-act' + (x.ok ? '' : ' bad'), 'data-verb': x.verb }, [el('span', { class: 'dd-at', text: new Date(x.at).toLocaleTimeString() }),
+    el('b', { text: x.verb }), el('span', { text: [x.args && x.args.x != null ? `${x.args.x},${x.args.y}` : '', x.args && x.args.chars != null ? x.args.chars + ' chars' : '', x.args && x.args.keys ? x.args.keys : '',
+      x.args && x.args.minutes ? x.args.minutes + ' min ' + x.args.mode : ''].filter(Boolean).join(' ') }), el('small', { text: [x.by, x.why, x.ok ? '' : x.reason].filter(Boolean).join(' · ') })]);
+  function ddDraw() { const s = DD.st; if (!s) return; const left = s.armed ? Math.max(0, s.until - Date.now()) : 0;
+    $('dd-state').className = 'dd-state ' + (s.armed ? (s.mode === 'view' ? 'view' : 'on') : 'off');
+    $('dd-state').textContent = !s.backend ? 'Cannot be driven on this computer: ' + (s.why || 'no backend') : s.armed ? `Armed (${s.mode === 'view' ? 'view only' : 'act'}) by ${s.by}, ${Math.floor(left / 60000)}:${String(Math.floor(left / 1000) % 60).padStart(2, '0')} left · ${s.backend}` : 'Off. Nothing can touch the screen until you arm it. · ' + s.backend;
+    $('n-desktop').textContent = s.armed ? '●' : ''; $('dd-arm').disabled = !s.backend; $('dd-disarm').disabled = !s.armed;
+    if (s.armed && left === 0) ddState(); }
+  async function ddState() { try { DD.st = await api('GET', '/api/cos/desktop/state'); ddDraw(); } catch (e) { $('dd-state').textContent = e.message; } }
+  async function desktop(on) {
+    if (!on) { if (DD.es) { DD.es.close(); DD.es = null; } clearInterval(DD.tick); DD.tick = null; return; }
+    await ddState();
+    try { DD.acts = (await api('GET', '/api/cos/desktop/log?limit=50')).acts || []; } catch (_) { DD.acts = []; }
+    $('dd-log').replaceChildren(...DD.acts.slice().reverse().map(ddLine));
+    if (!DD.es && window.EventSource) { DD.es = new EventSource('/api/cos/events'); DD.es.addEventListener('cos.desktop.act', (m) => { let x; try { x = JSON.parse(m.data); } catch (_) { return; }
+      $('dd-log').prepend(ddLine(x)); if (/^(arm|disarm)$/.test(x.verb) || /expired/.test(x.reason || '')) ddState(); }); }
+    if (!DD.tick) DD.tick = setInterval(ddDraw, 1000);   // the countdown, drawn locally (no request)
+  }
+  $('dd-arm').addEventListener('click', async () => { const mode = (document.querySelector('input[name="dd-mode"]:checked') || {}).value || 'act';
+    try { DD.st = await api('POST', '/api/cos/desktop/arm', { minutes: Number($('dd-min').value), mode, by: 'person' }); ddDraw(); say('ok', `The desktop is armed (${mode}) for ${$('dd-min').value} minutes.`); } catch (e) { say('bad', e.message); } });
+  $('dd-disarm').addEventListener('click', async () => { try { DD.st = await api('POST', '/api/cos/desktop/disarm', { by: 'person' }); ddDraw(); say('ok', 'The desktop is disarmed.'); } catch (e) { say('bad', e.message); } });
 
   pipes(); flows();
   window.AUTOMATION = { show, open, pipes, state: S };

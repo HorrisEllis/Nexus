@@ -23,6 +23,7 @@
     <button class="ae-tab" data-tab="workflows" role="tab">Workflows<b id="n-workflows"></b></button>
     <button class="ae-tab" data-tab="runs" role="tab">Runs<b id="n-runs"></b></button>
     <button class="ae-tab" data-tab="log" role="tab">Log</button>
+    <button class="ae-tab" data-tab="desktop" role="tab">Desktop<b id="n-desktop"></b></button>
     <button class="ae-tab" data-tab="supervision" role="tab">Supervision</button>
   </nav>
   <div id="ae-msg" class="ae-msg" role="status"></div>
@@ -41,6 +42,23 @@
   </section>
   <section class="ae-pane" data-pane="log" hidden>
     <section class="panel"><div class="panel-head"><h2>The engine's log</h2><span class="tag">newest first</span></div><div class="panel-body" id="ae-log">reading…</div></section>
+  </section>
+
+  <!-- PC9 slice a (2026-11-11), his: "I'm saying for you. Like look at clearglass. Nexus nerve, cleardriver injecting coordinates into the dom." -->
+  <section class="ae-pane" data-pane="desktop" hidden>
+    <section class="panel"><div class="panel-head"><h2>The desktop driver</h2><span class="tag">this computer only</span></div>
+      <div class="panel-body">
+        <p class="muted">Lets Claude and Nexus's agents drive this screen the way ClearDriver drives a page: take the screen, click at x,y, type, press keys, scroll. It is off until you arm it, for the time you choose. View-only allows the screen only. Disarm stops it at once. Every act is logged below, with who asked and why; typed text is logged as its length only.</p>
+        <div class="dd-state" id="dd-state">reading…</div>
+        <div class="dd-arm">
+          <label>For <select id="dd-min"><option>5</option><option selected>15</option><option>30</option><option>60</option></select> minutes</label>
+          <label><input type="radio" name="dd-mode" value="act" checked> act</label>
+          <label><input type="radio" name="dd-mode" value="view"> view only</label>
+          <button class="btn primary" id="dd-arm">Arm</button>
+          <button class="btn danger" id="dd-disarm">Disarm</button>
+        </div>
+        <div id="dd-log" class="dd-log"></div>
+      </div></section>
   </section>
 
   <section class="ae-pane" data-pane="supervision" hidden>

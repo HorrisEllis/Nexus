@@ -143,6 +143,20 @@ decisions:
       First, the pipeline in COS's automation engine works and is operable: execute, see, change, manage, diagnose, export and test, for any
       kind of step (copilot tools, frameworks, macros). RAID's decisions are recorded as steps as they are made, everything is visible, and a
       completed contract becomes a replayable pipeline node (PC7). Then COS is optimised (PR6, PR4, CP6, on-demand and heap caps).
+  PC_D14_a_desktop_driver_for_agents:
+    status: "DECIDED 2026-11-11 (his)"
+    james: '"would you be able to the Remote Desktop that you have. Can you replicate that as an option so you can utilize that in COS UI?" · "Do it. Are you able to build or add an option for remote" · asked who it is for: "I’m saying for you. Like look at clearglass. Nexus nerve, cleardriver injecting coordinates into the dom." · asked its default: "Na"'
+    context: >-
+      Asked: is the remote option for him from his phone, for Nexus's agents, or for the coder through COS. The coder said that Anthropic's own
+      Remote Control already lets a cloud session see and drive his PC. He answered: for the coder, the way Clear Glass's driver (the nerve,
+      ClearDriver) injects coordinates into a page.
+    chosen: >-
+      A desktop driver: the whole screen driven the way ClearDriver drives a page, through COS (screen, click at x,y, type, key, scroll),
+      used by the coder through his Remote Control link (the coder runs COS's commands on his own PC, so nothing is exposed to the internet)
+      and by Nexus's agents as a pipeline step.
+    reading_to_confirm: >-
+      "Na" to the default was read as no preference. The coder's default, by the axioms (REVERSIBILITY, USER_AUTONOMY, §1.2): off until he
+      arms it from COS for a set time. Armed, it acts; a kill switch disarms it; every act is logged with who and why.
   PC_D0_reuse_first:
     status: "DECIDED 2026-11-08 by his axioms"
     chosen: >-
@@ -643,3 +657,29 @@ built_2026_11_09_plan:
     # - Two execFile calls in cos/pipeline/index.js got windowsHide (SC16).
     # Next slices: pause, resume and retry; the dry run; the diagnosis view; export of a run.
     slice_a_built: "0.60.481"
+  PC9_the_desktop_driver:
+    status: OPEN   # slice a BUILT 0.60.483 (the driver, its routes and command, the Desktop tab); the Windows backend proved on his PC next
+    james: '"I’m saying for you. Like look at clearglass. Nexus nerve, cleardriver injecting coordinates into the dom."'
+    depends_on: [PC_D14_a_desktop_driver_for_agents]
+    files: [cos/remote-desktop/desktop-driver.js, cos/remote-desktop/input-injector.js, cos/manager/server.js, cos/manager/contract.json, idearium/cli/route-commands.js, cos/ui/automation/engine.js, tests/modules/test-cos-desktop-driver.test.js]
+    requires: [node, "Windows: PowerShell (always there); Linux: xdotool and ImageMagick's import, when present"]
+    prerequisites: ["his arm in COS, each time, for a set time"]
+    reuse: >-
+      cos/remote-desktop/input-injector.js (one interface, a rate limiter, a view-only lock; its native backend was an optional nut-js, never
+      installed) and ClearDriver's verbs (clear-glass/src/driver/index.js: screenshot, click at x,y, type, pressKey, scroll).
+    does: >-
+      COS drives the desktop the way ClearDriver drives a page: screen (a PNG of the whole screen and its size), move, click at x,y, type, key,
+      scroll. Backends: on Windows, PowerShell with user32 and System.Drawing, nothing to install, started hidden; on Linux, xdotool and import
+      when present; otherwise it refuses, naming what is missing. It is off until he arms it in COS for a set time (view-only allows the screen
+      only). One kill switch. Every act is logged (who, what, where, why) and streamed. Served on localhost only: POST /api/cos/desktop/<verb>,
+      and `cos desktop <verb>` for the coder (through his Remote Control link) and for agents. Backend, then route, then command, then UI.
+    proof: "a stand-in backend: every verb refused unarmed, the screen alone under view-only, every verb under armed, the arm expiring by itself, the kill switch; every act in the log; the commands; the Arm control in COS through Clear Glass. The real PowerShell backend is proved on his PC, through his link."
+
+# ── ADDENDUM 2026-11-11 (0.60.483) — PC9 slice a: the desktop driver for agents (his PC_D14) ──────────────────────────────────────────────
+# James, 2026-11-11: "I’m saying for you. Like look at clearglass. Nexus nerve, cleardriver injecting coordinates into the dom."
+# Built: cos/remote-desktop/desktop-driver.js (screen, move, click, type, key, scroll; backends: Windows PowerShell user32/System.Drawing,
+# Linux xdotool/import, else refused, named). Off until he arms it (1–60 min; view-only = the screen only; only a person arms; Disarm the kill
+# switch; expiry by itself). Every act logged (desktop/log.jsonl) and streamed (cos.desktop.act); typed text as its length only. Localhost
+# only: /api/cos/desktop/<verb> (declared in cos/manager/contract.json), `cos desktop <verb>`, the Automation › Desktop tab (heard on the
+# event stream, not polled). Proof: test-cos-desktop-driver 9/9 (stand-in backend; DD-09 in Clear Glass). Open: the Windows backend run on
+# his PC through his Remote Control link. The coder's: a move bypasses the injector (it applies moves later, unconfirmed).

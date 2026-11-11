@@ -7,11 +7,11 @@ intent: null
 summary: 36 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1794353343297
+exported_at: 1794355493063
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794353343297
-lastSeenAt: 1794353343297
+firstSeenAt: 1794355493063
+lastSeenAt: 1794355493063
 fingerprint: null
 payload:
   for: PC4_the_box_kinds_on_the_canvas
@@ -317,6 +317,9 @@ payload:
           - cos/pipeline/runs.eg
           - cos/pipeline/cli.eg
           - lib/automation/pipeline.js
+      - with: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC9_the_desktop_driver
+        files:
+          - cos/manager/server.js
     dangling: []
     lines:
       - >-
@@ -331,6 +334,7 @@ payload:
       - >-
         same files as PC8_operate_a_pipeline with no order between them: cos/pipeline/runs.eg,
         cos/pipeline/cli.eg, lib/automation/pipeline.js
+      - 'same files as PC9_the_desktop_driver with no order between them: cos/manager/server.js'
     edges:
       - from: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC1_one_box_shape
         kind: declared

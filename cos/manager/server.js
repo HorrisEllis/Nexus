@@ -85,6 +85,7 @@ function createServer(sup, opts = {}) {
     if (data) q.write(data); q.end();
   });
   const srvRef = {};
+  let desktop = null;   // PC9: made on first use
   // 2026-11-09 — James: "This needs to be a module." COS's pipeline module (cos/pipeline/): the box shape, the gates, requests kept as files
   pipeline = require('../pipeline/index.js').createPipeline({ automation, idearium: _ideariumGet, call: _systemCall,
     dataDir: process.env.COS_MANAGER_DATA || path.join(root, 'cos', 'data', 'manager') });
@@ -235,6 +236,21 @@ function createServer(sup, opts = {}) {
       if (m === 'POST' && p === '/api/cos/pipeline/from-erv') { if (/^agent:/.test(String(body.by || ''))) return send(res, 403, { ok: false, error: 'an agent proposes; making a pipeline from the canvas is a person\'s' }); const r = await pipeline.fromErv({ text: body.text, erv: body.erv, name: body.name, by: body.by || 'person' }); return send(res, r.ok ? 200 : r.code || 422, r); }
       if (m === 'POST' && p === '/api/cos/pipeline/sync') { if (/^agent:/.test(String(body.by || ''))) return send(res, 403, { ok: false, error: 'an agent proposes; importing is a person\'s or a system\'s' }); return send(res, 200, await pipeline.sync()); }
       if (m === 'GET' && p === '/api/cos/pipeline/sources') return send(res, 200, { ok: true, sources: pipeline.sources() });
+      // PC9 slice a (2026-11-11), his PC_D14: "I'm saying for you. Like look at clearglass. Nexus nerve, cleardriver injecting coordinates into the dom."
+      // The desktop driven the way ClearDriver drives a page (cos/remote-desktop/desktop-driver.js). Localhost only; off until he arms it, for a set time.
+      { const dm = /^\/api\/cos\/desktop(?:\/(state|log|arm|disarm|screen|move|click|type|key|scroll))?$/.exec(p);
+        if (dm) {
+          const ra = String((req.socket && req.socket.remoteAddress) || '');
+          if (!/^(127\.|::1$|::ffff:127\.)/.test(ra)) return send(res, 403, { ok: false, error: 'the desktop driver answers on this computer only (localhost)' });
+          if (!desktop) desktop = require('../remote-desktop/desktop-driver.js').createDesktopDriver({ backend: opts.desktopBackend,
+            dataDir: process.env.COS_MANAGER_DATA || path.join(root, 'cos', 'data', 'manager'), emit: (ev, d) => broadcast(ev, d) });
+          const verb = dm[1] || 'state';
+          if (verb === 'state') return send(res, 200, desktop.state());
+          if (verb === 'log') return send(res, 200, desktop.log({ limit: u.searchParams.get('limit') }));
+          if (m !== 'POST') return send(res, 405, { ok: false, error: `POST /api/cos/desktop/${verb}` });
+          const r = await desktop[verb](body);
+          return send(res, r.ok === false ? (r.code || 409) : 200, r);
+        } }
       // PC8 slice a (2026-11-10): a delta and a baseline per step, and the decisions of the latest run (cos/pipeline/baseline.eg)
       if (m === 'GET' && p === '/api/cos/pipeline/baseline') { const r = await pipeline.baseline({ pipeline: u.searchParams.get('pipeline'), limit: u.searchParams.get('limit') }); return send(res, r.ok === false ? (r.code || 500) : 200, r); }
       // 2026-11-09 — James: "They build upon request, dynamically" · "It's end state first reasoning." A phase planned into its own .pipeline (end state
