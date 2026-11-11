@@ -121,6 +121,9 @@ function createDesktopDriver({ backend = undefined, dataDir, emit = () => {}, no
 
   return {
     state, arm, disarm, logFile,
+    /** the latest acts, newest last (what the Desktop tab shows when it opens) */
+    log: ({ limit = 50 } = {}) => { let lines = []; try { lines = fs.readFileSync(logFile, 'utf8').trim().split('\n').filter(Boolean); } catch (_) {}
+      return { ok: true, acts: lines.slice(-Math.max(1, Math.min(500, Number(limit) || 50))).map(l => { try { return JSON.parse(l); } catch (_) { return null; } }).filter(Boolean) }; },
     screen: ({ by, why } = {}) => act('screen', { why }, by, async () => { const file = path.join(dir, 'screens', `${now()}.png`); const r = await B.screen(file); return { ...r, file }; }, { viewOk: true }),
     // a move goes straight to the backend: the injector coalesces moves and applies them later, so a driver would not know it happened
     move: ({ x, y, by, why } = {}) => act('move', { x, y, why }, by, async () => { await B.mousemove(n(x), n(y)); return {}; }),

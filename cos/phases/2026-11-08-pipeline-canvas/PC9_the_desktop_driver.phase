@@ -7,18 +7,20 @@ intent: null
 summary: PC9_the_desktop_driver (?) — 7 file(s)
 system: idearium
 tags: []
-exported_at: 1794355493086
+exported_at: 1794356000679
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794355493086
-lastSeenAt: 1794355493086
+firstSeenAt: 1794356000679
+lastSeenAt: 1794356000679
 fingerprint: null
 payload:
   id: PC9_the_desktop_driver
   map: docs/2026-11-08-pipeline-canvas-phasemap.spec
   repo: null
   layer: null
-  status: OPEN
+  status: >-
+    OPEN   # slice a BUILT 0.60.483 (the driver, its routes and command, the Desktop tab); the
+    Windows backend proved on his PC next
   files:
     - cos/remote-desktop/desktop-driver.js
     - cos/remote-desktop/input-injector.js
@@ -31,4 +33,4 @@ payload:
     - PC_D14_a_desktop_driver_for_agents
   blocks: []
   spec: null
-  graph: b123dbd309345c04
+  graph: 75bfe44a6b17c2d5

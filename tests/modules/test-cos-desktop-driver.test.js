@@ -12,12 +12,14 @@
  *   DD-06  disarm is the kill switch: the next act refused; an arm past its time expires by itself
  *   DD-07  no backend on this machine: arming refused, naming what is missing
  *   DD-08  SendKeys text and combos escaped for Windows; the command row builds each verb
+ *   DD-09  the Desktop tab in Clear Glass through the real cockpit: off; armed by his click; an agent's act appears live (heard, not polled); disarmed
  *
  * The backend is a stand-in that records each call; the real Windows backend (PowerShell, user32) is proved on his PC.
  */
 require('../../lib/test-sandbox.js').ensure();
 const assert = require('assert'), fs = require('fs'), os = require('os'), path = require('path'), http = require('http');
 const ROOT = path.join(__dirname, '..', '..');
+if (!process.env.GLASS_CHROMIUM) { const c = '/opt/pw-browsers/chromium-1243/chrome-linux64/chrome'; if (fs.existsSync(c) && !fs.existsSync(path.join(ROOT, 'node_modules/electron'))) process.env.GLASS_CHROMIUM = c; }
 const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'cos-desktop-'));
 process.env.COS_MANAGER_DATA = path.join(tmp, 'data');
 const D = require(path.join(ROOT, 'cos/remote-desktop/desktop-driver.js'));
@@ -123,6 +125,30 @@ const standIn = {
     assert.deepStrictEqual(row.req({ args: [], flags: {} }), { system: 'cos', method: 'GET', path: '/api/cos/desktop/state' });
     assert.deepStrictEqual(row.req({ args: ['arm', '15'], flags: { view: true } }).body, { by: 'person', why: '', minutes: 15, mode: 'view' });
     assert.deepStrictEqual(row.req({ args: ['type', 'hi', 'there'], flags: { by: 'agent:x' } }).body, { by: 'agent:x', why: '', text: 'hi there' });
+  });
+
+  await T('DD-09', 'the Desktop tab in Clear Glass through the real cockpit: off; armed by his click; an agent\'s act appears live (heard, not polled); disarmed', async () => {
+    const cp = await new Promise(r => { const s = require('net').createServer(); s.listen(0, '127.0.0.1', () => { const q = s.address().port; s.close(() => r(q)); }); });
+    const cockpit = require(path.join(ROOT, 'cos/ui/serve.js')).createServer({ port: cp, manager: `http://127.0.0.1:${M}` }); await new Promise(r => cockpit.listen(cp, '127.0.0.1', r));
+    const glass = require(path.join(ROOT, 'clear-glass/src/driver/glass.js'));
+    let browser; try { browser = await glass.chromium.launch(); } catch (e) { cockpit.close(); console.log(`  - DD-09 SKIPPED: the engine could not start (${e.message.split('\n')[0]})`); return; }
+    try {
+      const page = await browser.newPage({ viewport: { width: 1280, height: 860 } });
+      await page.goto(`http://127.0.0.1:${cp}/automation/index.html`);
+      const until = async (fn, ms = 10000) => { const t = Date.now() + ms; while (Date.now() < t) { const v = await page.evaluate(fn); if (v) return v; await new Promise(r => setTimeout(r, 150)); } return null; };
+      await until(() => !!document.querySelector('[data-tab="desktop"]'));
+      await page.evaluate(() => document.querySelector('[data-tab="desktop"]').click());
+      assert.ok(await until(() => /^Off\./.test(document.getElementById('dd-state').textContent)), 'off: ' + await page.evaluate(() => document.getElementById('dd-state').textContent));
+      assert.ok(await until(() => document.querySelectorAll('#dd-log .dd-act').length > 0), 'the earlier acts listed from the log');
+      await page.evaluate(() => { document.getElementById('dd-min').value = '5'; document.getElementById('dd-arm').click(); });
+      assert.ok(await until(() => /^Armed \(act\) by person, 4:5\d left/.test(document.getElementById('dd-state').textContent)), 'armed: ' + await page.evaluate(() => document.getElementById('dd-state').textContent));
+      const c = await P('click', { x: 321, y: 654, by: 'agent:claude', why: 'seen live' }); assert.strictEqual(c.status, 200);
+      assert.ok(await until(() => { const f = document.querySelector('#dd-log .dd-act'); return f && f.dataset.verb === 'click' && /321,654/.test(f.textContent) && /seen live/.test(f.textContent); }), 'the act, live, on top');
+      if (process.env.HB_SHOTS) await page.screenshot({ path: path.join(process.env.HB_SHOTS, 'cos-desktop-driver.png'), fullPage: true });
+      await page.evaluate(() => document.getElementById('dd-disarm').click());
+      assert.ok(await until(() => /^Off\./.test(document.getElementById('dd-state').textContent)), 'disarmed');
+      assert.strictEqual((await P('click', { x: 1, y: 1, by: 'agent:claude' })).status, 409);
+    } finally { await browser.close(); cockpit.close(); }
   });
 
   es.destroy(); mgr.close(); sup.shutdown({ by: 'test' });

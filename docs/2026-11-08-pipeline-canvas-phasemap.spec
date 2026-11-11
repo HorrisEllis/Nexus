@@ -658,7 +658,7 @@ built_2026_11_09_plan:
     # Next slices: pause, resume and retry; the dry run; the diagnosis view; export of a run.
     slice_a_built: "0.60.481"
   PC9_the_desktop_driver:
-    status: OPEN
+    status: OPEN   # slice a BUILT 0.60.483 (the driver, its routes and command, the Desktop tab); the Windows backend proved on his PC next
     james: '"I’m saying for you. Like look at clearglass. Nexus nerve, cleardriver injecting coordinates into the dom."'
     depends_on: [PC_D14_a_desktop_driver_for_agents]
     files: [cos/remote-desktop/desktop-driver.js, cos/remote-desktop/input-injector.js, cos/manager/server.js, cos/manager/contract.json, idearium/cli/route-commands.js, cos/ui/automation/engine.js, tests/modules/test-cos-desktop-driver.test.js]
@@ -674,3 +674,12 @@ built_2026_11_09_plan:
       only). One kill switch. Every act is logged (who, what, where, why) and streamed. Served on localhost only: POST /api/cos/desktop/<verb>,
       and `cos desktop <verb>` for the coder (through his Remote Control link) and for agents. Backend, then route, then command, then UI.
     proof: "a stand-in backend: every verb refused unarmed, the screen alone under view-only, every verb under armed, the arm expiring by itself, the kill switch; every act in the log; the commands; the Arm control in COS through Clear Glass. The real PowerShell backend is proved on his PC, through his link."
+
+# ── ADDENDUM 2026-11-11 (0.60.483) — PC9 slice a: the desktop driver for agents (his PC_D14) ──────────────────────────────────────────────
+# James, 2026-11-11: "I’m saying for you. Like look at clearglass. Nexus nerve, cleardriver injecting coordinates into the dom."
+# Built: cos/remote-desktop/desktop-driver.js (screen, move, click, type, key, scroll; backends: Windows PowerShell user32/System.Drawing,
+# Linux xdotool/import, else refused, named). Off until he arms it (1–60 min; view-only = the screen only; only a person arms; Disarm the kill
+# switch; expiry by itself). Every act logged (desktop/log.jsonl) and streamed (cos.desktop.act); typed text as its length only. Localhost
+# only: /api/cos/desktop/<verb> (declared in cos/manager/contract.json), `cos desktop <verb>`, the Automation › Desktop tab (heard on the
+# event stream, not polled). Proof: test-cos-desktop-driver 9/9 (stand-in backend; DD-09 in Clear Glass). Open: the Windows backend run on
+# his PC through his Remote Control link. The coder's: a move bypasses the injector (it applies moves later, unconfirmed).

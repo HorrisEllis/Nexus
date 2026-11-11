@@ -24,3 +24,14 @@
 .ae-bar.off .ae-bar-fill { background: var(--warn, #e0a030); }
 .ae-base { display: block; font-size: 12px; }
 .ae-decision { display: flex; gap: 8px; font-size: 12px; padding-left: 12px; }
+
+/* PC9 slice a (2026-11-11): the desktop driver */
+.dd-state { padding: 10px 12px; border-radius: 8px; margin: 10px 0; font-weight: 600; border: 1px solid var(--line, #333); }
+.dd-state.off { opacity: .85; }
+.dd-state.on { border-color: #d9534f; color: #d9534f; }
+.dd-state.view { border-color: #e0a030; color: #e0a030; }
+.dd-arm { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 12px; }
+.dd-log { max-height: 360px; overflow: auto; font-size: 12px; }
+.dd-act { display: grid; grid-template-columns: 80px 60px 1fr; gap: 6px; padding: 3px 0; border-bottom: 1px solid var(--line, #2a2a2a); }
+.dd-act small { grid-column: 2 / -1; opacity: .7; }
+.dd-act.bad b { color: #d9534f; }

@@ -509,6 +509,12 @@
       "out": "{ armed, mode: act|view, until, by, leftMs, backend, why } \u2014 PC9 (2026-11-11): the desktop driver, off until he arms it"
     },
     {
+      "method": "GET",
+      "path": "/api/cos/desktop/log",
+      "in": "?limit=<acts>",
+      "out": "{ acts: [{ at, verb, args, by, why, ok, reason? }] } \u2014 PC9: the latest acts of the desktop driver, newest last"
+    },
+    {
       "method": "POST",
       "path": "/api/cos/desktop/arm",
       "in": "{ minutes (1-60), mode: act|view, by: 'person' }",

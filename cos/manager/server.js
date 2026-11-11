@@ -238,7 +238,7 @@ function createServer(sup, opts = {}) {
       if (m === 'GET' && p === '/api/cos/pipeline/sources') return send(res, 200, { ok: true, sources: pipeline.sources() });
       // PC9 slice a (2026-11-11), his PC_D14: "I'm saying for you. Like look at clearglass. Nexus nerve, cleardriver injecting coordinates into the dom."
       // The desktop driven the way ClearDriver drives a page (cos/remote-desktop/desktop-driver.js). Localhost only; off until he arms it, for a set time.
-      { const dm = /^\/api\/cos\/desktop(?:\/(state|arm|disarm|screen|move|click|type|key|scroll))?$/.exec(p);
+      { const dm = /^\/api\/cos\/desktop(?:\/(state|log|arm|disarm|screen|move|click|type|key|scroll))?$/.exec(p);
         if (dm) {
           const ra = String((req.socket && req.socket.remoteAddress) || '');
           if (!/^(127\.|::1$|::ffff:127\.)/.test(ra)) return send(res, 403, { ok: false, error: 'the desktop driver answers on this computer only (localhost)' });
@@ -246,6 +246,7 @@ function createServer(sup, opts = {}) {
             dataDir: process.env.COS_MANAGER_DATA || path.join(root, 'cos', 'data', 'manager'), emit: (ev, d) => broadcast(ev, d) });
           const verb = dm[1] || 'state';
           if (verb === 'state') return send(res, 200, desktop.state());
+          if (verb === 'log') return send(res, 200, desktop.log({ limit: u.searchParams.get('limit') }));
           if (m !== 'POST') return send(res, 405, { ok: false, error: `POST /api/cos/desktop/${verb}` });
           const r = await desktop[verb](body);
           return send(res, r.ok === false ? (r.code || 409) : 200, r);
