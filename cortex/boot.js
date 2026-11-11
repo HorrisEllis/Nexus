@@ -1097,6 +1097,15 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
+  // RD9 slice a (2026-11-12), his: "inputs into raid, saved as a .input node, then raid decides what to do with using the routing."
+  if (p === '/api/raid/input' || p === '/api/raid/inputs') {
+    const RI = require('./core/raid/input.js'); const dir = process.env.RAID_INPUTS_DIR || path.join(__dirname, 'data', 'raid', 'inputs');
+    if (req.method !== 'POST') { json(res, 200, { ok: true, inputs: RI.list({ dir, limit: Number(url.searchParams.get('limit')) || 50 }) }); return; }
+    let b = await readBody(req); if (typeof b === 'string') { try { b = JSON.parse(b || '{}'); } catch (_) { b = {}; } }
+    const r = await RI.take(b || {}, { dir, decide: async (intent) => _raidDecide(intent, { sigmaFloor: _field.entropy, regime: _field.regime }) });
+    json(res, r.ok ? 200 : (r.code || 400), r); return;
+  }
+
   if (p === '/api/raid/decide') {
     const intent = url.searchParams.get('intent') || '';
     const cfrCtx = { sigmaFloor: _field.entropy, regime: _field.regime };

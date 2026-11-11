@@ -1,0 +1,279 @@
+envelope: 1
+uuid: nexus-export-graph-phase:RD9_every_input_through_raid:637fd23a80e43a10
+type: graph
+id: phase:RD9_every_input_through_raid:637fd23a80e43a10
+context: dependency graph of phase RD9_every_input_through_raid
+intent: null
+summary: 33 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1794373266364
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794373266364
+lastSeenAt: 1794373266364
+fingerprint: null
+payload:
+  for: RD9_every_input_through_raid
+  kind: phase
+  repo: null
+  hash: 637fd23a80e43a10
+  nodes:
+    - path: cortex/boot.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/envelope.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/input.js
+      role: changes
+      exists: false
+      system: cortex
+    - path: cortex/core/raid/router.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: cortex/interaction-contract.json
+      role: changes
+      exists: true
+      system: cortex
+    - path: cos/manager/cli.js
+      role: changes
+      exists: true
+      system: cos
+    - path: idearium/cli/route-commands.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: lib/node-export.js
+      role: changes
+      exists: true
+      system: lib
+    - path: tests/modules/test-raid-input.test.js
+      role: changes
+      exists: false
+      system: null
+    - path: architect/schemas/index.js
+      role: used-by
+      exists: true
+      system: architect
+    - path: clear-glass/schemas/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: copilot/lib/inject-config.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/schemas/index.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/tool-runtime.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: cortex/core/raid/contract-intake.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/contract-v2-door.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/cortex-service.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/server.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: lib/chunk-service.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/cortex-sse-broadcast.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-raid-router.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/config.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/index.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/push-recall.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/hooks/index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/lean-mode.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/migrate-ledger-per-system.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nerve/index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus/nexus-bus.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/pulse.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/version.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: cortex/core/raid/router.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/data-home.js
+      kind: requires
+    - from: cortex/boot.js
+      to: cortex/config.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/version.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/pulse.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/nexus/nexus-bus.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/lean-mode.js
+      kind: requires
+    - from: cortex/boot.js
+      to: cortex/push-recall.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/migrate-ledger-per-system.js
+      kind: requires
+    - from: cortex/boot.js
+      to: cortex/core/raid/index.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/nerve/index.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/hooks/index.js
+      kind: requires
+    - from: tests/modules/test-raid-router.js
+      to: cortex/core/raid/envelope.js
+      kind: requires
+    - from: lib/chunk-service.js
+      to: cortex/core/raid/router.js
+      kind: requires
+    - from: cortex/cortex-service.js
+      to: cortex/boot.js
+      kind: requires
+    - from: cortex/server.js
+      to: cortex/boot.js
+      kind: requires
+    - from: tests/modules/cortex-sse-broadcast.test.js
+      to: cortex/boot.js
+      kind: requires
+    - from: architect/schemas/index.js
+      to: lib/node-export.js
+      kind: requires
+    - from: clear-glass/schemas/index.js
+      to: lib/node-export.js
+      kind: requires
+    - from: copilot/lib/inject-config.js
+      to: lib/node-export.js
+      kind: requires
+    - from: copilot/schemas/index.js
+      to: lib/node-export.js
+      kind: requires
+    - from: copilot/tool-runtime.js
+      to: lib/node-export.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: lib/node-export.js
+      kind: requires
+    - from: cortex/core/raid/contract-v2-door.js
+      to: lib/node-export.js
+      kind: requires
+  crossings:
+    - from: lib/chunk-service.js
+      to: cortex/core/raid/router.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-13-projects-raid-and-gates-phasemap.spec::RD0_raid_has_its_own_contract
+    dependents: []
+    upstream:
+      - docs/2026-10-13-projects-raid-and-gates-phasemap.spec::RD0_raid_has_its_own_contract
+    downstream: []
+    blockedBy:
+      - docs/2026-10-13-projects-raid-and-gates-phasemap.spec::RD0_raid_has_its_own_contract
+    unlocks: []
+    conflicts:
+      - with: docs/2026-10-13-projects-raid-and-gates-phasemap.spec::RD1_raid_commands
+        files:
+          - idearium/cli/route-commands.js
+          - cortex/boot.js
+      - with: docs/2026-10-13-projects-raid-and-gates-phasemap.spec::RD3_the_registry_carries_events
+        files:
+          - cortex/core/raid/router.js
+      - with: docs/2026-10-13-projects-raid-and-gates-phasemap.spec::RD4_the_fulfilled_contract_is_one_file
+        files:
+          - lib/node-export.js
+      - with: docs/2026-10-13-projects-raid-and-gates-phasemap.spec::CK1_the_catalogue_runs
+        files:
+          - idearium/cli/route-commands.js
+    dangling: []
+    lines:
+      - layer 1 · blocked by RD0_raid_has_its_own_contract
+      - 'depends on (1): RD0_raid_has_its_own_contract'
+      - 'needed by (0): —'
+      - >-
+        same files as RD1_raid_commands with no order between them: idearium/cli/route-commands.js,
+        cortex/boot.js
+      - >-
+        same files as RD3_the_registry_carries_events with no order between them:
+        cortex/core/raid/router.js
+      - >-
+        same files as RD4_the_fulfilled_contract_is_one_file with no order between them:
+        lib/node-export.js
+      - >-
+        same files as CK1_the_catalogue_runs with no order between them:
+        idearium/cli/route-commands.js
+    edges:
+      - from: docs/2026-10-13-projects-raid-and-gates-phasemap.spec::RD0_raid_has_its_own_contract
+        kind: declared

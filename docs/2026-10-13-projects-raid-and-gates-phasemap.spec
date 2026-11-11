@@ -290,6 +290,25 @@ spec:
         gates list / add / edit / retire, checks list / add / run (from the catalogue, CK1). Axioms and gates become node files
         (.axiom, .gate) with schemas so they can be added without editing code; the code constants are their seed.
       proof: "an agent lists RAID's queue and a contract's gates through nexus.command; a repo axiom added by command is enforced at the next gate"
+    RD9_every_input_through_raid:
+      layer: library
+      systems: [cortex, idearium, cos]
+      component: cortex.raid
+      status: "OPEN — slice a BUILT 0.60.486 (the .input node, the route, the decision recorded; test-raid-input 2/2). Next: slice b, the router acts"
+      james: '"I want raid to get done. That way we can have the cli in nexus hooked into raid, inputs into raid, saved as a .input node, then raid decides what to do with using the routing." (2026-11-12) · "I meant as cos.exe. like i feel like im trying to make a operating system. eravos the desktop ui, cos the runtime, resource manager the task manager, clearglass the browser, idearium the explorer.exe." (2026-11-12)'
+      depends_on: [RD0_raid_has_its_own_contract]
+      files: [cortex/core/raid/input.js, cortex/core/raid/envelope.js, cortex/core/raid/router.js, cortex/boot.js, cortex/interaction-contract.json, lib/node-export.js, idearium/cli/route-commands.js, cos/manager/cli.js, tests/modules/test-raid-input.test.js]
+      reuse: "RAID's envelope (envelope.js make/stamp), its router (router.js route), contract intake, the node envelope (lib/node-export.js already names the type input), POST /api/raid/decide, COS's request through a pipeline (0.60.474), AE_D8 (RAID the hub of what and whether; COS of how and where)."
+      does: >-
+        One way in, for the operating system he describes (COS the runtime, ERAVOS the desktop, Clear Glass the browser, Idearium the explorer,
+        the resource manager the task manager): RAID is what every input reaches first. POST /api/raid/input { text | command, args, from, by }
+        → (1) kept first as a .input node file (who, which surface, when, the words as given); (2) RAID's envelope made from it; (3) the router
+        decides: a command a system owns → that system's route; a request → a contract, end state first, run by COS as a pipeline; a question →
+        the agent RAID picks; nothing fits → a gap, held for him; (4) the decision, its why and what it became written back on the node.
+        Slices: (a) the .input node, the route, the decision recorded, nothing acted on; (b) the router acts; (c) cos.exe's command line and
+        the Nexus CLI send what they do not recognise to it; (d) inputs listed and replayed.
+      proof: "an input by route is a .input file before RAID decides; each of the four routings from a stand-in; the decision and its why on the node; cos.exe's unknown words arrive as an input"
+      also_asked_2026_11_12_not_yet_mapped: "the panel's 27 engines (cos/services/anonymous/engines) as templates for networking compartments, in the catalog, as test-environment and DAG dependency options (cos-services map, after SV2); .erv opened by ERAVOS on install (Windows file association); `cos import` a system into cos.exe (cos-console map, after SC4). Each is mapped in its own map before it is built."
     RD2_idearium_routes_through_raid:
       layer: library
       systems: [idearium, cortex]
