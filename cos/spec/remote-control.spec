@@ -134,7 +134,11 @@ spec:
     - "command: cos remote field | show | act <n> <do> | focus"
 
   readings_to_confirm:
+    # RC_R1 DECIDED 2026-11-11, his: "Yes. Stand in until we build a full application from looking glass. To replace electron." Reading a:
+    # the UI Automation tree stands in for a DOM, and the overlay window for injection, until an application built on Looking Glass (the
+    # renderer and app host of clear-glass/spec/sources/glass-engine-working-spec-v0.1-draft.md) replaces Electron and owns its own tree.
     - id: RC_R1
+      decided: "a, a stand-in until Looking Glass replaces Electron"
       question: "\"injecting code into the dom\" on the desktop, outside Clear Glass"
       reading_a: "The coder's default: the desktop has no DOM, so its UI Automation tree stands in for one, and the overlay is a window drawn over the screen. Inside Clear Glass, the real DOM injection already exists and is reused."
       reading_b: "Only inside Clear Glass pages: the remote control drives Clear Glass, and the desktop stays with PC9's raw coordinates."

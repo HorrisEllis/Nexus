@@ -692,7 +692,8 @@ built_2026_11_09_plan:
       and his phone through the remote-desktop viewer, with Disarm. Slices: (a) the desktop field and describe; (b) act by number with verify;
       (c) the overlay; (d) Nerve's focus; (e) the viewer.
     proof: "a stand-in UI Automation tree gives page/field.js's shape; unarmed refused; a stale number refused; a no-op click said; the tab through Clear Glass; the Windows path on his PC."
-    readings_to_confirm: ["RC_R1 (cos/spec/remote-control.spec): on the desktop, the UI Automation tree as its DOM plus an overlay window (the coder's default), or only inside Clear Glass pages"]
+    decided: 'RC_R1, his, 2026-11-11: "Yes. Stand in until we build a full application from looking glass. To replace electron." The UI Automation tree and the overlay window are a stand-in until a Looking Glass application (clear-glass/spec/sources/glass-engine-working-spec-v0.1-draft.md) replaces Electron.'
+
 # ── ADDENDUM 2026-11-11 (0.60.483) — PC9 slice a: the desktop driver for agents (his PC_D14) ──────────────────────────────────────────────
 # James, 2026-11-11: "I’m saying for you. Like look at clearglass. Nexus nerve, cleardriver injecting coordinates into the dom."
 # Built: cos/remote-desktop/desktop-driver.js (screen, move, click, type, key, scroll; backends: Windows PowerShell user32/System.Drawing,
