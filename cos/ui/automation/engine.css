@@ -35,3 +35,7 @@
 .dd-act { display: grid; grid-template-columns: 80px 60px 1fr; gap: 6px; padding: 3px 0; border-bottom: 1px solid var(--line, #2a2a2a); }
 .dd-act small { grid-column: 2 / -1; opacity: .7; }
 .dd-act.bad b { color: #d9534f; }
+
+/* PC8 slice b (2026-11-11): retry from a step */
+.ae-from { font-size: 11px; padding: 2px 8px; margin-left: 6px; }
+.st.paused { color: #e0a030; }

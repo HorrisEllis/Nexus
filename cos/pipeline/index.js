@@ -10,7 +10,7 @@
  *   - make the HTTP calls a gate asks for or acts with, on each owner's declared address (no sockets in Emerge until CIE10, §5.15);
  *   - take the engine's events and gates in order, one at a time, so a request's files change in the order the run did.
  *
- *   createPipeline({ automation, idearium, call, dataDir }) → { boxes, gates, runs, decideGate(q), onEvent(type, data), request(q), resume(id, q) }
+ *   createPipeline({ automation, idearium, call, dataDir }) → { boxes, gates, runs, decideGate(q), onEvent(type, data), request(q), resume(id, q), retry(engineRun, q) }
  */
 const fs = require('fs'), os = require('os'), path = require('path'), { execFile } = require('child_process');
 
@@ -133,6 +133,13 @@ function createPipeline({ automation, idearium = null, call = null, dataDir } = 
     const q = await inOrder(() => eg('resume-of', { base: dataDir, id })); if (!q.ok) return q;
     const r = await (await engineP()).run(q.pipeline, { vars: q.vars, wait: false, done: q.done, meta: { request: id } });
     return r.ok ? { ok: true, request: id, engineRun: r.runId, alreadyMet: Object.keys(q.done) } : { ok: false, code: 400, error: r.error };
+  }
+  // PC8 slice b (2026-11-11): a failed engine run retried — its request resumed (runs.eg retry_of); from: that step and every step after it again
+  async function retry(engineRun, { from = null, by } = {}) {
+    if (!by) return { ok: false, code: 400, error: 'say who asks: { "by": "person" }' };
+    const q = await inOrder(() => eg('retry-of', { base: dataDir, run: engineRun, from })); if (!q.ok) return q;
+    const r = await (await engineP()).run(q.pipeline, { vars: q.vars, wait: false, done: q.done, meta: { request: q.request } });
+    return r.ok ? { ok: true, request: q.request, engineRun: r.runId, retryOf: engineRun, alreadyMet: Object.keys(q.done), again: q.again } : { ok: false, code: 400, error: r.error };
   }
   // ── frameworks: a .framework that declares its steps compiles to a .pipeline (framework.eg), which runs as a step of any other (PC2 slice b) ──
   const fwDir = process.env.COS_FRAMEWORKS_DIR || path.join(root, 'docs');   // where .framework files are (docs/ in Nexus); a test points it at its own
@@ -275,7 +282,7 @@ function createPipeline({ automation, idearium = null, call = null, dataDir } = 
     return { ...out, pipeline: id, latestRun: latest ? { id: latest.id, status: latest.status, decisions: latest.decisions || [] } : null };
   }
 
-  return { boxes, gates, runs, frameworks, frameworkStep, decideGate, onEvent, request, resume, planPhase, buildNext, sync, sources, fromErv, baseline };
+  return { boxes, gates, runs, frameworks, frameworkStep, decideGate, onEvent, request, resume, retry, planPhase, buildNext, sync, sources, fromErv, baseline };
 }
 
 module.exports = { createPipeline, MODULE_ID: 'cos.pipeline', VERSION: '1.0.0' };

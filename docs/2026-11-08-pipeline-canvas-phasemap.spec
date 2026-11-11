@@ -624,7 +624,7 @@ built_2026_11_09_plan:
     # the pipeline's, not Idearium's loop beside it); a contract met becomes a .macro of its steps, replayable to rebuild or reconstruct what it
     # built (the snapshots of "every step snapshotted, any run replayed", cos/spec/pipeline-canvas.spec).
   PC8_operate_a_pipeline:
-    status: OPEN   # slice a BUILT 0.60.481 (a delta and a baseline per step; RAID's decisions as steps; the bar)
+    status: OPEN   # slice a BUILT 0.60.481 (a delta and a baseline per step; RAID's decisions as steps; the bar); slice b BUILT 0.60.484 (pause, continue, retry from a step)
     james: '"seeing, changing, managing, diagnosing, exporting, testing, agnostic." · "record each step in raids decision, dynamically building each step, as it goes. it all needs to be visable."'
     depends_on: [PC_D13_the_pipeline_works_first_then_cos_optimised, PC5_programmable_gate_types]
     files: [lib/automation/pipeline.js, lib/automation/routes.js, lib/automation/engine.js, cos/manager/automation-door.js, cos/pipeline/runs.eg, cos/pipeline/cli.eg, cos/ui/automation/engine.js, cos/ui/automation/page.js, idearium/cli/route-commands.js]
@@ -692,7 +692,8 @@ built_2026_11_09_plan:
       and his phone through the remote-desktop viewer, with Disarm. Slices: (a) the desktop field and describe; (b) act by number with verify;
       (c) the overlay; (d) Nerve's focus; (e) the viewer.
     proof: "a stand-in UI Automation tree gives page/field.js's shape; unarmed refused; a stale number refused; a no-op click said; the tab through Clear Glass; the Windows path on his PC."
-    readings_to_confirm: ["RC_R1 (cos/spec/remote-control.spec): on the desktop, the UI Automation tree as its DOM plus an overlay window (the coder's default), or only inside Clear Glass pages"]
+    decided: 'RC_R1, his, 2026-11-11: "Yes. Stand in until we build a full application from looking glass. To replace electron." The UI Automation tree and the overlay window are a stand-in until a Looking Glass application (clear-glass/spec/sources/glass-engine-working-spec-v0.1-draft.md) replaces Electron.'
+
 # ── ADDENDUM 2026-11-11 (0.60.483) — PC9 slice a: the desktop driver for agents (his PC_D14) ──────────────────────────────────────────────
 # James, 2026-11-11: "I’m saying for you. Like look at clearglass. Nexus nerve, cleardriver injecting coordinates into the dom."
 # Built: cos/remote-desktop/desktop-driver.js (screen, move, click, type, key, scroll; backends: Windows PowerShell user32/System.Drawing,
@@ -701,3 +702,10 @@ built_2026_11_09_plan:
 # only: /api/cos/desktop/<verb> (declared in cos/manager/contract.json), `cos desktop <verb>`, the Automation › Desktop tab (heard on the
 # event stream, not polled). Proof: test-cos-desktop-driver 9/9 (stand-in backend; DD-09 in Clear Glass). Open: the Windows backend run on
 # his PC through his Remote Control link. The coder's: a move bypasses the injector (it applies moves later, unconfirmed).
+
+# ── ADDENDUM 2026-11-11 (0.60.484) — PC8 slice b: a run managed — pause, continue, retry ─────────────────────────────────────────────────
+# James, 2026-11-10: "execute, or manage the pipeline. thats what its for." · 2026-11-11: "But yes the high leverage. Need that done"
+# Built: Pause (the running step finishes, nothing new starts), Continue, Retry of a failed run from its request's files (met steps not run
+# again; from a step, it and every step after it: cos/pipeline/runs.eg retry_of). Routes, events (automation.pipeline.paused|continued),
+# commands (cos automation pause|continue, cos pipeline-retry), buttons. Fixed: a waited failed run answered "Invalid status code: failed".
+# Proof: OA-12, CP-20, HB-08, runs.test.eg 7/7. Next slices: a dry run; the diagnosis view; export of a run.

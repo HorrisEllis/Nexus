@@ -13,6 +13,7 @@ require('../../lib/test-sandbox.js').ensure();
  *   OA-05  a task with no agentKey is refused (§1.2)
  *   OA-06  busEmit reaches the injected bus; browser/macro hooks port to Clear Glass with the right path
  *   OA-07  setBus wires the default bus used when no busFn is injected
+ *   OA-12  PC8 slice b: a run paused finishes the step running and starts nothing new; continued, it goes on to ok; each an event
  */
 const assert = require('assert');
 const A = require('../../cos/manager/automation-door.js');
@@ -179,6 +180,35 @@ await t('OA-11', 'a pipeline run keeps each step\'s start, finish and wait, and 
   const ev = events.find(e => e.type === 'automation.pipeline.decision'); assert.ok(ev && ev.data.task === 'write' && ev.data.decision.chose === 'claude', 'the decision is streamed as it happens');
   const saved = JSON.parse(fs.readFileSync(path.join(dir, 'runs', `${run.id}.json`), 'utf8'));
   assert.strictEqual(saved.decisions.length, 1, 'kept with the run, for the baseline and the replay');
+  fs.rmSync(dir, { recursive: true, force: true });
+});
+
+await t('OA-12', 'PC8 slice b: a run paused finishes the step running and starts nothing new; continued, it goes on to ok; each an event', async () => {
+  const os = require('os'), fs = require('fs'), path = require('path');
+  const { AutomationEngine } = require('../../lib/automation/engine.js'); const { Pipelines } = require('../../lib/automation/pipeline.js');
+  let release; const held = new Promise(r => { release = r; });
+  const events = [];
+  const hooks = A.buildHooks({ guardianFn: async () => { await held; return { ok: true, reply: 'written' }; }, raidDecideFn: raidDown, busFn: (type, data) => events.push({ type, data }) });
+  const E = new AutomationEngine(hooks);
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'pc8b-')); const P = new Pipelines(E, { dir });
+  P._emit = ((orig) => (type, data) => { events.push({ type, data }); return orig.call(P, type, data); })(P._emit);
+  const made = P.create({ name: 'pc8b', tasks: [
+    { id: 'write', step: { type: 'agent', config: { agentKey: 'coder', prompt: 'write it', await: true } } },
+    { id: 'next', depends_on: ['write'], step: { type: 'set', config: { assign: 'x = 1' } } }] });
+  const r = await P.run(made.pipeline.id, { wait: false }); assert.ok(r.ok, JSON.stringify(r));
+  const sleep = (ms) => new Promise(z => setTimeout(z, ms));
+  for (let k = 0; k < 40 && P.getRun(r.runId).tasks.write.status !== 'running'; k++) await sleep(25);
+  assert.deepStrictEqual(P.pause(r.runId, { by: 'person' }), { ok: true, status: 'paused' });
+  release(); await sleep(200);
+  let run = P.getRun(r.runId);
+  assert.strictEqual(run.tasks.write.status, 'done', 'the step running finishes'); assert.strictEqual(run.tasks.next.status, 'waiting', 'nothing new starts');
+  assert.strictEqual(run.status, 'paused');
+  assert.ok(events.some(e => e.type === 'automation.pipeline.paused' && e.data.by === 'person'));
+  assert.deepStrictEqual(P.unpause(r.runId, { by: 'person' }), { ok: true, status: 'running' });
+  for (let k = 0; k < 40 && P.getRun(r.runId).status === 'running'; k++) await sleep(25);
+  run = P.getRun(r.runId); assert.strictEqual(run.status, 'ok', JSON.stringify(run).slice(0, 300)); assert.ok(run.pausedMs >= 150, 'the time paused is kept');
+  assert.ok(events.some(e => e.type === 'automation.pipeline.continued'));
+  assert.strictEqual(P.pause('nope').status, 404);
   fs.rmSync(dir, { recursive: true, force: true });
 });
 

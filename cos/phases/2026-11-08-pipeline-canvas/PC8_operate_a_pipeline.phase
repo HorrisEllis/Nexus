@@ -7,11 +7,11 @@ intent: null
 summary: PC8_operate_a_pipeline (?) — 9 file(s)
 system: idearium
 tags: []
-exported_at: 1794353343314
+exported_at: 1794371023229
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794353343314
-lastSeenAt: 1794353343314
+firstSeenAt: 1794371023229
+lastSeenAt: 1794371023229
 fingerprint: null
 payload:
   id: PC8_operate_a_pipeline
@@ -20,7 +20,7 @@ payload:
   layer: null
   status: >-
     OPEN   # slice a BUILT 0.60.481 (a delta and a baseline per step; RAID's decisions as steps; the
-    bar)
+    bar); slice b BUILT 0.60.484 (pause, continue, retry from a step)
   files:
     - lib/automation/pipeline.js
     - lib/automation/routes.js

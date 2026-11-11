@@ -110,3 +110,23 @@ test "met is RAID's answer when it is given; the booking is recorded" {
   expect run.contract.booked and run.contract.verdict.by == "RAID's contract (Cortex)" and run.contract.verdict.why == "gate b is READY"
   remove_path(base)
 }
+
+test "PC8 slice b: a failed run retried resumes its request; from a step, it and every step after it run again; a met run is not retried" {
+  let base = fresh()
+  let Q = { id: "three", name: "Three", tasks: [{ id: "a", step: { type: "set" } }, { id: "b", depends_on: ["a"], step: { type: "set" } },
+    { id: "c", depends_on: ["b"], step: { type: "set" } }, { id: "d", depends_on: ["a"], step: { type: "set" } }] }
+  let id = runs.request(base, Q, { v: 2 }, "person", 100, "e1")
+  ev(base, "automation.pipeline.task", { runId: "e1", task: "a", status: "done", output: "A" })
+  ev(base, "automation.pipeline.task", { runId: "e1", task: "b", status: "done", output: "B" })
+  ev(base, "automation.pipeline.task", { runId: "e1", task: "d", status: "done", output: "D" })
+  ev(base, "automation.pipeline.task", { runId: "e1", task: "c", status: "failed", error: "boom" })
+  ev(base, "automation.pipeline.done", { runId: "e1", status: "failed" })
+  let r = runs.retry_of(base, "e1", null)
+  expect r.ok and r.request == id and r.pipeline == "three" and r.vars == { v: 2 } and sort(keys(r.done)) == ["a", "b", "d"] and r.again == []
+  let f = runs.retry_of(base, "e1", "b")
+  expect f.ok and f.again == ["b", "c"] and sort(keys(f.done)) == ["a", "d"] and f.done.a == "A"
+  expect runs.retry_of(base, "e1", "zz").code == 404
+  expect runs.retry_of(base, "nope", null).code == 404
+  remove_path(base)
+}
+
