@@ -7,11 +7,11 @@ intent: null
 summary: 9 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1794355493068
+exported_at: 1794356140649
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794355493068
-lastSeenAt: 1794355493068
+firstSeenAt: 1794356140649
+lastSeenAt: 1794356140649
 fingerprint: null
 payload:
   for: PC5_programmable_gate_types
@@ -159,6 +159,11 @@ payload:
           - cos/manager/server.js
           - cos/manager/contract.json
           - idearium/cli/route-commands.js
+      - with: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC10_our_own_remote_control
+        files:
+          - cos/manager/server.js
+          - cos/manager/contract.json
+          - idearium/cli/route-commands.js
     dangling: []
     lines:
       - layer 14 · blocked by MB3_one_shape_with_pipelines
@@ -175,6 +180,9 @@ payload:
         cos/manager/contract.json, idearium/cli/route-commands.js, tests/modules/run-all.js
       - >-
         same files as PC9_the_desktop_driver with no order between them: cos/manager/server.js,
+        cos/manager/contract.json, idearium/cli/route-commands.js
+      - >-
+        same files as PC10_our_own_remote_control with no order between them: cos/manager/server.js,
         cos/manager/contract.json, idearium/cli/route-commands.js
     edges:
       - from: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC1_one_box_shape

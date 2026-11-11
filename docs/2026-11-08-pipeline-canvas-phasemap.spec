@@ -675,6 +675,24 @@ built_2026_11_09_plan:
       and `cos desktop <verb>` for the coder (through his Remote Control link) and for agents. Backend, then route, then command, then UI.
     proof: "a stand-in backend: every verb refused unarmed, the screen alone under view-only, every verb under armed, the arm expiring by itself, the kill switch; every act in the log; the commands; the Arm control in COS through Clear Glass. The real PowerShell backend is proved on his PC, through his link."
 
+  PC10_our_own_remote_control:
+    status: OPEN   # mapped and specced 2026-11-11; built after the pipeline works and COS is optimised (his PC_D13: "Can't get distracted")
+    james: '"Can you spec our own remote-control. From nexus nerve, interaction field, cleardriver and injecting code into the dom to see it. Like look at clearglass" · "Just map it. Maybe spec it. Then back to the high leverage."'
+    spec: cos/spec/remote-control.spec
+    depends_on: [PC9_the_desktop_driver]
+    files: [cos/remote-desktop/desktop-field.js, cos/remote-desktop/overlay.ps1, cos/remote-desktop/remote-control.js, lib/nerve/index.js, cos/manager/server.js, cos/manager/contract.json, idearium/cli/route-commands.js, cos/ui/automation/engine.js, tests/modules/test-cos-remote-control.test.js]
+    reuse: >-
+      clear-glass/src/page/field.js (the field: numbered targets with x, y, z; at; spotlight; describe), ClearDriver's pointer, page/state-diff.js,
+      Nerve (lib/nerve), cos/remote-desktop's WebRTC host and viewer, PC9's driver and its arming.
+    does: >-
+      Nexus's own remote control. See: the desktop as an interaction field (Windows UI Automation read through PowerShell, the desktop's DOM),
+      the same target shape as a Clear Glass page. Show: badges, grid and a spotlight drawn over the screen in a click-through window, as Clear
+      Glass injects them into a page. Act: by number, routed to Clear Glass (a page) or PC9's driver (the desktop), then verified by reading
+      again; a click that changed nothing is said. Nerve: his focus and what changed, streamed, so an agent reads less. Watch: the Desktop tab
+      and his phone through the remote-desktop viewer, with Disarm. Slices: (a) the desktop field and describe; (b) act by number with verify;
+      (c) the overlay; (d) Nerve's focus; (e) the viewer.
+    proof: "a stand-in UI Automation tree gives page/field.js's shape; unarmed refused; a stale number refused; a no-op click said; the tab through Clear Glass; the Windows path on his PC."
+    readings_to_confirm: ["RC_R1 (cos/spec/remote-control.spec): on the desktop, the UI Automation tree as its DOM plus an overlay window (the coder's default), or only inside Clear Glass pages"]
 # ── ADDENDUM 2026-11-11 (0.60.483) — PC9 slice a: the desktop driver for agents (his PC_D14) ──────────────────────────────────────────────
 # James, 2026-11-11: "I’m saying for you. Like look at clearglass. Nexus nerve, cleardriver injecting coordinates into the dom."
 # Built: cos/remote-desktop/desktop-driver.js (screen, move, click, type, key, scroll; backends: Windows PowerShell user32/System.Drawing,

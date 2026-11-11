@@ -7,11 +7,11 @@ intent: null
 summary: 31 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1794356000679
+exported_at: 1794356140667
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794356000679
-lastSeenAt: 1794356000679
+firstSeenAt: 1794356140667
+lastSeenAt: 1794356140667
 fingerprint: null
 payload:
   for: PC9_the_desktop_driver
@@ -222,12 +222,15 @@ payload:
     layer: 1
     deps:
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D14_a_desktop_driver_for_agents
-    dependents: []
+    dependents:
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC10_our_own_remote_control
     upstream:
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D14_a_desktop_driver_for_agents
-    downstream: []
+    downstream:
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC10_our_own_remote_control
     blockedBy: []
-    unlocks: []
+    unlocks:
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC10_our_own_remote_control
     conflicts:
       - with: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC2_procedures_and_frameworks_as_steps
         files:
@@ -258,7 +261,9 @@ payload:
     lines:
       - layer 1 · ready
       - 'depends on (1): PC_D14_a_desktop_driver_for_agents'
-      - 'needed by (0): —'
+      - >-
+        needed by (1): PC10_our_own_remote_control · finishing it unlocks
+        PC10_our_own_remote_control
       - >-
         same files as PC2_procedures_and_frameworks_as_steps with no order between them:
         cos/manager/server.js
