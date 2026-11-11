@@ -932,6 +932,8 @@ export const SPEC = [
   { key: 'cos.pipeline-retry', repo: false, usage: 'cos pipeline-retry <engine run id> [--from <step>]', about: 'retry a failed pipeline run from its request\'s files: what was met is not run again; --from runs that step and every step after it again (PC8 slice b, his 2026-11-10 "execute, or manage the pipeline")',
     req: (a) => ({ system: 'cos', method: 'POST', path: `/api/cos/pipeline/runs/${encodeURIComponent(String((a.args || [])[0] || ''))}/retry`, body: { from: a.flags.from || null, by: 'person' } }),
     personOnly: () => 'retrying a run is the person\'s — an agent asks them' },
+  { key: 'raid.input', repo: false, usage: 'raid input <words…> | raid input --list', about: 'send an input to RAID: kept first as a .input node, then RAID decides where it goes and the decision is written back on the node (RD9 slice a, his 2026-11-12 "inputs into raid, saved as a .input node"); --list shows the latest',
+    req: (a) => a.flags.list ? { system: 'cortex', method: 'GET', path: '/api/raid/inputs' } : { system: 'cortex', method: 'POST', path: '/api/raid/input', body: { text: (a.args || []).join(' '), from: 'cli', by: a.flags.by || 'person' } } },
   { key: 'cos.procedures', repo: false, usage: 'cos procedures', about: 'Idearium\'s procedures, read through COS (its route), each a step a pipeline can hold (PC1, PC2)',
     req: () => ({ system: 'cos', method: 'GET', path: '/api/cos/procedures' }) },
   { key: 'cos.boxes', repo: false, usage: 'cos boxes <pipeline-id> | cos boxes --procedure <id>', about: 'a pipeline or a procedure as boxes and wires (Emerge\'s box shape, PC1): each box\'s kind, ref, hooks and gate, the wires from its DAG, and every fault named',
