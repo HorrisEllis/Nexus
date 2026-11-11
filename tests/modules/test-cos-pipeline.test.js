@@ -463,6 +463,7 @@ const eg = (...a) => require('child_process').spawnSync(process.execPath, [path.
         fixed = true; const from = (await req(M, 'POST', `/api/cos/pipeline/runs/${run2}/retry`, { by: 'person', from: 'a' })).body;
         assert.ok(from.ok, JSON.stringify(from)); assert.deepStrictEqual(from.alreadyMet, [], 'from a: every step after it runs again'); assert.deepStrictEqual(from.again, ['a', 'b', 'c']);
         await wait(async () => { const r = (await req(M, 'GET', `/api/cos/automation/pipeline-runs/${from.engineRun}`)).body.run; return r && r.status === 'ok'; });
+        const rd = (await req(M, 'GET', '/api/cos/pipeline/ready')).body; assert.ok(rd.ok && rd.phases[0].id === PH.id, 'the phases that can be built now, for the run form: ' + JSON.stringify(rd));
         const contract = J(path.join(ROOT, 'cos/manager/contract.json'));
         for (const r of ['/api/cos/pipeline/runs/:id/retry', '/api/cos/automation/pipeline-runs/:id/pause', '/api/cos/automation/pipeline-runs/:id/continue']) assert.ok(contract.routes.some(x => x.path === r), r + ' declared');
         const SPEC = (await import(require('url').pathToFileURL(path.join(ROOT, 'idearium/cli/route-commands.js')).href)).SPEC;

@@ -251,6 +251,12 @@ function createPipeline({ automation, idearium = null, call = null, dataDir } = 
     const next = (q.queue || [])[0]; if (!next) return { ok: false, code: 409, error: 'nothing can be built now', blocked: (q.counts || {}).byGroup || null };
     return planPhase({ key: next.key, repo, chunks, framework, run: true, by });
   }
+  // 2026-11-12 — James: "the pipeline says no phase selected". The phases Nexus can build now (Idearium's queue, by its route), for the tab to offer
+  async function ready({ limit = 20 } = {}) {
+    const q = await ideariumRoute('GET', `/api/phases/next?limit=${Math.max(1, Math.min(50, Number(limit) || 20))}`);
+    if (!q.ok) return { ok: false, code: 502, error: q.why };
+    return { ok: true, phases: (q.queue || []).map(x => ({ id: x.id, key: x.key, map: x.map, does: x.does || null })), counts: q.counts || null };
+  }
   // the engine's framework step: compile the tree, name the pipeline to run
   const frameworkStep = async ({ id }) => { const r = await frameworks.tree(id); return r.ok ? { ok: true, pipeline: r.pipeline.name } : { ok: false, error: r.error }; };
   // 2026-11-10 — James: "Also needs to be able to create pipelines. That's what the canvas is for." · "I want to program it myself using the pipeline
@@ -282,7 +288,7 @@ function createPipeline({ automation, idearium = null, call = null, dataDir } = 
     return { ...out, pipeline: id, latestRun: latest ? { id: latest.id, status: latest.status, decisions: latest.decisions || [] } : null };
   }
 
-  return { boxes, gates, runs, frameworks, frameworkStep, decideGate, onEvent, request, resume, retry, planPhase, buildNext, sync, sources, fromErv, baseline };
+  return { boxes, gates, runs, frameworks, frameworkStep, decideGate, onEvent, request, resume, retry, ready, planPhase, buildNext, sync, sources, fromErv, baseline };
 }
 
 module.exports = { createPipeline, MODULE_ID: 'cos.pipeline', VERSION: '1.0.0' };

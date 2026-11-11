@@ -75,9 +75,22 @@
       if (runId) { try { S.run = (await api('GET', A('/pipeline-runs/' + encodeURIComponent(runId)))).run; } catch (_) {} draw(S.pipes.find(x => x.id === id)); follow(runId); } }
     catch (e) {
       const needs = (e.body && e.body.needs) || [];
-      if (needs.length) { const v = { ...vars }; for (const n of needs) { const a = window.prompt(`This run needs ${n} (it is part of a step's address):`, ''); if (a == null || !a.trim()) return say('bad', `Not run: ${n} was not given`); v[n] = a.trim(); } return runIt(id, v); }
+      if (needs.length) return askNeeds(id, needs, vars);   // 2026-11-12: asked in the page (COS's app window shows no browser prompt: "no phase selected")
       say('bad', e.message);
     }
+  }
+  // 2026-11-12 — James: "the pipeline says no phase selected". What a run needs is asked in the page: a phase is chosen from the phases that can
+  // be built now (Idearium's queue, through COS), anything else is typed.
+  async function askNeeds(id, needs, vars) {
+    let ready = []; if (needs.includes('phase')) { try { ready = (await api('GET', '/api/cos/pipeline/ready?limit=30')).phases || []; } catch (e) { say('bad', 'The phases that can be built could not be read: ' + e.message); } }
+    const rows = needs.map(n => el('label', { class: 'ae-need' }, [el('span', { text: n }),
+      n === 'phase' && ready.length ? el('select', { 'data-need': n }, ready.map(ph => el('option', { value: ph.id, text: ph.id + (ph.map ? '  (' + String(ph.map).split('/').pop() + ')' : '') })))
+        : el('input', { 'data-need': n, type: 'text', placeholder: n === 'phase' ? 'a phase id, e.g. PC8_operate_a_pipeline' : n })]));
+    const form = el('div', { class: 'ae-needs', id: 'ae-needs' }, [el('p', { text: 'This run needs ' + needs.join(', ') + ' (part of a step\'s address):' }), ...rows,
+      el('div', { class: 'ae-btns' }, [el('button', { class: 'btn primary', 'data-act': 'needs-run', text: '▶ Run with these', onclick: () => { const v = { ...vars };
+        for (const f of form.querySelectorAll('[data-need]')) { const a = String(f.value || '').trim(); if (!a) return say('bad', `Not run: ${f.dataset.need} was not given`); v[f.dataset.need] = a; } form.remove(); runIt(id, v); } }),
+      el('button', { class: 'btn', text: 'Cancel', onclick: () => form.remove() })])]);
+    const old = $('ae-needs'); if (old) old.remove(); $('ae-p-body').prepend(form); say('bad', 'Choose ' + needs.join(', ') + ' to run it.');
   }
   // PC8 slice b (2026-11-11): pause, continue, and retry (all of a failed run, or from a step) — each a COS route and a command too
   async function ctl(runId, what) { try { const r = await api('POST', A('/pipeline-runs/' + encodeURIComponent(runId) + '/' + what), { by: 'person' }); say('ok', what === 'pause' ? 'Paused: the step running now finishes, nothing new starts' : 'Continued');

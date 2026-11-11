@@ -615,6 +615,12 @@
       "personAct": true
     },
     {
+      "method": "GET",
+      "path": "/api/cos/pipeline/ready",
+      "in": "?limit=<n>",
+      "out": "{ phases: [{ id, key, map, does }], counts } \u2014 2026-11-12: the phases Nexus can build now (Idearium's queue, by its route), offered when a run needs a phase"
+    },
+    {
       "method": "POST",
       "path": "/api/cos/pipeline/runs/:id/retry",
       "in": "{ from?, by }",
@@ -895,6 +901,7 @@
         "POST /api/cos/automation/pipeline-runs/:id/pause",
         "POST /api/cos/automation/pipeline-runs/:id/continue",
         "POST /api/cos/pipeline/runs/:id/retry",
+        "GET /api/cos/pipeline/ready",
         "POST /api/cos/automation/import",
         "GET /api/cos/automation/workflows",
         "POST /api/cos/automation/workflows/:id/run",
