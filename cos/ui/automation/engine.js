@@ -45,7 +45,10 @@
     const run = S.run, t = run ? run.tasks || {} : {};
     const btns = el('div', { class: 'ae-btns' }, [
       el('button', { class: 'btn primary', 'data-act': 'run', onclick: () => runIt(p.id), text: '▶ Run' }),
-      run && run.status === 'running' ? el('button', { class: 'btn', 'data-act': 'stop', onclick: () => stopIt(run.id), text: '■ Stop' }) : null,
+      run && run.status === 'running' ? el('button', { class: 'btn', 'data-act': 'pause', onclick: () => ctl(run.id, 'pause'), text: '❚❚ Pause' }) : null,
+      run && run.status === 'paused' ? el('button', { class: 'btn primary', 'data-act': 'continue', onclick: () => ctl(run.id, 'continue'), text: '▶ Continue' }) : null,
+      run && (run.status === 'running' || run.status === 'paused') ? el('button', { class: 'btn', 'data-act': 'stop', onclick: () => stopIt(run.id), text: '■ Stop' }) : null,
+      run && (run.status === 'failed' || run.status === 'cancelled') ? el('button', { class: 'btn', 'data-act': 'retry', onclick: () => retryIt(run.id), text: '↻ Retry' }) : null,
       el('button', { class: 'btn', 'data-act': 'export', onclick: () => exportIt(p), text: '⇩ Export .pipeline' }),
       el('button', { class: 'btn', 'data-act': 'erv', onclick: () => ervIt(p), text: '⧉ Open on canvas (.erv)' })]);
     const base = (S.base && S.base.steps) || {};
@@ -58,9 +61,10 @@
       const baseTxt = b ? `baseline ${dur(b.mean_ms)}${b.sigma_ms != null ? ' ± ' + dur(b.sigma_ms) : ''} over ${b.n} run${b.n === 1 ? '' : 's'}${b.sigma_ms == null ? ' (a sigma from 3)' : ''}${b.wait_mean_ms != null && (k.depends_on || []).length ? ' · waits ' + dur(b.wait_mean_ms) : ''}${off ? ` · ${b.z > 0 ? 'slower' : 'faster'} than usual (z ${b.z.toFixed(1)})` : ''}` : '';
       const decisions = (r.decisions || []).map(d => el('div', { class: 'ae-decision', 'data-by': d.by || '' }, [el('span', { class: 'mono', text: (d.by || 'decision').toUpperCase() }),
         el('span', { text: d.kind === 'agent.provider' ? `chose ${d.chose}${d.asked && d.asked !== d.chose ? ' (asked for ' + d.asked + ')' : ''}` : `${d.kind || ''} ${d.chose || ''}` }), d.why ? el('span', { class: 'why', text: d.why }) : null]));
+      const again = run && (run.status === 'failed' || run.status === 'cancelled') ? el('button', { class: 'btn sm ae-from', 'data-from': k.id, title: 'retry from this step: it and every step after it run again', onclick: () => retryIt(run.id, k.id), text: '↻ from here' }) : null;
       return el('div', { class: 'ae-step', 'data-step': k.id, 'data-state': st }, [el('span', { text: k.label || k.id }), el('span', { class: 'mono', text: dur(r.ms) }), bar, el('span', { class: 'st ' + st, text: st || '—' }),
         r.error ? el('span', { class: 'why', text: r.error }) : (k.depends_on || []).length ? el('span', { class: 'why', text: 'after ' + k.depends_on.join(', ') }) : null,
-        baseTxt ? el('span', { class: 'ae-base muted', text: baseTxt }) : null, ...decisions]); }));
+        baseTxt ? el('span', { class: 'ae-base muted', text: baseTxt }) : null, ...decisions, again]); }));
     const head = run ? el('p', { class: 'muted', text: `run ${String(run.id).slice(0, 8)} · ${run.status} · started ${ago(run.startedAt)}${took(run) != null ? ' · ' + secs(took(run)) : ''}` }) : el('p', { class: 'muted', text: 'Not run yet.' });
     $('ae-p-body').replaceChildren(btns, head, steps);
   }
@@ -75,11 +79,17 @@
       say('bad', e.message);
     }
   }
+  // PC8 slice b (2026-11-11): pause, continue, and retry (all of a failed run, or from a step) — each a COS route and a command too
+  async function ctl(runId, what) { try { const r = await api('POST', A('/pipeline-runs/' + encodeURIComponent(runId) + '/' + what), { by: 'person' }); say('ok', what === 'pause' ? 'Paused: the step running now finishes, nothing new starts' : 'Continued');
+    if (S.run && S.run.id === runId) { S.run.status = r.status; const p = S.pipes.find(x => x.id === S.sel); if (p) draw(p); } follow(runId); } catch (e) { say('bad', e.message); } }
+  async function retryIt(runId, from) { try { const r = await api('POST', '/api/cos/pipeline/runs/' + encodeURIComponent(runId) + '/retry', { by: 'person', ...(from ? { from } : {}) });
+    say('ok', `Retrying${from ? ' from ' + from : ''}: ${r.alreadyMet.length ? r.alreadyMet.join(', ') + ' already met, not run again' : 'every step runs'}`);
+    try { S.run = (await api('GET', A('/pipeline-runs/' + encodeURIComponent(r.engineRun)))).run; } catch (_) {} const p = S.pipes.find(x => x.id === S.sel); if (p) draw(p); follow(r.engineRun); } catch (e) { say('bad', e.message); } }
   async function stopIt(runId) { try { await api('POST', A('/pipeline-runs/' + encodeURIComponent(runId) + '/cancel'), { by: 'person' }); say('ok', 'Stopped'); } catch (e) { say('bad', e.message); } }
   function follow(runId) {
     clearInterval(S.poll); S.poll = setInterval(async () => {
       try { const r = await api('GET', A('/pipeline-runs/' + encodeURIComponent(runId))); S.run = r.run; const p = S.pipes.find(x => x.id === S.sel); if (p) draw(p);
-        if (r.run.status !== 'running') { clearInterval(S.poll); S.poll = null; say(r.run.status === 'done' ? 'ok' : 'bad', `${p ? p.name : 'The pipeline'}: ${r.run.status}`); } }
+        if (r.run.status !== 'running' && r.run.status !== 'paused') { clearInterval(S.poll); S.poll = null; say(r.run.status === 'done' ? 'ok' : 'bad', `${p ? p.name : 'The pipeline'}: ${r.run.status}`); } }
       catch (_) {} }, 1000);
   }
   async function exportIt(p) { try { const r = await api('GET', A('/pipelines/' + encodeURIComponent(p.id) + '/node')); download(r.filename || (p.name || p.id) + '.pipeline', r.text, 'text/yaml');

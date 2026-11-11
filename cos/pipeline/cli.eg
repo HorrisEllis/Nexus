@@ -171,7 +171,11 @@ else if cmd == "resume-of" {
   let q = input()
   print(json(runs.resume_of(q.base, q.id)))
 }
+else if cmd == "retry-of" {
+  let q = input()
+  print(json(runs.retry_of(q.base, q.run, get(q, "from", null))))
+}
 else {
-  eprint("unknown command \"" + cmd + "\": the commands are version, baseline, boxes, dag, erv, roundtrip, types, save-type, gate, gate-actions, frameworks, framework, framework-tree, plan-phase, request, booked, read-id, event, list, read, resume-of (each <file.json>)")
+  eprint("unknown command \"" + cmd + "\": the commands are version, baseline, boxes, dag, erv, roundtrip, types, save-type, gate, gate-actions, frameworks, framework, framework-tree, plan-phase, request, booked, read-id, event, list, read, resume-of, retry-of (each <file.json>)")
   exit(1)
 }

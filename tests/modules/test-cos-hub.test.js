@@ -9,6 +9,7 @@ require('../../lib/test-sandbox.js').ensure();
  *   HB-02 an owner down is said (down, with the reason); a route the owner refuses is said (refused, with the status); never wired
  *   HB-03 the slots with no route yet are waiting and name the phase that wires them; COS's own slots answer in process
  *   HB-07 AE5: the Automation tab — a pipeline listed, run live to done, exported as a .pipeline, imported back; the supervisor's rules kept
+ *   HB-08 PC8 slice b: Pause holds a run (the running step finishes), Continue finishes it; a failed run's Retry and "from here", retried to done
  *   HB-04 GET /api/cos/hub through the manager; the Hub page in Clear Glass through the real cockpit shows each slot and its state
  */
 const assert = require('assert'), fs = require('fs'), os = require('os'), path = require('path'), http = require('http'), net = require('net');
@@ -152,6 +153,41 @@ const stand = async (answers) => { const hits = []; const s = http.createServer(
       await page.evaluate(() => document.querySelector('[data-tab="supervision"]').click());
       assert.ok(await until(() => document.querySelectorAll('#form .rule').length > 3 && !document.querySelector('[data-pane="supervision"]').hidden), 'the supervisor\'s rules are still here');
     } finally { await browser.close(); }
+  });
+  await test('HB-08', 'PC8 slice b in Clear Glass: Pause holds a run and Continue finishes it; a failed run shows Retry and "from here"; Retry runs it to done', async () => {
+    let fixed = false, slow = true;
+    const flaky = http.createServer((q, r) => { r.setHeader('content-type', 'application/json'); const go = () => { if (!fixed) { r.statusCode = 500; return r.end('{"ok":false}'); } r.end('{"ok":true}'); }; if (slow && q.url === '/slow') return setTimeout(() => { r.end('{"ok":true}'); }, 1200); go(); });
+    await new Promise(x => flaky.listen(0, '127.0.0.1', x)); const fp = flaky.address().port;
+    const mk = (name, tasks) => req(mp, 'POST', '/api/cos/automation/pipelines', { name, tasks, by: 'person' }).then(r => (r.body.pipeline || r.body).id);
+    const SET = (v) => ({ type: 'set', config: { assign: { v } } });
+    const held = await mk('PC8b hold', [{ id: 'one', label: 'Slow one', step: { type: 'api', config: { url: `http://127.0.0.1:${fp}/slow`, method: 'GET' } } }, { id: 'two', label: 'Then two', depends_on: ['one'], step: SET('b') }]);
+    const flak = await mk('PC8b retry', [{ id: 'a', label: 'Set a', step: SET('a') }, { id: 'b', label: 'Call it', depends_on: ['a'], step: { type: 'api', config: { url: `http://127.0.0.1:${fp}/x`, method: 'GET' } } }]);
+    const glass = require(path.join(ROOT, 'clear-glass/src/driver/glass.js'));
+    let browser; try { browser = await glass.chromium.launch(); } catch (e) { flaky.close(); console.log(`  - HB-08 SKIPPED: the engine could not start (${e.message.split('\n')[0]})`); return; }
+    try {
+      const page = await browser.newPage({ viewport: { width: 1280, height: 860 } });
+      await page.goto(`http://127.0.0.1:${cp}/automation/index.html`);
+      const until = async (fn, arg, ms = 12000) => { const t = Date.now() + ms; while (Date.now() < t) { const v = await page.evaluate(fn, arg); if (v) return v; await new Promise(r => setTimeout(r, 120)); } return null; };
+      await until((id) => !!document.querySelector(`[data-pipeline="${id}"]`), held);
+      await page.evaluate((id) => document.querySelector(`[data-pipeline="${id}"]`).click(), held);
+      await until(() => document.querySelectorAll('.ae-step').length === 2);
+      await page.evaluate(() => document.querySelector('[data-act="run"]').click());
+      assert.ok(await until(() => !!document.querySelector('[data-act="pause"]')), 'Pause while it runs');
+      await page.evaluate(() => document.querySelector('[data-act="pause"]').click());
+      assert.ok(await until(() => !!document.querySelector('[data-act="continue"]') && document.querySelector('[data-step="one"]').dataset.state === 'done' && document.querySelector('[data-step="two"]').dataset.state === 'waiting'), 'paused: the slow step finished, the next did not start');
+      if (process.env.HB_SHOTS) await page.screenshot({ path: path.join(process.env.HB_SHOTS, 'cos-automation-paused.png'), fullPage: true });
+      await page.evaluate(() => document.querySelector('[data-act="continue"]').click());
+      assert.ok(await until(() => document.querySelector('[data-step="two"]').dataset.state === 'done'), 'continued to done');
+      await page.evaluate((id) => document.querySelector(`[data-pipeline="${id}"]`).click(), flak);
+      await until(() => document.querySelectorAll('.ae-step').length === 2 && !!document.querySelector('[data-step="b"]'));
+      await page.evaluate(() => document.querySelector('[data-act="run"]').click());
+      assert.ok(await until(() => !!document.querySelector('[data-act="retry"]') && document.querySelectorAll('.ae-from').length === 2), 'failed: Retry and a "from here" on each step');
+      if (process.env.HB_SHOTS) await page.screenshot({ path: path.join(process.env.HB_SHOTS, 'cos-automation-retry.png'), fullPage: true });
+      fixed = true;
+      await page.evaluate(() => document.querySelector('[data-act="retry"]').click());
+      assert.ok(await until(() => /a already met, not run again/.test(document.getElementById('ae-msg').textContent)), 'said what was met: ' + await page.evaluate(() => document.getElementById('ae-msg').textContent));
+      assert.ok(await until(() => [...document.querySelectorAll('.ae-step')].every(e => e.dataset.state === 'done')), 'retried to done');
+    } finally { await browser.close(); flaky.close(); }
   });
   cockpit.close(); mgr.close(); cortex.s.close(); idearium.s.close(); sup.shutdown({ by: 'test' }); fs.rmSync(dir, { recursive: true, force: true });
   console.log(`\n  ${passed} passed, ${failed} failed\n`); process.exit(failed ? 1 : 0);

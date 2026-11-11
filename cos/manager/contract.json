@@ -18,6 +18,8 @@
       "automation.pipeline.start",
       "automation.pipeline.task",
       "automation.pipeline.decision",
+      "automation.pipeline.paused",
+      "automation.pipeline.continued",
       "automation.pipeline.done"
     ],
     "origin": "AE7 (2026-11-08), James: \"Then an api that eravos can use for the step. So needs full cli commands, events, nodes.\"",
@@ -129,6 +131,18 @@
       "method": "POST",
       "path": "/api/cos/automation/pipeline-runs/:id/cancel",
       "out": "\u2192 { run } \u2014 stop a run (AE5)"
+    },
+    {
+      "method": "POST",
+      "path": "/api/cos/automation/pipeline-runs/:id/pause",
+      "in": "{ by }",
+      "out": "{ status: paused } \u2014 PC8 slice b (2026-11-11): no new step starts; a running step finishes"
+    },
+    {
+      "method": "POST",
+      "path": "/api/cos/automation/pipeline-runs/:id/continue",
+      "in": "{ by }",
+      "out": "{ status: running } \u2014 PC8 slice b: a paused run goes on where it was"
     },
     {
       "method": "GET",
@@ -599,6 +613,13 @@
       "in": "{ by }",
       "out": "{ request, engineRun, alreadyMet[] } \u2014 from its step files: what is met is not run again",
       "personAct": true
+    },
+    {
+      "method": "POST",
+      "path": "/api/cos/pipeline/runs/:id/retry",
+      "in": "{ from?, by }",
+      "out": "{ request, engineRun, retryOf, alreadyMet[], again[] } \u2014 PC8 slice b (2026-11-11): a failed run retried from its request's files; from: that step and every step after it run again (cos/pipeline/runs.eg retry_of)",
+      "personAct": true
     }
   ],
   "door": {
@@ -871,6 +892,9 @@
         "GET /api/cos/automation/pipeline-runs",
         "GET /api/cos/automation/pipeline-runs/:id",
         "POST /api/cos/automation/pipeline-runs/:id/cancel",
+        "POST /api/cos/automation/pipeline-runs/:id/pause",
+        "POST /api/cos/automation/pipeline-runs/:id/continue",
+        "POST /api/cos/pipeline/runs/:id/retry",
         "POST /api/cos/automation/import",
         "GET /api/cos/automation/workflows",
         "POST /api/cos/automation/workflows/:id/run",

@@ -28,7 +28,7 @@ const TABLE = [
   ['disk', 'disk <system> [make] [state] | disk verify <file>', 'a system\'s disks (its spec as metadata, its files in one compressed file); make one, with its data if you say state; verify one'],
   ['disks', 'disks', 'every disk COS holds'],
   // AE7 (2026-11-08) — James: "Then an api that eravos can use for the step. So needs full cli commands, events, nodes."
-  ['automation', 'automation workflows | run <id> | step <type> [key=value …] | active | log [n] | catalogue | nodes | export <id> | import <file> | pipelines | pipeline <id> | pipeline-run <id> | runs [pipeline-id] | stop <run-id> | pipeline-export <id> [file] | systems-pipelines <system> | import-from <system> <id>', 'the automation engine COS runs: its workflows, a run, one step on its own (what an ERAVOS box calls), live runs, the log, the step kinds, workflows as nodes'],
+  ['automation', 'automation workflows | run <id> | step <type> [key=value …] | active | log [n] | catalogue | nodes | export <id> | import <file> | pipelines | pipeline <id> | pipeline-run <id> | runs [pipeline-id] | stop <run-id> | pause <run-id> | continue <run-id> | pipeline-export <id> [file] | systems-pipelines <system> | import-from <system> <id>', 'the automation engine COS runs: its workflows, a run, one step on its own (what an ERAVOS box calls), live runs, the log, the step kinds, workflows as nodes'],
   ['vdisk', 'vdisk <system> [make|refresh|verify] | vdisk <system> snapshot|revert|drop <tag>', 'its virtual disk (qcow2): metadata, files and all its data in one file, its snapshots inside'],
 ];
 
@@ -117,6 +117,9 @@ function createCli({ sup, resources = null, config = null, notices = null, propo
           else if (sub === 'pipeline-run') { need(2, row[1]); const r = await call('POST', `/pipelines/${encodeURIComponent(a[1])}/run`, { by }); L.push(r.ok === false ? `refused: ${r.error}` : `running ${a[1]}: run ${r.runId || (r.run && r.run.id) || '?'}`); }
           else if (sub === 'runs') { const r = await call('GET', `/pipeline-runs?limit=20${a[1] ? '&pipelineId=' + encodeURIComponent(a[1]) : ''}`); if (!r.runs.length) L.push('no runs yet');
             for (const x of r.runs) { const t = Object.values(x.tasks || {}); L.push(`${pad(x.status, 9)}${pad(x.id.slice(0, 8), 10)}${pad(t.filter(y => y.status === 'done').length + '/' + t.length, 7)}${x.pipelineName || x.pipelineId}`); } }
+          // PC8 slice b (2026-11-11): pause and continue a live run; a run named by the first characters `runs` shows
+          else if (sub === 'pause' || sub === 'continue') { need(2, row[1]); let id = a[1]; if (id.length < 36) { const live = ((await call('GET', '/pipeline-runs?limit=50')).runs || []).filter(x => x.id.startsWith(id)); if (live.length === 1) id = live[0].id; }
+            const r = await call('POST', `/pipeline-runs/${encodeURIComponent(id)}/${sub}`, { by }); L.push(r.ok === false ? `refused: ${r.error}` : `${sub === 'pause' ? 'paused' : 'continued'} ${id.slice(0, 8)}: ${r.status}`); }
           else if (sub === 'stop') { need(2, row[1]); const r = await call('POST', `/pipeline-runs/${encodeURIComponent(a[1])}/cancel`, { by }); L.push(r.ok === false ? `refused: ${r.error}` : `stopped ${a[1]}`); }
           // 0.60.463 — James, 2026-11-08: "hooking in idearium. The pipeline in idearium is meant to be shown on the canvas." A system's own .pipeline files,
           // read by that system's route (GET /api/pipelines, /api/pipelines/:id — Idearium's first), never its folder (§5.15); imported into the engine.

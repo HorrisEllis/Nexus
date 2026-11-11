@@ -414,6 +414,46 @@ fn resume_of(base: string, id: string): map {
   return { ok: true, pipeline: r.run.payload.request.pipeline, vars: r.run.payload.request.vars, done: met }
 }
 
+// PC8 slice b (2026-11-11). James, 2026-11-10: "the pipeline in the automation engine in cos needs to be able to execute, or manage the pipeline.
+// thats what its for. seeing, changing, managing, diagnosing, exporting, testing, agnostic." A failed engine run is retried as its request
+// resumed: what was met is not run again. With from, that step and every step after it (by the DAG) run again too.
+fn after_of(steps: list, from: string): map {
+  var out = {}
+  out[from] = true
+  var grew = true
+  while grew {
+    grew = false
+    for s in steps {
+      let t = s.payload.task
+      if not has(out, t) {
+        for a in s.payload.after {
+          if has(out, a) and not has(out, t) {
+            out[t] = true
+            grew = true
+          }
+        }
+      }
+    }
+  }
+  return out
+}
+
+fn retry_of(base: string, engine_run: string, from: any): map {
+  let id = folder_of(base, engine_run)
+  if id == null { return { ok: false, code: 404, error: "no unmet request holds run \"" + engine_run + "\": a met run is run again, not retried" } }
+  let q = resume_of(base, id)
+  if not q.ok { return q }
+  if from == null or from == "" { return { ok: true, request: id, pipeline: q.pipeline, vars: q.vars, done: q.done, again: [] } }
+  let r = read_request(base, id)
+  if find(r.steps, fn(s) = s.payload.task == from) == null { return { ok: false, code: 404, error: "no step \"" + from + "\" in request " + id } }
+  let again = after_of(r.steps, from)
+  var done = {}
+  for k in keys(q.done) {
+    if not has(again, k) { done[k] = q.done[k] }
+  }
+  return { ok: true, request: id, pipeline: q.pipeline, vars: q.vars, done: done, again: sort(keys(again)) }
+}
+
 // what a gate's actions got back (the door made the calls): kept on the gate's last verdict and the step's, so a stopped request shows why
 fn record_actions(base: string, engine_run: string, task: string, acts: list): map {
   let id = folder_of(base, engine_run)

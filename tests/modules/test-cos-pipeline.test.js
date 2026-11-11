@@ -37,6 +37,8 @@
  *          imported; run, it runs; drawn again with the same name it updates the same pipeline; a step naming nothing is said (422); an agent's is a 403
  *   CP-16  every pipeline a physical node file, imported: a system's own (fetched by its route, kept as a file first), COS's planned ones
  *          (written as their node file first); an unchanged file is left, a changed one updates in place (same id); all in the engine's list
+ *   CP-20  (2026-11-11) PC8 slice b: a failed run retried from its request's files (what was met is not run again); from a step, it and the
+ *          steps after it; a met run is not retried; an agent's retry is a 403; the routes and the command declared
  *   CP-07  an engine with no gate host refuses a typed gate, said; command rows for agents and copilot
  */
 require('../../lib/test-sandbox.js').ensure();
@@ -95,7 +97,7 @@ const eg = (...a) => require('child_process').spawnSync(process.execPath, [path.
   const TEST = { type: 'test', with: { owner: 'tester', route: 'POST /api/tests/run', expect: 'passed' } };
   try {
     await T('CP-00', 'Emerge\'s own tests: the box shape (with its dag hook) and the gate', () => {
-      for (const [f, n] of [['cos/pipeline/test/box.test.eg', 14], ['cos/pipeline/test/gate.test.eg', 8], ['cos/pipeline/test/runs.test.eg', 6], ['cos/pipeline/test/framework.test.eg', 8]]) { const r = eg('test', f); assert.strictEqual(r.status, 0, r.stdout + r.stderr); assert.match(r.stdout, new RegExp(`${n} passed, 0 failed`)); }
+      for (const [f, n] of [['cos/pipeline/test/box.test.eg', 14], ['cos/pipeline/test/gate.test.eg', 8], ['cos/pipeline/test/runs.test.eg', 7], ['cos/pipeline/test/framework.test.eg', 8]]) { const r = eg('test', f); assert.strictEqual(r.status, 0, r.stdout + r.stderr); assert.match(r.stdout, new RegExp(`${n} passed, 0 failed`)); }
     });
 
     await T('CP-01', 'one folder with its registry; the shipped .gatetype files listed; a try decides and does nothing', async () => {
@@ -437,6 +439,35 @@ const eg = (...a) => require('child_process').spawnSync(process.execPath, [path.
       const bad = await req(M, 'GET', '/api/cos/pipeline/baseline'); assert.strictEqual(bad.status, 400);
       const SPEC = (await import(require('url').pathToFileURL(path.join(ROOT, 'idearium/cli/route-commands.js')).href)).SPEC;
       assert.ok(SPEC.some(s => s.key === 'cos.pipeline-baseline'), 'a command row, for agents and copilot');
+    });
+    await T('CP-20', 'PC8 slice b: a failed run retried from its request\'s files: what was met is not run again; from a step, it and the steps after it; an agent\'s retry is a 403', async () => {
+      let fixed = false, hits = 0;
+      const flaky = await stand((q, r) => { hits++; r.setHeader('content-type', 'application/json'); if (!fixed) { r.statusCode = 500; return r.end('{"ok":false,"error":"down"}'); } r.end('{"ok":true}'); });
+      const API = { type: 'api', config: { url: `http://127.0.0.1:${flaky.address().port}/x`, method: 'GET' } };
+      try {
+        const id = await make('pc8-retry', [{ id: 'a', step: SET('x') }, { id: 'b', depends_on: ['a'], step: API }, { id: 'c', depends_on: ['b'], step: SET('z') }]);
+        const first = (await req(M, 'POST', `/api/cos/automation/pipelines/${id}/run?wait=1`, { by: 'person' })).body;
+        const runId = first.runId || (first.run && first.run.id); assert.strictEqual(first.status || (first.run && first.run.status), 'failed', JSON.stringify(first).slice(0, 300));
+        const kept = async (n) => wait(async () => ((await req(M, 'GET', '/api/cos/pipeline/requests')).body.requests || []).filter(x => x.pipeline === id && x.phase !== 'running').length >= n);
+        await kept(1);
+        assert.strictEqual((await req(M, 'POST', `/api/cos/pipeline/runs/${runId}/retry`, { by: 'agent:x' })).status, 403);
+        fixed = true; const before = hits;
+        const rt = (await req(M, 'POST', `/api/cos/pipeline/runs/${runId}/retry`, { by: 'person' })).body;
+        assert.ok(rt.ok, JSON.stringify(rt)); assert.deepStrictEqual(rt.alreadyMet, ['a'], 'a was met: not run again'); assert.strictEqual(rt.retryOf, runId);
+        const done = await wait(async () => { const r = (await req(M, 'GET', `/api/cos/automation/pipeline-runs/${rt.engineRun}`)).body.run; return r && r.status !== 'running' ? r : null; });
+        assert.strictEqual(done.status, 'ok', JSON.stringify(done.tasks)); assert.strictEqual(done.tasks.a.met, 'earlier'); assert.ok(hits > before, 'b ran again');
+        const met = (await req(M, 'POST', `/api/cos/pipeline/runs/${rt.engineRun}/retry`, { by: 'person', from: 'b' })).body;
+        assert.ok(met.ok === false && /no unmet request/.test(met.error), 'a met run is run again, not retried: ' + JSON.stringify(met));
+        fixed = false; const r2 = (await req(M, 'POST', `/api/cos/automation/pipelines/${id}/run?wait=1`, { by: 'person' })).body; const run2 = r2.runId || (r2.run && r2.run.id);
+        await kept(1); await new Promise(z => setTimeout(z, 300));
+        fixed = true; const from = (await req(M, 'POST', `/api/cos/pipeline/runs/${run2}/retry`, { by: 'person', from: 'a' })).body;
+        assert.ok(from.ok, JSON.stringify(from)); assert.deepStrictEqual(from.alreadyMet, [], 'from a: every step after it runs again'); assert.deepStrictEqual(from.again, ['a', 'b', 'c']);
+        await wait(async () => { const r = (await req(M, 'GET', `/api/cos/automation/pipeline-runs/${from.engineRun}`)).body.run; return r && r.status === 'ok'; });
+        const contract = J(path.join(ROOT, 'cos/manager/contract.json'));
+        for (const r of ['/api/cos/pipeline/runs/:id/retry', '/api/cos/automation/pipeline-runs/:id/pause', '/api/cos/automation/pipeline-runs/:id/continue']) assert.ok(contract.routes.some(x => x.path === r), r + ' declared');
+        const SPEC = (await import(require('url').pathToFileURL(path.join(ROOT, 'idearium/cli/route-commands.js')).href)).SPEC;
+        assert.ok(SPEC.some(s => s.key === 'cos.pipeline-retry'), 'a command row');
+      } finally { flaky.close(); }
     });
   } finally {
     es.destroy(); mgr.close(); sup.shutdown({ by: 'test' }); tester.close(); emerge.close(); cortex.close(); ideariumStand.close();
