@@ -63,7 +63,7 @@
         el('span', { text: d.kind === 'agent.provider' ? `chose ${d.chose}${d.asked && d.asked !== d.chose ? ' (asked for ' + d.asked + ')' : ''}` : `${d.kind || ''} ${d.chose || ''}` }), d.why ? el('span', { class: 'why', text: d.why }) : null]));
       const again = run && (run.status === 'failed' || run.status === 'cancelled') ? el('button', { class: 'btn sm ae-from', 'data-from': k.id, title: 'retry from this step: it and every step after it run again', onclick: () => retryIt(run.id, k.id), text: '↻ from here' }) : null;
       return el('div', { class: 'ae-step', 'data-step': k.id, 'data-state': st }, [el('span', { text: k.label || k.id }), el('span', { class: 'mono', text: dur(r.ms) }), bar, el('span', { class: 'st ' + st, text: st || '—' }),
-        r.error ? el('span', { class: 'why', text: r.error }) : (k.depends_on || []).length ? el('span', { class: 'why', text: 'after ' + k.depends_on.join(', ') }) : null,
+        r.error ? el('span', { class: 'why', text: r.error }) : (r.held && run && run.status === 'paused' && run.paused && run.paused.task === k.id) ? el('span', { class: 'why ae-held', 'data-held': k.id, text: 'waits for you: ' + r.held.why + ' — then Continue' }) : (k.depends_on || []).length ? el('span', { class: 'why', text: 'after ' + k.depends_on.join(', ') }) : null,
         baseTxt ? el('span', { class: 'ae-base muted', text: baseTxt }) : null, ...decisions, again]); }));
     const head = run ? el('p', { class: 'muted', text: `run ${String(run.id).slice(0, 8)} · ${run.status} · started ${ago(run.startedAt)}${took(run) != null ? ' · ' + secs(took(run)) : ''}` }) : el('p', { class: 'muted', text: 'Not run yet.' });
     $('ae-p-body').replaceChildren(btns, head, steps);

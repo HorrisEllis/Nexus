@@ -627,7 +627,7 @@ built_2026_11_09_plan:
     status: OPEN   # slice a BUILT 0.60.481 (a delta and a baseline per step; RAID's decisions as steps; the bar); slice b BUILT 0.60.484 (pause, continue, retry from a step)
     james: '"seeing, changing, managing, diagnosing, exporting, testing, agnostic." · "record each step in raids decision, dynamically building each step, as it goes. it all needs to be visable."'
     depends_on: [PC_D13_the_pipeline_works_first_then_cos_optimised, PC5_programmable_gate_types]
-    files: [lib/automation/pipeline.js, lib/automation/routes.js, lib/automation/engine.js, cos/manager/automation-door.js, cos/pipeline/runs.eg, cos/pipeline/cli.eg, cos/ui/automation/engine.js, cos/ui/automation/page.js, idearium/cli/route-commands.js, cos/pipeline/index.js, cos/manager/server.js, tests/modules/test-cos-pipeline.test.js, idearium/api/index.js, idearium/pipelines/idearium-build.pipeline, lib/nexus-client.js, lib/repo-agent.js, guardian/lib/ncp-handler.js, guardian/server.js, tests/modules/test-ncp-handler-sr3.js]
+    files: [lib/automation/pipeline.js, lib/automation/routes.js, lib/automation/engine.js, cos/manager/automation-door.js, cos/pipeline/runs.eg, cos/pipeline/cli.eg, cos/ui/automation/engine.js, cos/ui/automation/page.js, idearium/cli/route-commands.js, cos/pipeline/index.js, cos/manager/server.js, tests/modules/test-cos-pipeline.test.js, idearium/api/index.js, idearium/pipelines/idearium-build.pipeline, lib/nexus-client.js, lib/repo-agent.js, guardian/lib/ncp-handler.js, guardian/server.js, tests/modules/test-ncp-handler-sr3.js, tests/modules/test-pipelines.test.js]
     requires: [node]
     prerequisites: ["the census of 2026-11-10 (below)"]
     census_2026_11_10: >-
@@ -851,3 +851,27 @@ built_2026_11_09_plan:
 # reply was a tool call ({"name":"idearium.code_map.tool",…}) that nothing read; Google's "Couldn't sign you in — This browser or app may
 # not be secure" inside Clear Glass: his sign-ins are his, and the coder does not work around a provider's sign-in check.
 # Also open: Clear Glass re-injects Claude's userscript every minute while its tab is on the sign-in page (15 times in 15 minutes, seen).
+
+# ── ADDENDUM 2026-11-11 (0.60.496) — PC8 expanded: a step that holds for him, instead of failing (mapped before code) ──
+# James, 2026-11-11, asked what now and shown the order (commit; the pipeline holds for his verdict; the proof on Gemini; COS restarted; the stale contract): "Do it"
+# The gap, from runs aaa327d9 and 5047dbb3: seven steps met, then `evidence` failed the whole run on a phase nothing can check. His rule of
+# 2026-10-26 (GV_D2): "the gate doesn't wait for me to accept it or not before it fails."
+# What exists, read first (§8.6): the engine's pause and continue (PC8 slice b, 0.60.484: POST …/pipeline-runs/:id/pause|continue, `cos pipeline
+# continue`, the tab's Continue button); a task's onFail (stop | continue); Idearium's verdict route (GV2) for a run RAID held.
+# Side by side: (a) a new step type or route that waits on Idearium for his verdict (a long request held for hours, or a poll); (b) the
+# task's own onFail gains `hold`: a step that cannot pass pauses the run with its reason, stays waiting, and is asked again when he
+# continues. (b) taken, by his axioms: §8.6 (pause and continue are used, nothing new beside them), §5.10 (no new crossing: COS's engine
+# learns nothing of Idearium), §1.2 (the reason is said on the run), USER_AUTONOMY (the verdict stays his; the engine only waits).
+# To build, JavaScript changed in place (the engine stays JavaScript until CIE13):
+#   - lib/automation/pipeline.js: onFail `hold`; the run is paused by the pipeline, naming the step and why; continue asks the step again.
+#   - idearium/api/index.js: POST …/phases/evidence { phase } answers ok for a phase already done (his acceptance closed it), saying so.
+#   - idearium/pipelines/idearium-build.pipeline: `evidence` holds.
+#   - cos/ui/automation/engine.js: a held run shows which step waits and why, beside Continue.
+# Limit, said: a held run lives in COS's process; COS restarted, the hold is gone and the run is retried from its step (slice b's retry).
+# Built 0.60.496 as mapped above. Proof: tests/modules/test-pipelines.test.js PL-03b; 6 of 7 (PL-06 "Clear Glass host exited", not looked into).
+# NOT proved live: the running COS holds the old engine (its restart is his); Idearium, restarted by the coder for the evidence answer, was
+# held by COS at waiting-memory (6 to 9% free, floor 10%) and was down when this was written. No pipeline run was made on 0.60.496.
+# Open: his acceptance is still two acts (accept the phase in Idearium, then Continue): one act that carries his words to the verdict is his
+# to ask for. A held run does not outlive a COS restart.
+# After, the same day: James, "Firefox Closed." Free memory 11.3%, COS started Idearium by itself. The evidence answer is proved live
+# (IN0_baseline: already true, done, nothing left to judge). The hold is still not live: COS is not restarted.

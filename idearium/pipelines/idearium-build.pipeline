@@ -115,10 +115,14 @@ payload:
           method: GET
           timeoutMs: 280000
       gate: *ref_0
+    # 0.60.496 — James, 2026-10-26: "the gate doesn't wait for me to accept it or not before it fails." A phase the evidence cannot close
+    # (no test reaches it, a test failed, a file waits for his approval) holds the run here with the reason. He accepts or rejects the phase
+    # in Idearium, then continues the run; the step is asked again.
     - id: evidence
       label: Closed on evidence
       depends_on:
         - landed
+      onFail: hold
       step:
         type: api
         config:

@@ -9883,6 +9883,10 @@ async function handle(req, res, route, query, body) {
       // 0.60.493 — { phase } judges that phase alone. Before, the pipeline's step sent a phase and the route judged up to 10 open phases,
       // whichever they were (30 s and more). Asked for one phase, it answers ok only when that phase closes (or would, on a dry run).
       const phases = Object.values(DAG.build(maps, {}).nodes).filter(n => !n.done && !n.decision && (!b.phase || n.id === b.phase || n.key === b.phase)).map(n => ({ key: n.key, map: n.map, id: n.id, files: n.files }));
+      // 0.60.496 PC8 — asked for one phase that is already done (closed on evidence earlier, or by his acceptance): that is the answer, and ok.
+      // The pipeline's step holds for his verdict on a phase nothing can check; continued after he accepted it, it meets this.
+      if (b.phase) { const dn = Object.values(DAG.build(maps, {}).nodes).find(n => !n.decision && n.done && (n.id === b.phase || n.key === b.phase));
+        if (dn) return ok(res, { already: true, phase: dn.id, map: dn.map, status: dn.status || null, closed: [], wouldClose: [], open: [], ran: [], note: `${dn.id} is already done in its map${dn.status ? ` (${String(dn.status).slice(0, 80)})` : ''}: nothing left to judge` }); }
       const apply = b.apply === true;
       const r = await PC.byEvidence({ phases, root, repo, dryRun: !apply, setStatus: apply ? _phaseSetStatus : null, limit: Math.max(1, Math.min(500, parseInt(b.limit, 10) || 10)) });
       for (const c of r.closed) {

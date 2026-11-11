@@ -93,6 +93,31 @@ async function test(id, desc, fn) { try { await fn(); console.log(`  ✓ ${id} $
     assert.ok(P.runs(c.pipeline.id).length === 2 && P.getRun(r.runId).status === 'failed', 'runs kept');
   });
 
+  // 0.60.496 PC8 — his 2026-10-26 "the gate doesn't wait for me to accept it or not before it fails."
+  await test('PL-03b', 'onFail hold: the step that cannot pass pauses the run with its reason; continue asks it again; it passes and the rest run', async () => {
+    assert.match(v({ name: 'x', tasks: [{ id: 'a', step: macro('m'), onFail: 'wait' }] }).problems.join(' '), /onFail is stop, continue or hold/);
+    flaky = 0;
+    const c = P.create({ name: 'Holds for him', tasks: [{ id: 'check', step: macro('flaky'), gate: { contains: 'READY' }, onFail: 'hold' }, { id: 'after', depends_on: ['check'], step: macro('m') }] });
+    assert.ok(c.ok, JSON.stringify(c));
+    const s = await P.run(c.pipeline.id, { wait: false });
+    const until = async (f) => { for (let i = 0; i < 200; i++) { const r = P.getRun(s.runId); if (r && f(r)) return r; await new Promise(x => setTimeout(x, 10)); } throw new Error('not reached: ' + JSON.stringify(P.getRun(s.runId)).slice(0, 400)); };
+    let r = await until(x => x.status === 'paused');
+    assert.deepStrictEqual([r.paused.by, r.paused.task, r.tasks.check.status, r.tasks.after.status], ['the pipeline', 'check', 'waiting', 'waiting']);
+    assert.match(r.paused.why, /does not contain "READY"/); assert.strictEqual(r.tasks.check.held.times, 1);
+    assert.ok(P.unpause(s.runId, { by: 'him' }).ok);
+    r = await until(x => x.status === 'paused' && x.tasks.check.held.times === 2);   // asked again, still not met: held again
+    assert.ok(P.unpause(s.runId, { by: 'him' }).ok);
+    for (let i = 0; i < 200 && P._active.has(s.runId); i++) await new Promise(x => setTimeout(x, 10));
+    r = P.getRun(s.runId);
+    assert.deepStrictEqual([r.status, r.tasks.check.status, r.tasks.after.status], ['ok', 'done', 'done']);
+    // cancelled while held: the run ends, nothing left running
+    flaky = 0; const s2 = await P.run(c.pipeline.id, { wait: false });
+    for (let i = 0; i < 200 && (P.getRun(s2.runId) || {}).status !== 'paused'; i++) await new Promise(x => setTimeout(x, 10));
+    assert.ok(P.cancel(s2.runId).ok);
+    for (let i = 0; i < 200 && P._active.has(s2.runId); i++) await new Promise(x => setTimeout(x, 10));
+    assert.strictEqual(P.getRun(s2.runId).status, 'cancelled');
+  });
+
   await test('PL-04', 'the door: create, validate, get with layers, run, the run read back, archive', async () => {
     const R = require(path.join(ROOT, 'lib/automation/routes.js'));
     const call = (method, url, body) => R.handle(A, { method, url, body: body || {} }, {});
