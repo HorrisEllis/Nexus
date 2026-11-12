@@ -925,3 +925,9 @@ phases_addendum_2026_11_01_mg33:
 # GET /api/intelligence/friction for the field's regime. Cortex down: cortex: 'down' and why, trails unreadable (never empty), and the rest
 # answered. A second require of jaa-db.js (_getJaaDB) that nothing called was removed, said. Proof: AD-05; CT-07 8/8 (was 7/8); FM-07,
 # test-failure-modes 9/9 (was 8/9); test-flight-data 9/9; the census 0 past its baseline.
+
+
+## ADDENDUM 2026-11-12 (0.60.497) — MG18: an agent can propose restarting COS itself
+James, 2026-11-12: "Need to be able to propose restarts."
+- A proposal kind restart-cos (target cos, a reason required), held; taken by him, COS restarts itself (opts.restartCos, as CE2b). An agent
+  cannot take it. Command row cos.propose (restart cos, and restart|start|stop <system>). Proof: test-cos-propose-restart 3/3.
