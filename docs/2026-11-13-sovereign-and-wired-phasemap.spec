@@ -133,6 +133,32 @@ phases:
       call to a route that system's map declares (added to its map and command nodes when missing). After each pair the ratchet's
       baseline falls and is written back. At zero, a new crossing fails the build, not only the count.
     proof: "per pair: the census shows 0 for it and its callers' tests pass; at the end 0 system crossings, and a fixture require() across a seam fails by name"
+  SW7a_the_crystal_lattice_into_intelligence:
+    layer: integration
+    status: OPEN
+    james: '"yes but lib needs to stop acting like a system. should we move that into the substrate or into the intelligence system?" · "Yes, map the move" · "this should be a pipeline task" (2026-11-13)'
+    depends_on: [SW_D5_lib_is_not_a_system]
+    part_of: SW7_lib_goes_home
+    files: [lib/meta/crystal-lattice.js, intelligence/lattice/crystal-lattice.js, intelligence/routes.js, intelligence/registry-components.js, lib/compartment-engine.js, lib/case-library.js, lib/meta/index.js, lib/node-export.js, lib/agent-tools/tools/query/query-intelligence.js, idearium/cli/route-commands.js, tests/modules/crystal-lattice.test.js, tests/modules/case-library.test.js, tests/modules/intuition-upgrade.test.js, tests/modules/test-crystal-lattice-in-intelligence.test.js]
+    read_2026_11_13: >-
+      lib/meta/crystal-lattice.js (262 lines): a (domain, verb, outcome) pattern seen PATTERN_FREQUENCY_THRESHOLD times becomes a crystal
+      (PASS) or a negative crystal (FAIL); lattice edges gain weight on success, lose it on failure, and decay on a timer. Its tables,
+      crystals and lattice_edges, are in Cortex's JAA store, reached by require('../../cortex/memory/jaa-db') (a crossing). Live callers:
+      lib/compartment-engine.js (updateOnExecution on every compartment outcome; the engine runs in Cortex's process, so the decay timer
+      does too) and lib/case-library.js (_edgeKey, reading lattice_edges.success_rate). lib/meta/index.js keeps a lazy getter no one
+      calls; node-export.js and query-intelligence.js name it in comments. Intelligence already serves GET /api/intelligence/crystals and
+      /api/intelligence/lattice, reading the same tables read-only (intelligence/routes.js freshReader). cortex/cortex-v2.js reads
+      lattice_edges through Cortex's /api/memory (a route, not a crossing).
+    does: >-
+      Backend first: git mv lib/meta/crystal-lattice.js → intelligence/lattice/crystal-lattice.js (history kept); it runs in Intelligence's
+      process, and its decay timer with it. Route: POST /api/intelligence/lattice/outcome { compartment, outcome } is updateOnExecution;
+      GET /api/intelligence/lattice/edge?from&to answers what case-library reads. Then the callers: compartment-engine posts each outcome
+      (never blocking the compartment: Intelligence down is said on the ledger and the outcome counted as missed, not retried into a
+      storm, his "one system down breaks no other"); case-library asks the edge route; lib/meta/index.js loses its getter. Command row:
+      `intel lattice outcome|edge`. The tables stay where they are in this slice (Cortex's store, read by Intelligence already); their
+      move into intelligence/data is SW4's for Intelligence (his "own data folder by default"), a migration first (§0.3), nothing deleted.
+    proof: "lib/meta/crystal-lattice.js gone and git log --follow finds it at its new path; three PASS outcomes posted give one crystal, a FAIL pattern a negative crystal (the old tests at the new home); case-library's edge read through the route equals the old direct read; with Intelligence stopped a compartment still completes and the missed outcome is on the ledger; the census shows lib's crossing into cortex from crystal-lattice gone and none added"
+    note: "its own phase so COS's pipeline can build it as one request: SW7 waits on SW4 and SW6, this slice needs nothing built first, removes crossings and adds none"
   SW7_lib_goes_home:
     layer: integration
     status: OPEN
@@ -148,27 +174,7 @@ phases:
       James, 2026-11-13: "yes but lib needs to stop acting like a system. should we move that into the substrate or into the intelligence
       system?" · told the coder's reading (into Intelligence; its spec names it the home of the cognition layer): "Yes, map the move".
       SW_D5 decides lib/ is not a system. Mapped ahead of the order (SW7 last) by his yes; slice a removes crossings and adds none.
-    slice_a_the_crystal_lattice_into_intelligence:
-      files: [lib/meta/crystal-lattice.js, intelligence/lattice/crystal-lattice.js, intelligence/routes.js, intelligence/registry-components.js, lib/compartment-engine.js, lib/case-library.js, lib/meta/index.js, lib/node-export.js, lib/agent-tools/tools/query/query-intelligence.js, idearium/cli/route-commands.js, tests/modules/crystal-lattice.test.js, tests/modules/case-library.test.js, tests/modules/intuition-upgrade.test.js, tests/modules/test-crystal-lattice-in-intelligence.test.js]
-      read_2026_11_13: >-
-        lib/meta/crystal-lattice.js (262 lines): a (domain, verb, outcome) pattern seen PATTERN_FREQUENCY_THRESHOLD times becomes a crystal
-        (PASS) or a negative crystal (FAIL); lattice edges gain weight on success, lose it on failure, and decay on a timer. Its tables,
-        crystals and lattice_edges, are in Cortex's JAA store, reached by require('../../cortex/memory/jaa-db') (a crossing). Live callers:
-        lib/compartment-engine.js (updateOnExecution on every compartment outcome; the engine runs in Cortex's process, so the decay timer
-        does too) and lib/case-library.js (_edgeKey, reading lattice_edges.success_rate). lib/meta/index.js keeps a lazy getter no one
-        calls; node-export.js and query-intelligence.js name it in comments. Intelligence already serves GET /api/intelligence/crystals and
-        /api/intelligence/lattice, reading the same tables read-only (intelligence/routes.js freshReader). cortex/cortex-v2.js reads
-        lattice_edges through Cortex's /api/memory (a route, not a crossing).
-      does: >-
-        Backend first: git mv lib/meta/crystal-lattice.js → intelligence/lattice/crystal-lattice.js (history kept); it runs in Intelligence's
-        process, and its decay timer with it. Route: POST /api/intelligence/lattice/outcome { compartment, outcome } is updateOnExecution;
-        GET /api/intelligence/lattice/edge?from&to answers what case-library reads. Then the callers: compartment-engine posts each outcome
-        (never blocking the compartment: Intelligence down is said on the ledger and the outcome counted as missed, not retried into a
-        storm, his "one system down breaks no other"); case-library asks the edge route; lib/meta/index.js loses its getter. Command row:
-        `intel lattice outcome|edge`. The tables stay where they are in this slice (Cortex's store, read by Intelligence already); their
-        move into intelligence/data is SW4's for Intelligence (his "own data folder by default"), a migration first (§0.3), nothing deleted.
-      proof: "lib/meta/crystal-lattice.js gone and git log --follow finds it at its new path; three PASS outcomes posted give one crystal, a FAIL pattern a negative crystal (the old tests at the new home); case-library's edge read through the route equals the old direct read; with Intelligence stopped a compartment still completes and the missed outcome is on the ledger; the census shows lib's crossing into cortex from crystal-lattice gone and none added"
-      depends_on_note: "needs nothing built first; CY0 (one crystal schema) writes through it later, in Intelligence (CY0 expanded the same day)"
+    slice_a: "built as its own phase, SW7a_the_crystal_lattice_into_intelligence (his 2026-11-13: \"this should be a pipeline task\")"
 
 order: >-
   SW0 first (it measures every other phase). Then SW1 → SW2 → SW3 (the map, the command nodes, the events) and SW4 (data) beside them.

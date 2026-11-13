@@ -1,0 +1,43 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-13-sovereign-and-wired-phasemap.spec::SW7a_the_crystal_lattice_into_intelligence
+type: phase
+id: docs_2026-11-13-sovereign-and-wired-phasemap.spec::SW7a_the_crystal_lattice_into_intelligence
+context: >-
+  pipeline phase SW7a_the_crystal_lattice_into_intelligence of
+  docs/2026-11-13-sovereign-and-wired-phasemap.spec
+intent: null
+summary: SW7a_the_crystal_lattice_into_intelligence (integration) — 14 file(s)
+system: idearium
+tags: []
+exported_at: 1794557833641
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794557833641
+lastSeenAt: 1794557833641
+fingerprint: null
+payload:
+  id: SW7a_the_crystal_lattice_into_intelligence
+  map: docs/2026-11-13-sovereign-and-wired-phasemap.spec
+  repo: null
+  layer: integration
+  status: OPEN
+  files:
+    - lib/meta/crystal-lattice.js
+    - intelligence/lattice/crystal-lattice.js
+    - intelligence/routes.js
+    - intelligence/registry-components.js
+    - lib/compartment-engine.js
+    - lib/case-library.js
+    - lib/meta/index.js
+    - lib/node-export.js
+    - lib/agent-tools/tools/query/query-intelligence.js
+    - idearium/cli/route-commands.js
+    - tests/modules/crystal-lattice.test.js
+    - tests/modules/case-library.test.js
+    - tests/modules/intuition-upgrade.test.js
+    - tests/modules/test-crystal-lattice-in-intelligence.test.js
+  depends_on:
+    - SW_D5_lib_is_not_a_system
+  blocks: []
+  spec: null
+  graph: 01543ebcad04ebbf

@@ -1,0 +1,297 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SW7a_the_crystal_lattice_into_intelligence:01543ebcad04ebbf
+type: graph
+id: phase:SW7a_the_crystal_lattice_into_intelligence:01543ebcad04ebbf
+context: dependency graph of phase SW7a_the_crystal_lattice_into_intelligence
+intent: null
+summary: 38 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1794557833641
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794557833641
+lastSeenAt: 1794557833641
+fingerprint: null
+payload:
+  for: SW7a_the_crystal_lattice_into_intelligence
+  kind: phase
+  repo: null
+  hash: 01543ebcad04ebbf
+  nodes:
+    - path: idearium/cli/route-commands.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: intelligence/lattice/crystal-lattice.js
+      role: changes
+      exists: false
+      system: intelligence
+    - path: intelligence/registry-components.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: intelligence/routes.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: lib/agent-tools/tools/query/query-intelligence.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/case-library.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/compartment-engine.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/meta/crystal-lattice.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/meta/index.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/node-export.js
+      role: changes
+      exists: true
+      system: lib
+    - path: tests/modules/case-library.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: tests/modules/crystal-lattice.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: tests/modules/intuition-upgrade.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: tests/modules/test-crystal-lattice-in-intelligence.test.js
+      role: changes
+      exists: false
+      system: null
+    - path: architect/schemas/index.js
+      role: used-by
+      exists: true
+      system: architect
+    - path: clear-glass/schemas/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: cortex/core/raid/contract-intake.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: intelligence/server.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: lib/agent-tools/tools/coordination/intelligence-query.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/autonomous-loop.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: orchestrator/orchestrator.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: tests/modules/compartment-engine.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/idearium-phase-compartment.test.mjs
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/mastermind-upgrade.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-intelligence-core-wired.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-sovereign-systems.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: intelligence/adversarial.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/alk-perception/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/alk/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/bda/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/causal/anomaly.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/causal/compound.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/gap/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/intuition.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/liminal/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/mastermind.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/telemetry-codec/index.js
+      role: uses
+      exists: true
+      system: intelligence
+  edges:
+    - from: lib/meta/crystal-lattice.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/intuition.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/mastermind.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/adversarial.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/liminal/index.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/gap/index.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/bda/index.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/causal/anomaly.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/causal/compound.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/alk/index.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/alk-perception/index.js
+      kind: requires
+    - from: intelligence/routes.js
+      to: intelligence/telemetry-codec/index.js
+      kind: requires
+    - from: intelligence/server.js
+      to: intelligence/routes.js
+      kind: requires
+    - from: tests/modules/mastermind-upgrade.test.js
+      to: intelligence/routes.js
+      kind: requires
+    - from: tests/modules/test-sovereign-systems.test.js
+      to: intelligence/routes.js
+      kind: requires
+    - from: lib/agent-tools/tools/coordination/intelligence-query.js
+      to: intelligence/registry-components.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: lib/compartment-engine.js
+      kind: requires
+    - from: lib/autonomous-loop.js
+      to: lib/compartment-engine.js
+      kind: requires
+    - from: tests/modules/compartment-engine.test.js
+      to: lib/compartment-engine.js
+      kind: requires
+    - from: tests/modules/idearium-phase-compartment.test.mjs
+      to: lib/compartment-engine.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: lib/meta/index.js
+      kind: requires
+    - from: tests/modules/test-intelligence-core-wired.js
+      to: lib/meta/index.js
+      kind: requires
+    - from: architect/schemas/index.js
+      to: lib/node-export.js
+      kind: requires
+    - from: clear-glass/schemas/index.js
+      to: lib/node-export.js
+      kind: requires
+  crossings:
+    - from: lib/meta/crystal-lattice.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+    - from: lib/agent-tools/tools/coordination/intelligence-query.js
+      to: intelligence/registry-components.js
+      fromSystem: lib
+      toSystem: intelligence
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW_D5_lib_is_not_a_system
+    dependents: []
+    upstream:
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW_D5_lib_is_not_a_system
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts:
+      - with: docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW2_routes_and_command_nodes
+        files:
+          - idearium/cli/route-commands.js
+      - with: docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW7_lib_goes_home
+        files:
+          - lib/meta/crystal-lattice.js
+          - intelligence/lattice/crystal-lattice.js
+          - intelligence/routes.js
+          - lib/compartment-engine.js
+          - lib/case-library.js
+          - tests/modules/test-crystal-lattice-in-intelligence.test.js
+    dangling: []
+    lines:
+      - layer 1 · ready
+      - 'depends on (1): SW_D5_lib_is_not_a_system'
+      - 'needed by (0): —'
+      - >-
+        same files as SW2_routes_and_command_nodes with no order between them:
+        idearium/cli/route-commands.js
+      - >-
+        same files as SW7_lib_goes_home with no order between them: lib/meta/crystal-lattice.js,
+        intelligence/lattice/crystal-lattice.js, intelligence/routes.js, lib/compartment-engine.js,
+        lib/case-library.js, tests/modules/test-crystal-lattice-in-intelligence.test.js
+    edges:
+      - from: docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW_D5_lib_is_not_a_system
+        kind: declared
