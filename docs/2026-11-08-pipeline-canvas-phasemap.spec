@@ -998,7 +998,7 @@ expanded_2026_11_13_ollama:
 #   - Ollama's own app: "No. Let’s build our own with emerge. Completely ours." — two readings, his to choose (PC_D17).
 decisions_2026_11_13_model_server:
   PC_D17_our_own_model_server_in_emerge:
-    status: "TO HIM: which reading (asked 2026-11-13)"
+    status: "DECIDED 2026-11-13 by James: reading a, widened to an inference supervisor in Emerge, Ollama its first backend (see the addendum after)"
     james: '"No. Let’s build our own with emerge. Completely ours." · "Emerge only" · "Other local, then Guardian"'
     readings:
       a_the_manager: >-
@@ -1011,3 +1011,36 @@ decisions_2026_11_13_model_server:
         so it runs on the 3700X alone: a 2.4B-active model is feasible on CPU only with SIMD kernels Emerge does not have yet. Months; a project
         of its own (its own map), and the GTX 1650 unused until Emerge reaches the GPU.
     coder_recommends: "a first (it is what makes Ollama's app unnecessary now); b mapped as its own project after, if he wants it"
+
+# ── ADDENDUM 2026-11-13 (map) — PC_D17 decided: an inference supervisor defined in Emerge, Ollama its first backend (his) ──
+# James, 2026-11-13, choosing between "our own manager" and "our own engine": "YES. You’re talking about building the supervisor itself in Emerge,
+# not JavaScript. That is a substantially different proposition. And potentially a better fit for Nexus. ... you define the supervisor in Emerge as
+# a system of processes, conditions, constraints, routes and executable operations. ... * Detect whether Ollama is running. * Inspect available
+# models. * Receive inference requests. * Evaluate resource availability. * Queue or dispatch requests. * Monitor execution. * Recover from
+# failures. Each operation becomes an Emerge-defined process. ... Ollama becomes just one backend implementation. You could eventually build the
+# same supervisor around llama.cpp, another local inference runtime or even a remote inference service. Emerge defines the management logic. The
+# backend performs inference. One important caveat: Emerge still needs mechanisms to interact with the operating system, HTTP interfaces and
+# native executables. ... I would investigate building this as a complete Emerge-defined inference supervisor, with Ollama as its first backend,
+# rather than making an Ollama-specific controller. That would test Emerge’s ability to build an actual reusable infrastructure system."
+# PC_D17: DECIDED, reading a (the manager, not the engine), widened by him to a backend-agnostic inference supervisor. Inference stays a backend's.
+# What Emerge has for it, read the same day (emerge/emerge/lang/runtime.js, native/rt.eg): proc_start, proc_wait, proc_wait_ms, proc_signal,
+# proc_run; read_file, write_file, path_exists, is_dir, list_dir, make_dir, move_path, remove_path. Not there: an HTTP client or server, sockets,
+# environment variables, the platform's name. Native emerge.exe is Linux (syscalls); on his Windows machine Emerge runs interpreted (eg.js on
+# node), and a Windows PE is a milestone only (native/milestone.eg). So, his caveat in the tree: the OS, HTTP and native executables.
+# The other angle, before calling HTTP a blocker (his rule, 2026-11-07): Ollama's own CLI answers detect, inventory and load without HTTP
+# (`ollama ps`, `ollama list`, `ollama run --keepalive`), all by proc_run; HTTP is needed only to serve requests and to stream a reply. Slices
+# a-c use the CLI; d needs the door; the gaps go to CIE14 (gaps found while coding).
+expanded_2026_11_13_inference_supervisor:
+  PC14_cos_runs_the_model_server:
+    status: OPEN
+    expanded: "2026-11-13, PC_D17 (his): an inference supervisor defined in Emerge, Ollama its first backend; replaces Ollama's app"
+    files_added: [cos/inference/supervisor.eg, cos/inference/backend.eg, cos/inference/backends/ollama.eg, cos/inference/backends/llamacpp.eg, cos/inference/test/supervisor.test.eg, cos/manager/inference-door.js]
+    slices:
+      a_the_backend_contract: "backend.eg: what a backend is — detect, models, load, unload, infer, health, stop — as Emerge records and processes; a stand-in backend passes it"
+      b_ollama_detected_and_started: "backends/ollama.eg: the binary found (candidates by path_exists), a running server adopted (`ollama ps` answers), else `ollama serve` started by proc_start, kept by pid; needs env and platform (CIE14 gap, said)"
+      c_models_and_fit: "inventory by `ollama list`; fit by memory (PC13's rule in Emerge: RAM, the card, active parameters)"
+      d_requests: "receive, queue and dispatch inference requests with constraints (one model loaded at a time on a 4 GB card; a request over budget waits or falls back); served through COS's door (the JS host as cos/pipeline already is, until Emerge has sockets)"
+      e_monitor_and_recover: "a crash restarted with backoff; a hung request timed out and said; a server that stops answering adopted again or restarted"
+      f_fallback_backends: "llama.cpp's server and any OpenAI-shaped local server, then Guardian (remote), each fallback said (his: Other local, then Guardian)"
+      g_ollamas_app_retired: "a COS proposal (PC11) to stop Ollama's tray app and remove its Startup entry, once b runs on his machine"
+    proof_added: "supervisor.test.eg on a stand-in backend: detect, adopt, start, crash and restart, over budget waits, fallback said; then his machine, Ollama's app closed, Nexus's ladder answered by COS"
