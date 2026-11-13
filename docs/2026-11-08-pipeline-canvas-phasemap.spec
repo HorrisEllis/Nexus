@@ -924,3 +924,11 @@ built_2026_11_09_plan:
 # lib/pipeline-routing.js classify() now reads "nothing was sent", "no-answer", "provider-down" and Copilot's door unreachable as provider-down
 # (transient), not unknown (which contract-gates.js filed as capability). Proof: PR-05b, GT-01b; the suites around it green. Contracts already
 # carrying such a skip list keep it (the 11-11 one was archived by hand).
+
+# ── ADDENDUM 2026-11-13 (0.60.521) — PC8: the framework trial as a COS pipeline, on Ollama, with a benchmark ──
+# James, 2026-11-13: "we have ollama now. lets leverage that. test, benchmark, run the trial in the docs folder. clearglass pipelines, raid
+# pipelines, idearium, all of them in cos." cos/pipeline/pipelines/framework-trial.pipeline (shipped; imported by the sync): api steps on the
+# trial screen's routes, one problem per step through Ollama, a hold for his blind scores (onFail hold, 0.60.496), score, benchmark. trial.js
+# fixed in place (Windows-safe answer names; blind read Ollama answers), --problem and bench.jsonl added. Proof: run whole in COS against a
+# stand-in Ollama; test-framework-trial-deploy 5/5 (A6). Clear Glass's pipeline routes checked against the sync's shape. "raid pipelines":
+# RAID has no .pipeline files or pipeline route; its readings asked (his).

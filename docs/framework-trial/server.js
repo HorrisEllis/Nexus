@@ -48,6 +48,8 @@ function state() {
     problems, arms: Object.keys(arms.arms || {}), armText: arms.arms || {}, answerFormat: arms.answer_format || '',
     answers, hasBlind: fs.existsSync(path.join(DIR, 'key.json')),
     hasScores: fs.existsSync(path.join(DIR, 'scores.csv')), hasResults: fs.existsSync(path.join(DIR, 'results.md')),
+    scored: (() => { try { return fs.readFileSync(path.join(DIR, 'scores.csv'), 'utf8').trim().split('\n').slice(1).filter(l => (l.split(',')[2] || '') !== '').length; } catch (_) { return 0; } })(),   // 0.60.521: rows with a level given
+    bench: (() => { try { return require(TRIAL).bench({ quiet: true }); } catch (_) { return null; } })(),   // 0.60.521: the benchmark, per model
   };
 }
 
@@ -82,6 +84,7 @@ const server = http.createServer(async (req, res) => {
     if (req.method === 'POST' && u.pathname === '/api/deploy') {
       const b = await body(req);
       const args = ['deploy', '--model', (b.models && b.models.length ? b.models.join(',') : 'all'), '--arm', b.arm || 'both', '--run', String(b.run || 1)];
+      if (b.problem) args.push('--problem', String(b.problem));   // 0.60.521: one problem per request (a pipeline step waits at most ~5 min)
       if (b.mock) args.push('--mock');
       const r = await runTrial(args);
       return send(res, 200, { ok: r.ok, log: r.out + r.err, state: state() });

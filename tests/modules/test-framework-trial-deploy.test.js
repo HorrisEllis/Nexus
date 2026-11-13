@@ -56,6 +56,38 @@ test('A3', 'a provider whose transport throws is reported, not thrown, and nothi
   assert.ok(!fs.existsSync(path.join(ANS, T.P[0].id, `boom-A-${RUN_FAIL}.md`)), 'no file written for a failed send');
 });
 
+// 0.60.521 — James, 2026-11-13: "we have ollama now. lets leverage that. test, benchmark, run the trial in the docs folder."
+test('A6', 'Ollama end to end through the real transport (a stand-in Ollama over HTTP): one problem by --problem, a file name Windows takes, the benchmark line, and blind keeps it', async () => {
+  const os = require('os'), http = require('http');
+  const bench = path.join(os.tmpdir(), `trial-bench-${process.pid}.jsonl`); process.env.TRIAL_BENCH_FILE = bench;
+  delete require.cache[require.resolve('../../docs/framework-trial/trial.js')];
+  const T2 = require('../../docs/framework-trial/trial.js');
+  const asked = [];
+  const srv = http.createServer((q, s) => { let b = ''; q.on('data', c => b += c); q.on('end', () => { const j = JSON.parse(b); asked.push(j);
+    s.setHeader('content-type', 'application/json'); s.end(JSON.stringify({ response: `answer from ${j.model}`, eval_count: 120, eval_duration: 4e9, load_duration: 5e8, prompt_eval_count: 900 })); }); });
+  await new Promise(r => srv.listen(0, '127.0.0.1', r)); process.env.OLLAMA_URL = `http://127.0.0.1:${srv.address().port}/api/generate`;
+  try {
+    assert.strictEqual(T2.fileModel('ollama:qwen2.5-coder:7b'), 'ollama_qwen2_5_coder_7b', 'no colon (Windows refuses one in a file name)');
+    const r = await T2.deploy(['--model', 'ollama:qwen2.5-coder:7b', '--arm', 'both', '--run', String(RUN_OK), '--problem', 'P2']);
+    assert.strictEqual(r.ok, 2, JSON.stringify(r.results)); assert.ok(r.results.every(x => x.p === 'P2'), 'only the problem asked');
+    assert.ok(asked.every(a => a.model === 'qwen2.5-coder:7b' && a.stream === false), 'Ollama asked for the model, not streamed');
+    const f = path.join(ANS, 'P2', `ollama_qwen2_5_coder_7b-B-${RUN_OK}.md`);
+    assert.ok(fs.existsSync(f) && /answer from qwen2.5-coder:7b/.test(fs.readFileSync(f, 'utf8')), 'saved under a safe name');
+    const b = T2.bench({ quiet: true }); const m = b.models.find(x => x.model === 'ollama:qwen2.5-coder:7b');
+    assert.ok(m && m.ok === 2 && m.tokensPerSec === 30 && m.medianTokens === 120, JSON.stringify(b));
+    await assert.rejects(() => T2.deploy(['--model', 'ollama', '--problem', 'P99', '--run', String(RUN_OK)]), /no problem P99/);
+    // blind reads the safe name back: the model is the part before -<arm>-<run>
+    const key = path.join(DIR, 'key.json'), blindDir = path.join(DIR, 'blind');
+    const had = { key: fs.existsSync(key) ? fs.readFileSync(key) : null, blind: fs.existsSync(blindDir) };
+    if (!had.blind) {   // only when no real blind set is there to be overwritten
+      T2.blind = T2.blind; const keep = console.log; console.log = () => {}; try { require('../../docs/framework-trial/trial.js').blind(); } finally { console.log = keep; }
+      const k = JSON.parse(fs.readFileSync(key, 'utf8'));
+      assert.ok(Object.values(k).some(v => v.model === 'ollama_qwen2_5_coder_7b' && v.arm === 'B' && v.run === RUN_OK), 'blind kept the Ollama answer');
+      fs.rmSync(blindDir, { recursive: true, force: true }); if (had.key) fs.writeFileSync(key, had.key); else fs.rmSync(key, { force: true });
+    }
+  } finally { srv.close(); delete process.env.OLLAMA_URL; delete process.env.TRIAL_BENCH_FILE; fs.rmSync(bench, { force: true }); }
+});
+
 test('A4', 'an empty reply is a failure, not a saved blank answer', async () => {
   T.setSend(async () => '   ');
   const r = await T.deploy(['--model', 'blankm', '--arm', 'A', '--run', String(RUN_FAIL)]);
