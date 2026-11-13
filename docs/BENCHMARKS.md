@@ -24,6 +24,20 @@ then they are written by hand.
   - A CLI command that called the module directly broke Pillar's rule (every command sends to a hook): `map` became an in hook.
 - **Gaps found:** no capturing regular expression in Emerge (routes matched by a regex are not seen); 160 reaches between systems against
   the census's 150 the same morning, not traced.
+## 2026-11-13 — Emerge: the wraps and the ledger proofs natively; 6 not native down to 1 (0.60.511)
+- **Measured:** Emerge coding. His words: "It’s meant to be self aware." · "Okay."
+- **Method:** three builtins in rt.eg; two functions in the world written in Emerge with their lowering; one program compared both ways.
+- **Lines:** .eg +36 (rt.eg 18, world.eg 22 with comments, lower.eg 3, codegen.eg 1); JavaScript +3 (two cases in native.test.js).
+- **Tests:** native 115/115 (1 min 26 s); self.test.eg 3/3; the compiler at a fixpoint.
+- **Failed runs before the pass, and what each taught:**
+  1. rt.eg called helpers that do not exist (rt_cat2, rt_cat4): the runtime builds text with rt_sb_new / rt_sb_str / rt_sb_done.
+  2. Two statements on one line in rt.eg, with two spaces and then with `;`: both refused ("expected end of statement"). In the raw
+     runtime a statement ends at the line.
+- **Gaps found in Emerge:** `;` between statements is refused in rt.eg though blank() in contract.eg's grammar treats it as a separator
+  elsewhere: one rule for it is wanted. The message for a missing runtime helper names front.eg:26, not the helper.
+- **Tension meter:** JavaScript in Emerge unchanged. Primitives not native: 6 → 1.
+- **What came of it:** a native Emerge program can prove an entry is in its ledger, the piece a contract's evidence rests on.
+
 ## 2026-11-13 — Emerge: folders natively; 10 primitives not native down to 6 (CIE13 slice b, 0.60.510)
 - **Measured:** Emerge coding. His words: "Continue. Look a the graph substrate. Like emerge should reduce friction between primitives." · "Yeah."
 - **Method:** five builtins in rt.eg by syscall; one 17-line program run interpreted and native and compared; Emerge's own map counts the rest.

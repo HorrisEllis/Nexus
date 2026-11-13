@@ -1942,6 +1942,29 @@ fn rt_b_path_exists(path) {
   if sys6(21, rt_cpath(path), 0, 0, 0, 0) == 0 { return TRUE }
   return FALSE
 }
+// CIE14 (2026-11-13): arithmetic on ints that wraps at 64 bits where + - * refuse (lang/runtime.js wrapOp). A machine word wraps by itself.
+fn rt_wrap_need(a, b, who) {
+  if rt_is_int(a) and rt_is_int(b) { return 0 }
+  let sb = rt_sb_new()
+  rt_sb_str(sb, who)
+  rt_sb_str(sb, " needs two ints, got ")
+  rt_sb_str(sb, rt_type_name(a))
+  rt_sb_str(sb, " and ")
+  rt_sb_str(sb, rt_type_name(b))
+  return rt_die_lit(rt_sb_done(sb))
+}
+fn rt_b_wrap_add(a, b) {
+  rt_wrap_need(a, b, "wrap_add")
+  return rt_mkint(rt_intval(a) + rt_intval(b))
+}
+fn rt_b_wrap_sub(a, b) {
+  rt_wrap_need(a, b, "wrap_sub")
+  return rt_mkint(rt_intval(a) - rt_intval(b))
+}
+fn rt_b_wrap_mul(a, b) {
+  rt_wrap_need(a, b, "wrap_mul")
+  return rt_mkint(rt_intval(a) * rt_intval(b))
+}
 // CIE13 slice b (2026-11-13): folders, from the kernel directly. is_dir (stat), make_dir (mkdir, every folder on the way), move_path
 // (rename, the folder it goes to made first), remove_path (unlink / rmdir, all the way down; a path not there is not an error), list_dir
 // (getdents64; names in byte order; a folder not there is []). The interpreter's are lang/runtime.js's; the same answers both ways.
