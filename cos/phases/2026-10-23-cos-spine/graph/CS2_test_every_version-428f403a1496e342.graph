@@ -7,11 +7,11 @@ intent: null
 summary: 19 node(s), 5 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793421631193
+exported_at: 1794611790076
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793421631193
-lastSeenAt: 1793421631193
+firstSeenAt: 1794611790076
+lastSeenAt: 1794611790076
 fingerprint: null
 payload:
   for: CS2_test_every_version
@@ -177,10 +177,11 @@ payload:
       known: true
   ready: true
   dag:
-    layer: 2
+    layer: 7
     deps:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS1_a_version_is_a_system_state
       - docs/2026-10-10-snapshot-compartments-phasemap.spec::SN1_open_a_snapshot_as_a_compartment
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP5_states_rewind_versions
     dependents:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS8_the_cos_screen
     upstream:
@@ -188,14 +189,26 @@ payload:
       - docs/2026-10-10-snapshot-compartments-phasemap.spec::SN1_open_a_snapshot_as_a_compartment
       - docs/2026-10-23-cos-spine-phasemap.spec::CS1_a_version_is_a_system_state
       - docs/2026-10-23-cos-spine-phasemap.spec::CS_D2_a_version_is_the_whole_state
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM0_the_heartbeat
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM1_ollama_through_its_bridge
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM2_loom_owns_its_tables
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM3_readers_through_its_routes
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM4_the_seal_and_into_its_compartment
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM6_cos_runs_loom_in_its_compartment
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM_D1_ollama_through_its_bridge
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM_D2_loom_owns_its_tables
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM_D4_cos_manages_loom_s_compartment
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP0_the_full_spec
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP1_the_machine_and_its_door
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP5_states_rewind_versions
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP_D0_a_compartment_is_all_of_it
     downstream:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS8_the_cos_screen
       - docs/2026-10-24-cos-manager-phasemap.spec::MG12_the_exe_is_the_compartment_manager
       - docs/2026-10-24-cos-manager-phasemap.spec::MG13_cli_in_the_exe
       - docs/2026-10-24-cos-manager-phasemap.spec::MG14_live_thumbnails
     blockedBy:
-      - docs/2026-10-23-cos-spine-phasemap.spec::CS1_a_version_is_a_system_state
-      - docs/2026-10-10-snapshot-compartments-phasemap.spec::SN1_open_a_snapshot_as_a_compartment
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP5_states_rewind_versions
     unlocks: []
     conflicts:
       - with: docs/2026-10-23-cos-spine-phasemap.spec::CS6_rebuild_from_the_spec
@@ -203,14 +216,16 @@ payload:
           - cos/workspace/index.js
     dangling: []
     lines:
-      - layer 2 · blocked by CS1_a_version_is_a_system_state, SN1_open_a_snapshot_as_a_compartment
+      - layer 7 · blocked by CP5_states_rewind_versions
       - >-
-        depends on (2): CS1_a_version_is_a_system_state, SN1_open_a_snapshot_as_a_compartment · all
-        upstream 4
+        depends on (3): CS1_a_version_is_a_system_state, SN1_open_a_snapshot_as_a_compartment,
+        CP5_states_rewind_versions · all upstream 17
       - 'needed by (1): CS8_the_cos_screen · all downstream 4'
       - 'same files as CS6_rebuild_from_the_spec with no order between them: cos/workspace/index.js'
     edges:
       - from: docs/2026-10-23-cos-spine-phasemap.spec::CS1_a_version_is_a_system_state
         kind: declared
       - from: docs/2026-10-10-snapshot-compartments-phasemap.spec::SN1_open_a_snapshot_as_a_compartment
+        kind: declared
+      - from: docs/2026-11-01-the-compartment-phasemap.spec::CP5_states_rewind_versions
         kind: declared

@@ -7,18 +7,21 @@ intent: null
 summary: CS9_every_project_a_compartment (integration) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792757382221
+exported_at: 1794611790089
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792757382221
-lastSeenAt: 1792757382221
+firstSeenAt: 1794611790089
+lastSeenAt: 1794611790089
 fingerprint: null
 payload:
   id: CS9_every_project_a_compartment
   map: docs/2026-10-23-cos-spine-phasemap.spec
   repo: null
   layer: integration
-  status: OPEN
+  status: >-
+    "SUPERSEDED 2026-11-01 by CP9_cos_and_idearium_one_link in
+    docs/2026-11-01-the-compartment-phasemap.spec (his: compartments in COS become nested repos in
+    Idearium; one link both ways); the text below is kept"
   files:
     - cos/spine/projects.js
     - idearium/repo/index.js
@@ -27,6 +30,7 @@ payload:
     - CS4_every_system_a_compartment
     - CS1_a_version_is_a_system_state
     - CS_D6_every_project_a_compartment
+    - CP5_states_rewind_versions
   blocks:
     - MOD-CS-PROJECTS
   spec: cos/spec/cos-spine.spec

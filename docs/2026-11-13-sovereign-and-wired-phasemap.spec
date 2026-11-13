@@ -344,3 +344,6 @@ order: >-
 # through autopilot.js in the sandbox, one manager ran the duties, its ledger says so; test-autopilot-handover 7/7 (AH-06). Said: the launcher
 # is still a process (it holds the console, Ctrl+C and the restart after an update); starting the manager directly from the exe and the
 # service is a later step, not SW5a's.
+# ── ADDENDUM 2026-11-13 — SW5b re-aimed: RAID moves into COS (his), so its worker and officiator go to COS, not Cortex ──
+# James, 2026-11-13: "moves into cos. i feel like." (docs/2026-10-23-cos-spine-phasemap.spec CS11, picked up). SW5b waits on CS11 step 1
+# (the callers reach RAID by route) so the worker and officiator move once. Cortex's memory compactors and deduplicator stay Cortex's.

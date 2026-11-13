@@ -7,18 +7,21 @@ intent: null
 summary: CS8_the_cos_screen (ui) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1793421631208
+exported_at: 1794611790094
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793421631208
-lastSeenAt: 1793421631208
+firstSeenAt: 1794611790094
+lastSeenAt: 1794611790094
 fingerprint: null
 payload:
   id: CS8_the_cos_screen
   map: docs/2026-10-23-cos-spine-phasemap.spec
   repo: null
   layer: ui
-  status: OPEN
+  status: >-
+    "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one
+    idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own
+    door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
   files:
     - cos/app/desktop/spine.html
     - cos/app/desktop/spine.js
@@ -30,4 +33,4 @@ payload:
   blocks:
     - MOD-CS-UI
   spec: cos/spec/cos-spine.spec
-  graph: 98c11f97c95ea491
+  graph: 2009c0fdf6333aa7

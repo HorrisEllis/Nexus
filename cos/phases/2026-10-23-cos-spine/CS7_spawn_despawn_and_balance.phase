@@ -7,18 +7,21 @@ intent: null
 summary: CS7_spawn_despawn_and_balance (backend) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792757382219
+exported_at: 1794611790087
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792757382219
-lastSeenAt: 1792757382219
+firstSeenAt: 1794611790087
+lastSeenAt: 1794611790087
 fingerprint: null
 payload:
   id: CS7_spawn_despawn_and_balance
   map: docs/2026-10-23-cos-spine-phasemap.spec
   repo: null
   layer: backend
-  status: OPEN
+  status: >-
+    "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one
+    idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own
+    door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
   files:
     - cos/spine/scale.js
     - cos/spine/systems.js

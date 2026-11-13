@@ -7,18 +7,21 @@ intent: null
 summary: CS2_test_every_version (integration) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792877163802
+exported_at: 1794611790076
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792877163802
-lastSeenAt: 1792877163802
+firstSeenAt: 1794611790076
+lastSeenAt: 1794611790076
 fingerprint: null
 payload:
   id: CS2_test_every_version
   map: docs/2026-10-23-cos-spine-phasemap.spec
   repo: null
   layer: integration
-  status: OPEN
+  status: >-
+    "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one
+    idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own
+    door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
   files:
     - cos/spine/test-version.js
     - cos/testenv/index.js
@@ -26,6 +29,7 @@ payload:
   depends_on:
     - CS1_a_version_is_a_system_state
     - SN1_open_a_snapshot_as_a_compartment
+    - CP5_states_rewind_versions
   blocks:
     - MOD-CS-TEST
   spec: cos/spec/cos-spine.spec
