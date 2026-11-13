@@ -1,0 +1,241 @@
+{
+ "systems": [
+  {
+   "system": "architect",
+   "server": false,
+   "registry": true,
+   "contract": true,
+   "taxonomy": false,
+   "commands": 0,
+   "own_data": true,
+   "root_data": true,
+   "missing": [
+    "server.js",
+    "its event taxonomy",
+    "command nodes",
+    "data still at the root (data/architect)"
+   ],
+   "of": 7,
+   "has": 3
+  },
+  {
+   "system": "clear-glass",
+   "server": false,
+   "registry": true,
+   "contract": true,
+   "taxonomy": false,
+   "commands": 0,
+   "own_data": true,
+   "root_data": true,
+   "missing": [
+    "server.js",
+    "its event taxonomy",
+    "command nodes",
+    "data still at the root (data/clear-glass)"
+   ],
+   "of": 7,
+   "has": 3
+  },
+  {
+   "system": "copilot",
+   "server": true,
+   "registry": true,
+   "contract": true,
+   "taxonomy": true,
+   "commands": 0,
+   "own_data": true,
+   "root_data": true,
+   "missing": [
+    "command nodes",
+    "data still at the root (data/copilot)"
+   ],
+   "of": 7,
+   "has": 5
+  },
+  {
+   "system": "cortex",
+   "server": true,
+   "registry": true,
+   "contract": true,
+   "taxonomy": true,
+   "commands": 0,
+   "own_data": true,
+   "root_data": true,
+   "missing": [
+    "command nodes",
+    "data still at the root (data/cortex)"
+   ],
+   "of": 7,
+   "has": 5
+  },
+  {
+   "system": "cos",
+   "server": false,
+   "registry": false,
+   "contract": true,
+   "taxonomy": true,
+   "commands": 0,
+   "own_data": true,
+   "root_data": false,
+   "missing": [
+    "server.js",
+    "its registry",
+    "command nodes"
+   ],
+   "of": 7,
+   "has": 4
+  },
+  {
+   "system": "diagnostic",
+   "server": true,
+   "registry": true,
+   "contract": true,
+   "taxonomy": true,
+   "commands": 0,
+   "own_data": true,
+   "root_data": true,
+   "missing": [
+    "command nodes",
+    "data still at the root (data/diagnostic)"
+   ],
+   "of": 7,
+   "has": 5
+  },
+  {
+   "system": "emerge/emerge",
+   "server": true,
+   "registry": true,
+   "contract": true,
+   "taxonomy": true,
+   "commands": 0,
+   "own_data": true,
+   "root_data": false,
+   "missing": [
+    "command nodes"
+   ],
+   "of": 7,
+   "has": 6
+  },
+  {
+   "system": "guardian",
+   "server": true,
+   "registry": true,
+   "contract": true,
+   "taxonomy": true,
+   "commands": 49,
+   "own_data": true,
+   "root_data": true,
+   "missing": [
+    "data still at the root (data/guardian)"
+   ],
+   "of": 7,
+   "has": 6
+  },
+  {
+   "system": "idearium",
+   "server": false,
+   "registry": true,
+   "contract": true,
+   "taxonomy": false,
+   "commands": 0,
+   "own_data": true,
+   "root_data": true,
+   "missing": [
+    "server.js",
+    "its event taxonomy",
+    "command nodes",
+    "data still at the root (data/idearium)"
+   ],
+   "of": 7,
+   "has": 3
+  },
+  {
+   "system": "intelligence",
+   "server": true,
+   "registry": true,
+   "contract": true,
+   "taxonomy": true,
+   "commands": 22,
+   "own_data": true,
+   "root_data": true,
+   "missing": [
+    "data still at the root (data/intelligence)"
+   ],
+   "of": 7,
+   "has": 6
+  },
+  {
+   "system": "loom",
+   "server": true,
+   "registry": true,
+   "contract": true,
+   "taxonomy": false,
+   "commands": 0,
+   "own_data": true,
+   "root_data": true,
+   "missing": [
+    "its event taxonomy",
+    "command nodes",
+    "data still at the root (data/loom)"
+   ],
+   "of": 7,
+   "has": 4
+  },
+  {
+   "system": "ollama",
+   "server": true,
+   "registry": true,
+   "contract": true,
+   "taxonomy": false,
+   "commands": 19,
+   "own_data": true,
+   "root_data": true,
+   "missing": [
+    "its event taxonomy",
+    "data still at the root (data/ollama)"
+   ],
+   "of": 7,
+   "has": 5
+  },
+  {
+   "system": "orchestrator",
+   "server": false,
+   "registry": false,
+   "contract": true,
+   "taxonomy": true,
+   "commands": 0,
+   "own_data": true,
+   "root_data": true,
+   "missing": [
+    "server.js",
+    "its registry",
+    "command nodes",
+    "data still at the root (data/orchestrator)"
+   ],
+   "of": 7,
+   "has": 3
+  },
+  {
+   "system": "versionium",
+   "server": true,
+   "registry": true,
+   "contract": true,
+   "taxonomy": true,
+   "commands": 0,
+   "own_data": true,
+   "root_data": true,
+   "missing": [
+    "command nodes",
+    "data still at the root (data/versionium)"
+   ],
+   "of": 7,
+   "has": 5
+  }
+ ],
+ "totals": {
+  "systems": 14,
+  "whole": 0,
+  "has": 63,
+  "of": 98
+ }
+}

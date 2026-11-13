@@ -616,6 +616,18 @@
     },
     {
       "method": "GET",
+      "path": "/api/cos/sovereign",
+      "out": "{ systems: [{ system, server, registry, contract, taxonomy, commands, own_data, root_data, has, of, missing[] }], totals: { systems, whole, has, of }, worse[], compared } \u2014 SW0 (2026-11-13): what each system holds in its own folder, against the reading kept (cos/sovereign/card.eg)"
+    },
+    {
+      "method": "POST",
+      "path": "/api/cos/sovereign",
+      "in": "{ by: 'person' }",
+      "out": "the card, kept as the reading to hold; refused (409) while any part is worse",
+      "personAct": true
+    },
+    {
+      "method": "GET",
       "path": "/api/cos/pipeline/ready",
       "in": "?limit=<n>",
       "out": "{ phases: [{ id, key, map, does }], counts } \u2014 2026-11-12: the phases Nexus can build now (Idearium's queue, by its route), offered when a run needs a phase"

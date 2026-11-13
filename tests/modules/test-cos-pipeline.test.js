@@ -98,7 +98,7 @@ const eg = (...a) => require('child_process').spawnSync(process.execPath, [path.
   const TEST = { type: 'test', with: { owner: 'tester', route: 'POST /api/tests/run', expect: 'passed' } };
   try {
     await T('CP-00', 'Emerge\'s own tests: the box shape (with its dag hook) and the gate', () => {
-      for (const [f, n] of [['cos/pipeline/test/box.test.eg', 14], ['cos/pipeline/test/gate.test.eg', 8], ['cos/pipeline/test/runs.test.eg', 7], ['cos/pipeline/test/framework.test.eg', 8]]) { const r = eg('test', f); assert.strictEqual(r.status, 0, r.stdout + r.stderr); assert.match(r.stdout, new RegExp(`${n} passed, 0 failed`)); }
+      for (const [f, n] of [['cos/pipeline/test/box.test.eg', 14], ['cos/pipeline/test/gate.test.eg', 8], ['cos/pipeline/test/runs.test.eg', 7], ['cos/pipeline/test/framework.test.eg', 8], ['cos/sovereign/test/card.test.eg', 3]]) { const r = eg('test', f); assert.strictEqual(r.status, 0, r.stdout + r.stderr); assert.match(r.stdout, new RegExp(`${n} passed, 0 failed`)); }
     });
 
     await T('CP-01', 'one folder with its registry; the shipped .gatetype files listed; a try decides and does nothing', async () => {
@@ -464,6 +464,11 @@ const eg = (...a) => require('child_process').spawnSync(process.execPath, [path.
         fixed = true; const from = (await req(M, 'POST', `/api/cos/pipeline/runs/${run2}/retry`, { by: 'person', from: 'a' })).body;
         assert.ok(from.ok, JSON.stringify(from)); assert.deepStrictEqual(from.alreadyMet, [], 'from a: every step after it runs again'); assert.deepStrictEqual(from.again, ['a', 'b', 'c']);
         await wait(async () => { const r = (await req(M, 'GET', `/api/cos/automation/pipeline-runs/${from.engineRun}`)).body.run; return r && r.status === 'ok'; });
+        // SW0 (2026-11-13): the sovereignty scorecard through COS's door, on the real tree; an agent cannot keep a reading
+        const sv = (await req(M, 'GET', '/api/cos/sovereign')).body; assert.ok(sv.ok && sv.systems.length >= 13, JSON.stringify(sv).slice(0, 200));
+        const g = sv.systems.find(x => x.system === 'guardian'); assert.ok(g.server && g.registry && g.commands > 40, JSON.stringify(g));
+        assert.ok(sv.systems.find(x => x.system === 'cos').missing.includes('its registry')); assert.deepStrictEqual(sv.worse, [], 'nothing worse than the reading kept');
+        assert.strictEqual((await req(M, 'POST', '/api/cos/sovereign', { by: 'agent:x' })).status, 403);
         const rd = (await req(M, 'GET', '/api/cos/pipeline/ready')).body; assert.ok(rd.ok && rd.phases[0].id === PH.id, 'the phases that can be built now, for the run form: ' + JSON.stringify(rd));
         const contract = J(path.join(ROOT, 'cos/manager/contract.json'));
         for (const r of ['/api/cos/pipeline/runs/:id/retry', '/api/cos/automation/pipeline-runs/:id/pause', '/api/cos/automation/pipeline-runs/:id/continue']) assert.ok(contract.routes.some(x => x.path === r), r + ' declared');

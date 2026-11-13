@@ -1,0 +1,80 @@
+// cos/sovereign/card.eg — the sovereignty scorecard: what each system holds in its own folder (phase SW0, docs/2026-11-13-sovereign-and-wired-phasemap.spec).
+// James, 2026-11-13: "We need each system sovereign. Then using the drawbridge as the only way to access files." · "They all need routes and
+// command nodes, with events per call and command" · "each system to use their own data folder by default" · "Each system needs their database
+// and server.js."
+//
+//   card(root, systems)   → { ok, systems: [{ system, server, registry, contract, taxonomy, commands, own_data, root_data, has, of, missing }], totals }
+//   worse(before, after)  → what got worse between two cards (the ratchet): a part lost, command nodes fewer, data back at the root
+//
+// It reads names only (does this file exist, how many command nodes); it opens nothing and changes nothing. Not measured here, said: the
+// crossings between systems (lib/system-boundary.js, Idearium's `system sovereign`), an event per call (SW3), a database per system (no one
+// file says a system has one; SW4 defines it).
+
+let PARTS = ["server", "registry", "contract", "taxonomy", "commands", "own_data", "no_root_data"]
+
+fn any_of(dir: string, names: list): bool {
+  for n in names { if path_exists(dir + "/" + n) { return true } }
+  return false
+}
+
+fn command_nodes(dir: string): num {
+  if not path_exists(dir + "/commands") { return 0 }
+  return len(filter(list_dir(dir + "/commands"), fn(f) = f ends_with ".command"))
+}
+
+fn one(root: string, sys: string): map {
+  let d = root + "/" + sys
+  let n = command_nodes(d)
+  var row = { system: sys,
+    server: path_exists(d + "/server.js"),
+    registry: any_of(d, ["registry-components.js", "registry-components.json"]),
+    contract: any_of(d, ["interaction-contract.json", "contract.json"]),
+    taxonomy: path_exists(d + "/event-taxonomy.js"),
+    commands: n,
+    own_data: path_exists(d + "/data"),
+    root_data: path_exists(root + "/data/" + sys) }
+  var missing = []
+  if not row.server { missing = push(missing, "server.js") }
+  if not row.registry { missing = push(missing, "its registry") }
+  if not row.contract { missing = push(missing, "its contract") }
+  if not row.taxonomy { missing = push(missing, "its event taxonomy") }
+  if n == 0 { missing = push(missing, "command nodes") }
+  if not row.own_data { missing = push(missing, "its own data folder") }
+  if row.root_data { missing = push(missing, "data still at the root (data/" + sys + ")") }
+  row["missing"] = missing
+  row["of"] = len(PARTS)
+  row["has"] = len(PARTS) - len(missing)
+  return row
+}
+
+fn card(root: string, systems: list): map {
+  var rows = []
+  var whole = 0
+  var has = 0
+  for s in systems {
+    if path_exists(root + "/" + s) {
+      let r = one(root, s)
+      rows = push(rows, r)
+      has += r.has
+      if len(r.missing) == 0 { whole += 1 }
+    }
+  }
+  return { ok: true, systems: rows, totals: { systems: len(rows), whole: whole, has: has, of: len(rows) * len(PARTS) } }
+}
+
+/** the ratchet: each part may only improve */
+fn worse(before: map, after: map): list {
+  var out = []
+  for b in before.systems {
+    let a = find(after.systems, fn(x) = x.system == b.system)
+    if a == null { out = push(out, b.system + ": no longer read") }
+    else {
+      for p in ["server", "registry", "contract", "taxonomy", "own_data"] {
+        if b[p] and not a[p] { out = push(out, b.system + ": lost " + p) }
+      }
+      if a.commands < b.commands { out = push(out, b.system + ": command nodes fell from " + str(b.commands) + " to " + str(a.commands)) }
+      if a.root_data and not b.root_data { out = push(out, b.system + ": data is back at the root") }
+    }
+  }
+  return out
+}

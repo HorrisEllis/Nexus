@@ -134,6 +134,16 @@ function createPipeline({ automation, idearium = null, call = null, dataDir } = 
     const r = await (await engineP()).run(q.pipeline, { vars: q.vars, wait: false, done: q.done, meta: { request: id } });
     return r.ok ? { ok: true, request: id, engineRun: r.runId, alreadyMet: Object.keys(q.done) } : { ok: false, code: 400, error: r.error };
   }
+  // SW0 (2026-11-13), his: "We need each system sovereign." The scorecard (cos/sovereign/card.eg): what each system holds in its own folder,
+  // against the last reading kept (cos/sovereign/baseline.json) — each part may only improve. write: keep this reading (refused while worse).
+  const SOV_SYSTEMS = ['architect', 'clear-glass', 'copilot', 'cortex', 'cos', 'diagnostic', 'emerge/emerge', 'guardian', 'idearium', 'intelligence', 'loom', 'ollama', 'orchestrator', 'versionium'];
+  async function sovereign({ write = false, treeRoot = root, baselineFile = path.join(root, 'cos', 'sovereign', 'baseline.json'), systems = SOV_SYSTEMS } = {}) {
+    let baseline = null; try { baseline = JSON.parse(fs.readFileSync(baselineFile, 'utf8')); } catch (_) {}
+    const r = await eg('sovereign-card', { root: treeRoot, systems, baseline }); if (!r.ok) return r;
+    if (write) { if (r.worse.length) return { ...r, ok: false, code: 409, error: `not kept: ${r.worse.length} part(s) got worse: ${r.worse.join('; ')}` };
+      fs.writeFileSync(baselineFile, JSON.stringify({ systems: r.systems, totals: r.totals }, null, 1) + '\n'); return { ...r, kept: true }; }
+    return r;
+  }
   // PC8 slice b (2026-11-11): a failed engine run retried — its request resumed (runs.eg retry_of); from: that step and every step after it again
   async function retry(engineRun, { from = null, by } = {}) {
     if (!by) return { ok: false, code: 400, error: 'say who asks: { "by": "person" }' };
@@ -292,7 +302,7 @@ function createPipeline({ automation, idearium = null, call = null, dataDir } = 
     return { ...out, pipeline: id, latestRun: latest ? { id: latest.id, status: latest.status, decisions: latest.decisions || [] } : null };
   }
 
-  return { boxes, gates, runs, frameworks, frameworkStep, decideGate, onEvent, request, resume, retry, ready, planPhase, buildNext, sync, sources, fromErv, baseline };
+  return { boxes, gates, runs, frameworks, frameworkStep, decideGate, onEvent, request, resume, retry, ready, sovereign, planPhase, buildNext, sync, sources, fromErv, baseline };
 }
 
 module.exports = { createPipeline, MODULE_ID: 'cos.pipeline', VERSION: '1.0.0' };

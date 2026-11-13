@@ -1,0 +1,45 @@
+// cos/sovereign/test/card.test.eg — the sovereignty scorecard (SW0). eg test cos/sovereign/test/card.test.eg
+use "../card.eg" as C
+
+fn tree(): string {
+  let r = "/tmp/cos-sovereign-test-" + uid()
+  remove_path(r)
+  make_dir(r + "/whole/commands")
+  make_dir(r + "/whole/data")
+  for f in ["server.js", "registry-components.js", "interaction-contract.json", "event-taxonomy.js", "commands/a.command", "commands/b.command", "commands/readme.md"] { write_file(r + "/whole/" + f, "x") }
+  make_dir(r + "/bare")
+  write_file(r + "/bare/contract.json", "x")
+  make_dir(r + "/data/bare")
+  return r
+}
+
+test "a system with every part is whole; command nodes are counted, other files in the folder are not" {
+  let r = tree()
+  let c = C.card(r, ["whole", "bare", "absent"])
+  let w = c.systems[0]
+  expect w.system == "whole" and w.has == 7 and w.of == 7 and w.missing == [] and w.commands == 2
+  expect len(c.systems) == 2 and c.totals.whole == 1 and c.totals.systems == 2
+  remove_path(r)
+}
+
+test "what a system lacks is named, each part: server.js, registry, taxonomy, command nodes, its own data, data at the root" {
+  let r = tree()
+  let b = C.card(r, ["bare"]).systems[0]
+  expect b.contract and not b.server and b.root_data and b.has == 1
+  expect b.missing == ["server.js", "its registry", "its event taxonomy", "command nodes", "its own data folder", "data still at the root (data/bare)"]
+  remove_path(r)
+}
+
+test "the ratchet: a part lost, command nodes fewer, or data back at the root is worse, named; an improvement is not, and undoing one is" {
+  let r = tree()
+  let before = C.card(r, ["whole", "bare"])
+  expect C.worse(before, before) == []
+  remove_path(r + "/whole/commands/a.command")
+  remove_path(r + "/whole/event-taxonomy.js")
+  make_dir(r + "/data/whole")
+  write_file(r + "/bare/server.js", "x")
+  let after = C.card(r, ["whole", "bare"])
+  expect C.worse(before, after) == ["whole: lost taxonomy", "whole: command nodes fell from 2 to 1", "whole: data is back at the root"]
+  expect C.worse(after, before) == ["bare: lost server"]
+  remove_path(r)
+}
