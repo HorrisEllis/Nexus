@@ -366,3 +366,12 @@ phases_addendum_2026_11_09_sc7:
       services reads every system from GET /api/cos/systems with its Start at boot. No tab, option or system is named in the pages' code (ST-01).
       core.js now speaks to window.top, so a page inside a Settings tab is answered by the shell itself.
     not_built: "the preview's Boot set row: no such setting exists (what starts at boot is each system's Start at boot); said, not invented. Asked of him if he wants one."
+
+# ── ADDENDUM 2026-11-13 (0.60.511, COS 0.8.0) — SC7 and SC16 reach his exe ──
+# James, 2026-11-13: "Can you push and release CLS like as an update? So I could, let's make it a service." (CLS read as COS, the coder's
+# reading.) Found: 0.60.460 (SC16, Clear Glass through electron.exe, no console) and 0.60.464 (SC7, Settings › Startup and services, with
+# "Run Nexus as a Windows service") changed cos/app/** and left cos/app/version.js at 0.7.1, so the cos-app workflow refused both runs
+# ("bump cos/app/version.js") and his exe never got either. COS 0.8.0 is the bump: merged to main, the workflow publishes cos-v0.8.0
+# (portable, setup, SHA256SUMS), and 0.7.1's own update check announces it. The service itself is CA4's (COS 0.5.0, NexusCOS through
+# nssm.exe); 0.8.0 puts its switch in the cockpit beside the tray's. Also: test-cos-install IN-06 pinned COS to exactly 0.7.0 and failed
+# from 0.7.1 on; it now asks for 0.7.0 or later (install.js arrived in 0.7.0). On Windows, unverified until his run.
