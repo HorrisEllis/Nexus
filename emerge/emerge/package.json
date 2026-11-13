@@ -9,7 +9,7 @@
     "cli": "node cli.js",
     "test:system": "node tests/skeleton.test.js && node tests/lang-door.test.js && node tests/nesting.test.js",
     "test": "node test/observe.test.js && node test/debug.test.js && node test/core.test.js",
-    "test:lang": "node lang/test/lang.test.js && node lang/test/differential.test.js && node lang/test/bootstrap.test.js && node lang/test/ide.test.js && node lang/test/ledger.test.js && node lang/test/contract.test.js && node lang/test/native.test.js && node lang/test/selfhost.test.js && node lang/test/say.test.js && node lang/test/learn.test.js && node lang/eg.js test lang/test/world/observe.eg && node lang/eg.js test lang/test/world/debug.eg",
+    "test:lang": "node lang/eg.js test lang/cie/test/self.test.eg && node lang/test/lang.test.js && node lang/test/differential.test.js && node lang/test/bootstrap.test.js && node lang/test/ide.test.js && node lang/test/ledger.test.js && node lang/test/contract.test.js && node lang/test/native.test.js && node lang/test/selfhost.test.js && node lang/test/say.test.js && node lang/test/learn.test.js && node lang/eg.js test lang/test/world/observe.eg && node lang/eg.js test lang/test/world/debug.eg",
     "eg": "node lang/eg.js",
     "build": "node lang/eg.js bootstrap"
   },

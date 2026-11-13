@@ -24,6 +24,24 @@ then they are written by hand.
   - A CLI command that called the module directly broke Pillar's rule (every command sends to a hook): `map` became an in hook.
 - **Gaps found:** no capturing regular expression in Emerge (routes matched by a regex are not seen); 160 reaches between systems against
   the census's 150 the same morning, not traced.
+## 2026-11-13 — Emerge: its map of itself, in the substrate's shape (CIE14 slice f, 0.60.509)
+- **Measured:** Emerge coding, and his framework (negative space: the registry is the shadow, the source is what is present). His words: "Continue. Look a the graph substrate. Like emerge should reduce friction between primitives.   It’s meant to be self aware."
+- **Method:** cie/self.eg reads Emerge's own tables and text into blocks and edges; gaps() is what one side has and the other lacks. The
+  result was then checked against the real compiler: one one-line program per primitive.
+- **Wall time:** the map interpreted 0.2 s; the report compiled natively 10 ms; its 3 tests under 1 s.
+- **Lines:** .eg +150 (cie/self.eg 118, self.test.eg 34, lang/self.eg 10, counted with comments); JavaScript 0.
+- **Tests:** self.test.eg 3/3.
+- **Failed runs before the pass, and what each taught:**
+  1. The first map said 26 primitives were interpreter-only, among them print and min: wrong. Natively a primitive is carried out by
+     three roads, not one (the table, VARIADIC, and calls the lowering rewrites). The map reads all three now: 10.
+- **Checked against the compiler:** the 10 refused, 3 controls compiled. One of the 10 (ledger_check_proof) was refused for the test's
+  own argument count, so 9 are confirmed.
+- **Gaps found in Emerge:** no way for a program to learn the folder its own file is in (the test is run from emerge/emerge and passes
+  "lang"); the lowering's rewrites are found by reading its text, because they are not data.
+- **Tension meter:** JavaScript lines in Emerge unchanged (14,404). The work left at the primitive level is now a number Emerge reports
+  itself: 10 primitives not native.
+- **What came of it:** the worklist for the rest of CIE13 and CIE14 is generated, not remembered.
+
 ## 2026-11-13 — Emerge: a clock and a file check natively (CIE13 slice a, 0.60.502)
 - **Measured:** Emerge coding. His words: "Working on it in another session. Maybe you can work on finishing emerge. So we can stop using JavaScript"
 - **Method:** the three builtins written in rt.eg by syscall; each case run interpreted and native and compared (native.test.js).
