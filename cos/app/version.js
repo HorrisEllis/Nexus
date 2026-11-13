@@ -20,4 +20,8 @@
 // 0.7.1 (Nexus 0.60.418, MG35b): James, 2026-11-06, with COS saying "Nexus did not start: nexus linked is already running (pid 7492): stop it first":
 // "opening cos gives this error. can you make it so  only one can and will open to the same instance." COS uses the Nexus already running when it
 // answers; one running but silent is said, with Restart Nexus.
-module.exports = { version: '0.7.1' };
+// 0.8.0 (Nexus 0.60.514): James, 2026-11-13: "Can you push and release CLS like as an update? So I could, let's make it a service." (CLS read
+// as COS.) The exe had changed since cos-v0.7.1 with no bump, so the cos-app workflow refused it and his 0.7.1 never got: SC16 (0.60.460,
+// "also can we have cos.exe run the command prompts in the background?": Clear Glass started through electron.exe, no console window) and SC7
+// (0.60.464: Settings › Startup and services in the cockpit, with "Run Nexus as a Windows service", NexusCOS through nssm.exe, CA4 0.5.0).
+module.exports = { version: '0.8.0' };
