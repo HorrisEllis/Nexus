@@ -1942,6 +1942,141 @@ fn rt_b_path_exists(path) {
   if sys6(21, rt_cpath(path), 0, 0, 0, 0) == 0 { return TRUE }
   return FALSE
 }
+// CIE13 slice c (2026-11-13): processes, from the kernel directly (fork, execve, wait4, kill, pipe2, dup2). James, 2026-11-13: "Next."
+//   proc_start(cmd, args) → pid         a child started; it shares this program's output and environment
+//   proc_wait(pid) → code               waits; the exit code, or 128 + the signal that ended it
+//   proc_wait_ms(pid, ms) → code|null   the same, for at most ms; null when it is still running
+//   proc_signal(pid, sig) → bool        15 asks it to stop, 9 ends it; false when there is no such process
+//   proc_run(cmd, args) → { code, out } runs it to its end and gives what it wrote to stdout
+// A command with no "/" is looked for in the usual folders (rt_exec_c). One that cannot be started ends with code 127.
+fn rt_proc_argv(cmd, args) {
+  if rt_kind(cmd) != K_STR { rt_fail2("a command must be a string, got ", rt_type_name(cmd)) }
+  if rt_kind(args) != K_LIST { rt_fail2("a command's arguments are a list of strings, got ", rt_type_name(args)) }
+  let n = mem_get(args + 8)
+  let items = mem_get(args + 24)
+  let v = rt_alloc((n + 2) * 8)
+  mem_set(v, rt_cpath(cmd))
+  var i = 0
+  while i < n {
+    mem_set(v + (i + 1) * 8, rt_cpath(mem_get(items + i * 8)))
+    i = i + 1
+  }
+  mem_set(v + (n + 1) * 8, 0)
+  return v
+}
+// in the child: become the command, or end with 127
+fn rt_exec_c(cmd, argv) {
+  let envp = rt_sp + 8 + (mem_get(rt_sp) + 1) * 8
+  let n = mem_get(cmd + 8)
+  var slash = 0
+  var i = 0
+  while i < n {
+    if mem_get8(cmd + 24 + i) == 47 { slash = 1 }
+    i = i + 1
+  }
+  if slash == 1 { sys6(59, mem_get(argv), argv, envp, 0, 0) }
+  else {
+    rt_exec_in("/usr/local/sbin/", 16, cmd, argv, envp)
+    rt_exec_in("/usr/local/bin/", 15, cmd, argv, envp)
+    rt_exec_in("/usr/sbin/", 10, cmd, argv, envp)
+    rt_exec_in("/usr/bin/", 9, cmd, argv, envp)
+    rt_exec_in("/sbin/", 6, cmd, argv, envp)
+    rt_exec_in("/bin/", 5, cmd, argv, envp)
+  }
+  sys6(60, 127, 0, 0, 0, 0)
+  return 0
+}
+fn rt_exec_in(dir, dn, cmd, argv, envp) {
+  let n = mem_get(cmd + 8)
+  let p = rt_alloc(dn + n + 1)
+  mem_copy(p, dir + 24, dn)
+  mem_copy(p + dn, cmd + 24, n)
+  mem_set8(p + dn + n, 0)
+  sys6(59, p, argv, envp, 0, 0)
+  return 0
+}
+fn rt_proc_code(st) {
+  let w = mem_get(st) & 4294967295
+  if (w & 127) == 0 { return (w >> 8) & 255 }
+  return 128 + (w & 127)
+}
+fn rt_pid(v, who) {
+  if not rt_is_num(v) or (v >> 3) < 1 { rt_fail2(who, " needs a process id from proc_start") }
+  return v >> 3
+}
+fn rt_b_proc_start(cmd, args) {
+  let argv = rt_proc_argv(cmd, args)
+  let pid = sys6(57, 0, 0, 0, 0, 0)
+  if pid < 0 { rt_fail2("proc_start: cannot start ", rt_tostr(cmd)) }
+  if pid == 0 { rt_exec_c(cmd, argv) }
+  return rt_mknum(pid)
+}
+fn rt_b_proc_wait(v) {
+  let pid = rt_pid(v, "proc_wait")
+  let st = rt_alloc(8)
+  mem_set(st, 0)
+  if sys6(61, pid, st, 0, 0, 0) != pid { rt_fail("proc_wait: no such process of this program") }
+  return rt_mknum(rt_proc_code(st))
+}
+fn rt_b_proc_wait_ms(v, limit) {
+  let pid = rt_pid(v, "proc_wait_ms")
+  if not rt_is_num(limit) or (limit >> 3) < 0 { rt_fail("proc_wait_ms needs a whole num of milliseconds, 0 or more") }
+  let ms = limit >> 3
+  let st = rt_alloc(8)
+  mem_set(st, 0)
+  let nap = rt_alloc(16)
+  mem_set(nap, 0)
+  mem_set(nap + 8, 2000000)
+  let t = rt_alloc(16)
+  sys6(228, 1, t, 0, 0, 0)
+  let from = mem_get(t) * 1000 + mem_get(t + 8) / 1000000
+  while 1 {
+    let r = sys6(61, pid, st, 1, 0, 0)
+    if r == pid { return rt_mknum(rt_proc_code(st)) }
+    if r < 0 { rt_fail("proc_wait_ms: no such process of this program") }
+    sys6(228, 1, t, 0, 0, 0)
+    if mem_get(t) * 1000 + mem_get(t + 8) / 1000000 - from >= ms { return NULL }
+    sys6(35, nap, 0, 0, 0, 0)
+  }
+  return NULL
+}
+fn rt_b_proc_signal(v, sig) {
+  let pid = rt_pid(v, "proc_signal")
+  if not rt_is_num(sig) or (sig >> 3) < 0 or (sig >> 3) > 64 { rt_fail("proc_signal needs a signal number, 0 to 64") }
+  if sys6(62, pid, sig >> 3, 0, 0, 0) == 0 { return TRUE }
+  return FALSE
+}
+fn rt_b_proc_run(cmd, args) {
+  let argv = rt_proc_argv(cmd, args)
+  let fds = rt_alloc(8)
+  if sys6(293, fds, 0, 0, 0, 0) != 0 { rt_fail("proc_run: cannot make a pipe") }
+  let rd = mem_get(fds) & 4294967295
+  let wr = (mem_get(fds) >> 32) & 4294967295
+  let pid = sys6(57, 0, 0, 0, 0, 0)
+  if pid < 0 { rt_fail2("proc_run: cannot start ", rt_tostr(cmd)) }
+  if pid == 0 {
+    sys6(33, wr, 1, 0, 0, 0)
+    sys6(3, rd, 0, 0, 0, 0)
+    sys6(3, wr, 0, 0, 0, 0)
+    rt_exec_c(cmd, argv)
+  }
+  sys6(3, wr, 0, 0, 0, 0)
+  let sb = rt_sb_new()
+  while 1 {
+    rt_sb_room(sb, 65536)
+    let r = sys6(0, rd, mem_get(sb) + mem_get(sb + 8), 65536, 0, 0)
+    if r <= 0 { break }
+    mem_set(sb + 8, mem_get(sb + 8) + r)
+  }
+  sys6(3, rd, 0, 0, 0, 0)
+  let st = rt_alloc(8)
+  mem_set(st, 0)
+  sys6(61, pid, st, 0, 0, 0)
+  let m = rt_map_new()
+  rt_map_set(m, "code", rt_mknum(rt_proc_code(st)))
+  rt_map_set(m, "out", rt_str_from(mem_get(sb), mem_get(sb + 8)))
+  return m
+}
 // CIE14 (2026-11-13): arithmetic on ints that wraps at 64 bits where + - * refuse (lang/runtime.js wrapOp). A machine word wraps by itself.
 fn rt_wrap_need(a, b, who) {
   if rt_is_int(a) and rt_is_int(b) { return 0 }

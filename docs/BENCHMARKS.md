@@ -24,6 +24,20 @@ then they are written by hand.
   - A CLI command that called the module directly broke Pillar's rule (every command sends to a hook): `map` became an in hook.
 - **Gaps found:** no capturing regular expression in Emerge (routes matched by a regex are not seen); 160 reaches between systems against
   the census's 150 the same morning, not traced.
+## 2026-11-13 — Emerge: processes natively (CIE13 slice c, 0.60.512)
+- **Measured:** Emerge coding. His words: "So we can stop using JavaScript" · "Next."
+- **Method:** five builtins in rt.eg by syscall; the interpreter's by /proc; one 12-line program compared both ways.
+- **Wall time:** native suite 1 min 37 s (117 cases).
+- **Lines:** .eg +128 (rt.eg), +2 (codegen.eg); JavaScript +22 (runtime.js), +4 (native.test.js). Emerge's JavaScript after: about 14,430.
+- **Tests:** native 117/117; self.test.eg 3/3; the compiler at a fixpoint.
+- **Failed runs before the pass:** none. fork, execve with the parent's environment, the pipe and the wait were right on the first run.
+- **Gaps found in Emerge:** the interpreter cannot block on a child (Node gives exit codes only through its event loop), so its
+  proc_wait reads /proc/<pid>/stat: Linux only, and one more reason the interpreter is retired, not ported. No stderr capture. A
+  builtin with an optional argument cannot be declared natively without its own handling (proc_signal takes both).
+- **Tension meter:** JavaScript in Emerge rose by 26 lines this slice (the interpreter's side). Primitives: 127, 125 both ways.
+- **What came of it:** Emerge has what a supervisor is made of: start a system, time it, know it died, stop it. COS's manager can now
+  be written in Emerge once the door (a socket, CIE10) is.
+
 ## 2026-11-13 — Emerge: the wraps and the ledger proofs natively; 6 not native down to 1 (0.60.511)
 - **Measured:** Emerge coding. His words: "It’s meant to be self aware." · "Okay."
 - **Method:** three builtins in rt.eg; two functions in the world written in Emerge with their lowering; one program compared both ways.

@@ -1229,6 +1229,24 @@ function createRuntime(opts = {}) {
   // CIE13 slice a (2026-11-13): the clock, the same natively (native/rt.eg rt_b_now_ms, rt_b_sleep_ms). Whole milliseconds.
   def('now_ms', 0, () => Date.now());
   def('sleep_ms', 1, n => { if (typeof n !== 'number' || !Number.isInteger(n) || n < 0) err('sleep_ms needs a whole num of milliseconds, 0 or more'); Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, n); return null; });
+  // CIE13 slice c (2026-11-13): processes, the same natively (native/rt.eg rt_b_proc_*). The interpreter cannot wait on a child without
+  // giving up its turn, so it reads the child's state from /proc (Linux), as the native runtime asks the kernel. Scaffold, retired with CIE11.
+  {
+    const cp = require('child_process');
+    const strs = (who, cmd, args) => { needStr(cmd, who); if (!Array.isArray(args) || args.some(a => typeof a !== 'string')) err(`a command's arguments are a list of strings`); };
+    const nap = (ms) => Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, ms);
+    const codes = new Map();   // pid → code, once seen ended
+    const ended = (pid) => { if (codes.has(pid)) return codes.get(pid); let st; try { st = fs.readFileSync(`/proc/${pid}/stat`, 'utf8'); } catch (_) { return undefined; }
+      const f = st.slice(st.lastIndexOf(')') + 2).split(' '); if (f[0] !== 'Z') return null; const w = Number(f[49]); const c = (w & 127) === 0 ? (w >> 8) & 255 : 128 + (w & 127); codes.set(pid, c); return c; };
+    const pidOf = (v, who) => { if (typeof v !== 'number' || !Number.isInteger(v) || v < 1) err(`${who} needs a process id from proc_start`); return v; };
+    def('proc_start', 2, (cmd, args) => { noLens('proc_start'); strs('proc_start', cmd, args); const c = cp.spawn(cmd, args, { stdio: 'inherit' }); c.on('error', () => {}); if (!c.pid) { const d = cp.spawn('/bin/sh', ['-c', 'exit 127'], { stdio: 'inherit' }); return d.pid; } return c.pid; });
+    def('proc_wait', 1, (v) => { const pid = pidOf(v, 'proc_wait'); for (;;) { const c = ended(pid); if (c === undefined) err('proc_wait: no such process of this program'); if (c !== null) return c; nap(2); } });
+    def('proc_wait_ms', 2, (v, ms) => { const pid = pidOf(v, 'proc_wait_ms'); if (typeof ms !== 'number' || !Number.isInteger(ms) || ms < 0) err('proc_wait_ms needs a whole num of milliseconds, 0 or more');
+      const from = Date.now(); for (;;) { const c = ended(pid); if (c === undefined) err('proc_wait_ms: no such process of this program'); if (c !== null) return c; if (Date.now() - from >= ms) return null; nap(2); } });
+    def('proc_signal', 2, (v, sig) => { const pid = pidOf(v, 'proc_signal'); if (typeof sig !== 'number' || !Number.isInteger(sig) || sig < 0 || sig > 64) err('proc_signal needs a signal number, 0 to 64'); if (codes.has(pid)) return false; try { process.kill(pid, sig); return true; } catch (_) { return false; } });
+    def('proc_run', 2, (cmd, args) => { noLens('proc_run'); strs('proc_run', cmd, args); const r = cp.spawnSync(cmd, args, { stdio: ['inherit', 'pipe', 'inherit'], encoding: 'utf8', maxBuffer: 1 << 28 });
+      const m = mkMap(); m.code = r.error ? 127 : (r.signal ? 128 + (require('os').constants.signals[r.signal] || 0) : r.status); m.out = r.stdout || ''; return m; });
+  }
   // SW1 slice a (2026-11-13): a folder told from a file, so a walk can recurse (pillar/map/map.eg). A missing path is not a folder.
   def('is_dir', 1, p => { try { return fs.statSync(needStr(p, 'is_dir')).isDirectory(); } catch (_) { return false; } });
   def('make_dir', 1, p => {
