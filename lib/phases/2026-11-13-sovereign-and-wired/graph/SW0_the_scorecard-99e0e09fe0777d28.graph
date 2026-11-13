@@ -7,11 +7,11 @@ intent: null
 summary: 29 node(s), 3 crossing(s)
 system: idearium
 tags: []
-exported_at: 1794550806498
+exported_at: 1794551278392
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794550806498
-lastSeenAt: 1794550806498
+firstSeenAt: 1794551278392
+lastSeenAt: 1794551278392
 fingerprint: null
 payload:
   for: SW0_the_scorecard
@@ -252,7 +252,7 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - layer 1 · ready
+      - layer 1
       - 'depends on (1): SW_D0_picked_up'
       - >-
         needed by (2): SW1_each_system_its_own_map, SW4_own_data_by_default · all downstream 7 ·

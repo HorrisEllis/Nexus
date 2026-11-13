@@ -47,7 +47,7 @@ decisions:
 phases:
   SW0_the_scorecard:
     layer: backend
-    status: OPEN
+    status: "BUILT 0.60.498 (the parts each system holds, in Emerge: cos/sovereign/card.eg; `cos sovereign`). Open: the crossings and an event per call on the same card"
     depends_on: [SW_D0_picked_up]
     files: [lib/system-boundary.js, lib/drawbridge-registry.js, lib/system-sovereign-card.js, idearium/cli/route-commands.js, tests/modules/test-system-sovereign-card.test.js]
     reuse: "lib/system-boundary.js (census, check, sovereignty, homes), lib/drawbridge-registry.js (registryOf: declared, observed, negative space), lib/registry-sovereign-check.js (RG0)."
@@ -138,3 +138,32 @@ order: >-
   SW0 first (it measures every other phase). Then SW1 → SW2 → SW3 (the map, the command nodes, the events) and SW4 (data) beside them.
   SW5 before SW6, so the orchestrator's crossings are not moved twice. SW7 last. Each phase is slices of one system at a time, so a slice
   can be built by the pipeline as its own request.
+
+# ── EXPANDED 2026-11-13 (0.60.498) — his additions the same day; SW0 built ───────────────────────────────────────────────────────────────
+# James, 2026-11-13: "Was trying to get the pipeline built fully so it can take care of these automatically, step by step. The heartbeat needs
+# hooked in and the polling disabled. Like all capabilities should have a command with events. Look at the node taxonomy, it's another way to
+# make the system more dynamic and recursive. Follow the axioms 3.1 and Claude.md. Like we can bundle them also. Each system needs their
+# database and server.js." · asked "Is this high leverage?", told yes in his order (the pipeline first, so it builds the rest), then: "Yes."
+#
+# Read: NODE-TAXONOMY.md. It already names what this map builds: capability (its route, a .command, and its intent are required), command,
+# event, hook, wire, component, ledger, and system (OPEN there). So:
+# - SW1 expands: a system's map is its nodes in the taxonomy's types (component, hook, wire, capability, command, event, and one .system node),
+#   in lib/node-export.js's envelope. Every capability names its command and its events, or the registry refuses it (genesis 2c).
+# - SW2 expands: "all capabilities should have a command with events": a capability with no .command, or a .command with no events, is
+#   counted on the scorecard and may only fall.
+# - SW3 expands: the heartbeat is one of the system's events, declared like the rest. Hooking it in and disabling the polling is PR6
+#   (docs/2026-10-05-announce-pulse-repair-phasemap.spec PR6_cos_listens_never_polls), which this map depends on for SW3's proof, not a
+#   second phase for it.
+# - SW4 expands: "Each system needs their database and server.js." Its database is in its own data folder, opened only by that system; its
+#   server.js is its one process, what COS manages (his 2026-11-03). Of 14, eight have a server.js at their root today (copilot, cortex,
+#   diagnostic, guardian, intelligence, loom, ollama, versionium; Emerge's is emerge/emerge/server.js).
+# - Bundles ("Like we can bundle them also"): reading to confirm, SW_R2. (a) A system's nodes exported as one bundle file, so a system can be
+#   moved, backed up or imported whole (with `cos import`, SC17 when mapped). (b) Several nodes bundled into one node, as a .pipeline bundles its
+#   macros. The coder's reading is (a); not built.
+# - The order, his: the pipeline builds these, one system per request. So each slice of SW1–SW7 is written as a request the pipeline can take,
+#   and its proof is a number on the scorecard.
+#
+# SW0 built (0.60.498): cos/sovereign/card.eg (Emerge) reads, for each system, its server.js, registry, contract, event taxonomy, command
+# nodes, its own data folder, and whether its data is still at the root; worse() is the ratchet. Through COS: GET /api/cos/sovereign, POST to
+# keep a reading (a person's), `cos sovereign [--keep]`. First reading, kept in cos/sovereign/baseline.json: 0 of 14 systems whole, 63 of 98
+# parts. Not on the card yet, said: the crossings (Idearium's `system sovereign` has them), an event per call, a database per system.

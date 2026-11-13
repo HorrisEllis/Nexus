@@ -7,11 +7,11 @@ intent: null
 summary: 16 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1794550806511
+exported_at: 1794551278409
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794550806511
-lastSeenAt: 1794550806511
+firstSeenAt: 1794551278409
+lastSeenAt: 1794551278409
 fingerprint: null
 payload:
   for: SW4_own_data_by_default
@@ -135,8 +135,7 @@ payload:
       - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW_D4_own_data_by_default
     downstream:
       - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW7_lib_goes_home
-    blockedBy:
-      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW0_the_scorecard
+    blockedBy: []
     unlocks: []
     conflicts:
       - with: docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW6_the_drawbridge_the_only_way_in
@@ -144,7 +143,7 @@ payload:
           - lib/system-boundary.js
     dangling: []
     lines:
-      - layer 2 · blocked by SW0_the_scorecard
+      - layer 2 · ready
       - 'depends on (2): SW0_the_scorecard, SW_D4_own_data_by_default · all upstream 3'
       - 'needed by (1): SW7_lib_goes_home'
       - >-
