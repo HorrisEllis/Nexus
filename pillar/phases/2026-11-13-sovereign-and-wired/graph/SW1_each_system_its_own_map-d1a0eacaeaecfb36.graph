@@ -1,23 +1,23 @@
 envelope: 1
-uuid: nexus-export-graph-phase:SW1_each_system_its_own_map:ed5d2af4a8c5b4dd
+uuid: nexus-export-graph-phase:SW1_each_system_its_own_map:d1a0eacaeaecfb36
 type: graph
-id: phase:SW1_each_system_its_own_map:ed5d2af4a8c5b4dd
+id: phase:SW1_each_system_its_own_map:d1a0eacaeaecfb36
 context: dependency graph of phase SW1_each_system_its_own_map
 intent: null
-summary: 11 node(s), 1 crossing(s)
+summary: 30 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1794551278398
+exported_at: 1794555954658
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794551278398
-lastSeenAt: 1794551278398
+firstSeenAt: 1794555954658
+lastSeenAt: 1794555954658
 fingerprint: null
 payload:
   for: SW1_each_system_its_own_map
   kind: phase
   repo: null
-  hash: ed5d2af4a8c5b4dd
+  hash: d1a0eacaeaecfb36
   nodes:
     - path: cos/archetype/nexus-system/lib/registry.js
       role: changes
@@ -27,6 +27,10 @@ payload:
       role: changes
       exists: false
       system: cos
+    - path: emerge/emerge/lang/runtime.js
+      role: changes
+      exists: true
+      system: emerge
     - path: emerge/registry-components.js
       role: changes
       exists: false
@@ -39,10 +43,54 @@ payload:
       role: changes
       exists: false
       system: orchestrator
+    - path: pillar/cli.eg
+      role: changes
+      exists: true
+      system: pillar
+    - path: pillar/map/map.eg
+      role: changes
+      exists: true
+      system: pillar
+    - path: pillar/test/map.test.eg
+      role: changes
+      exists: true
+      system: pillar
     - path: tests/modules/test-system-own-map.test.js
       role: changes
       exists: false
       system: null
+    - path: emerge/emerge/lang/bootstrap.js
+      role: used-by
+      exists: true
+      system: emerge
+    - path: emerge/emerge/lang/checker.js
+      role: used-by
+      exists: true
+      system: emerge
+    - path: emerge/emerge/lang/eg.js
+      role: used-by
+      exists: true
+      system: emerge
+    - path: emerge/emerge/lang/emitter.js
+      role: used-by
+      exists: true
+      system: emerge
+    - path: emerge/emerge/lang/ide.js
+      role: used-by
+      exists: true
+      system: emerge
+    - path: emerge/emerge/lang/index.js
+      role: used-by
+      exists: true
+      system: emerge
+    - path: emerge/emerge/lang/map.js
+      role: used-by
+      exists: true
+      system: emerge
+    - path: emerge/emerge/lang/test/harness.js
+      role: used-by
+      exists: true
+      system: emerge
     - path: idearium/api/index.js
       role: used-by
       exists: true
@@ -51,6 +99,34 @@ payload:
       role: used-by
       exists: true
       system: null
+    - path: emerge/emerge/core/constraint.js
+      role: uses
+      exists: true
+      system: emerge
+    - path: emerge/emerge/lang/build-loader.js
+      role: uses
+      exists: true
+      system: emerge
+    - path: emerge/emerge/lang/components.js
+      role: uses
+      exists: true
+      system: emerge
+    - path: emerge/emerge/lang/errors.js
+      role: uses
+      exists: true
+      system: emerge
+    - path: emerge/emerge/lang/ledger.js
+      role: uses
+      exists: true
+      system: emerge
+    - path: emerge/emerge/observe/debug.js
+      role: uses
+      exists: true
+      system: emerge
+    - path: emerge/emerge/observe/index.js
+      role: uses
+      exists: true
+      system: emerge
     - path: lib/shadow.js
       role: uses
       exists: true
@@ -73,11 +149,56 @@ payload:
     - from: lib/drawbridge-registry.js
       to: lib/shadow.js
       kind: requires
+    - from: emerge/emerge/lang/runtime.js
+      to: emerge/emerge/lang/errors.js
+      kind: requires
+    - from: emerge/emerge/lang/runtime.js
+      to: emerge/emerge/core/constraint.js
+      kind: requires
+    - from: emerge/emerge/lang/runtime.js
+      to: emerge/emerge/lang/components.js
+      kind: requires
+    - from: emerge/emerge/lang/runtime.js
+      to: emerge/emerge/lang/build-loader.js
+      kind: requires
+    - from: emerge/emerge/lang/runtime.js
+      to: emerge/emerge/lang/ledger.js
+      kind: requires
+    - from: emerge/emerge/lang/runtime.js
+      to: emerge/emerge/observe/index.js
+      kind: requires
+    - from: emerge/emerge/lang/runtime.js
+      to: emerge/emerge/observe/debug.js
+      kind: requires
     - from: idearium/api/index.js
       to: lib/drawbridge-registry.js
       kind: requires
     - from: tests/modules/test-drawbridge-registry.test.js
       to: lib/drawbridge-registry.js
+      kind: requires
+    - from: emerge/emerge/lang/bootstrap.js
+      to: emerge/emerge/lang/runtime.js
+      kind: requires
+    - from: emerge/emerge/lang/checker.js
+      to: emerge/emerge/lang/runtime.js
+      kind: requires
+    - from: emerge/emerge/lang/eg.js
+      to: emerge/emerge/lang/runtime.js
+      kind: requires
+    - from: emerge/emerge/lang/emitter.js
+      to: emerge/emerge/lang/runtime.js
+      kind: requires
+    - from: emerge/emerge/lang/ide.js
+      to: emerge/emerge/lang/runtime.js
+      kind: requires
+    - from: emerge/emerge/lang/index.js
+      to: emerge/emerge/lang/runtime.js
+      kind: requires
+    - from: emerge/emerge/lang/map.js
+      to: emerge/emerge/lang/runtime.js
+      kind: requires
+    - from: emerge/emerge/lang/test/harness.js
+      to: emerge/emerge/lang/runtime.js
       kind: requires
   crossings:
     - from: lib/drawbridge-registry.js

@@ -1,0 +1,60 @@
+// pillar/test/map.test.eg — one system's map from its own folder (SW1 slice a). eg test pillar/test/map.test.eg
+// James, 2026-11-13: "Basically looms map but per system and it's in charge of its own map."
+use "../map/map.eg" as M
+
+fn tree(): string {
+  let r = "/tmp/pillar-map-test-" + uid()
+  remove_path(r)
+  make_dir(r + "/alpha/lib")
+  make_dir(r + "/alpha/commands")
+  make_dir(r + "/alpha/node_modules/x")
+  make_dir(r + "/alpha/data")
+  make_dir(r + "/beta")
+  make_dir(r + "/lib")
+  write_file(r + "/alpha/server.js",
+    "const h = require('./lib/h.js');\nconst b = require('../beta/api.js');\nconst k = require('../lib/kernel.js');\nconst k2 = require('../lib/kernel.js');\n" +
+    "if (url.pathname === '/health') {{}}\nif (u === \"/api/alpha/run\" && m === 'POST') {{}}\nbus.emit('alpha.started', {{}});\nbus.emit(name, {{}});\n")
+  write_file(r + "/alpha/lib/h.js", "const s = require('../server.js');\nconst b2 = require('../../beta/api.js');\nif (p === `/api/alpha/h`) {{}}\n")
+  write_file(r + "/alpha/node_modules/x/index.js", "if (a === '/not-mine') {{}}\n")
+  write_file(r + "/alpha/data/cache.js", "if (a === '/not-code') {{}}\n")
+  write_file(r + "/alpha/commands/run.command", "x")
+  write_file(r + "/alpha/commands/readme.md", "x")
+  write_file(r + "/beta/api.js", "")
+  write_file(r + "/lib/kernel.js", "")
+  return r
+}
+
+test "routes, events, commands and the files read: its own code only (node_modules and data are not read)" {
+  let r = tree()
+  let m = M.map_of(r, "alpha")
+  expect m.ok and m.system == "alpha" and m.files == 2
+  expect m.routes == ["/api/alpha/h", "/api/alpha/run", "/health"]
+  expect m.events == ["alpha.started"], "an event named by a variable is not seen (a limit, said)"
+  expect m.commands == ["run.command"]
+  remove_path(r)
+}
+
+test "a crossing is a require that leaves the folder, each file-to-file pair counted once; a require inside it is not one" {
+  let r = tree()
+  let m = M.map_of(r, "alpha")
+  expect m.crossings == [{ to: "beta", count: 2 }, { to: "lib", count: 1 }]
+  remove_path(r)
+}
+
+test "mapped twice, the same fingerprint; a new route changes it" {
+  let r = tree()
+  let a = M.map_of(r, "alpha")
+  let b = M.map_of(r, "alpha")
+  expect a.fingerprint == b.fingerprint and len(a.fingerprint) == 64
+  write_file(r + "/alpha/lib/more.js", "if (p === '/api/alpha/more') {{}}\n")
+  let c = M.map_of(r, "alpha")
+  expect c.fingerprint != a.fingerprint and c.routes contains "/api/alpha/more"
+  remove_path(r)
+}
+
+test "a folder that is not there is said, not mapped" {
+  let r = tree()
+  let m = M.map_of(r, "gamma")
+  expect not m.ok and m.why starts_with "no folder"
+  remove_path(r)
+}

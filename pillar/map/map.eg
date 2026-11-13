@@ -1,0 +1,119 @@
+// pillar/map/map.eg — one system's map, generated from its own folder (SW1 slice a, docs/2026-11-13-sovereign-and-wired-phasemap.spec).
+// James, 2026-11-13: "Basically looms map but per system and it's in charge of its own map." (SW_D2) · "Each primitive/capabity should be its
+// own file. The core file being either the foundation or the pillars." · "Like isn't pillar the replacement to lib"
+//
+//   map_of(root, system) → { ok, system, files, routes, events, crossings: [{ to, count }], commands, fingerprint }   or { ok: false, why }
+//
+// It reads ONE system's folder and writes nothing: the system that owns the folder is the one that keeps and serves its map (slice b).
+// Read by text, because Emerge has no capturing regular expression yet:
+//   a route    — a string literal starting with "/" right after "=== " (url.pathname === '/health', u === '/agent-mesh/send')
+//   an event   — the first string argument of emit( (bus.emit('guardian.job.error', …))
+//   a crossing — a require('./…' or '../…') that, resolved against the file's own folder, leaves the system's folder; each file-to-file
+//                pair counted once per target system (as lib/system-boundary.js counts them)
+//   a command  — a .command node in <system>/commands
+// Limits, said: a route matched by a regular expression in the code, a computed require and an event named by a variable are not seen.
+// Skipped folders: node_modules, data, phases, _archive, tests, test, dist, build, and any folder whose name starts with ".".
+
+let SKIP = ["node_modules", "data", "phases", "_archive", "tests", "test", "dist", "build"]
+let QUOTES = ["'", "\"", "`"]
+
+/** every .js file under dir, as paths relative to the system's folder (sorted by the walk: list_dir is sorted) */
+fn js_files(dir: string, rel: string): list {
+  var out = []
+  for n in list_dir(dir) {
+    let p = dir + "/" + n
+    if is_dir(p) {
+      if not (SKIP contains n) and not (n starts_with ".") {
+        for f in js_files(p, rel + n + "/") { out = push(out, f) }
+      }
+    } else if n ends_with ".js" { out = push(out, rel + n) }
+  }
+  return out
+}
+
+/** the text up to the first q in s, or null when there is none */
+fn upto(s: string, q: string) {
+  let e = find_text(s, q)
+  if e < 0 { return null }
+  return slice(s, 0, e)
+}
+
+/** each literal that follows marker+quote in text, read up to the same quote */
+fn literals_after(text: string, marker: string): list {
+  var out = []
+  for q in QUOTES {
+    let parts = split(text, marker + q)
+    var i = 0
+    for part in parts {
+      if i > 0 {
+        let v = upto(part, q)
+        if v != null and find_text(v, "\n") < 0 { out = push(out, v) }
+      }
+      i += 1
+    }
+  }
+  return out
+}
+
+/** a relative path resolved against a list of folder segments; null when it climbs above the root */
+fn resolve(base: list, spec: string) {
+  var segs = base
+  for s in split(spec, "/") {
+    if s == "" or s == "." { segs = segs }
+    else if s == ".." {
+      if len(segs) == 0 { return null }
+      segs = slice(segs, 0, len(segs) - 1)
+    } else { segs = push(segs, s) }
+  }
+  return segs
+}
+
+fn starts_with_list(xs: list, prefix: list): bool {
+  if len(xs) < len(prefix) { return false }
+  var i = 0
+  for p in prefix {
+    if xs[i] != p { return false }
+    i += 1
+  }
+  return true
+}
+
+fn map_of(root: string, system: string): map {
+  let dir = root + "/" + system
+  if not is_dir(dir) { return { ok: false, why: "no folder " + dir } }
+  let own = split(system, "/")
+  let files = js_files(dir, "")
+  var routes = []
+  var events = []
+  var reach = {}
+  var seen = {}
+  for f in files {
+    let text = read_file(dir + "/" + f)
+    for r in literals_after(text, "=== ") { if r starts_with "/" { routes = push(routes, r) } }
+    for e in literals_after(text, "emit(") { if e != "" { events = push(events, e) } }
+    let fdir = slice(split(f, "/"), 0, len(split(f, "/")) - 1)
+    for spec in literals_after(text, "require(") {
+      if spec starts_with "./" or spec starts_with "../" {
+        let full = resolve(own + fdir, spec)
+        var to = "outside the root"
+        if full != null and starts_with_list(full, own) { to = null }
+        else if full != null and len(full) > 0 { to = full[0] }
+        var where = "above the root"
+        if full != null { where = join(full, "/") }
+        let pair = f + " -> " + where
+        if to != null and not has(seen, pair) { seen[pair] = true; reach[to] = get(reach, to, 0) + 1 }
+      }
+    }
+  }
+  var crossings = []
+  for t in sort(keys(reach)) { crossings = push(crossings, { to: t, count: reach[t] }) }
+  var commands = []
+  if is_dir(dir + "/commands") {
+    for c in list_dir(dir + "/commands") { if c ends_with ".command" { commands = push(commands, c) } }
+  }
+  let body = { system: system, files: len(files), routes: sort(unique(routes)), events: sort(unique(events)), crossings: crossings, commands: commands }
+  var m = { ok: true }
+  for k in keys(body) { m[k] = body[k] }
+  m["fingerprint"] = hex(sha256(json(body)))
+  return m
+}

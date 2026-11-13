@@ -19,7 +19,7 @@ fn hooks(): list {
 }
 
 fn usage() {
-  print("pillar " + pillar.Pillar.version + " — eg run pillar/cli.eg version | registry | <in hook> [args]; the in hooks:")
+  print("pillar " + pillar.Pillar.version + " — eg run pillar/cli.eg version | registry | map <root> <system> | <in hook> [args]; the in hooks:")
   for h in hooks() { if h.direction == "in" { print("  " + h.name) } }
 }
 
@@ -29,6 +29,10 @@ if len(a) > 0 { cmd = a[0] }
 
 if cmd == "version" { print(pillar.Pillar.version) }
 else if cmd == "registry" { print(json({ record: pillar_record(), hooks: hooks() })) }
+else if cmd == "map" {
+  if len(a) < 3 { raise("usage: eg run pillar/cli.eg map <root> <system>") }
+  send pillar.Pillar.map { root: a[1], system: a[2] }
+}
 else if cmd == "contracts" { send pillar.Pillar.contracts {} }
 else if cmd == "contract" {
   if len(a) < 2 { raise("usage: eg run pillar/cli.eg contract <id>") }

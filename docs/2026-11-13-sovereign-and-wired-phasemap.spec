@@ -58,9 +58,9 @@ phases:
     proof: "the card on the real tree equals the reading above; a fixture system missing each part is named for it; a number that worsens fails"
   SW1_each_system_its_own_map:
     layer: backend
-    status: OPEN
+    status: "SLICE A BUILT 0.60.503 (pillar/map/map.eg, Pillar's map hook; 14 of 14 fingerprints stable). Open: slice b, each server.js keeps and serves its own map"
     depends_on: [SW0_the_scorecard, SW_D2_each_system_keeps_its_own_map]
-    files: [cos/archetype/nexus-system/lib/registry.js, cos/registry-components.js, orchestrator/registry-components.js, emerge/registry-components.js, lib/drawbridge-registry.js, tests/modules/test-system-own-map.test.js]
+    files: [cos/archetype/nexus-system/lib/registry.js, cos/registry-components.js, orchestrator/registry-components.js, emerge/registry-components.js, lib/drawbridge-registry.js, tests/modules/test-system-own-map.test.js, pillar/map/map.eg, pillar/test/map.test.eg, pillar/cli.eg, emerge/emerge/lang/runtime.js]
     reuse: "DB9 and DB16 (lib/drawbridge-registry.js registryOf), idearium/repo/architecture.js toNodes (genesis 2c: the registry regenerated from the code), the system archetype (cos/archetype/nexus-system), loom/scanners/capability-map.js read as a library until its parts are the archetype's."
     does: >-
       Each system generates its own map from its own code (component, hook, wire, event, capability, command and system nodes, genesis 2c),
@@ -167,3 +167,32 @@ order: >-
 # nodes, its own data folder, and whether its data is still at the root; worse() is the ratchet. Through COS: GET /api/cos/sovereign, POST to
 # keep a reading (a person's), `cos sovereign [--keep]`. First reading, kept in cos/sovereign/baseline.json: 0 of 14 systems whole, 63 of 98
 # parts. Not on the card yet, said: the crossings (Idearium's `system sovereign` has them), an event per call, a database per system.
+# ── ADDENDUM 2026-11-13 — his words on the compartment's file, the service and the drawbridge; SW1 slice a (mapped before code) ──
+# James, 2026-11-13: "comtinue to the registry. also what about making cos a service. the .spec is the compartments disc file? that way when
+# idearium creates a new compartment it can be imported automatically using the .spec. the server.js used to interact with each system. the
+# drawbridge also hooks into the cie-eg in emege. like emerge reduces as much friction as possible, cie-eg is emeges version of the drawbridge"
+# Earlier the same day: "Then each systems server.js uses its own database for managing nodes with also connect to the lattice. Each
+# primitive/capabity should be its own file. The core file being either the foundation or the pillars." · "Like isn't pillar the replacement to lib"
+# Read from the code (2026-11-13):
+#   - the service: built (CA4, 0.60.389, cos/app/service.js, NSSM, service NexusCOS); not installed on his PC (Get-Service: none).
+#   - the compartment's file today: COS's supervisor reads <system>/<system>.cos (his 2026-11-01 "no .json files. only nodes. use .cos"), else
+#     compartment.json; only emerge/emerge.cos exists, 12 systems still have compartment.json. A folder carrying either is picked up at COS's
+#     next boot. Each system also has <system>/spec/<system>.spec (the archetype's). Whether the .spec becomes the compartment's file (and the
+#     .cos goes) is his to settle: asked, not changed.
+#   - CIE-EG's own registry: Emerge's components() (components, hooks, wires) is the drawbridge inside Emerge, as he says; an Emerge system's
+#     map is read from it; a JavaScript system's map is generated from its code (SW1).
+# SW1 slice a, the coder's reading by the axioms (§8.6 reuse; his "each primitive/capabity should be its own file"; PIL_D2 "library"; §5.9):
+#   - pillar/map/map.eg: map_of(root, system) reads ONE system's folder (its .js, skipping node_modules, data, phases, _archive, tests) and
+#     returns { system, files, routes, events, crossings: [{ to, count }], commands, fingerprint }. Pure: it writes nothing.
+#     Read by text (Emerge has no regex capture): a route is a string literal after === that starts with '/'; an event is the first string
+#     argument of emit(; a crossing is a require('../…') that leaves the system's folder. Limits, said: a route matched by a regular expression
+#     in the code is not seen; a computed require is not seen.
+#   - emerge/emerge/lang/runtime.js gains is_dir (a missing capability goes into Emerge, §17.13); emerge-lock rewritten.
+#   - pillar/cli.eg: `map <root> <system>` prints it. Proof: pillar/test/map.test.eg; each of the 14 systems mapped twice, same fingerprint.
+#   - Slice b (not this slice): each server.js writes its own map into its own folder and serves GET /api/<system>/registry; the routes found
+#     against registry-components.js declared (a route in the code and not in the map named).
+# ── ADDENDUM 2026-11-13 (0.60.503, renumbered: main took 0.60.502 for CIE13 slice a) — SW1 slice a built ──
+# pillar/map/map.eg, Pillar's in hook map, `eg run pillar/cli.eg map <root> <system>`, Emerge's is_dir. Proof: pillar/test/map.test.eg 4/4;
+# the 14 systems mapped twice, 14 of 14 the same fingerprint; Versionium's 19 routes equal a grep; Guardian's 49 command nodes and 10 reaches
+# into Intelligence equal SW0 and the census. Changed while building: map became one of Pillar's in hooks (Pillar's rule, every command
+# through a hook). Open: slice b; routes matched by a regular expression are not seen; 160 reaches between systems against the census's 150.

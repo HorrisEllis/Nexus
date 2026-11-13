@@ -1229,6 +1229,8 @@ function createRuntime(opts = {}) {
   // CIE13 slice a (2026-11-13): the clock, the same natively (native/rt.eg rt_b_now_ms, rt_b_sleep_ms). Whole milliseconds.
   def('now_ms', 0, () => Date.now());
   def('sleep_ms', 1, n => { if (typeof n !== 'number' || !Number.isInteger(n) || n < 0) err('sleep_ms needs a whole num of milliseconds, 0 or more'); Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, n); return null; });
+  // SW1 slice a (2026-11-13): a folder told from a file, so a walk can recurse (pillar/map/map.eg). A missing path is not a folder.
+  def('is_dir', 1, p => { try { return fs.statSync(needStr(p, 'is_dir')).isDirectory(); } catch (_) { return false; } });
   def('make_dir', 1, p => {
     noLens('make_dir'); needStr(p, 'make_dir');
     try { fs.mkdirSync(p, { recursive: true }); } catch (e) { err(`make_dir: ${e.code || e.message} ${p}`); }

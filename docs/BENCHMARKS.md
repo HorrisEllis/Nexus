@@ -9,6 +9,21 @@ then they are written by hand.
 
 
 
+## 2026-11-13 — each system's map from its own folder, in Emerge (SW1 slice a, 0.60.503)
+- **Measured:** Emerge. One capability in one file (`pillar/map/map.eg`) maps any system's code: routes, events, crossings, command nodes.
+- **His words:** "Basically looms map but per system and it's in charge of its own map." · "Each primitive/capabity should be its own file."
+- **Method:** Emerge `test` blocks (4 cases on a built tree); then the real tree, every system mapped twice; then checked against a grep,
+  the scorecard (SW0) and the census (lib/system-boundary.js).
+- **Code:** 119 lines of `.eg` (map.eg), 60 of test, 1 builtin (`is_dir`) added to Emerge's runtime.
+- **Result:** 14 of 14 systems give the same fingerprint twice; the whole tree in under 8 s. Versionium's routes equal a grep (19);
+  Guardian's command nodes (49) and its reaches into Intelligence (10) equal the scorecard and the census.
+- **Failed runs and what each taught:**
+  - Emerge had no way to tell a folder from a file: `is_dir` added (a missing capability goes into Emerge).
+  - Crossings first counted every require line (lib 15); the census counts each file-to-file pair once (lib 10). Changed to agree.
+  - `{}` inside an Emerge string is interpolation: the test's sample code had to write `{{}}`.
+  - A CLI command that called the module directly broke Pillar's rule (every command sends to a hook): `map` became an in hook.
+- **Gaps found:** no capturing regular expression in Emerge (routes matched by a regex are not seen); 160 reaches between systems against
+  the census's 150 the same morning, not traced.
 ## 2026-11-13 — Emerge: a clock and a file check natively (CIE13 slice a, 0.60.502)
 - **Measured:** Emerge coding. His words: "Working on it in another session. Maybe you can work on finishing emerge. So we can stop using JavaScript"
 - **Method:** the three builtins written in rt.eg by syscall; each case run interpreted and native and compared (native.test.js).

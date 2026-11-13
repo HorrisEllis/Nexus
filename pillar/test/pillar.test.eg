@@ -14,7 +14,7 @@ test "Pillar is registered in Emerge's component registry, by its own record" {
 }
 
 test "what Pillar offers is its hooks" {
-  expect pillar.Pillar.hooks.in == ["contracts", "contract", "check", "identity_of"]
+  expect pillar.Pillar.hooks.in == ["contracts", "contract", "map", "check", "identity_of"]   // map: SW1 slice a (2026-11-13)
   expect pillar.Pillar.hooks.out == ["answer"]
 }
 

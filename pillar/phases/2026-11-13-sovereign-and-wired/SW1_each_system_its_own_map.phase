@@ -4,21 +4,23 @@ type: phase
 id: docs_2026-11-13-sovereign-and-wired-phasemap.spec::SW1_each_system_its_own_map
 context: pipeline phase SW1_each_system_its_own_map of docs/2026-11-13-sovereign-and-wired-phasemap.spec
 intent: null
-summary: SW1_each_system_its_own_map (backend) — 6 file(s)
+summary: SW1_each_system_its_own_map (backend) — 10 file(s)
 system: idearium
 tags: []
-exported_at: 1794550806502
+exported_at: 1794566026104
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794550806502
-lastSeenAt: 1794550806502
+firstSeenAt: 1794566026104
+lastSeenAt: 1794566026104
 fingerprint: null
 payload:
   id: SW1_each_system_its_own_map
   map: docs/2026-11-13-sovereign-and-wired-phasemap.spec
   repo: null
   layer: backend
-  status: OPEN
+  status: >-
+    "SLICE A BUILT 0.60.503 (pillar/map/map.eg, Pillar's map hook; 14 of 14 fingerprints stable).
+    Open: slice b, each server.js keeps and serves its own map"
   files:
     - cos/archetype/nexus-system/lib/registry.js
     - cos/registry-components.js
@@ -26,9 +28,13 @@ payload:
     - emerge/registry-components.js
     - lib/drawbridge-registry.js
     - tests/modules/test-system-own-map.test.js
+    - pillar/map/map.eg
+    - pillar/test/map.test.eg
+    - pillar/cli.eg
+    - emerge/emerge/lang/runtime.js
   depends_on:
     - SW0_the_scorecard
     - SW_D2_each_system_keeps_its_own_map
   blocks: []
   spec: null
-  graph: ed5d2af4a8c5b4dd
+  graph: d1a0eacaeaecfb36

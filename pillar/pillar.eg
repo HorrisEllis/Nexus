@@ -5,6 +5,7 @@
 // PIL_D2: a library others use (use "pillar/pillar.eg"), no process of its own until he settles it. It uses nothing outside pillar/ but Emerge.
 
 use "./contracts/contracts.eg" as C
+use "./map/map.eg" as SysMap   // SW1 slice a (2026-11-13): one system's map from its own folder
 
 component Pillar {
   id = "pillar.kernel"
@@ -26,6 +27,15 @@ component Pillar {
     var why = null
     if found == null { why = "no contract " + q.id }
     emit out answer { hook: "contract", ok: found != null, value: found, why: why }
+  }
+
+  // SW1 slice a (2026-11-13) — James: "Basically looms map but per system and it's in charge of its own map." One system's map, read from
+  // its own folder (pillar/map/map.eg); it writes nothing: the system that owns the folder keeps and serves it (slice b).
+  in map(q: { root: string, system: string }) {
+    let m = SysMap.map_of(q.root, q.system)
+    var why = null
+    if not m.ok { why = m.why }
+    emit out answer { hook: "map", ok: m.ok, value: m, why: why }
   }
 
   // Not built yet: each answers with the phase that builds it, never a silent pass (§1.2).
