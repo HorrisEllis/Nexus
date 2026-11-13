@@ -7,18 +7,20 @@ intent: null
 summary: CIE13_native_system_primitives (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1794023236623
+exported_at: 1794558075887
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794023236623
-lastSeenAt: 1794023236623
+firstSeenAt: 1794558075887
+lastSeenAt: 1794558075887
 fingerprint: null
 payload:
   id: CIE13_native_system_primitives
   map: docs/2026-11-06-cie-eg-build-phasemap.spec
   repo: null
   layer: null
-  status: OPEN
+  status: >-
+    OPEN   # slice a BUILT 0.60.502 (now_ms, sleep_ms, path_exists natively and interpreted); next:
+    list_dir, make_dir, remove natively, then Process
   files:
     - emerge/emerge/lang/native/rt.eg
     - emerge/emerge/lang/native/codegen.eg

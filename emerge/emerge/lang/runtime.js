@@ -1226,6 +1226,9 @@ function createRuntime(opts = {}) {
     try { return fs.readdirSync(p).sort(); } catch (e) { if (e.code === 'ENOENT') return []; err(`list_dir: ${e.code || e.message} ${p}`); }
   });
   def('path_exists', 1, p => fs.existsSync(needStr(p, 'path_exists')));
+  // CIE13 slice a (2026-11-13): the clock, the same natively (native/rt.eg rt_b_now_ms, rt_b_sleep_ms). Whole milliseconds.
+  def('now_ms', 0, () => Date.now());
+  def('sleep_ms', 1, n => { if (typeof n !== 'number' || !Number.isInteger(n) || n < 0) err('sleep_ms needs a whole num of milliseconds, 0 or more'); Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, n); return null; });
   def('make_dir', 1, p => {
     noLens('make_dir'); needStr(p, 'make_dir');
     try { fs.mkdirSync(p, { recursive: true }); } catch (e) { err(`make_dir: ${e.code || e.message} ${p}`); }

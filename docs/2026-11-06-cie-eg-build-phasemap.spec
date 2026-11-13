@@ -288,7 +288,7 @@ phases:
     proof: "git ls-files 'emerge/emerge/*.js' outside the archive is empty; every suite green"
 
   CIE13_native_system_primitives:
-    status: OPEN
+    status: OPEN   # slice a BUILT 0.60.502 (now_ms, sleep_ms, path_exists natively and interpreted); next: list_dir, make_dir, remove natively, then Process
     depends_on: [CIE_D1_remove_the_javascript_now, PIL2_contracts, CIE5_native_test]
     spec: emerge/emerge/spec/cie-eg.spec
     files: [emerge/emerge/lang/native/rt.eg, emerge/emerge/lang/native/codegen.eg, emerge/emerge/lang/native/sys_process.eg, emerge/emerge/lang/native/sys_clock.eg,
@@ -555,3 +555,12 @@ order: "CIE1 built. Then, his CIE_D1: CIE2 → CIE3 → CIE4 → CIE5 → (CIE6,
 # itself (its new source uses only \{ escapes, so the old compiler could build it): stage 2 = stage 3, byte for byte. Nothing in the tree relied on
 # {{ opening an interpolation of a map (checked). Proof: lang 168/168 (two new cases), native 109/109, differential 19/19, selfhost 16/16,
 # bootstrap 11/11; cos/pipeline's eg tests and test-cos-pipeline 14/14 unchanged.
+
+## ADDENDUM 2026-11-13 (0.60.502) — CIE13 slice a: the clock and a file check, from the kernel
+James, 2026-11-13: "Working on it in another session. Maybe you can work on finishing emerge. So we can stop using JavaScript"
+- Built: now_ms(), sleep_ms(n), path_exists(p) as builtins of emerge.exe by Linux syscalls (clock_gettime 228, nanosleep 35, access 21) in
+  lang/native/rt.eg; the same in the interpreter. check_env_text.eg regenerated; native/bin/emerge rebuilt to a fixpoint.
+- Proof: native.test 112/112 (3 new cases against the interpreter); Emerge's suites 31, 14, 6.
+- Order from here, the coder's reading of his "finishing emerge" (to confirm): CIE13 next slices (the folder builtins natively, then
+  Process), then CIE9 (the 5,335 lines of JavaScript tests as .eg tests), CIE10 (the door served by emerge.exe), CIE11 (the interpreter
+  archived). CIE14's gaps as they are met.
