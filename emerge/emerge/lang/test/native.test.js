@@ -45,6 +45,8 @@ const CASES = {
   'the clock: now_ms and sleep_ms': `let a = now_ms()\nsleep_ms(60)\nlet b = now_ms()\nprint(a > 1700000000000, b - a >= 60, b - a < 2000, type_of(a))\nsleep_ms(0)`,
   'path_exists': `print(path_exists("/tmp"), path_exists("/no/such/place"), path_exists("/proc/self/exe"))`,
   'sleep_ms refuses what is not a whole count': { src: `print("before")\nsleep_ms(-1)`, code: 1 },
+  // CIE13 slice b (2026-11-13): folders natively — made all the way down, listed in order, moved, removed all the way down
+  'folders: is_dir, make_dir, list_dir, move_path, remove_path': `let r = "/tmp/eg-dirs-case-${process.pid}"\nremove_path(r)\nprint(path_exists(r), is_dir(r), list_dir(r))\nmake_dir(r + "/a/b/c")\nmake_dir(r + "/a/b/c")\nwrite_file(r + "/a/zeta.txt", "z")\nwrite_file(r + "/a/alpha.txt", "a")\nwrite_file(r + "/a/b/c/deep.txt", "d")\nprint(is_dir(r + "/a/b/c"), is_dir(r + "/a/zeta.txt"), is_dir(r + "/nope"))\nprint(list_dir(r + "/a"), list_dir(r + "/a/b/c"), list_dir(r + "/a/b"))\nmove_path(r + "/a/zeta.txt", r + "/moved/to/here/z.txt")\nprint(list_dir(r + "/a"), read_file(r + "/moved/to/here/z.txt"), path_exists(r + "/a/zeta.txt"))\nremove_path(r + "/a/alpha.txt")\nremove_path(r + "/a")\nprint(path_exists(r + "/a"), list_dir(r))\nremove_path(r)\nremove_path(r)\nprint(path_exists(r))`,
   'gcd': `fn gcd(a: int, b: int): int {\n  if b == 0i { return a }\n  return gcd(b, a % b)\n}\nprint(gcd(48i, 18i), gcd(17i, 5i), gcd(0i, 9i))`,
   // refusals: both must exit 1, with nothing on stdout before the error
   'overflow add traps': { src: `print("before")\nprint(${MAX} + 1i)\nprint("after")`, code: 1 },

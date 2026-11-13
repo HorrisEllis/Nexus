@@ -288,7 +288,7 @@ phases:
     proof: "git ls-files 'emerge/emerge/*.js' outside the archive is empty; every suite green"
 
   CIE13_native_system_primitives:
-    status: OPEN   # slice a BUILT 0.60.502 (now_ms, sleep_ms, path_exists natively and interpreted); next: list_dir, make_dir, remove natively, then Process
+    status: OPEN   # slice a BUILT 0.60.502 (now_ms, sleep_ms, path_exists); slice b BUILT 0.60.510 (is_dir, make_dir, list_dir, move_path, remove_path natively); next: Process
     depends_on: [CIE_D1_remove_the_javascript_now, PIL2_contracts, CIE5_native_test]
     spec: emerge/emerge/spec/cie-eg.spec
     files: [emerge/emerge/lang/native/rt.eg, emerge/emerge/lang/native/codegen.eg, emerge/emerge/lang/native/sys_process.eg, emerge/emerge/lang/native/sys_clock.eg,
@@ -574,3 +574,11 @@ James, 2026-11-13: "Continue. Look a the graph substrate. Like emerge should red
   ledger_proof, ledger_check_proof, observe_gaps); the backends agree on every arity. This list is CIE13's next slice and CIE14's.
 - The coder's reading of "reduce friction between primitives" (to confirm): first Emerge sees every primitive and every way it is carried
   out (built here); next, one source generates the tables that are four hand edits today.
+
+## ADDENDUM 2026-11-13 (0.60.510) — CIE13 slice b: folders natively
+James, 2026-11-13, told the next step was the folder builtins off Emerge's own list: "Yeah."
+- Built: is_dir, make_dir, list_dir, move_path, remove_path in lang/native/rt.eg by syscall (stat 4, mkdir 83, getdents64 217, rename 82,
+  unlink 87, rmdir 84). The interpreter had them.
+- Proof: one 17-line program the same interpreted and native (a case in native.test.js); the compiler at a fixpoint; self.test.eg 3/3,
+  its ratchet 10 → 6.
+- Left on Emerge's own list: wrap_add, wrap_sub, wrap_mul, ledger_proof, ledger_check_proof, observe_gaps. Then Process (spawn, wait, kill).
