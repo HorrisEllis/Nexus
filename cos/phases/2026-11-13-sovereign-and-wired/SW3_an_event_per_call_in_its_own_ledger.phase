@@ -1,0 +1,38 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-13-sovereign-and-wired-phasemap.spec::SW3_an_event_per_call_in_its_own_ledger
+type: phase
+id: docs_2026-11-13-sovereign-and-wired-phasemap.spec::SW3_an_event_per_call_in_its_own_ledger
+context: >-
+  pipeline phase SW3_an_event_per_call_in_its_own_ledger of
+  docs/2026-11-13-sovereign-and-wired-phasemap.spec
+intent: null
+summary: SW3_an_event_per_call_in_its_own_ledger (backend) — 8 file(s)
+system: idearium
+tags: []
+exported_at: 1794550806508
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794550806508
+lastSeenAt: 1794550806508
+fingerprint: null
+payload:
+  id: SW3_an_event_per_call_in_its_own_ledger
+  map: docs/2026-11-13-sovereign-and-wired-phasemap.spec
+  repo: null
+  layer: backend
+  status: OPEN
+  files:
+    - cos/archetype/nexus-system/lib/ledger.js
+    - cos/archetype/nexus-system/lib/serve.js
+    - architect/event-taxonomy.js
+    - clear-glass/event-taxonomy.js
+    - idearium/event-taxonomy.js
+    - loom/event-taxonomy.js
+    - ollama/event-taxonomy.js
+    - tests/modules/test-system-call-ledger.test.js
+  depends_on:
+    - SW2_routes_and_command_nodes
+    - SW_D3_an_event_for_every_call
+  blocks: []
+  spec: null
+  graph: 184948aa96071980

@@ -1,0 +1,262 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SW0_the_scorecard:99e0e09fe0777d28
+type: graph
+id: phase:SW0_the_scorecard:99e0e09fe0777d28
+context: dependency graph of phase SW0_the_scorecard
+intent: null
+summary: 29 node(s), 3 crossing(s)
+system: idearium
+tags: []
+exported_at: 1794551278392
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794551278392
+lastSeenAt: 1794551278392
+fingerprint: null
+payload:
+  for: SW0_the_scorecard
+  kind: phase
+  repo: null
+  hash: 99e0e09fe0777d28
+  nodes:
+    - path: idearium/cli/route-commands.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: lib/drawbridge-registry.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/system-boundary.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/system-sovereign-card.js
+      role: changes
+      exists: false
+      system: lib
+    - path: tests/modules/test-system-sovereign-card.test.js
+      role: changes
+      exists: false
+      system: null
+    - path: diagnostic/tests/causality.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/cli/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/architecture-migrate.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/phase-graph.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/registry-draft.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/system-nodes.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: loom/templates/cos-compartment.js
+      role: used-by
+      exists: true
+      system: loom
+    - path: tests/modules/test-cos-compartment-template.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-drawbridge-registry.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-sovereign-systems.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-system-boundary.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/core/raid/contract-adapters.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/contract-gates.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: lib/agent-tools/tools/nexus/recall.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/architecture-migrate.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/capability-spec.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/git-pr.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-read.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-self/systems.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/node-export.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/resource-monitor.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/shadow.js
+      role: uses
+      exists: true
+      system: lib
+    - path: loom/scanners/capability-map.js
+      role: uses
+      exists: true
+      system: loom
+  edges:
+    - from: lib/system-boundary.js
+      to: lib/capability-spec.js
+      kind: requires
+    - from: lib/system-boundary.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: lib/drawbridge-registry.js
+      to: loom/scanners/capability-map.js
+      kind: requires
+    - from: lib/drawbridge-registry.js
+      to: lib/shadow.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-gates.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: lib/node-export.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-adapters.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: lib/architecture-migrate.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: lib/git-pr.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: lib/resource-monitor.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: lib/agent-tools/tools/nexus/recall.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: lib/nexus-read.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/system-boundary.js
+      kind: requires
+    - from: lib/architecture-migrate.js
+      to: lib/system-boundary.js
+      kind: requires
+    - from: lib/phase-graph.js
+      to: lib/system-boundary.js
+      kind: requires
+    - from: lib/registry-draft.js
+      to: lib/system-boundary.js
+      kind: requires
+    - from: lib/system-nodes.js
+      to: lib/system-boundary.js
+      kind: requires
+    - from: loom/templates/cos-compartment.js
+      to: lib/system-boundary.js
+      kind: requires
+    - from: tests/modules/test-cos-compartment-template.test.js
+      to: lib/system-boundary.js
+      kind: requires
+    - from: tests/modules/test-sovereign-systems.test.js
+      to: lib/system-boundary.js
+      kind: requires
+    - from: tests/modules/test-system-boundary.test.js
+      to: lib/system-boundary.js
+      kind: requires
+    - from: tests/modules/test-drawbridge-registry.test.js
+      to: lib/drawbridge-registry.js
+      kind: requires
+    - from: diagnostic/tests/causality.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: idearium/cli/index.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+  crossings:
+    - from: lib/drawbridge-registry.js
+      to: loom/scanners/capability-map.js
+      fromSystem: lib
+      toSystem: loom
+      kind: upward
+      known: true
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-gates.js
+      fromSystem: idearium
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-adapters.js
+      fromSystem: idearium
+      toSystem: cortex
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW_D0_picked_up
+    dependents:
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW1_each_system_its_own_map
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW4_own_data_by_default
+    upstream:
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW_D0_picked_up
+    downstream:
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW1_each_system_its_own_map
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW2_routes_and_command_nodes
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW3_an_event_per_call_in_its_own_ledger
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW4_own_data_by_default
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW5_orchestrator_into_the_supervisor
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW6_the_drawbridge_the_only_way_in
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW7_lib_goes_home
+    blockedBy: []
+    unlocks:
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW1_each_system_its_own_map
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW4_own_data_by_default
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1
+      - 'depends on (1): SW_D0_picked_up'
+      - >-
+        needed by (2): SW1_each_system_its_own_map, SW4_own_data_by_default · all downstream 7 ·
+        finishing it unlocks SW1_each_system_its_own_map, SW4_own_data_by_default
+    edges:
+      - from: docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW_D0_picked_up
+        kind: declared

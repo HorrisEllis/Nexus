@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-13-sovereign-and-wired-phasemap.spec::SW2_routes_and_command_nodes
+type: phase
+id: docs_2026-11-13-sovereign-and-wired-phasemap.spec::SW2_routes_and_command_nodes
+context: pipeline phase SW2_routes_and_command_nodes of docs/2026-11-13-sovereign-and-wired-phasemap.spec
+intent: null
+summary: SW2_routes_and_command_nodes (backend) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1794550806505
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794550806505
+lastSeenAt: 1794550806505
+fingerprint: null
+payload:
+  id: SW2_routes_and_command_nodes
+  map: docs/2026-11-13-sovereign-and-wired-phasemap.spec
+  repo: null
+  layer: backend
+  status: OPEN
+  files:
+    - cos/archetype/nexus-system/lib/commands.js
+    - idearium/cli/route-commands.js
+    - tests/modules/test-system-command-nodes.test.js
+  depends_on:
+    - SW1_each_system_its_own_map
+  blocks: []
+  spec: null
+  graph: 81928563b00f4e02

@@ -863,6 +863,8 @@ export const SPEC = [
   { key: 'cos.ledger', repo: false, usage: 'cos ledger [system] [--limit n]', about: 'the supervisor\'s ledger: every spawn, crash, restart, refusal and stop, with why',
     req: (a) => ({ method: 'GET', path: `/api/cos/ledger?limit=${Number(a.flags.limit) || 50}${a.args[0] ? `&system=${encodeURIComponent(a.args[0])}` : ''}` }) },
   // 0.60.337 MG18 — what COS's UI shows, as rows (agents get every read a person gets; taking a proposal is a person's act)
+  { key: 'cos.propose', repo: false, usage: 'cos propose <restart|start|stop> <system> --why <reason> [--by agent:<name>]  ·  cos propose restart cos --why <reason>', about: 'an agent proposes an act on COS; it is held until the person takes it (cos take <id>) or drops it. `restart cos` proposes restarting COS itself (his 2026-11-12 "Need to be able to propose restarts.")',
+    req: (a) => { const g = (a.args || []).map(String), cos = g[0] === 'restart' && g[1] === 'cos'; return { system: 'cos', method: 'POST', path: '/api/cos/proposals', body: { verb: cos ? 'restart-cos' : g[0], target: g[1] || '', why: a.flags.why || '', by: a.flags.by || 'agent:cli' } }; } },
   { key: 'cos.proposals', repo: false, usage: 'cos proposals [--open]', about: 'agents\' held acts on COS: who, what, on which system, why, and whether a person took or dropped it',
     req: (a) => ({ method: 'GET', path: `/api/cos/proposals${a.flags.open ? '?open=1' : ''}` }) },
   { key: 'cos.proposal.act', repo: false, personOnly: () => 'taking or dropping a proposal is the person\'s: Take or Drop on COS\'s Proposals page, or ask them', usage: 'cos <take|drop> <proposal-id>', about: 'take an agent\'s proposal (it runs as your act) or drop it; both ledgered',
@@ -929,6 +931,10 @@ export const SPEC = [
   { key: 'cos.request-resume', repo: false, usage: 'cos request-resume <request-id>', about: 'resume a request not met, from its step files: what is met is not run again',
     req: (a) => ({ system: 'cos', method: 'POST', path: `/api/cos/pipeline/requests/${encodeURIComponent(String((a.args || [])[0] || ''))}/resume`, body: { by: 'person' } }),
     personOnly: () => 'resuming a request is the person\'s — an agent asks them' },
+  { key: 'cos.sovereign', repo: false, usage: 'cos sovereign [--keep]', about: 'the sovereignty scorecard: for each system, whether it has its own server.js, registry, contract, event taxonomy, command nodes and data folder, and whether its data is still at the root; what got worse since the reading kept. --keep keeps this reading (SW0, his 2026-11-13 "We need each system sovereign.")',
+    req: (a) => (a.flags.keep ? { system: 'cos', method: 'POST', path: '/api/cos/sovereign', body: { by: 'person' } } : { system: 'cos', method: 'GET', path: '/api/cos/sovereign' }),
+    print: (d, a, h) => { for (const r of d.systems || []) console.log(`  ${(r.has === r.of ? h.c.mint : h.c.amber)(`${r.has}/${r.of}`)} ${String(r.system).padEnd(14)} ${h.c.dim(r.missing.length ? 'lacks ' + r.missing.join(', ') : 'whole')}`);
+      const t = d.totals || {}; console.log(h.c.dim(`  ${t.whole} of ${t.systems} whole · ${t.has}/${t.of} parts`)); for (const w of d.worse || []) console.log(h.c.amber(`  worse: ${w}`)); } },
   { key: 'cos.pipeline-retry', repo: false, usage: 'cos pipeline-retry <engine run id> [--from <step>]', about: 'retry a failed pipeline run from its request\'s files: what was met is not run again; --from runs that step and every step after it again (PC8 slice b, his 2026-11-10 "execute, or manage the pipeline")',
     req: (a) => ({ system: 'cos', method: 'POST', path: `/api/cos/pipeline/runs/${encodeURIComponent(String((a.args || [])[0] || ''))}/retry`, body: { from: a.flags.from || null, by: 'person' } }),
     personOnly: () => 'retrying a run is the person\'s — an agent asks them' },

@@ -26,6 +26,12 @@ function createServer(sup, opts = {}) {
   const door = require('./autopilot-door.js').mount(sup, { ROOT: root });   // MG16: autopilot's routes, in its shapes (MG-003)
   const send = (res, code, body) => { res.writeHead(code, { 'Content-Type': 'application/json' }); res.end(JSON.stringify(body)); };
   const proposals = createProposals(sup);   // MG18: agents' held acts
+  // 2026-11-12 — James: "Need to be able to propose restarts." An agent could propose restarting a system (MG18); COS itself was not a target.
+  // Now: { verb: 'restart-cos', target: 'cos', why, by: agent:<name> } is held; taken by him, COS restarts itself the way an update's yes does.
+  proposals.register('restart-cos', {
+    check: ({ target, payload }) => { if (target !== 'cos') throw Object.assign(new Error('restart-cos restarts COS itself: { "target": "cos" } (a system is { "verb": "restart", "target": "<system>" })'), { code: 400 });
+      if (typeof opts.restartCos !== 'function') throw Object.assign(new Error('this COS was not started to restart itself: nothing to propose'), { code: 409 }); return { payload: payload || null }; },
+    run: (p, { by }) => opts.restartCos({ by }) });
   const resources = require('./resources.js').createResources(sup, { proposals });   // CP6a: caps by layer, read back; the account; pressure → a proposal
   // CE2 0.60.376 — Nexus's update as COS's: per system, the tool behind the toast (cos/manager/updates.js); every step on the event stream
   const updates = require('./updates.js').createUpdates(sup, { root, emit: (e, d) => { broadcast(e, d); if (e === 'cos.update') notices.fromUpdate(d); },
@@ -270,6 +276,9 @@ function createServer(sup, opts = {}) {
         if (rm && m === 'GET' && !rm[2]) { const r = await pipeline.runs.read(rm[1]); return send(res, r ? 200 : 404, r ? { ok: true, ...r } : { ok: false, error: `no request "${rm[1]}"` }); }
         if (rm && m === 'POST' && rm[2]) { if (/^agent:/.test(String(body.by || ''))) return send(res, 403, { ok: false, error: 'an agent proposes; resuming is a person\'s' }); const r = await pipeline.resume(rm[1], { by: body.by }); return send(res, r.ok ? 200 : (r.code || 400), r); } }
       if (m === 'GET' && p === '/api/cos/pipeline/ready') { const r = await pipeline.ready({ limit: u.searchParams.get('limit') }); return send(res, r.ok ? 200 : (r.code || 502), r); }   // 2026-11-12: the phases that can be built now, for the run form
+      // SW0 (2026-11-13): the sovereignty scorecard; POST keeps this reading as the one to hold (a person's)
+      if (p === '/api/cos/sovereign' && (m === 'GET' || m === 'POST')) { if (m === 'POST' && body.by !== 'person') return send(res, 403, { ok: false, error: 'keeping a reading as the baseline is a person\'s' });
+        const r = await pipeline.sovereign({ write: m === 'POST', ...(opts.sovereign || {}) }); return send(res, r.ok ? 200 : (r.code || 500), r); }
       // PC8 slice b (2026-11-11): a failed run retried, from its request's files; { from } runs that step and every step after it again
       { const rt = /^\/api\/cos\/pipeline\/runs\/([\w.-]+)\/retry$/.exec(p);
         if (rt && m === 'POST') { if (/^agent:/.test(String(body.by || ''))) return send(res, 403, { ok: false, error: 'an agent proposes; retrying is a person\'s' }); const r = await pipeline.retry(rt[1], { from: body.from || null, by: body.by }); return send(res, r.ok ? 200 : (r.code || 400), r); } }
@@ -291,7 +300,7 @@ function createServer(sup, opts = {}) {
       const lg = /^\/api\/cos\/systems\/([^/]+)\/logs$/.exec(p);
       if (lg && m === 'GET') return send(res, 200, { ok: true, system: decodeURIComponent(lg[1]), lines: sup.logs(decodeURIComponent(lg[1]), { limit: Number(u.searchParams.get('limit')) || 200 }) });
       if (m === 'GET' && p === '/api/cos/proposals') return send(res, 200, { ok: true, proposals: proposals.list({ open: u.searchParams.get('open') === '1' }) });
-      if (m === 'POST' && p === '/api/cos/proposals') { try { return send(res, 200, { ok: true, proposal: proposals.hold(body) }); } catch (e) { return send(res, e.code === 400 ? 400 : /no system/.test(e.message) ? 404 : 500, { ok: false, error: e.message }); } }
+      if (m === 'POST' && p === '/api/cos/proposals') { if (body.verb === 'restart-cos' && (!body.why || String(body.why).trim().length < 3)) return send(res, 400, { ok: false, error: 'say why COS should restart: the reason is part of the proposal' }); try { return send(res, 200, { ok: true, proposal: proposals.hold(body) }); } catch (e) { return send(res, e.code === 400 ? 400 : /no system/.test(e.message) ? 404 : 500, { ok: false, error: e.message }); } }
       const pr = /^\/api\/cos\/proposals\/([^/]+)\/(take|drop)$/.exec(p);
       if (pr && m === 'POST') { try { return send(res, 200, { ok: true, ...(pr[2] === 'take' ? proposals.take(decodeURIComponent(pr[1]), { by: body.by }) : proposals.drop(decodeURIComponent(pr[1]), { by: body.by, why: body.why })) }); }
         catch (e) { return send(res, typeof e.code === 'number' ? e.code : 500, { ok: false, error: e.message }); } }

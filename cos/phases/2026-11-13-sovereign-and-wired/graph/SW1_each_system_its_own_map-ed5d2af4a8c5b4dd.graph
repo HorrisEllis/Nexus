@@ -1,0 +1,125 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SW1_each_system_its_own_map:ed5d2af4a8c5b4dd
+type: graph
+id: phase:SW1_each_system_its_own_map:ed5d2af4a8c5b4dd
+context: dependency graph of phase SW1_each_system_its_own_map
+intent: null
+summary: 11 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1794551278398
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794551278398
+lastSeenAt: 1794551278398
+fingerprint: null
+payload:
+  for: SW1_each_system_its_own_map
+  kind: phase
+  repo: null
+  hash: ed5d2af4a8c5b4dd
+  nodes:
+    - path: cos/archetype/nexus-system/lib/registry.js
+      role: changes
+      exists: false
+      system: cos
+    - path: cos/registry-components.js
+      role: changes
+      exists: false
+      system: cos
+    - path: emerge/registry-components.js
+      role: changes
+      exists: false
+      system: emerge
+    - path: lib/drawbridge-registry.js
+      role: changes
+      exists: true
+      system: lib
+    - path: orchestrator/registry-components.js
+      role: changes
+      exists: false
+      system: orchestrator
+    - path: tests/modules/test-system-own-map.test.js
+      role: changes
+      exists: false
+      system: null
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: tests/modules/test-drawbridge-registry.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: lib/shadow.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/system-boundary.js
+      role: uses
+      exists: true
+      system: lib
+    - path: loom/scanners/capability-map.js
+      role: uses
+      exists: true
+      system: loom
+  edges:
+    - from: lib/drawbridge-registry.js
+      to: loom/scanners/capability-map.js
+      kind: requires
+    - from: lib/drawbridge-registry.js
+      to: lib/system-boundary.js
+      kind: requires
+    - from: lib/drawbridge-registry.js
+      to: lib/shadow.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/drawbridge-registry.js
+      kind: requires
+    - from: tests/modules/test-drawbridge-registry.test.js
+      to: lib/drawbridge-registry.js
+      kind: requires
+  crossings:
+    - from: lib/drawbridge-registry.js
+      to: loom/scanners/capability-map.js
+      fromSystem: lib
+      toSystem: loom
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW0_the_scorecard
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW_D2_each_system_keeps_its_own_map
+    dependents:
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW2_routes_and_command_nodes
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW5_orchestrator_into_the_supervisor
+    upstream:
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW0_the_scorecard
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW_D0_picked_up
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW_D2_each_system_keeps_its_own_map
+    downstream:
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW2_routes_and_command_nodes
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW3_an_event_per_call_in_its_own_ledger
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW5_orchestrator_into_the_supervisor
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW6_the_drawbridge_the_only_way_in
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW7_lib_goes_home
+    blockedBy: []
+    unlocks:
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW2_routes_and_command_nodes
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW5_orchestrator_into_the_supervisor
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2 · ready
+      - 'depends on (2): SW0_the_scorecard, SW_D2_each_system_keeps_its_own_map · all upstream 3'
+      - >-
+        needed by (2): SW2_routes_and_command_nodes, SW5_orchestrator_into_the_supervisor · all
+        downstream 5 · finishing it unlocks SW2_routes_and_command_nodes,
+        SW5_orchestrator_into_the_supervisor
+    edges:
+      - from: docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW0_the_scorecard
+        kind: declared
+      - from: docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW_D2_each_system_keeps_its_own_map
+        kind: declared
