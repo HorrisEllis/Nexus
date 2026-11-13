@@ -1,41 +1,51 @@
 envelope: 1
-uuid: nexus-export-graph-phase:GW0_gate_census:0475656455782995
+uuid: nexus-export-graph-phase:GW0_gate_census:0239575b68adefb1
 type: graph
-id: phase:GW0_gate_census:0475656455782995
+id: phase:GW0_gate_census:0239575b68adefb1
 context: dependency graph of phase GW0_gate_census
 intent: null
-summary: 2 node(s), 0 crossing(s)
+summary: 4 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792787677991
+exported_at: 1794574312322
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677991
-lastSeenAt: 1792787677991
+firstSeenAt: 1794574312322
+lastSeenAt: 1794574312322
 fingerprint: null
 payload:
   for: GW0_gate_census
   kind: phase
   repo: null
-  hash: '0475656455782995'
+  hash: 0239575b68adefb1
   nodes:
+    - path: cos/census/gate.eg
+      role: changes
+      exists: false
+      system: cos
+    - path: cos/census/test/gate.test.eg
+      role: changes
+      exists: false
+      system: cos
+    - path: cos/pipeline/cli.eg
+      role: changes
+      exists: true
+      system: cos
     - path: docs/atlases/gate-census.md
       role: changes
       exists: false
       system: null
-    - path: lib/gate-census.js
-      role: changes
-      exists: false
-      system: lib
   edges: []
   crossings: []
   ready: true
   dag:
-    layer: 0
-    deps: []
+    layer: 1
+    deps:
+      - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GR0_graph_census
     dependents:
       - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GW1_gate_primitive
-    upstream: []
+    upstream:
+      - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GR0_graph_census
     downstream:
       - docs/2026-10-20-belief-loop-phasemap.spec::AV1_adversarial_review
       - docs/2026-10-20-belief-loop-phasemap.spec::BW1_borrowing
@@ -50,12 +60,15 @@ payload:
       - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GW1_gate_primitive
       - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GW2_gates_at_every_level
       - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GW3_gate_panel
-    blockedBy: []
+    blockedBy:
+      - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GR0_graph_census
     unlocks: []
     conflicts: []
     dangling: []
     lines:
-      - layer 0 · ready
-      - 'depends on (0): —'
+      - layer 1 · blocked by GR0_graph_census
+      - 'depends on (1): GR0_graph_census'
       - 'needed by (1): GW1_gate_primitive · all downstream 13'
-    edges: []
+    edges:
+      - from: docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GR0_graph_census
+        kind: inferred

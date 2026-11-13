@@ -6,14 +6,14 @@ context: >-
   pipeline phase GR1_graph_primitive of
   docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec
 intent: null
-summary: GR1_graph_primitive (foundation) — 1 file(s)
+summary: GR1_graph_primitive (foundation) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792787677982
+exported_at: 1794574312293
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677982
-lastSeenAt: 1792787677982
+firstSeenAt: 1794574312293
+lastSeenAt: 1794574312293
 fingerprint: null
 payload:
   id: GR1_graph_primitive
@@ -22,12 +22,13 @@ payload:
   layer: foundation
   status: OPEN
   files:
-    - lib/core/graph.js
+    - pillar/graph/graph.eg
+    - pillar/test/graph.test.eg
+    - pillar/pillar.eg
   depends_on:
     - GR0_graph_census
-    - NC1_neutral_core_boundary
-    - NM1_one_name_per_file
+    - PIL1_pillar_stands
   blocks:
     - MOD-GRAPH
   spec: docs/substrate.spec
-  graph: 8e94a4d6d6d8e5b6
+  graph: 4d1d3a8dd85480fc

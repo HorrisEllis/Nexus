@@ -96,7 +96,7 @@ phases:
     layer: foundation
     status: OPEN
     depends_on: []
-    files: [lib/graph-census.js, docs/atlases/graph-census.md]
+    files: [cos/census/graph.eg, cos/census/test/graph.test.eg, cos/pipeline/cli.eg, docs/atlases/graph-census.md]
     spec: docs/substrate.spec
     blocks: [MOD-GRAPH-CENSUS]
     does: >-
@@ -104,11 +104,16 @@ phases:
       what its edges rest on (discovered, declared, unknown). Route + `graph census` command.
     proof: the census lists the ten graphs above with their real counts on his data/; a new graph added to the tree appears in it
 
+    expanded_2026_11_13: >-
+      James, 2026-11-13: "lib needs to stop acting like a system" (SW_D5) · "Each primitive/capabity should be its own file. The core file being either the foundation or the pillars." · "Like isn't pillar the replacement to lib" · "how close is nexus, can you merge each branch. and then can we get the pipeline moving. the substrait built"
+      In Emerge, run by COS like the sovereignty scorecard (cos/sovereign/card.eg, SW0), not new JavaScript in lib/: cos/census/graph.eg reads
+      the tree and lists every graph (its nodes, edge kinds, store, writers, readers); `cos census graph` through cos/pipeline/cli.eg. Built
+      through COS's pipeline as its own request (his "get the pipeline moving").
   GR1_graph_primitive:
     layer: foundation
     status: OPEN
-    depends_on: [GR0_graph_census, NC1_neutral_core_boundary, NM1_one_name_per_file]
-    files: [lib/core/graph.js, lib/node-schemas/schema.block, lib/node-schemas/schema.edge, lib/node-schemas/schema.observation]
+    depends_on: [GR0_graph_census, PIL1_pillar_stands]
+    files: [pillar/graph/graph.eg, pillar/test/graph.test.eg, pillar/pillar.eg, lib/node-schemas/schema.block, lib/node-schemas/schema.edge, lib/node-schemas/schema.observation]
     spec: docs/substrate.spec
     blocks: [MOD-GRAPH]
     does: >-
@@ -118,6 +123,13 @@ phases:
       is the block's richer form — this is its core, not a second shape.
     proof: schema-checked round trip; an edge without evidence is refused; two observations of one scope diff into new/changed/gone
 
+    expanded_2026_11_13: >-
+      James, 2026-11-13: "lib needs to stop acting like a system" (SW_D5) · "Each primitive/capabity should be its own file. The core file being either the foundation or the pillars." · "Like isn't pillar the replacement to lib" · "how close is nexus, can you merge each branch. and then can we get the pipeline moving. the substrait built"
+      The graph primitive is Pillar's, in Emerge, one file (pillar/graph/graph.eg), answered as one of Pillar's in hooks; not lib/core/graph.js.
+      depends_on changed: NC1_neutral_core_boundary is shelved (his 2026-11-07, "Those are all top of my head ideas") and its job, the one neutral
+      core, is Pillar's (PIL_D2 "library"); NM1_one_name_per_file is his same rule, kept by Pillar's one file per primitive. Now waits on GR0
+      and PIL1 (built 0.60.422). The learning on the graph (crystals, lattice weights) is Intelligence's (SW7a), not this phase's.
+    readings_to_confirm: ["GR1_R1 (the coder's, 2026-11-13): NC1 and NM1 replaced by PIL1 as above"]
   GR2_graph_views:
     layer: library
     status: OPEN
@@ -259,7 +271,7 @@ phases:
     layer: foundation
     status: OPEN
     depends_on: []
-    files: [lib/gate-census.js, docs/atlases/gate-census.md]
+    files: [cos/census/gate.eg, cos/census/test/gate.test.eg, cos/pipeline/cli.eg, docs/atlases/gate-census.md]
     spec: docs/substrate.spec
     blocks: [MOD-GATE-CENSUS]
     does: >-
@@ -267,6 +279,9 @@ phases:
       what overrides it ("anyway") and who may. Joined to cos/spec/check-catalogue.spec's checks.
     proof: the twelve gates above listed with their shapes; the ones that cannot say unknown are named
 
+    expanded_2026_11_13: >-
+      James, 2026-11-13: "lib needs to stop acting like a system" (SW_D5) · "Each primitive/capabity should be its own file. The core file being either the foundation or the pillars." · "Like isn't pillar the replacement to lib" · "how close is nexus, can you merge each branch. and then can we get the pipeline moving. the substrait built"
+      In Emerge beside GR0 (cos/census/gate.eg), joined to cos/spec/check-catalogue.spec's checks; `cos census gate`. Built through the pipeline.
   GW1_gate_primitive:
     layer: foundation
     status: OPEN

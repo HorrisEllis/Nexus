@@ -1,37 +1,44 @@
 envelope: 1
-uuid: nexus-export-graph-phase:GR1_graph_primitive:8e94a4d6d6d8e5b6
+uuid: nexus-export-graph-phase:GR1_graph_primitive:4d1d3a8dd85480fc
 type: graph
-id: phase:GR1_graph_primitive:8e94a4d6d6d8e5b6
+id: phase:GR1_graph_primitive:4d1d3a8dd85480fc
 context: dependency graph of phase GR1_graph_primitive
 intent: null
-summary: 1 node(s), 0 crossing(s)
+summary: 3 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792787677982
+exported_at: 1794574312293
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677982
-lastSeenAt: 1792787677982
+firstSeenAt: 1794574312293
+lastSeenAt: 1794574312293
 fingerprint: null
 payload:
   for: GR1_graph_primitive
   kind: phase
   repo: null
-  hash: 8e94a4d6d6d8e5b6
+  hash: 4d1d3a8dd85480fc
   nodes:
-    - path: lib/core/graph.js
+    - path: pillar/graph/graph.eg
       role: changes
       exists: false
-      system: lib
+      system: pillar
+    - path: pillar/pillar.eg
+      role: changes
+      exists: true
+      system: pillar
+    - path: pillar/test/graph.test.eg
+      role: changes
+      exists: false
+      system: pillar
   edges: []
   crossings: []
   ready: true
   dag:
-    layer: 3
+    layer: 2
     deps:
       - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GR0_graph_census
-      - docs/2026-10-19-infrastructure-spine-phasemap.spec::NC1_neutral_core_boundary
-      - docs/2026-10-19-idearium-control-phasemap.spec::NM1_one_name_per_file
+      - docs/2026-11-06-pillar-phasemap.spec::PIL1_pillar_stands
     dependents:
       - docs/2026-10-20-belief-loop-phasemap.spec::IV1_invariant_kinds
       - docs/2026-10-20-belief-loop-phasemap.spec::PV1_provenance_on_every_claim
@@ -40,11 +47,12 @@ payload:
       - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::CH0_chunk_census_and_contract
       - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GW1_gate_primitive
     upstream:
-      - docs/2026-10-19-idearium-control-phasemap.spec::NM1_one_name_per_file
-      - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN0_baseline
-      - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN3_registry_is_the_spine
-      - docs/2026-10-19-infrastructure-spine-phasemap.spec::NC1_neutral_core_boundary
       - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GR0_graph_census
+      - docs/2026-11-06-pillar-phasemap.spec::PIL1_pillar_stands
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D0_the_name_is_pillar
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D1_the_shape_he_brought
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D2_a_process_or_a_library
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D3_written_in_emerge
     downstream:
       - docs/2026-10-20-belief-loop-phasemap.spec::AV1_adversarial_review
       - docs/2026-10-20-belief-loop-phasemap.spec::BW1_borrowing
@@ -73,28 +81,24 @@ payload:
       - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::TV1_traversal_primitive
       - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::TV2_invariant_guided_traversal
       - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::TV3_traversal_as_context
+      - docs/2026-11-01-friction-map-phasemap.spec::FT4_what_fits
+      - docs/2026-11-01-friction-map-phasemap.spec::FT5_asked_and_seen
     blockedBy:
       - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GR0_graph_census
-      - docs/2026-10-19-infrastructure-spine-phasemap.spec::NC1_neutral_core_boundary
-      - docs/2026-10-19-idearium-control-phasemap.spec::NM1_one_name_per_file
     unlocks:
       - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::TV1_traversal_primitive
       - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::CH0_chunk_census_and_contract
     conflicts: []
     dangling: []
     lines:
-      - layer 3 · blocked by GR0_graph_census, NC1_neutral_core_boundary, NM1_one_name_per_file
-      - >-
-        depends on (3): GR0_graph_census, NC1_neutral_core_boundary, NM1_one_name_per_file · all
-        upstream 5
+      - layer 2 · blocked by GR0_graph_census
+      - 'depends on (2): GR0_graph_census, PIL1_pillar_stands · all upstream 6'
       - >-
         needed by (6): IV1_invariant_kinds, PV1_provenance_on_every_claim, GR2_graph_views,
         TV1_traversal_primitive, CH0_chunk_census_and_contract, GW1_gate_primitive · all downstream
-        27 · finishing it unlocks TV1_traversal_primitive, CH0_chunk_census_and_contract
+        29 · finishing it unlocks TV1_traversal_primitive, CH0_chunk_census_and_contract
     edges:
       - from: docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GR0_graph_census
         kind: declared
-      - from: docs/2026-10-19-infrastructure-spine-phasemap.spec::NC1_neutral_core_boundary
-        kind: declared
-      - from: docs/2026-10-19-idearium-control-phasemap.spec::NM1_one_name_per_file
+      - from: docs/2026-11-06-pillar-phasemap.spec::PIL1_pillar_stands
         kind: declared
