@@ -24,4 +24,7 @@
 // as COS.) The exe had changed since cos-v0.7.1 with no bump, so the cos-app workflow refused it and his 0.7.1 never got: SC16 (0.60.460,
 // "also can we have cos.exe run the command prompts in the background?": Clear Glass started through electron.exe, no console window) and SC7
 // (0.60.464: Settings › Startup and services in the cockpit, with "Run Nexus as a Windows service", NexusCOS through nssm.exe, CA4 0.5.0).
-module.exports = { version: '0.8.0' };
+// 0.8.1 (Nexus 0.60.518–0.60.525): James, 2026-11-13: "then merge push and release cos.exe and nexus." · "when you are done". The exe changed in
+// cos/app/runtime.js (SW5a, 0.60.518: a release whose duties live in cos/manager/duties.js is recognised as one that hands over to COS's manager,
+// not only one with lib/nexus/core-duties.js), so it is a new exe; without it, his COS would start a 0.60.518+ Nexus as an old self-supervising one.
+module.exports = { version: '0.8.1' };
