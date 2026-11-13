@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-30-pipeline-consolidation-and-job-ledger-phasemap.spec::CM1_pipeline_section_absorbs_macros_automation
+type: phase
+id: docs_2026-10-30-pipeline-consolidation-and-job-ledger-phasemap.spec::CM1_pipeline_section_absorbs_macros_automation
+context: >-
+  pipeline phase CM1_pipeline_section_absorbs_macros_automation of
+  docs/2026-10-30-pipeline-consolidation-and-job-ledger-phasemap.spec
+intent: null
+summary: CM1_pipeline_section_absorbs_macros_automation (ui) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1794576846845
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794576846845
+lastSeenAt: 1794576846845
+fingerprint: null
+payload:
+  id: CM1_pipeline_section_absorbs_macros_automation
+  map: docs/2026-10-30-pipeline-consolidation-and-job-ledger-phasemap.spec
+  repo: null
+  layer: ui
+  status: OPEN
+  files:
+    - clear-glass/renderer/settings/sections/pipelines.js
+    - clear-glass/renderer/library/sections/macros.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 0293abefdfbe1947

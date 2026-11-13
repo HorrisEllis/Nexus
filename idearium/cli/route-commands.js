@@ -770,6 +770,16 @@ export const SPEC = [
   { key: 'providers.ready', repo: false, usage: 'providers ready', about: 'can each browser agent take a job now, and if not why: a sign-in wall, every account resting, a usage limit, a reply waiting on your ◎ pick',
     req: () => ({ method: 'GET', path: '/api/providers/ready' }),
     print: (d, a, h) => { for (const [id, r] of Object.entries(d.providers || {})) console.log(`  ${(r.ready ? (r.order === 'last' ? h.c.amber : h.c.mint) : h.c.amber)((r.ready ? (r.order === 'last' ? 'last ' : 'ready') : 'not  ').padEnd(5))} ${id.padEnd(11)} ${h.c.dim(r.why)}`); } },
+  // JL1/JL2 (2026-10-30, restated 2026-11-13) — James: "need a ledger for agents using the jobs and .response in the
+  // back end and logging the status maybe. guardian is the source of truth." Every Guardian job joined to its
+  // .response node: queued | claimed | fulfilled, and why not when it isn't.
+  { key: 'jobs.ledger', repo: false, usage: 'jobs ledger [--provider p] [--state queued|claimed|fulfilled|error] [--limit n]', about: 'guardian\'s job queue joined to each job\'s .response node — fulfilled only when the node is really written, never guessed from status alone',
+    req: (a) => ({ method: 'GET', path: `/api/jobs/ledger?${new URLSearchParams([['limit', a.flags.limit], ['provider', a.flags.provider], ['queueState', a.flags.state]].filter(([, v]) => v != null))}` }),
+    print: (d, a, h) => {
+      const COL = { queued: h.c.dim, claimed: h.c.amber, fulfilled: h.c.mint, error: h.c.coral };
+      for (const r of d.rows || []) console.log(`  ${COL[r.queueState](r.queueState.padEnd(9))} ${r.provider.padEnd(10)} ${r.id.slice(0, 8)}  ${r.fulfilled ? h.c.dim(`${r.response.chars} chars`) : h.c.amber(r.unfulfilled_why || 'unfulfilled')}`);
+      const c = d.counts || {}; console.log(h.c.dim(`  ${c.total || 0} jobs — ${c.queued || 0} queued, ${c.claimed || 0} claimed, ${c.fulfilled || 0} fulfilled, ${c.error || 0} error`));
+    } },
   { key: 'accounts.chain', repo: false, usage: 'accounts chain <provider> [account1,account2,…]', about: 'a provider\'s account fallback chain: show it (and which accounts rest at their limit), or set it in order',
     need: (a) => (a.args.length ? null : '<provider>'),
     req: (a) => (a.args[1] ? { method: 'POST', path: '/api/accounts/chain', body: { provider: a.args[0], accounts: a.args[1].split(',').map(x => x.trim()).filter(Boolean) } } : { method: 'GET', path: `/api/accounts/chain?provider=${encodeURIComponent(a.args[0])}` }),

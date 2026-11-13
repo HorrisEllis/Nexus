@@ -1,0 +1,47 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CM1_pipeline_section_absorbs_macros_automation:0293abefdfbe1947
+type: graph
+id: phase:CM1_pipeline_section_absorbs_macros_automation:0293abefdfbe1947
+context: dependency graph of phase CM1_pipeline_section_absorbs_macros_automation
+intent: null
+summary: 2 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1794576846845
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794576846845
+lastSeenAt: 1794576846845
+fingerprint: null
+payload:
+  for: CM1_pipeline_section_absorbs_macros_automation
+  kind: phase
+  repo: null
+  hash: 0293abefdfbe1947
+  nodes:
+    - path: clear-glass/renderer/library/sections/macros.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/renderer/settings/sections/pipelines.js
+      role: changes
+      exists: true
+      system: clear-glass
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+    edges: []

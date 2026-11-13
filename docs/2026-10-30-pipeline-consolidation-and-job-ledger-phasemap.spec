@@ -62,7 +62,7 @@ phases:
     proof: "the Pipelines section shows macros + workflows as blocks with import/export; the old screens redirect; in Clear Glass; GROUNDING FIRST — read pipelines.js/macros.js and the engine's linkage before code"
 
   JL1_job_ledger_backend:
-    status: OPEN
+    status: "BUILT 0.60.506 — guardian/lib/job-ledger.js, a route on guardian/server.js (GET /jobs/ledger). Restated 2026-11-13: \"need a ledger for agents using the jobs and .response in the back end and logging the status maybe. guardian is the source of truth.\" The parallel-session collision risk named below is resolved (claude/laughing-fermi-4f7sj5 is merged into main, 2026-11-06).
     layer: library
     depends_on: []
     files: [guardian/lib/response-sink.js, lib/ledger-jobs.js]
@@ -75,7 +75,7 @@ phases:
     proof: "the ledger lists each job with its queue state and whether its .response is written; a job fulfilled from Clear Glass gets its .response and flips to fulfilled; a job with no .response is named unfulfilled — tested against injected queue + sink"
 
   JL2_route_command_ui:
-    status: OPEN
+    status: "BUILT 0.60.506 — idearium/api/index.js GET /api/jobs/ledger (forwards to guardian, never its files), idearium/cli/route-commands.js key jobs.ledger. UI (the human view in Clear Glass, his order of delivery's fourth step) not in this slice: said, not silently dropped.
     layer: ui
     depends_on: [JL1_job_ledger_backend]
     files: [idearium/api/index.js, idearium/cli/route-commands.js]

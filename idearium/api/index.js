@@ -3600,6 +3600,7 @@ const ROUTE_CAP = {
   'system.registry.drafts': CAPS.READ_IDEAS, 'system.registry.draft': CAPS.READ_IDEAS,   // 0.60.229 DB16 — reads only
   'system.registry': CAPS.READ_IDEAS, 'system.registry.one': CAPS.READ_IDEAS, 'system.registry.settle': CAPS.WRITE_IDEAS,   // 0.60.127 DB9/DB10
   'providers.ready': CAPS.READ_IDEAS,   // 0.60.28 PF1
+  'jobs.ledger': CAPS.READ_IDEAS,   // JL2 2026-11-13 — the job ledger (guardian/lib/job-ledger.js), read-only here
   'accounts.chain': CAPS.READ_IDEAS, 'accounts.chain.set': CAPS.ADMIN, 'accounts.rest': CAPS.ADMIN,   // 0.60.25 account fallback chain
   'accounts.profiles': CAPS.READ_IDEAS,   // 0.60.32 PF1 — every account tab and its lane
   'repo.system': CAPS.READ_IDEAS, 'repo.system.control': CAPS.ADMIN,   // §0.39.372 NC2 — stopping a system is an admin act
@@ -3906,6 +3907,7 @@ function _matchRoute(method, url) {
     ['DELETE', ['api','repos',    ':uuid','desktop'],        'repo.desktop.stop'],
     ['GET',    ['api','repos',    ':uuid','system'],  'repo.system'],      // §0.39.372 NC2 — a Nexus system repo's live system: its processes as its supervisor sees them
     ['GET',    ['api','providers','ready'], 'providers.ready'],     // 0.60.28 PF1 — can each browser agent take a job now (guardian owns it)
+    ['GET',    ['api','jobs','ledger'], 'jobs.ledger'],     // JL2 2026-11-13 — guardian's job ledger: each job joined to its .response node
     ['GET',    ['api','accounts','chain'],  'accounts.chain'],      // 0.60.25 — the fallback chain (guardian owns it)
     ['POST',   ['api','accounts','chain'],  'accounts.chain.set'],
     ['GET',    ['api','accounts','profiles'], 'accounts.profiles'],   // 0.60.32 PF1 — guardian's account tabs: the provider's own and each profile tab
@@ -6185,6 +6187,19 @@ async function handle(req, res, route, query, body) {
       const providers = await _require('../../lib/agent-providers.js').guardianReady();
       if (!providers) return err(res, 502, 'Guardian did not answer — readiness is read from it (is it running?)');
       return ok(res, { providers });
+    }
+    // JL2 (2026-11-13) — James: "need a ledger for agents using the jobs and .response in the back end and logging
+    // the status maybe. guardian is the source of truth." Idearium reads it from Guardian (§5.9, never Guardian's files).
+    case 'jobs.ledger': {
+      let r;
+      const qs = new URLSearchParams();
+      if (query.limit) qs.set('limit', query.limit);
+      if (query.provider) qs.set('provider', query.provider);
+      if (query.queueState) qs.set('queueState', query.queueState);
+      try { r = await _nexusClient.get('guardian', `/jobs/ledger${qs.toString() ? `?${qs}` : ''}`, { timeout: 8000 }); }
+      catch (e) { return err(res, 502, `Guardian did not answer — the job ledger is read from it (${e.message})`); }
+      if (!r || r.ok === false) return err(res, 502, (r && r.error) || 'Guardian refused the job ledger');
+      return ok(res, { rows: r.rows, counts: r.counts });
     }
     case 'accounts.chain': case 'accounts.chain.set': case 'accounts.rest': case 'accounts.profiles': {
       let r;

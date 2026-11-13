@@ -410,6 +410,7 @@ const SUITES = [
   'test-plan-code-run-attention.test.js',   // 0.60.0 — plan then code (Ollama codes the planned files), the planner grounded and the system checked, learning from the agents; repo play/pause/rewind; Plan clear; Guardian sign-in / map attention + Clear Glass panel and picker
   // 0.60.1 — the nexus-system template's handoff and modules are checked by test-system-skeleton (SK-02 runs the laid-out system's own self-test)
   'test-accounts-picker-cos.test.js',
+  'test-guardian-job-ledger.test.js',   // JL1/JL2 2026-11-13 — the job ledger: every Guardian job joined to its .response node
   'test-project-decompose.test.js',   // 0.60.5 — a project (zip or folder) decomposed into the component store, each component bundled with its require closure; the drop zone; Clear Glass in the COS window style   // 0.60.2 — account routing by hat / intent / repo (Guardian, JAA) + Clear Glass's account switch on the JAA cookie vault; the COS-window attention panel; the pick checked by Clear Glass's selector check, anchored at x/y/z and used by every userscript (field map); ChatGPT works signed out; sign-in responses untouched
   'test-contract-gates.test.js',   // 0.60.15 — .contract v2: his four acceptance conditions (legacy files, evidence, invalidation, packet)
   'test-recursive-split.test.js', // 0.60.40 BR2 — splitting recursively to a depth bound; CK-247 runs

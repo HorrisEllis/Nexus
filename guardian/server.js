@@ -3717,6 +3717,19 @@ function handleExtendedRoutes(req, res, url, method) {
     if (status) list = list.filter(j=>j.status===status);
     pRes(res, 200, { ok:true, jobs:list.slice(-limit) }); return true;
   }
+
+  // §JL1 2026-10-30/2026-11-13 — James: "the phase that has each job from guardian saved in the queue, the formeer
+  // .response, and have it be the job ledger, each job has to have it's corrasponding .response node to be
+  // fullfilled from clearglass' end" · "need a ledger for agents using the jobs and .response in the back end and
+  // logging the status maybe. guardian is the source of truth." — the job store joined to each job's .response node
+  // (guardian/lib/job-ledger.js): every job's queue state, and whether (and how) it is fulfilled.
+  if (method==='GET' && url.pathname==='/jobs/ledger') {
+    const { rows, counts } = require('./lib/job-ledger.js').list({
+      jobs, limit: url.searchParams.get('limit'),
+      provider: url.searchParams.get('provider') || null, queueState: url.searchParams.get('queueState') || null,
+    });
+    pRes(res, 200, { ok: true, rows, counts }); return true;
+  }
   if (method==='GET' && url.pathname==='/bus') {
     const n   = parseInt(url.searchParams.get('n') || '20');
     const smp = bus.sample(n);          // { logLevel, count, entries }

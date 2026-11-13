@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-30-pipeline-consolidation-and-job-ledger-phasemap.spec::JL1_job_ledger_backend
+type: phase
+id: docs_2026-10-30-pipeline-consolidation-and-job-ledger-phasemap.spec::JL1_job_ledger_backend
+context: >-
+  pipeline phase JL1_job_ledger_backend of
+  docs/2026-10-30-pipeline-consolidation-and-job-ledger-phasemap.spec
+intent: null
+summary: JL1_job_ledger_backend (library) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1794576846850
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794576846850
+lastSeenAt: 1794576846850
+fingerprint: null
+payload:
+  id: JL1_job_ledger_backend
+  map: docs/2026-10-30-pipeline-consolidation-and-job-ledger-phasemap.spec
+  repo: null
+  layer: library
+  status: >-
+    "BUILT 0.60.506 — guardian/lib/job-ledger.js, a route on guardian/server.js (GET /jobs/ledger).
+    Restated 2026-11-13: \"need a ledger for agents using the jobs and .response in the back end and
+    logging the status maybe. guardian is the source of truth.\" The parallel-session collision risk
+    named below is resolved (claude/laughing-fermi-4f7sj5 is merged into main, 2026-11-06).
+  files:
+    - guardian/lib/response-sink.js
+    - lib/ledger-jobs.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: afda4316bcb52984
