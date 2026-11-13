@@ -288,7 +288,7 @@ phases:
     proof: "git ls-files 'emerge/emerge/*.js' outside the archive is empty; every suite green"
 
   CIE13_native_system_primitives:
-    status: OPEN   # slice a BUILT 0.60.502 (now_ms, sleep_ms, path_exists); slice b BUILT 0.60.510 (is_dir, make_dir, list_dir, move_path, remove_path natively); next: Process
+    status: OPEN   # slice a BUILT 0.60.502 (now_ms, sleep_ms, path_exists); slice b BUILT 0.60.510 (is_dir, make_dir, list_dir, move_path, remove_path natively); slice c BUILT 0.60.512 (proc_run, proc_start, proc_wait, proc_wait_ms, proc_signal); left: watching a folder, timers, stderr, Windows, Pillar's contracts
     depends_on: [CIE_D1_remove_the_javascript_now, PIL2_contracts, CIE5_native_test]
     spec: emerge/emerge/spec/cie-eg.spec
     files: [emerge/emerge/lang/native/rt.eg, emerge/emerge/lang/native/codegen.eg, emerge/emerge/lang/native/sys_process.eg, emerge/emerge/lang/native/sys_clock.eg,
@@ -588,3 +588,12 @@ James, 2026-11-13, told the six left on Emerge's list were next: "Okay."
 - Built: wrap_add, wrap_sub, wrap_mul (rt.eg); ledger_proof, ledger_check_proof (cie/world.eg proof, check_proof; native/lower.eg).
 - Proof: one program the same both ways (a case in native.test.js, 115/115); self.test.eg 3/3, ratchet 6 → 1; the compiler at a fixpoint.
 - Left: observe_gaps (its ledger entry must equal the interpreter's hash for hash). Then CIE13's Process.
+
+## ADDENDUM 2026-11-13 (0.60.512) — CIE13 slice c: processes natively
+James, 2026-11-13, told process control was next: "Next."
+- Built: proc_run, proc_start, proc_wait, proc_wait_ms, proc_signal in lang/native/rt.eg by syscall (fork 57, execve 59, wait4 61, kill 62,
+  pipe2 293, dup2 33); the same in the interpreter (by /proc, Linux).
+- Proof: one program the same both ways (a case in native.test.js, 117/117); the compiler at a fixpoint.
+- CIE13's proof line met but for watching a folder and a timer. Its prerequisite, Pillar's Process, Clock and File contracts, is not
+  written yet: said, and the next small piece, so each builtin conforms to a contract and is not only compared with the interpreter.
+- What this opens: COS's manager in Emerge needs these and a socket (CIE10).
