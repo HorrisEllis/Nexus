@@ -24,6 +24,19 @@ then they are written by hand.
   - A CLI command that called the module directly broke Pillar's rule (every command sends to a hook): `map` became an in hook.
 - **Gaps found:** no capturing regular expression in Emerge (routes matched by a regex are not seen); 160 reaches between systems against
   the census's 150 the same morning, not traced.
+## 2026-11-13 — Emerge: folders natively; 10 primitives not native down to 6 (CIE13 slice b, 0.60.510)
+- **Measured:** Emerge coding. His words: "Continue. Look a the graph substrate. Like emerge should reduce friction between primitives." · "Yeah."
+- **Method:** five builtins in rt.eg by syscall; one 17-line program run interpreted and native and compared; Emerge's own map counts the rest.
+- **Lines:** .eg +108 (rt.eg), +2 (codegen.eg); JavaScript +2 (one case in native.test.js).
+- **Tests:** the folder case the same both ways; self.test.eg 3/3; the compiler at a fixpoint.
+- **Failed runs before the pass:** none. The five were right on the first native run (the map and the earlier slice had shown the four
+  places a builtin is added).
+- **Gaps found in Emerge:** a builtin added to the interpreter is unknown to the native compiler until its environment is regenerated
+  by hand (is_dir, added by another session the same day, was): the friction the map exists to show, and the next thing to generate.
+- **Tension meter:** JavaScript in Emerge unchanged. Primitives not native: 10 → 6, by Emerge's own count.
+- **What came of it:** an Emerge program can keep files in folders natively: what cos/pipeline's requests-as-files and the sovereignty
+  card need to run without Node.
+
 ## 2026-11-13 — Emerge: its map of itself, in the substrate's shape (CIE14 slice f, 0.60.509)
 - **Measured:** Emerge coding, and his framework (negative space: the registry is the shadow, the source is what is present). His words: "Continue. Look a the graph substrate. Like emerge should reduce friction between primitives.   It’s meant to be self aware."
 - **Method:** cie/self.eg reads Emerge's own tables and text into blocks and edges; gaps() is what one side has and the other lacks. The

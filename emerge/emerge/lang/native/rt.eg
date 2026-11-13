@@ -1942,6 +1942,119 @@ fn rt_b_path_exists(path) {
   if sys6(21, rt_cpath(path), 0, 0, 0, 0) == 0 { return TRUE }
   return FALSE
 }
+// CIE13 slice b (2026-11-13): folders, from the kernel directly. is_dir (stat), make_dir (mkdir, every folder on the way), move_path
+// (rename, the folder it goes to made first), remove_path (unlink / rmdir, all the way down; a path not there is not an error), list_dir
+// (getdents64; names in byte order; a folder not there is []). The interpreter's are lang/runtime.js's; the same answers both ways.
+// Like write_file natively, these do not add a ledger entry (the interpreter's do): said in cie-eg.spec's native differences.
+fn rt_is_dir_c(p) {
+  let b = rt_bytes_new(160)
+  if sys6(4, p, b + 16, 0, 0, 0) != 0 { return 0 }
+  if (mem_get(b + 16 + 24) & 61440) == 16384 { return 1 }
+  return 0
+}
+fn rt_b_is_dir(path) {
+  if rt_is_dir_c(rt_cpath(path)) == 1 { return TRUE }
+  return FALSE
+}
+// mkdir -p on a C path of n bytes: each folder on the way, then the path; 0 when it is there at the end
+fn rt_mkdir_p_c(p, n) {
+  var i = 1
+  while i < n {
+    if mem_get8(p + i) == 47 {
+      mem_set8(p + i, 0)
+      sys6(83, p, 493, 0, 0, 0)
+      mem_set8(p + i, 47)
+    }
+    i = i + 1
+  }
+  sys6(83, p, 493, 0, 0, 0)
+  return rt_is_dir_c(p)
+}
+fn rt_b_make_dir(path) {
+  let p = rt_cpath(path)
+  if rt_mkdir_p_c(p, mem_get(path + 8)) != 1 { rt_fail2("make_dir: cannot make ", rt_tostr(path)) }
+  return NULL
+}
+fn rt_b_move_path(from, to) {
+  let a = rt_cpath(from)
+  let b = rt_cpath(to)
+  var cut = mem_get(to + 8) - 1
+  while cut > 0 and mem_get8(b + cut) != 47 { cut = cut - 1 }
+  if cut > 0 {
+    mem_set8(b + cut, 0)
+    rt_mkdir_p_c(b, cut)
+    mem_set8(b + cut, 47)
+  }
+  if sys6(82, a, b, 0, 0, 0) != 0 { rt_fail3("move_path: cannot move ", rt_tostr(from), " to its new place") }
+  return NULL
+}
+// the names in an open folder, each handed to rt_dir_take(acc, name pointer, name bytes); "." and ".." left out
+fn rt_dir_each(fd, acc, parent, parent_n) {
+  let buf = rt_alloc(32768)
+  while 1 {
+    let r = sys6(217, fd, buf, 32768, 0, 0)
+    if r <= 0 { break }
+    var at = 0
+    while at < r {
+      let reclen = mem_get8(buf + at + 16) + mem_get8(buf + at + 17) * 256
+      let name = buf + at + 19
+      var n = 0
+      while mem_get8(name + n) != 0 { n = n + 1 }
+      let dot = mem_get8(name) == 46 and (n == 1 or (n == 2 and mem_get8(name + 1) == 46))
+      if not dot {
+        if parent == 0 { rt_list_push(acc, rt_str_from(name, n)) }
+        else {
+          let child = rt_alloc(parent_n + n + 2)
+          mem_copy(child, parent, parent_n)
+          mem_set8(child + parent_n, 47)
+          mem_copy(child + parent_n + 1, name, n)
+          mem_set8(child + parent_n + 1 + n, 0)
+          rt_rm_c(child, parent_n + 1 + n)
+        }
+      }
+      at = at + reclen
+    }
+  }
+  return 0
+}
+fn rt_rm_c(p, n) {
+  let r = sys6(87, p, 0, 0, 0, 0)
+  if r == 0 or r == 0 - 2 { return 0 }
+  // a folder: everything in it first, then the folder (O_RDONLY|O_DIRECTORY|O_NOFOLLOW = 65536 + 131072)
+  let fd = sys6(2, p, 196608, 0, 0, 0)
+  if fd < 0 { return fd }
+  rt_dir_each(fd, 0, p, n)
+  sys6(3, fd, 0, 0, 0, 0)
+  return sys6(84, p, 0, 0, 0, 0)
+}
+fn rt_b_remove_path(path) {
+  let r = rt_rm_c(rt_cpath(path), mem_get(path + 8))
+  if r != 0 and r != 0 - 2 { rt_fail2("remove_path: cannot remove ", rt_tostr(path)) }
+  return NULL
+}
+fn rt_b_list_dir(path) {
+  let l = rt_list_new(8)
+  let fd = sys6(2, rt_cpath(path), 65536, 0, 0, 0)
+  if fd == 0 - 2 { return l }
+  if fd < 0 { rt_fail2("list_dir: cannot list ", rt_tostr(path)) }
+  rt_dir_each(fd, l, 0, 0)
+  sys6(3, fd, 0, 0, 0, 0)
+  // names in byte order (insertion sort: a folder's names are few)
+  let items = mem_get(l + 24)
+  let n = mem_get(l + 8)
+  var i = 1
+  while i < n {
+    let v = mem_get(items + i * 8)
+    var j = i - 1
+    while j >= 0 and rt_str_cmp(mem_get(items + j * 8), v) > 0 {
+      mem_set(items + (j + 1) * 8, mem_get(items + j * 8))
+      j = j - 1
+    }
+    mem_set(items + (j + 1) * 8, v)
+    i = i + 1
+  }
+  return l
+}
 fn rt_b_chmod_exec(path) {
   sys6(90, rt_cpath(path), 493, 0, 0, 0)
   return NULL
