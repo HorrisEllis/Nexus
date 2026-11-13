@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-13-one-place-for-accounts-phasemap.spec::AC3_one_list_of_accounts
+type: phase
+id: docs_2026-11-13-one-place-for-accounts-phasemap.spec::AC3_one_list_of_accounts
+context: pipeline phase AC3_one_list_of_accounts of docs/2026-11-13-one-place-for-accounts-phasemap.spec
+intent: null
+summary: AC3_one_list_of_accounts (integration) — 9 file(s)
+system: idearium
+tags: []
+exported_at: 1794575726383
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794575726383
+lastSeenAt: 1794575726383
+fingerprint: null
+payload:
+  id: AC3_one_list_of_accounts
+  map: docs/2026-11-13-one-place-for-accounts-phasemap.spec
+  repo: null
+  layer: integration
+  status: OPEN
+  files:
+    - guardian/lib/agent-registry.js
+    - guardian/lib/account-routing.js
+    - guardian/lib/cg-account-authority.js
+    - guardian/lib/provider-login.js
+    - guardian/lib/provider-attention.js
+    - clear-glass/src/providers/registry.js
+    - lib/account-registry.js
+    - lib/account-identity-index.js
+    - lib/agent-tools/tools/accounts/account-manage.js
+  depends_on:
+    - AC1_cos_serves_its_vault
+  blocks: []
+  spec: null
+  graph: 3c45590ffa93bf78

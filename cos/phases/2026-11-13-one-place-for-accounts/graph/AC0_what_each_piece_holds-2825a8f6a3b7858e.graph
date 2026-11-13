@@ -1,0 +1,106 @@
+envelope: 1
+uuid: nexus-export-graph-phase:AC0_what_each_piece_holds:2825a8f6a3b7858e
+type: graph
+id: phase:AC0_what_each_piece_holds:2825a8f6a3b7858e
+context: dependency graph of phase AC0_what_each_piece_holds
+intent: null
+summary: 9 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1794575726377
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794575726377
+lastSeenAt: 1794575726377
+fingerprint: null
+payload:
+  for: AC0_what_each_piece_holds
+  kind: phase
+  repo: null
+  hash: 2825a8f6a3b7858e
+  nodes:
+    - path: cos/spec/vault.spec
+      role: changes
+      exists: false
+      system: cos
+    - path: cos/vault/index.js
+      role: changes
+      exists: true
+      system: cos
+    - path: docs/atlases/cos-atlas.md
+      role: changes
+      exists: true
+      system: null
+    - path: cos/ci/keys.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/cli/commands/vault.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/host/gates/vault.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/playgrounds/kernel.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/vaultd/server.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/vault/store.js
+      role: uses
+      exists: true
+      system: cos
+  edges:
+    - from: cos/vault/index.js
+      to: cos/vault/store.js
+      kind: requires
+    - from: cos/ci/keys.js
+      to: cos/vault/index.js
+      kind: requires
+    - from: cos/cli/commands/vault.js
+      to: cos/vault/index.js
+      kind: requires
+    - from: cos/host/gates/vault.js
+      to: cos/vault/index.js
+      kind: requires
+    - from: cos/playgrounds/kernel.js
+      to: cos/vault/index.js
+      kind: requires
+    - from: cos/vaultd/server.js
+      to: cos/vault/index.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC_D1_where_the_one_place_is
+    dependents:
+      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC1_cos_serves_its_vault
+    upstream:
+      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC_D1_where_the_one_place_is
+    downstream:
+      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC1_cos_serves_its_vault
+      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC2_clear_glass_keeps_through_cos
+      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC3_one_list_of_accounts
+      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC4_system_secrets
+      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC5_the_accounts_page
+    blockedBy: []
+    unlocks:
+      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC1_cos_serves_its_vault
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · ready
+      - 'depends on (1): AC_D1_where_the_one_place_is'
+      - >-
+        needed by (1): AC1_cos_serves_its_vault · all downstream 5 · finishing it unlocks
+        AC1_cos_serves_its_vault
+    edges:
+      - from: docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC_D1_where_the_one_place_is
+        kind: declared

@@ -1,0 +1,209 @@
+envelope: 1
+uuid: nexus-export-graph-phase:AC3_one_list_of_accounts:3c45590ffa93bf78
+type: graph
+id: phase:AC3_one_list_of_accounts:3c45590ffa93bf78
+context: dependency graph of phase AC3_one_list_of_accounts
+intent: null
+summary: 26 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1794575726383
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794575726383
+lastSeenAt: 1794575726383
+fingerprint: null
+payload:
+  for: AC3_one_list_of_accounts
+  kind: phase
+  repo: null
+  hash: 3c45590ffa93bf78
+  nodes:
+    - path: clear-glass/src/providers/registry.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: guardian/lib/account-routing.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: guardian/lib/agent-registry.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: guardian/lib/cg-account-authority.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: guardian/lib/provider-attention.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: guardian/lib/provider-login.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: lib/account-identity-index.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/account-registry.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/accounts/account-manage.js
+      role: changes
+      exists: true
+      system: lib
+    - path: clear-glass/src/contexts/session-headers.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/ipc/bridge.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/providers/host.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/providers/selector-assign.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/test/phase2.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: guardian/ask.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: guardian/lib/dispatcher.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: guardian/server.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: tests/modules/test-guardian-dispatch-ladder.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-guardian-mesh-client.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-guardian-wake.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: guardian/jaa-store.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/options.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: lib/agent-facts-hash.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: guardian/lib/agent-registry.js
+      to: lib/data-home.js
+      kind: requires
+    - from: guardian/lib/account-routing.js
+      to: guardian/jaa-store.js
+      kind: requires
+    - from: guardian/lib/provider-attention.js
+      to: guardian/options.js
+      kind: requires
+    - from: clear-glass/src/providers/registry.js
+      to: lib/agent-facts-hash.js
+      kind: requires
+    - from: lib/account-registry.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: guardian/server.js
+      to: guardian/lib/agent-registry.js
+      kind: requires
+    - from: tests/modules/test-guardian-dispatch-ladder.js
+      to: guardian/lib/agent-registry.js
+      kind: requires
+    - from: tests/modules/test-guardian-mesh-client.js
+      to: guardian/lib/agent-registry.js
+      kind: requires
+    - from: tests/modules/test-guardian-wake.js
+      to: guardian/lib/agent-registry.js
+      kind: requires
+    - from: guardian/ask.js
+      to: guardian/lib/account-routing.js
+      kind: requires
+    - from: guardian/lib/dispatcher.js
+      to: guardian/lib/provider-login.js
+      kind: requires
+    - from: clear-glass/src/contexts/session-headers.js
+      to: clear-glass/src/providers/registry.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/providers/registry.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/providers/registry.js
+      kind: requires
+    - from: clear-glass/src/providers/host.js
+      to: clear-glass/src/providers/registry.js
+      kind: requires
+    - from: clear-glass/src/providers/selector-assign.js
+      to: clear-glass/src/providers/registry.js
+      kind: requires
+    - from: clear-glass/test/phase2.test.js
+      to: clear-glass/src/providers/registry.js
+      kind: requires
+  crossings:
+    - from: lib/account-registry.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC1_cos_serves_its_vault
+    dependents:
+      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC5_the_accounts_page
+    upstream:
+      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC0_what_each_piece_holds
+      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC1_cos_serves_its_vault
+      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC_D1_where_the_one_place_is
+    downstream:
+      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC5_the_accounts_page
+    blockedBy:
+      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC1_cos_serves_its_vault
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 3 · blocked by AC1_cos_serves_its_vault
+      - 'depends on (1): AC1_cos_serves_its_vault · all upstream 3'
+      - 'needed by (1): AC5_the_accounts_page'
+    edges:
+      - from: docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC1_cos_serves_its_vault
+        kind: declared

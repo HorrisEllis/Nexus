@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-13-one-place-for-accounts-phasemap.spec::AC1_cos_serves_its_vault
+type: phase
+id: docs_2026-11-13-one-place-for-accounts-phasemap.spec::AC1_cos_serves_its_vault
+context: pipeline phase AC1_cos_serves_its_vault of docs/2026-11-13-one-place-for-accounts-phasemap.spec
+intent: null
+summary: AC1_cos_serves_its_vault (backend) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1794575726379
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794575726379
+lastSeenAt: 1794575726379
+fingerprint: null
+payload:
+  id: AC1_cos_serves_its_vault
+  map: docs/2026-11-13-one-place-for-accounts-phasemap.spec
+  repo: null
+  layer: backend
+  status: OPEN
+  files:
+    - cos/manager/server.js
+    - cos/vault/index.js
+    - cos/manager/contract.json
+    - idearium/cli/route-commands.js
+    - tests/modules/test-cos-vault-routes.test.js
+  depends_on:
+    - AC0_what_each_piece_holds
+  blocks: []
+  spec: null
+  graph: da41666deb5e1a5a

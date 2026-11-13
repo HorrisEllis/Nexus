@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-13-one-place-for-accounts-phasemap.spec::AC2_clear_glass_keeps_through_cos
+type: phase
+id: docs_2026-11-13-one-place-for-accounts-phasemap.spec::AC2_clear_glass_keeps_through_cos
+context: >-
+  pipeline phase AC2_clear_glass_keeps_through_cos of
+  docs/2026-11-13-one-place-for-accounts-phasemap.spec
+intent: null
+summary: AC2_clear_glass_keeps_through_cos (integration) — 7 file(s)
+system: idearium
+tags: []
+exported_at: 1794575726381
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794575726381
+lastSeenAt: 1794575726381
+fingerprint: null
+payload:
+  id: AC2_clear_glass_keeps_through_cos
+  map: docs/2026-11-13-one-place-for-accounts-phasemap.spec
+  repo: null
+  layer: integration
+  status: OPEN
+  files:
+    - clear-glass/src/cookies/vault.js
+    - clear-glass/src/cookies/session-hub.js
+    - clear-glass/src/passwords/vault.js
+    - clear-glass/src/passwords/service.js
+    - clear-glass/src/accounts/login-portal.js
+    - clear-glass/src/security/vault-key.js
+    - clear-glass/src/providers/account-switch.js
+  depends_on:
+    - AC1_cos_serves_its_vault
+  blocks: []
+  spec: null
+  graph: 99d4c5e9170658ce

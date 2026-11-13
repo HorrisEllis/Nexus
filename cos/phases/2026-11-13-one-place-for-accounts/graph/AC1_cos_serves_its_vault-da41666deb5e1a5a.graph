@@ -1,0 +1,245 @@
+envelope: 1
+uuid: nexus-export-graph-phase:AC1_cos_serves_its_vault:da41666deb5e1a5a
+type: graph
+id: phase:AC1_cos_serves_its_vault:da41666deb5e1a5a
+context: dependency graph of phase AC1_cos_serves_its_vault
+intent: null
+summary: 29 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1794575726379
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794575726379
+lastSeenAt: 1794575726379
+fingerprint: null
+payload:
+  for: AC1_cos_serves_its_vault
+  kind: phase
+  repo: null
+  hash: da41666deb5e1a5a
+  nodes:
+    - path: cos/manager/contract.json
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/manager/server.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/vault/index.js
+      role: changes
+      exists: true
+      system: cos
+    - path: idearium/cli/route-commands.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: tests/modules/test-cos-vault-routes.test.js
+      role: changes
+      exists: false
+      system: null
+    - path: cos/ci/keys.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/cli/commands/vault.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/host/gates/vault.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/playgrounds/kernel.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/vaultd/server.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: diagnostic/tests/causality.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/cli/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: tests/modules/test-cg-agent-doors.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-cos-compartment-template.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-drawbridge-registry.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-eros-hooks.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cos/disk/disk.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/add-system.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/autopilot-door.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/deploy.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/hub.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/notices.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/proposals.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/resources.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/supervisor.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/system-config.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/updates.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/usage.js
+      role: uses
+      exists: true
+      system: cos
+  edges:
+    - from: cos/manager/server.js
+      to: cos/manager/supervisor.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/proposals.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/usage.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/autopilot-door.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/resources.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/updates.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/notices.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/system-config.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/add-system.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/deploy.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/hub.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/disk/disk.js
+      kind: requires
+    - from: cos/ci/keys.js
+      to: cos/vault/index.js
+      kind: requires
+    - from: cos/cli/commands/vault.js
+      to: cos/vault/index.js
+      kind: requires
+    - from: cos/host/gates/vault.js
+      to: cos/vault/index.js
+      kind: requires
+    - from: cos/playgrounds/kernel.js
+      to: cos/vault/index.js
+      kind: requires
+    - from: cos/vaultd/server.js
+      to: cos/vault/index.js
+      kind: requires
+    - from: diagnostic/tests/causality.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: idearium/cli/index.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-cg-agent-doors.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-cos-compartment-template.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-drawbridge-registry.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-eros-hooks.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC0_what_each_piece_holds
+    dependents:
+      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC2_clear_glass_keeps_through_cos
+      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC3_one_list_of_accounts
+      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC4_system_secrets
+    upstream:
+      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC0_what_each_piece_holds
+      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC_D1_where_the_one_place_is
+    downstream:
+      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC2_clear_glass_keeps_through_cos
+      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC3_one_list_of_accounts
+      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC4_system_secrets
+      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC5_the_accounts_page
+    blockedBy:
+      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC0_what_each_piece_holds
+    unlocks:
+      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC2_clear_glass_keeps_through_cos
+      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC3_one_list_of_accounts
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2 · blocked by AC0_what_each_piece_holds
+      - 'depends on (1): AC0_what_each_piece_holds · all upstream 2'
+      - >-
+        needed by (3): AC2_clear_glass_keeps_through_cos, AC3_one_list_of_accounts,
+        AC4_system_secrets · all downstream 4 · finishing it unlocks
+        AC2_clear_glass_keeps_through_cos, AC3_one_list_of_accounts
+    edges:
+      - from: docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC0_what_each_piece_holds
+        kind: declared

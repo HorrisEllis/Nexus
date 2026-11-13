@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-13-one-place-for-accounts-phasemap.spec::AC0_what_each_piece_holds
+type: phase
+id: docs_2026-11-13-one-place-for-accounts-phasemap.spec::AC0_what_each_piece_holds
+context: pipeline phase AC0_what_each_piece_holds of docs/2026-11-13-one-place-for-accounts-phasemap.spec
+intent: null
+summary: AC0_what_each_piece_holds (foundation) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1794575726377
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794575726377
+lastSeenAt: 1794575726377
+fingerprint: null
+payload:
+  id: AC0_what_each_piece_holds
+  map: docs/2026-11-13-one-place-for-accounts-phasemap.spec
+  repo: null
+  layer: foundation
+  status: OPEN
+  files:
+    - cos/vault/index.js
+    - cos/spec/vault.spec
+    - docs/atlases/cos-atlas.md
+  depends_on:
+    - AC_D1_where_the_one_place_is
+  blocks: []
+  spec: null
+  graph: 2825a8f6a3b7858e

@@ -1,0 +1,68 @@
+envelope: 1
+uuid: nexus-export-graph-phase:AC5_the_accounts_page:426e64b73f48b0f2
+type: graph
+id: phase:AC5_the_accounts_page:426e64b73f48b0f2
+context: dependency graph of phase AC5_the_accounts_page
+intent: null
+summary: 4 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1794575726388
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794575726388
+lastSeenAt: 1794575726388
+fingerprint: null
+payload:
+  for: AC5_the_accounts_page
+  kind: phase
+  repo: null
+  hash: 426e64b73f48b0f2
+  nodes:
+    - path: cos/manager/contract.json
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/ui/accounts/index.html
+      role: changes
+      exists: false
+      system: cos
+    - path: cos/ui/accounts/page.css
+      role: changes
+      exists: false
+      system: cos
+    - path: cos/ui/accounts/page.js
+      role: changes
+      exists: false
+      system: cos
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 4
+    deps:
+      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC2_clear_glass_keeps_through_cos
+      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC3_one_list_of_accounts
+    dependents: []
+    upstream:
+      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC0_what_each_piece_holds
+      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC1_cos_serves_its_vault
+      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC2_clear_glass_keeps_through_cos
+      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC3_one_list_of_accounts
+      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC_D1_where_the_one_place_is
+    downstream: []
+    blockedBy:
+      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC2_clear_glass_keeps_through_cos
+      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC3_one_list_of_accounts
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 4 · blocked by AC2_clear_glass_keeps_through_cos, AC3_one_list_of_accounts
+      - 'depends on (2): AC2_clear_glass_keeps_through_cos, AC3_one_list_of_accounts · all upstream 5'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC2_clear_glass_keeps_through_cos
+        kind: declared
+      - from: docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC3_one_list_of_accounts
+        kind: declared

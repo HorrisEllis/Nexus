@@ -1,0 +1,167 @@
+envelope: 1
+uuid: nexus-export-graph-phase:AC2_clear_glass_keeps_through_cos:99d4c5e9170658ce
+type: graph
+id: phase:AC2_clear_glass_keeps_through_cos:99d4c5e9170658ce
+context: dependency graph of phase AC2_clear_glass_keeps_through_cos
+intent: null
+summary: 20 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1794575726381
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794575726381
+lastSeenAt: 1794575726381
+fingerprint: null
+payload:
+  for: AC2_clear_glass_keeps_through_cos
+  kind: phase
+  repo: null
+  hash: 99d4c5e9170658ce
+  nodes:
+    - path: clear-glass/src/accounts/login-portal.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/cookies/session-hub.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/cookies/vault.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/passwords/service.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/passwords/vault.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/providers/account-switch.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/security/vault-key.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/plugins/passwords/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.pre-userscripts.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/providers/profile-tabs.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/test/login-portal-elsewhere.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: clear-glass/test/provider-account-sync.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: clear-glass/test/session-hub.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: clear-glass/test/signin-window-quiet.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: clear-glass/test/storage-jaa.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: clear-glass/src/site-settings/readers.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/site-settings/store.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/storage/jaa.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: lib/jaa-store.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: clear-glass/src/cookies/vault.js
+      to: lib/jaa-store.js
+      kind: requires
+    - from: clear-glass/src/passwords/vault.js
+      to: clear-glass/src/storage/jaa.js
+      kind: requires
+    - from: clear-glass/src/passwords/vault.js
+      to: clear-glass/src/site-settings/store.js
+      kind: requires
+    - from: clear-glass/src/passwords/service.js
+      to: clear-glass/src/site-settings/readers.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/cookies/vault.js
+      kind: requires
+    - from: clear-glass/src/main/index.pre-userscripts.js
+      to: clear-glass/src/cookies/vault.js
+      kind: requires
+    - from: clear-glass/src/providers/profile-tabs.js
+      to: clear-glass/src/cookies/session-hub.js
+      kind: requires
+    - from: clear-glass/test/session-hub.test.js
+      to: clear-glass/src/cookies/session-hub.js
+      kind: requires
+    - from: clear-glass/test/signin-window-quiet.test.js
+      to: clear-glass/src/cookies/session-hub.js
+      kind: requires
+    - from: clear-glass/test/storage-jaa.test.js
+      to: clear-glass/src/passwords/vault.js
+      kind: requires
+    - from: clear-glass/plugins/passwords/index.js
+      to: clear-glass/src/passwords/service.js
+      kind: requires
+    - from: clear-glass/test/login-portal-elsewhere.test.js
+      to: clear-glass/src/accounts/login-portal.js
+      kind: requires
+    - from: clear-glass/test/provider-account-sync.test.js
+      to: clear-glass/src/providers/account-switch.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC1_cos_serves_its_vault
+    dependents:
+      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC5_the_accounts_page
+    upstream:
+      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC0_what_each_piece_holds
+      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC1_cos_serves_its_vault
+      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC_D1_where_the_one_place_is
+    downstream:
+      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC5_the_accounts_page
+    blockedBy:
+      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC1_cos_serves_its_vault
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 3 · blocked by AC1_cos_serves_its_vault
+      - 'depends on (1): AC1_cos_serves_its_vault · all upstream 3'
+      - 'needed by (1): AC5_the_accounts_page'
+    edges:
+      - from: docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC1_cos_serves_its_vault
+        kind: declared
