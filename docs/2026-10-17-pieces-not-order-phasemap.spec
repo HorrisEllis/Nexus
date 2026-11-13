@@ -140,6 +140,27 @@ phases:
       and the JavaScript ladder builds it as before (nothing that works today breaks). routing.emerge_first: prefer (default) | off.
     proof: "test-emerge-rung: a compile error carried into the next try and fixed; a test failure carried; a passing brick's adapter required by its expectation test; off and fallback leave the ladder unchanged; Emerge reached only through its command line"
 
+  EMB2_ollama_writes_emerge_for_the_pipeline:
+    status: OPEN
+    depends_on: [EMB1_emerge_writes_the_brick]
+    james: '"like the pipeline can build all of this if we get ollama working with emerge and the pipeline" (2026-11-13) · "we have ollama now. lets leverage that. test, benchmark"'
+    files: [idearium/lib/emerge-rung.cjs, idearium/api/index.js, emerge/emerge/lang/cie/self.eg, emerge/bench/bench.js, emerge/bench/chunks.js, tests/modules/test-emerge-rung.test.js]
+    does: >-
+      So the pipeline, on his Ollama, builds the phases that are now written in Emerge. Found 2026-11-13: (1) the Emerge rung (EMB1) fires only
+      for a NEW planned .js file; the phases plan .eg files directly now (cos/census/graph.eg, cos/pipeline/contract.eg), and a planned .eg file
+      goes to the plain ladder: written by an agent as text, never checked by Emerge's compiler or run by its own .test.eg. (2) The card that
+      teaches a model Emerge (CARD in emerge-rung.cjs) predates use, on/wire, and the file, folder and process primitives, and says "No
+      imports": a model cannot write today's .eg from it. (3) Emerge's benchmark asks Ollama already (bench.js llm, chunks.js llm) and no real
+      model has run it. Slices:
+        a. measure first: Emerge's two benchmarks on his installed Ollama models, reported per model (which can write Emerge, at what chunk
+           size); his run (the sandbox cannot reach Ollama). The numbers decide the rung's first model and chunking.
+        b. the card generated from Emerge's own map of itself (self.eg observe: every primitive, its arity), so it cannot fall behind the
+           language again; the syntax lines kept, "No imports" replaced by `use`.
+        c. the rung for a planned .eg file: written in Emerge, checked by its compiler (lang-check), retried with what failed, its planned
+           .test.eg run (eg test); only the .eg lands (no JS adapter).
+        d. the remaining CS11 groups (B-F) and PC12 slices (b-d) filed as pipeline requests, one per slice, built by the pipeline.
+    proof: "a: a table per model from the real runs; b: the card names every primitive self.eg finds; c: a fixture phase planning one .eg with a .test.eg is built by a stand-in model through the rung (a wrong try's compiler error goes into the next try) and lands only the .eg; d: a slice built by the pipeline"
+    axioms: "§17.13 (a missing capability is built into Emerge: the card from Emerge's own map), §8.6 (the rung, the benchmark and self.eg exist), his order (the pipeline builds the rest)"
   PC6_assembled_and_checked_whole:
     status: OPEN
     systems: [cortex]

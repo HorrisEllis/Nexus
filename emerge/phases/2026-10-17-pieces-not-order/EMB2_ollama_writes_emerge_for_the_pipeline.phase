@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-17-pieces-not-order-phasemap.spec::EMB2_ollama_writes_emerge_for_the_pipeline
+type: phase
+id: docs_2026-10-17-pieces-not-order-phasemap.spec::EMB2_ollama_writes_emerge_for_the_pipeline
+context: >-
+  pipeline phase EMB2_ollama_writes_emerge_for_the_pipeline of
+  docs/2026-10-17-pieces-not-order-phasemap.spec
+intent: null
+summary: EMB2_ollama_writes_emerge_for_the_pipeline (?) — 6 file(s)
+system: idearium
+tags: []
+exported_at: 1794612430668
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794612430668
+lastSeenAt: 1794612430668
+fingerprint: null
+payload:
+  id: EMB2_ollama_writes_emerge_for_the_pipeline
+  map: docs/2026-10-17-pieces-not-order-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/lib/emerge-rung.cjs
+    - idearium/api/index.js
+    - emerge/emerge/lang/cie/self.eg
+    - emerge/bench/bench.js
+    - emerge/bench/chunks.js
+    - tests/modules/test-emerge-rung.test.js
+  depends_on:
+    - EMB1_emerge_writes_the_brick
+  blocks: []
+  spec: null
+  graph: 579a25f18ba2e73f

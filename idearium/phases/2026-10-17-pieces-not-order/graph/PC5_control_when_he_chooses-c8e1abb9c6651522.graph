@@ -7,11 +7,11 @@ intent: null
 summary: 27 node(s), 3 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793948354092
+exported_at: 1794612430661
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793948354092
-lastSeenAt: 1793948354092
+firstSeenAt: 1794612430661
+lastSeenAt: 1794612430661
 fingerprint: null
 payload:
   for: PC5_control_when_he_chooses
@@ -233,12 +233,18 @@ payload:
     blockedBy:
       - docs/2026-10-17-pieces-not-order-phasemap.spec::PC1_the_point_first
     unlocks: []
-    conflicts: []
+    conflicts:
+      - with: docs/2026-10-17-pieces-not-order-phasemap.spec::EMB2_ollama_writes_emerge_for_the_pipeline
+        files:
+          - idearium/api/index.js
     dangling: []
     lines:
       - layer 2 · blocked by PC1_the_point_first
       - 'depends on (1): PC1_the_point_first · all upstream 3'
       - 'needed by (0): —'
+      - >-
+        same files as EMB2_ollama_writes_emerge_for_the_pipeline with no order between them:
+        idearium/api/index.js
     edges:
       - from: docs/2026-10-17-pieces-not-order-phasemap.spec::PC1_the_point_first
         kind: declared
