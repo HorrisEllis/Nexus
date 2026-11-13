@@ -1044,3 +1044,14 @@ expanded_2026_11_13_inference_supervisor:
       f_fallback_backends: "llama.cpp's server and any OpenAI-shaped local server, then Guardian (remote), each fallback said (his: Other local, then Guardian)"
       g_ollamas_app_retired: "a COS proposal (PC11) to stop Ollama's tray app and remove its Startup entry, once b runs on his machine"
     proof_added: "supervisor.test.eg on a stand-in backend: detect, adopt, start, crash and restart, over budget waits, fallback said; then his machine, Ollama's app closed, Nexus's ladder answered by COS"
+
+# ── PINNED 2026-11-13 (his idea; not mapped, not built) — a model of our own: a base model trained on Emerge and his framework, as Nexus's copilot ──
+# James, 2026-11-13: "Also huge idea to put a pin in. What if we load a base model for emerge and the framework to train completely for nexus as
+# the copilot"
+# Context, the coder's, for when it is unpinned: the inference supervisor (PC14) would serve it as one more backend. What there is to train on:
+# Emerge's own sources, examples and tests (lang/, cie/), every .phase and map, his framework (docs/innovation-toolkit*.md, FRAMEWORK-THREADS),
+# his words (docs/his-words). Small for training a model from nothing; a fit for adapting a small base model (LoRA). On his machine a 4 GB GTX 1650
+# can adapt a model up to about 3B, slowly; a rented GPU for hours is the other way. Open, his: "base model" as a pretrained small model adapted
+# (the coder's reading) or a model trained from nothing; and what "completely for nexus" excludes. A prediction goes in FRAMEWORK-THREADS before any run.
+pinned_2026_11_13:
+  - "a base model trained on Emerge and his framework, completely for Nexus, as the copilot (his, 2026-11-13); after PC14, unmapped"
