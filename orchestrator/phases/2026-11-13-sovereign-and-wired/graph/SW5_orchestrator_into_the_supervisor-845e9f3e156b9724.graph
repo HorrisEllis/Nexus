@@ -7,11 +7,11 @@ intent: null
 summary: 19 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1794550806513
+exported_at: 1794608390822
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794550806513
-lastSeenAt: 1794550806513
+firstSeenAt: 1794608390822
+lastSeenAt: 1794608390822
 fingerprint: null
 payload:
   for: SW5_orchestrator_into_the_supervisor
@@ -155,6 +155,9 @@ payload:
       - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW1_each_system_its_own_map
       - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW_D1_orchestrator_into_the_supervisor
     dependents:
+      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC4_system_secrets
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW5a_autopilots_remains_into_the_supervisor
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW5b_cortexs_workers_go_home
       - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW6_the_drawbridge_the_only_way_in
     upstream:
       - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW0_the_scorecard
@@ -163,11 +166,22 @@ payload:
       - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW_D1_orchestrator_into_the_supervisor
       - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW_D2_each_system_keeps_its_own_map
     downstream:
+      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC4_system_secrets
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW5a_autopilots_remains_into_the_supervisor
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW5b_cortexs_workers_go_home
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW5c_the_orchestrators_own_background_assigned
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW5d_the_bus_into_cos
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW5e_the_forwards_retired
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW5f_others_data_goes_home
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW5g_the_pages_and_auth
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW5h_the_orchestrator_retired
       - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW6_the_drawbridge_the_only_way_in
       - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW7_lib_goes_home
     blockedBy:
       - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW1_each_system_its_own_map
-    unlocks: []
+    unlocks:
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW5a_autopilots_remains_into_the_supervisor
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW5b_cortexs_workers_go_home
     conflicts: []
     dangling: []
     lines:
@@ -175,7 +189,11 @@ payload:
       - >-
         depends on (2): SW1_each_system_its_own_map, SW_D1_orchestrator_into_the_supervisor · all
         upstream 5
-      - 'needed by (1): SW6_the_drawbridge_the_only_way_in · all downstream 2'
+      - >-
+        needed by (4): AC4_system_secrets, SW5a_autopilots_remains_into_the_supervisor,
+        SW5b_cortexs_workers_go_home, SW6_the_drawbridge_the_only_way_in · all downstream 11 ·
+        finishing it unlocks SW5a_autopilots_remains_into_the_supervisor,
+        SW5b_cortexs_workers_go_home
     edges:
       - from: docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW1_each_system_its_own_map
         kind: declared

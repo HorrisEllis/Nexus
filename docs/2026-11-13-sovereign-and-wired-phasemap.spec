@@ -122,6 +122,79 @@ phases:
       assigned: into COS's supervisor, to the system that owns it, or retired. Then moved one part at a time, the old route answering
       with where it went until its callers have moved. Its 14 crossings into Cortex end with it.
     proof: "each orchestrator route answered by COS or by its owner; the old address says where it went; with the orchestrator not started, Nexus boots and the pipeline builds"
+  SW5a_autopilots_remains_into_the_supervisor:
+    layer: backend
+    status: OPEN
+    depends_on: [SW5_orchestrator_into_the_supervisor]
+    files: [lib/nexus/core-duties.js, cos/manager/duties.js, lib/nexus/autopilot.js, cos/manager/server.js, tests/modules/test-core-duties.test.js]
+    reuse: "MG17 (0.60.330: supervision already moved; autopilot.js is the launcher), lib/nexus/core-duties.js whole (moved by git mv, not rewritten), COS's ledger and bus in-process"
+    does: >-
+      His "orchastrator and autopilot need to migrate to cos superviser" (2026-11-13). What autopilot still runs in its own process beside COS,
+      the six duties of core-duties.js (wire, vitals, update, loom, snapshot, follow), runs inside COS's manager. `follow` listens to COS's ledger
+      in the process instead of reading it by route every few seconds (PR6, no polling). lib/nexus/autopilot.js stays the entry COS's exe and
+      the NexusCOS service start (cos/app/runtime.js ENTRIES), and only starts the manager and stays in the foreground. lib/ holds no duty after
+      it (SW_D5).
+    proof: "the duties' tests pass from cos/manager/duties.js; with COS's manager started alone (no launcher) a circuit-open line makes one gap and the minute's snapshot is written; ps shows one Nexus supervisor process, not two"
+  SW5b_cortexs_workers_go_home:
+    layer: backend
+    status: OPEN
+    depends_on: [SW5_orchestrator_into_the_supervisor]
+    files: [orchestrator/orchestrator.js, cortex/server.js, cortex/core/raid/worker.js, cortex/core/raid/officiator.js, cortex/memory/table-compactor.js, cortex/memory/table-deduplicator.js]
+    does: >-
+      Found by the census: the orchestrator starts Cortex's RAID worker, its officiator, its table compactor (twice: rows and caps) and its
+      deduplicator inside the orchestrator's own process, and opens Cortex's jaa-db directly in 12 places. They are Cortex's (§5.15): Cortex's
+      server.js starts them; what the orchestrator read from jaa-db it asks Cortex's routes for. Not COS's: the supervisor runs processes, not
+      another system's work.
+    proof: "with the orchestrator stopped, a contract filed by POST /api/raid/contracts is drained by Cortex's own worker; the census shows orchestrator → cortex at 0 requires"
+  SW5c_the_orchestrators_own_background_assigned:
+    layer: backend
+    status: OPEN
+    depends_on: [SW5a_autopilots_remains_into_the_supervisor, SW5b_cortexs_workers_go_home]
+    files: [orchestrator/orchestrator.js, orchestrator/lib, cos/manager/server.js, versionium, lib/warp-bus.js, lib/resource-monitor.js, lib/gap-relay.js]
+    does: >-
+      Each thing the orchestrator starts at boot, assigned before it moves: the WARP spine and the pulse (COS's bus and heartbeat, PR6), the
+      resource monitor (COS's proc-stats already measures), the gap relay (COS's supervisor: it holds the restarts), the sigma-writer and
+      sigma compaction (their owner read from the code first), Versionium's auto-commit (Versionium's own server), the node registry and system
+      nodes sync (each system its own, SW1). One per slice; each named where it went.
+    proof: "per item: it runs from its owner with the orchestrator stopped; its old start line in orchestrator.js says where it went"
+  SW5d_the_bus_into_cos:
+    layer: backend
+    status: OPEN
+    depends_on: [SW5c_the_orchestrators_own_background_assigned]
+    files: [orchestrator/orchestrator.js, cos/manager/server.js, cos/manager/contract.json]
+    does: "The bus and its streams (/nexus-bus/sse, /sse, /api/events, /api/event, /api/recall, /api/ledger, /api/state) answered by COS (its /api/cos/events exists); :9000 forwards them until their callers move."
+    proof: "an event emitted by a system reaches a listener on COS's stream and on :9000's forwarder alike"
+  SW5e_the_forwards_retired:
+    layer: integration
+    status: OPEN
+    depends_on: [SW5d_the_bus_into_cos, SW6_the_drawbridge_the_only_way_in]
+    files: [orchestrator/orchestrator.js, lib/nexus-client.js]
+    does: >-
+      146 routes of the orchestrator only forward to another system (guardian 39, cortex 37, idearium 29, architect 21, intelligence 7,
+      diagnostic 4, loom 3, copilot 3, versionium 2, emerge 1). Each caller goes to the owner's route through lib/nexus-client.js, one owner at a
+      time, smallest first; the forward then answers with where it went.
+    proof: "per owner: a grep finds no caller of the forwarded path on :9000; the callers' tests pass"
+  SW5f_others_data_goes_home:
+    layer: integration
+    status: OPEN
+    depends_on: [SW5e_the_forwards_retired, SW4_own_data_by_default]
+    files: [orchestrator/orchestrator.js]
+    does: "What the orchestrator serves that is another system's (ideas, snapshots, gaps, SNR, memory, notes, components, hooks, specs, tags, CFR) is served by its owner (§5.15, one owner per kind of data); the orchestrator's copy, if any, moved once by a command he runs."
+    proof: "each kind answered by its owner; the orchestrator holds none of them"
+  SW5g_the_pages_and_auth:
+    layer: ui
+    status: OPEN
+    depends_on: [SW5f_others_data_goes_home]
+    files: [orchestrator/orchestrator.js, orchestrator/auth, orchestrator/cos-ui-door.js, cos/ui]
+    does: "The shell pages (/, /home, /ui/*) and auth: their home is his to settle (SW5_R1); then moved."
+    proof: "each page opens from its new home in Clear Glass"
+  SW5h_the_orchestrator_retired:
+    layer: integration
+    status: OPEN
+    depends_on: [SW5g_the_pages_and_auth]
+    files: [orchestrator/orchestrator.js, orchestrator/compartment.json, cos/manager/supervisor.js, docs/atlases/orchestrator-atlas.md]
+    does: ":9000 becomes a forwarder to COS that names where each route went (SW5_R2 decides how long it lives); the orchestrator's compartment archived with a pointer (§0.3)."
+    proof: "SW5's own: with the orchestrator not started, Nexus boots, every :9000 caller gets its answer, and the pipeline builds"
   SW6_the_drawbridge_the_only_way_in:
     layer: integration
     status: OPEN
@@ -238,3 +311,27 @@ order: >-
 # the 14 systems mapped twice, 14 of 14 the same fingerprint; Versionium's 19 routes equal a grep; Guardian's 49 command nodes and 10 reaches
 # into Intelligence equal SW0 and the census. Changed while building: map became one of Pillar's in hooks (Pillar's rule, every command
 # through a hook). Open: slice b; routes matched by a regular expression are not seen; 160 reaches between systems against the census's 150.
+
+# ── ADDENDUM 2026-11-13 — SW5 expanded: the census, autopilot's remains, eight slices (mapped before code) ──
+# James, 2026-11-13: "orchastrator and autopilot need to migrate to cos superviser"
+# Already his, kept: SW_D1 (this map, the same day), MG38 and MG_D5 (2026-11-08, "Cos is meant to be the orchastrator": the process retires,
+# :9000 a forwarder). MG38 is SW5 (one phase, two maps); SW5 is where it is built. Autopilot's supervision moved on 2026-10-31 (MG17, 0.60.330).
+# The census (read from orchestrator/orchestrator.js, 3,716 lines, 2026-11-13):
+#   - about 180 route branches; 146 of them only forward to another system (counts in SW5e);
+#   - it requires into other systems 21 times: Cortex 17 (its RAID worker, officiator, table compactor, deduplicator started in this process;
+#     jaa-db opened directly 12 times), Intelligence 1 (the CFR ledger), Clear Glass 1 (copilot tools), Copilot 1 (user model), Guardian 1;
+#   - at boot it starts the WARP spine, the resource monitor, the gap relay, sigma-writer, Versionium's auto-commit, sigma compaction, the
+#     pulse, the node registry and the system nodes sync;
+#   - files naming :9000 or the orchestrator by name, outside tests and archives: about 160 (lib 80, clear-glass 17, guardian 9, cos 8,
+#     copilot 8, loom 7, intelligence 6, idearium 4); a grep, an upper bound.
+# What is left of autopilot: lib/nexus/autopilot.js (159 lines, the launcher) and lib/nexus/core-duties.js (194 lines, six duties) run in a
+# process of their own beside COS's manager: two Nexus processes where one supervises. SW5a moves the duties in.
+# By the axioms (the coder's, cited): §10.3 one supervisor, §5.15 one owner per kind of data (so Cortex's workers go to Cortex, not COS),
+# §5.9 each system its own folder, SW_D5 lib is not a system, §0.3 nothing deleted (git mv; the old route says where it went).
+# Order: SW5a and SW5b first (independent, small, each ends a crossing), then c → d → e (after SW6's pattern) → f → g → h.
+# readings_to_confirm (his):
+#   SW5_R1: the orchestrator's shell pages and auth. (a) Into COS (its UI server cos/ui/serve.js and the manager); (b) each page to the system
+#     it shows, auth to Guardian. The coder leans (a) for the shell, (b) for the pages that show one system.
+#   SW5_R2: :9000 after the move. (a) A forwarder kept as long as anything calls it; (b) kept one release, then gone. The coder leans (a).
+# Built alongside, 0.60.515 (Clear Glass's code, recorded in the changelog; found in his console while mapping): _erosHold out of scope
+# (ER2, 0.60.509) and the sign-in page re-injection loop (SI1). His console also shows SW5b's finding live: "orchestrator [raid-worker]".

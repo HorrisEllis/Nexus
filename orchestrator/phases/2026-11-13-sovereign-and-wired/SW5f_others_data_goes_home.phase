@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-13-sovereign-and-wired-phasemap.spec::SW5f_others_data_goes_home
+type: phase
+id: docs_2026-11-13-sovereign-and-wired-phasemap.spec::SW5f_others_data_goes_home
+context: pipeline phase SW5f_others_data_goes_home of docs/2026-11-13-sovereign-and-wired-phasemap.spec
+intent: null
+summary: SW5f_others_data_goes_home (integration) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1794608390844
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794608390844
+lastSeenAt: 1794608390844
+fingerprint: null
+payload:
+  id: SW5f_others_data_goes_home
+  map: docs/2026-11-13-sovereign-and-wired-phasemap.spec
+  repo: null
+  layer: integration
+  status: OPEN
+  files:
+    - orchestrator/orchestrator.js
+  depends_on:
+    - SW5e_the_forwards_retired
+    - SW4_own_data_by_default
+  blocks: []
+  spec: null
+  graph: 0471afad00e41e25

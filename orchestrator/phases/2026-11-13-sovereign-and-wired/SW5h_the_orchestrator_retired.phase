@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-13-sovereign-and-wired-phasemap.spec::SW5h_the_orchestrator_retired
+type: phase
+id: docs_2026-11-13-sovereign-and-wired-phasemap.spec::SW5h_the_orchestrator_retired
+context: pipeline phase SW5h_the_orchestrator_retired of docs/2026-11-13-sovereign-and-wired-phasemap.spec
+intent: null
+summary: SW5h_the_orchestrator_retired (integration) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1794608390850
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794608390850
+lastSeenAt: 1794608390850
+fingerprint: null
+payload:
+  id: SW5h_the_orchestrator_retired
+  map: docs/2026-11-13-sovereign-and-wired-phasemap.spec
+  repo: null
+  layer: integration
+  status: OPEN
+  files:
+    - orchestrator/orchestrator.js
+    - orchestrator/compartment.json
+    - cos/manager/supervisor.js
+    - docs/atlases/orchestrator-atlas.md
+  depends_on:
+    - SW5g_the_pages_and_auth
+  blocks: []
+  spec: null
+  graph: 3d71eec844b928eb

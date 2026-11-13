@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-13-sovereign-and-wired-phasemap.spec::SW5c_the_orchestrators_own_background_assigned
+type: phase
+id: docs_2026-11-13-sovereign-and-wired-phasemap.spec::SW5c_the_orchestrators_own_background_assigned
+context: >-
+  pipeline phase SW5c_the_orchestrators_own_background_assigned of
+  docs/2026-11-13-sovereign-and-wired-phasemap.spec
+intent: null
+summary: SW5c_the_orchestrators_own_background_assigned (backend) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1794608390834
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794608390834
+lastSeenAt: 1794608390834
+fingerprint: null
+payload:
+  id: SW5c_the_orchestrators_own_background_assigned
+  map: docs/2026-11-13-sovereign-and-wired-phasemap.spec
+  repo: null
+  layer: backend
+  status: OPEN
+  files:
+    - orchestrator/orchestrator.js
+    - cos/manager/server.js
+    - lib/warp-bus.js
+    - lib/resource-monitor.js
+    - lib/gap-relay.js
+  depends_on:
+    - SW5a_autopilots_remains_into_the_supervisor
+    - SW5b_cortexs_workers_go_home
+  blocks: []
+  spec: null
+  graph: 779d9da1bded7024

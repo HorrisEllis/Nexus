@@ -635,14 +635,16 @@ class ProviderHost {
       if (win.isDestroyed()) { clearInterval(reloadTimer); return; }
       const url = win.webContents.getURL();
       const isProviderPage = def.hosts.some(h => url.includes(h));
-      if (isProviderPage) {
+      // 0.60.515 — not on its sign-in page: _inject skips that page before it caches the script, so the check below read "not loaded" as
+      // "changed" and logged and re-injected every minute for as long as the tab sat signed out (seen 2026-11-13, chatgpt, each minute).
+      if (isProviderPage && !isSigninPage(url)) {
         // Only re-inject if script on disk has changed
         const filePath = this._scriptPath(providerId);
         try {
           const mtime = fs.statSync(filePath).mtimeMs;
           const cached = this._scriptCache.get(providerId);
           if (!cached || cached.mtimeMs !== mtime) {
-            _log(`[ProviderHost] ${providerId} — script changed on disk, re-injecting…`);
+            _log(`[ProviderHost] ${providerId} — ${cached ? 'script changed on disk, re-injecting' : 'script not injected yet, injecting'}…`);
             await this._inject(providerId, win);
           }
         } catch (_) {}

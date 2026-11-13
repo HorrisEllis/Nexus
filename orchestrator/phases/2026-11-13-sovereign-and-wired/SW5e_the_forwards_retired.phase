@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-13-sovereign-and-wired-phasemap.spec::SW5e_the_forwards_retired
+type: phase
+id: docs_2026-11-13-sovereign-and-wired-phasemap.spec::SW5e_the_forwards_retired
+context: pipeline phase SW5e_the_forwards_retired of docs/2026-11-13-sovereign-and-wired-phasemap.spec
+intent: null
+summary: SW5e_the_forwards_retired (integration) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1794608390841
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794608390841
+lastSeenAt: 1794608390841
+fingerprint: null
+payload:
+  id: SW5e_the_forwards_retired
+  map: docs/2026-11-13-sovereign-and-wired-phasemap.spec
+  repo: null
+  layer: integration
+  status: OPEN
+  files:
+    - orchestrator/orchestrator.js
+    - lib/nexus-client.js
+  depends_on:
+    - SW5d_the_bus_into_cos
+    - SW6_the_drawbridge_the_only_way_in
+  blocks: []
+  spec: null
+  graph: 671cfdb9569173cf

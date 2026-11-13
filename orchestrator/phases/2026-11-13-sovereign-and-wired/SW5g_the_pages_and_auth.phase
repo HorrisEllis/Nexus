@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-13-sovereign-and-wired-phasemap.spec::SW5g_the_pages_and_auth
+type: phase
+id: docs_2026-11-13-sovereign-and-wired-phasemap.spec::SW5g_the_pages_and_auth
+context: pipeline phase SW5g_the_pages_and_auth of docs/2026-11-13-sovereign-and-wired-phasemap.spec
+intent: null
+summary: SW5g_the_pages_and_auth (ui) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1794608390847
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794608390847
+lastSeenAt: 1794608390847
+fingerprint: null
+payload:
+  id: SW5g_the_pages_and_auth
+  map: docs/2026-11-13-sovereign-and-wired-phasemap.spec
+  repo: null
+  layer: ui
+  status: OPEN
+  files:
+    - orchestrator/orchestrator.js
+    - orchestrator/cos-ui-door.js
+  depends_on:
+    - SW5f_others_data_goes_home
+  blocks: []
+  spec: null
+  graph: 808c91d948451cb9

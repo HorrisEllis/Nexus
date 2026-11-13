@@ -180,6 +180,9 @@ const EROS_PORT = parseInt(process.env.EROS_PORT || '7432');
 // EROS_AUTOSTART=0 leaves it to be started by hand, as before.
 const { ErosSupervisor } = require('../eros/supervisor');
 let erosSupervisor = null;
+// 0.60.515 — read by GET /eros-supervisor (the wire's server, another function), so they live here; were let/const inside the boot
+// function (0.60.509), and the route threw "_erosHold is not defined" as an unhandled rejection.
+let _erosHold = null, _erosAutostart = null;
 const WIRE_PORT = parseInt(process.env.WIRE_PORT || '7704');
 
 // ── State ──────────────────────────────────────────────────────────────────
@@ -1770,7 +1773,7 @@ async function bootstrap() {
   // §0.60.123 MP — James: "can we fix the memory issue … failure modes are to prevent problems". ErosmancerOS (node + tsx)
   // is not part of a build: lean mode holds it, and so does a recent memory crisis without headroom (lib/prevention.js).
   // POST :7702/eros-supervisor/start still starts it on demand.
-  let _erosHold = null;
+  _erosHold = null;
   try {
     const lean = require('../../../lib/lean-mode.js').read();
     const h = require('../../../lib/prevention.js').heavyAllowedHere('clear-glass');
@@ -1779,7 +1782,7 @@ async function bootstrap() {
   // 2026-11-13 — James: "can you add an autostart option with erosmanceros?" A real, persisted setting
   // (nexusOptions eros.autostart, Settings > ErosmancerOS) decides this now; EROS_AUTOSTART still wins when it is
   // explicitly set (either value), for anyone already using it, so nothing already depending on the env var changes.
-  const _erosAutostart = NexusOptions.decideErosAutostart(process.env.EROS_AUTOSTART, nexusOptions?.get()?.eros?.autostart);
+  _erosAutostart = NexusOptions.decideErosAutostart(process.env.EROS_AUTOSTART, nexusOptions?.get()?.eros?.autostart);
   if (_erosHold) console.log(`[ClearGlass/Eros] not started — ${_erosHold} (it starts on demand: POST :7702/eros-supervisor/start)`);
   else if (_erosAutostart) {
     erosSupervisor = new ErosSupervisor({ port: EROS_PORT, cdpPort: CG_CDP_PORT });
