@@ -97,8 +97,10 @@ async function test(id, desc, fn) { try { await fn(); console.log(`  ✓ ${id} $
     assert.match(fs.readFileSync(path.join(ROOT, 'cos/app/desktop/starting-preload.js'), 'utf8'), /install: \(\) => ipcRenderer\.invoke\('cos:install'\)/);
   });
 
-  await test('IN-06', 'COS 0.7.0; install.js in the exe; autoInstall on by default; first launch installs', () => {
-    assert.strictEqual(require(path.join(ROOT, 'cos/app/version.js')).version, '0.7.0');
+  // 0.60.514: "at least 0.7.0" (install.js arrived in 0.7.0); pinned to exactly 0.7.0, this failed from 0.7.1 (0.60.418) on
+  await test('IN-06', 'COS 0.7.0 or later; install.js in the exe; autoInstall on by default; first launch installs', () => {
+    const [ma, mi] = require(path.join(ROOT, 'cos/app/version.js')).version.split('.').map(Number);
+    assert.ok(ma > 0 || mi >= 7, 'COS is 0.7.0 or later');
     assert.ok(fs.readFileSync(path.join(ROOT, 'scripts/build-cos-app.js'), 'utf8').includes("'cos/app/install.js'"));
     assert.strictEqual(require(path.join(ROOT, 'cos/app/settings.js')).DEFAULTS.autoInstall, true);
     const M = fs.readFileSync(path.join(ROOT, 'cos/app/desktop/main.js'), 'utf8');
