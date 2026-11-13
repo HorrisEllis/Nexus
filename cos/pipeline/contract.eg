@@ -1,0 +1,56 @@
+// cos/pipeline/contract.eg — a RAID contract as a pipeline COS runs (PC12a, docs/2026-11-08-pipeline-canvas-phasemap.spec).
+// James, 2026-11-13: "both. each step of any pipeline. thats the point. i want all pipelines managable, orchastratred, and programmable in cos.
+// all of them." · "i want raid to be the hub that all systems run througj"
+//
+//   pipeline_of(view) → { ok, pipeline: { name, description, vars, settings, tasks } }   or { ok: false, why }
+//
+// view is Cortex's own answer for one contract (GET /api/raid/contracts/v2/:id): its gates, each with what it waits on. Each gate becomes one
+// step: it asks RAID to check that gate (POST nexus://cortex/api/raid/contracts/v2/<id>/gates/<gate>/check), and the step is met only when RAID
+// answers that this gate PASSED. A gate that does not pass holds the run saying RAID's own reasons (reasonAt; onFail hold): the work stays RAID's, the order and
+// the waiting are COS's. Only the contract's shape is written (its gates and their order), never their state, so a pipeline changes only when the
+// contract does. A gate id is made a task id (letters, digits, _ and -, 41 at most, unique); the gate's own id is kept on the step.
+
+fn task_id(gid: string, used: map): string {
+  var out = ""
+  for ch in split(gid, "") {
+    if (ch >= "a" and ch <= "z") or (ch >= "A" and ch <= "Z") or (ch >= "0" and ch <= "9") or ch == "_" or ch == "-" { out = out + ch } else { out = out + "_" }
+  }
+  if out == "" or not ((slice(out, 0, 1) >= "a" and slice(out, 0, 1) <= "z") or (slice(out, 0, 1) >= "A" and slice(out, 0, 1) <= "Z")) { out = "g" + out }
+  if len(out) > 36 { out = slice(out, 0, 36) }
+  var id = out
+  var n = 2
+  while has(used, id) { id = out + "-" + str(n); n += 1 }
+  return id
+}
+
+fn label_of(g: map): string {
+  var bits = []
+  if get(g, "kind", null) != null { bits = push(bits, g.kind) }
+  if get(g, "file", null) != null { bits = push(bits, g.file) }
+  if len(bits) == 0 { return "gate " + g.id }
+  return join(bits, " · ") + " (" + g.id + ")"
+}
+
+fn pipeline_of(view: map): map {
+  let cid = get(view, "id", null)
+  if cid == null { return { ok: false, why: "a contract view names its id" } }
+  let gates = get(view, "gates", [])
+  if len(gates) == 0 { return { ok: false, why: "contract " + cid + " has no gates (a v1 contract runs as before)" } }
+  var ids = {}
+  var used = {}
+  for g in gates { let t = task_id(g.id, used); used[t] = true; ids[g.id] = t }
+  var tasks = []
+  for g in gates {
+    var deps = []
+    for d in get(g, "depends_on", []) { if has(ids, d) { deps = push(deps, ids[d]) } }
+    tasks = push(tasks, { id: ids[g.id], label: label_of(g), depends_on: deps, raid_gate: g.id,
+      step: { type: "api", config: { url: "nexus://cortex/api/raid/contracts/v2/" + cid + "/gates/" + g.id + "/check", method: "POST", body: "\{\}" } },
+      gate: { matches: "\"check\":\\\{\"status\":\"PASSED\"", reasonAt: "body.check.reasons" },
+      onFail: "hold" })
+  }
+  var what = cid
+  let o = get(view, "outcome", null)
+  if o != null and get(o, "what", null) != null { what = o.what }
+  return { ok: true, pipeline: { name: "RAID contract: " + what, description: "RAID's contract " + cid + ", gate by gate: each step asks RAID to check one gate and is met when RAID says it PASSED; a gate that does not pass holds the run with RAID's reasons.",
+    vars: {}, settings: { parallel: 1 }, tasks: tasks, source: { system: "cortex", contract: cid } } }
+}

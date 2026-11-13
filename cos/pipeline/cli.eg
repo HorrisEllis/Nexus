@@ -11,6 +11,7 @@ use "./plan.eg" as plan
 use "./baseline.eg" as baseline
 use "../sovereign/card.eg" as sovereign
 use "../census/graph.eg" as graphs
+use "./contract.eg" as contract
 
 wire box.BoxShape.answer -> "box.answer"
 var last = null
@@ -181,6 +182,9 @@ else if cmd == "sovereign-card" {
   if b != null { w = sovereign.worse(b, c) }
   print(json({ ok: true, systems: c.systems, totals: c.totals, worse: w, compared: b != null }))
 }
+else if cmd == "contract-pipeline" {   // PC12a (2026-11-13): a RAID contract's view → the pipeline COS runs, gate by gate
+  print(json(contract.pipeline_of(input())))
+}
 else if cmd == "graph-census" {   // GR0 (2026-11-13): every graph in Nexus, read from the tree; { root, data, markdown? }
   let q = input()
   let c = graphs.census(q.root, q.data)
@@ -193,6 +197,6 @@ else if cmd == "retry-of" {
   print(json(runs.retry_of(q.base, q.run, get(q, "from", null))))
 }
 else {
-  eprint("unknown command \"" + cmd + "\": the commands are version, baseline, boxes, dag, erv, roundtrip, types, save-type, gate, gate-actions, frameworks, framework, framework-tree, plan-phase, request, booked, read-id, event, list, read, resume-of, retry-of, sovereign-card, graph-census (each <file.json>)")
+  eprint("unknown command \"" + cmd + "\": the commands are version, baseline, boxes, dag, erv, roundtrip, types, save-type, gate, gate-actions, frameworks, framework, framework-tree, plan-phase, request, booked, read-id, event, list, read, resume-of, retry-of, sovereign-card, graph-census, contract-pipeline (each <file.json>)")
   exit(1)
 }

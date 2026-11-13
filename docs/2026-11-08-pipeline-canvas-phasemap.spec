@@ -710,6 +710,29 @@ built_2026_11_09_plan:
     proof: "PR-05b: each of those texts classifies as provider-down, not unknown (a signed-out tab is left as it is: login never falls through, his rule); GT-01b: an attempt failing 'nothing was sent to gemini' is retried, nothing excluded, nothing learned; GT-02 unchanged"
     axioms: "§1.2 (a failure is said as what it is), do not guess (a guess filed as capability taught the route a falsehood), §8.6 (the transient class and its rules exist; the classifier learns four phrases)"
 
+  PC12_every_pipeline_in_cos:
+    status: OPEN
+    depends_on: [PC8_operate_a_pipeline]
+    james: '"both. each step of any pipeline. thats the point. i want all pipelines managable, orchastratred, and programmable in cos. all of them." (2026-11-13) · "clearglass pipelines, raid pipelines, idearium, all of them in cos."'
+    files: [cortex/core/raid/contract-v2-door.js, cos/pipeline/contract.eg, cos/pipeline/test/contract.test.eg, cos/pipeline/cli.eg, cos/pipeline/index.js, cos/pipeline/registry.json, tests/modules/test-cos-pipeline.test.js]
+    does: >-
+      Every sequence of steps Nexus runs is a pipeline in COS's Automation tab: each step seen with its state, run or re-run from COS, and
+      changed there (through its owner's route: the owner keeps the truth, §5.15). The census (read 2026-11-13), and where each stands:
+      in COS already — Idearium's pipelines (by route, 0.60.517), Clear Glass's pipelines, workflows and macros (by route; Fiverr's among
+      them), COS's own (the framework trial, 0.60.521), procedures and frameworks as steps (PC2). Not in COS — RAID's contracts v2 (each a
+      gated sequence of bricks, Cortex's), RAID's execution sequence (lib/execution-pipeline.js: isolate, verify, compare, commit), the build
+      loop (lib/build-pipeline.js), chains (lib/chains.js), the intent flow (lib/intent-flow.js), the chunk build's agent switching
+      (lib/chunk-build-orchestrator.js), a repo's replayable procedures (lib/repo-procedures.js), the phase build's ladder (Idearium).
+      Slices, one owner at a time:
+        a. RAID's contracts as pipelines: Cortex lists them (GET /api/raid/contracts/v2) and its view carries each gate's depends_on, kind and
+           file; COS turns a contract into a .pipeline (cos/pipeline/contract.eg, Emerge), each gate a step that checks that gate on Cortex's
+           route; the sync imports them. Running it in COS checks each gate in order; a failed gate's reasons are the step's.
+        b. RAID's execution sequence as a pipeline: each stage served by its owner's route first (what exists read before), then one .pipeline.
+        c. the rest of the census, each: a .pipeline its owner serves, or retired into one that exists (said which).
+        d. programmable both ways: a pipeline changed in COS is written back through its owner's route and validated there; the owner refuses
+           what breaks it, and COS shows why.
+    proof: "per slice: the census shows it in COS; its steps run from COS and their states read back from the owner; for (a) a fixture contract's gates become steps in order, a passed gate's step is met, a failed one carries RAID's reasons"
+    axioms: "§5.15 (the owner keeps the truth, COS reaches it by route), §8.6 (the sync, the box shape and RAID's check route are used), §1.2 (a step's failure is the owner's words), USER_AUTONOMY (his: all of them, step by step)"
 # ── ADDENDUM 2026-11-11 (0.60.483) — PC9 slice a: the desktop driver for agents (his PC_D14) ──────────────────────────────────────────────
 # James, 2026-11-11: "I’m saying for you. Like look at clearglass. Nexus nerve, cleardriver injecting coordinates into the dom."
 # Built: cos/remote-desktop/desktop-driver.js (screen, move, click, type, key, scroll; backends: Windows PowerShell user32/System.Drawing,
@@ -932,3 +955,11 @@ built_2026_11_09_plan:
 # fixed in place (Windows-safe answer names; blind read Ollama answers), --problem and bench.jsonl added. Proof: run whole in COS against a
 # stand-in Ollama; test-framework-trial-deploy 5/5 (A6). Clear Glass's pipeline routes checked against the sync's shape. "raid pipelines":
 # RAID has no .pipeline files or pipeline route; its readings asked (his).
+
+# ── ADDENDUM 2026-11-13 (0.60.522) — PC12 mapped; slice a built: RAID's contracts are pipelines in COS ──
+# James, 2026-11-13: "both. each step of any pipeline. thats the point. i want all pipelines managable, orchastratred, and programmable in cos.
+# all of them." · "i want raid to be the hub that all systems run througj". Built: Cortex's list route and each gate's depends_on in its view;
+# cos/pipeline/contract.eg (a contract → a pipeline, each gate a step asking RAID to check it); the sync's convert; a gate's reasonAt. Proof:
+# a stand-in Cortex with Cortex's real door, run from COS, held with RAID's own reason, done after evidence and Continue.
+# Open: slices b-d; his "raid to be the hub": readings asked (RAID decides every system's work · every call between systems passes
+# through RAID · RAID moves into COS).

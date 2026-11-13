@@ -7,11 +7,11 @@ intent: null
 summary: 34 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1794388656891
+exported_at: 1794611411170
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794388656891
-lastSeenAt: 1794388656891
+firstSeenAt: 1794611411170
+lastSeenAt: 1794611411170
 fingerprint: null
 payload:
   for: PC7_iterate_to_the_end_state
@@ -343,6 +343,11 @@ payload:
           - cos/manager/server.js
           - cos/manager/contract.json
           - idearium/cli/route-commands.js
+      - with: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC12_every_pipeline_in_cos
+        files:
+          - cos/pipeline/cli.eg
+          - cos/pipeline/index.js
+          - tests/modules/test-cos-pipeline.test.js
     dangling: []
     lines:
       - >-
@@ -364,6 +369,9 @@ payload:
       - >-
         same files as PC10_our_own_remote_control with no order between them: cos/manager/server.js,
         cos/manager/contract.json, idearium/cli/route-commands.js
+      - >-
+        same files as PC12_every_pipeline_in_cos with no order between them: cos/pipeline/cli.eg,
+        cos/pipeline/index.js, tests/modules/test-cos-pipeline.test.js
     edges:
       - from: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC3_the_build_request_step
         kind: declared

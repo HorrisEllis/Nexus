@@ -229,7 +229,14 @@ function createPipeline({ automation, idearium = null, call = null, dataDir } = 
         const [nm, np] = src.node.split(' '); const g = await ask(src.system, `${nm} ${np.replace(':id', encodeURIComponent(id))}`, undefined, 4 * 1024 * 1024);
         if (g.error || g.status >= 400) { skipped.push({ id, why: g.error || `answered ${g.status}` }); continue; }
         let j = {}; try { j = JSON.parse(g.body || '{}'); } catch (e) { skipped.push({ id, why: `not JSON${g.cut ? ' (cut at ' + (g.body || '').length + ' of ' + g.length + ' bytes)' : ''}: ${e.message}` }); continue; }
-        const text = String(src.textAt).split('.').reduce((o, k) => (o ? o[k] : undefined), j);
+        // PC12a (0.60.522): a source whose items are not pipelines yet (RAID's contracts) is turned into one by COS's Emerge (src.convert), its
+        // owner's answer read as it is; the pipeline is written as a node file first, like every other
+        let text;
+        if (src.convert) {
+          const c = await eg(src.convert, j); if (!c.ok) { skipped.push({ id, why: c.why || c.error || `${src.convert} refused it` }); continue; }
+          text = NE.toYaml(NE.wrap('pipeline', `${slug(src.system)}-${slug(id)}`, { id: `${slug(src.system)}-${slug(id)}`, format: 'nexus-pipeline', version: 1, ...c.pipeline },
+            { context: `${src.system}'s ${id}, made a pipeline by COS (${src.convert})`, intent: c.pipeline.description, tags: ['pipeline', src.system, 'converted'] }));
+        } else text = String(src.textAt).split('.').reduce((o, k) => (o ? o[k] : undefined), j);
         if (typeof text !== 'string') { skipped.push({ id, why: `no text at ${src.textAt}` }); continue; }
         const dir = path.join(nodesDir, `from-${slug(src.system)}`); fs.mkdirSync(dir, { recursive: true });
         fs.writeFileSync(path.join(dir, `${slug(id)}.pipeline`), text); n++;

@@ -739,3 +739,14 @@ then they are written by hand.
 - **Gaps found:** Emerge has no file size, so a table is read whole to count its lines (said in the module). There is no capturing regular
   expression (as in SW1), so stores are found by text.
 - **Not proved:** his real counts. The sandbox holds no live tables; `cos census graph` on his machine gives them.
+
+## 2026-11-13 — a RAID contract as a pipeline, in Emerge (PC12a, 0.60.522)
+- **Measured:** his framework. The end state was written before the code: "a fixture contract's gates become steps in order, a passed
+  gate's step is met, a failed one carries RAID's reasons".
+- **His words:** "both. each step of any pipeline. thats the point. i want all pipelines managable, orchastratred, and programmable in cos."
+- **Method:** Emerge `test` blocks, then a live run: COS's manager against a stand-in Cortex running Cortex's real door.
+- **Code:** `cos/pipeline/contract.eg`, `cos/pipeline/test/contract.test.eg`.
+- **Result:** eg test 4/4. Live: the contract was synced, run, held with RAID's own reason, and finished after the evidence and Continue.
+- **Failed runs before the pass:** 1. The held run's reason was the pattern that did not match, not RAID's words. The gate learned `reasonAt`
+  (lib/automation/pipeline.js, changed in place). That was a method gap, not a language one.
+- **Gaps found:** none in Emerge. Characters are compared one by one to make a task id (there is no regular expression replace).

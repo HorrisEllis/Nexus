@@ -8,6 +8,7 @@
  *
  *   handle(method, path, body, { dir }) → Promise<{ status, json }> | null (not one of its routes)
  *     POST /api/raid/contracts/v2                         { id, payload, by, replace? }  book a contract (validated; an agent's refused)
+ *     GET  /api/raid/contracts/v2                         every booked contract: id, outcome, gates, passed, complete (PC12a)
  *     GET  /api/raid/contracts/v2/:id                     its outcome, gates (BLOCKED · READY · PASSED · FAILED · STALE), gaps, complete, why
  *     POST /api/raid/contracts/v2/:id/evidence            { key, value, by }  recorded; then every gate it may open is checked, until none moves
  *     POST /api/raid/contracts/v2/:id/gates/:gate/check   check one gate now against its evidence
@@ -24,7 +25,11 @@ async function handle(method, p, body = {}, { dir = defaultDir() } = {}) {
   if (!p.startsWith(PREFIX)) return null;
   const NE = require('../../../lib/node-export.js');
   const fileOf = (id) => path.join(dir, `${String(id).replace(/[^\w.-]/g, '_')}.contract`);
-  const view = (id, L) => { const ev = CG.evaluate(L.payload); return { id, outcome: L.payload.outcome, gates: ev.gates, gaps: L.payload.gaps || [], complete: ev.complete, why: ev.why, evidence: (L.payload.state && L.payload.state.evidence) || {} }; };
+  // PC12a (0.60.522): each gate also says what it waits on, its kind, its file and its parent, so a contract can be drawn and run as a pipeline
+  // by COS (cos/pipeline/contract.eg); the evaluation itself is unchanged
+  const shape = (L, gates) => gates.map(g => { const d = (L.payload.gates || []).find(x => x.id === g.id) || {};
+    return { ...g, depends_on: d.depends_on || [], kind: d.kind || null, file: d.file || null, parent: d.parent || null, children: d.children || [] }; });
+  const view = (id, L) => { const ev = CG.evaluate(L.payload); return { id, outcome: L.payload.outcome, gates: shape(L, ev.gates), gaps: L.payload.gaps || [], complete: ev.complete, why: ev.why, evidence: (L.payload.state && L.payload.state.evidence) || {} }; };
   const r = (status, json) => ({ status, json });
   try {
     if (p === PREFIX && method === 'POST') {
@@ -36,6 +41,17 @@ async function handle(method, p, body = {}, { dir = defaultDir() } = {}) {
       if (fs.existsSync(fileOf(id)) && !body.replace) return r(409, { ok: false, error: `contract ${id} is booked already` });
       fs.writeFileSync(fileOf(id), NE.toYaml(NE.wrap('contract', id, payload, { context: `booked by ${body.by || 'unknown'}`, intent: payload.outcome && payload.outcome.what, tags: ['v2'] })));
       return r(200, { ok: true, ...view(id, CG.load(fileOf(id))) });
+    }
+    // PC12a (0.60.522) — James, 2026-11-13: "i want all pipelines managable, orchastratred, and programmable in cos. all of them." Every booked
+    // contract, so COS can list them as pipelines: { contracts: [{ id, outcome, gates, passed, complete, at }] }; one unreadable is named, not hidden
+    if (p === PREFIX && method === 'GET') {
+      let names = []; try { names = fs.readdirSync(dir).filter(n => n.endsWith('.contract')).sort(); } catch (_) {}
+      const contracts = [], unreadable = [];
+      for (const n of names) { const id = n.slice(0, -'.contract'.length);
+        try { const L = CG.load(path.join(dir, n)); const ev = CG.evaluate(L.payload);
+          contracts.push({ id, outcome: L.payload.outcome || null, gates: ev.gates.length, passed: ev.gates.filter(g => g.status === 'PASSED').length, complete: ev.complete, at: fs.statSync(path.join(dir, n)).mtimeMs }); }
+        catch (e) { unreadable.push({ id, why: e.message }); } }
+      return r(200, { ok: true, contracts, unreadable });
     }
     const m = /^\/api\/raid\/contracts\/v2\/([\w.-]+)(?:\/(evidence|gates\/([\w.-]+)\/(check|split|packet)))?$/.exec(p);
     if (!m) return r(404, { ok: false, error: `no route ${method} ${p}` });

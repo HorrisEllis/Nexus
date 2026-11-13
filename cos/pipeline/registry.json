@@ -3,7 +3,7 @@
   "owner": "cos",
   "version": "1.0.0",
   "about": "COS's pipeline module: the box shape, the gates, and every request kept as files until its contract is met (PC1, PC5; cos/spec/pipeline-canvas.spec)",
-  "origin": "James, 2026-11-09: \"No. Terrible folder structure. This needs to be a module.\" · \"Needs to use actual physical files in the backend, the steps. Like the dag and contract, and the relevant nodes. Like each step needs to be persistent until the contract and conditions for the request from the dag have been met.\" · \"The gates are temporary unless it didn't finish.\"",
+  "origin": "James, 2026-11-09: \"No. Terrible folder structure. This needs to be a module.\" \u00b7 \"Needs to use actual physical files in the backend, the steps. Like the dag and contract, and the relevant nodes. Like each step needs to be persistent until the contract and conditions for the request from the dag have been met.\" \u00b7 \"The gates are temporary unless it didn't finish.\"",
   "entry": "index.js",
   "components": [
     {
@@ -75,7 +75,36 @@
       "lang": "js",
       "door": "starts Emerge (until COS's manager is Emerge, CIE13), makes the HTTP calls a gate asks for (no sockets in Emerge until CIE10), takes the engine's events in order; no logic"
     },
-    {"id": "cos.automation.baseline", "file": "baseline.eg", "lang": "emerge", "hooks": {"in": ["baseline"], "out": ["answer"]}, "test": "test/baseline.test.eg", "phase": "PC8_operate_a_pipeline", "why": "James, 2026-11-10: \"each step measured by a delta ... to establish a baseline.\""}
+    {
+      "id": "cos.automation.baseline",
+      "file": "baseline.eg",
+      "lang": "emerge",
+      "hooks": {
+        "in": [
+          "baseline"
+        ],
+        "out": [
+          "answer"
+        ]
+      },
+      "test": "test/baseline.test.eg",
+      "phase": "PC8_operate_a_pipeline",
+      "why": "James, 2026-11-10: \"each step measured by a delta ... to establish a baseline.\""
+    },
+    {
+      "id": "cos.pipeline.contract",
+      "file": "contract.eg",
+      "lang": "emerge",
+      "hooks": {
+        "in": [
+          "contract-pipeline"
+        ],
+        "out": [
+          "pipeline"
+        ]
+      },
+      "test": "test/contract.test.eg"
+    }
   ],
   "routes": [
     "GET /api/cos/boxes",
@@ -209,13 +238,13 @@
         "Cortex's /api/raid/contracts/v2/:id",
         "GET /api/cos/pipeline/requests/:id (RAID's view)"
       ],
-      "owner": "cortex (RAID) — Cortex keeps the books"
+      "owner": "cortex (RAID) \u2014 Cortex keeps the books"
     }
   ],
   "data": "<COS data>/pipeline/: runs/active/<id>/, runs/done/<id>/, gate-types/ (never committed)",
   "nodes": {
-    "about": "what a request carries: each step's output as a node of its type in nodes/<step>/out.<type>; a step declares takes/gives (lib/node-schemas: chunk, contract, context, gap, intent, hypothesis, crystal, output … any of them); each wire in dag.dag says what it carries; each step file names what it took and gave",
-    "origin": "James, 2026-11-09: \"i meant the data that runs through the pipeline like idearium pipeline does, emerge, .contracts with .dag, .chunk, .context or any of the nodes.\" · \"look at the idearium pipeline, don't limit to just my request for the node types\"",
+    "about": "what a request carries: each step's output as a node of its type in nodes/<step>/out.<type>; a step declares takes/gives (lib/node-schemas: chunk, contract, context, gap, intent, hypothesis, crystal, output \u2026 any of them); each wire in dag.dag says what it carries; each step file names what it took and gave",
+    "origin": "James, 2026-11-09: \"i meant the data that runs through the pipeline like idearium pipeline does, emerge, .contracts with .dag, .chunk, .context or any of the nodes.\" \u00b7 \"look at the idearium pipeline, don't limit to just my request for the node types\"",
     "types": "every type in lib/node-schemas (77 with .context and .dag, added 2026-11-09)"
   },
   "recursive": "a step that runs a pipeline (or a framework, compiled to one) starts a child request; the step names its children, the child its parent (request, step), at any depth (the engine's chain and MAX_DEPTH)",
@@ -252,6 +281,14 @@
         "listKey": "pipelines",
         "node": "GET /automation/pipelines/:id/node",
         "textAt": "text"
+      },
+      {
+        "system": "cortex",
+        "list": "GET /api/raid/contracts/v2",
+        "listKey": "contracts",
+        "node": "GET /api/raid/contracts/v2/:id",
+        "convert": "contract-pipeline",
+        "about": "PC12a (0.60.522), his \"all pipelines managable, orchastratred, and programmable in cos\": RAID's contracts, each gate a step that asks RAID to check it (cos/pipeline/contract.eg)"
       }
     ]
   }
