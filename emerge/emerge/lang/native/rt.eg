@@ -1920,6 +1920,28 @@ fn rt_b_write_bytes(path, b) {
   if rt_kind(b) != K_BYTES { rt_fail2("write_bytes needs bytes, got ", rt_type_name(b)) }
   return rt_write_path(path, b + 16, mem_get(b + 8))
 }
+// CIE13 slice a (2026-11-13): the clock and a file check, from the kernel directly. James, 2026-11-13: "Maybe you can work on finishing
+// emerge. So we can stop using JavaScript". now_ms(): clock_gettime(CLOCK_REALTIME) as whole milliseconds since 1970. sleep_ms(n):
+// nanosleep. path_exists(p): access(p, F_OK). The interpreter has the same three (lang/runtime.js), so a program runs the same both ways.
+fn rt_b_now_ms() {
+  let b = rt_bytes_new(16)
+  sys6(228, 0, b + 16, 0, 0, 0)
+  return rt_mknum(mem_get(b + 16) * 1000 + mem_get(b + 24) / 1000000)
+}
+fn rt_b_sleep_ms(v) {
+  if not rt_is_num(v) { rt_fail("sleep_ms needs a whole num of milliseconds, 0 or more") }
+  let n = v >> 3
+  if n < 0 { rt_fail("sleep_ms needs a whole num of milliseconds, 0 or more") }
+  let b = rt_bytes_new(16)
+  mem_set(b + 16, n / 1000)
+  mem_set(b + 24, (n % 1000) * 1000000)
+  sys6(35, b + 16, 0, 0, 0, 0)
+  return NULL
+}
+fn rt_b_path_exists(path) {
+  if sys6(21, rt_cpath(path), 0, 0, 0, 0) == 0 { return TRUE }
+  return FALSE
+}
 fn rt_b_chmod_exec(path) {
   sys6(90, rt_cpath(path), 493, 0, 0, 0)
   return NULL

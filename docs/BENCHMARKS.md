@@ -9,6 +9,24 @@ then they are written by hand.
 
 
 
+## 2026-11-13 — Emerge: a clock and a file check natively (CIE13 slice a, 0.60.502)
+- **Measured:** Emerge coding. His words: "Working on it in another session. Maybe you can work on finishing emerge. So we can stop using JavaScript"
+- **Method:** the three builtins written in rt.eg by syscall; each case run interpreted and native and compared (native.test.js).
+- **Wall time:** the native suite 1 min 23 s (112 cases); the compiler built by the interpreter 40 s, by itself 2.1 s (19x); one small
+  program compiled by the interpreter-run compiler 8 s.
+- **Lines:** .eg +22 (rt.eg), +1 (codegen.eg); JavaScript +3 (runtime.js), +4 (native.test.js). Emerge's totals after: 14,404 lines of
+  JavaScript, 13,964 of .eg (generated *_text.eg not counted).
+- **Tests:** native 112/112 (109 before, 3 new); Emerge's own suites 31, 14, 6.
+- **Failed runs before the pass, and what each taught:**
+  1. `"sleep_ms" is not defined` natively: the native compiler checks names against check_env_text.eg, generated from the interpreter's
+     builtins. A builtin is added in four places (rt.eg, codegen.eg's table, runtime.js, the regenerated environment), then the compiler
+     is rebuilt.
+  2. In another file the same day (cos/sovereign/card.eg): `ends_with(f, "x")` refused; it is an infix word, `f ends_with "x"`.
+- **Gaps found in Emerge:** adding one builtin takes four edits and two regenerations by hand: a candidate for one table that generates
+  the rest (CIE14). No folder listing, making or removing natively yet (next slice). No is-a-folder test in either runtime.
+- **Tension meter:** 14,404 lines of JavaScript left in Emerge. This slice removed none; it adds what the removal waits on.
+- **What came of it:** an Emerge program can time a step and wait, natively: what the pipeline's baseline, a heartbeat and a supervisor need.
+
 ## 2026-11-10 — Nexus's memory at boot, measured, and fitted to his machine (0.60.482)
 - **Measured:** Nexus. Each system's resident memory, 25 s after it booted in a fresh sandbox, all 11 at once, each answering its /health.
 - **His machine (his Task Manager):** an i3-1215U, 7.7 GB, memory at 91%, disk at 99%.
