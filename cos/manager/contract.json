@@ -508,6 +508,11 @@
     },
     {
       "method": "GET",
+      "path": "/api/cos/census/graph",
+      "out": "{ graphs: [{ id, what, store, node_kinds, edge_kinds, evidence, writers, readers, rows, rows_why }], unknown: [{ name, in }], files_read, markdown? } \u2014 every graph in Nexus, read from the tree (GR0); ?markdown=1 adds the atlas page"
+    },
+    {
+      "method": "GET",
       "path": "/api/cos/pipeline/sync",
       "out": "{ last: { at, why, imported, updated, files, systems: [{ system, ok, files | why }], failed } | null, sources: [system] } \u2014 the last sync (0.60.517): what it read and which system did not answer"
     },

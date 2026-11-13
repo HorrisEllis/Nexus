@@ -405,3 +405,11 @@ This supersedes the handoff's PN1 layout (2026-10-19: graph/<phase>-<hash>.graph
 # CONFIRMED 2026-11-13 (his): asked "one .chunk node at every level, reused exactly by hash and crystallized by count?": "yes but lib needs to
 # stop acting like a system." Readings (1)-(3) above stand as his. Reading (4) settled: the crystal lattice goes to Intelligence, not a new
 # substrate system ("Yes, map the move"): SW7 slice a and SW_D5 in docs/2026-11-13-sovereign-and-wired-phasemap.spec; CY0 expanded.
+
+# ── ADDENDUM 2026-11-13 (0.60.519) — GR0 built, in Emerge, run by COS ──
+# James, 2026-11-13: "i want the orchastrator and supstrate for the graphs phases" · "find them." · "yes. then the highest leverage."
+# cos/census/graph.eg: 12 graphs declared with their tokens; writers and readers read from the tree; rows read from data (none → null, with why);
+# an undeclared graph named in the code is listed (unknown). GET /api/cos/census/graph, `census graph` (COS's console), `cos census graph`
+# (Idearium's CLI), docs/atlases/graph-census.md. Proof: eg test 4/4; the tree: 13,419 loom entries, 5,778 phase graphs, 1,079 phases in 131 maps.
+# Found: the .phase files lag their maps (PS1's .phase reads OPEN, its map DONE). GR2 waits on AD1, shelved: his call (unshelve, or GR2
+# drops AD1 and reads through Pillar's per-system map, SW1). Next: GR1 (the one shape, in Pillar; GR0 and PIL1 met).

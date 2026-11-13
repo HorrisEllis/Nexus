@@ -941,6 +941,9 @@ export const SPEC = [
   { key: 'cos.request-resume', repo: false, usage: 'cos request-resume <request-id>', about: 'resume a request not met, from its step files: what is met is not run again',
     req: (a) => ({ system: 'cos', method: 'POST', path: `/api/cos/pipeline/requests/${encodeURIComponent(String((a.args || [])[0] || ''))}/resume`, body: { by: 'person' } }),
     personOnly: () => 'resuming a request is the person\'s — an agent asks them' },
+  // GR0 (2026-11-13) — James: "find them." · "yes. then the highest leverage." Every graph in Nexus, read from the tree, through COS's route
+  { key: 'cos.census-graph', repo: false, usage: 'cos census graph', about: 'every graph Nexus keeps (loom registry, phase graphs and DAG, the lattice, the causal graph, …): its store, what its edges rest on, the files that write and read it, its rows on this machine\'s data; graphs the code names that are not declared',
+    req: () => ({ system: 'cos', method: 'GET', path: '/api/cos/census/graph' }) },
   { key: 'cos.sovereign', repo: false, usage: 'cos sovereign [--keep]', about: 'the sovereignty scorecard: for each system, whether it has its own server.js, registry, contract, event taxonomy, command nodes and data folder, and whether its data is still at the root; what got worse since the reading kept. --keep keeps this reading (SW0, his 2026-11-13 "We need each system sovereign.")',
     req: (a) => (a.flags.keep ? { system: 'cos', method: 'POST', path: '/api/cos/sovereign', body: { by: 'person' } } : { system: 'cos', method: 'GET', path: '/api/cos/sovereign' }),
     print: (d, a, h) => { for (const r of d.systems || []) console.log(`  ${(r.has === r.of ? h.c.mint : h.c.amber)(`${r.has}/${r.of}`)} ${String(r.system).padEnd(14)} ${h.c.dim(r.missing.length ? 'lacks ' + r.missing.join(', ') : 'whole')}`);

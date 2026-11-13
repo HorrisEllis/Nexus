@@ -59,7 +59,7 @@ function createServer(sup, opts = {}) {
   // DK6–DK8 0.60.383 — James, 2026-11-03: "It needs to be a virtual disk. For the virtual envirements for qumu also. Like it holds all the data,
   // snapshots, system state." Each system's qcow2: its metadata, files and data in one ext4, its snapshots inside the same file
   const vdisks = require('../disk/vdisk.js').createVDisks({ root, disks });
-  const cli = require('./cli.js').createCli({ sup, resources, config, notices, proposals, addSystem, usage, disks, vdisks, pipelineSync: (o) => syncPipelines(o) });
+  const cli = require('./cli.js').createCli({ sup, resources, config, notices, proposals, addSystem, usage, disks, vdisks, pipelineSync: (o) => syncPipelines(o), graphCensus: (o) => pipeline.graphCensus(o) });
   sup.on('ledger', (entry) => { try { notices.fromLedger(entry); } catch (_) {} });
   const checkNotice = () => { try { notices.fromNotice(require('../../lib/nexus-update.js').notice({ root })); } catch (_) {} };
   const noticeTick = setInterval(checkNotice, 10 * 60 * 1000); if (noticeTick.unref) noticeTick.unref(); setTimeout(checkNotice, 2000).unref();
@@ -305,6 +305,8 @@ function createServer(sup, opts = {}) {
         if (rm && m === 'GET' && !rm[2]) { const r = await pipeline.runs.read(rm[1]); return send(res, r ? 200 : 404, r ? { ok: true, ...r } : { ok: false, error: `no request "${rm[1]}"` }); }
         if (rm && m === 'POST' && rm[2]) { if (/^agent:/.test(String(body.by || ''))) return send(res, 403, { ok: false, error: 'an agent proposes; resuming is a person\'s' }); const r = await pipeline.resume(rm[1], { by: body.by }); return send(res, r.ok ? 200 : (r.code || 400), r); } }
       if (m === 'GET' && p === '/api/cos/pipeline/ready') { const r = await pipeline.ready({ limit: u.searchParams.get('limit') }); return send(res, r.ok ? 200 : (r.code || 502), r); }   // 2026-11-12: the phases that can be built now, for the run form
+      // GR0 (2026-11-13): the graph census — every graph in Nexus, its store, writers, readers and rows (cos/census/graph.eg); ?markdown=1 adds the atlas page
+      if (m === 'GET' && p === '/api/cos/census/graph') { const r = await pipeline.graphCensus({ markdown: u.searchParams.get('markdown') === '1' }); return send(res, r.ok ? 200 : (r.code || 500), r); }
       // SW0 (2026-11-13): the sovereignty scorecard; POST keeps this reading as the one to hold (a person's)
       if (p === '/api/cos/sovereign' && (m === 'GET' || m === 'POST')) { if (m === 'POST' && body.by !== 'person') return send(res, 403, { ok: false, error: 'keeping a reading as the baseline is a person\'s' });
         const r = await pipeline.sovereign({ write: m === 'POST', ...(opts.sovereign || {}) }); return send(res, r.ok ? 200 : (r.code || 500), r); }
