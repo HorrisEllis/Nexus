@@ -27,7 +27,7 @@ const http = require('http');
 const MODULE_ID = 'guardian.provider-attention';
 const VERSION = '1.0.0';
 const REASONS = Object.freeze(['signin', 'map', 'no-connect']);
-const LOGIN_OPTIONAL = new Set(['chatgpt']);   // mirrors clear-glass/src/providers/registry.js loginOptional
+const LOGIN_OPTIONAL = new Set(['chatgpt', 'gemini']);   // mirrors clear-glass/src/providers/registry.js loginOptional (gemini: his 2026-11-13)
 const SIGNIN_RE = /\/(login|log-in|signin|sign-in|sign_in|auth|authenticate|oauth|sso|account\/login|u\/login)(\/|$|\?|#)/i;
 const SIGNIN_HOSTS = /(^|\.)(accounts\.google\.com|login\.microsoftonline\.com|auth0\.com|appleid\.apple\.com|auth\.openai\.com|login\.live\.com)$/i;
 

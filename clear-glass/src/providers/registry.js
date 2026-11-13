@@ -49,6 +49,9 @@ const SEED = Object.freeze({
     hosts:          ['gemini.google.com', 'aistudio.google.com'],
     userscriptFile: 'userscript-gemini.js',
     color:          '#4285f4',
+    // 2026-11-13 — James: "gemini doewsnt seem like it needs to be signed in." Like ChatGPT: a tab on a sign-in page is sent back to the
+    // chat before the person is asked (providers/attention.js); he can still sign in from the panel.
+    loginOptional:  true,
   },
   perplexity: {
     id:             'perplexity',
