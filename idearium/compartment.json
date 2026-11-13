@@ -34,6 +34,7 @@
       ],
       "phase": 3,
       "healthUrl": "http://127.0.0.1:4800/health",
+      "heartbeat": "idearium",
       "compartment": "nexus-self-idearium",
       "boundary": {
         "mode": "audit",

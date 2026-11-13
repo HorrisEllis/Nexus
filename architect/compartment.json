@@ -33,6 +33,7 @@
       ],
       "phase": 3,
       "healthUrl": "http://127.0.0.1:3747/health",
+      "heartbeat": "architect",
       "compartment": "nexus-self-architect",
       "boundary": {
         "mode": "audit",

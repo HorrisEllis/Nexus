@@ -698,6 +698,7 @@
     "cos.desktop.act": "{ at, verb, args, by, why, ok, reason? } \u2014 every act of the desktop driver, or why it was refused (PC9, 2026-11-11)",
     "cos.ledger": "{ entry: SupervisorLedgerEntry } \u2014 every line the supervisor writes, as it is written",
     "cos.system.state": "{ name, state, pid } \u2014 a system's state changed",
+    "cos.usage": "{ usage } — COS's resource sample (every 30 s): the host's CPU and memory and each system's; PR6 slice a, pages listen instead of polling",
     "cos.ui.navigate": "{ to } \u2014 a page asks the shell to open a route",
     "cos.ui.notice": "{ level, text } \u2014 a page asks the shell to say something",
     "cos.ui.tab": "{ tab } \u2014 the shell tells a cockpit which tab the address names",
@@ -763,7 +764,7 @@
       "listens": [
         "cos.system.state",
         "cos.ledger"
-      ],
+      , "cos.usage"],
       "emits": [
         "cos.ui.navigate",
         "cos.ui.notice"

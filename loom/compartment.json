@@ -34,6 +34,7 @@
       "phase": 3,
       "optional": true,
       "healthUrl": "http://127.0.0.1:3752/health",
+      "heartbeat": "loom",
       "compartment": "nexus-self-loom",
       "boundary": {
         "mode": "enforce",

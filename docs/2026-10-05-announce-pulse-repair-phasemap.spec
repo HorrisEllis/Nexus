@@ -131,7 +131,7 @@ spec:
       proof: "a fixture system that hangs is restarted through autopilot and its next beat closes the gap; a restart that does not bring it back is escalated, not repeated past the breaker"
     PR6_cos_listens_never_polls:
       layer: system
-      status: OPEN
+      status: "SLICE A BUILT 0.60.504 (beats to COS; up at the first beat; missed beat said; usage streamed). Open: the rest of the beaters, the other pages' timers, SW5"
       james: 'cos needs to replace polling completely with the heartbeat from each system." · "just needs to listen for the heartbeat. maybe deltas to establish a baseline. · "the health check is redundant. also the main page keeps refreshing." · "cos is going to be the entire meta system for nexus."'
       depends_on: [PR3_negative_space_for_missed_heartbeats, PR4_deviation_raises_the_bpm]
       files: [cos/manager/supervisor.js, cos/manager/server.js, cos/archetype/nexus-system/lib/heartbeat.js, cos/archetype/nexus-system.js, cos/archetype/registry.js, cos/ui/shell/page.js, cos/ui/overview/page.js, cos/ui/hub/page.js, cos/ui/deployments/page.js, lib/pulse-watch.js]
@@ -163,3 +163,30 @@ spec:
 # file: orchestrator.js is a server with no exports, and his rule is no new JavaScript; the check and its result are in the changelog.
 # Not yet seen on a real idle stop: the Orchestrator must be restarted, then Versionium left idle for 10 minutes.
 # Left: the diagnostic's watch (lib/pulse-listener.js, "missed its heartbeat") and the watchdog's OFFLINE line still fire for a sleeping system.
+
+## ADDENDUM 2026-11-13 — PR6 slice a: beats go to COS; a beating system is up at its first beat; COS's pages listen (mapped before code)
+# James, 2026-11-13: "okay can you replace the polling and decouple what systems you can. thats one reason for the perfoamnce, because theyre
+# coupled so too many need to run also. like imagine they can access each other also without a node process. get the heartbeat done and
+# polling disabled" · "orchastrator needs to migrate to the superviser" · "the heartbeat optimizes nexus since when systems arent needed they
+# dont need to be polled."
+# Read the same day: lib/pulse.js posts every beat (10 s) to the Orchestrator (:9000 /api/heartbeat) and /api/register; the systems that beat:
+# architect, clear-glass (its wire), cortex, guardian, idearium, loom, ollama, orchestrator; not yet: copilot, diagnostic, versionium,
+# intelligence. COS's supervisor waits for each start by asking /health every 250 ms (cos/manager/supervisor.js, two loops); COS's pages
+# re-read state on timers (shell 5 s and its systems poll, overview 5 s, hub 10 s, deployments 4 s, logs 2 s, the engine page).
+# The coupling he names: COS cannot hear a beat until the Orchestrator is up, and the Orchestrator is one of the systems COS starts.
+# Slice a (the coder's cut, by §16.4 smallest change, §5.15 one system down breaks no other, SW_D1 the Orchestrator into the supervisor):
+#   - lib/pulse.js sends each beat and the registration to COS (COS_MANAGER_PORT, default 7799: POST /api/cos/heartbeat, /api/cos/register),
+#     whatever orchPort a caller passes; no system's code changes. COS is up before any system it starts.
+#   - COS answers the beat at once and passes it on to the Orchestrator (fire and forget), so the diagnostic and the Orchestrator's own watch
+#     keep working unchanged until SW5 moves them in; the Orchestrator down breaks nothing in COS.
+#   - the supervisor: a system whose declaration says `heartbeat` is up at its first beat (no /health request); each beat expects the next
+#     within interval × 1.5 + 5 s; a beat that does not come is said once as pulse-missed (negative space, PR3's rule), and a later beat
+#     clears it. A system COS stopped idle is asleep, not missed (his: not needed, not polled). A system that does not beat yet keeps the
+#     old start check, named in the ledger as not beating.
+#   - COS's shell and overview pages take systems' state from COS's event stream (GET /api/cos/events) instead of their timers.
+# Not in slice a, said: PR4 (the beat quickens on deviation); copilot, diagnostic, versionium and intelligence beating; the other pages'
+# timers (hub, deployments, logs, engine); the Orchestrator's watch and /api/heartbeat retired (SW5).
+# "access each other without a node process" (his): the reading, to confirm, is that a sleeping system is answered from what it keeps on
+# disk (its own map, SW1, and its nodes) without being started; mapped in SW1 slice b, not built here.
+# BUILT 0.60.504 as mapped above. Proof: tests/modules/test-cos-heartbeat.test.js HB-01..07 7/7. Not proven in Clear Glass (its host exits under
+# this machine's memory). Not live until COS and the systems restart.

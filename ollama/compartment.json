@@ -34,6 +34,7 @@
       "phase": 3,
       "optional": true,
       "healthUrl": "http://127.0.0.1:3749/health",
+      "heartbeat": "ollama",
       "compartment": "nexus-self-ollama",
       "boundary": {
         "mode": "enforce",

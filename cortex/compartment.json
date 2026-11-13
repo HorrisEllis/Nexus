@@ -34,6 +34,7 @@
       "phase": 1,
       "critical": true,
       "healthUrl": "http://127.0.0.1:3748/health",
+      "heartbeat": "cortex",
       "compartment": "nexus-self-cortex",
       "boundary": {
         "mode": "audit",

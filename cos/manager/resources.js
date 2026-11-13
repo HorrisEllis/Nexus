@@ -66,7 +66,7 @@ function _judgeOf(sup) {
     : { low: free < floor, why: `free memory ${(free * 100).toFixed(1)}% is ${free < floor ? 'under' : 'over'} the floor ${Math.round(floor * 100)}%` };
 }
 function createResources(sup, { root = sup.root, store = null, sampleMs = 30000, read = null, setPriority = os.setPriority, getPriority = os.getPriority,
-  proposals = null, ring = 120, approve = null } = {}) {
+  proposals = null, ring = 120, approve = null, onSample = null } = {}) {   // onSample: PR6 slice a, each sample handed out (COS's stream)
   const judge = _judgeOf(sup);   // CP6a 0.60.501
   // 2026-11-01 CP6b — James: "cos backend, and hooking into idearium and raid. cos resource manager per compartment". An act COS takes by rule
   // on a compartment is RAID's to approve (§9.1 the only write authority for the system's own decisions, §5.2): lib/raid-port.js approveTool,
@@ -174,6 +174,7 @@ function createResources(sup, { root = sup.root, store = null, sampleMs = 30000,
     } else if (incident && free >= Math.min(0.3, P.memoryHaltPct * 2)) incident = null;   // the incident ends with headroom back (resource-monitor's 30%, capped)
     try { await balanceStep(u, list, P); } catch (e) { sup.note('balance-error', `the balance step failed: ${e.message} — nothing changed`, { by: 'rule:balance' }); }
     last = u;
+    if (typeof onSample === 'function') { try { onSample(u); } catch (_) {} }   // PR6 slice a: pages hear the sample; nobody polls for it
     return u;
   }
   let last = null;
@@ -237,7 +238,7 @@ function createResources(sup, { root = sup.root, store = null, sampleMs = 30000,
   }
 
   sup.setHooks({ heapMB, spawned });
-  return { caps, setCaps, all, sample, history, spawned, heapMB, balance, stop: () => { if (timer) clearInterval(timer); }, file: FILE, PRIORITIES: Object.keys(PRIORITIES) };
+  return { caps, setCaps, all, sample, last: () => last, history, spawned, heapMB, balance, stop: () => { if (timer) clearInterval(timer); }, file: FILE, PRIORITIES: Object.keys(PRIORITIES) };
 }
 
 module.exports = { createResources, validate, PRIORITIES, BALANCE };

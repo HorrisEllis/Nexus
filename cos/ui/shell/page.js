@@ -105,6 +105,7 @@
       BUS.pulse(entry.system, `${entry.kind}${/^person|^agent/.test(entry.by || '') ? ' by-person' : ''}`); relay('cos.ledger', { entry });
       if (/^proposal-/.test(entry.kind)) refreshProposals(); });
     es.addEventListener('cos.system.state', (m) => onState(JSON.parse(m.data)));
+    es.addEventListener('cos.usage', (m) => { try { const d = JSON.parse(m.data); drawTop(d.usage); relay('cos.usage', d); } catch (_) {} });   // PR6 slice a: no timer
     es.addEventListener('cos.console', (m) => { try { relay('cos.console', JSON.parse(m.data)); } catch (_) {} });   // SC11: the Console tab
     es.addEventListener('cos.notice', (m) => { try { dispatchEvent(new CustomEvent('cos-notice', { detail: JSON.parse(m.data) })); } catch (_) {} });   // SC5: the bell (console.js)
     es.onerror = () => { busState('starting', 'reconnecting — reading every 5 s'); startPoll(); };
@@ -154,14 +155,19 @@
       const [hl, us] = await Promise.all([get('/api/cos/health'), get('/api/cos/usage')]);
       $('manager').querySelector('.dot').dataset.s = 'up';
       $('manager-text').textContent = $('manager').title = `manager · pid ${hl.pid} · ${hl.systems} systems`;   // CE7: the title holds the full text when the pill is shortened
-      const host = us.usage.host, cpu = Math.min(1, host.load1 / host.cpus), used = 1 - host.freeMemPct / 100;
+      drawTop(us.usage);
+    } catch (e) { $('manager').querySelector('.dot').dataset.s = 'down'; $('manager-text').textContent = $('manager').title = 'manager not answering'; }
+  }
+  function drawTop(usage) {   // PR6 slice a: drawn from each sample COS streams (cos.usage), not from a 5 s timer
+    try {
+      const host = usage.host, cpu = Math.min(1, host.load1 / host.cpus), used = 1 - host.freeMemPct / 100;
       const mc = $('m-cpu'), mm = $('m-mem');
       mc.querySelector('i').style.width = `${Math.round(cpu * 100)}%`; mc.querySelector('.v').textContent = `${Math.round(cpu * 100)}%`; mc.classList.toggle('hot', cpu > 0.85);
       mm.querySelector('i').style.width = `${Math.round(used * 100)}%`; mm.querySelector('.v').textContent = `${Math.round(used * 100)}%`;
       const fl = mm.querySelector('.floor'); if (host.haltPct != null) { fl.style.display = 'block'; fl.style.left = `${(1 - host.haltPct) * 100}%`; }
       mm.classList.toggle('hot', host.haltPct != null && host.freeMemPct / 100 < host.haltPct * 1.5);
       mm.title = `host memory in use: ${host.totalMB - host.freeMB} of ${host.totalMB} MB · the supervisor halts spawns below ${Math.round((host.haltPct || 0) * 100)}% free`;
-    } catch (e) { $('manager').querySelector('.dot').dataset.s = 'down'; $('manager-text').textContent = $('manager').title = 'manager not answering'; }
+    } catch (_) { /* a sample it cannot draw leaves the last one shown */ }
   }
   async function refreshProposals() { try { S.proposals = (await get('/api/cos/proposals?open=1')).proposals.length; badge(); } catch (_) {} }
 
@@ -206,7 +212,7 @@
     }
     stage.replaceChildren(); S.frames.clear();   // SC7: a page opened while the contract was loading was cleared from the stage but kept here, so it never showed again
     BUS.lanes(S.systems.map(s => s.name)); renderNav(); route(); connect(); refreshTop(); refreshProposals();
-    setInterval(refreshTop, 5000);
+    // PR6 slice a: the 5 s refresh is gone; the top is drawn from each cos.usage sample on the stream
   }
   start();
 })();

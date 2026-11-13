@@ -127,5 +127,6 @@
   COS.on('cos.ledger', ({ entry }) => { if (/^proposal-/.test(entry.kind)) loadProposals(); else soon(); });
 
   renderHead(); await load(); loadProposals();
-  setInterval(loadUsage, 5000);
+  COS.on('cos.usage', ({ usage }) => { S.usage = usage; S.usageAt = Date.now(); render(); });   // PR6 slice a: each sample from COS's stream, no 5 s timer
+  loadUsage();
 })();

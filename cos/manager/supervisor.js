@@ -103,6 +103,31 @@ function createSupervisor({ root, declarations = null, policy = {}, ledgerFile =
       ? { low: true, why: `${pc(free)} memory free is under the floor ${pc(floor)} and ${z.toFixed(1)}σ under ${base}`, baseline: b, z }
       : { low: false, why: `${pc(free)} memory free is under the floor ${pc(floor)} but usual here: ${z.toFixed(1)}σ from ${base} (bites at ${P.memSigmaK}σ)`, baseline: b, z };
   }
+  // PR6 slice a (2026-11-13) — James: "get the heartbeat done and polling disabled" · "the heartbeat optimizes nexus since when systems arent
+  // needed they dont need to be polled." A system whose declaration names its `heartbeat` (the id lib/pulse.js beats as) is up at its first
+  // beat, with no /health request; each beat expects the next within its interval × 1.5 + 5 s; a beat that does not come is said once
+  // (pulse-missed), a later beat clears it. A system COS stopped (idle, or asked) is asleep: its silence is not a miss.
+  const beatName = (id) => { for (const s of S.values()) { const h = eff(s.decl).heartbeat; if (h && (Array.isArray(h) ? h.includes(id) : h === id)) return s.decl.name; } return null; };
+  function beat(b = {}) {
+    const id = String(b.systemId || ''); const name = id && beatName(id);
+    if (!name) return { known: false, name: null };
+    const s = S.get(name), now = Date.now(), every = Math.max(1000, Number(b.intervalMs) || 10000);
+    s.lastBeat = { at: now, seq: b.seq || null, every, memMB: b.meta && b.meta.memMB || null };
+    if (s.proc && (s.state === 'starting' || s.state === 'degraded')) { s.state = 'up'; write('pulse', name, `up at its first beat (${id}, every ${every / 1000} s); no /health asked`); }
+    if (s.missedSince) { write('pulse-recovered', name, `beat again after ${Math.round((now - s.missedSince) / 1000)} s of silence`); s.missedSince = null; }
+    if (s.beatTimer) clearTimeout(s.beatTimer);
+    s.beatTimer = setTimeout(() => { s.beatTimer = null; if (!s.proc || s.missedSince) return;   // stopped: asleep, not missed
+      s.missedSince = Date.now(); write('pulse-missed', name, `no beat for ${Math.round((every * 1.5 + 5000) / 1000)} s (last at ${new Date(now).toISOString()}); the process is still there (pid ${s.pid})`); }, every * 1.5 + 5000);
+    if (s.beatTimer.unref) s.beatTimer.unref();
+    for (const w of (s.beatWaiters || []).splice(0)) w(true);
+    return { known: true, name };
+  }
+  // up by its beat, within ms; false when none came (said by the caller)
+  function waitBeat(s, proc, ms) {
+    return new Promise((res) => { if (s.proc === proc && s.state === 'up') return res(true);
+      let done = false; const w = (v) => { if (done) return; done = true; res(v); }; (s.beatWaiters = s.beatWaiters || []).push(w);
+      const t = setTimeout(() => { s.beatWaiters = (s.beatWaiters || []).filter(x => x !== w); w(false); }, ms); if (t.unref) t.unref(); });
+  }
   const S = new Map();   // name → { decl, state, proc, pid, crashes[], restarts, backoffMs, timers, lastActivity, startedAt, by, circuit, lastExit }
   const add = (d) => S.set(d.name, { decl: d, state: 'declared', proc: null, pid: null, crashes: [], restarts: 0, backoffMs: P.restart.backoffMs[0],
     timers: new Set(), lastActivity: null, startedAt: null, by: null, circuit: { open: false, openedAt: null, why: null }, lastExit: null, health: null,
@@ -186,7 +211,10 @@ function createSupervisor({ root, declarations = null, policy = {}, ledgerFile =
     later(s, P.stableMs, () => { if (s.proc === proc) s.backoffMs = P.restart.backoffMs[0]; });
     proc.on('exit', (code, signal) => onExit(name, proc, code, signal));
     proc.on('error', (err) => log(`[${name}] failed to spawn: ${err.message}`));
-    if (d.healthUrl) {   // up when its health answers, within the phase gate; else said (a spawn outside boot is watched the same way)
+    if (d.heartbeat) {   // PR6 slice a: up at its first beat, within the phase gate; no /health request
+      (async () => { const ok = await waitBeat(s, proc, P.phaseGateMs);
+        if (!ok && s.proc === proc && s.state === 'starting') { s.state = 'degraded'; write('health', name, `no beat within ${P.phaseGateMs / 1000}s of spawn`); } })();
+    } else if (d.healthUrl) {   // up when its health answers, within the phase gate; else said (a spawn outside boot is watched the same way)
       (async () => { const until = Date.now() + P.phaseGateMs;
         while (s.proc === proc && Date.now() < until) { if (await checkHealth(d.healthUrl)) { if (s.proc === proc && s.state === 'starting') s.state = 'up'; return; } await new Promise(r => setTimeout(r, 250)); }
         if (s.proc === proc && s.state === 'starting') { s.state = 'degraded'; write('health', name, `no health within ${P.phaseGateMs / 1000}s of spawn`); } })();
@@ -198,6 +226,7 @@ function createSupervisor({ root, declarations = null, policy = {}, ledgerFile =
     const s = S.get(name);
     if (proc && s.proc !== proc) return;   // an old child's exit
     s.proc = null; s.pid = null; s.pause = null; s.lastExit = { code, signal, ts: Date.now() };
+    if (s.beatTimer) { clearTimeout(s.beatTimer); s.beatTimer = null; } s.missedSince = null;   // PR6: a stopped system is asleep, not missed
     if (s.state === 'stopping') { s.state = 'stopped'; write('stop', name, 'stopped as asked', { code, by: s.by }); return; }
     if (s.state === 'idling') { s.state = 'idle'; write('idle-stop', name, `idle ${Math.round(P.idleMs / 1000)}s; starts again when asked`, { code }); return; }
     if (s.state === 'restarting') { s.backoffMs = P.restart.backoffMs[0]; write('restart', name, 'restarting as asked', { code, by: s.by }); spawnNow(name, s.by); return; }
@@ -272,7 +301,8 @@ function createSupervisor({ root, declarations = null, policy = {}, ledgerFile =
     for (const ph of phases) {
       const group = chosen.filter(s => (E.get(s).phase ?? 99) === ph);
       for (const s of group) { if (!running(s)) spawnNow(s.decl.name, by); started.push(s.decl.name); }
-      await Promise.all(group.filter(s => E.get(s).healthUrl).map(async (s) => {   // the phase waits for its health, never forever (§1.2)
+      await Promise.all(group.filter(s => E.get(s).healthUrl || E.get(s).heartbeat).map(async (s) => {   // the phase waits for its health, never forever (§1.2)
+        if (E.get(s).heartbeat) { if (!(await waitBeat(s, s.proc, P.phaseGateMs))) write('health', s.decl.name, `phase ${ph}: no beat within ${P.phaseGateMs / 1000}s — boot goes on, said`); return; }   // PR6 slice a
         const until = Date.now() + P.phaseGateMs;
         while (Date.now() < until) { if (await checkHealth(E.get(s).healthUrl)) { if (s.proc) s.state = 'up'; return; } await new Promise(r => setTimeout(r, 250)); }
         write('health', s.decl.name, `phase ${ph}: no health within ${P.phaseGateMs / 1000}s — boot goes on, said`);
@@ -307,7 +337,7 @@ function createSupervisor({ root, declarations = null, policy = {}, ledgerFile =
 
   const api = { boot, note, logs, pause, resume, on: (ev, fn) => bus.on(ev, fn), off: (ev, fn) => bus.off(ev, fn), declarations: () => decls.map(d => ({ ...d })), list: () => [...S.values()].map(view), get: (n) => view(must(n)), start, stop, restart, touch, resetCircuit, ledger,
     policy: () => JSON.parse(JSON.stringify(P)), setPolicy: (patch, { by = 'person' } = {}) => { Object.assign(P, patch || {}); write('policy', null, `policy changed: ${JSON.stringify(patch)}`, { by }); return JSON.parse(JSON.stringify(P)); },
-    shutdown, DEFAULTS, ledgerFile: LEDGER, memoryObserve, memoryBaseline, memoryJudge, lastBoot: null, setHooks: (h) => { Object.assign(hooks, h || {}); },
+    shutdown, DEFAULTS, ledgerFile: LEDGER, beat, memoryObserve, memoryBaseline, memoryJudge, lastBoot: null, setHooks: (h) => { Object.assign(hooks, h || {}); },
     // SC4 — a system added while COS runs (its declaration just written by add-system.js): declared live, never started by this
     declare: (d) => { if (!d || !d.name) throw Object.assign(new Error('a declaration needs a name'), { code: 400 }); if (S.has(d.name)) throw Object.assign(new Error(`"${d.name}" is already declared`), { code: 409 });
       decls.push(d); add(d); write('declared', d.name, `added while COS runs: ${d.cmd || 'node'} ${(d.args || []).join(' ')}`, { by: d.addedBy || 'person' }); return view(S.get(d.name)); },

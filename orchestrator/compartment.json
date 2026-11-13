@@ -37,6 +37,7 @@
       "phase": 2,
       "critical": true,
       "healthUrl": "http://127.0.0.1:9000/health",
+      "heartbeat": "orchestrator",
       "compartment": "nexus-self-orchestrator",
       "boundary": {
         "mode": "audit",

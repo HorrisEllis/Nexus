@@ -25,6 +25,10 @@ function createServer(sup, opts = {}) {
   const { root = path.resolve(__dirname, '..', '..') } = opts;
   const door = require('./autopilot-door.js').mount(sup, { ROOT: root });   // MG16: autopilot's routes, in its shapes (MG-003)
   const send = (res, code, body) => { res.writeHead(code, { 'Content-Type': 'application/json' }); res.end(JSON.stringify(body)); };
+  // PR6 slice a: a beat or a registration passed on to the Orchestrator (its origin from its declaration); no answer awaited, an error dropped
+  const _onward = (path, raw) => { try { const d = sup.declarations().find(x => x.name === 'orchestrator'); let port = 9000; try { if (d && d.healthUrl) port = Number(new URL(d.healthUrl).port) || 9000; } catch (_) {}
+    const q = http.request({ host: '127.0.0.1', port, path, method: 'POST', timeout: 3000, headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(raw || '') } }, (r) => r.resume());
+    q.on('timeout', () => q.destroy()); q.on('error', () => {}); q.end(raw || ''); } catch (_) {} };
   const proposals = createProposals(sup);   // MG18: agents' held acts
   // 2026-11-12 — James: "Need to be able to propose restarts." An agent could propose restarting a system (MG18); COS itself was not a target.
   // Now: { verb: 'restart-cos', target: 'cos', why, by: agent:<name> } is held; taken by him, COS restarts itself the way an update's yes does.
@@ -32,7 +36,7 @@ function createServer(sup, opts = {}) {
     check: ({ target, payload }) => { if (target !== 'cos') throw Object.assign(new Error('restart-cos restarts COS itself: { "target": "cos" } (a system is { "verb": "restart", "target": "<system>" })'), { code: 400 });
       if (typeof opts.restartCos !== 'function') throw Object.assign(new Error('this COS was not started to restart itself: nothing to propose'), { code: 409 }); return { payload: payload || null }; },
     run: (p, { by }) => opts.restartCos({ by }) });
-  const resources = require('./resources.js').createResources(sup, { proposals });   // CP6a: caps by layer, read back; the account; pressure → a proposal
+  const resources = require('./resources.js').createResources(sup, { proposals, onSample: (u) => broadcast('cos.usage', { usage: u }) });   // PR6 slice a: the sample on the stream   // CP6a: caps by layer, read back; the account; pressure → a proposal
   // CE2 0.60.376 — Nexus's update as COS's: per system, the tool behind the toast (cos/manager/updates.js); every step on the event stream
   const updates = require('./updates.js').createUpdates(sup, { root, emit: (e, d) => { broadcast(e, d); if (e === 'cos.update') notices.fromUpdate(d); },
     // CE2b 0.60.417 — James, 2026-11-06: "updates need to restart cos." · on Clear Glass: "Ask me first". The yes is his (POST /api/cos/update/restart);
@@ -145,6 +149,14 @@ function createServer(sup, opts = {}) {
         res.write(`event: cos.hello\ndata: ${JSON.stringify({ systems: sup.list().map(v => ({ name: v.name, state: v.state, pid: v.pid })), at: Date.now() })}\n\n`);
         streams.add(res); req.on('close', () => streams.delete(res)); return;
       }
+      // PR6 slice a (2026-11-13) — James: "get the heartbeat done and polling disabled" · "orchastrator needs to migrate to the superviser".
+      // Every system's beat (lib/pulse.js) comes here: the supervisor hears it (up at its first beat, a missed beat said), and it is passed on
+      // to the Orchestrator, fire and forget, until the Orchestrator moves in (SW5). The Orchestrator down changes nothing here.
+      if (m === 'POST' && (p === '/api/cos/heartbeat' || p === '/api/cos/register')) {
+        const r = p.endsWith('heartbeat') ? sup.beat(body) : { known: null };
+        _onward(p.endsWith('heartbeat') ? '/api/heartbeat' : '/api/register', rawBody);
+        return send(res, 200, { ok: true, at: Date.now(), heardBy: 'cos', system: r.name || null, known: r.known, registry: {} });
+      }
       // 2026-11-01 TV3 — James: "i also meant cos ui" (the emergence channel). COS asks Intelligence through its routes (its origin from its
       // declaration's healthUrl, never its files) and the kernel for his emergence runs (lib/emergence.js). A silent Intelligence is a 503 naming it.
       const em = /^\/api\/cos\/emergence\/(patterns|liminal|sessions)$/.exec(p);
@@ -168,7 +180,8 @@ function createServer(sup, opts = {}) {
       if (m === 'PATCH' && p === '/api/cos/update/settings') { const r = updates.setSettings(body.patch || {}, { by: body.by }); return send(res, r.ok ? 200 : r.code || 400, r); }
       if (m === 'GET' && p === '/api/cos/update/history') return send(res, 200, updates.history({ limit: u.searchParams.get('limit') }));
       if (m === 'POST' && p === '/api/cos/update/rollback') { if (!body.by) return send(res, 400, { ok: false, error: 'say who acts: { "by": "person" }' }); if (/^agent:/.test(String(body.by))) return send(res, 403, { ok: false, error: 'an agent proposes; a rollback is a person\'s' }); const r = await updates.rollback({ by: body.by }); return send(res, r.ok ? 200 : 409, r); }
-      if (m === 'GET' && p === '/api/cos/usage') return send(res, 200, { ok: true, usage: await usage.readAsync(sup.list(), sup.policy()) });
+      // PR6 slice a: answered from COS's last sample (every 30 s) when it is fresh; each read costs a process listing (PowerShell on Windows)
+      if (m === 'GET' && p === '/api/cos/usage') { const l = resources.last && resources.last(); if (l && l.at && Date.now() - l.at < 45000) return send(res, 200, { ok: true, usage: l, from: 'last sample' }); return send(res, 200, { ok: true, usage: await usage.readAsync(sup.list(), sup.policy()) }); }
       // CP6a (his 2026-11-01: "then i want resource management for each cos compartment") — caps by layer, read back; the account
       if (m === 'GET' && p === '/api/cos/resources') { if (u.searchParams.get('fresh') === '1') await resources.sample(); return send(res, 200, { ok: true, resources: resources.all() }); }
       const cp = /^\/api\/cos\/systems\/([^/]+)\/caps$/.exec(p);
