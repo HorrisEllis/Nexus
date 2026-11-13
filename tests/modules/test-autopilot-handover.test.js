@@ -7,13 +7,14 @@ require('../../lib/test-sandbox.js').ensure();
  *         fixture system up on the door's /status, a 'handover' ledger line naming the version; SIGTERM stops the manager and the system
  *   AH-02 a second launcher on the same port finds the manager and starts nothing (no second supervisor, the same pid)
  *   AH-03 an old autopilot holding the port is refused, exit 1, said
+ *   AH-06 SW5a: inside COS the duties hear the ledger as it is written and act on the supervisor itself
  *   AH-04 core's duties: the snapshot keeps autopilot's keys; COS's ledger lines → one gap per circuit-open, one diagnostic per stall, once
  *   AH-05 COS's runtime tells a release that hands over from one that supervises itself
  */
 const assert = require('assert'), fs = require('fs'), os = require('os'), path = require('path'), http = require('http'), { spawn } = require('child_process');
 const ROOT = path.join(__dirname, '..', '..');
 const LAUNCHER = path.join(ROOT, 'lib/nexus/autopilot.js');
-const duties = require(path.join(ROOT, 'lib/nexus/core-duties.js'));
+const duties = require(path.join(ROOT, 'cos/manager/duties.js'));
 const { supervisorOf } = require(path.join(ROOT, 'cos/app/runtime.js'));
 let passed = 0, failed = 0;
 async function test(id, d, fn) { try { await fn(); console.log(`  ✓ ${id} ${d}`); passed++; } catch (e) { console.error(`  ✗ ${id} ${d}\n    ${(e.stack || e.message).split('\n').slice(0, 3).join('\n    ')}`); failed++; } }
@@ -88,12 +89,30 @@ function launch(args) { const c = spawn(process.execPath, [LAUNCHER, ...args], {
       assert.deepStrictEqual(got.diag, ['b'], 'one diagnostic for the one stall line');
     });
 
+    await test('AH-06', 'SW5a: inside COS the duties hear the ledger as it is written (no route, no polling) and act on the supervisor itself', async () => {
+      const { EventEmitter } = require('events'); const bus = new EventEmitter(); const restarted = [];
+      const sup = { list: () => [{ name: 'a', state: 'up', pid: process.pid, restarts: { count: 0 } }], restart: (n, o) => { restarted.push([n, o.by]); return { ok: true }; } };
+      const got = { snap: [], gap: [], diag: [] };
+      const d = duties.start({ cos: duties.inProcess(sup, null), onLedger: (fn) => { bus.on('ledger', fn); return () => bus.off('ledger', fn); }, log: () => {}, wireIn: false, snapshotMs: 1e9,
+        sinks: { writeSnapshot: (p) => got.snap.push(p), reportGap: (s) => got.gap.push(s), runDiagnostic: async (s) => { got.diag.push(s); } } });
+      await new Promise(r => setTimeout(r, 50));
+      const e = { id: 'y1', ts: Date.now(), kind: 'circuit-open', system: 'a', why: 'crash loop' };
+      bus.emit('ledger', e); bus.emit('ledger', e); bus.emit('ledger', { id: 'y2', ts: Date.now(), kind: 'health', system: 'b', why: 'phase 3: no health within 30s' });
+      await new Promise(r => setTimeout(r, 50));
+      assert.deepStrictEqual(got.gap, ['a'], 'one gap, heard, once'); assert.deepStrictEqual(got.diag, ['b']);
+      assert.ok(got.snap.length >= 1 && got.snap[0].perSystem.a.status === 'up', 'the snapshot read from the supervisor itself');
+      await duties.inProcess(sup, null).restart('a', 'rule:auto-update'); assert.deepStrictEqual(restarted, [['a', 'rule:auto-update']]);
+      d.stop(); assert.strictEqual(bus.listenerCount('ledger'), 0, 'stop lets go of the ledger');
+    });
+
     await test('AH-05', 'COS\'s runtime tells a release that hands over (0.60.330 on) from one that supervises itself', async () => {
       const r = fs.mkdtempSync(path.join(os.tmpdir(), 'mg17-rel-'));
       assert.strictEqual(supervisorOf(r), 'autopilot');
       fs.mkdirSync(path.join(r, 'cos', 'manager'), { recursive: true }); fs.writeFileSync(path.join(r, 'cos', 'manager', 'server.js'), '');
       fs.mkdirSync(path.join(r, 'lib', 'nexus'), { recursive: true }); fs.writeFileSync(path.join(r, 'lib', 'nexus', 'core-duties.js'), '');
       assert.strictEqual(supervisorOf(r), 'cos-manager');
+      fs.rmSync(path.join(r, 'lib', 'nexus', 'core-duties.js')); assert.strictEqual(supervisorOf(r), 'autopilot');
+      fs.writeFileSync(path.join(r, 'cos', 'manager', 'duties.js'), ''); assert.strictEqual(supervisorOf(r), 'cos-manager', 'SW5a: the duties in COS hand over too');
       assert.strictEqual(supervisorOf(ROOT), 'cos-manager', 'this tree hands over');
       fs.rmSync(r, { recursive: true, force: true });
     });

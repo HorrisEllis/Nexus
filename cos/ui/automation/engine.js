@@ -152,6 +152,21 @@
     try { DD.st = await api('POST', '/api/cos/desktop/arm', { minutes: Number($('dd-min').value), mode, by: 'person' }); ddDraw(); say('ok', `The desktop is armed (${mode}) for ${$('dd-min').value} minutes.`); } catch (e) { say('bad', e.message); } });
   $('dd-disarm').addEventListener('click', async () => { try { DD.st = await api('POST', '/api/cos/desktop/disarm', { by: 'person' }); ddDraw(); say('ok', 'The desktop is disarmed.'); } catch (e) { say('bad', e.message); } });
 
+  // 0.60.517 — James, 2026-11-13: "also all pipelines in nexus need to be here." The list was read once, when the page opened: a pipeline imported
+  // from the console, or by COS's sync once Idearium and Clear Glass answered, did not show. Now: the Sync button; what the last sync read and which
+  // system did not answer; and the list read again when COS's stream says a pipeline changed or a sync ended (heard, not polled).
+  const syncSaid = (l) => { const el2 = $('ae-sync-said'); if (!el2) return; if (!l) { el2.textContent = 'Not synced since COS started.'; return; }
+    const sys = (l.systems || []).map(x => x.ok ? `${x.system} ${x.files} of ${x.listed}${(x.skipped || []).length ? ' (' + x.skipped.map(k => k.id + ': ' + k.why).join('; ') + ')' : ''}` : `${x.system} did not answer`).join(' · ');
+    el2.textContent = `Synced ${ago(l.at)} (${l.why}): ${l.imported || 0} imported, ${l.updated || 0} updated${(l.failed || []).length ? ', ' + l.failed.length + ' refused' : ''}${sys ? ' · ' + sys : ''}`; };
+  async function sync() { const b = $('ae-sync'); if (b) b.disabled = true; say('', 'Importing every pipeline in Nexus…');
+    try { const r = await api('POST', '/api/cos/pipeline/sync', { by: 'person' }); syncSaid(r); await pipes(); const miss = (r.systems || []).filter(x => !x.ok);
+      say(miss.length ? 'bad' : 'ok', `${r.imported} imported, ${r.updated} updated.${miss.length ? ' Not answering: ' + miss.map(x => x.system).join(', ') + ' (their last files kept).' : ''}`); }
+    catch (e) { say('bad', e.message); } finally { if (b) b.disabled = false; } }
+  if ($('ae-sync')) $('ae-sync').addEventListener('click', sync);
+  if (window.EventSource) { const es = new EventSource('/api/cos/events'); let t = null; const again = () => { clearTimeout(t); t = setTimeout(pipes, 300); };
+    ['automation.pipeline.created', 'automation.pipeline.updated', 'automation.pipeline.deleted', 'automation.pipeline.archived', 'automation.pipeline.imported'].forEach(n => es.addEventListener(n, again));
+    es.addEventListener('cos.pipeline.synced', (m) => { let x = null; try { x = JSON.parse(m.data); } catch (_) {} if (x) syncSaid(x); again(); }); }
+  api('GET', '/api/cos/pipeline/sync').then((r) => { syncSaid(r.last); if (!r.last || (r.last.systems || []).some(x => !x.ok) || !(S.pipes || []).length) sync(); }).catch(() => {});
   pipes(); flows();
   window.AUTOMATION = { show, open, pipes, state: S };
 })();

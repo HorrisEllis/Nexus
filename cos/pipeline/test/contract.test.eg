@@ -1,0 +1,36 @@
+// cos/pipeline/test/contract.test.eg — a RAID contract as a pipeline (PC12a). eg test cos/pipeline/test/contract.test.eg
+use "../contract.eg" as C
+
+let VIEW = { id: "phase-SW5b", outcome: { what: "Cortex's workers go home" },
+  gates: [{ id: "b1.worker_js", status: "PASSED", depends_on: [], kind: "build:file.js", file: "cortex/core/raid/worker.js" },
+          { id: "b2.boot_js", status: "READY", depends_on: ["b1.worker_js"], kind: "build:file.js", file: "cortex/boot.js" },
+          { id: "phase", status: "BLOCKED", depends_on: ["b1.worker_js", "b2.boot_js"], kind: "phase:integrate", file: null }] }
+
+test "each gate is one step, in RAID's order, asking RAID to check that gate" {
+  let r = C.pipeline_of(VIEW)
+  expect r.ok and r.pipeline.name == "RAID contract: Cortex's workers go home" and len(r.pipeline.tasks) == 3
+  let t = r.pipeline.tasks
+  expect t[0].id == "b1_worker_js" and t[1].depends_on == ["b1_worker_js"] and t[2].depends_on == ["b1_worker_js", "b2_boot_js"]
+  expect t[1].step.config.url == "nexus://cortex/api/raid/contracts/v2/phase-SW5b/gates/b2.boot_js/check" and t[1].raid_gate == "b2.boot_js"
+  expect t[0].onFail == "hold" and t[0].label == "build:file.js · cortex/core/raid/worker.js (b1.worker_js)"
+}
+
+test "only the shape is written, never the state: the same contract at another moment is the same pipeline" {
+  var later = VIEW
+  later["gates"] = [{ id: "b1.worker_js", status: "FAILED", depends_on: [], kind: "build:file.js", file: "cortex/core/raid/worker.js" },
+    { id: "b2.boot_js", status: "PASSED", depends_on: ["b1.worker_js"], kind: "build:file.js", file: "cortex/boot.js" },
+    { id: "phase", status: "PASSED", depends_on: ["b1.worker_js", "b2.boot_js"], kind: "phase:integrate", file: null }]
+  expect json(C.pipeline_of(later)) == json(C.pipeline_of(VIEW))
+}
+
+test "a gate id that is not a task id is made one, unique; one with no gates is refused, named" {
+  let r = C.pipeline_of({ id: "x", gates: [{ id: "1.a", depends_on: [] }, { id: "1/a", depends_on: ["1.a"] }] })
+  expect r.pipeline.tasks[0].id == "g1_a" and r.pipeline.tasks[1].id == "g1_a-2" and r.pipeline.tasks[1].depends_on == ["g1_a"]
+  let none = C.pipeline_of({ id: "v1", gates: [] })
+  expect not none.ok and none.why starts_with "contract v1 has no gates"
+}
+
+test "RAID's PASSED answer meets the step's gate; any other answer does not" {
+  let g = C.pipeline_of(VIEW).pipeline.tasks[0].gate
+  expect g.matches == "\"check\":\\\{\"status\":\"PASSED\"" and g.reasonAt == "body.check.reasons"
+}

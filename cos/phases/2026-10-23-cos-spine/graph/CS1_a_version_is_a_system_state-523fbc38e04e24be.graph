@@ -7,11 +7,11 @@ intent: null
 summary: 26 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793421631190
+exported_at: 1794611790073
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793421631190
-lastSeenAt: 1793421631190
+firstSeenAt: 1794611790073
+lastSeenAt: 1794611790073
 fingerprint: null
 payload:
   for: CS1_a_version_is_a_system_state
@@ -226,29 +226,20 @@ payload:
       - docs/2026-10-24-cos-manager-phasemap.spec::MG7_automation_macros_and_hats
       - docs/2026-10-24-cos-manager-phasemap.spec::MG9_the_console_ui
       - docs/2026-10-30-foundation-up-phasemap.spec::F4_raid_routes_the_doors
+      - docs/2026-11-01-build-from-cos-phasemap.spec::BC5_open_loops_imported
+      - docs/2026-11-02-cos-disk-phasemap.spec::DK4_boot_from_a_disk
+      - docs/2026-11-02-cos-disk-phasemap.spec::DK5_machine_disks
     blockedBy:
       - docs/2026-10-23-cos-spine-phasemap.spec::CS_D2_a_version_is_the_whole_state
     unlocks: []
-    conflicts:
-      - with: docs/2026-10-23-cos-spine-phasemap.spec::CS3_the_registry_is_the_bridge
-        files:
-          - idearium/repo/snapshot.js
-      - with: docs/2026-10-23-cos-spine-phasemap.spec::CS5_caps_per_compartment
-        files:
-          - cos/compartment/qemu-runtime.js
+    conflicts: []
     dangling: []
     lines:
       - layer 1 · blocked by CS_D2_a_version_is_the_whole_state
       - 'depends on (1): CS_D2_a_version_is_the_whole_state'
       - >-
         needed by (4): CS2_test_every_version, CS6_rebuild_from_the_spec,
-        CS9_every_project_a_compartment, MG3_the_state_manager · all downstream 19
-      - >-
-        same files as CS3_the_registry_is_the_bridge with no order between them:
-        idearium/repo/snapshot.js
-      - >-
-        same files as CS5_caps_per_compartment with no order between them:
-        cos/compartment/qemu-runtime.js
+        CS9_every_project_a_compartment, MG3_the_state_manager · all downstream 22
     edges:
       - from: docs/2026-10-23-cos-spine-phasemap.spec::CS_D2_a_version_is_the_whole_state
         kind: declared

@@ -1,0 +1,184 @@
+# The framework trial as a COS pipeline — James, 2026-11-13: "we have ollama now. lets leverage that. test, benchmark, run the trial in the docs
+# folder. clearglass pipelines, raid pipelines, idearium, all of them in cos." The trial (docs/framework-trial): six problems, each asked with and
+# without his method, judged blind. Each step calls the trial's own screen (docs/framework-trial/server.js, :4820); it runs trial.js, which asks
+# Ollama directly. One problem per step (a request waits at most about 5 min). Judging stays his and blind: the run holds at "judged" until the
+# screen has scores, and goes on when he presses Continue. Nothing here is new code: api steps on the routes the screen already serves.
+envelope: 1
+uuid: nexus-export-pipeline-framework-trial
+type: pipeline
+id: framework-trial
+context: COS › pipelines (shipped with COS; run by COS's engine)
+intent: >-
+  The framework trial, run by Ollama: each of six problems asked with and without his method (arms A and B), the answers blinded, his blind
+  scores waited for, then arm B scored against arm A, and the benchmark per model.
+summary: 11 tasks · the trial's own routes · Ollama
+system: cos
+tags:
+  - pipeline
+  - trial
+  - ollama
+  - bundled
+source: cos/pipeline/pipelines
+occurrences: 1
+payload:
+  id: framework-trial
+  format: nexus-pipeline
+  version: 1
+  name: Framework trial (Ollama)
+  description: >-
+    The framework trial (docs/framework-trial), run by Ollama: P1-P6 each asked with arm A (baseline) and arm B (his method), blinded, his
+    blind scores waited for, then arm B scored against arm A, and the benchmark (time, tokens, tokens per second) per model. Start the trial's
+    screen first: node docs/framework-trial/server.js. Set vars.model to an installed Ollama model (ollama:<name>), vars.run to a run number.
+  vars:
+    model: ollama:qwen2.5-coder:7b   # an installed Ollama model, written ollama:<name>
+    run: 1                           # the run number: answers/<P>/<model>-<arm>-<run>.md; a second run gives the same cells a second sample
+    port: 4820                       # the trial's screen (TRIAL_UI_PORT)
+  settings:
+    parallel: 1
+  tasks:
+    - id: screen
+      label: The trial's screen answers
+      depends_on: []
+      step:
+        type: api
+        config:
+          url: http://127.0.0.1:{{vars.port}}/api/state
+          method: GET
+          timeoutMs: 10000
+      gate:
+        contains: '"problems"'
+      retries: 2
+      onFail: hold   # not up: start it (node docs/framework-trial/server.js), then Continue
+    - id: p1
+      label: P1, both arms, by {{vars.model}}
+      depends_on:
+        - screen
+      step:
+        type: api
+        config:
+          url: http://127.0.0.1:{{vars.port}}/api/deploy
+          method: POST
+          body: '{"models":["{{vars.model}}"],"arm":"both","run":{{vars.run}},"problem":"P1"}'
+          timeoutMs: 290000   # one problem, two answers: under the ~5 min a request can wait
+      gate:
+        matches: '"ok":true[\s\S]*deployed 2 answer'
+      retries: 1
+    - id: p2
+      label: P2, both arms, by {{vars.model}}
+      depends_on:
+        - p1
+      step:
+        type: api
+        config:
+          url: http://127.0.0.1:{{vars.port}}/api/deploy
+          method: POST
+          body: '{"models":["{{vars.model}}"],"arm":"both","run":{{vars.run}},"problem":"P2"}'
+          timeoutMs: 290000   # one problem, two answers: under the ~5 min a request can wait
+      gate:
+        matches: '"ok":true[\s\S]*deployed 2 answer'
+      retries: 1
+    - id: p3
+      label: P3, both arms, by {{vars.model}}
+      depends_on:
+        - p2
+      step:
+        type: api
+        config:
+          url: http://127.0.0.1:{{vars.port}}/api/deploy
+          method: POST
+          body: '{"models":["{{vars.model}}"],"arm":"both","run":{{vars.run}},"problem":"P3"}'
+          timeoutMs: 290000   # one problem, two answers: under the ~5 min a request can wait
+      gate:
+        matches: '"ok":true[\s\S]*deployed 2 answer'
+      retries: 1
+    - id: p4
+      label: P4, both arms, by {{vars.model}}
+      depends_on:
+        - p3
+      step:
+        type: api
+        config:
+          url: http://127.0.0.1:{{vars.port}}/api/deploy
+          method: POST
+          body: '{"models":["{{vars.model}}"],"arm":"both","run":{{vars.run}},"problem":"P4"}'
+          timeoutMs: 290000   # one problem, two answers: under the ~5 min a request can wait
+      gate:
+        matches: '"ok":true[\s\S]*deployed 2 answer'
+      retries: 1
+    - id: p5
+      label: P5, both arms, by {{vars.model}}
+      depends_on:
+        - p4
+      step:
+        type: api
+        config:
+          url: http://127.0.0.1:{{vars.port}}/api/deploy
+          method: POST
+          body: '{"models":["{{vars.model}}"],"arm":"both","run":{{vars.run}},"problem":"P5"}'
+          timeoutMs: 290000   # one problem, two answers: under the ~5 min a request can wait
+      gate:
+        matches: '"ok":true[\s\S]*deployed 2 answer'
+      retries: 1
+    - id: p6
+      label: P6, both arms, by {{vars.model}}
+      depends_on:
+        - p5
+      step:
+        type: api
+        config:
+          url: http://127.0.0.1:{{vars.port}}/api/deploy
+          method: POST
+          body: '{"models":["{{vars.model}}"],"arm":"both","run":{{vars.run}},"problem":"P6"}'
+          timeoutMs: 290000   # one problem, two answers: under the ~5 min a request can wait
+      gate:
+        matches: '"ok":true[\s\S]*deployed 2 answer'
+      retries: 1
+    - id: blind
+      label: Blind the answers (the key stays closed)
+      depends_on:
+        - p6
+      step:
+        type: api
+        config:
+          url: http://127.0.0.1:{{vars.port}}/api/blind
+          method: POST
+          body: '{}'
+          timeoutMs: 60000
+      gate:
+        contains: '"ok":true'
+    - id: judged
+      label: Waits for your scores (the trial's screen, blind)
+      depends_on:
+        - blind
+      step:
+        type: api
+        config:
+          url: http://127.0.0.1:{{vars.port}}/api/state
+          method: GET
+      gate:
+        matches: '"scored":[1-9]'
+      onFail: hold   # judging is his, blind: score on the trial's screen (http://127.0.0.1:4820), then Continue
+    - id: score
+      label: Score, arm B against arm A
+      depends_on:
+        - judged
+      step:
+        type: api
+        config:
+          url: http://127.0.0.1:{{vars.port}}/api/score
+          method: POST
+          body: '{}'
+          timeoutMs: 60000
+      gate:
+        contains: '"ok":true'
+    - id: bench
+      label: The benchmark, per model
+      depends_on:
+        - score
+      step:
+        type: api
+        config:
+          url: http://127.0.0.1:{{vars.port}}/api/state
+          method: GET
+      gate:
+        contains: '"bench"' 

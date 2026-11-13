@@ -7,11 +7,11 @@ intent: null
 summary: CA1_clear_glass_to_the_tray (?) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1793592215335
+exported_at: 1794613330829
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793592215335
-lastSeenAt: 1793592215335
+firstSeenAt: 1794613330829
+lastSeenAt: 1794613330829
 fingerprint: null
 payload:
   id: CA1_clear_glass_to_the_tray
@@ -31,4 +31,4 @@ payload:
   blocks:
     - MOD-CGT-IDLE-TRAY
   spec: clear-glass/spec/tray.spec
-  graph: 43f0cfe47b1efd7d
+  graph: 08dc45c3ec3424f5

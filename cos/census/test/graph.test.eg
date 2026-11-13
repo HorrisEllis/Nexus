@@ -1,0 +1,63 @@
+// cos/census/test/graph.test.eg — the graph census (GR0). eg test cos/census/test/graph.test.eg
+use "../graph.eg" as G
+
+fn tree(): string {
+  let r = "/tmp/cos-graph-census-" + uid()
+  remove_path(r)
+  make_dir(r + "/lib/meta")
+  make_dir(r + "/copilot")
+  make_dir(r + "/shop")
+  make_dir(r + "/node_modules/x")
+  make_dir(r + "/loom/schema")
+  make_dir(r + "/loom/data")
+  make_dir(r + "/data/cortex/memory")
+  write_file(r + "/lib/meta/lattice.js", "const T = 'lattice_edges';\nfunction add(e) \{ db.insert(T, e) \}\n")
+  write_file(r + "/copilot/reads.js", "const rows = db.query('lattice_edges')\n")
+  write_file(r + "/loom/schema/registry.js", "this.file = path.join(dir, 'registry.json');\nfs.writeFileSync(this.file, s)\n")
+  write_file(r + "/loom/data/registry.json", "\{\"component\": \{\"a\": 1, \"b\": 2\}, \"hook\": [1, 2, 3]\}")
+  write_file(r + "/shop/orders.js", "db.insert('order_edges', e)\n")
+  write_file(r + "/node_modules/x/index.js", "db.insert('vendor_edges', e)\n")
+  write_file(r + "/data/cortex/memory/lattice_edges.jsonl", "\{\"a\":1\}\n\{\"a\":2\}\n\{\"a\":3\}\n")
+  return r
+}
+
+fn graph(c: map, id: string): map { return find(c.graphs, fn(g) = g.id == id) }
+
+test "a writer is read from the code: on the token's line, or through the name that line gives the store; the rest are readers" {
+  let r = tree()
+  let c = G.census(r, r + "/data")
+  let l = graph(c, "crystal-lattice")
+  expect l.writers == ["lib/meta/lattice.js"] and l.readers == ["copilot/reads.js"]
+  let reg = graph(c, "loom-registry")
+  expect reg.writers == ["loom/schema/registry.js"]
+  remove_path(r)
+}
+
+test "rows are read, never a constant: a table's lines, a JSON file's entries; no data is null with the reason" {
+  let r = tree()
+  let c = G.census(r, r + "/data")
+  expect graph(c, "crystal-lattice").rows == 3
+  let reg = graph(c, "loom-registry")
+  expect reg.rows == 5 and reg.per.component == 2 and reg.per.hook == 3
+  let p = graph(c, "person-model")
+  expect p.rows == null and p.rows_why starts_with "no person_model_edges.jsonl"
+  expect graph(c, "require-graph").rows == null
+  remove_path(r)
+}
+
+test "a graph the code names and this census does not declare appears in unknown; node_modules is not read" {
+  let r = tree()
+  let c = G.census(r, r + "/data")
+  expect len(c.unknown) == 1 and c.unknown[0].name == "order_edges" and c.unknown[0].in == ["shop/orders.js"]
+  write_file(r + "/shop/stock.js", "db.insert('stock_nodes', n)\n")
+  let c2 = G.census(r, r + "/data")
+  expect len(c2.unknown) == 2 and c2.unknown[1].name == "stock_nodes"
+  remove_path(r)
+}
+
+test "the census is written as markdown, every graph a row" {
+  let r = tree()
+  let md = G.to_markdown(G.census(r, r + "/data"))
+  expect find_text(md, "| crystal-lattice |") >= 0 and find_text(md, "`order_edges` in shop/orders.js") >= 0
+  remove_path(r)
+}

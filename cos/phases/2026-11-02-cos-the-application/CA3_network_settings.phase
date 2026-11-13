@@ -7,11 +7,11 @@ intent: null
 summary: CA3_network_settings (?) — 9 file(s)
 system: idearium
 tags: []
-exported_at: 1793847429741
+exported_at: 1794613330836
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793847429741
-lastSeenAt: 1793847429741
+firstSeenAt: 1794613330836
+lastSeenAt: 1794613330836
 fingerprint: null
 payload:
   id: CA3_network_settings
@@ -40,4 +40,4 @@ payload:
     - MOD-NET-PAGE
     - MOD-NET-GATE
   spec: cos/spec/network.spec
-  graph: c62138123487c859
+  graph: 28e9cf53bf17fa6c

@@ -226,7 +226,8 @@ phases:
 
   CS11_raid_in_the_exe:
     layer: backend
-    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
+    status: OPEN   # picked up 2026-11-13, his: "moves into cos. i feel like." (was: LATER, shelved 2026-11-07)
+    status_previous: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas')"
     depends_on: [CS4_every_system_a_compartment, DB6_move_the_crossings, IM6_cortex_unclumped, CS_D8_raid_home]
     files: [cos/raid/index.js, cos/raid/store.js, cos/raid/routes.js, cos/app/desktop/main.js, cortex/core/raid/router.js, cortex/core/raid/worker.js, cortex/core/raid/officiator.js]
     spec: cos/spec/cos-spine.spec
@@ -425,3 +426,25 @@ are not boundary work, so they are deferred too; the coder will flag one if it s
 # James, 2026-11-07: "The wiring harness" · "spec it." CS3 is the enforcement of his 2026-10-23 decision ("a compartment declares itself
 # through its .spec"); the coder had shelved it as an idea that morning (PIC0) and said so. Picked up; COS reads each harness through that
 # system's own door, never its files.
+
+# ── ADDENDUM 2026-11-13 — CS11 picked up: RAID moves into COS (his), measured, expanded (mapped; nothing moved) ──
+# James, 2026-11-13: "i want raid to be the hub that all systems run througj" · asked the three readings side by side (RAID decides all work ·
+# every call goes through RAID · RAID moves into COS): "moves into cos. i feel like." Recorded as his direction; "i feel like" kept with it, so
+# the move is confirmed with him before the first file moves (step 3 below).
+# Measured 2026-11-13: 71 files load cortex/core/raid in-process (47 tests, 24 in systems: lib 11, idearium 3, orchestrator 2, copilot 2,
+# cortex 2, scripts 2, diagnostic 1, architect 1); cortex/boot.js serves 15 /api/raid routes; cortex/core/raid is 18 files, 5,609 lines. RAID's
+# worker and officiator run in the orchestrator's process today (SW5's census).
+# Changed by this: SW5b (docs/2026-11-13-sovereign-and-wired-phasemap.spec) sent RAID's worker and officiator home to Cortex; with RAID moving into
+# COS their home is COS. SW5b waits on step 1 here so they move once, not twice.
+# The order (the coder's, by §5.15 and §5.14 — every caller reaches RAID by its route first, so the move breaks nothing):
+#   1. the 24 system callers reach RAID by its routes (nexus://cortex/api/raid/…), one system at a time (DB6's pattern); tests follow their code;
+#   2. RAID's books (data/raid, Cortex's contracts) read through RAID's own data folder (IM6, SW4);
+#   3. with him: the move. RAID's always-on half (routing, contracts, the worker, the officiator, the load balance) runs in COS's manager and
+#      serves the same /api/raid/* routes; nexus://cortex/api/raid answers from COS (a forward named where it went); the reasoning half opens on
+#      demand. cortex/core/raid archived (§0.3);
+#   4. CS7: COS balances load through RAID, which now sees every compartment's live load in its own process.
+# ── ADDENDUM 2026-11-13 (0.60.523) — CS11 step 1, group A built: filing work with RAID goes by route ──
+# James, 2026-11-13: "cs11, then pc12." Cortex: POST …/contracts/:id/outcome, POST /api/raid/gate-before; 'v2' no longer read as a contract id.
+# Architect (5), Copilot (1), Idearium (verdict, spec build, chunk build, queue read) by route. The 24 callers grouped: A filing (done), B routing
+# decisions (11), C RAID's contract engine in Idearium's process and its gate logic as a library (its own design: RAID calls back per brick),
+# D worker and officiator (SW5b), E noise filter, F routing description. scripts/mco5, mco6 are RAID's own proofs and move with it.

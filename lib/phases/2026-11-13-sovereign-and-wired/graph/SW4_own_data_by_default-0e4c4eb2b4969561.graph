@@ -7,11 +7,11 @@ intent: null
 summary: 16 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1794551278409
+exported_at: 1794608390817
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794551278409
-lastSeenAt: 1794551278409
+firstSeenAt: 1794608390817
+lastSeenAt: 1794608390817
 fingerprint: null
 payload:
   for: SW4_own_data_by_default
@@ -128,12 +128,16 @@ payload:
       - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW0_the_scorecard
       - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW_D4_own_data_by_default
     dependents:
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW5f_others_data_goes_home
       - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW7_lib_goes_home
     upstream:
       - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW0_the_scorecard
       - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW_D0_picked_up
       - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW_D4_own_data_by_default
     downstream:
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW5f_others_data_goes_home
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW5g_the_pages_and_auth
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW5h_the_orchestrator_retired
       - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW7_lib_goes_home
     blockedBy: []
     unlocks: []
@@ -145,7 +149,7 @@ payload:
     lines:
       - layer 2 · ready
       - 'depends on (2): SW0_the_scorecard, SW_D4_own_data_by_default · all upstream 3'
-      - 'needed by (1): SW7_lib_goes_home'
+      - 'needed by (2): SW5f_others_data_goes_home, SW7_lib_goes_home · all downstream 4'
       - >-
         same files as SW6_the_drawbridge_the_only_way_in with no order between them:
         lib/system-boundary.js

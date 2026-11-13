@@ -1,0 +1,278 @@
+// cos/census/graph.eg — every graph in Nexus, read from the tree (phase GR0, docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec).
+// James, 2026-10-20: "spec it. the chunking system. can you also spec the graphs, traversal, dynamic chunking, gating," · 2026-11-13: "lib needs
+// to stop acting like a system" · "i want the orchastrator and supstrate for the graphs phases" · "find them." · "yes. then the highest leverage."
+//
+//   census(root, data) → { ok, graphs: [{ id, what, store, node_kinds, edge_kinds, evidence, writers, readers, rows, rows_why }], unknown, files_read }
+//   to_markdown(c)     → the census as docs/atlases/graph-census.md
+//
+// Read-only (MOD-GRAPH-CENSUS): it opens files and writes nothing. Each graph is declared here with the token its code names it by (the
+// 2026-10-20 census, ten and more); its writers and readers are then READ from the tree: a file is a writer when a line naming the token
+// also writes (insert, upsert, put, append, write_file, writeFile, appendFile, save), or writes through the name that line gives the store
+// (const X = …, this.file = …), else a reader. A graph may name a token that counts only inside its own folder (local: a name others share). Its rows are read from data: a JSON
+// file's entries, a table's lines (a .jsonl table appends, so updates count as lines: said), a folder's files. No data, no count: rows
+// is null and rows_why says why. Every count is a read, never a constant.
+// A graph the code names that is not declared here is listed in unknown[] (GATE-GC-004): a string literal ending _edges or _nodes, or a
+// file named graph.json, in a file that names no declared graph; a name of four words or more (a_phrase_like_this_nodes) is prose, not a table. So a new graph added to the tree appears without editing this file.
+// Limits, said: a store named by a variable or built from parts is not seen; Emerge has no file size, so a table is read whole to count it.
+
+let SKIP = ["node_modules", "data", "phases", "_archive", "tests", "test", "dist", "build"]
+let WRITES = ["insert(", "upsert(", ".put(", "append(", "write_file(", "writeFile", "appendFile", ".save(", "createWriteStream"]
+
+// kind: "file" (a JSON file; count: what to count in it), "table" (a .jsonl table in a store dir), "files" (files under a folder by suffix),
+// "computed" (built from the code each time it is asked: no rows of its own)
+let GRAPHS = [
+  { id: "loom-registry", what: "components, seams, hooks, wires and concerns of the whole tree; requires and consumers are its edges",
+    store: { kind: "file", path: "loom/data/registry.json", count: "per key" }, node_kinds: ["component", "seam", "hook", "concern"], edge_kinds: ["wire (requires, consumers)"],
+    evidence: "discovered: loom/bootstrap.js reads the code", tokens: ["loom/data/registry.json", "'loom', 'data', 'registry.json'"], local: { under: "loom/", tokens: ["'registry.json'"] } },
+  { id: "require-graph", what: "static requires between files", store: { kind: "computed", module: "lib/require-graph.js" },
+    node_kinds: ["file"], edge_kinds: ["requires"], evidence: "discovered: parsed from the code when asked", tokens: ["require-graph"] },
+  { id: "phase-graph", what: "one phase's files: what it changes, uses, is used by, and crosses (DG2)", store: { kind: "files", dir: ".", suffix: ".graph", under: "phases" },
+    node_kinds: ["phase", "file"], edge_kinds: ["changes", "uses", "used-by", "crosses"], evidence: "discovered: phase-specs reads the tree", tokens: ["phase-graph"] },
+  { id: "phase-dag", what: "every phase of every map; depends_on are its edges (DG3)", store: { kind: "phases", dir: "docs", suffix: ".spec" },
+    node_kinds: ["phase", "decision"], edge_kinds: ["depends_on"], evidence: "declared: depends_on is written by hand in each map", tokens: ["phase-dag"] },
+  { id: "system-boundary", what: "crossings between systems, held to a ratchet", store: { kind: "computed", module: "lib/system-boundary.js" },
+    node_kinds: ["system", "file"], edge_kinds: ["crosses"], evidence: "discovered: requires read from the code", tokens: ["system-boundary"] },
+  { id: "cfr-causal", what: "the causal graph: what caused what, by session and job", store: { kind: "computed", module: "intelligence/cfr/graph.js" },
+    node_kinds: ["event"], edge_kinds: ["causedBy", "session", "job"], evidence: "declared (causedBy set by the emitter) and observed", tokens: ["cfr/graph"] },
+  { id: "crystal-lattice", what: "weighted edges between patterns; success and failure counted, decaying", store: { kind: "table", table: "lattice_edges", dirs: ["cortex/memory"] },
+    node_kinds: ["pattern"], edge_kinds: ["weighted (success, failure)"], evidence: "observed: counted from outcomes", tokens: ["lattice_edges"] },
+  { id: "lattice-nodes", what: "the lattice's nodes and their neighbours", store: { kind: "table", table: "lattice_nodes", dirs: ["cortex/memory"] },
+    node_kinds: ["pattern"], edge_kinds: ["neighbour"], evidence: "observed", tokens: ["lattice_nodes"] },
+  { id: "person-model", what: "what is known of him: stated, observed, inferred", store: { kind: "table", table: "person_model_edges", dirs: ["cortex/memory", "copilot"] },
+    node_kinds: ["person_model_nodes"], edge_kinds: ["person_model_edges"], evidence: "stated by him, observed, or inferred (each edge says which)", tokens: ["person_model_edges", "person_model_nodes"] },
+  { id: "repo-graph", what: "each Idearium repo's graph of its files", store: { kind: "files", dir: "idearium/data", suffix: "graph.json", under: "" },
+    node_kinds: ["file", "symbol"], edge_kinds: ["imports", "defines"], evidence: "discovered: lib/repo-context.js reads the repo", tokens: ["graph.json"] },
+  { id: "blueprint-index", what: "the blueprints and what each one names", store: { kind: "file", path: "blueprint-index.json", count: "per key" },
+    node_kinds: ["blueprint"], edge_kinds: ["names"], evidence: "declared: written by lib/blueprint-index.js from the blueprints", tokens: ["blueprint-index.json"] },
+  { id: "page-blocks", what: "a web page as a tree of blocks with addresses (Clear Glass)", store: { kind: "computed", module: "clear-glass/src/page/page-map.js" },
+    node_kinds: ["block"], edge_kinds: ["contains"], evidence: "discovered: read from the page when asked", tokens: ["page-map"] }
+]
+
+/** every .js file under dir, relative to root */
+fn js_files(root: string, rel: string): list {
+  var out = []
+  let dir = root + "/" + rel
+  for n in list_dir(dir) {
+    let p = dir + n
+    if is_dir(p) {
+      if not (SKIP contains n) and not (n starts_with ".") { for f in js_files(root, rel + n + "/") { out = push(out, f) } }
+    } else if n ends_with ".js" { out = push(out, rel + n) }
+  }
+  return out
+}
+
+/** files named …suffix under dir; when under is given, only inside a folder of that name */
+fn files_by(root: string, rel: string, suffix: string, under: string, inside: bool): list {
+  var out = []
+  let dir = root + "/" + rel
+  for n in list_dir(dir) {
+    let p = dir + n
+    if is_dir(p) {
+      if not (n == "node_modules" or n == "_archive" or n starts_with ".") {
+        for f in files_by(root, rel + n + "/", suffix, under, inside or n == under) { out = push(out, f) }
+      }
+    } else if n ends_with suffix and (under == "" or inside) { out = push(out, rel + n) }
+  }
+  return out
+}
+
+fn writes(line: string): bool {
+  for w in WRITES { if find_text(line, w) >= 0 { return true } }
+  return false
+}
+
+/** the name a line gives the store, when it names one: const X = … / let X = … / var X = … (else null) */
+fn named_on(line: string) {
+  for k in ["const ", "let ", "var "] {
+    let at = find_text(line, k)
+    if at >= 0 {
+      let rest = slice(line, at + len(k), len(line))
+      let eq = find_text(rest, "=")
+      if eq > 0 {
+        let name = slice(rest, 0, eq)
+        var clean = ""
+        for ch in split(name, "") { if ch != " " { clean = clean + ch } }
+        if clean != "" and find_text(clean, "\{") < 0 and find_text(clean, "[") < 0 and find_text(clean, ",") < 0 { return clean }
+      }
+    }
+  }
+  // a plain assignment: this.file = path.join(…, 'registry.json') — the name before " = " (not ==, not =>)
+  let eq2 = find_text(line, " = ")
+  if eq2 > 0 {
+    var clean2 = ""
+    for ch in split(slice(line, 0, eq2), "") { if ch != " " { clean2 = clean2 + ch } }
+    if clean2 != "" and find_text(clean2, "(") < 0 and find_text(clean2, "\{") < 0 and find_text(clean2, "[") < 0 and find_text(clean2, ",") < 0 { return clean2 }
+  }
+  return null
+}
+
+/** does this file write the store the token names: on the token's own line, or through the name that line gives it */
+fn writes_store(lines: list, token: string): bool {
+  var names = []
+  for line in lines {
+    if find_text(line, token) >= 0 {
+      if writes(line) { return true }
+      let n = named_on(line)
+      if n != null { names = push(names, n) }
+    }
+  }
+  if len(names) == 0 { return false }
+  for line in lines { if writes(line) { for n in names { if find_text(line, n) >= 0 { return true } } } }
+  return false
+}
+
+/** the literals in text that end with suffix (…_edges, …_nodes), read between quotes */
+fn literals_ending(text: string, suffix: string): list {
+  var out = []
+  for q in ["'", "\""] {
+    let parts = split(text, suffix + q)
+    var i = 0
+    for part in parts {
+      if i < len(parts) - 1 {
+        let parts2 = split(part, q)
+        let name = parts2[len(parts2) - 1] + suffix
+        if find_text(name, " ") < 0 and find_text(name, "\n") < 0 and len(name) > len(suffix) and len(split(name, "_")) <= 3 { out = push(out, name) }
+      }
+      i += 1
+    }
+  }
+  return out
+}
+
+fn lines_of(path: string): num {
+  let t = read_file(path)
+  var n = 0
+  for l in split(t, "\n") { if l != "" { n += 1 } }
+  return n
+}
+
+/** rows read from data; { rows, why } */
+fn rows_of(root: string, data: string, s: map): map {
+  if s.kind == "computed" { return { rows: null, why: "built from the code each time it is asked (" + s.module + "): no store of its own" } }
+  if s.kind == "file" {
+    let p = root + "/" + s.path
+    if not path_exists(p) { return { rows: null, why: "no " + s.path + " in this tree" } }
+    let j = parse_json(read_file(p))
+    if type_of(j) == "list" { return { rows: len(j), why: "entries in " + s.path } }
+    var per = {}
+    var total = 0
+    for k in keys(j) {
+      var n = 1
+      if type_of(j[k]) == "list" or type_of(j[k]) == "map" { n = len(j[k]) }
+      per[k] = n
+      total += n
+    }
+    return { rows: total, why: "entries in " + s.path, per: per }
+  }
+  if s.kind == "table" {
+    var found = []
+    for d in s.dirs {
+      let p = data + "/" + d + "/" + s.table + ".jsonl"
+      if path_exists(p) { found = push(found, { at: d, lines: lines_of(p) }) }
+    }
+    if len(found) == 0 { return { rows: null, why: "no " + s.table + ".jsonl in the data folder (" + join(s.dirs, ", ") + ")" } }
+    var n = 0
+    for f in found { n += f.lines }
+    return { rows: n, why: "lines of " + s.table + ".jsonl (appended: an update is a line too)", at: found }
+  }
+  if s.kind == "files" {
+    if not is_dir(root + "/" + s.dir) { return { rows: null, why: "no " + s.dir + " in this tree" } }
+    var rel = s.dir + "/"
+    if s.dir == "." { rel = "" }
+    let fs = files_by(root, rel, s.suffix, s.under, false)
+    var inside = ""
+    if s.under != "" { inside = " inside " + s.under + "/" }
+    return { rows: len(fs), why: "files named *" + s.suffix + inside + " under " + s.dir }
+  }
+  if s.kind == "phases" {
+    if not is_dir(root + "/" + s.dir) { return { rows: null, why: "no " + s.dir + " in this tree" } }
+    var n = 0
+    var maps = 0
+    for f in list_dir(root + "/" + s.dir) {
+      if f ends_with s.suffix {
+        var k = 0
+        for l in split(read_file(root + "/" + s.dir + "/" + f), "\n") { if l starts_with "    depends_on:" { k += 1 } }
+        if k > 0 { maps += 1 }
+        n += k
+      }
+    }
+    return { rows: n, why: "phases (a depends_on line each) in " + str(maps) + " maps under " + s.dir }
+  }
+  return { rows: null, why: "store kind " + s.kind + " is not read" }
+}
+
+fn census(root: string, data: string): map {
+  let files = js_files(root, "")
+  var who = {}
+  for g in GRAPHS { who[g.id] = { writers: [], readers: [] } }
+  var unknown = {}
+  for f in files {
+    let text = read_file(root + "/" + f)
+    var lines = null
+    var named = false
+    for g in GRAPHS {
+      var hit = false
+      var w = false
+      var toks = g.tokens
+      if has(g, "local") and f starts_with g.local.under { toks = toks + g.local.tokens }
+      for t in toks {
+        if find_text(text, t) >= 0 {
+          hit = true
+          if lines == null { lines = split(text, "\n") }
+          if writes_store(lines, t) { w = true }
+        }
+      }
+      if hit {
+        named = true
+        if w { who[g.id].writers = push(who[g.id].writers, f) } else { who[g.id].readers = push(who[g.id].readers, f) }
+      }
+    }
+    if not named {
+      for name in literals_ending(text, "_edges") + literals_ending(text, "_nodes") {
+        if not has(unknown, name) { unknown[name] = [] }
+        if not (unknown[name] contains f) { unknown[name] = push(unknown[name], f) }
+      }
+    }
+  }
+  var graphs = []
+  for g in GRAPHS {
+    let r = rows_of(root, data, g.store)
+    var row = { id: g.id, what: g.what, store: g.store, node_kinds: g.node_kinds, edge_kinds: g.edge_kinds, evidence: g.evidence,
+      writers: who[g.id].writers, readers: who[g.id].readers, rows: r.rows, rows_why: r.why }
+    if has(r, "per") { row["per"] = r.per }
+    graphs = push(graphs, row)
+  }
+  var unk = []
+  for k in sort(keys(unknown)) { unk = push(unk, { name: k, in: unknown[k] }) }
+  return { ok: true, graphs: graphs, unknown: unk, files_read: len(files) }
+}
+
+fn store_text(s: map): string {
+  if s.kind == "file" { return s.path }
+  if s.kind == "phases" { return "the maps (" + s.dir + "/*" + s.suffix + ")" }
+  if s.kind == "table" { return "table " + s.table + " (" + join(s.dirs, ", ") + ")" }
+  if s.kind == "files" { return "*" + s.suffix + " files under " + s.dir }
+  return "computed by " + s.module
+}
+
+fn to_markdown(c: map): string {
+  var md = "# Graph census\n\nGenerated by `cos/census/graph.eg` (phase GR0). Every graph Nexus keeps, read from the tree: " + str(c.files_read) + " source files read.\n\n"
+  md = md + "| Graph | What | Store | Edges rest on | Writers | Readers | Rows |\n|---|---|---|---|---|---|---|\n"
+  for g in c.graphs {
+    var rows = "none: " + g.rows_why
+    if g.rows != null { rows = str(g.rows) + " (" + g.rows_why + ")" }
+    md = md + "| " + g.id + " | " + g.what + " | " + store_text(g.store) + " | " + g.evidence + " | " + str(len(g.writers)) + " | " + str(len(g.readers)) + " | " + rows + " |\n"
+  }
+  md = md + "\n## Named in the code, not declared (" + str(len(c.unknown)) + ")\n\n"
+  if len(c.unknown) == 0 { md = md + "None.\n" }
+  for u in c.unknown { md = md + "- `" + u.name + "` in " + join(u.in, ", ") + "\n" }
+  md = md + "\n## Writers and readers\n"
+  for g in c.graphs {
+    var ws = "none found"
+    if len(g.writers) > 0 { ws = join(g.writers, ", ") }
+    var rs = "none found"
+    if len(g.readers) > 0 { rs = join(g.readers, ", ") }
+    md = md + "\n### " + g.id + "\n\n- writers: " + ws + "\n- readers: " + rs + "\n"
+  }
+  return md
+}

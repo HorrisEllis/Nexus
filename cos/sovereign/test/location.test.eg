@@ -1,0 +1,44 @@
+// cos/sovereign/test/location.test.eg — where each system lives and whether it can move (CA7 slice a). eg test cos/sovereign/test/location.test.eg
+use "../location.eg" as L
+
+fn tree(): string {
+  let r = "/tmp/cos-location-test-" + uid()
+  remove_path(r)
+  make_dir(r + "/alone")
+  make_dir(r + "/user")
+  make_dir(r + "/used")
+  make_dir(r + "/data/rooted")
+  make_dir(r + "/rooted")
+  write_file(r + "/alone/a.js", "module.exports = 1\n")
+  write_file(r + "/user/u.js", "const x = require('../used/x.js')\n")
+  write_file(r + "/used/x.js", "module.exports = 2\n")
+  write_file(r + "/rooted/r.js", "module.exports = 3\n")
+  return r
+}
+
+fn row(c: map, s: string): map { return find(c.systems, fn(x) = x.system == s) }
+
+test "a system nothing reaches into, that reaches nowhere, with its data at home, can move" {
+  let r = tree()
+  let a = row(L.locations(r, ["alone", "user", "used", "rooted"]), "alone")
+  expect a.movable and a.why == [] and a.files == 1 and a.out == 0 and a.in == 0
+  remove_path(r)
+}
+
+test "what holds a system in place is named: reaching out, being reached into, data at the root" {
+  let r = tree()
+  let c = L.locations(r, ["alone", "user", "used", "rooted"])
+  let u = row(c, "user")
+  expect not u.movable and u.out == 1 and u.out_to == ["used 1"] and u.why[0] starts_with "it reaches into used 1"
+  let d = row(c, "used")
+  expect not d.movable and d.in == 1 and d.in_from == ["user 1"]
+  let o = row(c, "rooted")
+  expect not o.movable and o.root_data and o.why == ["its data is still at the root, data/rooted (SW4)"]
+  remove_path(r)
+}
+
+test "a system with no folder is left out" {
+  let r = tree()
+  expect len(L.locations(r, ["alone", "ghost"]).systems) == 1
+  remove_path(r)
+}

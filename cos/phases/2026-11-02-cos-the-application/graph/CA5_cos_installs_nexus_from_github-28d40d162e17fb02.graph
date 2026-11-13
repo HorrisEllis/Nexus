@@ -7,11 +7,11 @@ intent: null
 summary: 28 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793940673620
+exported_at: 1794613330845
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793940673620
-lastSeenAt: 1793940673620
+firstSeenAt: 1794613330845
+lastSeenAt: 1794613330845
 fingerprint: null
 payload:
   for: CA5_cos_installs_nexus_from_github
@@ -195,6 +195,7 @@ payload:
       - docs/2026-10-24-cos-manager-phasemap.spec::MG36_the_cockpit_is_the_window
     dependents:
       - docs/2026-11-02-cos-the-application-phasemap.spec::CA6_install_asks_where_and_npm_in_program_files
+      - docs/2026-11-02-cos-the-application-phasemap.spec::CA8_first_time_setup
     upstream:
       - docs/2026-10-15-cos-app-phasemap.spec::COSA13_auto_update
       - docs/2026-10-15-cos-app-phasemap.spec::COSA14_versionium_record
@@ -220,6 +221,7 @@ payload:
     downstream:
       - docs/2026-11-02-cos-the-application-phasemap.spec::CA6_install_asks_where_and_npm_in_program_files
       - docs/2026-11-02-cos-the-application-phasemap.spec::CA7_each_compartment_its_own_location
+      - docs/2026-11-02-cos-the-application-phasemap.spec::CA8_first_time_setup
     blockedBy: []
     unlocks:
       - docs/2026-11-02-cos-the-application-phasemap.spec::CA6_install_asks_where_and_npm_in_program_files
@@ -229,8 +231,8 @@ payload:
       - layer 10
       - 'depends on (2): MG35_the_exe_starts_nexus, MG36_the_cockpit_is_the_window · all upstream 21'
       - >-
-        needed by (1): CA6_install_asks_where_and_npm_in_program_files · all downstream 2 ·
-        finishing it unlocks CA6_install_asks_where_and_npm_in_program_files
+        needed by (2): CA6_install_asks_where_and_npm_in_program_files, CA8_first_time_setup · all
+        downstream 3 · finishing it unlocks CA6_install_asks_where_and_npm_in_program_files
     edges:
       - from: docs/2026-10-24-cos-manager-phasemap.spec::MG35_the_exe_starts_nexus
         kind: declared

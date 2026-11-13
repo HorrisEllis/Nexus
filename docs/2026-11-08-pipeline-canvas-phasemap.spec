@@ -694,6 +694,45 @@ built_2026_11_09_plan:
     proof: "a stand-in UI Automation tree gives page/field.js's shape; unarmed refused; a stale number refused; a no-op click said; the tab through Clear Glass; the Windows path on his PC."
     decided: 'RC_R1, his, 2026-11-11: "Yes. Stand in until we build a full application from looking glass. To replace electron." The UI Automation tree and the overlay window are a stand-in until a Looking Glass application (clear-glass/spec/sources/glass-engine-working-spec-v0.1-draft.md) replaces Electron.'
 
+  PC11_nothing_sent_teaches_nothing:
+    status: OPEN
+    depends_on: []
+    james: '"yes. then the highest leverage. ollama can can now run the pipeline" (2026-11-13) · found 2026-11-11 (0.60.493): "an attempt where nothing was sent should not count against the agent. Its own phase, to map."'
+    files: [lib/pipeline-routing.js, tests/modules/test-pipeline-routing.test.js, tests/modules/test-contract-adapters.test.js]
+    does: >-
+      A build attempt that never reached its agent (nothing was sent, the tab signed out, the provider down, Copilot's door unreachable)
+      is a transient failure: it does not put the agent on the brick's skip list (.exclude), does not lower the agent in the door's
+      learned order, and does not teach a size lesson. Today lib/pipeline-routing.js classify() does not know "nothing was sent",
+      "no-answer", "provider-down" (with its hyphen) or Copilot's door unreachable as the agent being away: they read "unknown", which contract-gates.js classifyFailure turns
+      into capability, so one night with the browser agents asleep left a contract saying "failed it before, skipped: gemini, chatgpt,
+      claude" and every later build of that phase gave up in about 35 s (run phrun-mwbvr9la, 2026-11-11). An agent that answered and
+      fell short (any other error text) stays capability, as GT-02 holds.
+    proof: "PR-05b: each of those texts classifies as provider-down, not unknown (a signed-out tab is left as it is: login never falls through, his rule); GT-01b: an attempt failing 'nothing was sent to gemini' is retried, nothing excluded, nothing learned; GT-02 unchanged"
+    axioms: "§1.2 (a failure is said as what it is), do not guess (a guess filed as capability taught the route a falsehood), §8.6 (the transient class and its rules exist; the classifier learns four phrases)"
+
+  PC12_every_pipeline_in_cos:
+    status: OPEN
+    depends_on: [PC8_operate_a_pipeline]
+    james: '"both. each step of any pipeline. thats the point. i want all pipelines managable, orchastratred, and programmable in cos. all of them." (2026-11-13) · "clearglass pipelines, raid pipelines, idearium, all of them in cos."'
+    files: [cortex/core/raid/contract-v2-door.js, cos/pipeline/contract.eg, cos/pipeline/test/contract.test.eg, cos/pipeline/cli.eg, cos/pipeline/index.js, cos/pipeline/registry.json, tests/modules/test-cos-pipeline.test.js]
+    does: >-
+      Every sequence of steps Nexus runs is a pipeline in COS's Automation tab: each step seen with its state, run or re-run from COS, and
+      changed there (through its owner's route: the owner keeps the truth, §5.15). The census (read 2026-11-13), and where each stands:
+      in COS already — Idearium's pipelines (by route, 0.60.517), Clear Glass's pipelines, workflows and macros (by route; Fiverr's among
+      them), COS's own (the framework trial, 0.60.521), procedures and frameworks as steps (PC2). Not in COS — RAID's contracts v2 (each a
+      gated sequence of bricks, Cortex's), RAID's execution sequence (lib/execution-pipeline.js: isolate, verify, compare, commit), the build
+      loop (lib/build-pipeline.js), chains (lib/chains.js), the intent flow (lib/intent-flow.js), the chunk build's agent switching
+      (lib/chunk-build-orchestrator.js), a repo's replayable procedures (lib/repo-procedures.js), the phase build's ladder (Idearium).
+      Slices, one owner at a time:
+        a. RAID's contracts as pipelines: Cortex lists them (GET /api/raid/contracts/v2) and its view carries each gate's depends_on, kind and
+           file; COS turns a contract into a .pipeline (cos/pipeline/contract.eg, Emerge), each gate a step that checks that gate on Cortex's
+           route; the sync imports them. Running it in COS checks each gate in order; a failed gate's reasons are the step's.
+        b. RAID's execution sequence as a pipeline: each stage served by its owner's route first (what exists read before), then one .pipeline.
+        c. the rest of the census, each: a .pipeline its owner serves, or retired into one that exists (said which).
+        d. programmable both ways: a pipeline changed in COS is written back through its owner's route and validated there; the owner refuses
+           what breaks it, and COS shows why.
+    proof: "per slice: the census shows it in COS; its steps run from COS and their states read back from the owner; for (a) a fixture contract's gates become steps in order, a passed gate's step is met, a failed one carries RAID's reasons"
+    axioms: "§5.15 (the owner keeps the truth, COS reaches it by route), §8.6 (the sync, the box shape and RAID's check route are used), §1.2 (a step's failure is the owner's words), USER_AUTONOMY (his: all of them, step by step)"
 # ── ADDENDUM 2026-11-11 (0.60.483) — PC9 slice a: the desktop driver for agents (his PC_D14) ──────────────────────────────────────────────
 # James, 2026-11-11: "I’m saying for you. Like look at clearglass. Nexus nerve, cleardriver injecting coordinates into the dom."
 # Built: cos/remote-desktop/desktop-driver.js (screen, move, click, type, key, scroll; backends: Windows PowerShell user32/System.Drawing,
@@ -893,3 +932,34 @@ built_2026_11_09_plan:
 #     (derive, template, model: CIE-EG deterministic_first) and its tests.
 # First real run to show: SW7a's build request (2026-11-13): context met, dag met after Idearium's snapshot was refreshed, build failed twice
 # (Idearium out of its 1 GB heap at 09:15; then the request timed out while the build was started anyway and went stuck at 10:22).
+
+# ── ADDENDUM 2026-11-13 (0.60.517) — PC8: every pipeline in Nexus reaches the Automation tab ──
+# James, 2026-11-13: "also all pipelines in nexus need to be here." His tab showed 0 after an import that said "imported".
+# Found on a real COS and Idearium (sandbox): COS's call cut a system's answer at 4,096 bytes, Idearium's pipeline is 5,704, its JSON broke
+# and the sync skipped it silently; the sync ran once, before the systems answered; the tab read its list once. Built: read whole (4 MB),
+# a skipped pipeline named; the sync also on a source system's spawn, resume or beat in COS's ledger (PR6: heard, not polled) and on his ask;
+# the tab's Sync, what the last sync read, the list re-read from the stream; `pipeline-sync` in COS's console. Proof: test-cos-hub HB-10 in
+# Clear Glass; the sandbox run (the sync followed Idearium's first beat, 9 steps imported). Clear Glass's pipelines not proved live.
+# By the axioms: §8.6 (the sync and the sources existed; nothing new beside them), §1.2 (a skip is said), PR6 (no polling).
+
+# ── ADDENDUM 2026-11-13 (0.60.520) — PC11 built: an attempt that never reached its agent teaches nothing ──
+# James, 2026-11-13: "yes. then the highest leverage. ollama can can now run the pipeline". The 11-11 open item (3), the stale contract's cause:
+# lib/pipeline-routing.js classify() now reads "nothing was sent", "no-answer", "provider-down" and Copilot's door unreachable as provider-down
+# (transient), not unknown (which contract-gates.js filed as capability). Proof: PR-05b, GT-01b; the suites around it green. Contracts already
+# carrying such a skip list keep it (the 11-11 one was archived by hand).
+
+# ── ADDENDUM 2026-11-13 (0.60.521) — PC8: the framework trial as a COS pipeline, on Ollama, with a benchmark ──
+# James, 2026-11-13: "we have ollama now. lets leverage that. test, benchmark, run the trial in the docs folder. clearglass pipelines, raid
+# pipelines, idearium, all of them in cos." cos/pipeline/pipelines/framework-trial.pipeline (shipped; imported by the sync): api steps on the
+# trial screen's routes, one problem per step through Ollama, a hold for his blind scores (onFail hold, 0.60.496), score, benchmark. trial.js
+# fixed in place (Windows-safe answer names; blind read Ollama answers), --problem and bench.jsonl added. Proof: run whole in COS against a
+# stand-in Ollama; test-framework-trial-deploy 5/5 (A6). Clear Glass's pipeline routes checked against the sync's shape. "raid pipelines":
+# RAID has no .pipeline files or pipeline route; its readings asked (his).
+
+# ── ADDENDUM 2026-11-13 (0.60.522) — PC12 mapped; slice a built: RAID's contracts are pipelines in COS ──
+# James, 2026-11-13: "both. each step of any pipeline. thats the point. i want all pipelines managable, orchastratred, and programmable in cos.
+# all of them." · "i want raid to be the hub that all systems run througj". Built: Cortex's list route and each gate's depends_on in its view;
+# cos/pipeline/contract.eg (a contract → a pipeline, each gate a step asking RAID to check it); the sync's convert; a gate's reasonAt. Proof:
+# a stand-in Cortex with Cortex's real door, run from COS, held with RAID's own reason, done after evidence and Continue.
+# Open: slices b-d; his "raid to be the hub": readings asked (RAID decides every system's work · every call between systems passes
+# through RAID · RAID moves into COS).

@@ -508,6 +508,26 @@
     },
     {
       "method": "GET",
+      "path": "/api/cos/locations",
+      "out": "{ systems: [{ system, folder, files, out, out_to, in, in_from, root_data, movable, why }], root, cosRoot } \u2014 where each system lives and whether it can be moved (CA7a)"
+    },
+    {
+      "method": "GET",
+      "path": "/api/cos/systems/:name/location",
+      "out": "{ system, folder, inside, disk: { bytes, files, cut }, movable, why, out, out_to, in, in_from, root_data } \u2014 one system's location on this machine (CA7a)"
+    },
+    {
+      "method": "GET",
+      "path": "/api/cos/census/graph",
+      "out": "{ graphs: [{ id, what, store, node_kinds, edge_kinds, evidence, writers, readers, rows, rows_why }], unknown: [{ name, in }], files_read, markdown? } \u2014 every graph in Nexus, read from the tree (GR0); ?markdown=1 adds the atlas page"
+    },
+    {
+      "method": "GET",
+      "path": "/api/cos/pipeline/sync",
+      "out": "{ last: { at, why, imported, updated, files, systems: [{ system, ok, files | why }], failed } | null, sources: [system] } \u2014 the last sync (0.60.517): what it read and which system did not answer"
+    },
+    {
+      "method": "GET",
       "path": "/api/cos/pipeline/sources",
       "out": "{ sources: [{ file, name, pipelineId, from, sha, at }] } \u2014 the node file each pipeline came from"
     },

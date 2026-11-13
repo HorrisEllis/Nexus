@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-13-sovereign-and-wired-phasemap.spec::SW5a_autopilots_remains_into_the_supervisor
+type: phase
+id: docs_2026-11-13-sovereign-and-wired-phasemap.spec::SW5a_autopilots_remains_into_the_supervisor
+context: >-
+  pipeline phase SW5a_autopilots_remains_into_the_supervisor of
+  docs/2026-11-13-sovereign-and-wired-phasemap.spec
+intent: null
+summary: SW5a_autopilots_remains_into_the_supervisor (backend) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1794608390826
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794608390826
+lastSeenAt: 1794608390826
+fingerprint: null
+payload:
+  id: SW5a_autopilots_remains_into_the_supervisor
+  map: docs/2026-11-13-sovereign-and-wired-phasemap.spec
+  repo: null
+  layer: backend
+  status: OPEN
+  files:
+    - lib/nexus/core-duties.js
+    - cos/manager/duties.js
+    - lib/nexus/autopilot.js
+    - cos/manager/server.js
+    - tests/modules/test-core-duties.test.js
+  depends_on:
+    - SW5_orchestrator_into_the_supervisor
+  blocks: []
+  spec: null
+  graph: 00b9de91f9da8108

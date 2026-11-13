@@ -7,18 +7,21 @@ intent: null
 summary: CS4_every_system_a_compartment (backend) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792879719065
+exported_at: 1794611790080
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792879719065
-lastSeenAt: 1792879719065
+firstSeenAt: 1794611790080
+lastSeenAt: 1794611790080
 fingerprint: null
 payload:
   id: CS4_every_system_a_compartment
   map: docs/2026-10-23-cos-spine-phasemap.spec
   repo: null
   layer: backend
-  status: OPEN
+  status: >-
+    "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one
+    idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own
+    door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
   files:
     - cos/spine/systems.js
     - cos/compartment/process-runner.js

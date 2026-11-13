@@ -7,11 +7,11 @@ intent: null
 summary: 31 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793971500814
+exported_at: 1794612430665
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793971500814
-lastSeenAt: 1793971500814
+firstSeenAt: 1794612430665
+lastSeenAt: 1794612430665
 fingerprint: null
 payload:
   for: EMB1_emerge_writes_the_brick
@@ -230,7 +230,8 @@ payload:
       - docs/2026-10-19-pipeline-root-causes-phasemap.spec::VF1_verify_first
       - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS2_the_language_through_the_door
       - docs/2026-10-12-browser-providers-and-work-phasemap.spec::CS0_projects_decomposed_into_components
-    dependents: []
+    dependents:
+      - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB2_ollama_writes_emerge_for_the_pipeline
     upstream:
       - docs/2026-10-12-browser-providers-and-work-phasemap.spec::CS0_projects_decomposed_into_components
       - docs/2026-10-12-browser-providers-and-work-phasemap.spec::MX2_the_0_60_components_wired_in_loom
@@ -242,9 +243,11 @@ payload:
       - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D0_a_system_not_an_idearium_module
       - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D2_two_contracts_two_names
       - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D3_handlers_run_the_cli
-    downstream: []
+    downstream:
+      - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB2_ollama_writes_emerge_for_the_pipeline
     blockedBy: []
-    unlocks: []
+    unlocks:
+      - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB2_ollama_writes_emerge_for_the_pipeline
     conflicts: []
     dangling: []
     lines:
@@ -252,7 +255,9 @@ payload:
       - >-
         depends on (3): VF1_verify_first, EAS2_the_language_through_the_door,
         CS0_projects_decomposed_into_components · all upstream 10
-      - 'needed by (0): —'
+      - >-
+        needed by (1): EMB2_ollama_writes_emerge_for_the_pipeline · finishing it unlocks
+        EMB2_ollama_writes_emerge_for_the_pipeline
     edges:
       - from: docs/2026-10-19-pipeline-root-causes-phasemap.spec::VF1_verify_first
         kind: declared

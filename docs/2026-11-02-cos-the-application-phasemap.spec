@@ -153,7 +153,9 @@ phases_addendum_2026_11_04_b:
     proof: "IN-07 a .cmd under Program Files is quoted for cmd.exe; IN-08 the folder rule (nexus/empty/else <chosen>/nexus); IN-09 installDir
       kept, cancel installs nothing"
   CA7_each_compartment_its_own_location:
-    status: "OPEN — his reading to settle first (do not guess)"
+    status: OPEN   # reading settled 2026-11-13 (his): (c)
+    status_previous: "OPEN — his reading to settle first (do not guess)"
+    decided: '2026-11-13, his: asked "what does each system get a location for", with "Whole system: default + movable" as the second option: "second one, can be moved anbd changed in each systems individual settings." Reading (c): each system, code and data, lives in a folder inside COS by default; it can be moved and changed from that system own settings.' 
     origin: "James, 2026-11-05: \"i was also thinking each compartment can have a different location inside of cos.\""
     depends_on: [CA6_install_asks_where_and_npm_in_program_files]
     files: []
@@ -161,3 +163,36 @@ phases_addendum_2026_11_04_b:
       - "(a) each compartment (system) can live in a folder of his choosing, anywhere on disk (another drive too); COS keeps where each one is and starts it from there"
       - "(b) each compartment has its own folder inside COS's root (<COS root>/<system>), and COS lets him move it"
       - "(c) both: a default folder inside COS, movable per compartment"
+
+    expanded_2026_11_13: >-
+      Read from the code: every system today lives inside the Nexus folder, which lives inside COS (COS root/projects/nexus/versions/<v>, its
+      data in projects/nexus/data, COSA1): the default is already inside COS. What stops a system from being MOVED is measured, not guessed:
+      its code reaches into other systems by relative path (lib/system-boundary.js counts 396 crossings, 2026-11-13) and shared code in lib/
+      (SW7), and its data is found through the root data/ in 50 files (SW4). A system moved before those are gone stops working. So: each
+      system's settings show its location and its size now; Move is offered for a system whose crossings in and out are zero and whose data
+      resolves through its own folder, and for every other one it says what still holds it there (the counts, by name). As SW4, SW6 and SW7
+      land, more systems can move, with no change here.
+    slices:
+      a: "each system's location, size and whether it can move (and why not): GET /api/cos/systems/:name/location; `location <system>` in COS's console; its own settings page shows it"
+      b: "the move: copied, checked, the supervisor's declaration pointed at the new folder, started from there; the old folder kept as a note of where it went (§0.3); refused while it cannot move, with why"
+      c: "the wizard's storage step (CA8) shows the same for every system"
+    depends_on_for_b: [SW4_own_data_by_default, SW6_the_drawbridge_the_only_way_in, SW7_lib_goes_home]
+  CA8_first_time_setup:
+    status: OPEN
+    depends_on: [CA5_cos_installs_nexus_from_github, CA6_install_asks_where_and_npm_in_program_files, CA7_each_compartment_its_own_location]
+    james: '"can you finish cos ui? should be a first time setup wizard, storage location of each system/nexus, etc" (2026-11-13)'
+    files: [cos/app/desktop/main.js, cos/app/desktop/ui/app.js, cos/app/desktop/ui/index.html, cos/app/desktop/ui/style.css, cos/app/settings.js, cos/manager/server.js, cos/manager/cli.js, cos/manager/contract.json, cos/ui/settings]
+    does: >-
+      The first time COS opens, a setup in steps, in COS's own window (it must run before Nexus exists, so it is the exe's, not the cockpit's),
+      each step skippable and every answer changeable later in Settings: (1) Nexus: install from GitHub, link a folder he has, or import a
+      zip, and where (CA5, CA6: today a bare folder dialog); (2) where things live: COS's root, Nexus's data folder, and each system's
+      location (CA7 slice a), with sizes and free space; (3) start: with Windows, in the tray, as a Windows service (SC7, CA4); (4) agents:
+      Ollama found or not, its models, which one builds first (EMB2), Clear Glass's sign-ins named as his to do; (5) resources: the heavy-work
+      line and the memory floors (CP6a); (6) review, then apply, each act said. Kept: what was chosen and when (cos/app/settings.js); a
+      setup already done is not shown again unless asked (Settings › Run setup again).
+    order: "backend (the answers kept, each step's apply) → route → command → UI, step by step; step 2 waits on CA7 slice a"
+    proof: "on a fresh COS root: the setup shows; each step's answer applied and read back; skipped steps keep the defaults; a second start does not show it; Settings re-opens it; in the COS window"
+# ── ADDENDUM 2026-11-13 (0.60.525) — CA7 slice a built; the move and CA8 pinned (his) ──
+# James, 2026-11-13: "okay, just make it so nexus can be anywhere." then "put a pin in the can be moved anywhere. need the pipeline building all of
+# my requests." Built: cos/sovereign/location.eg, GET /api/cos/locations, GET /api/cos/systems/:name/location, `location [system]`. Pinned: CA7 b
+# (the move; his last reading: Nexus as a whole anywhere, not each system) and CA8 (the first-time setup), until he picks them up.

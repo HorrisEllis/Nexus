@@ -7,11 +7,11 @@ intent: null
 summary: 25 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793940673622
+exported_at: 1794613330848
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793940673622
-lastSeenAt: 1793940673622
+firstSeenAt: 1794613330848
+lastSeenAt: 1794613330848
 fingerprint: null
 payload:
   for: CA6_install_asks_where_and_npm_in_program_files
@@ -185,6 +185,7 @@ payload:
       - docs/2026-11-02-cos-the-application-phasemap.spec::CA5_cos_installs_nexus_from_github
     dependents:
       - docs/2026-11-02-cos-the-application-phasemap.spec::CA7_each_compartment_its_own_location
+      - docs/2026-11-02-cos-the-application-phasemap.spec::CA8_first_time_setup
     upstream:
       - docs/2026-10-15-cos-app-phasemap.spec::COSA13_auto_update
       - docs/2026-10-15-cos-app-phasemap.spec::COSA14_versionium_record
@@ -210,6 +211,7 @@ payload:
       - docs/2026-11-02-cos-the-application-phasemap.spec::CA_D0_the_cockpit_is_the_window
     downstream:
       - docs/2026-11-02-cos-the-application-phasemap.spec::CA7_each_compartment_its_own_location
+      - docs/2026-11-02-cos-the-application-phasemap.spec::CA8_first_time_setup
     blockedBy: []
     unlocks:
       - docs/2026-11-02-cos-the-application-phasemap.spec::CA7_each_compartment_its_own_location
@@ -219,8 +221,8 @@ payload:
       - layer 11
       - 'depends on (1): CA5_cos_installs_nexus_from_github · all upstream 22'
       - >-
-        needed by (1): CA7_each_compartment_its_own_location · finishing it unlocks
-        CA7_each_compartment_its_own_location
+        needed by (2): CA7_each_compartment_its_own_location, CA8_first_time_setup · finishing it
+        unlocks CA7_each_compartment_its_own_location
     edges:
       - from: docs/2026-11-02-cos-the-application-phasemap.spec::CA5_cos_installs_nexus_from_github
         kind: declared

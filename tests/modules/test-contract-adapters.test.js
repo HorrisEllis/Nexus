@@ -143,6 +143,12 @@ function check(n, c, d = '') { if (c) { pass++; console.log(`  ✓ ${n}`); } els
         t.ev[`${t.g.id}.class`] === 'transient' && t.seen.length === 3 && t.seen.every(x => x.first === 'small') && t.st.status === 'PASSED' && t.st.attempts === 1
         && !t.bounds.length && !t.door.length && !t.ev[`${t.g.id}.exclude`] && t.friction.filter(c => c === 'transient').length === 2 && t.r.complete, JSON.stringify({ seen: t.seen, st: t.st, b: t.bounds.length, d: t.door }));
 
+      // PC11 (0.60.520): an attempt that never reached the agent excludes nothing and teaches nothing, as a timeout does
+      const ns = await plant('lib/c.js', [{ ok: false, error: 'no-answer: nothing was sent to small (provider-down)' }]);
+      check('GT-01b PC11: "nothing was sent" is transient: retried on the same agent, no retry spent, nothing excluded, nothing learned',
+        ns.ev[`${ns.g.id}.class`] === 'transient' && ns.seen.every(x => x.first === 'small') && !ns.ev[`${ns.g.id}.exclude`] && !ns.door.length && !ns.bounds.length && ns.st.attempts === 1 && ns.r.complete,
+        JSON.stringify({ cls: ns.ev[`${ns.g.id}.class`], seen: ns.seen, ex: ns.ev[`${ns.g.id}.exclude`], d: ns.door.length, st: ns.st }));
+
       const c = await plant('lib/c.js', [{ ok: false, error: 'the export z is missing' }]);
       check('GT-02 capability: the next attempt skips the agent that failed (escalation), the door\'s order learns it, Boundaries learns a size lesson, and the retry carries the check\'s words',
         c.ev[`${c.g.id}.class`] === 'capability' && JSON.parse(c.ev[`${c.g.id}.exclude`]).join() === 'small' && c.seen[1].first === 'big' && /failed it before, skipped: small/.test(c.ev[`${c.g.id}.route`])

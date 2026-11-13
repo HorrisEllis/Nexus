@@ -7,18 +7,21 @@ intent: null
 summary: CS4a_cos_boots_alone (foundation) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1793421631198
+exported_at: 1794611790082
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793421631198
-lastSeenAt: 1793421631198
+firstSeenAt: 1794611790082
+lastSeenAt: 1794611790082
 fingerprint: null
 payload:
   id: CS4a_cos_boots_alone
   map: docs/2026-10-23-cos-spine-phasemap.spec
   repo: null
   layer: foundation
-  status: OPEN
+  status: >-
+    "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one
+    idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own
+    door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
   files:
     - cos/spine/boot.js
     - cos/app/runtime.js
@@ -31,4 +34,4 @@ payload:
   blocks:
     - MOD-CS-BOOT
   spec: cos/spec/cos-spine.spec
-  graph: c5a0de32d1a91c51
+  graph: aaa257a182dba2e4

@@ -83,7 +83,7 @@ const read = (p) => fs.readFileSync(path.join(ROOT, p), 'utf8');
   });
   await test('GV-05', 'wired: integrate, the held row, the route and handler, the row, the buttons, loom', async () => {
     const api = read('idearium/api/index.js');
-    for (const s of ["if (st === 'no-proof') return { awaitsPerson: true", "state: 'awaiting-verdict'", "['api','repos',    ':uuid','phases','verdict'],      'repo.phases.verdict'", 'async function _phaseVerdict(', "CI.reportExternalOutcome(held.raidQueueId, { status: 'pass'", "RI.revert(n.uuid"]) assert.ok(api.includes(s), s);
+    for (const s of ["if (st === 'no-proof') return { awaitsPerson: true", "state: 'awaiting-verdict'", "['api','repos',    ':uuid','phases','verdict'],      'repo.phases.verdict'", 'async function _phaseVerdict(', "raid = await _outcome('pass'", "/api/raid/contracts/${encodeURIComponent(held.raidQueueId)}/outcome", "RI.revert(n.uuid"]) assert.ok(api.includes(s), s);
     const C = await import(require('url').pathToFileURL(path.join(ROOT, 'idearium/cli/route-commands.js')).href);
     const row = C.SPEC.find(r => r.key === 'repo.verdict');
     assert.deepStrictEqual(row.req({ args: ['phrun-1', 'accept'], flags: { words: 'good' }, repo: { uuid: 'u' } }), { method: 'POST', path: '/api/repos/u/phases/verdict', body: { runId: 'phrun-1', accept: true, words: 'good', startedBy: 'command' } });

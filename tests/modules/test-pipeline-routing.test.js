@@ -37,6 +37,11 @@ function check(n, c, d = '') { if (c) { pass++; console.log(`  ✓ ${n}`); } els
       C('please log in to continue') === 'login' && C('429 Too Many Requests') === 'rate-limit' && C('connect ECONNREFUSED 127.0.0.1:3749') === 'provider-down'
       && C('exceeded outer wall-clock attempt cap — last check: mid_sentence_end') === 'truncated' && C('request timed out') === 'timeout' && C('I refuse to do that') === 'refused' && C('reply was empty') === 'empty',
       ['please log in', '429 Too Many Requests', 'ECONNREFUSED', 'mid_sentence_end', 'timed out', 'refuse', 'empty'].map(C).join());
+    // PC11 (0.60.520): an attempt that never reached its agent is the agent away, never 'unknown' (which the contract engine reads as capability)
+    check('PR-05b PC11: nothing was sent / no-answer / provider-down / copilot unreachable are provider-down; a real shortfall stays unknown',
+      ['no-answer: nothing was sent to gemini', 'gemini provider-down', 'copilot :3750 unreachable — connect ECONNREFUSED — nothing was sent to chatgpt'].every(e => C(e) === 'provider-down')
+      && C('the export z is missing') === 'unknown',
+      ['no-answer: nothing was sent to gemini', 'gemini provider-down', 'copilot :3750 unreachable', 'the export z is missing'].map(C).join());
     check('PR-06 fallback_on: login never falls through; a class left out stops', !PR.shouldFallback('login', PR.policyFrom({ fallback_on: 'login,empty' })) && PR.shouldFallback('empty', pol) && !PR.shouldFallback('refused', PR.policyFrom({ fallback_on: 'empty' })));
     let t = 1000;
     const bp = PR.policyFrom({ breaker_threshold: 2, breaker_cooldown_ms: 500 });

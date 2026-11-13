@@ -25,8 +25,9 @@ const S = (free) => ({ system: { freeMemPct: free, usedMemPct: 1 - free } });
   const a = P.heavyAllowed({ sample: S(0.15), level: 'pressure' });
   const b = P.heavyAllowed({ sample: S(0.22), level: 'ok' });
   const c = P.heavyAllowed({ sample: S(0.45), level: 'ok' });
-  check('PV-02 prevention, not reaction: under pressure heavy work waits; after a crisis "ok" (22% free) is not enough — it waits for 30%; with headroom it runs',
-    !a.ok && /pressure/.test(a.why) && !b.ok && /waits for 30% free, now 22%/.test(b.why) && c.ok, JSON.stringify({ a, b, c }));
+  const d = P.heavyAllowed({ sample: S(0.27), level: 'ok' });   // CP6a 0.60.518: his 2026-11-13 afternoon, 26.5-30% free after one critical moment
+  check('PV-02 prevention, not reaction: under pressure heavy work waits; after a crisis "ok" (22% free) is not enough — it waits for 25%; at 27% (his machine, 2026-11-13) and with headroom it runs',
+    !a.ok && /pressure/.test(a.why) && !b.ok && /waits for 25% free, now 22%/.test(b.why) && c.ok && d.ok, JSON.stringify({ a, b, c, d }));
   P.clear('memory_pressure');
   check('PV-03 with no recent crisis, an ok machine runs heavy work at 22% free', P.heavyAllowed({ sample: S(0.22), level: 'ok' }).ok);
 

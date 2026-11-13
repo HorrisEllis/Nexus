@@ -144,6 +144,13 @@ function createPipeline({ automation, idearium = null, call = null, dataDir } = 
       fs.writeFileSync(baselineFile, JSON.stringify({ systems: r.systems, totals: r.totals }, null, 1) + '\n'); return { ...r, kept: true }; }
     return r;
   }
+  // GR0 (2026-11-13), his "find them." then "yes. then the highest leverage.": every graph in Nexus, read from the tree (cos/census/graph.eg);
+  // rows from data (NEXUS_DATA_ROOT, else <root>/data); markdown: the atlas page as well
+  // CA7 slice a (2026-11-13), his "can be moved anbd changed in each systems individual settings": where each system lives and whether it can move
+  async function locations({ treeRoot = root, systems = SOV_SYSTEMS } = {}) { return eg('locations', { root: treeRoot, systems }); }
+  async function graphCensus({ treeRoot = root, data = process.env.NEXUS_DATA_ROOT || path.join(root, 'data'), markdown = false } = {}) {
+    return eg('graph-census', { root: treeRoot, data, markdown });
+  }
   // PC8 slice b (2026-11-11): a failed engine run retried — its request resumed (runs.eg retry_of); from: that step and every step after it again
   async function retry(engineRun, { from = null, by } = {}) {
     if (!by) return { ok: false, code: 400, error: 'say who asks: { "by": "person" }' };
@@ -213,21 +220,30 @@ function createPipeline({ automation, idearium = null, call = null, dataDir } = 
     // each system's own pipelines, by its route, kept as a file first (a system down is said, its files kept from last time)
     let reg = {}; try { reg = JSON.parse(fs.readFileSync(path.join(__dirname, 'registry.json'), 'utf8')).pipelineSources || {}; } catch (_) {}
     for (const src of reg.systems || []) {
-      const [lm, lp] = src.list.split(' '); const l = await ask(src.system, `${lm} ${lp}`);
+      // 0.60.517: read whole (4 MB). The call cut every answer at 4,096 bytes, so a pipeline larger than that (Idearium's is 5,704) failed
+      // to parse and was skipped without a word: the Automation tab showed 0. A pipeline that cannot be fetched or read is now named.
+      const [lm, lp] = src.list.split(' '); const l = await ask(src.system, `${lm} ${lp}`, undefined, 4 * 1024 * 1024);
       if (l.error || l.status >= 400) { fetched.push({ system: src.system, ok: false, why: l.error || `answered ${l.status}` }); continue; }
       let list = []; try { list = (JSON.parse(l.body || '{}')[src.listKey || 'pipelines']) || []; } catch (_) {}
-      let n = 0;
+      let n = 0; const skipped = [];
       for (const it of list) {
         const id = it.id || it.name; if (!id) continue;
-        const [nm, np] = src.node.split(' '); const g = await ask(src.system, `${nm} ${np.replace(':id', encodeURIComponent(id))}`);
-        if (g.error || g.status >= 400) continue;
-        let j = {}; try { j = JSON.parse(g.body || '{}'); } catch (_) {}
-        const text = String(src.textAt).split('.').reduce((o, k) => (o ? o[k] : undefined), j);
-        if (typeof text !== 'string') continue;
+        const [nm, np] = src.node.split(' '); const g = await ask(src.system, `${nm} ${np.replace(':id', encodeURIComponent(id))}`, undefined, 4 * 1024 * 1024);
+        if (g.error || g.status >= 400) { skipped.push({ id, why: g.error || `answered ${g.status}` }); continue; }
+        let j = {}; try { j = JSON.parse(g.body || '{}'); } catch (e) { skipped.push({ id, why: `not JSON${g.cut ? ' (cut at ' + (g.body || '').length + ' of ' + g.length + ' bytes)' : ''}: ${e.message}` }); continue; }
+        // PC12a (0.60.522): a source whose items are not pipelines yet (RAID's contracts) is turned into one by COS's Emerge (src.convert), its
+        // owner's answer read as it is; the pipeline is written as a node file first, like every other
+        let text;
+        if (src.convert) {
+          const c = await eg(src.convert, j); if (!c.ok) { skipped.push({ id, why: c.why || c.error || `${src.convert} refused it` }); continue; }
+          text = NE.toYaml(NE.wrap('pipeline', `${slug(src.system)}-${slug(id)}`, { id: `${slug(src.system)}-${slug(id)}`, format: 'nexus-pipeline', version: 1, ...c.pipeline },
+            { context: `${src.system}'s ${id}, made a pipeline by COS (${src.convert})`, intent: c.pipeline.description, tags: ['pipeline', src.system, 'converted'] }));
+        } else text = String(src.textAt).split('.').reduce((o, k) => (o ? o[k] : undefined), j);
+        if (typeof text !== 'string') { skipped.push({ id, why: `no text at ${src.textAt}` }); continue; }
         const dir = path.join(nodesDir, `from-${slug(src.system)}`); fs.mkdirSync(dir, { recursive: true });
         fs.writeFileSync(path.join(dir, `${slug(id)}.pipeline`), text); n++;
       }
-      fetched.push({ system: src.system, ok: true, files: n });
+      fetched.push({ system: src.system, ok: true, files: n, listed: list.length, ...(skipped.length ? { skipped } : {}) });
     }
     const files = [];
     const walk = (d, from) => { let names = []; try { names = fs.readdirSync(d, { withFileTypes: true }); } catch (_) {} for (const e of names) { if (e.isDirectory()) walk(path.join(d, e.name), e.name.replace(/^from-/, '')); else if (e.name.endsWith('.pipeline')) files.push({ file: path.join(d, e.name), from }); } };
@@ -302,7 +318,7 @@ function createPipeline({ automation, idearium = null, call = null, dataDir } = 
     return { ...out, pipeline: id, latestRun: latest ? { id: latest.id, status: latest.status, decisions: latest.decisions || [] } : null };
   }
 
-  return { boxes, gates, runs, frameworks, frameworkStep, decideGate, onEvent, request, resume, retry, ready, sovereign, planPhase, buildNext, sync, sources, fromErv, baseline };
+  return { boxes, gates, runs, frameworks, frameworkStep, decideGate, onEvent, request, resume, retry, ready, sovereign, graphCensus, locations, planPhase, buildNext, sync, sources, fromErv, baseline };
 }
 
 module.exports = { createPipeline, MODULE_ID: 'cos.pipeline', VERSION: '1.0.0' };

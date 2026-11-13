@@ -7,11 +7,11 @@ intent: null
 summary: 29 node(s), 3 crossing(s)
 system: idearium
 tags: []
-exported_at: 1794551278392
+exported_at: 1794608390792
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794551278392
-lastSeenAt: 1794551278392
+firstSeenAt: 1794608390792
+lastSeenAt: 1794608390792
 fingerprint: null
 payload:
   for: SW0_the_scorecard
@@ -238,11 +238,20 @@ payload:
     upstream:
       - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW_D0_picked_up
     downstream:
+      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC4_system_secrets
       - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW1_each_system_its_own_map
       - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW2_routes_and_command_nodes
       - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW3_an_event_per_call_in_its_own_ledger
       - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW4_own_data_by_default
       - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW5_orchestrator_into_the_supervisor
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW5a_autopilots_remains_into_the_supervisor
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW5b_cortexs_workers_go_home
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW5c_the_orchestrators_own_background_assigned
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW5d_the_bus_into_cos
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW5e_the_forwards_retired
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW5f_others_data_goes_home
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW5g_the_pages_and_auth
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW5h_the_orchestrator_retired
       - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW6_the_drawbridge_the_only_way_in
       - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW7_lib_goes_home
     blockedBy: []
@@ -255,7 +264,7 @@ payload:
       - layer 1
       - 'depends on (1): SW_D0_picked_up'
       - >-
-        needed by (2): SW1_each_system_its_own_map, SW4_own_data_by_default · all downstream 7 ·
+        needed by (2): SW1_each_system_its_own_map, SW4_own_data_by_default · all downstream 16 ·
         finishing it unlocks SW1_each_system_its_own_map, SW4_own_data_by_default
     edges:
       - from: docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW_D0_picked_up

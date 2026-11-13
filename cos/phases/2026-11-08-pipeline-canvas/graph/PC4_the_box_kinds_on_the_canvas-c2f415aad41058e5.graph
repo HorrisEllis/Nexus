@@ -7,11 +7,11 @@ intent: null
 summary: 36 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1794383857761
+exported_at: 1794611411153
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794383857761
-lastSeenAt: 1794383857761
+firstSeenAt: 1794611411153
+lastSeenAt: 1794611411153
 fingerprint: null
 payload:
   for: PC4_the_box_kinds_on_the_canvas
@@ -326,6 +326,12 @@ payload:
       - with: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC10_our_own_remote_control
         files:
           - cos/manager/server.js
+      - with: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC12_every_pipeline_in_cos
+        files:
+          - cos/pipeline/cli.eg
+          - cos/pipeline/index.js
+          - cos/pipeline/registry.json
+          - tests/modules/test-cos-pipeline.test.js
     dangling: []
     lines:
       - >-
@@ -343,6 +349,9 @@ payload:
         cos/manager/server.js, tests/modules/test-cos-pipeline.test.js
       - 'same files as PC9_the_desktop_driver with no order between them: cos/manager/server.js'
       - 'same files as PC10_our_own_remote_control with no order between them: cos/manager/server.js'
+      - >-
+        same files as PC12_every_pipeline_in_cos with no order between them: cos/pipeline/cli.eg,
+        cos/pipeline/index.js, cos/pipeline/registry.json, tests/modules/test-cos-pipeline.test.js
     edges:
       - from: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC1_one_box_shape
         kind: declared

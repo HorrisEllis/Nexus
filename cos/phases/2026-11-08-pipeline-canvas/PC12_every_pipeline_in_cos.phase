@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-08-pipeline-canvas-phasemap.spec::PC12_every_pipeline_in_cos
+type: phase
+id: docs_2026-11-08-pipeline-canvas-phasemap.spec::PC12_every_pipeline_in_cos
+context: pipeline phase PC12_every_pipeline_in_cos of docs/2026-11-08-pipeline-canvas-phasemap.spec
+intent: null
+summary: PC12_every_pipeline_in_cos (?) — 7 file(s)
+system: idearium
+tags: []
+exported_at: 1794611711628
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794611711628
+lastSeenAt: 1794611711628
+fingerprint: null
+payload:
+  id: PC12_every_pipeline_in_cos
+  map: docs/2026-11-08-pipeline-canvas-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cortex/core/raid/contract-v2-door.js
+    - cos/pipeline/contract.eg
+    - cos/pipeline/test/contract.test.eg
+    - cos/pipeline/cli.eg
+    - cos/pipeline/index.js
+    - cos/pipeline/registry.json
+    - tests/modules/test-cos-pipeline.test.js
+  depends_on:
+    - PC8_operate_a_pipeline
+  blocks: []
+  spec: null
+  graph: 7578bed27d374dcc

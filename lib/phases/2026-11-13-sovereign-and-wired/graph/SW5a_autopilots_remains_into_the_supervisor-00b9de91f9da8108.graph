@@ -1,0 +1,160 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SW5a_autopilots_remains_into_the_supervisor:00b9de91f9da8108
+type: graph
+id: phase:SW5a_autopilots_remains_into_the_supervisor:00b9de91f9da8108
+context: dependency graph of phase SW5a_autopilots_remains_into_the_supervisor
+intent: null
+summary: 17 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1794608390826
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794608390826
+lastSeenAt: 1794608390826
+fingerprint: null
+payload:
+  for: SW5a_autopilots_remains_into_the_supervisor
+  kind: phase
+  repo: null
+  hash: 00b9de91f9da8108
+  nodes:
+    - path: cos/manager/duties.js
+      role: changes
+      exists: false
+      system: cos
+    - path: cos/manager/server.js
+      role: changes
+      exists: true
+      system: cos
+    - path: lib/nexus/autopilot.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/nexus/core-duties.js
+      role: changes
+      exists: true
+      system: lib
+    - path: tests/modules/test-core-duties.test.js
+      role: changes
+      exists: false
+      system: null
+    - path: lib/autopilot-intelligence.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/error-log.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/gap-field.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/ledger-fanin/boot.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/ledger-fanin/index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/ledger-sse.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-cli-interface.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-update.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/prevention.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/resource-monitor.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/test-sandbox.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/version.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/nexus/core-duties.js
+      to: lib/ledger-fanin/index.js
+      kind: requires
+    - from: lib/nexus/core-duties.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: lib/nexus/core-duties.js
+      to: lib/ledger-fanin/boot.js
+      kind: requires
+    - from: lib/nexus/core-duties.js
+      to: lib/ledger-sse.js
+      kind: requires
+    - from: lib/nexus/core-duties.js
+      to: lib/error-log.js
+      kind: requires
+    - from: lib/nexus/core-duties.js
+      to: lib/autopilot-intelligence.js
+      kind: requires
+    - from: lib/nexus/core-duties.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: lib/nexus/core-duties.js
+      to: lib/nexus-update.js
+      kind: requires
+    - from: lib/nexus/core-duties.js
+      to: lib/resource-monitor.js
+      kind: requires
+    - from: lib/nexus/core-duties.js
+      to: lib/prevention.js
+      kind: requires
+    - from: lib/nexus/autopilot.js
+      to: lib/version.js
+      kind: requires
+    - from: lib/nexus/autopilot.js
+      to: lib/nexus-cli-interface.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 4
+    deps:
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW5_orchestrator_into_the_supervisor
+    dependents:
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW5c_the_orchestrators_own_background_assigned
+    upstream:
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW0_the_scorecard
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW1_each_system_its_own_map
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW5_orchestrator_into_the_supervisor
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW_D0_picked_up
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW_D1_orchestrator_into_the_supervisor
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW_D2_each_system_keeps_its_own_map
+    downstream:
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW5c_the_orchestrators_own_background_assigned
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW5d_the_bus_into_cos
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW5e_the_forwards_retired
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW5f_others_data_goes_home
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW5g_the_pages_and_auth
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW5h_the_orchestrator_retired
+    blockedBy:
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW5_orchestrator_into_the_supervisor
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 4 · blocked by SW5_orchestrator_into_the_supervisor
+      - 'depends on (1): SW5_orchestrator_into_the_supervisor · all upstream 6'
+      - 'needed by (1): SW5c_the_orchestrators_own_background_assigned · all downstream 6'
+    edges:
+      - from: docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW5_orchestrator_into_the_supervisor
+        kind: declared

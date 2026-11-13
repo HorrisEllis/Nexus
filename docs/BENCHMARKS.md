@@ -719,3 +719,34 @@ then they are written by hand.
 - **Code:** `pillar/pillar.eg` and `pillar/cli.eg`, commit f8ef0e3c8.
 - **Result:** eg test 4/4, test-pillar 5/5. A hook added without a command was caught.
 - **What came of it:** the hand-written registry file was deleted. The list lives once, in Emerge's registry.
+
+## 2026-11-13 — the graph census, in Emerge (GR0, 0.60.519)
+- **Measured:** his framework. GR0's proof as the end state, written before code: "the census lists the ten graphs above with their real
+  counts on his data/; a new graph added to the tree appears in it".
+- **His words:** "i want the orchastrator and supstrate for the graphs phases" · "find them." · "yes. then the highest leverage."
+- **Method:** Emerge's own `test` blocks on a fixture tree, then the census run on the whole tree through COS's route and its console.
+- **Code:** `cos/census/graph.eg` (one module, read-only) and `cos/census/test/graph.test.eg`; `graph-census` in `cos/pipeline/cli.eg`.
+- **Result:** eg test 4/4. 12 graphs declared, 2,045 source files read in 1.2–1.9 s (interpreted). The loom registry has 13,419 entries,
+  there are 5,778 phase graphs and 1,079 phases in 131 maps. One name is in the code but not declared (`detect_edges`, vendored; listed,
+  not hidden).
+- **Lines:** graph.eg and its test, new .eg. New JavaScript: only the route, command and console wiring, changed in place. No JavaScript
+  was removed.
+- **Failed runs before the pass:** 4. What each taught:
+  1. Emerge has no `? :`; plain `if` is used;
+  2. and 3. a `{` inside a string opens an interpolation (in the module and again in the test): it is written `\{`;
+  4. writers read as 0 because the code names a store in one place and writes it through a variable elsewhere. The method now follows the
+     name a line gives the store (`const X =`, `this.file =`).
+- **Gaps found:** Emerge has no file size, so a table is read whole to count its lines (said in the module). There is no capturing regular
+  expression (as in SW1), so stores are found by text.
+- **Not proved:** his real counts. The sandbox holds no live tables; `cos census graph` on his machine gives them.
+
+## 2026-11-13 — a RAID contract as a pipeline, in Emerge (PC12a, 0.60.522)
+- **Measured:** his framework. The end state was written before the code: "a fixture contract's gates become steps in order, a passed
+  gate's step is met, a failed one carries RAID's reasons".
+- **His words:** "both. each step of any pipeline. thats the point. i want all pipelines managable, orchastratred, and programmable in cos."
+- **Method:** Emerge `test` blocks, then a live run: COS's manager against a stand-in Cortex running Cortex's real door.
+- **Code:** `cos/pipeline/contract.eg`, `cos/pipeline/test/contract.test.eg`.
+- **Result:** eg test 4/4. Live: the contract was synced, run, held with RAID's own reason, and finished after the evidence and Continue.
+- **Failed runs before the pass:** 1. The held run's reason was the pattern that did not match, not RAID's words. The gate learned `reasonAt`
+  (lib/automation/pipeline.js, changed in place). That was a method gap, not a language one.
+- **Gaps found:** none in Emerge. Characters are compared one by one to make a task id (there is no regular expression replace).

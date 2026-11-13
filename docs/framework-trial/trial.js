@@ -39,11 +39,13 @@ function blind() {
   fs.rmSync(dst, { recursive: true, force: true }); fs.mkdirSync(dst, { recursive: true });
   const key = {}, leaks = [];
   for (const p of fs.readdirSync(src).filter(d => /^P\d+$/.test(d))) {
-    const files = fs.readdirSync(path.join(src, p)).filter(f => /^[a-z0-9]+-[AB]-\d+\.md$/i.test(f));
+    // 0.60.521 — a model's file name may carry underscores (ollama_qwen2_5_coder_7b, see fileModel): the filter took letters and digits only,
+    // so every Ollama answer was left out of judging without a word; the name is now read from the end (…-<arm>-<run>.md)
+    const files = fs.readdirSync(path.join(src, p)).filter(f => /^[a-z0-9_]+-[AB]-\d+\.md$/i.test(f));
     const shuffled = files.map(f => [crypto.randomBytes(4).toString('hex'), f]).sort((a, b) => a[0].localeCompare(b[0]));
     fs.mkdirSync(path.join(dst, p), { recursive: true });
     for (const [code, f] of shuffled) {
-      const [model, arm, run] = f.replace(/\.md$/, '').split('-');
+      const [, model, arm, run] = /^(.+)-([AB])-(\d+)\.md$/i.exec(f);
       const text = fs.readFileSync(path.join(src, p, f), 'utf8');
       fs.writeFileSync(path.join(dst, p, `${code}.md`), text);
       key[`${p}/${code}`] = { problem: p, model: model.toLowerCase(), arm, run: Number(run) };
@@ -121,8 +123,11 @@ async function _realSend(model, prompt) {
   const m = String(model).toLowerCase();
   if (m === 'ollama' || m.startsWith('ollama:')) {
     const name = m.includes(':') ? m.split(':').slice(1).join(':') : (process.env.OLLAMA_MODEL || 'qwen2.5-coder:7b');
-    const r = await _http(process.env.OLLAMA_URL || 'http://127.0.0.1:11434/api/generate', { model: name, prompt, stream: false }, 180000);
-    return r.response || '';
+    const r = await _http(process.env.OLLAMA_URL || 'http://127.0.0.1:11434/api/generate', { model: name, prompt, stream: false }, Number(process.env.TRIAL_OLLAMA_TIMEOUT_MS) || 600000);
+    if (r.error) throw new Error(`ollama: ${r.error}`);
+    // 0.60.521 — the benchmark: Ollama says how many tokens it wrote and how long that took (nanoseconds)
+    return { text: r.response || '', meta: { model: name, tokens: r.eval_count || null, evalMs: r.eval_duration ? Math.round(r.eval_duration / 1e6) : null,
+      loadMs: r.load_duration ? Math.round(r.load_duration / 1e6) : null, promptTokens: r.prompt_eval_count || null } };
   }
   const url = process.env.TRIAL_DEPLOY_URL || `${process.env.GUARDIAN_URL || 'http://127.0.0.1:7820'}/api/complete`;
   const r = await _http(url, { provider: m, prompt }, 180000);
@@ -137,33 +142,62 @@ function _mockReply(p, arm, model) {
   return `# ${model} ${arm} (mock)\n\nProblem ${p.id}. A placeholder answer for pipeline testing only — no real reasoning.\n\nEnd state: resolved.\n`;
 }
 
+// 0.60.521 — a model's name as a file name: "ollama:qwen2.5-coder:7b" has colons, which Windows refuses in a file name, so every Ollama answer
+// failed to save on his PC; letters and digits are kept, every other run of characters becomes one underscore
+function fileModel(model) { return String(model).toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '') || 'model'; }
+
+// the benchmark: one line per real answer (never for --mock or an injected transport) in bench.jsonl; bench() sums it per model
+const BENCH = process.env.TRIAL_BENCH_FILE || path.join(DIR, 'bench.jsonl');   // a test points it elsewhere
+function benchLine(row) { try { fs.appendFileSync(BENCH, JSON.stringify({ at: new Date().toISOString(), ...row }) + '\n'); } catch (_) {} }
+function bench({ quiet = false } = {}) {
+  let rows = []; try { rows = fs.readFileSync(BENCH, 'utf8').trim().split('\n').filter(Boolean).map(l => JSON.parse(l)); } catch (_) {}
+  const med = (xs) => { if (!xs.length) return null; const s = [...xs].sort((a, b) => a - b); return s[Math.floor(s.length / 2)]; };
+  const by = {}; for (const r of rows) (by[r.model] = by[r.model] || []).push(r);
+  const models = Object.entries(by).map(([model, rs]) => { const okr = rs.filter(r => r.ok);
+    const tps = okr.filter(r => r.tokens && r.evalMs).map(r => r.tokens / (r.evalMs / 1000));
+    return { model, answers: rs.length, ok: okr.length, failed: rs.length - okr.length, medianMs: med(okr.map(r => r.ms)),
+      medianTokens: med(okr.filter(r => r.tokens).map(r => r.tokens)), tokensPerSec: tps.length ? Math.round(med(tps) * 10) / 10 : null }; });
+  if (!quiet) { if (!models.length) console.log('no benchmark yet: deploy to a real model first');
+    for (const m of models) console.log(`${m.model}: ${m.ok}/${m.answers} answered · median ${m.medianMs == null ? '—' : (m.medianMs / 1000).toFixed(1) + ' s'} · ${m.medianTokens || '—'} tokens · ${m.tokensPerSec || '—'} tokens/s${m.failed ? ' · ' + m.failed + ' failed' : ''}`); }
+  return { models, rows: rows.length };
+}
+
 async function deploy(argv = []) {
   const f = _flags(argv);
   const models = (!f.model || f.model === 'all') ? ['claude', 'chatgpt', 'gemini'] : String(f.model).split(',').map(s => s.trim());
   const arms = (!f.arm || f.arm === 'both') ? Object.keys(ARMS.arms) : [String(f.arm)];
   const run = Number(f.run || 1);
+  // 0.60.521 — James, 2026-11-13: "we have ollama now. lets leverage that. test, benchmark, run the trial in the docs folder." --problem P1,P3
+  // runs those problems only, so a pipeline step can take one problem per request (a request waits at most about 5 min)
+  const only = f.problem && f.problem !== true ? String(f.problem).split(',').map(s => s.trim().toUpperCase()) : null;
+  const probs = only ? P.filter(p => only.includes(p.id)) : P;
+  if (only && !probs.length) throw new Error(`no problem ${only.join(', ')} (there are ${P.map(p => p.id).join(', ')})`);
   let ok = 0, fail = 0; const results = [];
-  for (const p of P) for (const arm of arms) for (const model of models) {
+  for (const p of probs) for (const arm of arms) for (const model of models) {
     const dir = path.join(DIR, 'answers', p.id); fs.mkdirSync(dir, { recursive: true });
-    const rel = `answers/${p.id}/${model}-${arm}-${run}.md`;
+    const rel = `answers/${p.id}/${fileModel(model)}-${arm}-${run}.md`;
+    const t0 = Date.now(); let meta = null;
     try {
-      const reply = f.mock ? _mockReply(p, arm, model) : await _send(model, promptFor(p, arm));
+      let reply = f.mock ? _mockReply(p, arm, model) : await _send(model, promptFor(p, arm));
+      if (reply && typeof reply === 'object') { meta = reply.meta || null; reply = reply.text; }
       if (!reply || !String(reply).trim()) throw new Error('empty reply');
-      fs.writeFileSync(path.join(DIR, 'answers', p.id, `${model}-${arm}-${run}.md`), String(reply));
-      ok++; results.push({ p: p.id, arm, model, ok: true }); console.log(`  ✓ ${p.id} ${arm} ${model} → ${rel}`);
+      fs.writeFileSync(path.join(DIR, rel), String(reply));
+      ok++; results.push({ p: p.id, arm, model, ok: true, ms: Date.now() - t0 }); console.log(`  ✓ ${p.id} ${arm} ${model} → ${rel} (${((Date.now() - t0) / 1000).toFixed(1)} s)`);
+      if (!f.mock && _send === _realSend) benchLine({ ...(meta || {}), ...(meta && meta.model ? { ran: meta.model } : {}), problem: p.id, arm, model, run, ok: true, ms: Date.now() - t0, chars: String(reply).length });
     } catch (e) {
       fail++; results.push({ p: p.id, arm, model, ok: false, error: e.message }); console.log(`  ✗ ${p.id} ${arm} ${model} — ${e.message} (not saved)`);
+      if (!f.mock && _send === _realSend) benchLine({ problem: p.id, arm, model, run, ok: false, ms: Date.now() - t0, error: e.message.slice(0, 200) });
     }
   }
   console.log(`\ndeployed ${ok} answer(s), ${fail} failed. Next: trial.js blind → sheet → (a judge fills scores.csv, blind) → score`);
   return { ok, fail, results };
 }
 
-module.exports = { prompts, blind, sheet, score, deploy, promptFor, setSend, P };
+module.exports = { prompts, blind, sheet, score, deploy, bench, fileModel, promptFor, setSend, P };
 
 if (require.main === module) {
   const cmd = process.argv[2];
-  const fn = { prompts, blind, sheet, score, deploy }[cmd];
-  if (!fn) { console.log('usage: trial.js prompts | deploy [--model m|all] [--arm A|B|both] [--run n] [--mock] | blind | sheet | score'); process.exit(1); }
+  const fn = { prompts, blind, sheet, score, deploy, bench }[cmd];
+  if (!fn) { console.log('usage: trial.js prompts | deploy [--model m|all] [--arm A|B|both] [--run n] [--problem P1,P2] [--mock] | blind | sheet | score | bench'); process.exit(1); }
   Promise.resolve(fn(process.argv.slice(3))).catch(e => { console.error(e.message); process.exit(1); });
 }

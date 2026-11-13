@@ -59,7 +59,7 @@ function createServer(sup, opts = {}) {
   // DK6–DK8 0.60.383 — James, 2026-11-03: "It needs to be a virtual disk. For the virtual envirements for qumu also. Like it holds all the data,
   // snapshots, system state." Each system's qcow2: its metadata, files and data in one ext4, its snapshots inside the same file
   const vdisks = require('../disk/vdisk.js').createVDisks({ root, disks });
-  const cli = require('./cli.js').createCli({ sup, resources, config, notices, proposals, addSystem, usage, disks, vdisks });
+  const cli = require('./cli.js').createCli({ sup, resources, config, notices, proposals, addSystem, usage, disks, vdisks, pipelineSync: (o) => syncPipelines(o), graphCensus: (o) => pipeline.graphCensus(o), locationOf: (name) => _locationOf(name) });
   sup.on('ledger', (entry) => { try { notices.fromLedger(entry); } catch (_) {} });
   const checkNotice = () => { try { notices.fromNotice(require('../../lib/nexus-update.js').notice({ root })); } catch (_) {} };
   const noticeTick = setInterval(checkNotice, 10 * 60 * 1000); if (noticeTick.unref) noticeTick.unref(); setTimeout(checkNotice, 2000).unref();
@@ -98,6 +98,11 @@ function createServer(sup, opts = {}) {
   });
   const srvRef = {};
   let desktop = null;   // PC9: made on first use
+  let _intelWake = null;
+  // CA7 slice a: the console asks the same thing the route answers (one system's location), through COS's own route
+  const _locationOf = (name) => new Promise((resolve) => { const port = srvRef.server && srvRef.server.address() && srvRef.server.address().port;
+    if (!port) return resolve({ ok: false, error: 'COS is not listening yet' });
+    http.get(`http://127.0.0.1:${port}/api/cos/${name ? `systems/${encodeURIComponent(name)}/location` : 'locations'}`, { timeout: 30000 }, (r) => { let t = ''; r.on('data', c => t += c); r.on('end', () => { try { resolve(JSON.parse(t)); } catch (_) { resolve({ ok: false, error: 'not JSON' }); } }); }).on('error', (e) => resolve({ ok: false, error: e.message })); });   // 0.60.524: the one wait while Intelligence is woken for the Emergence page
   // 2026-11-09 — James: "This needs to be a module." COS's pipeline module (cos/pipeline/): the box shape, the gates, requests kept as files
   pipeline = require('../pipeline/index.js').createPipeline({ automation, idearium: _ideariumGet, call: _systemCall,
     dataDir: process.env.COS_MANAGER_DATA || path.join(root, 'cos', 'data', 'manager') });
@@ -105,7 +110,22 @@ function createServer(sup, opts = {}) {
   automation.setGate((q) => pipeline.decideGate(q));
   automation.setFramework((q) => pipeline.frameworkStep(q));   // a framework as a step: compiled here, with every framework it runs
   // every pipeline a physical node file, imported at start (a system that does not answer yet is said; its last files are kept)
-  if (!opts.noPipelineSync) { const t = setTimeout(() => { pipeline.sync().catch(() => {}); }, 1500); if (t.unref) t.unref(); }
+  // 0.60.517 — James, 2026-11-13: "also all pipelines in nexus need to be here." The sync ran once, 1.5 s after COS started, before Idearium or
+  // Clear Glass answered, and never again: the tab stayed at 0. Now it runs again whenever a system it reads pipelines from comes up (its spawn,
+  // resume or first beat in the ledger: heard, not polled, PR6), when a person asks (the tab's Sync, `pipeline-sync`), and says what it did.
+  let lastSync = null, syncing = null;
+  const syncSources = (() => { try { return (JSON.parse(require('fs').readFileSync(path.join(root, 'cos', 'pipeline', 'registry.json'), 'utf8')).pipelineSources.systems || []).map(x => x.system); } catch (_) { return ['idearium', 'clear-glass']; } })();
+  function syncPipelines({ why = 'start' } = {}) {
+    if (syncing) return syncing;
+    syncing = pipeline.sync().then((r) => { lastSync = { at: Date.now(), why, ...r }; broadcast('cos.pipeline.synced', { at: lastSync.at, why, imported: r.imported, updated: r.updated, failed: (r.failed || []).length, systems: r.systems }); return lastSync; })
+      .catch((e) => { lastSync = { at: Date.now(), why, ok: false, error: e.message, files: [], systems: [], imported: 0, updated: 0, failed: [] }; return lastSync; })
+      .finally(() => { syncing = null; });
+    return syncing;
+  }
+  const syncLater = {};
+  sup.on('ledger', (e) => { if (!e || !syncSources.includes(e.system) || !/^(spawn|resumed|pulse|pulse-recovered)$/.test(String(e.kind))) return;
+    clearTimeout(syncLater[e.system]); const t = setTimeout(() => { syncPipelines({ why: `${e.system} ${e.kind}` }).catch(() => {}); }, e.kind === 'spawn' ? 20000 : 3000); if (t.unref) t.unref(); syncLater[e.system] = t; });
+  if (!opts.noPipelineSync) { const t = setTimeout(() => { syncPipelines({ why: 'start' }).catch(() => {}); }, 1500); if (t.unref) t.unref(); }
   sup.on('ledger', (entry) => {
     broadcast('cos.ledger', { entry });
     // 2026-11-09 — James: "Also conditions, triggers, events, etc. migrate BrainOS' features to the engine." What COS records is an event the
@@ -165,7 +185,22 @@ function createServer(sup, opts = {}) {
         const d = sup.declarations().find(x => x.name === 'intelligence'); let origin = 'http://127.0.0.1:3753'; try { if (d && d.healthUrl) origin = new URL(d.healthUrl).origin; } catch (_) {}
         const ask = (path) => new Promise((resolve) => { const q = http.get(origin + path, { timeout: 4000 }, (r) => { let t = ''; r.on('data', c => t += c); r.on('end', () => { try { resolve(JSON.parse(t)); } catch (_) { resolve({ ok: false, error: `not JSON (${r.statusCode})` }); } }); });
           q.on('timeout', () => q.destroy(new Error('no answer in 4 s'))); q.on('error', (e) => resolve({ ok: false, error: e.message })); });
-        if (em[1] === 'patterns') { const r = await ask('/api/intelligence/patterns'); return send(res, r && r.ok !== false ? 200 : 503, r && r.ok !== false ? r : { ok: false, error: `intelligence did not answer: ${(r && r.error) || 'no reply'}` }); }
+        // 0.60.524 — James, 2026-11-13, of this page: "why is it coupled to intelligence?" Two of its panels ARE Intelligence's data (what has
+        // crystallised, what is forming); the page read it, but Intelligence starts on demand and an asleep one answered ECONNREFUSED, said raw.
+        // Now the first refused ask wakes it (the supervisor's touch, as any on-demand call does) and waits for it (25 s), then asks again;
+        // one that still cannot start says why (its state, e.g. held under the memory floor).
+        const first = em[1] === 'patterns' ? '/api/intelligence/patterns' : '/api/liminal-space/status';
+        const probe = await ask(first);
+        let woke = null;
+        if (probe && probe.ok === false && /ECONNREFUSED/.test(String(probe.error || ''))) {
+          // one wake for every caller at once (the page's two panels ask together, every 10 s): they share the same wait
+          if (!_intelWake) _intelWake = (async () => { try { sup.touch('intelligence'); } catch (_) {}
+            for (let t0 = Date.now(); Date.now() - t0 < 25000;) { await new Promise(r => setTimeout(r, 1000)); const h = await ask('/health'); if (h && h.ok !== false) return true; }
+            return false; })().finally(() => { _intelWake = null; });
+          woke = { asked: true, up: await _intelWake };
+          if (!woke.up) { let st = null; try { st = (sup.list().find(x => x.name === 'intelligence') || {}).state; } catch (_) {} return send(res, 503, { ok: false, waking: true, state: st, error: `Intelligence was asleep: COS woke it, and it is not up yet (${st || 'starting'})${/memory/.test(String(st)) ? ', held until memory frees up' : ''}. This page asks again on its own.` }); }
+        }
+        if (em[1] === 'patterns') { const r = woke ? await ask('/api/intelligence/patterns') : probe; return send(res, r && r.ok !== false ? 200 : 503, r && r.ok !== false ? r : { ok: false, error: `intelligence did not answer: ${(r && r.error) || 'no reply'}` }); }
         const fp = u.searchParams.get('focalPoint');
         const [st, ls] = await Promise.all([ask('/api/liminal-space/status'), ask(`/api/liminal-space/list${fp ? `?focalPoint=${encodeURIComponent(fp)}` : ''}`)]);
         if (!st || st.ok === false) return send(res, 503, { ok: false, error: `intelligence did not answer: ${(st && st.error) || 'no reply'}` });
@@ -193,6 +228,21 @@ function createServer(sup, opts = {}) {
       if (m === 'GET' && p === '/api/cos/notices') return send(res, 200, { ok: true, notices: notices.list({ unread: u.searchParams.get('unread') === '1', kind: u.searchParams.get('kind'), limit: u.searchParams.get('limit') }), counts: notices.counts() });
       if (m === 'POST' && p === '/api/cos/notices/read') return send(res, 200, { ok: true, ...notices.read({ ids: body.ids, all: body.all === true }) });
       // SC2 — a system's configuration: every setting, its layer, when and how it applies; set his overrides; clear them back to the declared
+      // CA7 slice a (2026-11-13) — James: "should be a first time setup wizard, storage location of each system/nexus" · "second one, can be moved anbd
+      // changed in each systems individual settings." Where each system lives, whether it can be moved, and what holds it if not (cos/sovereign/location.eg);
+      // one system's answer adds its folder on this machine and its size on disk (files under it, node_modules included: that moves too)
+      if (m === 'GET' && p === '/api/cos/locations') { const r = await pipeline.locations(); return send(res, r.ok ? 200 : (r.code || 500), { ...r, root, cosRoot: process.env.COS_APP_ROOT || null }); }
+      { const lm = /^\/api\/cos\/systems\/([^/]+)\/location$/.exec(p);
+        if (lm && m === 'GET') { const name = decodeURIComponent(lm[1]); const d = sup.declarations().find(x => x.name === name || x.system === name);
+          if (!d) return send(res, 404, { ok: false, error: `no system ${name}` });
+          const dir = (d.cwd && d.cwd !== '.' ? d.cwd : null) || (d.entry ? String(d.entry).split('/')[0] : name);
+          const all = await pipeline.locations(); if (!all.ok) return send(res, all.code || 500, all);
+          const row = (all.systems || []).find(x => x.system === dir || x.system.split('/')[0] === dir) || null;
+          const abs = path.join(root, dir); let bytes = 0, files = 0, cut = false;
+          const walk = (f, depth) => { if (files > 200000 || depth > 40) { cut = true; return; } let st; try { st = require('fs').lstatSync(f); } catch (_) { return; }
+            if (st.isSymbolicLink()) return; if (st.isDirectory()) { let n = []; try { n = require('fs').readdirSync(f); } catch (_) {} for (const x of n) walk(path.join(f, x), depth + 1); } else { bytes += st.size; files++; } };
+          walk(abs, 0);
+          return send(res, 200, { ok: true, system: name, folder: abs, inside: abs.startsWith(root), disk: { bytes, files, cut }, ...(row ? { movable: row.movable, why: row.why, out: row.out, out_to: row.out_to, in: row.in, in_from: row.in_from, root_data: row.root_data, source_files: row.files } : { movable: false, why: ['not read by the census (no folder of its own)'] }) }); } }
       const cf = /^\/api\/cos\/systems\/([^/]+)\/config(\/clear)?$/.exec(p);
       if (cf) { const name = decodeURIComponent(cf[1]);
         try {
@@ -255,7 +305,8 @@ function createServer(sup, opts = {}) {
       // (shipped, COS's own, each system's by its route — kept as a file first); sources: which file each pipeline came from
       // 2026-11-10 — a pipeline drawn on the canvas: { text: <.erv>, name?, by } → the .pipeline node file written and imported (an agent's is a 403)
       if (m === 'POST' && p === '/api/cos/pipeline/from-erv') { if (/^agent:/.test(String(body.by || ''))) return send(res, 403, { ok: false, error: 'an agent proposes; making a pipeline from the canvas is a person\'s' }); const r = await pipeline.fromErv({ text: body.text, erv: body.erv, name: body.name, by: body.by || 'person' }); return send(res, r.ok ? 200 : r.code || 422, r); }
-      if (m === 'POST' && p === '/api/cos/pipeline/sync') { if (/^agent:/.test(String(body.by || ''))) return send(res, 403, { ok: false, error: 'an agent proposes; importing is a person\'s or a system\'s' }); return send(res, 200, await pipeline.sync()); }
+      if (m === 'POST' && p === '/api/cos/pipeline/sync') { if (/^agent:/.test(String(body.by || ''))) return send(res, 403, { ok: false, error: 'an agent proposes; importing is a person\'s or a system\'s' }); return send(res, 200, await syncPipelines({ why: `asked by ${body.by || 'person'}` })); }
+      if (m === 'GET' && p === '/api/cos/pipeline/sync') return send(res, 200, { ok: true, last: lastSync, sources: syncSources });   // 0.60.517: the last sync, what it read and what did not answer
       if (m === 'GET' && p === '/api/cos/pipeline/sources') return send(res, 200, { ok: true, sources: pipeline.sources() });
       // PC9 slice a (2026-11-11), his PC_D14: "I'm saying for you. Like look at clearglass. Nexus nerve, cleardriver injecting coordinates into the dom."
       // The desktop driven the way ClearDriver drives a page (cos/remote-desktop/desktop-driver.js). Localhost only; off until he arms it, for a set time.
@@ -289,6 +340,8 @@ function createServer(sup, opts = {}) {
         if (rm && m === 'GET' && !rm[2]) { const r = await pipeline.runs.read(rm[1]); return send(res, r ? 200 : 404, r ? { ok: true, ...r } : { ok: false, error: `no request "${rm[1]}"` }); }
         if (rm && m === 'POST' && rm[2]) { if (/^agent:/.test(String(body.by || ''))) return send(res, 403, { ok: false, error: 'an agent proposes; resuming is a person\'s' }); const r = await pipeline.resume(rm[1], { by: body.by }); return send(res, r.ok ? 200 : (r.code || 400), r); } }
       if (m === 'GET' && p === '/api/cos/pipeline/ready') { const r = await pipeline.ready({ limit: u.searchParams.get('limit') }); return send(res, r.ok ? 200 : (r.code || 502), r); }   // 2026-11-12: the phases that can be built now, for the run form
+      // GR0 (2026-11-13): the graph census — every graph in Nexus, its store, writers, readers and rows (cos/census/graph.eg); ?markdown=1 adds the atlas page
+      if (m === 'GET' && p === '/api/cos/census/graph') { const r = await pipeline.graphCensus({ markdown: u.searchParams.get('markdown') === '1' }); return send(res, r.ok ? 200 : (r.code || 500), r); }
       // SW0 (2026-11-13): the sovereignty scorecard; POST keeps this reading as the one to hold (a person's)
       if (p === '/api/cos/sovereign' && (m === 'GET' || m === 'POST')) { if (m === 'POST' && body.by !== 'person') return send(res, 403, { ok: false, error: 'keeping a reading as the baseline is a person\'s' });
         const r = await pipeline.sovereign({ write: m === 'POST', ...(opts.sovereign || {}) }); return send(res, r.ok ? 200 : (r.code || 500), r); }
@@ -365,12 +418,13 @@ if (require.main === module) {
   const root = arg('root') ? path.resolve(arg('root')) : path.resolve(__dirname, '..', '..');
   const only = arg('only') ? arg('only').split(',').map(s => s.trim()).filter(Boolean) : null;
   const sup = createSupervisor({ root });
-  let srvRef = null, uiRef = null;
+  let srvRef = null, uiRef = null, duties = null;
   // CE2b — COS restarts itself, after his yes: answer first, stop its systems, then come back — autopilot starts it again (exit 75), else relaunch.js
   const restartCos = ({ by = 'person' } = {}) => {
     const R = require('./relaunch.js'); const viaAutopilot = process.env.COS_LAUNCHER === 'autopilot';
     if (sup.note) sup.note('restart', `COS restarts itself after an update — ${viaAutopilot ? 'autopilot starts it again' : 'relaunch.js starts it again'}`, { by });
     setTimeout(() => {
+      try { duties && duties.stop(); } catch (_) {}
       try { sup.shutdown({ by: `restart:${by}` }); } catch (_) {}
       try { if (srvRef) srvRef.close(); if (uiRef) uiRef.close(); } catch (_) {}
       if (!viaAutopilot) R.spawnRelauncher({ args: process.argv.slice(1), port: srvRef && srvRef.address() ? srvRef.address().port : Number(process.env.COS_MANAGER_PORT) || 7799 });
@@ -387,6 +441,15 @@ if (require.main === module) {
       catch (e) { sup.note('automation', `the automation engine did not start: ${e.message}`, { by: 'boot' }); }
     }
     if (arg('handover')) sup.note('handover', `autopilot ${arg('handover')} handed supervision to COS's manager (MG17); its body is archived`, { by: 'boot' });
+    // SW5a (0.60.518) — James, 2026-11-13: "orchastrator and autopilot need to migrate to cos superviser". Autopilot's other duties (the wire,
+    // vitals, updates, the loom refresh, the minute's snapshot, following the ledger) ran in the launcher's own process beside this one; they run
+    // here now, on the supervisor itself, and the ledger is heard as it is written. --no-duties leaves them off (a test, a second manager).
+    if (!process.argv.includes('--no-duties')) {
+      try { const D = require('./duties.js');
+        duties = D.start({ cos: D.inProcess(sup, `http://127.0.0.1:${srv.address().port}`), onLedger: (fn) => { sup.on('ledger', fn); return () => sup.off('ledger', fn); }, log: (t) => console.log(`[cos] ${t}`) });
+        sup.note('duties', 'autopilot\'s duties run inside COS\'s manager: the wire, vitals, updates, the loom refresh, the snapshot, the ledger followed (SW5a)', { by: 'boot' }); }
+      catch (e) { sup.note('duties', `autopilot's duties did not start: ${e.message} — COS still supervises; vitals, updates and snapshots do not run`, { by: 'boot' }); }
+    }
     // 2026-11-01 MG33 — James: "where is cos ui?". Nothing started the cockpit (cos/ui/serve.js) or linked to it: a screen with no way in. The
     // manager now starts it beside itself (COS_UI_PORT, default 7797; --no-ui to leave it off). Its port held → said once, the manager runs on.
     let ui = null;
@@ -404,7 +467,7 @@ if (require.main === module) {
           const r = await D.install(root); sup.note('deps', r.ok ? `dependencies installed in ${Math.round(r.ms / 1000)} s` : `npm install failed (exit ${r.code}): ${String(r.tail).trim().split('\n').slice(-3).join(' ').slice(0, 300)} — booting anyway`, { by: 'boot' }); } }
       const r = await sup.boot({ by: 'boot', ...(only ? { set: only } : {}) }); console.log(`[cos] booted ${r.started.length}, skipped ${r.skipped.length}`);
     }
-    const bye = () => { sup.shutdown({ by: 'boot' }); srv.close(); if (ui) ui.close(); setTimeout(() => process.exit(0), 500).unref(); };
+    const bye = () => { try { duties && duties.stop(); } catch (_) {} sup.shutdown({ by: 'boot' }); srv.close(); if (ui) ui.close(); setTimeout(() => process.exit(0), 500).unref(); };
     process.on('SIGINT', bye); process.on('SIGTERM', bye);
   }).catch((e) => { console.error(`[cos] ${e.message}`); process.exit(1); });
 }

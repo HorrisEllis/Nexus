@@ -7,18 +7,23 @@ intent: null
 summary: CS3_the_registry_is_the_bridge (integration) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792757382210
+exported_at: 1794611790078
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792757382210
-lastSeenAt: 1792757382210
+firstSeenAt: 1794611790078
+lastSeenAt: 1794611790078
 fingerprint: null
 payload:
   id: CS3_the_registry_is_the_bridge
   map: docs/2026-10-23-cos-spine-phasemap.spec
   repo: null
   layer: integration
-  status: OPEN
+  status: >-
+    "OPEN — picked up 2026-11-07 for the wiring harness
+    (idearium/spec-engine/templates/wiring-harness.spec; his 'The wiring harness' · 'spec it.');
+    LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one
+    idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own
+    door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
   files:
     - cos/spine/bridge.js
     - orchestrator/lib/contract-handshake.js
@@ -28,6 +33,7 @@ payload:
     - IN3_registry_is_the_spine
     - CE3_the_handshake
     - DB16_a_registry_for_each_system
+    - CP1_the_machine_and_its_door
   blocks:
     - MOD-CS-BRIDGE
   spec: cos/spec/cos-spine.spec

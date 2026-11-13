@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-13-sovereign-and-wired-phasemap.spec::SW5b_cortexs_workers_go_home
+type: phase
+id: docs_2026-11-13-sovereign-and-wired-phasemap.spec::SW5b_cortexs_workers_go_home
+context: pipeline phase SW5b_cortexs_workers_go_home of docs/2026-11-13-sovereign-and-wired-phasemap.spec
+intent: null
+summary: SW5b_cortexs_workers_go_home (backend) — 6 file(s)
+system: idearium
+tags: []
+exported_at: 1794608390830
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794608390830
+lastSeenAt: 1794608390830
+fingerprint: null
+payload:
+  id: SW5b_cortexs_workers_go_home
+  map: docs/2026-11-13-sovereign-and-wired-phasemap.spec
+  repo: null
+  layer: backend
+  status: OPEN
+  files:
+    - orchestrator/orchestrator.js
+    - cortex/server.js
+    - cortex/core/raid/worker.js
+    - cortex/core/raid/officiator.js
+    - cortex/memory/table-compactor.js
+    - cortex/memory/table-deduplicator.js
+  depends_on:
+    - SW5_orchestrator_into_the_supervisor
+  blocks: []
+  spec: null
+  graph: 4dacf66063f6d6ac

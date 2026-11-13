@@ -7,11 +7,11 @@ intent: null
 summary: 43 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1794406224184
+exported_at: 1794611411174
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794406224184
-lastSeenAt: 1794406224184
+firstSeenAt: 1794611411174
+lastSeenAt: 1794611411174
 fingerprint: null
 payload:
   for: PC8_operate_a_pipeline
@@ -271,7 +271,8 @@ payload:
     deps:
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D13_the_pipeline_works_first_then_cos_optimised
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC5_programmable_gate_types
-    dependents: []
+    dependents:
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC12_every_pipeline_in_cos
     upstream:
       - docs/2026-10-28-first-principles-phasemap.spec::FP1_where_a_request_opens
       - docs/2026-10-28-first-principles-phasemap.spec::FP2_which_option_is_meant
@@ -315,10 +316,12 @@ payload:
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D1_gates_as_compartments
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D4_language
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D8_options_not_neat_boxes
-    downstream: []
+    downstream:
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC12_every_pipeline_in_cos
     blockedBy:
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC5_programmable_gate_types
-    unlocks: []
+    unlocks:
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC12_every_pipeline_in_cos
     conflicts:
       - with: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC2_procedures_and_frameworks_as_steps
         files:
@@ -367,7 +370,7 @@ payload:
       - >-
         depends on (2): PC_D13_the_pipeline_works_first_then_cos_optimised,
         PC5_programmable_gate_types · all upstream 42
-      - 'needed by (0): —'
+      - 'needed by (1): PC12_every_pipeline_in_cos · finishing it unlocks PC12_every_pipeline_in_cos'
       - >-
         same files as PC2_procedures_and_frameworks_as_steps with no order between them:
         lib/automation/engine.js, idearium/api/index.js, cos/manager/automation-door.js,

@@ -7,18 +7,21 @@ intent: null
 summary: CS1_a_version_is_a_system_state (foundation) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1792757382207
+exported_at: 1794611790073
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792757382207
-lastSeenAt: 1792757382207
+firstSeenAt: 1794611790073
+lastSeenAt: 1794611790073
 fingerprint: null
 payload:
   id: CS1_a_version_is_a_system_state
   map: docs/2026-10-23-cos-spine-phasemap.spec
   repo: null
   layer: foundation
-  status: OPEN
+  status: >-
+    "SUPERSEDED 2026-11-01 by CP5_states_rewind_versions in
+    docs/2026-11-01-the-compartment-phasemap.spec (his "just dont have redundancy. like each
+    compartment should be all of it."); the text below is kept"
   files:
     - cos/spine/version.js
     - idearium/repo/snapshot.js

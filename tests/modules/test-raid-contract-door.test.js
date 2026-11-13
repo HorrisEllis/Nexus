@@ -6,6 +6,7 @@
  *   RD2-01  booked (validated, a file in Cortex's books); an agent's refused; a bad id and an invalid payload refused, named; twice refused (409)
  *   RD2-02  evidence moves the contract as far as it goes; a gate is never checked before its evidence (no attempt spent); complete is RAID's
  *   RD2-03  a gate's packet is the smallest context it needs; a gate with two requires splits into children (chunking)
+ *   RD2-04  PC12a: every booked contract listed; each gate in the view says what it waits on (so COS can draw and run it as a pipeline)
  */
 require('../../lib/test-sandbox.js').ensure();
 const assert = require('assert'), fs = require('fs'), os = require('os'), path = require('path');
@@ -42,6 +43,17 @@ const P = { outcome: { what: 'two steps' }, refs: { x: { path: 'package.json' },
     assert.deepStrictEqual(Object.keys(pk.json.packet).sort(), ['contract', 'gaps', 'gate', 'invariants', 'outcome', 'refs', 'upstream']);
     const sp = await H('POST', '/api/raid/contracts/v2/c4/gates/b/split', { by: 'requires' });
     assert.ok(sp.json.ok, JSON.stringify(sp.json)); assert.ok(sp.json.gates.length > 2, 'b became children');
+  });
+  await T('RD2-04', 'PC12a: every booked contract listed (gates, passed, complete); each gate says what it waits on; one unreadable is named', async () => {
+    fs.writeFileSync(path.join(dir, 'broken.contract'), 'not: [a contract');
+    const l = await H('GET', '/api/raid/contracts/v2');
+    assert.strictEqual(l.status, 200);
+    const c1 = l.json.contracts.find(c => c.id === 'c1');
+    assert.ok(c1 && c1.gates === 2 && c1.passed === 2 && c1.complete === true && c1.outcome.what === 'two steps', JSON.stringify(l.json));
+    assert.ok(l.json.unreadable.some(u => u.id === 'broken'), 'the unreadable one is named');
+    const v = (await H('GET', '/api/raid/contracts/v2/c1')).json;
+    assert.deepStrictEqual(v.gates.map(g => [g.id, g.depends_on]), [['a', []], ['b', ['a']]]);
+    fs.rmSync(path.join(dir, 'broken.contract'));
   });
   fs.rmSync(dir, { recursive: true, force: true });
   console.log(`\n  ${passed} passed, ${failed} failed\n`); process.exit(failed ? 1 : 0);

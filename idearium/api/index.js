@@ -44,6 +44,10 @@ try { _require('../../lib/repo-agent.js').setRoutingPolicySource(() => _routingP
 // idearium stops being the last system that hardwires the port. Falls back to
 // :9000 with a warning only if the config is unreadable.
 const _nexusClient = _require('../../lib/nexus-client.js');
+// CS11 step 1 (0.60.523) — James, 2026-11-13: "i want raid to be the hub that all systems run througj" · "moves into cos. i feel like." RAID is
+// reached by its routes, never its files, so it can move into COS and nothing here notices. look: observability (no wake, 3 s, never waits);
+// otherwise Cortex is woken and its answer awaited.
+const _raidRoute = (method, p, body, { look = false } = {}) => _nexusClient.call('cortex', method, p, body, look ? { noWake: true, timeout: 3000 } : {});
 function _orchestrator() {
   try { return _nexusClient.resolve('orchestrator'); }
   catch (e) { console.warn('[idearium/api] orchestrator resolve failed, defaulting :9000:', e.message); return { host: '127.0.0.1', port: 9000 }; }
@@ -873,7 +877,7 @@ async function _phaseVerdict(repo, { runId, accept, words = '' } = {}, who = 'pe
   const base = { runId: b, repoUuid: repo.uuid, map: held.map || null, phase: held.phase || null };
   const said = String(words || '').slice(0, 2000);
   const mine = PC.injectsOf(b, RI.list(null, { limit: 100000 }));
-  const CI = _require('../../cortex/core/raid/contract-intake.js');
+  const _outcome = async (status, verdict) => { try { return (await _raidRoute('POST', `/api/raid/contracts/${encodeURIComponent(held.raidQueueId)}/outcome`, { status, verdict })).result || null; } catch (e) { return { ok: false, error: `RAID did not take the verdict: ${e.message}` }; } };
   let raid = null;
   if (accept) {
     let landed = 0; const refused = [];
@@ -884,7 +888,7 @@ async function _phaseVerdict(repo, { runId, accept, words = '' } = {}, who = 'pe
     appendRow('idearium_phase_runs', { uuid: `${b}-proof-proven`, ...base, runId: `${b}-proof`, buildRunId: b, state: 'proven', snapshot: held.snapshot || null,
       proof: { met: 0, total: 0, byPerson: { who, words: said }, strength: { ran: 0, filesOnly: false, byPerson: true } }, note: `accepted by ${who}${said ? `: "${said}"` : ''}`, ts: Date.now() });
     getIdeaOS().emit('idearium.repo.phase.run', { ...base, state: 'proven', byPerson: who });
-    if (held.raidQueueId) raid = CI.reportExternalOutcome(held.raidQueueId, { status: 'pass', verdict: `accepted by ${who}${said ? `: ${said}` : ''}` });
+    if (held.raidQueueId) raid = await _outcome('pass', `accepted by ${who}${said ? `: ${said}` : ''}`);
     _closeLog(repo.uuid, 'phase.verdict.accepted', `${held.phase || b} accepted by ${who}`, said || null);
     let close = null; try { close = await _closeRun(b, { trigger: 'verdict' }); } catch (e) { close = { error: e.message }; }
     return { ok: true, accepted: true, runId: b, landed, refused, close, raid };
@@ -899,7 +903,7 @@ async function _phaseVerdict(repo, { runId, accept, words = '' } = {}, who = 'pe
   appendRow('idearium_phase_runs', { uuid: `${b}-verdict-rejected`, ...base, state: 'verdict-rejected', snapshot: held.snapshot || null, error: `rejected by ${who}${said ? `: "${said}"` : ''}`, ts: Date.now() });
   appendRow('idearium_phase_runs', { uuid: `${b}-proof-unproven`, ...base, runId: `${b}-proof`, buildRunId: b, state: 'unproven', snapshot: held.snapshot || null, error: `rejected by ${who}${said ? `: "${said}"` : ''}`, ts: Date.now() });
   getIdeaOS().emit('idearium.repo.phase.run', { ...base, state: 'unproven', byPerson: who });
-  if (held.raidQueueId) raid = CI.reportExternalOutcome(held.raidQueueId, { status: 'fail', verdict: `rejected by ${who}${said ? `: ${said}` : ''}` });
+  if (held.raidQueueId) raid = await _outcome('fail', `rejected by ${who}${said ? `: ${said}` : ''}`);
   _closeLog(repo.uuid, 'phase.verdict.rejected', `${held.phase || b} rejected by ${who}`, said || null);
   return { ok: true, accepted: false, runId: b, reverted, kept, raid };
 }
@@ -5064,17 +5068,16 @@ async function handle(req, res, route, query, body) {
       // real spec build (§HONEST LIMIT, same as the chunk path's own).
       let _raidQueueId = null;
       try {
-        _raidQueueId = _require('../../cortex/core/raid/contract-intake.js').submitContract(
-          { content: `spec.build:${params.uuid}`, file: null, title: spec.name || params.uuid },
-          { source: 'idearium', intention: 'build' }
-        ).queueId;
+        _raidQueueId = (await _raidRoute('POST', '/api/raid/contracts', { contract: { content: `spec.build:${params.uuid}`, file: null, title: spec.name || params.uuid }, source: 'idearium', intention: 'build' }, { look: true })).queueId || null;
       } catch (e) {
         console.warn('[idearium/api] could not submit real RAID observability contract for spec.build (build proceeds regardless):', e.message);
       }
       // §RD1 0.60.37 — and RAID's gates before the compile runs (a refusal is said, nothing compiled)
       {
-        const gb = _require('../../cortex/core/raid/contract-intake.js').gateBefore({ source: 'idearium', intention: 'build', title: spec.name || params.uuid, queueId: _raidQueueId });
-        if (!gb.ok) return err(res, 403, `RAID did not let this build run — ${gb.blocked.reason}`, { code: 'RAID_REFUSED', gate: gb.blocked.gate, raidQueueId: _raidQueueId });
+        // CS11 step 1: by RAID's route (Cortex woken if asleep). RAID that does not answer refuses the build, said: RAID decides, a build it never saw does not run
+        let gb; try { gb = await _raidRoute('POST', '/api/raid/gate-before', { source: 'idearium', intention: 'build', title: spec.name || params.uuid, queueId: _raidQueueId }); }
+        catch (e) { return err(res, 503, `RAID did not answer its gates before this build (${e.message}), so nothing was compiled`, { code: 'RAID_UNREACHABLE', raidQueueId: _raidQueueId }); }
+        if (!gb.ok) return err(res, 403, `RAID did not let this build run — ${(gb.blocked && gb.blocked.reason) || gb.error || 'refused'}`, { code: 'RAID_REFUSED', gate: gb.blocked && gb.blocked.gate, raidQueueId: _raidQueueId });
       }
 
       // ── Actually compile — this used to be the gap: spec.build only
@@ -5113,12 +5116,7 @@ async function handle(req, res, route, query, body) {
         // §MCO8 2026-09-13 — report the already-known, real outcome back
         // to RAID (see submission above), same best-effort pattern as
         // the chunk-dispatch path's own reportExternalOutcome call.
-        if (_raidQueueId) {
-          try {
-            const _intake = _require('../../cortex/core/raid/contract-intake.js');
-            _intake.reportExternalOutcome(_raidQueueId, { status: _intake.STATUS.PASS });
-          } catch (_) { /* best-effort, see above */ }
-        }
+        if (_raidQueueId) _raidRoute('POST', `/api/raid/contracts/${encodeURIComponent(_raidQueueId)}/outcome`, { status: 'pass' }, { look: true }).catch(() => {});   // best-effort, see above
       } else {
         os.emit('idearium.error', { op: 'spec.build.compile', reason: compileResult.error });
         // Compile failed — don't leave the spec parked on 'building' forever
@@ -5126,12 +5124,7 @@ async function handle(req, res, route, query, body) {
         // Fall back to 'specced' so the UI reflects reality and a rebuild
         // can be re-attempted.
         os.emit('idearium.spec.update', { uuid: params.uuid, fields: { phase: 'specced' } });
-        if (_raidQueueId) {
-          try {
-            const _intake = _require('../../cortex/core/raid/contract-intake.js');
-            _intake.reportExternalOutcome(_raidQueueId, { status: _intake.STATUS.FAIL, verdict: compileResult.error || null });
-          } catch (_) { /* best-effort, see above */ }
-        }
+        if (_raidQueueId) _raidRoute('POST', `/api/raid/contracts/${encodeURIComponent(_raidQueueId)}/outcome`, { status: 'fail', verdict: compileResult.error || null }, { look: true }).catch(() => {});   // best-effort
       }
 
       // Notify orchestrator
@@ -9801,7 +9794,7 @@ async function handle(req, res, route, query, body) {
           const rows = run ? loadTable('idearium_phase_runs').filter(r => r.runId === run.runId) : [];
           const qid = rows.map(r => r.raidQueueId).find(Boolean) || null;
           let raid = null;
-          if (qid) { try { raid = _require('../../cortex/core/raid/contract-intake.js').listQueue().find(x => x.uuid === qid) || null; } catch (_) { raid = null; } }
+          if (qid) { try { raid = (await _raidRoute('GET', `/api/raid/contracts/${encodeURIComponent(qid)}`, undefined, { look: true })).contract || null; } catch (_) { raid = null; } }   // CS11 step 1: by RAID's route
           const tr = CT.trace(L.payload, { runs: rows, raid });
           // §GW2 0.60.77 — each brick's own run (lib/run-state.js, keyed by the brick): the baton every attempt and agent resumed
           try {
@@ -10924,22 +10917,23 @@ async function handle(req, res, route, query, body) {
         // below checks before trying to report anything back.
         let raidQueueId = null;
         try {
-          const submitted = _require('../../cortex/core/raid/contract-intake.js').submitContract(
-            { content: chunkPrompt, file: null, title: chunk.title || chunk.sectionId, forAgent: preferAgent, hat: who.hat ? (who.hat.uuid || who.hat.name) : null },
-            { source: 'idearium', intention: 'build' }
-          );
-          raidQueueId = submitted.queueId;
+          const submitted = await _raidRoute('POST', '/api/raid/contracts', { contract: { content: chunkPrompt, file: null, title: chunk.title || chunk.sectionId, forAgent: preferAgent, hat: who.hat ? (who.hat.uuid || who.hat.name) : null },
+            source: 'idearium', intention: 'build' }, { look: true });   // CS11 step 1: by RAID's route
+          raidQueueId = submitted.queueId || null;
         } catch (e) {
           console.warn('[idearium/api] could not submit real RAID observability contract (build proceeds regardless):', e.message);
         }
         // §RD1 0.60.37 — no longer observability only: RAID's gates decide before the chunk is sent (the constitution,
         // idearium's RAID contract, the hat's intent contract when one is worn). A refusal fails the chunk, said.
         {
-          const gb = _require('../../cortex/core/raid/contract-intake.js').gateBefore({ source: 'idearium', intention: 'build', forAgent: preferAgent || null,
-            hat: who.hat ? (who.hat.uuid || who.hat.name) : null, title: chunk.title || chunk.sectionId, queueId: raidQueueId });
+          // CS11 step 1: by RAID's route (Cortex woken if asleep); RAID that does not answer refuses the chunk, said
+          let gb; try { gb = await _raidRoute('POST', '/api/raid/gate-before', { source: 'idearium', intention: 'build', forAgent: preferAgent || null,
+            hat: who.hat ? (who.hat.uuid || who.hat.name) : null, title: chunk.title || chunk.sectionId, queueId: raidQueueId }); }
+          catch (e) { gb = { ok: false, blocked: { gate: 'raid-unreachable', reason: `RAID did not answer (${e.message})` } }; }
           if (!gb.ok) {
-            se.failChunk(params.uuid, chunk.uuid, `RAID did not let it run — ${gb.blocked.reason}`);
-            return err(res, 403, `RAID did not let this chunk run — ${gb.blocked.reason}`, { code: 'RAID_REFUSED', gate: gb.blocked.gate, raidQueueId });
+            const why = (gb.blocked && gb.blocked.reason) || gb.error || 'refused';
+            se.failChunk(params.uuid, chunk.uuid, `RAID did not let it run — ${why}`);
+            return err(res, 403, `RAID did not let this chunk run — ${why}`, { code: 'RAID_REFUSED', gate: gb.blocked && gb.blocked.gate, raidQueueId });
           }
         }
 
@@ -11073,12 +11067,7 @@ async function handle(req, res, route, query, body) {
           // case is left genuinely pending (still 'running' in RAID),
           // named honestly rather than silently guessed at.
           if (raidQueueId && !result.queued) {
-            try {
-              const intake = _require('../../cortex/core/raid/contract-intake.js');
-              intake.reportExternalOutcome(raidQueueId, {
-                status: result.ok ? intake.STATUS.PASS : intake.STATUS.FAIL,
-              });
-            } catch (_) { /* best-effort, see above */ }
+            _raidRoute('POST', `/api/raid/contracts/${encodeURIComponent(raidQueueId)}/outcome`, { status: result.ok ? 'pass' : 'fail' }, { look: true }).catch(() => {});   // CS11 step 1; best-effort
           }
           // §0.39.291 — a file chunk is the code inside the reply's fence, not the fence
           const fileOut = result.ok && !result.queued && result.text ? _fileContentFromReply(chunk, result.text) : null;

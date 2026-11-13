@@ -7,18 +7,20 @@ intent: null
 summary: CS11_raid_in_the_exe (backend) — 7 file(s)
 system: idearium
 tags: []
-exported_at: 1792757382224
+exported_at: 1794611790092
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792757382224
-lastSeenAt: 1792757382224
+firstSeenAt: 1794611790092
+lastSeenAt: 1794611790092
 fingerprint: null
 payload:
   id: CS11_raid_in_the_exe
   map: docs/2026-10-23-cos-spine-phasemap.spec
   repo: null
   layer: backend
-  status: OPEN
+  status: >-
+    OPEN   # picked up 2026-11-13, his: "moves into cos. i feel like." (was: LATER, shelved
+    2026-11-07)
   files:
     - cos/raid/index.js
     - cos/raid/store.js
@@ -35,4 +37,4 @@ payload:
   blocks:
     - MOD-CS-RAID
   spec: cos/spec/cos-spine.spec
-  graph: 3899474125085d16
+  graph: 0244109c720657fb
