@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-13-sovereign-and-wired-phasemap.spec::SW1_each_system_its_own_map
+type: phase
+id: docs_2026-11-13-sovereign-and-wired-phasemap.spec::SW1_each_system_its_own_map
+context: pipeline phase SW1_each_system_its_own_map of docs/2026-11-13-sovereign-and-wired-phasemap.spec
+intent: null
+summary: SW1_each_system_its_own_map (backend) — 6 file(s)
+system: idearium
+tags: []
+exported_at: 1794550806502
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794550806502
+lastSeenAt: 1794550806502
+fingerprint: null
+payload:
+  id: SW1_each_system_its_own_map
+  map: docs/2026-11-13-sovereign-and-wired-phasemap.spec
+  repo: null
+  layer: backend
+  status: OPEN
+  files:
+    - cos/archetype/nexus-system/lib/registry.js
+    - cos/registry-components.js
+    - orchestrator/registry-components.js
+    - emerge/registry-components.js
+    - lib/drawbridge-registry.js
+    - tests/modules/test-system-own-map.test.js
+  depends_on:
+    - SW0_the_scorecard
+    - SW_D2_each_system_keeps_its_own_map
+  blocks: []
+  spec: null
+  graph: ed5d2af4a8c5b4dd

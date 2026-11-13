@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-13-sovereign-and-wired-phasemap.spec::SW0_the_scorecard
+type: phase
+id: docs_2026-11-13-sovereign-and-wired-phasemap.spec::SW0_the_scorecard
+context: pipeline phase SW0_the_scorecard of docs/2026-11-13-sovereign-and-wired-phasemap.spec
+intent: null
+summary: SW0_the_scorecard (backend) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1794550806498
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794550806498
+lastSeenAt: 1794550806498
+fingerprint: null
+payload:
+  id: SW0_the_scorecard
+  map: docs/2026-11-13-sovereign-and-wired-phasemap.spec
+  repo: null
+  layer: backend
+  status: OPEN
+  files:
+    - lib/system-boundary.js
+    - lib/drawbridge-registry.js
+    - lib/system-sovereign-card.js
+    - idearium/cli/route-commands.js
+    - tests/modules/test-system-sovereign-card.test.js
+  depends_on:
+    - SW_D0_picked_up
+  blocks: []
+  spec: null
+  graph: 99e0e09fe0777d28

@@ -1,0 +1,140 @@
+# docs/2026-11-13-sovereign-and-wired-phasemap.spec
+# Every system sovereign, wired in through its own registry: the drawbridge the only way in. Picks up, by his word, what was shelved on
+# 2026-11-07 in docs/2026-10-17-system-drawbridge-phasemap.spec (DB3, DB6, DB9, DB16, DB23, DB24) and docs/2026-10-24-sovereign-systems-
+# phasemap.spec (SV1–SV7, CS13). Those maps are kept whole (§0.3); this one is the order to build them in. Mapped only; nothing built.
+
+origin:
+  date: 2026-11-13
+  james: '"Maybe you can work on wiring everying in. All phases that just need wiring in. Like the drawbridge and the component registry. Migrating the hooks to the registry instead of each other." (2026-11-12) · "Orchastatrator is meant to migrate into cos superviser. We need each system sovereign. Then using the drawbridge as the only way to access files. Basically looms map but per system and it’s in charge of its own map. They all need routes and command nodes, with events per call and command, all the events are to make it explicit and have it logged in the ledger per system. Also need each system to use their own data folder by default. Look at the node phases. Look at genesis and architecture spec" (2026-11-13)'
+  read_first: >-
+    Read 2026-11-13: genesis (idearium/spec-engine/templates/genesis.spec) Domain 0a (ownership: "a system holds its data, schemas, contract,
+    config, heartbeat and pulse in its own folder"), Domain 2 (api and cli are two doors into one room), Domain 2c (the registry as the
+    doorway: component, hook, wire, event, capability, command, contract and system nodes; "a module never imports across a seam"; "a
+    component without a capability, a command or its events is refused"), Domain 2d (nodes, one file per fact), Domain 4 (a ledger per
+    runtime); the architecture template; AXIOMS §5.16 and RG_D0 (the registry is per system; Loom is not it); the node maps
+    (2026-09-11 sovereign-node-architecture, 2026-10-22 system-node-db).
+  measured_2026_11_13: >-
+    lib/system-boundary.js census: 396 crossings between systems (540 at the baseline, 144 closed, 0 added): 150 system to system
+    (orchestrator → cortex 14, copilot → cortex 12, guardian → intelligence 10, idearium → cos 9, idearium → cortex 9, intelligence → cortex 7,
+    clear-glass → cos 6, copilot → intelligence 6, cortex → intelligence 6) and 246 from lib/ up into a system (cortex 75, cos 51,
+    intelligence 43, copilot 27, loom 25). Of 14 systems: 11 have a registry-components file (not cos, orchestrator, emerge); 13 a contract
+    (not emerge); 8 an event taxonomy; 3 a commands folder of command nodes (guardian 49, intelligence 22, ollama 19); every system has its
+    own data folder and data/<system> at the root also exists for 9 of them; 38 files in lib/ and 12 inside systems name the root data/.
+
+decisions:
+  SW_D0_picked_up:
+    status: DECIDED 2026-11-13 (his)
+    chosen: "The drawbridge and the per-system registry are no longer shelved: each system sovereign, its registry the only way in."
+    supersedes_in_part: "the 2026-11-07 shelving ('Those are all top of my head ideas') for the phases this map names; the rest stay shelved"
+    by: "his; AXIOMS §5.9, §5.15, §5.16; genesis 2c"
+  SW_D1_orchestrator_into_the_supervisor:
+    status: DECIDED 2026-11-13 (his)
+    chosen: '"Orchastatrator is meant to migrate into cos superviser." What the orchestrator still holds moves into COS''s supervisor; the automation engine already did (AE_D4, 2026-11-06).'
+    by: "his"
+  SW_D2_each_system_keeps_its_own_map:
+    status: DECIDED 2026-11-13 (his)
+    chosen: '"Basically looms map but per system and it’s in charge of its own map." Each system generates, stores and serves its own map of what it holds and offers. Loom''s central maps are not it (RG_D0).'
+    by: "his; §5.16"
+  SW_D3_an_event_for_every_call:
+    status: DECIDED 2026-11-13 (his)
+    chosen: '"events per call and command, all the events are to make it explicit and have it logged in the ledger per system." Every route call and every command emits an event, written to that system''s own ledger.'
+    by: "his; genesis Domain 4"
+  SW_D4_own_data_by_default:
+    status: DECIDED 2026-11-13 (his)
+    chosen: '"each system to use their own data folder by default." <system>/data is the default; the root data/<system> is read only to move what is there.'
+    by: "his; genesis 0a ownership"
+
+phases:
+  SW0_the_scorecard:
+    layer: backend
+    status: OPEN
+    depends_on: [SW_D0_picked_up]
+    files: [lib/system-boundary.js, lib/drawbridge-registry.js, lib/system-sovereign-card.js, idearium/cli/route-commands.js, tests/modules/test-system-sovereign-card.test.js]
+    reuse: "lib/system-boundary.js (census, check, sovereignty, homes), lib/drawbridge-registry.js (registryOf: declared, observed, negative space), lib/registry-sovereign-check.js (RG0)."
+    does: >-
+      One measure, per system, of what this map asks: its own registry (yes/no), routes declared against routes served, command nodes against
+      routes and CLI verbs, events declared against calls, its own ledger, its data in its own folder, crossings in and out. A ratchet: each
+      number may only improve. The table in measured_2026_11_13 is its first reading. `system sovereign [<system>]`.
+    proof: "the card on the real tree equals the reading above; a fixture system missing each part is named for it; a number that worsens fails"
+  SW1_each_system_its_own_map:
+    layer: backend
+    status: OPEN
+    depends_on: [SW0_the_scorecard, SW_D2_each_system_keeps_its_own_map]
+    files: [cos/archetype/nexus-system/lib/registry.js, cos/registry-components.js, orchestrator/registry-components.js, emerge/registry-components.js, lib/drawbridge-registry.js, tests/modules/test-system-own-map.test.js]
+    reuse: "DB9 and DB16 (lib/drawbridge-registry.js registryOf), idearium/repo/architecture.js toNodes (genesis 2c: the registry regenerated from the code), the system archetype (cos/archetype/nexus-system), loom/scanners/capability-map.js read as a library until its parts are the archetype's."
+    does: >-
+      Each system generates its own map from its own code (component, hook, wire, event, capability, command and system nodes, genesis 2c),
+      keeps it in its own folder, and serves it at its own route (GET /api/<system>/registry). COS, the orchestrator and Emerge get the
+      registry they lack. No system writes or serves another's. COS's system registry only connects them (his 2026-11-03).
+    proof: "each system's map generated twice is unchanged (fingerprints); a route in the code and not in the map is named; with Cortex and Loom stopped every other system still serves its map"
+  SW2_routes_and_command_nodes:
+    layer: backend
+    status: OPEN
+    depends_on: [SW1_each_system_its_own_map]
+    files: [cos/archetype/nexus-system/lib/commands.js, idearium/cli/route-commands.js, architect/commands, clear-glass/commands, copilot/commands, cortex/commands, cos/commands, diagnostic/commands, idearium/commands, loom/commands, orchestrator/commands, versionium/commands, tests/modules/test-system-command-nodes.test.js]
+    reuse: "the .command nodes Guardian (49), Intelligence (22) and Ollama (19) already keep; idearium/cli/route-commands.js (every row a route); genesis Domain 2 (api and cli are two doors into one room)."
+    does: >-
+      Every route a system serves and every CLI verb it answers is a command node in that system's own folder, generated from its map,
+      naming the capability it invokes. Eleven systems have none today. The central table of rows is then read from the systems' nodes,
+      not written by hand.
+    proof: "per system: routes served = command nodes (none missing, none extra); a row in the central table with no node is named; a command run by its node reaches the same route"
+  SW3_an_event_per_call_in_its_own_ledger:
+    layer: backend
+    status: OPEN
+    depends_on: [SW2_routes_and_command_nodes, SW_D3_an_event_for_every_call]
+    files: [cos/archetype/nexus-system/lib/ledger.js, cos/archetype/nexus-system/lib/serve.js, architect/event-taxonomy.js, clear-glass/event-taxonomy.js, idearium/event-taxonomy.js, loom/event-taxonomy.js, ollama/event-taxonomy.js, tests/modules/test-system-call-ledger.test.js]
+    reuse: "COS's supervisor ledger (append-only, every act a line), each system's event-taxonomy.js (8 of 14 have one), genesis Domain 4 (a ledger per runtime), the heartbeat in the archetype."
+    does: >-
+      One place in the archetype wraps every route and command: the call in and its outcome are an event (<system>.<command>.called /
+      .done / .failed, with who asked), declared in the system's taxonomy and appended to the system's own ledger in its data folder. The six
+      systems with no taxonomy get one, generated from their command nodes.
+    proof: "a call to any route of a fixture system is two lines in its ledger with who, what and the outcome; an event not in the taxonomy is refused, named; no system writes another's ledger"
+  SW4_own_data_by_default:
+    layer: backend
+    status: OPEN
+    depends_on: [SW0_the_scorecard, SW_D4_own_data_by_default]
+    files: [cos/archetype/nexus-system/lib/data-dir.js, lib/system-boundary.js, scripts/move-root-data.js, tests/modules/test-system-own-data.test.js]
+    reuse: "SV1 (every table has one owner) and SV2–SV7 of docs/2026-10-24-sovereign-systems-phasemap.spec, lib/system-boundary.js tables and homes, each system's existing <system>/data."
+    does: >-
+      One resolver gives a system its data folder: <system>/data unless its config says otherwise. The 12 files inside systems and the 38
+      in lib/ that name the root data/ go through it. What sits in data/<system> at the root is moved once, by a command he runs, into
+      the system's own folder: copied, checked, then the old place left as a note of where it went. Nothing is deleted.
+    proof: "on a fixture tree: each system reads and writes only under its own data; the move is the same bytes after as before; a file naming the root data/ is counted by the scorecard and may only fall"
+  SW5_orchestrator_into_the_supervisor:
+    layer: backend
+    status: OPEN
+    depends_on: [SW1_each_system_its_own_map, SW_D1_orchestrator_into_the_supervisor]
+    files: [orchestrator/orchestrator.js, orchestrator/auth, orchestrator/lib, orchestrator/cos-ui-door.js, cos/manager/supervisor.js, cos/manager/server.js, cos/manager/contract.json, tests/modules/test-orchestrator-into-cos.test.js]
+    reuse: "AE_D4 and AE6 (the automation engine already runs in COS), CS13 and DB23 (autopilot to the orchestrator, superseded by this), COS's supervisor and its declarations, MG38 (the pulse watch)."
+    does: >-
+      First a census of what the orchestrator still does (its routes, its auth, its pulse watch, the central /api/components), each
+      assigned: into COS's supervisor, to the system that owns it, or retired. Then moved one part at a time, the old route answering
+      with where it went until its callers have moved. Its 14 crossings into Cortex end with it.
+    proof: "each orchestrator route answered by COS or by its owner; the old address says where it went; with the orchestrator not started, Nexus boots and the pipeline builds"
+  SW6_the_drawbridge_the_only_way_in:
+    layer: integration
+    status: OPEN
+    depends_on: [SW2_routes_and_command_nodes, SW3_an_event_per_call_in_its_own_ledger, SW5_orchestrator_into_the_supervisor]
+    files: [lib/nexus-client.js, lib/system-boundary.js, lib/contracts/system-boundary-baseline.json, copilot, guardian, idearium, intelligence, clear-glass, cortex, tests/modules/test-drawbridge-only.test.js]
+    reuse: "DB3 and DB6, lib/nexus-client.js (a call to another system by its route, waking it through COS), the census and its ratchet, the CIE8 move (four callers repointed to Idearium's route) as the pattern."
+    does: >-
+      The 150 system-to-system crossings moved, one pair at a time, smallest first: each require() into another system's folder becomes a
+      call to a route that system's map declares (added to its map and command nodes when missing). After each pair the ratchet's
+      baseline falls and is written back. At zero, a new crossing fails the build, not only the count.
+    proof: "per pair: the census shows 0 for it and its callers' tests pass; at the end 0 system crossings, and a fixture require() across a seam fails by name"
+  SW7_lib_goes_home:
+    layer: integration
+    status: OPEN
+    depends_on: [SW6_the_drawbridge_the_only_way_in, SW4_own_data_by_default]
+    files: [lib, lib/system-boundary.js, cortex, cos, intelligence, copilot, loom, tests/modules/test-lib-goes-home.test.js]
+    reuse: "SV2 (core files go home), CS18 (one copy of the primitives), lib/system-boundary.js homes and blockerOf, DB0a (is lib a system: still his to settle)."
+    does: >-
+      The 246 crossings from lib/ up into a system: a file in lib/ that only one system uses moves into that system; one that reaches
+      into a system calls its route instead; what is truly shared stays, reaching into nothing.
+    proof: "0 upward crossings; each moved file's history kept (git mv); every test that named the old path passes at the new one"
+    readings_to_confirm: ["SW7_R1 (his 2026-11-10, still open): the component store. (a) lib/ a shared library with per-system config, (b) a store copied into each system, or (c) Pillar."]
+
+order: >-
+  SW0 first (it measures every other phase). Then SW1 → SW2 → SW3 (the map, the command nodes, the events) and SW4 (data) beside them.
+  SW5 before SW6, so the orchestrator's crossings are not moved twice. SW7 last. Each phase is slices of one system at a time, so a slice
+  can be built by the pipeline as its own request.

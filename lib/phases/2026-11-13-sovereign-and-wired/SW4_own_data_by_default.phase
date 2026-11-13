@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-13-sovereign-and-wired-phasemap.spec::SW4_own_data_by_default
+type: phase
+id: docs_2026-11-13-sovereign-and-wired-phasemap.spec::SW4_own_data_by_default
+context: pipeline phase SW4_own_data_by_default of docs/2026-11-13-sovereign-and-wired-phasemap.spec
+intent: null
+summary: SW4_own_data_by_default (backend) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1794550806511
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794550806511
+lastSeenAt: 1794550806511
+fingerprint: null
+payload:
+  id: SW4_own_data_by_default
+  map: docs/2026-11-13-sovereign-and-wired-phasemap.spec
+  repo: null
+  layer: backend
+  status: OPEN
+  files:
+    - cos/archetype/nexus-system/lib/data-dir.js
+    - lib/system-boundary.js
+    - scripts/move-root-data.js
+    - tests/modules/test-system-own-data.test.js
+  depends_on:
+    - SW0_the_scorecard
+    - SW_D4_own_data_by_default
+  blocks: []
+  spec: null
+  graph: 0e4c4eb2b4969561

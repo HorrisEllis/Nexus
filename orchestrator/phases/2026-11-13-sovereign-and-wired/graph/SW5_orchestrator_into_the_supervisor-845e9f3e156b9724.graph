@@ -1,0 +1,183 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SW5_orchestrator_into_the_supervisor:845e9f3e156b9724
+type: graph
+id: phase:SW5_orchestrator_into_the_supervisor:845e9f3e156b9724
+context: dependency graph of phase SW5_orchestrator_into_the_supervisor
+intent: null
+summary: 19 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1794550806513
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794550806513
+lastSeenAt: 1794550806513
+fingerprint: null
+payload:
+  for: SW5_orchestrator_into_the_supervisor
+  kind: phase
+  repo: null
+  hash: 845e9f3e156b9724
+  nodes:
+    - path: cos/manager/contract.json
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/manager/server.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/manager/supervisor.js
+      role: changes
+      exists: true
+      system: cos
+    - path: orchestrator/cos-ui-door.js
+      role: changes
+      exists: true
+      system: orchestrator
+    - path: orchestrator/orchestrator.js
+      role: changes
+      exists: true
+      system: orchestrator
+    - path: tests/modules/test-orchestrator-into-cos.test.js
+      role: changes
+      exists: false
+      system: null
+    - path: lib/cli/run-supervised.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: intelligence/cfr/ledger.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/boot-sequence.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/cli/boot-systems.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/event-taxonomy-pattern.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/gap-field.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus/nexus-bus.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus/nexus-cfr-influence.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus/nexus-knowledge.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus/nexus-query.js
+      role: uses
+      exists: true
+      system: lib
+    - path: orchestrator/event-taxonomy.js
+      role: uses
+      exists: true
+      system: orchestrator
+    - path: orchestrator/lib/intent-map.js
+      role: uses
+      exists: true
+      system: orchestrator
+  edges:
+    - from: orchestrator/orchestrator.js
+      to: lib/data-home.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: orchestrator/event-taxonomy.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: lib/event-taxonomy-pattern.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: orchestrator/lib/intent-map.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: lib/boot-sequence.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: lib/cli/boot-systems.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: intelligence/cfr/ledger.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: lib/nexus/nexus-bus.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: lib/nexus/nexus-query.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: lib/nexus/nexus-knowledge.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: lib/nexus/nexus-cfr-influence.js
+      kind: requires
+    - from: lib/cli/run-supervised.js
+      to: orchestrator/orchestrator.js
+      kind: requires
+  crossings:
+    - from: orchestrator/orchestrator.js
+      to: intelligence/cfr/ledger.js
+      fromSystem: orchestrator
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: lib/cli/run-supervised.js
+      to: orchestrator/orchestrator.js
+      fromSystem: lib
+      toSystem: orchestrator
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW1_each_system_its_own_map
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW_D1_orchestrator_into_the_supervisor
+    dependents:
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW6_the_drawbridge_the_only_way_in
+    upstream:
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW0_the_scorecard
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW1_each_system_its_own_map
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW_D0_picked_up
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW_D1_orchestrator_into_the_supervisor
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW_D2_each_system_keeps_its_own_map
+    downstream:
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW6_the_drawbridge_the_only_way_in
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW7_lib_goes_home
+    blockedBy:
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW1_each_system_its_own_map
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 3 · blocked by SW1_each_system_its_own_map
+      - >-
+        depends on (2): SW1_each_system_its_own_map, SW_D1_orchestrator_into_the_supervisor · all
+        upstream 5
+      - 'needed by (1): SW6_the_drawbridge_the_only_way_in · all downstream 2'
+    edges:
+      - from: docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW1_each_system_its_own_map
+        kind: declared
+      - from: docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW_D1_orchestrator_into_the_supervisor
+        kind: declared

@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-13-sovereign-and-wired-phasemap.spec::SW6_the_drawbridge_the_only_way_in
+type: phase
+id: docs_2026-11-13-sovereign-and-wired-phasemap.spec::SW6_the_drawbridge_the_only_way_in
+context: >-
+  pipeline phase SW6_the_drawbridge_the_only_way_in of
+  docs/2026-11-13-sovereign-and-wired-phasemap.spec
+intent: null
+summary: SW6_the_drawbridge_the_only_way_in (integration) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1794550806516
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794550806516
+lastSeenAt: 1794550806516
+fingerprint: null
+payload:
+  id: SW6_the_drawbridge_the_only_way_in
+  map: docs/2026-11-13-sovereign-and-wired-phasemap.spec
+  repo: null
+  layer: integration
+  status: OPEN
+  files:
+    - lib/nexus-client.js
+    - lib/system-boundary.js
+    - lib/contracts/system-boundary-baseline.json
+    - tests/modules/test-drawbridge-only.test.js
+  depends_on:
+    - SW2_routes_and_command_nodes
+    - SW3_an_event_per_call_in_its_own_ledger
+    - SW5_orchestrator_into_the_supervisor
+  blocks: []
+  spec: null
+  graph: b33bfa701701fee6
