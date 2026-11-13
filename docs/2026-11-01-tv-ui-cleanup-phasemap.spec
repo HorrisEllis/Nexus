@@ -114,3 +114,7 @@ build_order: "TV0 → TV1 → TV2. TV3 stands alone (its own page, its own route
 # - worn in COS's theme by its page.css;
 # - told its door by <meta name="emergence-api">: COS's GET /api/cos/emergence/:what.
 # COS asks Intelligence through its routes, its origin taken from its declaration, and the kernel for his runs.
+
+# ── ADDENDUM 2026-11-13 (0.60.524) — TV3: COS's Emergence page wakes Intelligence ──
+# James, 2026-11-13: "why is it coupled to intelligence?" Its crystallised and forming panels are Intelligence's data (by design, by route); an
+# asleep Intelligence was shown as ECONNREFUSED. /api/cos/emergence/* now wakes it (supervisor touch, one shared 25 s wait) and asks again.

@@ -98,6 +98,7 @@ function createServer(sup, opts = {}) {
   });
   const srvRef = {};
   let desktop = null;   // PC9: made on first use
+  let _intelWake = null;   // 0.60.524: the one wait while Intelligence is woken for the Emergence page
   // 2026-11-09 — James: "This needs to be a module." COS's pipeline module (cos/pipeline/): the box shape, the gates, requests kept as files
   pipeline = require('../pipeline/index.js').createPipeline({ automation, idearium: _ideariumGet, call: _systemCall,
     dataDir: process.env.COS_MANAGER_DATA || path.join(root, 'cos', 'data', 'manager') });
@@ -180,7 +181,22 @@ function createServer(sup, opts = {}) {
         const d = sup.declarations().find(x => x.name === 'intelligence'); let origin = 'http://127.0.0.1:3753'; try { if (d && d.healthUrl) origin = new URL(d.healthUrl).origin; } catch (_) {}
         const ask = (path) => new Promise((resolve) => { const q = http.get(origin + path, { timeout: 4000 }, (r) => { let t = ''; r.on('data', c => t += c); r.on('end', () => { try { resolve(JSON.parse(t)); } catch (_) { resolve({ ok: false, error: `not JSON (${r.statusCode})` }); } }); });
           q.on('timeout', () => q.destroy(new Error('no answer in 4 s'))); q.on('error', (e) => resolve({ ok: false, error: e.message })); });
-        if (em[1] === 'patterns') { const r = await ask('/api/intelligence/patterns'); return send(res, r && r.ok !== false ? 200 : 503, r && r.ok !== false ? r : { ok: false, error: `intelligence did not answer: ${(r && r.error) || 'no reply'}` }); }
+        // 0.60.524 — James, 2026-11-13, of this page: "why is it coupled to intelligence?" Two of its panels ARE Intelligence's data (what has
+        // crystallised, what is forming); the page read it, but Intelligence starts on demand and an asleep one answered ECONNREFUSED, said raw.
+        // Now the first refused ask wakes it (the supervisor's touch, as any on-demand call does) and waits for it (25 s), then asks again;
+        // one that still cannot start says why (its state, e.g. held under the memory floor).
+        const first = em[1] === 'patterns' ? '/api/intelligence/patterns' : '/api/liminal-space/status';
+        const probe = await ask(first);
+        let woke = null;
+        if (probe && probe.ok === false && /ECONNREFUSED/.test(String(probe.error || ''))) {
+          // one wake for every caller at once (the page's two panels ask together, every 10 s): they share the same wait
+          if (!_intelWake) _intelWake = (async () => { try { sup.touch('intelligence'); } catch (_) {}
+            for (let t0 = Date.now(); Date.now() - t0 < 25000;) { await new Promise(r => setTimeout(r, 1000)); const h = await ask('/health'); if (h && h.ok !== false) return true; }
+            return false; })().finally(() => { _intelWake = null; });
+          woke = { asked: true, up: await _intelWake };
+          if (!woke.up) { let st = null; try { st = (sup.list().find(x => x.name === 'intelligence') || {}).state; } catch (_) {} return send(res, 503, { ok: false, waking: true, state: st, error: `Intelligence was asleep: COS woke it, and it is not up yet (${st || 'starting'})${/memory/.test(String(st)) ? ', held until memory frees up' : ''}. This page asks again on its own.` }); }
+        }
+        if (em[1] === 'patterns') { const r = woke ? await ask('/api/intelligence/patterns') : probe; return send(res, r && r.ok !== false ? 200 : 503, r && r.ok !== false ? r : { ok: false, error: `intelligence did not answer: ${(r && r.error) || 'no reply'}` }); }
         const fp = u.searchParams.get('focalPoint');
         const [st, ls] = await Promise.all([ask('/api/liminal-space/status'), ask(`/api/liminal-space/list${fp ? `?focalPoint=${encodeURIComponent(fp)}` : ''}`)]);
         if (!st || st.ok === false) return send(res, 503, { ok: false, error: `intelligence did not answer: ${(st && st.error) || 'no reply'}` });
