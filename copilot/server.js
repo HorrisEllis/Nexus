@@ -1769,11 +1769,12 @@ const server = http.createServer(async (req, res) => {
     if (buildMatch) {
       const description = buildMatch[1].trim();
       try {
-        const intake = require('../cortex/core/raid/contract-intake.js');
-        const submitted = intake.submitContract({
+        // CS11 step 1 (0.60.523), his "moves into cos. i feel like.": RAID by its route, never its files (it may move into COS); Cortex is woken if asleep
+        const submitted = await require('../lib/nexus-client.js').call('cortex', 'POST', '/api/raid/contracts', { source: 'copilot', intention: 'build', contract: {
           content: `${description}\n\nRead the relevant real code before proposing or making any change (bottom-up — no guessing at what exists). If you make a real, verified change, report SEAM VERDICT: PASS. If you cannot, report SEAM VERDICT: FAIL with your real findings.`,
           title: description.slice(0, 80),
-        }, { source: 'copilot', intention: 'build' });
+        } });
+        if (!submitted || !submitted.queueId) throw new Error((submitted && submitted.error) || 'RAID did not give the contract an id');
         return json(res, 200, {
           text: `Queued as a real contract (${submitted.queueId.slice(0, 8)}) — it'll be picked up and dispatched to a real agent. This doesn't run instantly; check RAID's queue for its real status.`,
           model_used: 'nexus-raid-contract', confidence: 1, escalated: false, requestId, queueId: submitted.queueId,

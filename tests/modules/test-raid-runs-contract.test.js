@@ -115,7 +115,8 @@ const heals = []; bus.on('HEAL_REQUESTED', (e) => heals.push(e && (e.payload || 
     const api = fs.readFileSync(path.join(ROOT, 'idearium/api/index.js'), 'utf8');
     assert.ok(!/CG\.schedule\(/.test(api), 'idearium no longer runs the scheduler itself');
     assert.ok(api.includes("CI.runContract({ ...L, file }, { source: 'idearium'"), 'the phase build runs through RAID');
-    assert.strictEqual((api.match(/contract-intake\.js'\)\.gateBefore\(/g) || []).length, 2, 'spec-chunk build and compile are gated');
+    // CS11 step 1 (0.60.523): the gate is asked by RAID's route, so RAID can move into COS; still both paths, still gated
+    assert.strictEqual((api.match(/_raidRoute\('POST', '\/api\/raid\/gate-before'/g) || []).length, 2, 'spec-chunk build and compile are gated, by RAID\'s route');
   }));
 
   await test('RR-07', 'BR1: a phase that names no file is one brick (the whole phase) and passes only through its integration', () => quiet(async () => {

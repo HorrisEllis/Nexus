@@ -443,3 +443,8 @@ are not boundary work, so they are deferred too; the coder will flag one if it s
 #      serves the same /api/raid/* routes; nexus://cortex/api/raid answers from COS (a forward named where it went); the reasoning half opens on
 #      demand. cortex/core/raid archived (§0.3);
 #   4. CS7: COS balances load through RAID, which now sees every compartment's live load in its own process.
+# ── ADDENDUM 2026-11-13 (0.60.523) — CS11 step 1, group A built: filing work with RAID goes by route ──
+# James, 2026-11-13: "cs11, then pc12." Cortex: POST …/contracts/:id/outcome, POST /api/raid/gate-before; 'v2' no longer read as a contract id.
+# Architect (5), Copilot (1), Idearium (verdict, spec build, chunk build, queue read) by route. The 24 callers grouped: A filing (done), B routing
+# decisions (11), C RAID's contract engine in Idearium's process and its gate logic as a library (its own design: RAID calls back per brick),
+# D worker and officiator (SW5b), E noise filter, F routing description. scripts/mco5, mco6 are RAID's own proofs and move with it.

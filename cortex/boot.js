@@ -592,8 +592,26 @@ const server = http.createServer(async (req, res) => {
     } catch (e) { json(res, 400, { ok: false, error: e.message }); }
     return;
   }
+  // CS11 step 1 (0.60.523) — James, 2026-11-13: "i want raid to be the hub that all systems run througj" · "moves into cos. i feel like." What other
+  // systems did with RAID's contract intake in their own process, by route, so RAID can move without them noticing:
+  //   POST /api/raid/contracts/:id/outcome { status: PASS|FAIL, verdict? }  — the work's result, reported by the system that did it
+  //   POST /api/raid/gate-before { source, intention, forAgent?, hat?, title?, queueId? }  — RAID's gates before a build runs
+  if (p === '/api/raid/gate-before' && method === 'POST') {
+    const b = await readBody(req);
+    try { const r = require('./core/raid/contract-intake.js').gateBefore(b || {}); json(res, 200, { ok: true, ...r, gateOk: r.ok !== false }); }
+    catch (e) { json(res, 400, { ok: false, error: e.message }); }
+    return;
+  }
+  { const om = /^\/api\/raid\/contracts\/([^/]+)\/outcome$/.exec(p);
+    if (om && method === 'POST') {
+      const b = await readBody(req);
+      try { const I = require('./core/raid/contract-intake.js'); const r = I.reportExternalOutcome(decodeURIComponent(om[1]), { status: b.status, verdict: b.verdict || null }); json(res, 200, { ok: true, result: r || null }); }
+      catch (e) { json(res, 400, { ok: false, error: e.message }); }
+      return;
+    } }
+  // 0.60.523: 'v2' is not a contract id — GET /api/raid/contracts/v2 (the v2 list, PC12a) was answered here as "no contract v2" (404)
   { const cm = /^\/api\/raid\/contracts\/([^/]+)$/.exec(p);
-    if (cm && method === 'GET') {
+    if (cm && method === 'GET' && cm[1] !== 'v2') {
       const id = decodeURIComponent(cm[1]);
       let row = null; try { row = jaaDB.get('raid_contract_queue', id); } catch (_) {}
       if (!row) { try { row = (jaaDB.tail('raid_contract_queue', 500) || []).find(r => r.uuid === id || r.queueId === id) || null; } catch (_) {} }

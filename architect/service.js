@@ -22,6 +22,12 @@ const http   = require('http');
 const path   = require('path');
 const fs     = require('fs');
 const { randomUUID } = require('crypto');
+// CS11 step 1 (0.60.523) — James, 2026-11-13: "i want raid to be the hub that all systems run througj" · "moves into cos. i feel like." RAID is
+// reached by its routes, never its files, so it can move into COS and nothing here notices. Observability only: Cortex is not woken for it,
+// and an answer that does not come in 3 s is let go (the work below never waits on RAID).
+const _raid = (method, p, body) => require('../lib/nexus-client.js').call('cortex', method, p, body, { noWake: true, timeout: 3000 });
+async function _raidFile(contract, source, intention) { const r = await _raid('POST', '/api/raid/contracts', { contract, source, intention }); return (r && r.queueId) || null; }
+function _raidOutcome(queueId, status, verdict) { if (queueId) _raid('POST', `/api/raid/contracts/${encodeURIComponent(queueId)}/outcome`, { status, verdict: verdict || null }).catch(() => {}); }
 
 // ── Spec wizard constants ─────────────────────────────────────────────────────
 const SPEC_DIMENSIONS = ['meta','intent','axioms','constraints','modules','edges','gaps','tiers'];
@@ -386,30 +392,16 @@ async function boot() {
           // idearium's).
           let raidQueueId = null;
           try {
-            const intake = require('../cortex/core/raid/contract-intake.js');
-            raidQueueId = intake.submitContract(
-              { content: `blueprint.scan:${rootPath}`, file: rootPath, title: 'blueprint scan' },
-              { source: 'architect', intention: 'blueprint.scan' }
-            ).queueId;
+            raidQueueId = await _raidFile({ content: `blueprint.scan:${rootPath}`, file: rootPath, title: 'blueprint scan' }, 'architect', 'blueprint.scan');
           } catch (e) {
             console.warn('[architect/service] could not submit real RAID observability contract (scan proceeds regardless):', e.message);
           }
           try {
             const bp = blueprint.fromScan(rootPath, opts || {});
-            if (raidQueueId) {
-              try {
-                const i2 = require('../cortex/core/raid/contract-intake.js');
-                i2.reportExternalOutcome(raidQueueId, { status: i2.STATUS.PASS });
-              } catch (_) { /* best-effort, see above */ }
-            }
+            _raidOutcome(raidQueueId, 'pass');
             return json(res, 201, { ok: true, blueprint: bp });
           } catch(e) {
-            if (raidQueueId) {
-              try {
-                const i2 = require('../cortex/core/raid/contract-intake.js');
-                i2.reportExternalOutcome(raidQueueId, { status: i2.STATUS.FAIL, verdict: e.message });
-              } catch (_) { /* best-effort, see above */ }
-            }
+            _raidOutcome(raidQueueId, 'fail', e.message);
             return json(res, 500, { ok: false, error: e.message });
           }
         }
@@ -472,22 +464,13 @@ async function boot() {
           // real translate.utl() call.
           let raidQueueId = null;
           try {
-            const intake = require('../cortex/core/raid/contract-intake.js');
-            raidQueueId = intake.submitContract(
-              { content: `translate.utl:${text.slice(0, 80)}`, title: 'translate.utl' },
-              { source: 'architect', intention: 'translate.utl' }
-            ).queueId;
+            raidQueueId = await _raidFile({ content: `translate.utl:${text.slice(0, 80)}`, title: 'translate.utl' }, 'architect', 'translate.utl');
           } catch (e) {
             console.warn('[architect/service] could not submit real RAID observability contract (translate proceeds regardless):', e.message);
           }
           const result = translate.utl(text);
           jaa.insert('event_log', { type: 'architect.utl.processed', payload: { type_signature: result.type_signature, confidence: result.confidence, constraints: result.constraints.length }, source: 'translate', ts: Date.now() });
-          if (raidQueueId) {
-            try {
-              const i2 = require('../cortex/core/raid/contract-intake.js');
-              i2.reportExternalOutcome(raidQueueId, { status: i2.STATUS.PASS });
-            } catch (_) { /* best-effort */ }
-          }
+          _raidOutcome(raidQueueId, 'pass');
           return json(res, 200, { ok: true, result });
         }
 
@@ -606,11 +589,7 @@ async function boot() {
           // blueprint.scan/translate.utl above.
           let raidQueueId = null;
           try {
-            const intake = require('../cortex/core/raid/contract-intake.js');
-            raidQueueId = intake.submitContract(
-              { content: `map.scan:${rootPath}`, file: rootPath, title: 'topology map scan' },
-              { source: 'architect', intention: 'map.scan' }
-            ).queueId;
+            raidQueueId = await _raidFile({ content: `map.scan:${rootPath}`, file: rootPath, title: 'topology map scan' }, 'architect', 'map.scan');
           } catch (e) {
             console.warn('[architect/service] could not submit real RAID observability contract (map scan proceeds regardless):', e.message);
           }
@@ -618,20 +597,10 @@ async function boot() {
             const map = scanTopology(rootPath, opts || {});
             const record = jaa.insert('topology_maps', { data: map, causedBy: 'api.map.scan' });
             busEmit('architect.map.scanned', { id: record.uuid, rootPath, fileCount: map.files.length, gapCount: map.gaps.length });
-            if (raidQueueId) {
-              try {
-                const i2 = require('../cortex/core/raid/contract-intake.js');
-                i2.reportExternalOutcome(raidQueueId, { status: i2.STATUS.PASS });
-              } catch (_) { /* best-effort */ }
-            }
+            _raidOutcome(raidQueueId, 'pass');
             return json(res, 201, { ok: true, map, id: record.uuid });
           } catch(e) {
-            if (raidQueueId) {
-              try {
-                const i2 = require('../cortex/core/raid/contract-intake.js');
-                i2.reportExternalOutcome(raidQueueId, { status: i2.STATUS.FAIL, verdict: e.message });
-              } catch (_) { /* best-effort */ }
-            }
+            _raidOutcome(raidQueueId, 'fail', e.message);
             return json(res, 500, { ok: false, error: e.message });
           }
         }
@@ -655,22 +624,13 @@ async function boot() {
           // §MCO12 2026-09-13 (Track D continuation) — same pattern.
           let raidQueueId = null;
           try {
-            const intake = require('../cortex/core/raid/contract-intake.js');
-            raidQueueId = intake.submitContract(
-              { content: `gaps.open:${gap.id}`, title: 'gap opened' },
-              { source: 'architect', intention: 'gaps.open' }
-            ).queueId;
+            raidQueueId = await _raidFile({ content: `gaps.open:${gap.id}`, title: 'gap opened' }, 'architect', 'gaps.open');
           } catch (e) {
             console.warn('[architect/service] could not submit real RAID observability contract (gap creation proceeds regardless):', e.message);
           }
           const record = jaa.insert('gaps', { op: 'open', data: gap, causedBy: body.causedBy || 'api', ts: Date.now() });
           busEmit('architect.gap.opened', { id: gap.id, severity: gap.severity });
-          if (raidQueueId) {
-            try {
-              const i2 = require('../cortex/core/raid/contract-intake.js');
-              i2.reportExternalOutcome(raidQueueId, { status: i2.STATUS.PASS });
-            } catch (_) { /* best-effort */ }
-          }
+          _raidOutcome(raidQueueId, 'pass');
           return json(res, 201, { ok: true, gap, uuid: record.uuid });
         }
       }
