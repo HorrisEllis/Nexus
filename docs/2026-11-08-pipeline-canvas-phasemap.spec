@@ -893,3 +893,12 @@ built_2026_11_09_plan:
 #     (derive, template, model: CIE-EG deterministic_first) and its tests.
 # First real run to show: SW7a's build request (2026-11-13): context met, dag met after Idearium's snapshot was refreshed, build failed twice
 # (Idearium out of its 1 GB heap at 09:15; then the request timed out while the build was started anyway and went stuck at 10:22).
+
+# ── ADDENDUM 2026-11-13 (0.60.517) — PC8: every pipeline in Nexus reaches the Automation tab ──
+# James, 2026-11-13: "also all pipelines in nexus need to be here." His tab showed 0 after an import that said "imported".
+# Found on a real COS and Idearium (sandbox): COS's call cut a system's answer at 4,096 bytes, Idearium's pipeline is 5,704, its JSON broke
+# and the sync skipped it silently; the sync ran once, before the systems answered; the tab read its list once. Built: read whole (4 MB),
+# a skipped pipeline named; the sync also on a source system's spawn, resume or beat in COS's ledger (PR6: heard, not polled) and on his ask;
+# the tab's Sync, what the last sync read, the list re-read from the stream; `pipeline-sync` in COS's console. Proof: test-cos-hub HB-10 in
+# Clear Glass; the sandbox run (the sync followed Idearium's first beat, 9 steps imported). Clear Glass's pipelines not proved live.
+# By the axioms: §8.6 (the sync and the sources existed; nothing new beside them), §1.2 (a skip is said), PR6 (no polling).

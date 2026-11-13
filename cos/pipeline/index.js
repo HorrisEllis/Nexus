@@ -213,21 +213,23 @@ function createPipeline({ automation, idearium = null, call = null, dataDir } = 
     // each system's own pipelines, by its route, kept as a file first (a system down is said, its files kept from last time)
     let reg = {}; try { reg = JSON.parse(fs.readFileSync(path.join(__dirname, 'registry.json'), 'utf8')).pipelineSources || {}; } catch (_) {}
     for (const src of reg.systems || []) {
-      const [lm, lp] = src.list.split(' '); const l = await ask(src.system, `${lm} ${lp}`);
+      // 0.60.517: read whole (4 MB). The call cut every answer at 4,096 bytes, so a pipeline larger than that (Idearium's is 5,704) failed
+      // to parse and was skipped without a word: the Automation tab showed 0. A pipeline that cannot be fetched or read is now named.
+      const [lm, lp] = src.list.split(' '); const l = await ask(src.system, `${lm} ${lp}`, undefined, 4 * 1024 * 1024);
       if (l.error || l.status >= 400) { fetched.push({ system: src.system, ok: false, why: l.error || `answered ${l.status}` }); continue; }
       let list = []; try { list = (JSON.parse(l.body || '{}')[src.listKey || 'pipelines']) || []; } catch (_) {}
-      let n = 0;
+      let n = 0; const skipped = [];
       for (const it of list) {
         const id = it.id || it.name; if (!id) continue;
-        const [nm, np] = src.node.split(' '); const g = await ask(src.system, `${nm} ${np.replace(':id', encodeURIComponent(id))}`);
-        if (g.error || g.status >= 400) continue;
-        let j = {}; try { j = JSON.parse(g.body || '{}'); } catch (_) {}
+        const [nm, np] = src.node.split(' '); const g = await ask(src.system, `${nm} ${np.replace(':id', encodeURIComponent(id))}`, undefined, 4 * 1024 * 1024);
+        if (g.error || g.status >= 400) { skipped.push({ id, why: g.error || `answered ${g.status}` }); continue; }
+        let j = {}; try { j = JSON.parse(g.body || '{}'); } catch (e) { skipped.push({ id, why: `not JSON${g.cut ? ' (cut at ' + (g.body || '').length + ' of ' + g.length + ' bytes)' : ''}: ${e.message}` }); continue; }
         const text = String(src.textAt).split('.').reduce((o, k) => (o ? o[k] : undefined), j);
-        if (typeof text !== 'string') continue;
+        if (typeof text !== 'string') { skipped.push({ id, why: `no text at ${src.textAt}` }); continue; }
         const dir = path.join(nodesDir, `from-${slug(src.system)}`); fs.mkdirSync(dir, { recursive: true });
         fs.writeFileSync(path.join(dir, `${slug(id)}.pipeline`), text); n++;
       }
-      fetched.push({ system: src.system, ok: true, files: n });
+      fetched.push({ system: src.system, ok: true, files: n, listed: list.length, ...(skipped.length ? { skipped } : {}) });
     }
     const files = [];
     const walk = (d, from) => { let names = []; try { names = fs.readdirSync(d, { withFileTypes: true }); } catch (_) {} for (const e of names) { if (e.isDirectory()) walk(path.join(d, e.name), e.name.replace(/^from-/, '')); else if (e.name.endsWith('.pipeline')) files.push({ file: path.join(d, e.name), from }); } };

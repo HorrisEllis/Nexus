@@ -59,7 +59,7 @@ function createServer(sup, opts = {}) {
   // DK6–DK8 0.60.383 — James, 2026-11-03: "It needs to be a virtual disk. For the virtual envirements for qumu also. Like it holds all the data,
   // snapshots, system state." Each system's qcow2: its metadata, files and data in one ext4, its snapshots inside the same file
   const vdisks = require('../disk/vdisk.js').createVDisks({ root, disks });
-  const cli = require('./cli.js').createCli({ sup, resources, config, notices, proposals, addSystem, usage, disks, vdisks });
+  const cli = require('./cli.js').createCli({ sup, resources, config, notices, proposals, addSystem, usage, disks, vdisks, pipelineSync: (o) => syncPipelines(o) });
   sup.on('ledger', (entry) => { try { notices.fromLedger(entry); } catch (_) {} });
   const checkNotice = () => { try { notices.fromNotice(require('../../lib/nexus-update.js').notice({ root })); } catch (_) {} };
   const noticeTick = setInterval(checkNotice, 10 * 60 * 1000); if (noticeTick.unref) noticeTick.unref(); setTimeout(checkNotice, 2000).unref();
@@ -105,7 +105,22 @@ function createServer(sup, opts = {}) {
   automation.setGate((q) => pipeline.decideGate(q));
   automation.setFramework((q) => pipeline.frameworkStep(q));   // a framework as a step: compiled here, with every framework it runs
   // every pipeline a physical node file, imported at start (a system that does not answer yet is said; its last files are kept)
-  if (!opts.noPipelineSync) { const t = setTimeout(() => { pipeline.sync().catch(() => {}); }, 1500); if (t.unref) t.unref(); }
+  // 0.60.517 — James, 2026-11-13: "also all pipelines in nexus need to be here." The sync ran once, 1.5 s after COS started, before Idearium or
+  // Clear Glass answered, and never again: the tab stayed at 0. Now it runs again whenever a system it reads pipelines from comes up (its spawn,
+  // resume or first beat in the ledger: heard, not polled, PR6), when a person asks (the tab's Sync, `pipeline-sync`), and says what it did.
+  let lastSync = null, syncing = null;
+  const syncSources = (() => { try { return (JSON.parse(require('fs').readFileSync(path.join(root, 'cos', 'pipeline', 'registry.json'), 'utf8')).pipelineSources.systems || []).map(x => x.system); } catch (_) { return ['idearium', 'clear-glass']; } })();
+  function syncPipelines({ why = 'start' } = {}) {
+    if (syncing) return syncing;
+    syncing = pipeline.sync().then((r) => { lastSync = { at: Date.now(), why, ...r }; broadcast('cos.pipeline.synced', { at: lastSync.at, why, imported: r.imported, updated: r.updated, failed: (r.failed || []).length, systems: r.systems }); return lastSync; })
+      .catch((e) => { lastSync = { at: Date.now(), why, ok: false, error: e.message, files: [], systems: [], imported: 0, updated: 0, failed: [] }; return lastSync; })
+      .finally(() => { syncing = null; });
+    return syncing;
+  }
+  const syncLater = {};
+  sup.on('ledger', (e) => { if (!e || !syncSources.includes(e.system) || !/^(spawn|resumed|pulse|pulse-recovered)$/.test(String(e.kind))) return;
+    clearTimeout(syncLater[e.system]); const t = setTimeout(() => { syncPipelines({ why: `${e.system} ${e.kind}` }).catch(() => {}); }, e.kind === 'spawn' ? 20000 : 3000); if (t.unref) t.unref(); syncLater[e.system] = t; });
+  if (!opts.noPipelineSync) { const t = setTimeout(() => { syncPipelines({ why: 'start' }).catch(() => {}); }, 1500); if (t.unref) t.unref(); }
   sup.on('ledger', (entry) => {
     broadcast('cos.ledger', { entry });
     // 2026-11-09 — James: "Also conditions, triggers, events, etc. migrate BrainOS' features to the engine." What COS records is an event the
@@ -255,7 +270,8 @@ function createServer(sup, opts = {}) {
       // (shipped, COS's own, each system's by its route — kept as a file first); sources: which file each pipeline came from
       // 2026-11-10 — a pipeline drawn on the canvas: { text: <.erv>, name?, by } → the .pipeline node file written and imported (an agent's is a 403)
       if (m === 'POST' && p === '/api/cos/pipeline/from-erv') { if (/^agent:/.test(String(body.by || ''))) return send(res, 403, { ok: false, error: 'an agent proposes; making a pipeline from the canvas is a person\'s' }); const r = await pipeline.fromErv({ text: body.text, erv: body.erv, name: body.name, by: body.by || 'person' }); return send(res, r.ok ? 200 : r.code || 422, r); }
-      if (m === 'POST' && p === '/api/cos/pipeline/sync') { if (/^agent:/.test(String(body.by || ''))) return send(res, 403, { ok: false, error: 'an agent proposes; importing is a person\'s or a system\'s' }); return send(res, 200, await pipeline.sync()); }
+      if (m === 'POST' && p === '/api/cos/pipeline/sync') { if (/^agent:/.test(String(body.by || ''))) return send(res, 403, { ok: false, error: 'an agent proposes; importing is a person\'s or a system\'s' }); return send(res, 200, await syncPipelines({ why: `asked by ${body.by || 'person'}` })); }
+      if (m === 'GET' && p === '/api/cos/pipeline/sync') return send(res, 200, { ok: true, last: lastSync, sources: syncSources });   // 0.60.517: the last sync, what it read and what did not answer
       if (m === 'GET' && p === '/api/cos/pipeline/sources') return send(res, 200, { ok: true, sources: pipeline.sources() });
       // PC9 slice a (2026-11-11), his PC_D14: "I'm saying for you. Like look at clearglass. Nexus nerve, cleardriver injecting coordinates into the dom."
       // The desktop driven the way ClearDriver drives a page (cos/remote-desktop/desktop-driver.js). Localhost only; off until he arms it, for a set time.

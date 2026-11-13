@@ -27,6 +27,8 @@ const TABLE = [
   ['add', 'add <name> <folder> [cmd=node] [args=server.js] [port=<n>] [health=/health]', 'add a system: a proposal, taken by you'],
   ['disk', 'disk <system> [make] [state] | disk verify <file>', 'a system\'s disks (its spec as metadata, its files in one compressed file); make one, with its data if you say state; verify one'],
   ['disks', 'disks', 'every disk COS holds'],
+  // 0.60.517 — James, 2026-11-13: "also all pipelines in nexus need to be here." Every .pipeline file in Nexus imported into the engine, now
+  ['pipeline-sync', 'pipeline-sync', 'import every pipeline in Nexus into the Automation tab now: COS\'s own files and each system\'s, by its route; a system that does not answer is named'],
   // AE7 (2026-11-08) — James: "Then an api that eravos can use for the step. So needs full cli commands, events, nodes."
   ['automation', 'automation workflows | run <id> | step <type> [key=value …] | active | log [n] | catalogue | nodes | export <id> | import <file> | pipelines | pipeline <id> | pipeline-run <id> | runs [pipeline-id] | stop <run-id> | pause <run-id> | continue <run-id> | pipeline-export <id> [file] | systems-pipelines <system> | import-from <system> <id>', 'the automation engine COS runs: its workflows, a run, one step on its own (what an ERAVOS box calls), live runs, the log, the step kinds, workflows as nodes'],
   ['vdisk', 'vdisk <system> [make|refresh|verify] | vdisk <system> snapshot|revert|drop <tag>', 'its virtual disk (qcow2): metadata, files and all its data in one file, its snapshots inside'],
@@ -44,9 +46,10 @@ function split(line) {
 }
 const pad = (s, n) => String(s ?? '—').padEnd(n);
 
-function createCli({ sup, resources = null, config = null, notices = null, proposals = null, addSystem = null, usage = null, disks = null, vdisks = null } = {}) {
+function createCli({ sup, resources = null, config = null, notices = null, proposals = null, addSystem = null, usage = null, disks = null, vdisks = null, pipelineSync = null } = {}) {
   async function run(line, { by = 'person' } = {}) {
-    const [verb, ...a] = split(line); const L = [];
+    // 0.60.517 — "cos <verb>" typed in COS's own console is the verb (his 2026-11-13 `cos pipeline-sync` answered "no verb cos")
+    let [verb, ...a] = split(line); if (verb === 'cos' && a.length) verb = a.shift(); const L = [];
     if (!verb) return { ok: true, lines: [] };
     const acts = ['start', 'stop', 'restart', 'boot', 'take', 'drop', 'add'];   // and `disk <system> make` (below)
     if (/^agent:/.test(String(by)) && (acts.includes(verb) || (verb === 'disk' && a[1] === 'make') || (verb === 'vdisk' && /^(make|refresh|snapshot|revert|drop)$/.test(a[1] || '')) || (verb === 'config' && a.length > 1) || (verb === 'notices' && a[0] === 'read')))
@@ -160,6 +163,13 @@ function createCli({ sup, resources = null, config = null, notices = null, propo
           if (o.args) o.args = o.args.split(','); if (o.port) o.port = Number(o.port);
           const r = addSystem.propose(o); L.push(`proposal ${r.proposal.id}: add ${o.name} from ${o.dir}${r.taken ? ` — taken: ${r.taken.status}` : ' — held: take it to add'}`); break;
         }
+        case 'pipeline-sync': {
+          if (typeof pipelineSync !== 'function') throw new Error('the pipeline module is not up yet');
+          const r = await pipelineSync({ why: 'asked in the console' });
+          L.push(`imported ${r.imported}, updated ${r.updated}, ${(r.files || []).length - r.imported - r.updated - (r.failed || []).length} unchanged, ${(r.failed || []).length} refused`);
+          for (const x of r.systems || []) { L.push(`  ${x.system}: ${x.ok ? x.files + ' of ' + x.listed + ' fetched' : 'did not answer (' + x.why + '): its last files kept'}`); for (const k of x.skipped || []) L.push(`    skipped ${k.id}: ${k.why}`); }
+          for (const f of r.failed || []) L.push(`  refused ${f.file}: ${f.why}`);
+          break; }
         default: return { ok: false, lines: [`no verb "${verb}". The table:`, ...TABLE.map(r => `  ${r[1]}`)] };
       }
       return { ok: true, lines: L };

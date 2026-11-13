@@ -508,6 +508,11 @@
     },
     {
       "method": "GET",
+      "path": "/api/cos/pipeline/sync",
+      "out": "{ last: { at, why, imported, updated, files, systems: [{ system, ok, files | why }], failed } | null, sources: [system] } \u2014 the last sync (0.60.517): what it read and which system did not answer"
+    },
+    {
+      "method": "GET",
       "path": "/api/cos/pipeline/sources",
       "out": "{ sources: [{ file, name, pipelineId, from, sha, at }] } \u2014 the node file each pipeline came from"
     },

@@ -11,6 +11,8 @@ require('../../lib/test-sandbox.js').ensure();
  *   HB-07 AE5: the Automation tab — a pipeline listed, run live to done, exported as a .pipeline, imported back; the supervisor's rules kept
  *   HB-08 PC8 slice b: Pause holds a run (the running step finishes), Continue finishes it; a failed run's Retry and "from here", retried to done
  *   HB-09 (2026-11-12) a run that needs a value asks in the page, never a browser prompt ("no phase selected"), and runs with it
+ *   HB-10 (0.60.517, his "also all pipelines in nexus need to be here") the Pipelines tab: Sync, what the last sync read, a pipeline
+ *         imported elsewhere shows without reloading the page
  *   HB-04 GET /api/cos/hub through the manager; the Hub page in Clear Glass through the real cockpit shows each slot and its state
  */
 const assert = require('assert'), fs = require('fs'), os = require('os'), path = require('path'), http = require('http'), net = require('net');
@@ -213,6 +215,23 @@ const stand = async (answers) => { const hits = []; const s = http.createServer(
       assert.ok(await until(() => document.querySelector('.ae-step') && document.querySelector('.ae-step').dataset.state === 'done'), 'it ran');
       assert.ok(seen.includes('/dag?phase=PC8_operate_a_pipeline'), 'with the phase given: ' + seen.join());
     } finally { await browser.close(); tgt.close(); }
+  });
+  await test('HB-10', '0.60.517 in Clear Glass: Sync says what each system answered; a pipeline imported elsewhere appears without a reload', async () => {
+    const glass = require(path.join(ROOT, 'clear-glass/src/driver/glass.js'));
+    let browser; try { browser = await glass.chromium.launch(); } catch (e) { console.log(`  - HB-10 SKIPPED: the engine could not start (${e.message.split('\n')[0]})`); return; }
+    try {
+      const page = await browser.newPage({ viewport: { width: 1280, height: 860 } });
+      await page.goto(`http://127.0.0.1:${cp}/automation/index.html`);
+      const until = async (fn, arg, ms = 12000) => { const t = Date.now() + ms; while (Date.now() < t) { const v = await page.evaluate(fn, arg); if (v) return v; await new Promise(r => setTimeout(r, 120)); } return null; };
+      assert.ok(await until(() => !!document.getElementById('ae-sync')), 'the Sync button');
+      await page.evaluate(() => document.getElementById('ae-sync').click());
+      const said = await until(() => { const t = (document.getElementById('ae-sync-said') || {}).textContent || ''; return /^Synced/.test(t) && /did not answer/.test(t) ? t : null; });
+      assert.ok(said, 'the sync is said, naming the system that did not answer');
+      const r = await req(mp, 'POST', '/api/cos/automation/pipelines', { name: 'HB-10 made elsewhere', tasks: [{ id: 'a', label: 'A', step: { type: 'set', config: { assign: { v: 1 } } } }], by: 'person' });
+      const id = (r.body.pipeline || r.body).id; assert.ok(id, JSON.stringify(r.body));
+      assert.ok(await until((x) => !!document.querySelector(`[data-pipeline="${x}"]`), id), 'shown from the stream, without a reload');
+      const last = await req(mp, 'GET', '/api/cos/pipeline/sync'); assert.ok(last.body.last && last.body.last.systems.length >= 1, JSON.stringify(last.body));
+    } finally { await browser.close(); }
   });
   cockpit.close(); mgr.close(); cortex.s.close(); idearium.s.close(); sup.shutdown({ by: 'test' }); fs.rmSync(dir, { recursive: true, force: true });
   console.log(`\n  ${passed} passed, ${failed} failed\n`); process.exit(failed ? 1 : 0);
