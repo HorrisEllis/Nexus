@@ -694,6 +694,22 @@ built_2026_11_09_plan:
     proof: "a stand-in UI Automation tree gives page/field.js's shape; unarmed refused; a stale number refused; a no-op click said; the tab through Clear Glass; the Windows path on his PC."
     decided: 'RC_R1, his, 2026-11-11: "Yes. Stand in until we build a full application from looking glass. To replace electron." The UI Automation tree and the overlay window are a stand-in until a Looking Glass application (clear-glass/spec/sources/glass-engine-working-spec-v0.1-draft.md) replaces Electron.'
 
+  PC11_nothing_sent_teaches_nothing:
+    status: OPEN
+    depends_on: []
+    james: '"yes. then the highest leverage. ollama can can now run the pipeline" (2026-11-13) · found 2026-11-11 (0.60.493): "an attempt where nothing was sent should not count against the agent. Its own phase, to map."'
+    files: [lib/pipeline-routing.js, tests/modules/test-pipeline-routing.test.js, tests/modules/test-contract-adapters.test.js]
+    does: >-
+      A build attempt that never reached its agent (nothing was sent, the tab signed out, the provider down, Copilot's door unreachable)
+      is a transient failure: it does not put the agent on the brick's skip list (.exclude), does not lower the agent in the door's
+      learned order, and does not teach a size lesson. Today lib/pipeline-routing.js classify() does not know "nothing was sent",
+      "no-answer", "provider-down" (with its hyphen) or Copilot's door unreachable as the agent being away: they read "unknown", which contract-gates.js classifyFailure turns
+      into capability, so one night with the browser agents asleep left a contract saying "failed it before, skipped: gemini, chatgpt,
+      claude" and every later build of that phase gave up in about 35 s (run phrun-mwbvr9la, 2026-11-11). An agent that answered and
+      fell short (any other error text) stays capability, as GT-02 holds.
+    proof: "PR-05b: each of those texts classifies as provider-down, not unknown (a signed-out tab is left as it is: login never falls through, his rule); GT-01b: an attempt failing 'nothing was sent to gemini' is retried, nothing excluded, nothing learned; GT-02 unchanged"
+    axioms: "§1.2 (a failure is said as what it is), do not guess (a guess filed as capability taught the route a falsehood), §8.6 (the transient class and its rules exist; the classifier learns four phrases)"
+
 # ── ADDENDUM 2026-11-11 (0.60.483) — PC9 slice a: the desktop driver for agents (his PC_D14) ──────────────────────────────────────────────
 # James, 2026-11-11: "I’m saying for you. Like look at clearglass. Nexus nerve, cleardriver injecting coordinates into the dom."
 # Built: cos/remote-desktop/desktop-driver.js (screen, move, click, type, key, scroll; backends: Windows PowerShell user32/System.Drawing,
@@ -902,3 +918,9 @@ built_2026_11_09_plan:
 # the tab's Sync, what the last sync read, the list re-read from the stream; `pipeline-sync` in COS's console. Proof: test-cos-hub HB-10 in
 # Clear Glass; the sandbox run (the sync followed Idearium's first beat, 9 steps imported). Clear Glass's pipelines not proved live.
 # By the axioms: §8.6 (the sync and the sources existed; nothing new beside them), §1.2 (a skip is said), PR6 (no polling).
+
+# ── ADDENDUM 2026-11-13 (0.60.520) — PC11 built: an attempt that never reached its agent teaches nothing ──
+# James, 2026-11-13: "yes. then the highest leverage. ollama can can now run the pipeline". The 11-11 open item (3), the stale contract's cause:
+# lib/pipeline-routing.js classify() now reads "nothing was sent", "no-answer", "provider-down" and Copilot's door unreachable as provider-down
+# (transient), not unknown (which contract-gates.js filed as capability). Proof: PR-05b, GT-01b; the suites around it green. Contracts already
+# carrying such a skip list keep it (the 11-11 one was archived by hand).

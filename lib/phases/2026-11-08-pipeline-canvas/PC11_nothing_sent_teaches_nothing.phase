@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-08-pipeline-canvas-phasemap.spec::PC11_nothing_sent_teaches_nothing
+type: phase
+id: docs_2026-11-08-pipeline-canvas-phasemap.spec::PC11_nothing_sent_teaches_nothing
+context: pipeline phase PC11_nothing_sent_teaches_nothing of docs/2026-11-08-pipeline-canvas-phasemap.spec
+intent: null
+summary: PC11_nothing_sent_teaches_nothing (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1794610657563
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794610657563
+lastSeenAt: 1794610657563
+fingerprint: null
+payload:
+  id: PC11_nothing_sent_teaches_nothing
+  map: docs/2026-11-08-pipeline-canvas-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/pipeline-routing.js
+    - tests/modules/test-pipeline-routing.test.js
+    - tests/modules/test-contract-adapters.test.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 897d6aaeba4ffe63
