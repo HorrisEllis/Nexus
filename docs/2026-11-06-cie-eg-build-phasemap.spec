@@ -564,3 +564,13 @@ James, 2026-11-13: "Working on it in another session. Maybe you can work on fini
 - Order from here, the coder's reading of his "finishing emerge" (to confirm): CIE13 next slices (the folder builtins natively, then
   Process), then CIE9 (the 5,335 lines of JavaScript tests as .eg tests), CIE10 (the door served by emerge.exe), CIE11 (the interpreter
   archived). CIE14's gaps as they are met.
+
+## ADDENDUM 2026-11-13 (0.60.509) — CIE14 slice f: Emerge's map of itself, in the substrate's shape
+James, 2026-11-13: "Continue. Look a the graph substrate. Like emerge should reduce friction between primitives.   It’s meant to be self aware."
+- Read: docs/substrate.spec (Block, Edge with evidence; specced 2026-10-20, not built).
+- Built: lang/cie/self.eg (observe, gaps, summary), lang/self.eg (it said in words; compiles natively), lang/cie/test/self.test.eg (3/3,
+  the first .eg test in Emerge's own tree, with a ratchet: interpreter-only primitives only fall from 10).
+- Found: 121 primitives; 110 both ways; 10 only interpreted (list_dir, make_dir, move_path, remove_path, wrap_add, wrap_sub, wrap_mul,
+  ledger_proof, ledger_check_proof, observe_gaps); the backends agree on every arity. This list is CIE13's next slice and CIE14's.
+- The coder's reading of "reduce friction between primitives" (to confirm): first Emerge sees every primitive and every way it is carried
+  out (built here); next, one source generates the tables that are four hand edits today.
