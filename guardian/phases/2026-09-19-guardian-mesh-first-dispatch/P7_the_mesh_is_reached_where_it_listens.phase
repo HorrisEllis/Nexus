@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-09-19-guardian-mesh-first-dispatch-phasemap.spec::P7_the_mesh_is_reached_where_it_listens
+type: phase
+id: docs_2026-09-19-guardian-mesh-first-dispatch-phasemap.spec::P7_the_mesh_is_reached_where_it_listens
+context: >-
+  pipeline phase P7_the_mesh_is_reached_where_it_listens of
+  docs/2026-09-19-guardian-mesh-first-dispatch-phasemap.spec
+intent: null
+summary: P7_the_mesh_is_reached_where_it_listens (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1794534672974
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794534672974
+lastSeenAt: 1794534672974
+fingerprint: null
+payload:
+  id: P7_the_mesh_is_reached_where_it_listens
+  map: docs/2026-09-19-guardian-mesh-first-dispatch-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - guardian/lib/mesh-client.js
+    - clear-glass/src/main/index.js
+    - tests/modules/test-guardian-mesh-client.js
+  depends_on:
+    - P5_guardian_transport
+    - P3_endpoint
+  blocks: []
+  spec: null
+  graph: 286359ffa550a745

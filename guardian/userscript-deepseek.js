@@ -491,6 +491,9 @@ function _replyText(el) {
 }
 
 function findResponseEl() {
+  // 0.60.499 HP11 — James, 2026-11-12: "Yes, fix the reply". The reply he picked (userscript-field-map.js, a VERIFIED resp only) is asked first,
+  // as type() and press() already are; with no pick, or a pick the page no longer has, the lookup below decides as before.
+  const _picked = window.NexusFields && window.NexusFields.find('resp'); if (_picked) return _picked;
   const answers = document.querySelectorAll('.ds-markdown');
   return answers.length ? answers[answers.length - 1] : null;
 }

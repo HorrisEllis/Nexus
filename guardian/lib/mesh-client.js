@@ -38,7 +38,10 @@ function request(method, pathname, body, { port, timeoutMs = 60000 }) {
   });
 }
 
-function createMeshClient({ port = parseInt(process.env.CLEARGL_IPC_PORT || '7702', 10), pollMs = 2000, graceMs = 300000, sleep = (ms) => new Promise(r => setTimeout(r, ms)), now = Date.now } = {}) {
+// P7 (2026-11-13) — James: "Yes, mesh-first". The /agent-mesh/* routes are served by Clear Glass's wire server (WIRE_PORT, 7704), not
+// its IPC bridge (7702, which answers 404 to all of them): the first live smoke fell back to the page script for that reason.
+const MESH_PORT = () => parseInt(process.env.CLEARGL_MESH_PORT || process.env.WIRE_PORT || '7704', 10);
+function createMeshClient({ port = MESH_PORT(), pollMs = 2000, graceMs = 300000, sleep = (ms) => new Promise(r => setTimeout(r, ms)), now = Date.now } = {}) {
   const rq = (m, p, b, t) => request(m, p, b, { port, timeoutMs: t });
 
   // Wait for a job to finish. `everSeen` = the mesh has confirmed it knows this job (so it was accepted).
@@ -86,4 +89,4 @@ function createMeshClient({ port = parseInt(process.env.CLEARGL_IPC_PORT || '770
     },
   };
 }
-module.exports = { createMeshClient };
+module.exports = { createMeshClient, MESH_PORT };

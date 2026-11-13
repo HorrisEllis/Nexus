@@ -46,6 +46,20 @@ spec:
       mesh-first|ncp-first|ncp-only. Circuit breaker (N failures => skip mesh for T s). Records job.transport and
       job.transportFallbackReason. On mesh success, complete the job through the SAME completion path NCP uses (no second implementation)."
     P6_verify: "Real-process test with a fake Clear Glass server for guardian side; live smoke checklist for Electron side."
+    P7_the_mesh_is_reached_where_it_listens:
+      layer: library
+      status: "MAPPED 2026-11-13 — his \"Yes, mesh-first\" (2026-11-12); found by the first live smoke"
+      james: '"Yes, mesh-first"'
+      depends_on: [P5_guardian_transport, P3_endpoint]
+      files: [guardian/lib/mesh-client.js, clear-glass/src/main/index.js, tests/modules/test-guardian-mesh-client.js]
+      does: >-
+        Found by the first live smoke (job fe91f820, 2026-11-13 01:46 UTC): the ladder fell back to the page script. Guardian's
+        mesh client calls Clear Glass on 7702 (CLEARGL_IPC_PORT, the IPC bridge), but the /agent-mesh/* routes are served by
+        Clear Glass's wire server on 7704 (WIRE_PORT); 7702 answers 404 to every one. And the wire server compares
+        '/agent-mesh/job' with the whole URL, so GET /agent-mesh/job?jobId=… never matches: Guardian's wait would poll a 404
+        until its deadline. Fix in place: the mesh client defaults to 7704 (CLEARGL_MESH_PORT overrides), and the job route
+        reads its path without the query.
+      proof: "test-guardian-mesh-client: the default port is the wire port; GET /agent-mesh/job?jobId=x on Clear Glass answers ok; live: a prompt to chatgpt completes with transport mesh"
   decisions_needed:
     D1_default: "Default policy. Recommend shipping as ncp-first until the live smoke passes, then flip to mesh-first; env switch, no redeploy."
     D2_tabs: "Mesh tab and userscript tab for the same provider+account: separate (recommended, avoids T4) or shared."
@@ -112,3 +126,18 @@ spec:
     what: "The wake userscript's listener, agent hint and model-output wake detection do not exist on the mesh path. Hint injected by guardian/lib/wake-hint.js
       (mesh transport only, sent prompt only, byte-identical, once per tab), agent-initiated wake answered by guardian/lib/wake-loop.js (mesh completions only,
       depth-capped), wake replies for agent wakes seen in userscript tabs pinned to the userscript (transport ncp) with accountId. See HANDOFF-2026-09-19-mesh-first-dispatch.md addendum."
+# ── ADDENDUM 2026-11-12 (after 0.60.499) — D1 decided by him: Guardian runs mesh-first ──
+# James, 2026-11-12, after a build counted 12 answered calls as empty because the page scripts could not find the reply, and after his
+# pick of the reply was not saved: "this is meant to be an autonomous system at somepoint. using copilot as the interface." Offered:
+# keep picking replies by hand, or switch Guardian to mesh-first so the ladder's archaeology rung finds the reply selector itself and
+# re-reads the page without sending again. His answer: "Yes, mesh-first".
+# Done (coder): guardian option routing.transport set from ncp-only to mesh-first through guardian/options.js (actor user); it is stored in
+# guardian/data/options.json, not committed (data). No code changed. The default in guardian/options.js stays ncp-only.
+# By his axioms: §1.2 (a pick that changed nothing was a silent failure), §8.6 (the ladder already existed; nothing new was built).
+# NOT proven: D1 asked for the live smoke to pass first; it has not been run. At the switch every system was down (COS rebooted
+# 2026-11-13 01:44 UTC), so no job has yet gone through the mesh on this machine.
+# ── ADDENDUM 2026-11-13 (0.60.500) — P7 built: the mesh is reached where it listens ──
+# The live smoke (job fe91f820) fell back to the page script: the mesh client called 7702, which serves no /agent-mesh/* route (they are
+# on the wire server, 7704), and the wire server matched /agent-mesh/job against the whole URL. Both fixed in place. Proof: P7-01, P7-02.
+# NOT live: Guardian restarted on it; Clear Glass not (his rule, ask first). Seen, not fixed: the ladder's first fallback reason is
+# overwritten by loop_guard on the second dispatch.

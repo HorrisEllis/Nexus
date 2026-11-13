@@ -7,11 +7,11 @@ intent: null
 summary: P3_endpoint (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1792787675980
+exported_at: 1794534672968
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787675980
-lastSeenAt: 1792787675980
+firstSeenAt: 1794534672968
+lastSeenAt: 1794534672968
 fingerprint: null
 payload:
   id: P3_endpoint
@@ -24,4 +24,4 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 80b9c1cda9f7d5a5
+  graph: b45c73e91ddc0289

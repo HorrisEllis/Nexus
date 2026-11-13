@@ -27,6 +27,7 @@ const { EventEmitter } = require('events');
 const DEFAULTS = Object.freeze({   // autopilot's constants (the test reads both)
   bootSet: 'all', restart: { on: 'crash', backoffMs: [1000, 30000], factor: 2 }, stableMs: 60000,
   circuit: { maxRestarts: 6, windowMs: 5 * 60 * 1000 }, memoryHaltPct: 0.10, criticalHaltPct: 0.05, memBackoffMs: 15000,
+  memSigmaK: 2, memBaselineMin: 20, memBaselineKeep: 240, memoryAbsolutePct: 0.03,   // CP6a 0.60.501: the floors judged against the baseline
   maxOldSpaceMB: 1024, phaseGateMs: 30000, healthEveryMs: 0, idleMs: 10 * 60 * 1000, idleCheckMs: 60000, stopGraceMs: 5000,
 });
 
@@ -73,6 +74,35 @@ function createSupervisor({ root, declarations = null, policy = {}, ledgerFile =
   const P = { ...DEFAULTS, ...policy, restart: { ...DEFAULTS.restart, ...(policy.restart || {}) }, circuit: { ...DEFAULTS.circuit, ...(policy.circuit || {}) } };
   const decls = declarations || readDeclarations(root);
   const LEDGER = ledgerFile || path.join(process.env.COS_MANAGER_DATA || path.join(root, 'cos', 'data', 'manager'), 'ledger.jsonl');
+  // CP6a 0.60.501 — James, 2026-11-13: "also the resource manager, should use the baseline deviation when its applicable." This machine's
+  // free memory, learned from the samples resources.js takes (and each start check): its mean and sigma over the last memBaselineKeep. A
+  // floor bites only when free memory is also more than memSigmaK sigmas under that mean; with too few samples the fixed floor decides as
+  // before; under memoryAbsolutePct a start is always refused.
+  const MEMB = path.join(path.dirname(LEDGER), 'memory-baseline.json');
+  let memSamples = []; try { const j = JSON.parse(fs.readFileSync(MEMB, 'utf8')); if (Array.isArray(j.samples)) memSamples = j.samples.filter(x => typeof x === 'number' && x >= 0 && x <= 1).slice(-P.memBaselineKeep); } catch (_) {}
+  let memUnsaved = 0;
+  function memoryObserve(free) {
+    if (typeof free !== 'number' || !(free >= 0 && free <= 1)) return;
+    memSamples.push(+free.toFixed(4)); if (memSamples.length > P.memBaselineKeep) memSamples.shift();
+    if (++memUnsaved >= 10) { memUnsaved = 0; try { fs.mkdirSync(path.dirname(MEMB), { recursive: true }); fs.writeFileSync(MEMB + '.tmp', JSON.stringify({ at: Date.now(), samples: memSamples })); fs.renameSync(MEMB + '.tmp', MEMB); } catch (_) {} }
+  }
+  function memoryBaseline() {
+    const n = memSamples.length; if (!n) return { n: 0, established: false, mean: null, sigma: null };
+    const mean = memSamples.reduce((a, b) => a + b, 0) / n, sigma = Math.sqrt(memSamples.reduce((a, b) => a + (b - mean) ** 2, 0) / n);
+    return { n, established: n >= P.memBaselineMin, mean: +mean.toFixed(4), sigma: +sigma.toFixed(4) };
+  }
+  // memoryJudge(free, floor) → { low, why }: low = refuse / act. why names the floor and, when there is one, the baseline.
+  function memoryJudge(free, floor) {
+    const pc = (x) => `${(x * 100).toFixed(1)}%`, b = memoryBaseline();
+    if (free < P.memoryAbsolutePct) return { low: true, why: `${pc(free)} memory free is under the absolute minimum ${pc(P.memoryAbsolutePct)}`, baseline: b };
+    if (free >= floor) return { low: false, why: `${pc(free)} memory free, over the floor ${pc(floor)}`, baseline: b };
+    if (!b.established) return { low: true, why: `${pc(free)} memory free is under the floor ${pc(floor)} (no baseline yet: ${b.n} of ${P.memBaselineMin} samples)`, baseline: b };
+    const z = (b.mean - free) / Math.max(b.sigma, 0.005);
+    const base = `this machine's baseline ${pc(b.mean)} ± ${pc(b.sigma)} over ${b.n} samples`;
+    return z >= P.memSigmaK
+      ? { low: true, why: `${pc(free)} memory free is under the floor ${pc(floor)} and ${z.toFixed(1)}σ under ${base}`, baseline: b, z }
+      : { low: false, why: `${pc(free)} memory free is under the floor ${pc(floor)} but usual here: ${z.toFixed(1)}σ from ${base} (bites at ${P.memSigmaK}σ)`, baseline: b, z };
+  }
   const S = new Map();   // name → { decl, state, proc, pid, crashes[], restarts, backoffMs, timers, lastActivity, startedAt, by, circuit, lastExit }
   const add = (d) => S.set(d.name, { decl: d, state: 'declared', proc: null, pid: null, crashes: [], restarts: 0, backoffMs: P.restart.backoffMs[0],
     timers: new Set(), lastActivity: null, startedAt: null, by: null, circuit: { open: false, openedAt: null, why: null }, lastExit: null, health: null,
@@ -131,9 +161,10 @@ function createSupervisor({ root, declarations = null, policy = {}, ledgerFile =
     const s = S.get(name), d = eff(s.decl);
     if (s.circuit.open) { write('refused', name, `circuit open since ${new Date(s.circuit.openedAt).toISOString()}: ${s.circuit.why} — reset it to start`, { by }); return false; }
     const floor = d.critical ? P.criticalHaltPct : (d.haltPctOverride != null ? d.haltPctOverride : P.memoryHaltPct);
-    const free = freeMemPct();
-    if (free < floor) {
-      if (!write('refused', name, `only ${(free * 100).toFixed(1)}% memory free (floor ${(floor * 100).toFixed(0)}%); tried again in ${P.memBackoffMs / 1000}s`, { by })) return false;
+    const free = freeMemPct(); memoryObserve(free);
+    const mj = memoryJudge(free, floor);   // CP6a 0.60.501: the floor judged against this machine's baseline
+    if (mj.low) {
+      if (!write('refused', name, `only ${mj.why}; tried again in ${P.memBackoffMs / 1000}s`, { by })) return false;
       s.state = 'waiting-memory'; later(s, P.memBackoffMs, () => { if (s.state === 'waiting-memory') spawnNow(name, by); }); return false;
     }
     const c = commandOf(d);
@@ -276,7 +307,7 @@ function createSupervisor({ root, declarations = null, policy = {}, ledgerFile =
 
   const api = { boot, note, logs, pause, resume, on: (ev, fn) => bus.on(ev, fn), off: (ev, fn) => bus.off(ev, fn), declarations: () => decls.map(d => ({ ...d })), list: () => [...S.values()].map(view), get: (n) => view(must(n)), start, stop, restart, touch, resetCircuit, ledger,
     policy: () => JSON.parse(JSON.stringify(P)), setPolicy: (patch, { by = 'person' } = {}) => { Object.assign(P, patch || {}); write('policy', null, `policy changed: ${JSON.stringify(patch)}`, { by }); return JSON.parse(JSON.stringify(P)); },
-    shutdown, DEFAULTS, ledgerFile: LEDGER, lastBoot: null, setHooks: (h) => { Object.assign(hooks, h || {}); },
+    shutdown, DEFAULTS, ledgerFile: LEDGER, memoryObserve, memoryBaseline, memoryJudge, lastBoot: null, setHooks: (h) => { Object.assign(hooks, h || {}); },
     // SC4 — a system added while COS runs (its declaration just written by add-system.js): declared live, never started by this
     declare: (d) => { if (!d || !d.name) throw Object.assign(new Error('a declaration needs a name'), { code: 400 }); if (S.has(d.name)) throw Object.assign(new Error(`"${d.name}" is already declared`), { code: 409 });
       decls.push(d); add(d); write('declared', d.name, `added while COS runs: ${d.cmd || 'node'} ${(d.args || []).join(' ')}`, { by: d.addedBy || 'person' }); return view(S.get(d.name)); },

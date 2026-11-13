@@ -144,7 +144,7 @@ spec:
       status: "DONE (0.55.1) — guardian/lib/job-retry.js classify: 'no reply element … findResponseEl() matched nothing' is pick-reply, not no-reply; onError reads the transcript and the Clear Glass .response first and completes from them; otherwise the job says needsYou 'pick the reply with ◎' (bus stage needs-you) and the prompt is never re-sent. test-guardian-retry-novelty-installs (3 new checks, 52/52)."
       james: '"look at the .response in clearglass."'
       depends_on: []
-      files: [guardian/lib/job-retry.js]
+      files: [guardian/lib/job-retry.js, guardian/userscript-claude.js, guardian/userscript-gemini.js, guardian/userscript-deepseek.js, guardian/userscript-perplexity.js, tests/modules/test-accounts-picker-cos.test.js]
       does: >-
         Found: "no reply element found after 180s — findResponseEl() matched nothing on this page" was classed no-reply
         and retried by re-sending the prompt into the same chat, up to four times. That error means the page changed and
@@ -316,3 +316,19 @@ spec:
         classify() reads /sign ?in/ as a login wall, which never falls back and opens the breaker. "not connected / no
         <agent> tab open" is read first as provider-down, and the advice says "signed in".
       proof: "classify('not connected — no chatgpt tab open … signed in') is provider-down; 'please log in' is still login"
+
+# ── ADDENDUM 2026-11-12 (0.60.499) — HP11 expanded: the picked reply is used by every page script (mapped before code) ──
+# James, 2026-11-12, shown that Claude's page script never asks for the reply he picks: "Yes, fix the reply"
+# Found, from COS's build pipeline run 34c10bca (phase CS12_the_mover_is_proven) and his two screenshots: ChatGPT and Claude both answered
+# on the page, Guardian said "the prompt was sent but … reply cannot be found on the page — pick the reply", and the build counted 12 calls as
+# empty. HP11's remedy is the pick. Read (§8.6): guardian/userscript-field-map.js already has NexusFields.find('resp') (0.60.2, 0.60.50), and
+# every page script already calls type() and press() first. Only ChatGPT's script reads a picked reply (its own _nexusMap). Claude's, Gemini's,
+# DeepSeek's and Perplexity's findResponseEl() use their built-in selectors alone, so a pick there is saved and never used.
+# To build, JavaScript changed in place (no new file): each of those four findResponseEl() asks NexusFields.find('resp') first and falls back
+# to its own lookup, as type() and press() do. A seed value is still never used (find returns null unless the key is verified).
+# By his axioms: §8.6 (the field map is used, nothing beside it), §1.2 (a pick that changes nothing was a silent failure), §5.9 (Guardian's own files).
+# Not in this slice, said: Claude's built-in selector (.font-claude-message) is likely stale and is left as the fallback; it is not replaced
+# from memory. Guardian's map for chatgpt and claude read all-seed, nothing verified, on 2026-11-12 after his pick on ChatGPT: why that pick
+# was not saved is not known (Guardian crashed at 18:49 UTC and the disk was full that hour).
+# Built 0.60.499 as mapped above. Proof: tests/modules/test-accounts-picker-cos.test.js FM-08, FM-09; 38 of 42 (AT-02, AT-03, AT-04, WR-01 fail:
+# their fake window predates the Guardian picker of 0.60.71; not fixed here). NOT live: no job has been read through a pick.

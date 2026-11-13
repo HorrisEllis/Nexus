@@ -7,11 +7,11 @@ intent: null
 summary: 1 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792787675981
+exported_at: 1794534672970
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787675981
-lastSeenAt: 1792787675981
+firstSeenAt: 1794534672970
+lastSeenAt: 1794534672970
 fingerprint: null
 payload:
   for: P5_guardian_transport
@@ -29,9 +29,11 @@ payload:
   dag:
     layer: 0
     deps: []
-    dependents: []
+    dependents:
+      - docs/2026-09-19-guardian-mesh-first-dispatch-phasemap.spec::P7_the_mesh_is_reached_where_it_listens
     upstream: []
-    downstream: []
+    downstream:
+      - docs/2026-09-19-guardian-mesh-first-dispatch-phasemap.spec::P7_the_mesh_is_reached_where_it_listens
     blockedBy: []
     unlocks: []
     conflicts: []
@@ -39,6 +41,6 @@ payload:
     lines:
       - layer 0 · ready
       - 'depends on (0): —'
-      - 'needed by (0): —'
+      - 'needed by (1): P7_the_mesh_is_reached_where_it_listens'
       - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
     edges: []

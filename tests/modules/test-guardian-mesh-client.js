@@ -160,6 +160,21 @@ const client = (port, o = {}) => createMeshClient({ port, pollMs: 15, graceMs: 3
     assert.ok(!/slice\(0, 100000\)/.test(code(h)) && /GUARDIAN_MAX_RESPONSE_CHARS/.test(code(h)) && /responseTruncated/.test(code(h)));
   });
 
+  // P7 (2026-11-13) — his "Yes, mesh-first": the first live smoke reached 7702, which serves none of /agent-mesh/*
+  await test('P7-01', 'the mesh client reaches Clear Glass\'s wire server (7704) by default; CLEARGL_MESH_PORT overrides; CLEARGL_IPC_PORT does not', () => {
+    const keep = { m: process.env.CLEARGL_MESH_PORT, w: process.env.WIRE_PORT, i: process.env.CLEARGL_IPC_PORT };
+    delete process.env.CLEARGL_MESH_PORT; delete process.env.WIRE_PORT; process.env.CLEARGL_IPC_PORT = '7702';
+    const { MESH_PORT } = require('../../guardian/lib/mesh-client.js');
+    const def = MESH_PORT(); process.env.CLEARGL_MESH_PORT = '9123'; const ov = MESH_PORT();
+    for (const [k, v] of [['CLEARGL_MESH_PORT', keep.m], ['WIRE_PORT', keep.w], ['CLEARGL_IPC_PORT', keep.i]]) { if (v === undefined) delete process.env[k]; else process.env[k] = v; }
+    assert.strictEqual(def, 7704); assert.strictEqual(ov, 9123);
+  });
+  await test('P7-02', 'Clear Glass\'s job route is matched on its path, so ?jobId=… reaches it', () => {
+    const src = fs.readFileSync(path.join(__dirname, '../../clear-glass/src/main/index.js'), 'utf8');
+    assert.ok(src.includes("u.split('?')[0] === '/agent-mesh/job'"));
+    assert.ok(!src.includes("if (u === '/agent-mesh/job'"));
+  });
+
   console.log(`\n   ${passed} passed, ${failed} failed`);
   process.exit(failed ? 1 : 0);
 })();

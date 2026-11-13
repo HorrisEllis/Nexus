@@ -157,6 +157,16 @@ function fakeSession(initial = []) {
     check('FM-07 every provider script hands the map to the field map and tries type() / press() first',
       US.every(s => /window\.NexusFields\.set\(PROVIDER, msg\)/.test(s) && /window\.NexusFields\.type\(text\)\) return true/.test(s) && /window\.NexusFields\.press\(\)/.test(s)));
 
+    // 0.60.499 HP11 — his "Yes, fix the reply": a picked reply was saved and used only by ChatGPT's script
+    {
+      const body = (code) => { const i = code.indexOf('function findResponseEl() {'); let d = 0, j = code.indexOf('{', i); for (let k2 = j; k2 < code.length; k2++) { if (code[k2] === '{') d++; else if (code[k2] === '}' && --d === 0) return code.slice(i, k2 + 1); } return ''; };
+      const picked = { picked: true }, own = { own: true };
+      const run = (code, fields) => { const sb = { document: { querySelector: () => own, querySelectorAll: () => [own] } }; sb.window = sb; if (fields) sb.NexusFields = fields; return vm.runInNewContext(body(code) + '; findResponseEl()', sb); };
+      const four = ['claude', 'gemini', 'deepseek', 'perplexity'].map(p => src(`guardian/userscript-${p}.js`));
+      check('FM-08 a verified picked reply is what findResponseEl() returns, on Claude, Gemini, DeepSeek and Perplexity', four.every(c => run(c, { find: (key) => (key === 'resp' ? picked : null) }) === picked));
+      check('FM-09 with no pick (find says null), or no field map at all, each script\'s own lookup decides as before', four.every(c => run(c, { find: () => null }) === own && run(c, null) === own));
+    }
+
     // ── SM: the anchor in the selector map ───────────────────────────────────
     process.env.GUARDIAN_AGENTS_DIR = path.join(tmp, 'agents');
     const reg = require(path.join(ROOT, 'guardian/lib/agent-registry.js')).createAgentRegistry({ dir: path.join(tmp, 'agents') });

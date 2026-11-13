@@ -896,7 +896,8 @@ async function _startWire() {
         try { const r = await jobIntake.intake(parsed); res.writeHead(r.accepted === false ? 200 : 202); return res.end(JSON.stringify({ ok: r.accepted !== false, ...r })); }
         catch (e) { res.writeHead(500); return res.end(JSON.stringify({ ok: false, accepted: false, sent: false, stage: 'inject_failed', error: e.message })); }
       }
-      if (u === '/agent-mesh/job' && req.method === 'GET') {
+      // P7 (2026-11-13): the path without its query — u is the whole URL, so '?jobId=…' never matched and Guardian polled a 404
+      if (u.split('?')[0] === '/agent-mesh/job' && req.method === 'GET') {
         const id = new URL(req.url, 'http://127.0.0.1').searchParams.get('jobId');
         if (!jobIntake) { res.writeHead(503); return res.end(JSON.stringify({ ok: false, error: 'job intake not ready' })); }
         res.writeHead(200); return res.end(JSON.stringify({ ok: true, ...jobIntake.status(id) }));

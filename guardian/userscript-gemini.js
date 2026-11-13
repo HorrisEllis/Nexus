@@ -479,6 +479,9 @@ function _replyText(el) {
 function _noSpeaker(t) { return String(t || '').replace(/^\s*(?:Gemini|You)\s+said\s*[:\-–—]?\s*(?:\r?\n|$)/i, ''); }
 
 function findResponseEl() {
+  // 0.60.499 HP11 — James, 2026-11-12: "Yes, fix the reply". The reply he picked (userscript-field-map.js, a VERIFIED resp only) is asked first,
+  // as type() and press() already are; with no pick, or a pick the page no longer has, the lookup below decides as before.
+  const _picked = window.NexusFields && window.NexusFields.find('resp'); if (_picked) return _picked;
   const msgs = document.querySelectorAll('.model-response-text, .response-content, [data-testid="response"]');
   if (msgs.length) return msgs[msgs.length - 1];
   return document.querySelector('ms-chunk, .output-content'); // AI Studio

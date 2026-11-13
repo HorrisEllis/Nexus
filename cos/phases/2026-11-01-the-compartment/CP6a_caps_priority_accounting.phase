@@ -4,14 +4,14 @@ type: phase
 id: docs_2026-11-01-the-compartment-phasemap.spec::CP6a_caps_priority_accounting
 context: pipeline phase CP6a_caps_priority_accounting of docs/2026-11-01-the-compartment-phasemap.spec
 intent: null
-summary: CP6a_caps_priority_accounting (?) — 11 file(s)
+summary: CP6a_caps_priority_accounting (?) — 12 file(s)
 system: idearium
 tags: []
-exported_at: 1793917832779
+exported_at: 1794551935030
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793917832779
-lastSeenAt: 1793917832779
+firstSeenAt: 1794551935030
+lastSeenAt: 1794551935030
 fingerprint: null
 payload:
   id: CP6a_caps_priority_accounting
@@ -31,6 +31,7 @@ payload:
     - idearium/cli/route-commands.js
     - tests/modules/test-cos-resources.test.js
     - tests/modules/run-all.js
+    - tests/modules/test-cos-memory-baseline.test.js
   depends_on:
     - CP1a_every_system_walled_by_cos
     - CP_D6_resources_per_compartment
@@ -38,4 +39,4 @@ payload:
     - MOD-CP-USAGE
     - MOD-CP-RESOURCES
   spec: cos/spec/compartment.spec
-  graph: 7fd3502fd5ad6437
+  graph: fabdf5e0e28c6c11

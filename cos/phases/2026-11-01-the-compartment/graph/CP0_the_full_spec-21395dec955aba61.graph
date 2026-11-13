@@ -7,11 +7,11 @@ intent: null
 summary: 2 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1794032239991
+exported_at: 1794551934973
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794032239991
-lastSeenAt: 1794032239991
+firstSeenAt: 1794551934973
+lastSeenAt: 1794551934973
 fingerprint: null
 payload:
   for: CP0_the_full_spec
@@ -90,6 +90,7 @@ payload:
       - docs/2026-11-01-the-compartment-phasemap.spec::CP9_cos_and_idearium_one_link
       - docs/2026-11-02-cos-disk-phasemap.spec::DK4_boot_from_a_disk
       - docs/2026-11-02-cos-disk-phasemap.spec::DK5_machine_disks
+      - docs/2026-11-07-eravos-as-a-system-phasemap.spec::ERV5_the_visual_coding_and_debug_environment
     blockedBy: []
     unlocks:
       - docs/2026-11-01-the-compartment-phasemap.spec::CP1_the_machine_and_its_door
@@ -105,7 +106,7 @@ payload:
       - layer 1 · ready
       - 'depends on (1): CP_D0_a_compartment_is_all_of_it'
       - >-
-        needed by (1): CP1_the_machine_and_its_door · all downstream 51 · finishing it unlocks
+        needed by (1): CP1_the_machine_and_its_door · all downstream 52 · finishing it unlocks
         CP1_the_machine_and_its_door
       - 'same files as CP5e_parallel with no order between them: cos/spec/compartment.spec'
       - 'same files as CP5f_benchmark with no order between them: cos/spec/compartment.spec'

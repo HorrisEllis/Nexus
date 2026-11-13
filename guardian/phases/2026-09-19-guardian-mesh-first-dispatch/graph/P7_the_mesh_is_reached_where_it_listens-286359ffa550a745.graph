@@ -1,0 +1,173 @@
+envelope: 1
+uuid: nexus-export-graph-phase:P7_the_mesh_is_reached_where_it_listens:286359ffa550a745
+type: graph
+id: phase:P7_the_mesh_is_reached_where_it_listens:286359ffa550a745
+context: dependency graph of phase P7_the_mesh_is_reached_where_it_listens
+intent: null
+summary: 19 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1794534672974
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794534672974
+lastSeenAt: 1794534672974
+fingerprint: null
+payload:
+  for: P7_the_mesh_is_reached_where_it_listens
+  kind: phase
+  repo: null
+  hash: 286359ffa550a745
+  nodes:
+    - path: clear-glass/src/main/index.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: guardian/lib/mesh-client.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: tests/modules/test-guardian-mesh-client.js
+      role: changes
+      exists: true
+      system: null
+    - path: clear-glass/src/driver/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/ipc/bridge.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/mesh/agent-mesh.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: guardian/server.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: clear-glass/src/contexts/google-signin.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/contexts/manager.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/cookies/vault.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/core/bus.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/dom/archaeology.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/driver/index.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/fingerprint/engine.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/compartment-window.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/window-frame.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/sse/server.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/tls/proxy.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: clear-glass/src/main/index.js
+      to: lib/data-home.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/main/compartment-window.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/main/window-frame.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/contexts/google-signin.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/core/bus.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/sse/server.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/tls/proxy.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/fingerprint/engine.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/cookies/vault.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/contexts/manager.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/dom/archaeology.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/driver/index.js
+      kind: requires
+    - from: guardian/server.js
+      to: guardian/lib/mesh-client.js
+      kind: requires
+    - from: clear-glass/src/driver/index.js
+      to: clear-glass/src/main/index.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/main/index.js
+      kind: requires
+    - from: clear-glass/src/mesh/agent-mesh.js
+      to: clear-glass/src/main/index.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-09-19-guardian-mesh-first-dispatch-phasemap.spec::P5_guardian_transport
+      - docs/2026-09-19-guardian-mesh-first-dispatch-phasemap.spec::P3_endpoint
+    dependents: []
+    upstream:
+      - docs/2026-09-19-guardian-mesh-first-dispatch-phasemap.spec::P3_endpoint
+      - docs/2026-09-19-guardian-mesh-first-dispatch-phasemap.spec::P5_guardian_transport
+    downstream: []
+    blockedBy:
+      - docs/2026-09-19-guardian-mesh-first-dispatch-phasemap.spec::P5_guardian_transport
+      - docs/2026-09-19-guardian-mesh-first-dispatch-phasemap.spec::P3_endpoint
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · blocked by P5_guardian_transport, P3_endpoint
+      - 'depends on (2): P5_guardian_transport, P3_endpoint'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-09-19-guardian-mesh-first-dispatch-phasemap.spec::P5_guardian_transport
+        kind: declared
+      - from: docs/2026-09-19-guardian-mesh-first-dispatch-phasemap.spec::P3_endpoint
+        kind: declared

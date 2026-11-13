@@ -318,7 +318,7 @@ phases:
     spec: cos/spec/compartment.spec
     blocks: [MOD-CP-USAGE, MOD-CP-RESOURCES]
     depends_on: [CP1a_every_system_walled_by_cos, CP_D6_resources_per_compartment]
-    files: [cos/manager/resources.js, cos/manager/usage.js, cos/manager/supervisor.js, cos/manager/server.js, cos/manager/contract.json, cos/ui/cockpit/page.js, cos/ui/cockpit/sections/resources, cos/manager/proposals.js, loom/maps/cos-testenv-map.js, idearium/cli/route-commands.js, tests/modules/test-cos-resources.test.js, tests/modules/run-all.js]
+    files: [cos/manager/resources.js, cos/manager/usage.js, cos/manager/supervisor.js, cos/manager/server.js, cos/manager/contract.json, cos/ui/cockpit/page.js, cos/ui/cockpit/sections/resources, cos/manager/proposals.js, loom/maps/cos-testenv-map.js, idearium/cli/route-commands.js, tests/modules/test-cos-resources.test.js, tests/modules/run-all.js, tests/modules/test-cos-memory-baseline.test.js]
     does: >-
       caps(name) and setCaps(name, patch, { by }), with layers and read-back. The heap cap is applied at spawn; the priority is applied and
       read back at spawn and on change. Usage is read on Windows without wmic (PowerShell Get-Process, then tasklist). A ring of samples per
@@ -483,3 +483,19 @@ phases_addendum_cp3a:
 #     pipelines and workflow automation (COS's gates, AE6, MB3).
 # Reading to confirm, the coder's: "nodes moving through the field" read as each packet drawn at the gate it is in, its position and colour from
 # the field's values at that moment, replayable from the ledger; the other reading, a continuous physical simulation of the field. His to say.
+# ── ADDENDUM 2026-11-13 (0.60.501) — CP6a expanded: the memory floors are judged against this machine's baseline (mapped before code) ──
+# James, 2026-11-13, while Clear Glass was refused a restart every 15 s: "also the resource manager, should use the baseline deviation when its
+# applicable."
+# Found: on this machine (7.7 GB) free memory sits at about 8-14%. Clear Glass's own floor is 15% (haltPctOverride, MG15a 0.60.326), the
+# halt floor 10%, the balance floor 15%, all fixed. So Clear Glass was refused from 06:3x to 06:36 UTC without end, the halt rule held a
+# proposal to stop Idearium at boot, and rule:balance asked RAID every 30 s (raid-refused, hundreds of lines).
+# The rule, built into the supervisor that owns the floors (cos/manager/supervisor.js), used by resources.js:
+#   - the supervisor learns this machine's free memory: mean and sigma of the samples resources.js already takes (one per 30 s), the last
+#     240 (two hours), kept in <COS manager data>/memory-baseline.json so a restart keeps it;
+#   - a floor bites only when free memory is ALSO a deviation from that baseline: more than memSigmaK (2) sigmas under its mean;
+#   - before memBaselineMin (20) samples there is no baseline, and the fixed floor decides as before ("when its applicable");
+#   - under memoryAbsolutePct (3%) a start is always refused, whatever the baseline says.
+# The spawn check, the halt proposal and the balance rule ask the same judgement (sup.memoryJudge). Each refusal says the baseline.
+# By his axioms: CF1 / thread T4 (sigma measures deviation); §1.2 (a refusal says why); PR4 (deltas, COS optimised).
+# Cost, said: a start the baseline allows can push free memory lower than the old floor would have (Clear Glass is ~500 MB).
+# Proof: tests/modules/test-cos-memory-baseline.test.js (new; a test, not product JS).

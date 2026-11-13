@@ -7,11 +7,11 @@ intent: null
 summary: 18 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792877323517
+exported_at: 1794511766664
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792877323517
-lastSeenAt: 1792877323517
+firstSeenAt: 1794511766664
+lastSeenAt: 1794511766664
 fingerprint: null
 payload:
   for: HP15_a_typed_prompt_is_never_sent_again
@@ -165,6 +165,7 @@ payload:
       - docs/2026-10-09-hardening-pass-phasemap.spec::HP19_the_simulator_stays
       - docs/2026-10-09-hardening-pass-phasemap.spec::HP16_a_job_nobody_waits_for_is_not_sent_later
     upstream:
+      - docs/2026-10-09-hardening-pass-phasemap.spec::HP11_a_reply_on_the_page_is_never_sent_again
       - docs/2026-10-09-hardening-pass-phasemap.spec::HP13_the_failure_is_put_at_the_right_gate
       - docs/2026-10-09-hardening-pass-phasemap.spec::HP14_a_tab_that_does_not_take_the_job_is_said_in_seconds
     downstream:
@@ -181,7 +182,7 @@ payload:
     dangling: []
     lines:
       - layer 2
-      - 'depends on (1): HP14_a_tab_that_does_not_take_the_job_is_said_in_seconds · all upstream 2'
+      - 'depends on (1): HP14_a_tab_that_does_not_take_the_job_is_said_in_seconds · all upstream 3'
       - >-
         needed by (2): HP19_the_simulator_stays, HP16_a_job_nobody_waits_for_is_not_sent_later · all
         downstream 5 · finishing it unlocks HP19_the_simulator_stays,

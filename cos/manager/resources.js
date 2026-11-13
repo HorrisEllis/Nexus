@@ -60,8 +60,14 @@ function validate(patch) {
   return out;
 }
 
+// CP6a 0.60.501 — the supervisor's memory judgement (baseline deviation); a supervisor without one keeps the fixed floor
+function _judgeOf(sup) {
+  return (free, floor) => (sup && typeof sup.memoryJudge === 'function') ? sup.memoryJudge(free, floor)
+    : { low: free < floor, why: `free memory ${(free * 100).toFixed(1)}% is ${free < floor ? 'under' : 'over'} the floor ${Math.round(floor * 100)}%` };
+}
 function createResources(sup, { root = sup.root, store = null, sampleMs = 30000, read = null, setPriority = os.setPriority, getPriority = os.getPriority,
   proposals = null, ring = 120, approve = null } = {}) {
+  const judge = _judgeOf(sup);   // CP6a 0.60.501
   // 2026-11-01 CP6b — James: "cos backend, and hooking into idearium and raid. cos resource manager per compartment". An act COS takes by rule
   // on a compartment is RAID's to approve (§9.1 the only write authority for the system's own decisions, §5.2): lib/raid-port.js approveTool,
   // which fails closed (RAID unreachable → not approved). A proposal held for him stays his (USER_AUTONOMY): RAID gates rules, not him.
@@ -131,6 +137,7 @@ function createResources(sup, { root = sup.root, store = null, sampleMs = 30000,
   async function sample() {
     const list = sup.list(), P = sup.policy();
     const u = await reader(list, P);
+    if (u.host && typeof u.host.freeMemPct === 'number' && sup.memoryObserve) sup.memoryObserve(u.host.freeMemPct / 100);   // CP6a 0.60.501: the baseline learns
     for (const v of list) {
       const r = u.systems[v.name] || {};
       if (!hist.has(v.name)) hist.set(v.name, []);
@@ -155,13 +162,14 @@ function createResources(sup, { root = sup.root, store = null, sampleMs = 30000,
     }
     // pressure: under the halt floor, one held proposal per incident (CP_D6) — never an act of COS's own
     const free = u.host.freeMemPct / 100;
-    if (free < P.memoryHaltPct) {
+    const hj = judge(free, P.memoryHaltPct);   // CP6a 0.60.501: under the floor AND a deviation from this machine's baseline
+    if (hj.low) {
       if (!incident && proposals) {
         const cand = list.filter(v => v.pid && !v.critical).map(v => ({ v, c: caps(v.name), rss: (u.systems[v.name] || {}).rssMB || 0 }))
           .sort((a, b) => RANK.indexOf(a.c.priority) - RANK.indexOf(b.c.priority) || b.rss - a.rss)[0];
         incident = { since: u.at, proposal: null };
         if (cand) { try { incident.proposal = proposals.hold({ by: 'rule:resources', verb: 'stop', target: cand.v.name,
-          why: `free memory ${u.host.freeMemPct}% is under the halt floor ${Math.round(P.memoryHaltPct * 100)}%: ${cand.v.name} is the lowest-priority (${cand.c.priority}), largest (${cand.rss} MB) compartment that is not critical. Held for you; COS stops nothing by itself.` }).id; } catch (_) {} }
+          why: `${hj.why}: ${cand.v.name} is the lowest-priority (${cand.c.priority}), largest (${cand.rss} MB) compartment that is not critical. Held for you; COS stops nothing by itself.` }).id; } catch (_) {} }
       }
     } else if (incident && free >= Math.min(0.3, P.memoryHaltPct * 2)) incident = null;   // the incident ends with headroom back (resource-monitor's 30%, capped)
     try { await balanceStep(u, list, P); } catch (e) { sup.note('balance-error', `the balance step failed: ${e.message} — nothing changed`, { by: 'rule:balance' }); }
@@ -175,8 +183,9 @@ function createResources(sup, { root = sup.root, store = null, sampleMs = 30000,
     const B = { ...BALANCE, ...P }, cores = (u.host && u.host.cpus) || 1;
     const cpuSum = list.reduce((a, v) => a + (((u.systems[v.name] || {}).cpuPct) || 0), 0);
     const freePct = u.host ? u.host.freeMemPct / 100 : 1;
-    return { B, cpuSum, cpuCap: B.balanceCpuPct * cores * 100, freePct,
-      memory: freePct < B.balanceMemPct, cpu: cpuSum >= B.balanceCpuPct * cores * 100,
+    const mj = judge(freePct, B.balanceMemPct);   // CP6a 0.60.501: the balance floor judged against the baseline too
+    return { B, cpuSum, cpuCap: B.balanceCpuPct * cores * 100, freePct, memoryWhy: mj.why,
+      memory: mj.low, cpu: cpuSum >= B.balanceCpuPct * cores * 100,
       memoryClear: freePct >= B.balanceMemPct + 0.05, cpuClear: cpuSum < (B.balanceCpuPct - 0.15) * cores * 100 };
   }
   async function balanceStep(u, list, P) {
@@ -189,7 +198,7 @@ function createResources(sup, { root = sup.root, store = null, sampleMs = 30000,
         .sort((a, b) => kind === 'cpu' ? (b.s.cpuPct || 0) - (a.s.cpuPct || 0) : (b.s.rssMB || 0) - (a.s.rssMB || 0))[0];
       if (!cand) return null;
       const why = kind === 'cpu' ? `the compartments use ${Math.round(pr.cpuSum)}% CPU of ${Math.round(pr.cpuCap)}% allowed: ${cand.v.name} uses the most (${cand.s.cpuPct || 0}%)`
-        : `free memory ${u.host.freeMemPct}% is under the balance floor ${Math.round(pr.B.balanceMemPct * 100)}%: ${cand.v.name} is the largest at normal (${cand.s.rssMB || 0} MB)`;
+        : `${pr.memoryWhy}: ${cand.v.name} is the largest at normal (${cand.s.rssMB || 0} MB)`;
       let ok = null; try { ok = await askRaid(`cos.balance ${cand.v.name}`, { action: 'balance', intent: { action: 'lower-priority', target: cand.v.name, from: 'normal', to: 'below-normal' }, causedBy: 'rule:balance', why }); } catch (_) {}
       if (!(ok && ok.approved)) { sup.note('raid-refused', `RAID did not approve lowering ${cand.v.name} to below-normal: ${(ok && ok.reason) || 'no answer'} — not lowered (${why})`, { by: 'rule:balance', system: cand.v.name }); return { act: 'refused', name: cand.v.name, kind }; }
       const r = applyPriority(cand.v.name, cand.v.pid, 'below-normal');
