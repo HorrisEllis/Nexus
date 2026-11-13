@@ -967,3 +967,47 @@ expanded_2026_11_13_hub:
       fitsModel counts what the GPU holds (the card's free memory) and not only free RAM; the catalog sizes a mixture-of-experts model by its
       file (memory) and its active parameters (speed), so a 16B with 2.4B active is listed for his machine.
     proof: "MF tests: an 8.9 GB model on 4 GB VRAM and 9 GB free RAM fits; the same with 5 GB free RAM does not, saying both numbers"
+
+# ── ADDENDUM 2026-11-13 (map) — Ollama baked into COS: COS runs the server, Ollama's own app retired (his) ──
+# James, 2026-11-13: "Can we just replace the fucking Olama default application and just bake fucking Olama into cos? I'm fucking sick of the
+# Olama. Have it use any that's on my pc. Fallback to any other?"
+# Read first: Nexus's ollama system is a bridge only (ollama/server.js, :3749, compartment.json runtime.process "ollama-bridge"); the server it
+# talks to (:11434) is started by Ollama's own Windows app (its tray and its Startup entry), outside COS. COS's supervisor already runs a second
+# process per system (runtime.processes, MG15a) and picks a binary from cmdCandidates, but appends .cmd on Windows (made for electron), so
+# ollama.exe needs its own lookup. Nothing in COS starts, adopts or stops `ollama serve` today.
+expanded_2026_11_13_ollama:
+  PC14_cos_runs_the_model_server:
+    status: OPEN
+    layer: backend
+    james: '"replace the fucking Olama default application and just bake fucking Olama into cos" · "Have it use any that''s on my pc. Fallback to any other?"'
+    depends_on: [PC_D16_ollama_first_guardian_if_needed]
+    files: [ollama/compartment.json, lib/cli/compartments.js, cos/manager/supervisor.js, ollama/lib/model-inventory.js, cos/manager/proposals.js, idearium/cli/route-commands.js, tests/modules/test-cos-model-server.test.js]
+    reuse: "runtime.processes (a system's second process, MG15a); the supervisor's start, restart and circuit; MG35b's adopt-what-already-answers; COS proposals for acts on his machine (PC11)"
+    does: >-
+      The ollama system declares a second process, the model server: `ollama serve`, the binary found on his PC (PATH, %LOCALAPPDATA%\Programs\
+      Ollama, Program Files; the first that exists, named), with his models where they already are (OLLAMA_MODELS unset = his ~/.ollama). COS
+      starts it with the ollama system, restarts it on a crash, and stops it with COS. A server already answering on :11434 is adopted, never a
+      second one started. Retiring Ollama's own app (its tray process and its Startup entry) is a proposal he takes, never done silently.
+      Fallback, as read (to confirm): no Ollama binary → another local server that answers (LM Studio :1234, llama.cpp :8080, both
+      OpenAI-shaped) → Guardian's browser agents, each fallback said.
+    proof: "a stand-in binary: found and started; an answering :11434 adopted, nothing started; a crash restarted; no binary refused and the fallback named; the app's retirement only as a proposal"
+
+# Answered the same day (his, to three questions):
+#   - the fallback: "Other local, then Guardian" — no Ollama → another local server that answers (LM Studio, llama.cpp) → Guardian, each said.
+#   - the language: "Emerge only" — the lookup and the start are written in Emerge, not JavaScript (his 2026-11-07 rule, applied).
+#   - Ollama's own app: "No. Let’s build our own with emerge. Completely ours." — two readings, his to choose (PC_D17).
+decisions_2026_11_13_model_server:
+  PC_D17_our_own_model_server_in_emerge:
+    status: "TO HIM: which reading (asked 2026-11-13)"
+    james: '"No. Let’s build our own with emerge. Completely ours." · "Emerge only" · "Other local, then Guardian"'
+    readings:
+      a_the_manager: >-
+        Ours replaces Ollama's APP: finding models on his PC, starting, adopting and stopping the server, loading and unloading, serving
+        Nexus's ladder, in Emerge, in COS. The inference itself stays a binary that is already on his PC (ollama or llama.cpp), run as a
+        process. Weeks, not months; lands on PC14 as written.
+      b_the_engine: >-
+        Ours replaces Ollama ENTIRELY: an inference engine written in Emerge that reads a GGUF file and runs the model (quantized matrix
+        multiply, attention, mixture-of-experts routing, the tokenizer). Emerge compiles to x86 by syscalls with no libc and has no GPU access,
+        so it runs on the 3700X alone: a 2.4B-active model is feasible on CPU only with SIMD kernels Emerge does not have yet. Months; a project
+        of its own (its own map), and the GTX 1650 unused until Emerge reaches the GPU.
+    coder_recommends: "a first (it is what makes Ollama's app unnecessary now); b mapped as its own project after, if he wants it"

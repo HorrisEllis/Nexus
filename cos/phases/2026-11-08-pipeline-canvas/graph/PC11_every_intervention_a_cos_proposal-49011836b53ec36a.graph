@@ -7,11 +7,11 @@ intent: null
 summary: 33 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1794601375582
+exported_at: 1794601494894
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794601375582
-lastSeenAt: 1794601375582
+firstSeenAt: 1794601494894
+lastSeenAt: 1794601494894
 fingerprint: null
 payload:
   for: PC11_every_intervention_a_cos_proposal
@@ -287,6 +287,10 @@ payload:
         files:
           - cos/manager/server.js
           - idearium/api/index.js
+      - with: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC14_cos_runs_the_model_server
+        files:
+          - cos/manager/proposals.js
+          - idearium/cli/route-commands.js
     dangling:
       - PC_D15_raid_the_hub_of_every_interaction
     lines:
@@ -310,5 +314,5 @@ payload:
         same files as PC7_iterate_to_the_end_state with no order between them:
         cos/manager/server.js, idearium/cli/route-commands.js, idearium/api/index.js,
         lib/automation/pipeline.js
-      - … and 4 more phases sharing its files without an order
+      - … and 5 more phases sharing its files without an order
     edges: []
