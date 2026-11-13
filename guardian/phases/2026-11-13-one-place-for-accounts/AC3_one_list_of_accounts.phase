@@ -7,11 +7,11 @@ intent: null
 summary: AC3_one_list_of_accounts (integration) — 9 file(s)
 system: idearium
 tags: []
-exported_at: 1794575726383
+exported_at: 1794578166684
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794575726383
-lastSeenAt: 1794575726383
+firstSeenAt: 1794578166684
+lastSeenAt: 1794578166684
 fingerprint: null
 payload:
   id: AC3_one_list_of_accounts
@@ -30,7 +30,7 @@ payload:
     - lib/account-identity-index.js
     - lib/agent-tools/tools/accounts/account-manage.js
   depends_on:
-    - AC1_cos_serves_its_vault
+    - AC1_the_vault_as_a_library
   blocks: []
   spec: null
-  graph: 3c45590ffa93bf78
+  graph: d3b798b6769bea9f

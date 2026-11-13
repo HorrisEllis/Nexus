@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-13-one-place-for-accounts-phasemap.spec::AC6_key_slots
+type: phase
+id: docs_2026-11-13-one-place-for-accounts-phasemap.spec::AC6_key_slots
+context: pipeline phase AC6_key_slots of docs/2026-11-13-one-place-for-accounts-phasemap.spec
+intent: null
+summary: AC6_key_slots (backend) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1794578166676
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794578166676
+lastSeenAt: 1794578166676
+fingerprint: null
+payload:
+  id: AC6_key_slots
+  map: docs/2026-11-13-one-place-for-accounts-phasemap.spec
+  repo: null
+  layer: backend
+  status: >-
+    "BUILT 0.60.507 -- cos/vault/key-slots.js, cos/vault/keyring.js; crypto.js gained
+    encryptWithKey/decryptWithKey/primeMasterKey (additive, its existing encrypt/decrypt unchanged)"
+  files:
+    - cos/vault/key-slots.js
+    - cos/vault/keyring.js
+    - cos/vault/crypto.js
+    - cos/foundation/constants.js
+    - tests/modules/test-cos-vault-key-slots.test.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: db5f7572e9f7fc66

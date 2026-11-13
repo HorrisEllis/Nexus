@@ -7,11 +7,11 @@ intent: null
 summary: 4 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1794575726388
+exported_at: 1794578166689
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794575726388
-lastSeenAt: 1794575726388
+firstSeenAt: 1794578166689
+lastSeenAt: 1794578166689
 fingerprint: null
 payload:
   for: AC5_the_accounts_page
@@ -46,9 +46,10 @@ payload:
     dependents: []
     upstream:
       - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC0_what_each_piece_holds
-      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC1_cos_serves_its_vault
+      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC1_the_vault_as_a_library
       - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC2_clear_glass_keeps_through_cos
       - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC3_one_list_of_accounts
+      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC6_key_slots
       - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC_D1_where_the_one_place_is
     downstream: []
     blockedBy:
@@ -59,7 +60,7 @@ payload:
     dangling: []
     lines:
       - layer 4 · blocked by AC2_clear_glass_keeps_through_cos, AC3_one_list_of_accounts
-      - 'depends on (2): AC2_clear_glass_keeps_through_cos, AC3_one_list_of_accounts · all upstream 5'
+      - 'depends on (2): AC2_clear_glass_keeps_through_cos, AC3_one_list_of_accounts · all upstream 6'
       - 'needed by (0): —'
     edges:
       - from: docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC2_clear_glass_keeps_through_cos

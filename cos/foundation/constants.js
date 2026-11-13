@@ -60,6 +60,12 @@ const COS_COMP_DIR      = path.join(COS_DATA_ROOT,  'compartments');
 const COS_VAULT_DIR        = path.join(COS_STATE_DIR, 'vault');
 const COS_VAULT_STORE_FILE = path.join(COS_VAULT_DIR, 'store.json');
 const COS_VAULT_KEY_FILE   = path.join(COS_VAULT_DIR, 'master.key');
+// AC6 (2026-11-13) — James: "sign in like an account? then cos' vault keeps a backup of the key?" and "backup codes?
+// rsa2048? keypair?": the master key is wrapped under one or more key slots (password, a recovery code; Windows
+// Hello/a keypair slot can be added later, same interface) instead of sitting in master.key as plain bytes. Only
+// the wrapped slots are kept here — never a slot's secret, never the key unwrapped. cos/vault/key-slots.js,
+// cos/vault/keyring.js.
+const COS_VAULT_KEYRING_FILE = path.join(COS_VAULT_DIR, 'keyring.json');
 
 // ─── Per-Compartment Paths ────────────────────────────────────────────────────
 
@@ -121,6 +127,7 @@ module.exports = Object.freeze({
   COS_VAULT_DIR,
   COS_VAULT_STORE_FILE,
   COS_VAULT_KEY_FILE,
+  COS_VAULT_KEYRING_FILE,
   compartmentPaths,
 
   // Kernel

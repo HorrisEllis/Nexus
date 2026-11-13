@@ -1,0 +1,184 @@
+envelope: 1
+uuid: nexus-export-graph-phase:AC7_fallback_routing_and_one_popup:65188667953d80e7
+type: graph
+id: phase:AC7_fallback_routing_and_one_popup:65188667953d80e7
+context: dependency graph of phase AC7_fallback_routing_and_one_popup
+intent: null
+summary: 20 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1794578166691
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794578166691
+lastSeenAt: 1794578166691
+fingerprint: null
+payload:
+  for: AC7_fallback_routing_and_one_popup
+  kind: phase
+  repo: null
+  hash: 65188667953d80e7
+  nodes:
+    - path: clear-glass/src/providers/attention.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: cos/vault/index.js
+      role: changes
+      exists: true
+      system: cos
+    - path: guardian/lib/dispatch-ladder.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: guardian/lib/provider-attention.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: clear-glass/src/ipc/bridge.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: cos/ci/keys.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/cli/commands/vault.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/host/gates/vault.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/playgrounds/kernel.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/vaultd/server.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: guardian/ask.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: guardian/server.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: tests/modules/test-guardian-dispatch-ladder.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-guardian-mesh-client.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-guardian-wake.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-mesh-chat-reload.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: clear-glass/src/main/glass-frame.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/page/semantic-tree.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: cos/vault/store.js
+      role: uses
+      exists: true
+      system: cos
+    - path: guardian/options.js
+      role: uses
+      exists: true
+      system: guardian
+  edges:
+    - from: guardian/lib/dispatch-ladder.js
+      to: guardian/options.js
+      kind: requires
+    - from: clear-glass/src/providers/attention.js
+      to: clear-glass/src/page/semantic-tree.js
+      kind: requires
+    - from: clear-glass/src/providers/attention.js
+      to: clear-glass/src/main/glass-frame.js
+      kind: requires
+    - from: cos/vault/index.js
+      to: cos/vault/store.js
+      kind: requires
+    - from: guardian/server.js
+      to: guardian/lib/dispatch-ladder.js
+      kind: requires
+    - from: tests/modules/test-guardian-dispatch-ladder.js
+      to: guardian/lib/dispatch-ladder.js
+      kind: requires
+    - from: tests/modules/test-guardian-mesh-client.js
+      to: guardian/lib/dispatch-ladder.js
+      kind: requires
+    - from: tests/modules/test-guardian-wake.js
+      to: guardian/lib/dispatch-ladder.js
+      kind: requires
+    - from: tests/modules/test-mesh-chat-reload.test.js
+      to: guardian/lib/dispatch-ladder.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/providers/attention.js
+      kind: requires
+    - from: guardian/ask.js
+      to: guardian/lib/provider-attention.js
+      kind: requires
+    - from: cos/ci/keys.js
+      to: cos/vault/index.js
+      kind: requires
+    - from: cos/cli/commands/vault.js
+      to: cos/vault/index.js
+      kind: requires
+    - from: cos/host/gates/vault.js
+      to: cos/vault/index.js
+      kind: requires
+    - from: cos/playgrounds/kernel.js
+      to: cos/vault/index.js
+      kind: requires
+    - from: cos/vaultd/server.js
+      to: cos/vault/index.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 4
+    deps:
+      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC1_the_vault_as_a_library
+      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC3_one_list_of_accounts
+    dependents: []
+    upstream:
+      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC0_what_each_piece_holds
+      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC1_the_vault_as_a_library
+      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC3_one_list_of_accounts
+      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC6_key_slots
+      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC_D1_where_the_one_place_is
+    downstream: []
+    blockedBy:
+      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC1_the_vault_as_a_library
+      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC3_one_list_of_accounts
+    unlocks: []
+    conflicts:
+      - with: docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC8_credential_types
+        files:
+          - cos/vault/index.js
+    dangling: []
+    lines:
+      - layer 4 · blocked by AC1_the_vault_as_a_library, AC3_one_list_of_accounts
+      - 'depends on (2): AC1_the_vault_as_a_library, AC3_one_list_of_accounts · all upstream 5'
+      - 'needed by (0): —'
+      - 'same files as AC8_credential_types with no order between them: cos/vault/index.js'
+    edges:
+      - from: docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC1_the_vault_as_a_library
+        kind: declared
+      - from: docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC3_one_list_of_accounts
+        kind: declared

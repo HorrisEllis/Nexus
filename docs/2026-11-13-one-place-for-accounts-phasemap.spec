@@ -47,8 +47,53 @@ decisions:
         "cos is the meta system" (PC_D12). Against: cookies change often, so Clear Glass writes through a route, and the move is larger.
       c_its_own_system: "An Accounts system (sovereign, its own server.js and data). Against: a fifteenth system, and his \"COS must not become a blob\" read the other way."
     coder_recommendation: "b, COS's vault: accounts must be there when Clear Glass is not, and one key and one audit log is the 'one place' he describes. Said, not chosen."
+    superseded_2026_11_13: >-
+      James, straight after: "that adds dependancy." Right -- AC_D1 as first written had every system call COS's manager over HTTP for every
+      account read, which makes COS a new runtime dependency for things that used to need nothing (exactly what AC_D1's own reading (b) had
+      flagged as its "against"). Kept whole (par 0.3), corrected here: "COS's vault" stays the answer, but as a LIBRARY, not a service. Every
+      system requires cos/vault/*.js directly, in its own process -- no HTTP call, no COS process has to be running. What COS's manager
+      gains instead (AC1, revised) is a thin route onto the SAME files, for its own Accounts page and audit -- showing, never gating.
+      This is PIL_D2's own precedent applied here ("a library with a CLI... no server.js, no door", docs/2026-11-06-pillar-phasemap.spec):
+      the vault is the kind of system that is not a process.
   AC_D2_one_list_of_agents_signed_out:
     status: "DECIDED by the axioms (§8.6 one source): whichever place AC_D1 picks, which agents work signed out is said once there; Guardian's LOGIN_OPTIONAL copy is read from it, not kept."
+  AC_D3_an_encrypted_compartment_not_a_service:
+    status: "DECIDED 2026-11-13 (his), by the superseded_2026_11_13 note above"
+    chosen: "what about a encrypted compartment as a database like snowflake uses."
+    chosen_full: >-
+      Read and agreed as: records are never changed once written (each write is a new encrypted file; a small manifest points at the
+      current ones -- history for free, no separate snapshot step); sharing a record means wrapping ITS key with the other system's key,
+      never copying the value; one key per system, a key tree under one root. Built this slice: the root-key half only (AC6, the key
+      slots a root key is wrapped under). NOT built: the per-record key tree, the append-only manifest, or sharing by key-wrap -- cos/
+      vault/store.js still rewrites its one store.json file in place. Said, not silently dropped: real further work, mapped as AC1's
+      remaining proof, not finished with AC6.
+  AC_D4_sign_in_unlocks_it:
+    status: "DECIDED 2026-11-13 (his)"
+    chosen: "what about a sign in like an account? then cos' vault keeps a backup of the key?"
+    chosen_full: >-
+      Yes -- built as AC6. "what about an encrypted file that can use github as a backup? or windows authentication? backup codes? like
+      rsa2048? or a keypair?" read as key SLOTS (BitLocker/LUKS's own idea, named to him and agreed): any one slot's secret opens the same
+      root key, so losing one costs nothing while another still works. Built (AC6): a password slot and a recovery-code slot (the backup
+      codes he asked about), generic -- openSlots tries a secret against every slot, not by a slot's name, so a slot added later needs no
+      new unlock code. NOT built, said: a Windows Hello/DPAPI slot (needs a native hook outside plain Node -- cos/vault/crypto.js's own
+      header already flags the same gap for TPM/DPAPI binding of today's single key file); a recovery-keypair slot (X25519, the coder's
+      reading -- smaller, faster than RSA, the modern default; RSA-3072 the floor if it must be RSA; to confirm); GitHub as a backup
+      TARGET for the encrypted files (AC_D5).
+  AC_D5_backups_the_rewind_system_and_a_finding:
+    status: "DECIDED 2026-11-13 (his), with a real finding along the way"
+    chosen: "okay, so use the rewind system to take backups"
+    reading_to_confirm: >-
+      Clear Glass already has a system called rewind (clear-glass/src/rewind/engine.js): a browser session's time machine -- it snapshots
+      a tab's URL, cookies and storage every few seconds so a tab can step back. It is NOT the whole-system VM-style rewind he described
+      elsewhere (RW1, docs/2026-10-02-workshop-codex-rewind-phasemap.spec, LATER -- that code does not exist). The coder's reading of "use
+      the rewind system" here: not literally clear-glass/src/rewind/engine.js (wrong tool, see the finding below), but its IDEA -- never
+      overwrite, keep points you can go back to -- applied as AC_D3's append-only compartment (history for free from never overwriting a
+      record) and as real off-machine backups: the encrypted compartment's files (never an unwrapped key) copied to a private GitHub repo
+      and to a second local copy. NOT built this slice.
+    found: >-
+      clear-glass/src/rewind/engine.js's own header says it now persists full localStorage/sessionStorage to its snapshot file -- "auth
+      tokens/app state in storage are now persisted to disk in the snapshot file" -- in PLAIN JSON, no encryption. That is itself a leak
+      of the exact sessions AC2 is meant to protect, independent of anything else in this map. Not fixed in this slice: tracked as AC9.
 
 phases:
   AC0_what_each_piece_holds:
@@ -63,34 +108,49 @@ phases:
       type per kind in COS's vault with its scope (a provider account: shared, granted to Clear Glass and Guardian; a password: Clear Glass;
       a system secret: that system's compartment). Written as cos/spec/vault.spec; nothing changes on disk.
     proof: "every file of the census named with what it keeps and the vault record it becomes; no kind left without a record type"
-  AC1_cos_serves_its_vault:
+  AC1_the_vault_as_a_library:
     layer: backend
-    status: OPEN
-    depends_on: [AC0_what_each_piece_holds]
-    files: [cos/manager/server.js, cos/vault/index.js, cos/manager/contract.json, idearium/cli/route-commands.js, tests/modules/test-cos-vault-routes.test.js]
+    status: "OPEN -- AC6 (its key-slot half) BUILT 0.60.507; the record read/write/scope/audit layer below it still to build"
+    depends_on: [AC0_what_each_piece_holds, AC6_key_slots]
+    files: [cos/vault/index.js, cos/manager/server.js, cos/manager/contract.json, idearium/cli/route-commands.js, tests/modules/test-cos-vault-routes.test.js]
     does: >-
-      COS's manager serves its vault (in its own process, no daemon needed): read, write, list and delete by record type and scope, each
-      call naming the system that asks; a system reads only what its scope or a grant allows; every write and read on the audit log, every
-      write recorded in Versionium without its value (§17.12, the value never leaves the vault). Command rows `cos vault …`. COS is up
-      before any system it starts, so accounts are there when Clear Glass is not.
-    proof: "a system reads its own and granted records and is refused another's; a value never appears in the ledger, a log or Versionium; with Clear Glass stopped Guardian still reads a provider account"
+      AC_D3/AC_D1 superseded: every system requires cos/vault/*.js directly (no HTTP, no COS process needed to read or write an account)
+      -- read, write, list and delete by record type and scope, the system asking named every time; a system reads only its own and what
+      a grant allows; every write and read on the audit log, every write recorded in Versionium without its value. COS's manager gains a
+      route onto the SAME files for its own Accounts page (AC5) and the audit view -- showing, never the only way in. Command rows
+      `cos vault ...` for a person, reading the same library.
+    proof: "a system reads its own and granted records and is refused another's with no COS process running; a value never appears in the ledger, a log or Versionium; COS's Accounts page shows the same records a direct read does"
+  AC6_key_slots:
+    layer: backend
+    status: "BUILT 0.60.507 -- cos/vault/key-slots.js, cos/vault/keyring.js; crypto.js gained encryptWithKey/decryptWithKey/primeMasterKey (additive, its existing encrypt/decrypt unchanged)"
+    depends_on: []
+    files: [cos/vault/key-slots.js, cos/vault/keyring.js, cos/vault/crypto.js, cos/foundation/constants.js, tests/modules/test-cos-vault-key-slots.test.js]
+    does: >-
+      AC_D4: the vault's real root key is never a plain file (cos/vault/crypto.js's own header already named this as the vault's one
+      honest weakness). It is wrapped under key slots -- a password slot and a recovery-code slot built now, a future slot (Windows
+      Hello, a recovery keypair) the same shape. unlock({password}) migrates an existing plain master.key with no re-encryption (the AES
+      key's bytes are unchanged, only how it is stored changes) or creates a fresh vault; openSlots tries one secret against every slot,
+      never by a slot's name, so a slot added later needs no new unlock code (a real bug, found and fixed before it shipped: an earlier
+      version matched a secret to a slot by name, so a third slot could never open at all).
+    proof: "test-cos-vault-key-slots.test.js KS-01..06, KR-01..07, 13/13: wrong secret fails closed with one generic reason; a tampered slot never decrypts; the recovery code opens the same key as the password, independently; migrating a plain master.key keeps every entry already encrypted under it readable; a corrupted keyring file is refused, never silently overwritten; a slot added after the fact opens with its own new secret"
+
   AC2_clear_glass_keeps_through_cos:
     layer: integration
     status: OPEN
-    depends_on: [AC1_cos_serves_its_vault]
+    depends_on: [AC1_the_vault_as_a_library]
     files: [clear-glass/src/cookies/vault.js, clear-glass/src/cookies/session-hub.js, clear-glass/src/passwords/vault.js, clear-glass/src/passwords/service.js, clear-glass/src/accounts/login-portal.js, clear-glass/src/security/vault-key.js, clear-glass/src/providers/account-switch.js]
     does: >-
-      Clear Glass keeps the sign-in pages and its live browser sessions, but saves and loads accounts, cookies and passwords through COS's
-      vault routes. A migration first (§0.3): every record in Clear Glass's two vaults copied into COS's, checked by count and hash, the old
+      Clear Glass keeps the sign-in pages and its live browser sessions, but saves and loads accounts, cookies and passwords through cos/vault's
+      library (AC1), in its own process -- no COS route required. A migration first (§0.3): every record in Clear Glass's two vaults copied into COS's, checked by count and hash, the old
       files kept read-only until he says they can go. Clear Glass's own vault key retires once nothing reads it.
     proof: "after the migration COS's vault holds every account, cookie set and password Clear Glass had (counts equal); a sign-in saved in Clear Glass is read back from COS; the old vault files untouched"
   AC3_one_list_of_accounts:
     layer: integration
     status: OPEN
-    depends_on: [AC1_cos_serves_its_vault]
+    depends_on: [AC1_the_vault_as_a_library]
     files: [guardian/lib/agent-registry.js, guardian/lib/account-routing.js, guardian/lib/cg-account-authority.js, guardian/lib/provider-login.js, guardian/lib/provider-attention.js, clear-glass/src/providers/registry.js, lib/account-registry.js, lib/account-identity-index.js, lib/agent-tools/tools/accounts/account-manage.js]
     does: >-
-      One list: every account (provider, name, which is the default, which agents work signed out) is a record in COS's vault; Guardian's
+      One list: every account (provider, name, which is the default, which agents work signed out) is a record in cos/vault; Guardian's
       agent registry, account routing and the "Clear Glass account authority" read it from COS; lib/account-registry.js and the identity
       index move or retire (SW_D5, lib is not a system). Which agents work signed out is said once there (AC_D2): Guardian's LOGIN_OPTIONAL
       copy and Clear Glass's flag both read it.
@@ -98,10 +158,10 @@ phases:
   AC4_system_secrets:
     layer: integration
     status: OPEN
-    depends_on: [AC1_cos_serves_its_vault, SW5_orchestrator_into_the_supervisor]
+    depends_on: [AC1_the_vault_as_a_library, SW5_orchestrator_into_the_supervisor]
     files: [orchestrator/auth, cos/vaultd/server.js, cos/vaultd/daemon.js]
     does: >-
-      The Orchestrator's auth and any API keys or tokens a system keeps move into COS's vault under that system's compartment scope, with
+      The Orchestrator's auth and any API keys or tokens a system keeps move into cos/vault under that system's compartment scope, with
       the Orchestrator's move into the supervisor (SW5). vaultd stays as the second way in for the CLI, the same vault.
     proof: "no secret left in a system's files (a scan for keys and tokens finds none outside the vault); each system still authenticates"
   AC5_the_accounts_page:
@@ -113,4 +173,41 @@ phases:
       One page in COS: every account and its provider, the default per provider, which agents work signed out, each site's saved sign-in,
       and the audit of who read what. A value is never shown; it can be replaced. Tested in Clear Glass.
     proof: "in Clear Glass, an account added on the page is used by the next job; the audit shows the read"
-order: "AC0 → AC1 → AC2 and AC3 side by side → AC5; AC4 with SW5."
+  AC7_fallback_routing_and_one_popup:
+    layer: integration
+    status: OPEN
+    james: 'his 2026-11-13 "fallback routing, popup for the login missing, im sick of logins being seperated. can this be optional?"'
+    depends_on: [AC1_the_vault_as_a_library, AC3_one_list_of_accounts]
+    files: [guardian/lib/dispatch-ladder.js, clear-glass/src/providers/attention.js, guardian/lib/provider-attention.js, cos/vault/index.js]
+    does: >-
+      A job asking for an agent reads the vault for which accounts are actually signed in right now and falls back to the next ready one
+      instead of surfacing a popup first; the popup (already real, clear-glass/src/providers/attention.js) becomes the last resort, one
+      flow fired from the vault's own missing-credential event, not a different popup per system. Optional per provider (his question,
+      answered yes): a flag on the account record, default auto-fallback, settable to always-ask.
+    proof: "ChatGPT signed out, Claude and Gemini ready: a job completes on one of them with no popup; a provider flagged always-ask still asks; the popup fires once for a given missing credential, from whichever system noticed first"
+  AC8_credential_types:
+    layer: integration
+    status: OPEN
+    james: 'his 2026-11-13 "i meant like login with google, apple, github,etc. though i do want support for api keys."'
+    depends_on: [AC1_the_vault_as_a_library]
+    files: [cos/vault/index.js, clear-glass/src/contexts/google-signin.js, guardian/lib/provider-login.js]
+    does: >-
+      Each account record is typed: a browser session (cookies -- the result of a normal sign-in, OR of "Continue with Google/Apple/
+      GitHub" at the provider's OWN page, which Clear Glass already drives, src/contexts/google-signin.js exists), or an app password/
+      API key (his ask, preferred over scraping a session where the provider supports one -- fewer session failures, revocable without
+      touching the real password). Nexus does not become an OAuth CLIENT of Google/Apple/GitHub itself -- reading to confirm: "login with
+      google/apple/github" is the provider's own federated sign-in button, already reachable by the browser automation that exists; the
+      vault's job is to hold the resulting session the same as any other, not to run a second sign-in flow of its own.
+    proof: "a provider account signed in through its own Google button is one vault record, read back like a password-based one; an API-key record is used for a job with no browser tab at all"
+  AC9_rewinds_plaintext_tokens:
+    layer: library
+    status: OPEN
+    james: "found answering his 2026-11-13 'use the rewind system to take backups' -- AC_D5"
+    depends_on: []
+    files: [clear-glass/src/rewind/engine.js]
+    does: >-
+      clear-glass/src/rewind/engine.js writes full localStorage/sessionStorage, which can hold auth tokens, to a plain JSON file per
+      agent under its rewind folder. Once cos/vault is reachable as a library (AC1) with no COS process required, rewind's writer
+      encrypts through it instead of fs.writeFileSync -- a real, independent fix, not blocked on the rest of this map.
+    proof: "a rewind snapshot file on disk holds no readable token or cookie value; restoring a tab from it still works"
+order: "AC0 → AC6 (built) → AC1 → AC2, AC3, AC9 side by side → AC7, AC8 → AC5; AC4 with SW5."

@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-13-one-place-for-accounts-phasemap.spec::AC9_rewinds_plaintext_tokens
+type: phase
+id: docs_2026-11-13-one-place-for-accounts-phasemap.spec::AC9_rewinds_plaintext_tokens
+context: >-
+  pipeline phase AC9_rewinds_plaintext_tokens of
+  docs/2026-11-13-one-place-for-accounts-phasemap.spec
+intent: null
+summary: AC9_rewinds_plaintext_tokens (library) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1794578166697
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794578166697
+lastSeenAt: 1794578166697
+fingerprint: null
+payload:
+  id: AC9_rewinds_plaintext_tokens
+  map: docs/2026-11-13-one-place-for-accounts-phasemap.spec
+  repo: null
+  layer: library
+  status: OPEN
+  files:
+    - clear-glass/src/rewind/engine.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 412d235ff248793b

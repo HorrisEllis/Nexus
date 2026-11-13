@@ -9,11 +9,11 @@ intent: null
 summary: AC2_clear_glass_keeps_through_cos (integration) — 7 file(s)
 system: idearium
 tags: []
-exported_at: 1794575726381
+exported_at: 1794578166681
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794575726381
-lastSeenAt: 1794575726381
+firstSeenAt: 1794578166681
+lastSeenAt: 1794578166681
 fingerprint: null
 payload:
   id: AC2_clear_glass_keeps_through_cos
@@ -30,7 +30,7 @@ payload:
     - clear-glass/src/security/vault-key.js
     - clear-glass/src/providers/account-switch.js
   depends_on:
-    - AC1_cos_serves_its_vault
+    - AC1_the_vault_as_a_library
   blocks: []
   spec: null
-  graph: 99d4c5e9170658ce
+  graph: d9473ab57a37e482

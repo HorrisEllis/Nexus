@@ -68,12 +68,15 @@ function getOrCreateMasterKey(keyFilePath = COS_VAULT_KEY_FILE) {
 }
 
 /**
+ * AC6 (2026-11-13) — the pure AEAD core, with the key passed in rather than read from a file. Same cipher
+ * (aes-256-gcm, Node's built-in crypto — real, not a toy substitute, per this file's own header above), extracted
+ * so key-slots.js can wrap/unwrap a root key with a password- or recovery-code-derived key, reusing this exact
+ * code instead of a second cipher call site. encrypt()/decrypt() below are now thin wrappers over these.
  * @param {string} plaintext
- * @param {string} [keyFilePath]
+ * @param {Buffer} key  32 bytes
  * @returns {{ iv: string, authTag: string, ciphertext: string }}  all hex-encoded
  */
-function encrypt(plaintext, keyFilePath = COS_VAULT_KEY_FILE) {
-  const key = getOrCreateMasterKey(keyFilePath);
+function encryptWithKey(plaintext, key) {
   const iv = crypto.randomBytes(IV_BYTES);
   const cipher = crypto.createCipheriv(ALGO, key, iv);
   const ciphertext = Buffer.concat([cipher.update(String(plaintext), 'utf8'), cipher.final()]);
@@ -83,12 +86,11 @@ function encrypt(plaintext, keyFilePath = COS_VAULT_KEY_FILE) {
 
 /**
  * @param {{ iv: string, authTag: string, ciphertext: string }} encrypted
- * @param {string} [keyFilePath]
+ * @param {Buffer} key  32 bytes
  * @returns {string} plaintext
  * @throws if the authTag doesn't verify — tampered or wrong key
  */
-function decrypt(encrypted, keyFilePath = COS_VAULT_KEY_FILE) {
-  const key = getOrCreateMasterKey(keyFilePath);
+function decryptWithKey(encrypted, key) {
   const decipher = crypto.createDecipheriv(ALGO, key, Buffer.from(encrypted.iv, 'hex'));
   decipher.setAuthTag(Buffer.from(encrypted.authTag, 'hex'));
   const plaintext = Buffer.concat([
@@ -96,6 +98,39 @@ function decrypt(encrypted, keyFilePath = COS_VAULT_KEY_FILE) {
     decipher.final(),
   ]);
   return plaintext.toString('utf8');
+}
+
+/**
+ * @param {string} plaintext
+ * @param {string} [keyFilePath]
+ * @returns {{ iv: string, authTag: string, ciphertext: string }}  all hex-encoded
+ */
+function encrypt(plaintext, keyFilePath = COS_VAULT_KEY_FILE) {
+  return encryptWithKey(plaintext, getOrCreateMasterKey(keyFilePath));
+}
+
+/**
+ * @param {{ iv: string, authTag: string, ciphertext: string }} encrypted
+ * @param {string} [keyFilePath]
+ * @returns {string} plaintext
+ * @throws if the authTag doesn't verify — tampered or wrong key
+ */
+function decrypt(encrypted, keyFilePath = COS_VAULT_KEY_FILE) {
+  return decryptWithKey(encrypted, getOrCreateMasterKey(keyFilePath));
+}
+
+/**
+ * AC6 — primes the in-memory key cache for keyFilePath with an already-known key (e.g. one just unwrapped from a
+ * key slot), WITHOUT writing it to disk in plaintext. Every later encrypt()/decrypt() for the same keyFilePath then
+ * uses this key, the same cache getOrCreateMasterKey() already keeps. Lets a password-protected vault reach the
+ * exact same encrypt/decrypt call sites every existing caller already uses — they never need to know a keyring
+ * exists.
+ * @param {Buffer} key  32 bytes
+ * @param {string} [keyFilePath]
+ */
+function primeMasterKey(key, keyFilePath = COS_VAULT_KEY_FILE) {
+  if (!Buffer.isBuffer(key) || key.length !== KEY_BYTES) throw new Error(`primeMasterKey: key must be a ${KEY_BYTES}-byte Buffer`);
+  _keyCache.set(keyFilePath, key);
 }
 
 /**
@@ -113,5 +148,8 @@ module.exports = {
   getOrCreateMasterKey,
   encrypt,
   decrypt,
+  encryptWithKey,
+  decryptWithKey,
+  primeMasterKey,
   _resetKeyCacheForTests,
 };
