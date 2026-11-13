@@ -1,0 +1,243 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SW6_the_drawbridge_the_only_way_in:b33bfa701701fee6
+type: graph
+id: phase:SW6_the_drawbridge_the_only_way_in:b33bfa701701fee6
+context: dependency graph of phase SW6_the_drawbridge_the_only_way_in
+intent: null
+summary: 23 node(s), 4 crossing(s)
+system: idearium
+tags: []
+exported_at: 1794550806516
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794550806516
+lastSeenAt: 1794550806516
+fingerprint: null
+payload:
+  for: SW6_the_drawbridge_the_only_way_in
+  kind: phase
+  repo: null
+  hash: b33bfa701701fee6
+  nodes:
+    - path: lib/contracts/system-boundary-baseline.json
+      role: changes
+      exists: false
+      system: lib
+    - path: lib/nexus-client.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/system-boundary.js
+      role: changes
+      exists: true
+      system: lib
+    - path: tests/modules/test-drawbridge-only.test.js
+      role: changes
+      exists: false
+      system: null
+    - path: clear-glass/src/ipc/bridge.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: copilot/adversarial.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/lifeline.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/module-builder.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: cos/host/index.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: guardian/agents/index.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: guardian/ask.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: guardian/lib/ncp.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: guardian/routes/autonomous-loop.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: guardian/server.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: cortex/core/raid/index.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/routing-ir.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/personas.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: lib/capability-spec.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-config.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-self/systems.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/nexus-client.js
+      to: cortex/core/raid/routing-ir.js
+      kind: requires
+    - from: lib/nexus-client.js
+      to: cortex/core/raid/index.js
+      kind: requires
+    - from: lib/nexus-client.js
+      to: cortex/personas.js
+      kind: requires
+    - from: lib/nexus-client.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: lib/nexus-client.js
+      to: lib/nexus-config.js
+      kind: requires
+    - from: lib/system-boundary.js
+      to: lib/capability-spec.js
+      kind: requires
+    - from: lib/system-boundary.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: lib/nexus-client.js
+      kind: requires
+    - from: copilot/adversarial.js
+      to: lib/nexus-client.js
+      kind: requires
+    - from: copilot/lifeline.js
+      to: lib/nexus-client.js
+      kind: requires
+    - from: copilot/module-builder.js
+      to: lib/nexus-client.js
+      kind: requires
+    - from: copilot/server.js
+      to: lib/nexus-client.js
+      kind: requires
+    - from: cos/host/index.js
+      to: lib/nexus-client.js
+      kind: requires
+    - from: guardian/agents/index.js
+      to: lib/nexus-client.js
+      kind: requires
+    - from: guardian/ask.js
+      to: lib/nexus-client.js
+      kind: requires
+    - from: guardian/lib/ncp.js
+      to: lib/nexus-client.js
+      kind: requires
+    - from: guardian/routes/autonomous-loop.js
+      to: lib/nexus-client.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/nexus-client.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/nexus-client.js
+      kind: requires
+  crossings:
+    - from: lib/nexus-client.js
+      to: cortex/core/raid/routing-ir.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+    - from: lib/nexus-client.js
+      to: cortex/core/raid/index.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+    - from: lib/nexus-client.js
+      to: cortex/personas.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+    - from: lib/nexus-client.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 5
+    deps:
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW2_routes_and_command_nodes
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW3_an_event_per_call_in_its_own_ledger
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW5_orchestrator_into_the_supervisor
+    dependents:
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW7_lib_goes_home
+    upstream:
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW0_the_scorecard
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW1_each_system_its_own_map
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW2_routes_and_command_nodes
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW3_an_event_per_call_in_its_own_ledger
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW5_orchestrator_into_the_supervisor
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW_D0_picked_up
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW_D1_orchestrator_into_the_supervisor
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW_D2_each_system_keeps_its_own_map
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW_D3_an_event_for_every_call
+    downstream:
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW7_lib_goes_home
+    blockedBy:
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW2_routes_and_command_nodes
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW3_an_event_per_call_in_its_own_ledger
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW5_orchestrator_into_the_supervisor
+    unlocks: []
+    conflicts:
+      - with: docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW4_own_data_by_default
+        files:
+          - lib/system-boundary.js
+    dangling: []
+    lines:
+      - >-
+        layer 5 · blocked by SW2_routes_and_command_nodes, SW3_an_event_per_call_in_its_own_ledger,
+        SW5_orchestrator_into_the_supervisor
+      - >-
+        depends on (3): SW2_routes_and_command_nodes, SW3_an_event_per_call_in_its_own_ledger,
+        SW5_orchestrator_into_the_supervisor · all upstream 9
+      - 'needed by (1): SW7_lib_goes_home'
+      - 'same files as SW4_own_data_by_default with no order between them: lib/system-boundary.js'
+    edges:
+      - from: docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW2_routes_and_command_nodes
+        kind: declared
+      - from: docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW3_an_event_per_call_in_its_own_ledger
+        kind: declared
+      - from: docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW5_orchestrator_into_the_supervisor
+        kind: declared
