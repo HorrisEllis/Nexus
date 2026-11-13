@@ -7,11 +7,11 @@ intent: null
 summary: CIE13_native_system_primitives (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1794558075887
+exported_at: 1794584527882
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794558075887
-lastSeenAt: 1794558075887
+firstSeenAt: 1794584527882
+lastSeenAt: 1794584527882
 fingerprint: null
 payload:
   id: CIE13_native_system_primitives
@@ -19,8 +19,10 @@ payload:
   repo: null
   layer: null
   status: >-
-    OPEN   # slice a BUILT 0.60.502 (now_ms, sleep_ms, path_exists natively and interpreted); next:
-    list_dir, make_dir, remove natively, then Process
+    OPEN   # slice a BUILT 0.60.502 (now_ms, sleep_ms, path_exists); slice b BUILT 0.60.510 (is_dir,
+    make_dir, list_dir, move_path, remove_path natively); slice c BUILT 0.60.512 (proc_run,
+    proc_start, proc_wait, proc_wait_ms, proc_signal); left: watching a folder, timers, stderr,
+    Windows, Pillar's contracts
   files:
     - emerge/emerge/lang/native/rt.eg
     - emerge/emerge/lang/native/codegen.eg

@@ -190,7 +190,7 @@ fn typed_of(names) {
   }
   return out
 }
-let WORLD_BUILTINS = { ledger: 1, spent: 1, ledger_verify: 1, components: 1, gaps: 1, random: 1, uid: 1 }
+let WORLD_BUILTINS = { ledger: 1, spent: 1, ledger_verify: 1, components: 1, gaps: 1, random: 1, uid: 1, ledger_proof: 1, ledger_check_proof: 1 }
 let MEMBERS = { id: 1, name: 1, intent: 1, namespace: 1, version: 1, uuid: 1, hooks: 1, template: 1, kinds: 1 }
 
 /** rewrite one node and everything below it */
@@ -278,6 +278,9 @@ fn rw(n) {
     }
     if t == "Call" and n.callee.type == "Ident" and n.callee.name == "components" and len(n.args) == 0 { return wcall(n, "components_graph", []) }
     if t == "Call" and n.callee.type == "Ident" and n.callee.name == "ledger_verify" and len(n.args) == 0 { return wcall(n, "verify", []) }
+    // CIE14 (2026-11-13): a proof that an entry is in the ledger, and the check of one, through the world written in Emerge
+    if t == "Call" and n.callee.type == "Ident" and n.callee.name == "ledger_proof" and len(n.args) == 1 { return wcall(n, "proof", rw(n.args)) }
+    if t == "Call" and n.callee.type == "Ident" and n.callee.name == "ledger_check_proof" and len(n.args) == 1 { return wcall(n, "check_proof", rw(n.args)) }
   }
   var out = {}
   for k, v in n { out[k] = rw(v) }

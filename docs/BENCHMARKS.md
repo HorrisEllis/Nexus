@@ -24,6 +24,65 @@ then they are written by hand.
   - A CLI command that called the module directly broke Pillar's rule (every command sends to a hook): `map` became an in hook.
 - **Gaps found:** no capturing regular expression in Emerge (routes matched by a regex are not seen); 160 reaches between systems against
   the census's 150 the same morning, not traced.
+## 2026-11-13 — Emerge: processes natively (CIE13 slice c, 0.60.512)
+- **Measured:** Emerge coding. His words: "So we can stop using JavaScript" · "Next."
+- **Method:** five builtins in rt.eg by syscall; the interpreter's by /proc; one 12-line program compared both ways.
+- **Wall time:** native suite 1 min 37 s (117 cases).
+- **Lines:** .eg +128 (rt.eg), +2 (codegen.eg); JavaScript +22 (runtime.js), +4 (native.test.js). Emerge's JavaScript after: about 14,430.
+- **Tests:** native 117/117; self.test.eg 3/3; the compiler at a fixpoint.
+- **Failed runs before the pass:** none. fork, execve with the parent's environment, the pipe and the wait were right on the first run.
+- **Gaps found in Emerge:** the interpreter cannot block on a child (Node gives exit codes only through its event loop), so its
+  proc_wait reads /proc/<pid>/stat: Linux only, and one more reason the interpreter is retired, not ported. No stderr capture. A
+  builtin with an optional argument cannot be declared natively without its own handling (proc_signal takes both).
+- **Tension meter:** JavaScript in Emerge rose by 26 lines this slice (the interpreter's side). Primitives: 127, 125 both ways.
+- **What came of it:** Emerge has what a supervisor is made of: start a system, time it, know it died, stop it. COS's manager can now
+  be written in Emerge once the door (a socket, CIE10) is.
+
+## 2026-11-13 — Emerge: the wraps and the ledger proofs natively; 6 not native down to 1 (0.60.511)
+- **Measured:** Emerge coding. His words: "It’s meant to be self aware." · "Okay."
+- **Method:** three builtins in rt.eg; two functions in the world written in Emerge with their lowering; one program compared both ways.
+- **Lines:** .eg +36 (rt.eg 18, world.eg 22 with comments, lower.eg 3, codegen.eg 1); JavaScript +3 (two cases in native.test.js).
+- **Tests:** native 115/115 (1 min 26 s); self.test.eg 3/3; the compiler at a fixpoint.
+- **Failed runs before the pass, and what each taught:**
+  1. rt.eg called helpers that do not exist (rt_cat2, rt_cat4): the runtime builds text with rt_sb_new / rt_sb_str / rt_sb_done.
+  2. Two statements on one line in rt.eg, with two spaces and then with `;`: both refused ("expected end of statement"). In the raw
+     runtime a statement ends at the line.
+- **Gaps found in Emerge:** `;` between statements is refused in rt.eg though blank() in contract.eg's grammar treats it as a separator
+  elsewhere: one rule for it is wanted. The message for a missing runtime helper names front.eg:26, not the helper.
+- **Tension meter:** JavaScript in Emerge unchanged. Primitives not native: 6 → 1.
+- **What came of it:** a native Emerge program can prove an entry is in its ledger, the piece a contract's evidence rests on.
+
+## 2026-11-13 — Emerge: folders natively; 10 primitives not native down to 6 (CIE13 slice b, 0.60.510)
+- **Measured:** Emerge coding. His words: "Continue. Look a the graph substrate. Like emerge should reduce friction between primitives." · "Yeah."
+- **Method:** five builtins in rt.eg by syscall; one 17-line program run interpreted and native and compared; Emerge's own map counts the rest.
+- **Lines:** .eg +108 (rt.eg), +2 (codegen.eg); JavaScript +2 (one case in native.test.js).
+- **Tests:** the folder case the same both ways; self.test.eg 3/3; the compiler at a fixpoint.
+- **Failed runs before the pass:** none. The five were right on the first native run (the map and the earlier slice had shown the four
+  places a builtin is added).
+- **Gaps found in Emerge:** a builtin added to the interpreter is unknown to the native compiler until its environment is regenerated
+  by hand (is_dir, added by another session the same day, was): the friction the map exists to show, and the next thing to generate.
+- **Tension meter:** JavaScript in Emerge unchanged. Primitives not native: 10 → 6, by Emerge's own count.
+- **What came of it:** an Emerge program can keep files in folders natively: what cos/pipeline's requests-as-files and the sovereignty
+  card need to run without Node.
+
+## 2026-11-13 — Emerge: its map of itself, in the substrate's shape (CIE14 slice f, 0.60.509)
+- **Measured:** Emerge coding, and his framework (negative space: the registry is the shadow, the source is what is present). His words: "Continue. Look a the graph substrate. Like emerge should reduce friction between primitives.   It’s meant to be self aware."
+- **Method:** cie/self.eg reads Emerge's own tables and text into blocks and edges; gaps() is what one side has and the other lacks. The
+  result was then checked against the real compiler: one one-line program per primitive.
+- **Wall time:** the map interpreted 0.2 s; the report compiled natively 10 ms; its 3 tests under 1 s.
+- **Lines:** .eg +150 (cie/self.eg 118, self.test.eg 34, lang/self.eg 10, counted with comments); JavaScript 0.
+- **Tests:** self.test.eg 3/3.
+- **Failed runs before the pass, and what each taught:**
+  1. The first map said 26 primitives were interpreter-only, among them print and min: wrong. Natively a primitive is carried out by
+     three roads, not one (the table, VARIADIC, and calls the lowering rewrites). The map reads all three now: 10.
+- **Checked against the compiler:** the 10 refused, 3 controls compiled. One of the 10 (ledger_check_proof) was refused for the test's
+  own argument count, so 9 are confirmed.
+- **Gaps found in Emerge:** no way for a program to learn the folder its own file is in (the test is run from emerge/emerge and passes
+  "lang"); the lowering's rewrites are found by reading its text, because they are not data.
+- **Tension meter:** JavaScript lines in Emerge unchanged (14,404). The work left at the primitive level is now a number Emerge reports
+  itself: 10 primitives not native.
+- **What came of it:** the worklist for the rest of CIE13 and CIE14 is generated, not remembered.
+
 ## 2026-11-13 — Emerge: a clock and a file check natively (CIE13 slice a, 0.60.502)
 - **Measured:** Emerge coding. His words: "Working on it in another session. Maybe you can work on finishing emerge. So we can stop using JavaScript"
 - **Method:** the three builtins written in rt.eg by syscall; each case run interpreted and native and compared (native.test.js).

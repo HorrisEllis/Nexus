@@ -288,7 +288,7 @@ phases:
     proof: "git ls-files 'emerge/emerge/*.js' outside the archive is empty; every suite green"
 
   CIE13_native_system_primitives:
-    status: OPEN   # slice a BUILT 0.60.502 (now_ms, sleep_ms, path_exists natively and interpreted); next: list_dir, make_dir, remove natively, then Process
+    status: OPEN   # slice a BUILT 0.60.502 (now_ms, sleep_ms, path_exists); slice b BUILT 0.60.510 (is_dir, make_dir, list_dir, move_path, remove_path natively); slice c BUILT 0.60.512 (proc_run, proc_start, proc_wait, proc_wait_ms, proc_signal); left: watching a folder, timers, stderr, Windows, Pillar's contracts
     depends_on: [CIE_D1_remove_the_javascript_now, PIL2_contracts, CIE5_native_test]
     spec: emerge/emerge/spec/cie-eg.spec
     files: [emerge/emerge/lang/native/rt.eg, emerge/emerge/lang/native/codegen.eg, emerge/emerge/lang/native/sys_process.eg, emerge/emerge/lang/native/sys_clock.eg,
@@ -564,3 +564,36 @@ James, 2026-11-13: "Working on it in another session. Maybe you can work on fini
 - Order from here, the coder's reading of his "finishing emerge" (to confirm): CIE13 next slices (the folder builtins natively, then
   Process), then CIE9 (the 5,335 lines of JavaScript tests as .eg tests), CIE10 (the door served by emerge.exe), CIE11 (the interpreter
   archived). CIE14's gaps as they are met.
+
+## ADDENDUM 2026-11-13 (0.60.509) — CIE14 slice f: Emerge's map of itself, in the substrate's shape
+James, 2026-11-13: "Continue. Look a the graph substrate. Like emerge should reduce friction between primitives.   It’s meant to be self aware."
+- Read: docs/substrate.spec (Block, Edge with evidence; specced 2026-10-20, not built).
+- Built: lang/cie/self.eg (observe, gaps, summary), lang/self.eg (it said in words; compiles natively), lang/cie/test/self.test.eg (3/3,
+  the first .eg test in Emerge's own tree, with a ratchet: interpreter-only primitives only fall from 10).
+- Found: 121 primitives; 110 both ways; 10 only interpreted (list_dir, make_dir, move_path, remove_path, wrap_add, wrap_sub, wrap_mul,
+  ledger_proof, ledger_check_proof, observe_gaps); the backends agree on every arity. This list is CIE13's next slice and CIE14's.
+- The coder's reading of "reduce friction between primitives" (to confirm): first Emerge sees every primitive and every way it is carried
+  out (built here); next, one source generates the tables that are four hand edits today.
+
+## ADDENDUM 2026-11-13 (0.60.510) — CIE13 slice b: folders natively
+James, 2026-11-13, told the next step was the folder builtins off Emerge's own list: "Yeah."
+- Built: is_dir, make_dir, list_dir, move_path, remove_path in lang/native/rt.eg by syscall (stat 4, mkdir 83, getdents64 217, rename 82,
+  unlink 87, rmdir 84). The interpreter had them.
+- Proof: one 17-line program the same interpreted and native (a case in native.test.js); the compiler at a fixpoint; self.test.eg 3/3,
+  its ratchet 10 → 6.
+- Left on Emerge's own list: wrap_add, wrap_sub, wrap_mul, ledger_proof, ledger_check_proof, observe_gaps. Then Process (spawn, wait, kill).
+
+## ADDENDUM 2026-11-13 (0.60.511) — CIE14: the wraps and the ledger proofs natively; one primitive left
+James, 2026-11-13, told the six left on Emerge's list were next: "Okay."
+- Built: wrap_add, wrap_sub, wrap_mul (rt.eg); ledger_proof, ledger_check_proof (cie/world.eg proof, check_proof; native/lower.eg).
+- Proof: one program the same both ways (a case in native.test.js, 115/115); self.test.eg 3/3, ratchet 6 → 1; the compiler at a fixpoint.
+- Left: observe_gaps (its ledger entry must equal the interpreter's hash for hash). Then CIE13's Process.
+
+## ADDENDUM 2026-11-13 (0.60.512) — CIE13 slice c: processes natively
+James, 2026-11-13, told process control was next: "Next."
+- Built: proc_run, proc_start, proc_wait, proc_wait_ms, proc_signal in lang/native/rt.eg by syscall (fork 57, execve 59, wait4 61, kill 62,
+  pipe2 293, dup2 33); the same in the interpreter (by /proc, Linux).
+- Proof: one program the same both ways (a case in native.test.js, 117/117); the compiler at a fixpoint.
+- CIE13's proof line met but for watching a folder and a timer. Its prerequisite, Pillar's Process, Clock and File contracts, is not
+  written yet: said, and the next small piece, so each builtin conforms to a contract and is not only compared with the interpreter.
+- What this opens: COS's manager in Emerge needs these and a socket (CIE10).

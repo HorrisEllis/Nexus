@@ -1,0 +1,35 @@
+// lang/cie/test/self.test.eg — Emerge's map of itself (cie/self.eg). Run from emerge/emerge: eg test lang/cie/test/self.test.eg
+// James, 2026-11-13: "emerge should reduce friction between primitives. It's meant to be self aware."
+// The first test of Emerge written in Emerge inside Emerge's own tree (CIE9 begins here).
+use "../self.eg" as self
+
+let O = self.observe("lang")
+let G = self.gaps(O)
+
+test "every block and edge is in the substrate's shape, and every edge says where it was discovered" {
+  for b in O.blocks { expect has(b, "id") and has(b, "kind") and has(b, "domain") and has(b, "address") and has(b, "attrs") }
+  for e in O.edges { expect e.relation == "implements" and e.evidence == "discovered" and len(e.by) > 0 }
+  let ids = map(O.blocks, fn(b) = b.id)
+  for e in O.edges { expect index_of(ids, e.from) >= 0 and index_of(ids, e.to) >= 0 }
+}
+
+test "Emerge knows how each primitive is carried out: by the table, by any number of arguments, by lowering, by the prelude" {
+  let how = fn(name) = sort(map(filter(O.edges, fn(e) = e.to == name), fn(e) = e.domain))
+  expect how("now_ms") == ["interpreter", "native"]
+  expect how("print") == ["interpreter", "native"]
+  expect how("uid") == ["interpreter", "lowered"]
+  expect how("list_dir") == ["interpreter", "native"]
+  expect how("wrap_add") == ["interpreter", "native"]
+  expect how("ledger_proof") == ["interpreter", "lowered"]
+  expect how("observe_gaps") == ["interpreter"]
+}
+
+test "the negative space is the work left: what only the interpreter can do; the two backends agree on every arity" {
+  expect G.arity_differs == []
+  expect G.interpreter_only == ["observe_gaps"]
+  expect G.native_only == ["__exit"]
+  let s = self.summary(O)
+  expect s.primitives == s.both + s.interpreter_only + s.native_only
+  // the ratchet: this number only falls. 10 on 2026-11-13; 6 after the folder builtins (CIE13 slice b); 1 after the wraps and the ledger proofs.
+  expect s.interpreter_only <= 1
+}

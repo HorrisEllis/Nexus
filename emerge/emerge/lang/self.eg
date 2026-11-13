@@ -1,0 +1,9 @@
+// lang/self.eg — what Emerge knows about itself, said. Run from emerge/emerge: eg run lang/self.eg
+// James, 2026-11-13: "It's meant to be self aware."
+use "./cie/self.eg" as self
+let o = self.observe("lang")
+let g = self.gaps(o)
+let s = self.summary(o)
+print("Emerge has {s.primitives} primitives: {s.both} run interpreted and native, {s.interpreter_only} only interpreted, {s.native_only} only native.")
+if len(g.interpreter_only) > 0 { print("Not native yet: " + join(g.interpreter_only, ", ")) }
+if len(g.arity_differs) > 0 { print("The backends disagree on: " + join(map(g.arity_differs, fn(d) = d.name), ", ")) }

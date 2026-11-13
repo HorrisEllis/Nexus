@@ -1942,6 +1942,277 @@ fn rt_b_path_exists(path) {
   if sys6(21, rt_cpath(path), 0, 0, 0, 0) == 0 { return TRUE }
   return FALSE
 }
+// CIE13 slice c (2026-11-13): processes, from the kernel directly (fork, execve, wait4, kill, pipe2, dup2). James, 2026-11-13: "Next."
+//   proc_start(cmd, args) → pid         a child started; it shares this program's output and environment
+//   proc_wait(pid) → code               waits; the exit code, or 128 + the signal that ended it
+//   proc_wait_ms(pid, ms) → code|null   the same, for at most ms; null when it is still running
+//   proc_signal(pid, sig) → bool        15 asks it to stop, 9 ends it; false when there is no such process
+//   proc_run(cmd, args) → { code, out } runs it to its end and gives what it wrote to stdout
+// A command with no "/" is looked for in the usual folders (rt_exec_c). One that cannot be started ends with code 127.
+fn rt_proc_argv(cmd, args) {
+  if rt_kind(cmd) != K_STR { rt_fail2("a command must be a string, got ", rt_type_name(cmd)) }
+  if rt_kind(args) != K_LIST { rt_fail2("a command's arguments are a list of strings, got ", rt_type_name(args)) }
+  let n = mem_get(args + 8)
+  let items = mem_get(args + 24)
+  let v = rt_alloc((n + 2) * 8)
+  mem_set(v, rt_cpath(cmd))
+  var i = 0
+  while i < n {
+    mem_set(v + (i + 1) * 8, rt_cpath(mem_get(items + i * 8)))
+    i = i + 1
+  }
+  mem_set(v + (n + 1) * 8, 0)
+  return v
+}
+// in the child: become the command, or end with 127
+fn rt_exec_c(cmd, argv) {
+  let envp = rt_sp + 8 + (mem_get(rt_sp) + 1) * 8
+  let n = mem_get(cmd + 8)
+  var slash = 0
+  var i = 0
+  while i < n {
+    if mem_get8(cmd + 24 + i) == 47 { slash = 1 }
+    i = i + 1
+  }
+  if slash == 1 { sys6(59, mem_get(argv), argv, envp, 0, 0) }
+  else {
+    rt_exec_in("/usr/local/sbin/", 16, cmd, argv, envp)
+    rt_exec_in("/usr/local/bin/", 15, cmd, argv, envp)
+    rt_exec_in("/usr/sbin/", 10, cmd, argv, envp)
+    rt_exec_in("/usr/bin/", 9, cmd, argv, envp)
+    rt_exec_in("/sbin/", 6, cmd, argv, envp)
+    rt_exec_in("/bin/", 5, cmd, argv, envp)
+  }
+  sys6(60, 127, 0, 0, 0, 0)
+  return 0
+}
+fn rt_exec_in(dir, dn, cmd, argv, envp) {
+  let n = mem_get(cmd + 8)
+  let p = rt_alloc(dn + n + 1)
+  mem_copy(p, dir + 24, dn)
+  mem_copy(p + dn, cmd + 24, n)
+  mem_set8(p + dn + n, 0)
+  sys6(59, p, argv, envp, 0, 0)
+  return 0
+}
+fn rt_proc_code(st) {
+  let w = mem_get(st) & 4294967295
+  if (w & 127) == 0 { return (w >> 8) & 255 }
+  return 128 + (w & 127)
+}
+fn rt_pid(v, who) {
+  if not rt_is_num(v) or (v >> 3) < 1 { rt_fail2(who, " needs a process id from proc_start") }
+  return v >> 3
+}
+fn rt_b_proc_start(cmd, args) {
+  let argv = rt_proc_argv(cmd, args)
+  let pid = sys6(57, 0, 0, 0, 0, 0)
+  if pid < 0 { rt_fail2("proc_start: cannot start ", rt_tostr(cmd)) }
+  if pid == 0 { rt_exec_c(cmd, argv) }
+  return rt_mknum(pid)
+}
+fn rt_b_proc_wait(v) {
+  let pid = rt_pid(v, "proc_wait")
+  let st = rt_alloc(8)
+  mem_set(st, 0)
+  if sys6(61, pid, st, 0, 0, 0) != pid { rt_fail("proc_wait: no such process of this program") }
+  return rt_mknum(rt_proc_code(st))
+}
+fn rt_b_proc_wait_ms(v, limit) {
+  let pid = rt_pid(v, "proc_wait_ms")
+  if not rt_is_num(limit) or (limit >> 3) < 0 { rt_fail("proc_wait_ms needs a whole num of milliseconds, 0 or more") }
+  let ms = limit >> 3
+  let st = rt_alloc(8)
+  mem_set(st, 0)
+  let nap = rt_alloc(16)
+  mem_set(nap, 0)
+  mem_set(nap + 8, 2000000)
+  let t = rt_alloc(16)
+  sys6(228, 1, t, 0, 0, 0)
+  let from = mem_get(t) * 1000 + mem_get(t + 8) / 1000000
+  while 1 {
+    let r = sys6(61, pid, st, 1, 0, 0)
+    if r == pid { return rt_mknum(rt_proc_code(st)) }
+    if r < 0 { rt_fail("proc_wait_ms: no such process of this program") }
+    sys6(228, 1, t, 0, 0, 0)
+    if mem_get(t) * 1000 + mem_get(t + 8) / 1000000 - from >= ms { return NULL }
+    sys6(35, nap, 0, 0, 0, 0)
+  }
+  return NULL
+}
+fn rt_b_proc_signal(v, sig) {
+  let pid = rt_pid(v, "proc_signal")
+  if not rt_is_num(sig) or (sig >> 3) < 0 or (sig >> 3) > 64 { rt_fail("proc_signal needs a signal number, 0 to 64") }
+  if sys6(62, pid, sig >> 3, 0, 0, 0) == 0 { return TRUE }
+  return FALSE
+}
+fn rt_b_proc_run(cmd, args) {
+  let argv = rt_proc_argv(cmd, args)
+  let fds = rt_alloc(8)
+  if sys6(293, fds, 0, 0, 0, 0) != 0 { rt_fail("proc_run: cannot make a pipe") }
+  let rd = mem_get(fds) & 4294967295
+  let wr = (mem_get(fds) >> 32) & 4294967295
+  let pid = sys6(57, 0, 0, 0, 0, 0)
+  if pid < 0 { rt_fail2("proc_run: cannot start ", rt_tostr(cmd)) }
+  if pid == 0 {
+    sys6(33, wr, 1, 0, 0, 0)
+    sys6(3, rd, 0, 0, 0, 0)
+    sys6(3, wr, 0, 0, 0, 0)
+    rt_exec_c(cmd, argv)
+  }
+  sys6(3, wr, 0, 0, 0, 0)
+  let sb = rt_sb_new()
+  while 1 {
+    rt_sb_room(sb, 65536)
+    let r = sys6(0, rd, mem_get(sb) + mem_get(sb + 8), 65536, 0, 0)
+    if r <= 0 { break }
+    mem_set(sb + 8, mem_get(sb + 8) + r)
+  }
+  sys6(3, rd, 0, 0, 0, 0)
+  let st = rt_alloc(8)
+  mem_set(st, 0)
+  sys6(61, pid, st, 0, 0, 0)
+  let m = rt_map_new()
+  rt_map_set(m, "code", rt_mknum(rt_proc_code(st)))
+  rt_map_set(m, "out", rt_str_from(mem_get(sb), mem_get(sb + 8)))
+  return m
+}
+// CIE14 (2026-11-13): arithmetic on ints that wraps at 64 bits where + - * refuse (lang/runtime.js wrapOp). A machine word wraps by itself.
+fn rt_wrap_need(a, b, who) {
+  if rt_is_int(a) and rt_is_int(b) { return 0 }
+  let sb = rt_sb_new()
+  rt_sb_str(sb, who)
+  rt_sb_str(sb, " needs two ints, got ")
+  rt_sb_str(sb, rt_type_name(a))
+  rt_sb_str(sb, " and ")
+  rt_sb_str(sb, rt_type_name(b))
+  return rt_die_lit(rt_sb_done(sb))
+}
+fn rt_b_wrap_add(a, b) {
+  rt_wrap_need(a, b, "wrap_add")
+  return rt_mkint(rt_intval(a) + rt_intval(b))
+}
+fn rt_b_wrap_sub(a, b) {
+  rt_wrap_need(a, b, "wrap_sub")
+  return rt_mkint(rt_intval(a) - rt_intval(b))
+}
+fn rt_b_wrap_mul(a, b) {
+  rt_wrap_need(a, b, "wrap_mul")
+  return rt_mkint(rt_intval(a) * rt_intval(b))
+}
+// CIE13 slice b (2026-11-13): folders, from the kernel directly. is_dir (stat), make_dir (mkdir, every folder on the way), move_path
+// (rename, the folder it goes to made first), remove_path (unlink / rmdir, all the way down; a path not there is not an error), list_dir
+// (getdents64; names in byte order; a folder not there is []). The interpreter's are lang/runtime.js's; the same answers both ways.
+// Like write_file natively, these do not add a ledger entry (the interpreter's do): said in cie-eg.spec's native differences.
+fn rt_is_dir_c(p) {
+  let b = rt_bytes_new(160)
+  if sys6(4, p, b + 16, 0, 0, 0) != 0 { return 0 }
+  if (mem_get(b + 16 + 24) & 61440) == 16384 { return 1 }
+  return 0
+}
+fn rt_b_is_dir(path) {
+  if rt_is_dir_c(rt_cpath(path)) == 1 { return TRUE }
+  return FALSE
+}
+// mkdir -p on a C path of n bytes: each folder on the way, then the path; 0 when it is there at the end
+fn rt_mkdir_p_c(p, n) {
+  var i = 1
+  while i < n {
+    if mem_get8(p + i) == 47 {
+      mem_set8(p + i, 0)
+      sys6(83, p, 493, 0, 0, 0)
+      mem_set8(p + i, 47)
+    }
+    i = i + 1
+  }
+  sys6(83, p, 493, 0, 0, 0)
+  return rt_is_dir_c(p)
+}
+fn rt_b_make_dir(path) {
+  let p = rt_cpath(path)
+  if rt_mkdir_p_c(p, mem_get(path + 8)) != 1 { rt_fail2("make_dir: cannot make ", rt_tostr(path)) }
+  return NULL
+}
+fn rt_b_move_path(from, to) {
+  let a = rt_cpath(from)
+  let b = rt_cpath(to)
+  var cut = mem_get(to + 8) - 1
+  while cut > 0 and mem_get8(b + cut) != 47 { cut = cut - 1 }
+  if cut > 0 {
+    mem_set8(b + cut, 0)
+    rt_mkdir_p_c(b, cut)
+    mem_set8(b + cut, 47)
+  }
+  if sys6(82, a, b, 0, 0, 0) != 0 { rt_fail3("move_path: cannot move ", rt_tostr(from), " to its new place") }
+  return NULL
+}
+// the names in an open folder, each handed to rt_dir_take(acc, name pointer, name bytes); "." and ".." left out
+fn rt_dir_each(fd, acc, parent, parent_n) {
+  let buf = rt_alloc(32768)
+  while 1 {
+    let r = sys6(217, fd, buf, 32768, 0, 0)
+    if r <= 0 { break }
+    var at = 0
+    while at < r {
+      let reclen = mem_get8(buf + at + 16) + mem_get8(buf + at + 17) * 256
+      let name = buf + at + 19
+      var n = 0
+      while mem_get8(name + n) != 0 { n = n + 1 }
+      let dot = mem_get8(name) == 46 and (n == 1 or (n == 2 and mem_get8(name + 1) == 46))
+      if not dot {
+        if parent == 0 { rt_list_push(acc, rt_str_from(name, n)) }
+        else {
+          let child = rt_alloc(parent_n + n + 2)
+          mem_copy(child, parent, parent_n)
+          mem_set8(child + parent_n, 47)
+          mem_copy(child + parent_n + 1, name, n)
+          mem_set8(child + parent_n + 1 + n, 0)
+          rt_rm_c(child, parent_n + 1 + n)
+        }
+      }
+      at = at + reclen
+    }
+  }
+  return 0
+}
+fn rt_rm_c(p, n) {
+  let r = sys6(87, p, 0, 0, 0, 0)
+  if r == 0 or r == 0 - 2 { return 0 }
+  // a folder: everything in it first, then the folder (O_RDONLY|O_DIRECTORY|O_NOFOLLOW = 65536 + 131072)
+  let fd = sys6(2, p, 196608, 0, 0, 0)
+  if fd < 0 { return fd }
+  rt_dir_each(fd, 0, p, n)
+  sys6(3, fd, 0, 0, 0, 0)
+  return sys6(84, p, 0, 0, 0, 0)
+}
+fn rt_b_remove_path(path) {
+  let r = rt_rm_c(rt_cpath(path), mem_get(path + 8))
+  if r != 0 and r != 0 - 2 { rt_fail2("remove_path: cannot remove ", rt_tostr(path)) }
+  return NULL
+}
+fn rt_b_list_dir(path) {
+  let l = rt_list_new(8)
+  let fd = sys6(2, rt_cpath(path), 65536, 0, 0, 0)
+  if fd == 0 - 2 { return l }
+  if fd < 0 { rt_fail2("list_dir: cannot list ", rt_tostr(path)) }
+  rt_dir_each(fd, l, 0, 0)
+  sys6(3, fd, 0, 0, 0, 0)
+  // names in byte order (insertion sort: a folder's names are few)
+  let items = mem_get(l + 24)
+  let n = mem_get(l + 8)
+  var i = 1
+  while i < n {
+    let v = mem_get(items + i * 8)
+    var j = i - 1
+    while j >= 0 and rt_str_cmp(mem_get(items + j * 8), v) > 0 {
+      mem_set(items + (j + 1) * 8, mem_get(items + j * 8))
+      j = j - 1
+    }
+    mem_set(items + (j + 1) * 8, v)
+    i = i + 1
+  }
+  return l
+}
 fn rt_b_chmod_exec(path) {
   sys6(90, rt_cpath(path), 493, 0, 0, 0)
   return NULL

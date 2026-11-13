@@ -1,0 +1,139 @@
+// lang/cie/self.eg — Emerge's map of itself: every primitive as a block, every way it is carried out as an edge (CIE14, slice f).
+// James, 2026-11-13: "Look a the graph substrate. Like emerge should reduce friction between primitives. It's meant to be self aware."
+//
+// The shape is the substrate's (docs/substrate.spec: Block { id, kind, domain, address, name, attrs }, Edge { from, to, relation,
+// evidence, by, domain }), so what reads any graph in Nexus reads this one. Nothing is declared by hand here: each block and edge is
+// DISCOVERED in Emerge's own sources, and says where.
+//
+//   observe(lang_dir)  → { blocks, edges }    a primitive (domain "emerge"), the runtime function that carries it out natively
+//                                             (domain "native"), a call the native lowering rewrites into the world written in
+//                                             Emerge (domain "lowered"), its interpreter's definition (domain "interpreter"), a
+//                                             prelude function written in Emerge (domain "prelude")
+//   gaps(obs)          → the negative space:  interpreter_only (a program using one cannot be compiled yet), native_only,
+//                                             arity_differs (the two backends disagree on how many arguments)
+//   summary(obs)       → counts, for the tension meter
+//
+// Where it reads: native/codegen.eg's BUILTINS (what emerge.exe carries), native/check_env_text.eg (the interpreter's builtins and
+// their arity, regenerated from lang/runtime.js), core/prelude.eg (functions written in Emerge, the same both ways).
+
+use "../native/codegen.eg" as cg
+use "../native/check_env_text.eg" as env
+
+fn _block(id: string, kind: string, domain: string, address: string, attrs: map): map =
+  { id: id, kind: kind, domain: domain, address: address, name: id, attrs: attrs }
+fn _edge(from: string, to: string, by: string, domain: string): map =
+  { from: from, to: to, relation: "implements", evidence: "discovered", by: by, domain: domain }
+
+/** [fewest, most] from either table's way of writing an arity: n, or [fewest, most] with -1 for any number */
+fn _span(a: any): list {
+  if type_of(a) == "list" { return [a[0], a[1]] }
+  return [a, a]
+}
+
+fn _prelude_names(lang_dir: string): list {
+  var out = []
+  for l in split(read_file(lang_dir + "/core/prelude.eg"), "\n") {
+    if l starts_with "fn " {
+      let rest = slice(l, 3)
+      let at = find_text(rest, "(")
+      if at > 0 { out = push(out, slice(rest, 0, at)) }
+    }
+  }
+  return out
+}
+
+/** the calls native/lower.eg rewrites, read from its own text: callee.name == "x" */
+fn _lowered_names(lang_dir: string): list {
+  var out = {}
+  let parts = split(read_file(lang_dir + "/native/lower.eg"), "callee.name == \"")
+  var i = 1
+  while i < len(parts) {
+    let at = find_text(parts[i], "\"")
+    if at > 0 { out[slice(parts[i], 0, at)] = true }
+    i += 1
+  }
+  return sort(keys(out))
+}
+
+fn observe(lang_dir: string): map {
+  var blocks = []
+  var edges = []
+  var seen = {}
+  let arity = parse_json(env.TEXT).arity
+  for name in sort(keys(arity)) {
+    seen[name] = true
+    blocks = push(blocks, _block(name, "primitive", "emerge", "builtin " + name, { arity: _span(arity[name]) }))
+    blocks = push(blocks, _block("interpreter:" + name, "function", "interpreter", "lang/runtime.js def " + name, { arity: _span(arity[name]) }))
+    edges = push(edges, _edge("interpreter:" + name, name, "native/check_env_text.eg", "interpreter"))
+  }
+  for name in sort(keys(cg.BUILTINS)) {
+    let b = cg.BUILTINS[name]
+    if not has(seen, name) {
+      seen[name] = true
+      blocks = push(blocks, _block(name, "primitive", "emerge", "builtin " + name, { arity: [b[1], b[2]] }))
+    }
+    blocks = push(blocks, _block("native:" + b[0], "function", "native", "lang/native/rt.eg#" + b[0], { arity: [b[1], b[2]] }))
+    edges = push(edges, _edge("native:" + b[0], name, "native/codegen.eg BUILTINS", "native"))
+  }
+  // natively, some primitives take other roads than the table: any number of arguments (VARIADIC), or a call the lowering rewrites
+  // into the world written in Emerge (native/lower.eg names each one it rewrites)
+  for name in sort(keys(cg.VARIADIC)) {
+    blocks = push(blocks, _block("native:" + cg.VARIADIC[name], "function", "native", "lang/native/rt.eg#" + cg.VARIADIC[name], { arity: [0, -1] }))
+    edges = push(edges, _edge("native:" + cg.VARIADIC[name], name, "native/codegen.eg VARIADIC", "native"))
+  }
+  for name in _lowered_names(lang_dir) {
+    if has(seen, name) {
+      blocks = push(blocks, _block("lowered:" + name, "function", "lowered", "lang/native/lower.eg (" + name + ")", {}))
+      edges = push(edges, _edge("lowered:" + name, name, "native/lower.eg", "lowered"))
+    }
+  }
+  for name in _prelude_names(lang_dir) {
+    if not has(seen, name) {
+      seen[name] = true
+      blocks = push(blocks, _block(name, "primitive", "emerge", "prelude " + name, {}))
+    }
+    blocks = push(blocks, _block("prelude:" + name, "function", "prelude", "lang/core/prelude.eg#" + name, {}))
+    edges = push(edges, _edge("prelude:" + name, name, "core/prelude.eg", "prelude"))
+  }
+  return { blocks: blocks, edges: edges }
+}
+
+fn _by_domain(obs: map): map {
+  var m = {}
+  for e in obs.edges {
+    if not has(m, e.to) { m[e.to] = {} }
+    var d = m[e.to]
+    d[e.domain] = e.from
+    m[e.to] = d
+  }
+  return m
+}
+
+fn gaps(obs: map): map {
+  let how = _by_domain(obs)
+  var attrs = {}
+  for b in obs.blocks { attrs[b.id] = b.attrs }
+  var interp_only = []
+  var native_only = []
+  var differs = []
+  for name in sort(keys(how)) {
+    let h = how[name]
+    let n = has(h, "native") or has(h, "prelude") or has(h, "lowered")
+    let i = has(h, "interpreter") or has(h, "prelude")
+    if i and not n { interp_only = push(interp_only, name) }
+    if n and not i { native_only = push(native_only, name) }
+    if has(h, "native") and has(h, "interpreter") and attrs[h.native].arity != [0, -1] {
+      let a = attrs[h.native].arity
+      let b = attrs[h.interpreter].arity
+      if a != b { differs = push(differs, { name: name, native: a, interpreter: b }) }
+    }
+  }
+  return { interpreter_only: interp_only, native_only: native_only, arity_differs: differs }
+}
+
+fn summary(obs: map): map {
+  let g = gaps(obs)
+  let prims = filter(obs.blocks, fn(b) = b.kind == "primitive")
+  return { primitives: len(prims), edges: len(obs.edges), both: len(prims) - len(g.interpreter_only) - len(g.native_only),
+    interpreter_only: len(g.interpreter_only), native_only: len(g.native_only), arity_differs: len(g.arity_differs) }
+}
