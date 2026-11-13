@@ -24,4 +24,8 @@
 // as COS.) The exe had changed since cos-v0.7.1 with no bump, so the cos-app workflow refused it and his 0.7.1 never got: SC16 (0.60.460,
 // "also can we have cos.exe run the command prompts in the background?": Clear Glass started through electron.exe, no console window) and SC7
 // (0.60.464: Settings › Startup and services in the cockpit, with "Run Nexus as a Windows service", NexusCOS through nssm.exe, CA4 0.5.0).
-module.exports = { version: '0.8.0' };
+// 0.9.0 (Nexus 0.60.516, CA8): James, 2026-11-13, told the service switch needs nssm.exe, which is not on his machine and not in his NSSM.zip
+// (that is his NSM v2): "need to build it from scratch." COS carries its own service host, cos/app/bin/cos-svc.exe (C#, built with the compiler
+// Windows carries): it answers the service control manager, runs node + autopilot as NexusCOS (LocalSystem, at boot), rotates the logs, starts
+// Nexus again when it exits or stops answering its health URL (his NSM v2's rule). The switch no longer needs nssm.exe.
+module.exports = { version: '0.9.0' };

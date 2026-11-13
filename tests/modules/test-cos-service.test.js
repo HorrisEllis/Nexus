@@ -128,7 +128,7 @@ async function test(id, desc, fn) { try { await fn(); console.log(`  ✓ ${id} $
     for (const f of ['cos/app/service.js', 'cos/app/desktop-systems.js']) assert.ok(B.includes(`'${f}'`), f);
     const [maj, min] = require(path.join(ROOT, 'cos/app/version.js')).version.split('.').map(Number); assert.ok(maj > 0 || min >= 5, 'COS 0.5.0 or later carries the service');
     const M = fs.readFileSync(path.join(ROOT, 'cos/app/desktop/main.js'), 'utf8');
-    assert.match(M, /Run Nexus as a Windows service \(admin, at boot; needs nssm\.exe\)/);
+    assert.match(M, /Run Nexus as a Windows service \(admin, at boot\)/);
     assert.match(M, /if \(serviceOn\(\) && ctl\.linkedDir\(\)\)/);
   });
 
@@ -145,6 +145,74 @@ async function test(id, desc, fn) { try { await fn(); console.log(`  ✓ ${id} $
     assert.deepStrictEqual(w, [{ name: 'clear-glass', started: true, dir }]);
     const none = new Controller({ root: fs.mkdtempSync(path.join(os.tmpdir(), 'sv07n-')), store: { list: () => [] }, rt });
     assert.deepStrictEqual(await none.startWindowed(), []);
+  });
+
+  // ── CA8 (COS 0.9.0) — James, 2026-11-13: "need to build it from scratch." COS's own service host, cos-svc.exe, in place of nssm.exe ──
+  const H = 'C:\\COS\\resources\\app\\cos\\app\\bin\\cos-svc.exe';
+  await test('SV-08', 'COS\'s own host: found in its places; what it runs is one config (NSSM\'s settings, plus the health rule); the commands exactly', () => {
+    const has = (set) => (f) => set.includes(f);
+    assert.strictEqual(SV.findHost({ env: { COS_SVC_EXE: 'E:\\x\\cos-svc.exe' }, exists: has(['E:\\x\\cos-svc.exe']), here: 'C:\\a', appDir: 'C:\\COS' }), 'E:\\x\\cos-svc.exe');
+    assert.strictEqual(SV.findHost({ env: {}, exists: has([path.join('C:\\a', 'bin', 'cos-svc.exe')]), here: 'C:\\a', appDir: 'C:\\COS' }), path.join('C:\\a', 'bin', 'cos-svc.exe'));
+    assert.strictEqual(SV.findHost({ env: {}, exists: () => false, here: 'C:\\a', appDir: 'C:\\COS' }), null);
+    const c = SV.hostConfig({ node: NODE, entry: ENTRY, dir: DIR, logDir: LOGS });
+    assert.deepStrictEqual([c.name, c.node, c.entry, c.args, c.dir, c.logDir, c.env, c.rotateBytes, c.restartDelayMs, c.maxDelayMs, c.healthUrl, c.healthFails],
+      ['NexusCOS', NODE, ENTRY, ['--status-port=7799'], DIR, LOGS, { COS_SERVICE: '1', AUTOPILOT_STATUS_PORT: '7799' }, 10485760, 2000, 30000, 'http://127.0.0.1:7799/api/cos/health', 3]);
+    assert.throws(() => SV.hostConfig({ node: NODE }), /needs entry/);
+    const cfg = path.join(LOGS, 'service.json');
+    assert.deepStrictEqual(SV.hostInstallCommands({ host: H, configFile: cfg }).map(([cmd, a]) => { assert.strictEqual(cmd, H); return a.join(' '); }),
+      ['stop NexusCOS', 'remove NexusCOS confirm', `install ${cfg}`, 'start NexusCOS']);
+    assert.deepStrictEqual(SV.hostRemoveCommands({ host: H }).map(([, a]) => a.join(' ')), ['stop NexusCOS', 'remove NexusCOS confirm']);
+    const b = SV.batch(SV.hostInstallCommands({ host: H, configFile: cfg }));
+    assert.match(b, /cos-svc\.exe" "stop" "NexusCOS" >nul 2>&1\r\n/, 'a first install has nothing to stop: allowed to fail');
+    assert.match(b, /cos-svc\.exe" "install" "[^"]*service\.json"\r\nif errorlevel 1 \(echo failed at step 3: install [^\r]* & exit \/b 12\)/);
+  });
+
+  await test('SV-09', 'apply uses COS\'s own host before nssm.exe, writes its config, reads its status; off removes through it; neither found is said', async () => {
+    const scripts = [], written = [];
+    const on = await SV.apply({ enable: true, node: NODE, entry: ENTRY, dir: DIR, logDir: LOGS, platform: 'win32', findHostFn: () => H, findFn: () => { throw new Error('nssm must not be looked for when the host is there'); },
+      writeConfig: (f, o) => written.push([f, o]), runBatchElevated: async (t) => { scripts.push(t); return { ok: true }; }, statusFn: async ({ nssm }) => ({ state: nssm === H ? 'running' : 'unknown' }) });
+    assert.deepStrictEqual([on.ok, on.via, on.by, on.state, on.host, scripts.length], [true, 'service', 'cos-svc', 'running', H, 1], JSON.stringify(on));
+    assert.deepStrictEqual([written[0][0], written[0][1].entry, written[0][1].env.COS_SERVICE], [path.join(LOGS, 'service.json'), ENTRY, '1']);
+    assert.ok(/cos-svc\.exe" "install"/.test(scripts[0]) && !/nssm/.test(scripts[0]));
+    const off = await SV.apply({ enable: false, platform: 'win32', findHostFn: () => H, runBatchElevated: async (t) => { scripts.push(t); return { ok: true }; } });
+    assert.deepStrictEqual([off.ok, off.via, off.by], [true, 'removed', 'cos-svc']);
+    assert.ok(/cos-svc\.exe" "remove" "NexusCOS"/.test(scripts[1]) && !/"install"/.test(scripts[1]));
+    const fallback = await SV.apply({ enable: true, node: NODE, entry: ENTRY, dir: DIR, logDir: LOGS, platform: 'win32', findHostFn: () => null, findFn: () => N, runBatchElevated: async (t) => { scripts.push(t); return { ok: true }; }, statusFn: async () => ({ state: 'running' }) });
+    assert.deepStrictEqual([fallback.ok, fallback.by, fallback.nssm], [true, 'nssm', N]);
+    let ran = 0;
+    const neither = await SV.apply({ enable: true, node: NODE, entry: ENTRY, dir: DIR, platform: 'win32', findHostFn: () => null, findFn: () => null, runBatchElevated: async () => { ran++; return { ok: true }; } });
+    assert.ok(!neither.ok && /cos-svc\.exe\) is missing.*Nothing was installed/.test(neither.error) && ran === 0, JSON.stringify(neither));
+    const cant = await SV.apply({ enable: true, node: NODE, entry: ENTRY, dir: DIR, platform: 'win32', findHostFn: () => H, writeConfig: () => { throw new Error('disk full'); }, runBatchElevated: async () => { ran++; return { ok: true }; } });
+    assert.ok(!cant.ok && /could not be written.*disk full.*Nothing was installed/.test(cant.error) && ran === 0, JSON.stringify(cant));
+  });
+
+  await test('SV-10', 'the host ships: its source, its build script, the built exe matching its SHA256, in the exe\'s file list; COS 0.9.0 or later', () => {
+    for (const f of ['cos/app/service-host/cos-svc.cs', 'cos/app/service-host/build.cmd', 'cos/app/bin/cos-svc.exe', 'cos/app/bin/cos-svc.exe.sha256']) assert.ok(fs.existsSync(path.join(ROOT, f)), f);
+    const sum = require('crypto').createHash('sha256').update(fs.readFileSync(path.join(ROOT, 'cos/app/bin/cos-svc.exe'))).digest('hex');
+    assert.strictEqual(fs.readFileSync(path.join(ROOT, 'cos/app/bin/cos-svc.exe.sha256'), 'utf8').trim().split(/\s+/)[0], sum, 'the exe is the one build.cmd wrote');
+    const B = fs.readFileSync(path.join(ROOT, 'scripts/build-cos-app.js'), 'utf8');
+    for (const f of ['cos/app/bin/cos-svc.exe', 'cos/app/bin/cos-svc.exe.sha256']) assert.ok(B.includes(`'${f}'`), f);
+    const [maj, min] = require(path.join(ROOT, 'cos/app/version.js')).version.split('.').map(Number); assert.ok(maj > 0 || min >= 9, 'COS 0.9.0 or later carries its own host');
+    const src = fs.readFileSync(path.join(ROOT, 'cos/app/service-host/cos-svc.cs'), 'utf8');
+    for (const verb of ['install', 'start', 'stop', 'remove', 'status', 'run', 'console']) assert.ok(src.includes(`case "${verb}":`), verb);
+  });
+
+  if (process.platform === 'win32') await test('SV-11', 'on Windows, the built host really runs: starts the process with its env and arguments, logs it, starts it again with a growing delay, ends it on stop; status says a missing service', async () => {
+    const { spawnSync } = require('child_process');
+    const exe = path.join(ROOT, 'cos/app/bin/cos-svc.exe');
+    const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'sv11-'));
+    fs.writeFileSync(path.join(tmp, 'child.js'), "console.log('up', process.env.COS_SERVICE, process.argv.slice(2).join('|')); console.error('err line'); setTimeout(() => process.exit(7), 400);");
+    const cfg = path.join(tmp, 'service.json');
+    fs.writeFileSync(cfg, JSON.stringify({ name: 'CosSvcTest', node: process.execPath, entry: path.join(tmp, 'child.js'), args: ['--status-port=7799', 'two words'], dir: tmp, env: { COS_SERVICE: '1' }, logDir: path.join(tmp, 'logs'), restartDelayMs: 200, maxDelayMs: 800 }));
+    const r = spawnSync(exe, ['console', cfg, '3500'], { encoding: 'utf8', windowsHide: true, timeout: 30000 });
+    assert.strictEqual(r.status, 0, r.stderr);
+    const out = fs.readFileSync(path.join(tmp, 'logs', 'service.log'), 'utf8').trim().split(/\r?\n/);
+    assert.ok(out.length >= 3 && out.every(l => l === 'up 1 --status-port=7799|two words'), JSON.stringify(out));
+    assert.match(fs.readFileSync(path.join(tmp, 'logs', 'service-error.log'), 'utf8'), /err line/);
+    const host = fs.readFileSync(path.join(tmp, 'logs', 'service-host.log'), 'utf8');
+    assert.ok(/exit 7\).*again in 200 ms/.test(host) && /again in 400 ms/.test(host) && /again in 800 ms/.test(host) && /stopped\s*$/.test(host), host);
+    const st = spawnSync(exe, ['status', 'CosSvcTest'], { encoding: 'utf8', windowsHide: true });
+    assert.deepStrictEqual([st.status, SV.parseStatus(st.stdout)], [3, 'missing']);
   });
 
   console.log(`\n  ${passed} passed, ${failed} failed\n`); process.exitCode = failed ? 1 : 0;
