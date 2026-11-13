@@ -30,6 +30,8 @@ const TABLE = [
   // 0.60.517 — James, 2026-11-13: "also all pipelines in nexus need to be here." Every .pipeline file in Nexus imported into the engine, now
   // GR0 (2026-11-13) — his "find them.": every graph in Nexus, read from the tree
   ['census', 'census graph [--md]', 'every graph Nexus keeps: its store, what its edges rest on, the files that write and read it, its rows on this machine\'s data; --md prints the atlas page'],
+  // CA7 slice a (2026-11-13), his "can be moved anbd changed in each systems individual settings"
+  ['location', 'location [system]', 'where each system lives on this machine, its size, and whether it can be moved (and what holds it if not)'],
   ['pipeline-sync', 'pipeline-sync', 'import every pipeline in Nexus into the Automation tab now: COS\'s own files and each system\'s, by its route; a system that does not answer is named'],
   // AE7 (2026-11-08) — James: "Then an api that eravos can use for the step. So needs full cli commands, events, nodes."
   ['automation', 'automation workflows | run <id> | step <type> [key=value …] | active | log [n] | catalogue | nodes | export <id> | import <file> | pipelines | pipeline <id> | pipeline-run <id> | runs [pipeline-id] | stop <run-id> | pause <run-id> | continue <run-id> | pipeline-export <id> [file] | systems-pipelines <system> | import-from <system> <id>', 'the automation engine COS runs: its workflows, a run, one step on its own (what an ERAVOS box calls), live runs, the log, the step kinds, workflows as nodes'],
@@ -48,7 +50,7 @@ function split(line) {
 }
 const pad = (s, n) => String(s ?? '—').padEnd(n);
 
-function createCli({ sup, resources = null, config = null, notices = null, proposals = null, addSystem = null, usage = null, disks = null, vdisks = null, pipelineSync = null, graphCensus = null } = {}) {
+function createCli({ sup, resources = null, config = null, notices = null, proposals = null, addSystem = null, usage = null, disks = null, vdisks = null, pipelineSync = null, graphCensus = null, locationOf = null } = {}) {
   async function run(line, { by = 'person' } = {}) {
     // 0.60.517 — "cos <verb>" typed in COS's own console is the verb (his 2026-11-13 `cos pipeline-sync` answered "no verb cos")
     let [verb, ...a] = split(line); if (verb === 'cos' && a.length) verb = a.shift(); const L = [];
@@ -165,6 +167,14 @@ function createCli({ sup, resources = null, config = null, notices = null, propo
           if (o.args) o.args = o.args.split(','); if (o.port) o.port = Number(o.port);
           const r = addSystem.propose(o); L.push(`proposal ${r.proposal.id}: add ${o.name} from ${o.dir}${r.taken ? ` — taken: ${r.taken.status}` : ' — held: take it to add'}`); break;
         }
+        case 'location': {
+          if (typeof locationOf !== 'function') throw new Error('COS cannot read locations here');
+          const r = await locationOf(a[0] || null); if (!r.ok) throw new Error(r.error || 'no answer');
+          const mb = (b) => (b / 1048576).toFixed(b < 10485760 ? 1 : 0) + ' MB';
+          if (a[0]) { L.push(`${r.system}: ${r.folder}`, `  ${mb(r.disk.bytes)} in ${r.disk.files} files${r.disk.cut ? ' (counting stopped early)' : ''}`, `  ${r.movable ? 'can be moved' : 'cannot be moved yet:'}`); for (const w of r.why || []) L.push(`    ${w}`); break; }
+          L.push(`Nexus at ${r.root}${r.cosRoot ? ` · COS at ${r.cosRoot}` : ''}`);
+          for (const x of r.systems) L.push(`  ${x.system.padEnd(15)} ${x.movable ? 'can move' : `held: out ${x.out}, in ${x.in}${x.root_data ? ', data at the root' : ''}`}`);
+          break; }
         case 'census': {
           if (a[0] !== 'graph') throw Object.assign(new Error('usage: census graph [--md]'), { code: 400 });
           if (typeof graphCensus !== 'function') throw new Error('the pipeline module is not up yet');

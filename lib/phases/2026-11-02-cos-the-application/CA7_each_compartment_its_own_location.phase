@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-02-cos-the-application-phasemap.spec::CA7_each_compartment_its_own_location
+type: phase
+id: docs_2026-11-02-cos-the-application-phasemap.spec::CA7_each_compartment_its_own_location
+context: >-
+  pipeline phase CA7_each_compartment_its_own_location of
+  docs/2026-11-02-cos-the-application-phasemap.spec
+intent: null
+summary: CA7_each_compartment_its_own_location (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1794613330851
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794613330851
+lastSeenAt: 1794613330851
+fingerprint: null
+payload:
+  id: CA7_each_compartment_its_own_location
+  map: docs/2026-11-02-cos-the-application-phasemap.spec
+  repo: null
+  layer: null
+  status: 'OPEN   # reading settled 2026-11-13 (his): (c)'
+  files:
+    - lib/system-boundary.js
+  depends_on:
+    - CA6_install_asks_where_and_npm_in_program_files
+  blocks: []
+  spec: null
+  graph: 17e1cb928a57369d

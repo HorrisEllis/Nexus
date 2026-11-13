@@ -146,6 +146,8 @@ function createPipeline({ automation, idearium = null, call = null, dataDir } = 
   }
   // GR0 (2026-11-13), his "find them." then "yes. then the highest leverage.": every graph in Nexus, read from the tree (cos/census/graph.eg);
   // rows from data (NEXUS_DATA_ROOT, else <root>/data); markdown: the atlas page as well
+  // CA7 slice a (2026-11-13), his "can be moved anbd changed in each systems individual settings": where each system lives and whether it can move
+  async function locations({ treeRoot = root, systems = SOV_SYSTEMS } = {}) { return eg('locations', { root: treeRoot, systems }); }
   async function graphCensus({ treeRoot = root, data = process.env.NEXUS_DATA_ROOT || path.join(root, 'data'), markdown = false } = {}) {
     return eg('graph-census', { root: treeRoot, data, markdown });
   }
@@ -316,7 +318,7 @@ function createPipeline({ automation, idearium = null, call = null, dataDir } = 
     return { ...out, pipeline: id, latestRun: latest ? { id: latest.id, status: latest.status, decisions: latest.decisions || [] } : null };
   }
 
-  return { boxes, gates, runs, frameworks, frameworkStep, decideGate, onEvent, request, resume, retry, ready, sovereign, graphCensus, planPhase, buildNext, sync, sources, fromErv, baseline };
+  return { boxes, gates, runs, frameworks, frameworkStep, decideGate, onEvent, request, resume, retry, ready, sovereign, graphCensus, locations, planPhase, buildNext, sync, sources, fromErv, baseline };
 }
 
 module.exports = { createPipeline, MODULE_ID: 'cos.pipeline', VERSION: '1.0.0' };

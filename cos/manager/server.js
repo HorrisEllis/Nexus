@@ -59,7 +59,7 @@ function createServer(sup, opts = {}) {
   // DK6–DK8 0.60.383 — James, 2026-11-03: "It needs to be a virtual disk. For the virtual envirements for qumu also. Like it holds all the data,
   // snapshots, system state." Each system's qcow2: its metadata, files and data in one ext4, its snapshots inside the same file
   const vdisks = require('../disk/vdisk.js').createVDisks({ root, disks });
-  const cli = require('./cli.js').createCli({ sup, resources, config, notices, proposals, addSystem, usage, disks, vdisks, pipelineSync: (o) => syncPipelines(o), graphCensus: (o) => pipeline.graphCensus(o) });
+  const cli = require('./cli.js').createCli({ sup, resources, config, notices, proposals, addSystem, usage, disks, vdisks, pipelineSync: (o) => syncPipelines(o), graphCensus: (o) => pipeline.graphCensus(o), locationOf: (name) => _locationOf(name) });
   sup.on('ledger', (entry) => { try { notices.fromLedger(entry); } catch (_) {} });
   const checkNotice = () => { try { notices.fromNotice(require('../../lib/nexus-update.js').notice({ root })); } catch (_) {} };
   const noticeTick = setInterval(checkNotice, 10 * 60 * 1000); if (noticeTick.unref) noticeTick.unref(); setTimeout(checkNotice, 2000).unref();
@@ -98,7 +98,11 @@ function createServer(sup, opts = {}) {
   });
   const srvRef = {};
   let desktop = null;   // PC9: made on first use
-  let _intelWake = null;   // 0.60.524: the one wait while Intelligence is woken for the Emergence page
+  let _intelWake = null;
+  // CA7 slice a: the console asks the same thing the route answers (one system's location), through COS's own route
+  const _locationOf = (name) => new Promise((resolve) => { const port = srvRef.server && srvRef.server.address() && srvRef.server.address().port;
+    if (!port) return resolve({ ok: false, error: 'COS is not listening yet' });
+    http.get(`http://127.0.0.1:${port}/api/cos/${name ? `systems/${encodeURIComponent(name)}/location` : 'locations'}`, { timeout: 30000 }, (r) => { let t = ''; r.on('data', c => t += c); r.on('end', () => { try { resolve(JSON.parse(t)); } catch (_) { resolve({ ok: false, error: 'not JSON' }); } }); }).on('error', (e) => resolve({ ok: false, error: e.message })); });   // 0.60.524: the one wait while Intelligence is woken for the Emergence page
   // 2026-11-09 — James: "This needs to be a module." COS's pipeline module (cos/pipeline/): the box shape, the gates, requests kept as files
   pipeline = require('../pipeline/index.js').createPipeline({ automation, idearium: _ideariumGet, call: _systemCall,
     dataDir: process.env.COS_MANAGER_DATA || path.join(root, 'cos', 'data', 'manager') });
@@ -224,6 +228,21 @@ function createServer(sup, opts = {}) {
       if (m === 'GET' && p === '/api/cos/notices') return send(res, 200, { ok: true, notices: notices.list({ unread: u.searchParams.get('unread') === '1', kind: u.searchParams.get('kind'), limit: u.searchParams.get('limit') }), counts: notices.counts() });
       if (m === 'POST' && p === '/api/cos/notices/read') return send(res, 200, { ok: true, ...notices.read({ ids: body.ids, all: body.all === true }) });
       // SC2 — a system's configuration: every setting, its layer, when and how it applies; set his overrides; clear them back to the declared
+      // CA7 slice a (2026-11-13) — James: "should be a first time setup wizard, storage location of each system/nexus" · "second one, can be moved anbd
+      // changed in each systems individual settings." Where each system lives, whether it can be moved, and what holds it if not (cos/sovereign/location.eg);
+      // one system's answer adds its folder on this machine and its size on disk (files under it, node_modules included: that moves too)
+      if (m === 'GET' && p === '/api/cos/locations') { const r = await pipeline.locations(); return send(res, r.ok ? 200 : (r.code || 500), { ...r, root, cosRoot: process.env.COS_APP_ROOT || null }); }
+      { const lm = /^\/api\/cos\/systems\/([^/]+)\/location$/.exec(p);
+        if (lm && m === 'GET') { const name = decodeURIComponent(lm[1]); const d = sup.declarations().find(x => x.name === name || x.system === name);
+          if (!d) return send(res, 404, { ok: false, error: `no system ${name}` });
+          const dir = (d.cwd && d.cwd !== '.' ? d.cwd : null) || (d.entry ? String(d.entry).split('/')[0] : name);
+          const all = await pipeline.locations(); if (!all.ok) return send(res, all.code || 500, all);
+          const row = (all.systems || []).find(x => x.system === dir || x.system.split('/')[0] === dir) || null;
+          const abs = path.join(root, dir); let bytes = 0, files = 0, cut = false;
+          const walk = (f, depth) => { if (files > 200000 || depth > 40) { cut = true; return; } let st; try { st = require('fs').lstatSync(f); } catch (_) { return; }
+            if (st.isSymbolicLink()) return; if (st.isDirectory()) { let n = []; try { n = require('fs').readdirSync(f); } catch (_) {} for (const x of n) walk(path.join(f, x), depth + 1); } else { bytes += st.size; files++; } };
+          walk(abs, 0);
+          return send(res, 200, { ok: true, system: name, folder: abs, inside: abs.startsWith(root), disk: { bytes, files, cut }, ...(row ? { movable: row.movable, why: row.why, out: row.out, out_to: row.out_to, in: row.in, in_from: row.in_from, root_data: row.root_data, source_files: row.files } : { movable: false, why: ['not read by the census (no folder of its own)'] }) }); } }
       const cf = /^\/api\/cos\/systems\/([^/]+)\/config(\/clear)?$/.exec(p);
       if (cf) { const name = decodeURIComponent(cf[1]);
         try {

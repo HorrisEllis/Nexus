@@ -1,0 +1,54 @@
+// cos/sovereign/location.eg — where each system lives, and whether it can be moved (CA7 slice a, docs/2026-11-02-cos-the-application-phasemap.spec).
+// James, 2026-11-05: "i was also thinking each compartment can have a different location inside of cos." · 2026-11-13: "should be a first time
+// setup wizard, storage location of each system/nexus" · asked which reading: "second one, can be moved anbd changed in each systems individual
+// settings." (each system, code and data, in a folder inside COS by default; moved from its own settings)
+//
+//   locations(root, systems) → { ok, systems: [{ system, folder, files, out, out_to, in, in_from, root_data, movable, why }] }
+//
+// Read, never guessed: what reaches out of a system's folder (Pillar's map of it, pillar/map/map.eg: each require that leaves it), what reaches
+// into it from the others (their maps), and whether its data still sits in the root data/ folder (the sovereignty card, card.eg). A system moved
+// while any of these hold stops working, so it can move only when all three are zero; otherwise `why` names what still holds it, by count and
+// by name. Writes nothing.
+
+use "../../pillar/map/map.eg" as M
+use "./card.eg" as C
+
+fn first(p: string): string {
+  let parts = split(p, "/")
+  return parts[0]
+}
+
+fn locations(root: string, systems: list): map {
+  var maps = {}
+  for s in systems { if is_dir(root + "/" + s) { maps[s] = M.map_of(root, s) } }
+  // lib/ is not a system (SW_D5) and has no row, but what it reaches into holds a system in place too
+  var reachers = systems
+  if is_dir(root + "/lib") and not has(maps, "lib") { maps["lib"] = M.map_of(root, "lib"); reachers = push(reachers, "lib") }
+  var rows = []
+  for s in systems {
+    if has(maps, s) {
+      let m = maps[s]
+      let own = first(s)
+      var out = 0
+      var out_to = []
+      for c in get(m, "crossings", []) { out += c.count; out_to = push(out_to, c.to + " " + str(c.count)) }
+      var inn = 0
+      var in_from = []
+      for o in reachers {
+        if o != s and has(maps, o) {
+          var k = 0
+          for c in get(maps[o], "crossings", []) { if c.to == own { k += c.count } }
+          if k > 0 { inn += k; in_from = push(in_from, o + " " + str(k)) }
+        }
+      }
+      let card = C.one(root, s)
+      var why = []
+      if out > 0 { why = push(why, "it reaches into " + join(out_to, ", ") + " by path (SW6, SW7)") }
+      if inn > 0 { why = push(why, "it is reached into by " + join(in_from, ", ") + " by path (SW6)") }
+      if card.root_data { why = push(why, "its data is still at the root, data/" + s + " (SW4)") }
+      rows = push(rows, { system: s, folder: s, files: get(m, "files", 0), out: out, out_to: out_to, in: inn, in_from: in_from,
+        root_data: card.root_data, movable: len(why) == 0, why: why })
+    }
+  }
+  return { ok: true, systems: rows }
+}

@@ -1,0 +1,37 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-02-cos-the-application-phasemap.spec::CA8_first_time_setup
+type: phase
+id: docs_2026-11-02-cos-the-application-phasemap.spec::CA8_first_time_setup
+context: pipeline phase CA8_first_time_setup of docs/2026-11-02-cos-the-application-phasemap.spec
+intent: null
+summary: CA8_first_time_setup (?) — 8 file(s)
+system: idearium
+tags: []
+exported_at: 1794613330853
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794613330853
+lastSeenAt: 1794613330853
+fingerprint: null
+payload:
+  id: CA8_first_time_setup
+  map: docs/2026-11-02-cos-the-application-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/app/desktop/main.js
+    - cos/app/desktop/ui/app.js
+    - cos/app/desktop/ui/index.html
+    - cos/app/desktop/ui/style.css
+    - cos/app/settings.js
+    - cos/manager/server.js
+    - cos/manager/cli.js
+    - cos/manager/contract.json
+  depends_on:
+    - CA5_cos_installs_nexus_from_github
+    - CA6_install_asks_where_and_npm_in_program_files
+    - CA7_each_compartment_its_own_location
+  blocks: []
+  spec: null
+  graph: c2f48802a5338ba6
