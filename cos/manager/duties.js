@@ -1,18 +1,21 @@
 'use strict';
-// ── lib/nexus/core-duties.js — what autopilot did besides supervising, kept in lib after the handover (MG17, 0.60.330) ──────────────
-// Spec: cos/spec/cos-manager.spec MOD-MG-CORE-DUTIES · Map: docs/2026-10-24-cos-manager-phasemap.spec MG17_autopilot_hands_over, MG_D15
+// ── cos/manager/duties.js — what autopilot did besides supervising, run inside COS's manager (SW5a, 0.60.518) ─────────────────────
+// Was lib/nexus/core-duties.js (MG17, 0.60.330), moved here by git mv. Spec: cos/spec/cos-manager.spec MOD-MG-CORE-DUTIES ·
+// Maps: docs/2026-10-24-cos-manager-phasemap.spec MG17_autopilot_hands_over, MG_D15 · docs/2026-11-13-sovereign-and-wired-phasemap.spec SW5a
 //
-// James, 2026-10-31: "Starting the mg-17". Mapping the handover found that autopilot did more than supervise, and the spec named none
-// of it. Handing over the supervision alone would have dropped all of it (§0.3), so it stays lib's and runs in the launcher's process
-// (§5.15: lib's duties are lib's; COS is reached by its routes, never its files):
+// James, 2026-10-31: "Starting the mg-17". Mapping the handover found that autopilot did more than supervise; those duties stayed lib's and
+// ran in the launcher's process beside COS. James, 2026-11-13: "orchastrator and autopilot need to migrate to cos superviser" — so they run
+// in COS's manager now: one Nexus process supervises and does them (§10.3), and lib/ holds no duty (SW_D5, lib is not a system).
 //   wire      the fan-in, the ledger wire, error.log and the intelligence substrate (autopilot's §P1, §LEDGER-WIRE, §error-log, 2026-08-08)
 //   vitals    the post-boot vitals check (tests/verify-ncp-agents.js, sandboxed)
-//   update    automatic updates (lib/nexus-update.js startAuto): idle by the door's /idle, a restart by COS's route, by rule:auto-update
+//   update    automatic updates (lib/nexus-update.js startAuto): idle by the door's /idle, a restart by the supervisor, by rule:auto-update
 //   loom      the loom registry refresh, when it is old and memory allows (lib/prevention.js)
 //   snapshot  every minute, autopilot.instance_snapshot into the fan-in → cortex's event_log (the type and keys lib/pressure-window.js reads)
-//   follow    COS's ledger: a circuit-open line → one kernel_circuit_open gap (lib/gap-field.js); a boot phase's stall → one diagnostic run
-// Autopilot's in-process warp stream is not carried: COS's ledger is the record of every spawn, crash and circuit now (said in MG_D15).
-// Nothing here starts, stops or restarts a system except through COS's route, saying by = rule:<duty>. In a test run vitals, update and
+//   follow    COS's ledger: a circuit-open line → one kernel_circuit_open gap (lib/gap-field.js); a boot phase's stall → one diagnostic run.
+//             Inside COS each line is heard as it is written (the supervisor's 'ledger' event: PR6, heard, not polled); given only a base
+//             address (a COS in another process), the ledger is read by route every few seconds as before.
+// Autopilot's in-process warp stream is not carried: COS's ledger is the record of every spawn, crash and circuit (said in MG_D15).
+// Nothing here starts, stops or restarts a system except through the supervisor, saying by = rule:<duty>. In a test run vitals, update and
 // loom say they are skipped (they would act on the tree under test).
 
 const fs = require('fs');
@@ -21,7 +24,7 @@ const os = require('os');
 const http = require('http');
 const { spawn, spawnSync } = require('child_process');
 
-const MODULE_ID = 'nexus.lib.nexus.core-duties';
+const MODULE_ID = 'cos.manager.duties';   // was nexus.lib.nexus.core-duties (moved SW5a)
 const ROOT = path.join(__dirname, '..', '..');
 const SNAPSHOT_MS = 60_000;          // autopilot's INSTANCE_SNAPSHOT_MS: intelligence's own pattern-scan cadence
 const FOLLOW_MS = 5_000;
@@ -46,6 +49,19 @@ function cosClient(base) {
     ledger: async (limit = 200) => (await call('GET', `/api/cos/ledger?limit=${limit}`)).entries || [],
     restart: (name, by) => call('POST', `/api/cos/systems/${encodeURIComponent(name)}/restart`, { by }),
     idle: () => call('GET', '/idle', null, 15000),
+  };
+}
+
+/** inProcess(sup, base) → the same client, inside COS's manager: the supervisor itself for systems and restarts; only /idle (the door's
+ *  report, served by this same process) goes by route, to base */
+function inProcess(sup, base) {
+  const viaRoute = base ? cosClient(base) : null;
+  return {
+    health: async () => ({ ok: true, service: 'cos-manager', pid: process.pid }),
+    systems: async () => sup.list(),
+    ledger: async () => [],   // heard by event inside COS (start's onLedger), never read back
+    restart: async (name, by) => sup.restart(name, { by }),
+    idle: () => (viaRoute ? viaRoute.idle() : Promise.reject(new Error('no address for /idle'))),
   };
 }
 
@@ -94,10 +110,10 @@ function follow(entries, seen, since = 0) {
 // autopilot required cortex's jaa-db for this row; here it goes through the fan-in, whose activity-log subscriber posts it to cortex's
 // event_log by route — the same type, payload and source, and no new crossing into cortex (§5.15, designed out before the code)
 function writeSnapshot(payload) {
-  return require('../ledger-fanin').emit({ type: 'autopilot.instance_snapshot', payload, source: 'autopilot', causedBy: null, ts: Date.now() });
+  return require('../../lib/ledger-fanin').emit({ type: 'autopilot.instance_snapshot', payload, source: 'autopilot', causedBy: null, ts: Date.now() });
 }
 function reportGap(system, entry) {
-  return require('../gap-field.js').report({ type: 'kernel_circuit_open', source: 'autopilot', severity: 'critical', location: system, component: system,
+  return require('../../lib/gap-field.js').report({ type: 'kernel_circuit_open', source: 'autopilot', severity: 'critical', location: system, component: system,
     body: `Kernel "${system}" — COS's supervisor stopped restarting it: ${entry.why}`, meta: { ledgerId: entry.id, code: entry.code, at: entry.ts } });
 }
 function runDiagnostic(system, log) {
@@ -114,25 +130,25 @@ function runDiagnostic(system, log) {
 
 function wire(log) {
   try {
-    const fw = require('../ledger-fanin/boot').wireFanin({ onAutopilot: () => {} });
+    const fw = require('../../lib/ledger-fanin/boot').wireFanin({ onAutopilot: () => {} });
     log(`§P1 fan-in wired: ${fw.wired.join(', ')}${fw.skipped.length ? ' (deferred: ' + fw.skipped.map(s => s[0]).join(',') + ')' : ''}`);
   } catch (e) { log(`§P1 fan-in wiring skipped: ${e.message}`); }
   try {
-    const w = require('../ledger-sse').attachAll([
+    const w = require('../../lib/ledger-sse').attachAll([
       { system: 'copilot', url: 'http://127.0.0.1:3750/ledger/stream' }, { system: 'cortex', url: 'http://127.0.0.1:3748/ledger/stream' },
       { system: 'diagnostic', url: 'http://127.0.0.1:7825/ledger/stream' }, { system: 'guardian', url: 'http://127.0.0.1:7820/ledger/stream' },
       { system: 'loom', url: 'http://127.0.0.1:3752/ledger/stream' }]);
     log(`§ledger-wire consuming: ${w.attached.join(', ')}${w.failed.length ? ` (failed: ${w.failed.map(f => f[0]).join(',')})` : ''}`);
   } catch (e) { log(`§ledger-wire unavailable: ${e.message} — remote system activity will NOT be visible here`); }
-  try { const el = require('../error-log'); el.attach(require('../ledger-fanin')); log(`§error-log active — ${el.LOG_PATH}`); } catch (e) { log(`§error-log unavailable: ${e.message}`); }
-  try { log(require('../autopilot-intelligence').wireIntelligence({ snapshotAlreadyAttached: true }).report); } catch (e) { log(`intelligence substrate wiring skipped: ${e.message}`); }
+  try { const el = require('../../lib/error-log'); el.attach(require('../../lib/ledger-fanin')); log(`§error-log active — ${el.LOG_PATH}`); } catch (e) { log(`§error-log unavailable: ${e.message}`); }
+  try { log(require('../../lib/autopilot-intelligence').wireIntelligence({ snapshotAlreadyAttached: true }).report); } catch (e) { log(`intelligence substrate wiring skipped: ${e.message}`); }
 }
 
 function vitals(log) {
   const file = path.join(ROOT, 'tests', 'verify-ncp-agents.js');
   if (!fs.existsSync(file)) return log('⚠ vitals check skipped — tests/verify-ncp-agents.js not found (moved or renamed?)');
   log('running post-boot vitals check (tests/verify-ncp-agents.js)...');
-  const sb = require('../test-sandbox.js').childEnv();
+  const sb = require('../../lib/test-sandbox.js').childEnv();
   const proc = spawn(process.execPath, [file], { cwd: ROOT, env: sb.env, windowsHide: true }); proc.on('close', sb.cleanup);
   let out = ''; const cap = (c) => { out += c; }; proc.stdout.on('data', cap); proc.stderr.on('data', cap);
   const t = setTimeout(() => { try { proc.kill('SIGKILL'); } catch (_) {} }, VITALS_TIMEOUT_MS);
@@ -143,7 +159,7 @@ function vitals(log) {
 
 function autoUpdate(cos, names, log) {
   if (process.env.NEXUS_AUTO_UPDATE === '0') return log('[update] automatic updates off (NEXUS_AUTO_UPDATE=0)');
-  const U = require('../nexus-update.js');
+  const U = require('../../lib/nexus-update.js');
   const npmAsync = () => new Promise((resolve) => {
     const p = spawn(process.platform === 'win32' ? 'npm.cmd' : 'npm', ['install', '--no-audit', '--no-fund'], { cwd: ROOT, shell: process.platform === 'win32', windowsHide: true });
     let err = ''; p.stderr.on('data', (c) => { err = (err + c).slice(-800); });
@@ -159,7 +175,7 @@ function loomRefresh(log, tries = 0, timers) {
   let age = Infinity; try { age = Date.now() - fs.statSync(path.join(ROOT, 'loom', 'data', 'registry.json')).mtimeMs; } catch (_) {}
   if (age < LOOM_REFRESH_MAX_AGE_MS) return log(`loom registry is ${Math.round(age / 360000) / 10} h old — not rebuilt at this boot (rebuilt when older than ${LOOM_REFRESH_MAX_AGE_MS / 3600000} h)`);
   let h = { ok: true, why: '' };
-  try { const { ResourceMonitor } = require('../resource-monitor'); const m = new ResourceMonitor({ name: 'core-duties', intervalMs: 15000 }); h = require('../prevention.js').heavyAllowed({ sample: m.current(), level: m.level() }); } catch (_) {}
+  try { const { ResourceMonitor } = require('../../lib/resource-monitor'); const m = new ResourceMonitor({ name: 'core-duties', intervalMs: 15000 }); h = require('../../lib/prevention.js').heavyAllowed({ sample: m.current(), level: m.level() }); } catch (_) {}
   if (!h.ok) { if (tries === 0) log(`loom registry refresh waits — ${h.why}; re-checked every 5 min`); const t = setTimeout(() => loomRefresh(log, tries + 1, timers), 5 * 60 * 1000); if (t.unref) t.unref(); timers.push(t); return; }
   log('refreshing loom/data/registry.json in the background (about 4 min; nothing waits for it)');
   try { const c = spawn(process.execPath, ['loom/bootstrap.js'], { cwd: ROOT, stdio: 'ignore', detached: true, windowsHide: true }); c.on('error', (e) => log(`⚠ loom registry refresh failed to start: ${e.message}`)); c.unref(); }
@@ -170,25 +186,29 @@ function loomRefresh(log, tries = 0, timers) {
  * start({ base, log, sinks }) → { stop, tick } — runs every duty against COS's manager at base. sinks: { writeSnapshot, reportGap, runDiagnostic }
  * replace the real ones (a test). The duties a test run must not do say so.
  */
-function start({ base = 'http://127.0.0.1:7799', log = (s) => console.log(`[core] ${s}`), sinks = {}, wireIn = true, snapshotMs = SNAPSHOT_MS, followMs = FOLLOW_MS } = {}) {
-  const cos = cosClient(base); const S = { writeSnapshot, reportGap, runDiagnostic: (s) => runDiagnostic(s, log), ...sinks };
+function start({ base = 'http://127.0.0.1:7799', cos: given = null, onLedger = null, log = (s) => console.log(`[core] ${s}`), sinks = {}, wireIn = true, snapshotMs = SNAPSHOT_MS, followMs = FOLLOW_MS } = {}) {
+  const cos = given || cosClient(base); const S = { writeSnapshot, reportGap, runDiagnostic: (s) => runDiagnostic(s, log), ...sinks };
   const timers = []; const seen = new Set(); const since = Date.now() - 60_000; let update = null, stopped = false, warned = false;
   if (wireIn) wire(log);
   const once = (fn, what) => Promise.resolve().then(fn).then(() => { warned = false; }).catch((e) => { if (!warned) log(`${what}: COS did not answer (${e.message}) — tried again at the next tick`); warned = true; });
   const snap = () => once(async () => { const p = snapshot(await cos.systems()); S.writeSnapshot(p);
     if (p.freeMemPct < 20 && p.topConsumer) log(`memory pressure — free ${p.freeMemPct}% — top real consumer: ${p.topConsumer.system} (${p.topConsumer.mb}MB)`); }, 'instance snapshot');
-  const fol = () => once(async () => { for (const a of follow(await cos.ledger(), seen, since)) {
+  const act = async (acts) => { for (const a of acts) {
     if (a.act === 'gap') { try { S.reportGap(a.system, a.entry); log(`circuit open on '${a.system}': gap kernel_circuit_open written`); } catch (e) { log(`circuit open on '${a.system}': the gap could not be written (${e.message})`); } }
-    else await S.runDiagnostic(a.system); } }, 'ledger follow');
+    else await S.runDiagnostic(a.system); } };
+  const fol = () => once(async () => act(follow(await cos.ledger(), seen, since)), 'ledger follow');
   const every = (fn, ms) => { const t = setInterval(fn, ms); if (t.unref) t.unref(); timers.push(t); };
-  every(fol, followMs); every(snap, snapshotMs); snap(); fol();
+  let unhear = null;
+  if (typeof onLedger === 'function') unhear = onLedger((e) => { if (!stopped) act(follow([e], seen, since)).catch((err) => log(`ledger follow: ${err.message}`)); });   // SW5a: heard, not polled
+  else { every(fol, followMs); fol(); }
+  every(snap, snapshotMs); snap();
   if (inTestRun()) log('vitals check, automatic updates and the loom refresh skipped: this is a test run (they would act on the tree under test)');
   else {
     vitals(log);
     once(async () => { update = autoUpdate(cos, (await cos.systems()).map(s => s.name), log); }, 'automatic updates');
     const t = setTimeout(() => loomRefresh(log, 0, timers), 60_000); if (t.unref) t.unref(); timers.push(t);
   }
-  return { stop() { if (stopped) return; stopped = true; timers.forEach(t => { clearInterval(t); clearTimeout(t); }); try { update && update.stop && update.stop(); } catch (_) {} }, tick: () => Promise.all([snap(), fol()]) };
+  return { stop() { if (stopped) return; stopped = true; try { unhear && unhear(); } catch (_) {} timers.forEach(t => { clearInterval(t); clearTimeout(t); }); try { update && update.stop && update.stop(); } catch (_) {} }, tick: () => Promise.all([snap(), fol()]) };
 }
 
-module.exports = { MODULE_ID, start, cosClient, snapshot, follow, perPidMemoryMB, SNAPSHOT_MS };
+module.exports = { MODULE_ID, start, cosClient, inProcess, snapshot, follow, perPidMemoryMB, SNAPSHOT_MS };

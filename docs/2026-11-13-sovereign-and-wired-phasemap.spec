@@ -338,3 +338,9 @@ order: >-
 # ── ADDENDUM 2026-11-13 (0.60.516) — SW5g, a first act: the orchestrator's page no longer opens at boot ──
 # James, 2026-11-13: "no need to open 127.0.0.1:9000 on boot". orchestrator.config.json openUIOnBoot false (the existing switch; the
 # boot phase nexus.ui.open returns before asking Clear Glass or the system browser). The page itself is SW5g's, still to place (SW5_R1).
+# ── ADDENDUM 2026-11-13 (0.60.518) — SW5a built ──
+# James, 2026-11-13: "yes, watch it and start SW5a". lib/nexus/core-duties.js → cos/manager/duties.js (git mv); the manager runs it on the
+# supervisor itself, the ledger heard by event (no 5 s read); the launcher only starts COS and stays its foreground parent. Proof: launched
+# through autopilot.js in the sandbox, one manager ran the duties, its ledger says so; test-autopilot-handover 7/7 (AH-06). Said: the launcher
+# is still a process (it holds the console, Ctrl+C and the restart after an update); starting the manager directly from the exe and the
+# service is a later step, not SW5a's.

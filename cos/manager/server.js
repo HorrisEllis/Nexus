@@ -381,12 +381,13 @@ if (require.main === module) {
   const root = arg('root') ? path.resolve(arg('root')) : path.resolve(__dirname, '..', '..');
   const only = arg('only') ? arg('only').split(',').map(s => s.trim()).filter(Boolean) : null;
   const sup = createSupervisor({ root });
-  let srvRef = null, uiRef = null;
+  let srvRef = null, uiRef = null, duties = null;
   // CE2b — COS restarts itself, after his yes: answer first, stop its systems, then come back — autopilot starts it again (exit 75), else relaunch.js
   const restartCos = ({ by = 'person' } = {}) => {
     const R = require('./relaunch.js'); const viaAutopilot = process.env.COS_LAUNCHER === 'autopilot';
     if (sup.note) sup.note('restart', `COS restarts itself after an update — ${viaAutopilot ? 'autopilot starts it again' : 'relaunch.js starts it again'}`, { by });
     setTimeout(() => {
+      try { duties && duties.stop(); } catch (_) {}
       try { sup.shutdown({ by: `restart:${by}` }); } catch (_) {}
       try { if (srvRef) srvRef.close(); if (uiRef) uiRef.close(); } catch (_) {}
       if (!viaAutopilot) R.spawnRelauncher({ args: process.argv.slice(1), port: srvRef && srvRef.address() ? srvRef.address().port : Number(process.env.COS_MANAGER_PORT) || 7799 });
@@ -403,6 +404,15 @@ if (require.main === module) {
       catch (e) { sup.note('automation', `the automation engine did not start: ${e.message}`, { by: 'boot' }); }
     }
     if (arg('handover')) sup.note('handover', `autopilot ${arg('handover')} handed supervision to COS's manager (MG17); its body is archived`, { by: 'boot' });
+    // SW5a (0.60.518) — James, 2026-11-13: "orchastrator and autopilot need to migrate to cos superviser". Autopilot's other duties (the wire,
+    // vitals, updates, the loom refresh, the minute's snapshot, following the ledger) ran in the launcher's own process beside this one; they run
+    // here now, on the supervisor itself, and the ledger is heard as it is written. --no-duties leaves them off (a test, a second manager).
+    if (!process.argv.includes('--no-duties')) {
+      try { const D = require('./duties.js');
+        duties = D.start({ cos: D.inProcess(sup, `http://127.0.0.1:${srv.address().port}`), onLedger: (fn) => { sup.on('ledger', fn); return () => sup.off('ledger', fn); }, log: (t) => console.log(`[cos] ${t}`) });
+        sup.note('duties', 'autopilot\'s duties run inside COS\'s manager: the wire, vitals, updates, the loom refresh, the snapshot, the ledger followed (SW5a)', { by: 'boot' }); }
+      catch (e) { sup.note('duties', `autopilot's duties did not start: ${e.message} — COS still supervises; vitals, updates and snapshots do not run`, { by: 'boot' }); }
+    }
     // 2026-11-01 MG33 — James: "where is cos ui?". Nothing started the cockpit (cos/ui/serve.js) or linked to it: a screen with no way in. The
     // manager now starts it beside itself (COS_UI_PORT, default 7797; --no-ui to leave it off). Its port held → said once, the manager runs on.
     let ui = null;
@@ -420,7 +430,7 @@ if (require.main === module) {
           const r = await D.install(root); sup.note('deps', r.ok ? `dependencies installed in ${Math.round(r.ms / 1000)} s` : `npm install failed (exit ${r.code}): ${String(r.tail).trim().split('\n').slice(-3).join(' ').slice(0, 300)} — booting anyway`, { by: 'boot' }); } }
       const r = await sup.boot({ by: 'boot', ...(only ? { set: only } : {}) }); console.log(`[cos] booted ${r.started.length}, skipped ${r.skipped.length}`);
     }
-    const bye = () => { sup.shutdown({ by: 'boot' }); srv.close(); if (ui) ui.close(); setTimeout(() => process.exit(0), 500).unref(); };
+    const bye = () => { try { duties && duties.stop(); } catch (_) {} sup.shutdown({ by: 'boot' }); srv.close(); if (ui) ui.close(); setTimeout(() => process.exit(0), 500).unref(); };
     process.on('SIGINT', bye); process.on('SIGTERM', bye);
   }).catch((e) => { console.error(`[cos] ${e.message}`); process.exit(1); });
 }

@@ -499,3 +499,8 @@ phases_addendum_cp3a:
 # By his axioms: CF1 / thread T4 (sigma measures deviation); §1.2 (a refusal says why); PR4 (deltas, COS optimised).
 # Cost, said: a start the baseline allows can push free memory lower than the old floor would have (Clear Glass is ~500 MB).
 # Proof: tests/modules/test-cos-memory-baseline.test.js (new; a test, not product JS).
+# ── ADDENDUM 2026-11-13 (0.60.518) — CP6a: the line for heavy work lowered to 25% ──
+# James, 2026-11-13: "Lower the line for heavy work (CP6a, your load balancing). It's a number to choose, and the choice is yours."
+# lib/prevention.js PREVENT_FREE 0.30 → 0.25 (the monitor's way back to ok after pressure: 20% + clearMarginPct 5%); NEXUS_PREVENT_FREE
+# overrides. Seen: his 16 GB machine at 26.5-30% free for two hours after one critical moment, the RAID worker and Idearium's snapshot
+# waiting throughout. Not judged against the machine's baseline as the floors are (0.60.501): a later step if 25% is still wrong for him.

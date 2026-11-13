@@ -260,7 +260,7 @@ const BK = { ok: true, snapshot: 'test-backup-0001', created: true, files: 3 }; 
     const ap = fs.readFileSync(path.join(ROOT, 'lib/nexus/autopilot.retired-0.60.330.js'), 'utf8');
     assert.match(ap, /if \(!r\.halted\) _startAutoUpdate\(\);/); assert.match(ap, /NEXUS_TEST_SANDBOX \|\| process\.env\.NEXUS_TEST_RUN_DEPTH \|\| _autoUpdate\) return;/, 'never inside a test run');
     // 0.60.330 MG17 — the live boot's automatic updates are core-duties' now (the archive above is what ran before): after the boot, never in a test run
-    const cd = fs.readFileSync(path.join(ROOT, 'lib/nexus/core-duties.js'), 'utf8');
+    const cd = fs.readFileSync(path.join(ROOT, 'cos/manager/duties.js'), 'utf8');
     assert.match(cd, /if \(inTestRun\(\)\) log\('vitals check, automatic updates/); assert.match(cd, /update = autoUpdate\(cos,/);
   });
 

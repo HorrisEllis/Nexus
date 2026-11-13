@@ -25,7 +25,8 @@ const MODULE_ID = 'cos.app.runtime';
 const ENTRIES = ['lib/nexus/autopilot.js', 'nexus/autopilot.js'];
 function entryOf(versionDir, entry) { if (entry) return entry; return ENTRIES.find(e => fs.existsSync(path.join(versionDir, e))) || ENTRIES[0]; }
 /** supervisorOf(versionDir) → 'cos-manager' (0.60.330 on: the launcher hands over) | 'autopilot' (an older release supervises itself) */
-function supervisorOf(versionDir) { return fs.existsSync(path.join(versionDir, 'cos', 'manager', 'server.js')) && fs.existsSync(path.join(versionDir, 'lib', 'nexus', 'core-duties.js')) ? 'cos-manager' : 'autopilot'; }
+// SW5a (0.60.518): the duties moved from lib/nexus/core-duties.js to cos/manager/duties.js; a release with either hands over
+function supervisorOf(versionDir) { return fs.existsSync(path.join(versionDir, 'cos', 'manager', 'server.js')) && (fs.existsSync(path.join(versionDir, 'cos', 'manager', 'duties.js')) || fs.existsSync(path.join(versionDir, 'lib', 'nexus', 'core-duties.js'))) ? 'cos-manager' : 'autopilot'; }
 const DEFAULTS = { entry: null, statusPort: 7799, ports: [7799, 7820, 4800, 9000], healthTimeoutMs: 60000, graceMs: 8000, keepLogs: 10 };
 const paths = (root, project) => { const p = path.join(root, 'projects', project); return { project: p, logs: path.join(p, 'logs'), run: path.join(p, 'run.json') }; };
 const rmf = (f) => { try { fs.unlinkSync(f); } catch (_) {} };
