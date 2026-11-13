@@ -17,7 +17,7 @@ The interpreter has the same five (`lang/runtime.js`), so a program answers the 
 
 ## Proof
 - One program, the same output interpreted and native, and a case in `lang/test/native.test.js`:
-  - `echo`'s output read back; 138,894 bytes from `seq` read back whole;
+  - `echo`'s output read back; 108,894 bytes from `seq` read back whole;
   - exit codes 0, 3, 7, and 127 for a command that is not there;
   - a `sleep 30` still running after 150 ms (`null`), stopped with signal 15, its code 143.
 - native.test 117/117; Emerge's suites 31, 14, 6; the compiler at a fixpoint (three builds byte-identical).
