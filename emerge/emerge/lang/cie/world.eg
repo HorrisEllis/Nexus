@@ -611,6 +611,28 @@ fn gate_block_at() {
 }
 /** ledger_verify(): every hash, link, seq and checkpoint (4.4), through lang/cie/ledger.eg */
 fn verify() = L.verify(_entries).ok
+/** ledger_proof(seq): that entry belongs to the ledger — its Merkle path to the checkpoint that covers it (lang/runtime.js ledger_proof) */
+fn proof(n) {
+  if type_of(n) != "num" or floor(n) != n or n < 1 or n > len(_entries) { raise("ledger_proof: no entry {repr(n)}") }
+  let e = _entries[n - 1]
+  if e.kind == "checkpoint" { raise("ledger_proof: entry {n} is a checkpoint — it anchors the entries before it") }
+  var cp = null
+  for x in _entries { if cp == null and x.kind == "checkpoint" and x.seq > n { cp = x } }
+  if cp == null { raise("ledger_proof: entry {n} is not under a checkpoint yet") }
+  var p = cp.seq - 2
+  while p >= 0 and _entries[p].kind != "checkpoint" { p -= 1 }
+  let hashes = map(slice(_entries, p + 1, cp.seq - 1), fn(x) = x.hash)
+  return { seq: n, hash: e.hash, checkpoint: cp.seq, root: cp.body.root, path: L.merkle_proof(hashes, n - 1 - (p + 1)) }
+}
+/** ledger_check_proof(proof): the proof still holds against this ledger */
+fn check_proof(pr) {
+  if type_of(pr) != "map" or not has(pr, "path") or type_of(pr.path) != "list" { raise("ledger_check_proof needs a proof map from ledger_proof") }
+  if type_of(pr.seq) != "num" or type_of(pr.checkpoint) != "num" or pr.seq < 1 or pr.checkpoint < 1 or pr.seq > len(_entries) or pr.checkpoint > len(_entries) { return false }
+  let e = _entries[pr.seq - 1]
+  let cp = _entries[pr.checkpoint - 1]
+  if cp.kind != "checkpoint" or e.hash != pr.hash or cp.body.root != pr.root { return false }
+  try { return L.merkle_fold(pr.hash, pr.path) == pr.root } else err { return false }
+}
 
 fn listen(signal, run) { _globals = push(_globals, { signal: signal, run: run }) }
 

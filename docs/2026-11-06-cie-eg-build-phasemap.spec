@@ -582,3 +582,9 @@ James, 2026-11-13, told the next step was the folder builtins off Emerge's own l
 - Proof: one 17-line program the same interpreted and native (a case in native.test.js); the compiler at a fixpoint; self.test.eg 3/3,
   its ratchet 10 → 6.
 - Left on Emerge's own list: wrap_add, wrap_sub, wrap_mul, ledger_proof, ledger_check_proof, observe_gaps. Then Process (spawn, wait, kill).
+
+## ADDENDUM 2026-11-13 (0.60.511) — CIE14: the wraps and the ledger proofs natively; one primitive left
+James, 2026-11-13, told the six left on Emerge's list were next: "Okay."
+- Built: wrap_add, wrap_sub, wrap_mul (rt.eg); ledger_proof, ledger_check_proof (cie/world.eg proof, check_proof; native/lower.eg).
+- Proof: one program the same both ways (a case in native.test.js, 115/115); self.test.eg 3/3, ratchet 6 → 1; the compiler at a fixpoint.
+- Left: observe_gaps (its ledger entry must equal the interpreter's hash for hash). Then CIE13's Process.
