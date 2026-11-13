@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-08-pipeline-canvas-phasemap.spec::PC13_the_model_fits_by_what_it_runs
+type: phase
+id: docs_2026-11-08-pipeline-canvas-phasemap.spec::PC13_the_model_fits_by_what_it_runs
+context: >-
+  pipeline phase PC13_the_model_fits_by_what_it_runs of
+  docs/2026-11-08-pipeline-canvas-phasemap.spec
+intent: null
+summary: PC13_the_model_fits_by_what_it_runs (backend) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1794601375590
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794601375590
+lastSeenAt: 1794601375590
+fingerprint: null
+payload:
+  id: PC13_the_model_fits_by_what_it_runs
+  map: docs/2026-11-08-pipeline-canvas-phasemap.spec
+  repo: null
+  layer: backend
+  status: OPEN
+  files:
+    - lib/resource-monitor.js
+    - ollama/abliterated-catalog.js
+    - tests/modules/test-model-fit-ladder.test.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: fc4c5f85cd95f7dd

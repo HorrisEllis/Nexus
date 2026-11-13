@@ -893,3 +893,77 @@ built_2026_11_09_plan:
 #     (derive, template, model: CIE-EG deterministic_first) and its tests.
 # First real run to show: SW7a's build request (2026-11-13): context met, dag met after Idearium's snapshot was refreshed, build failed twice
 # (Idearium out of its 1 GB heap at 09:15; then the request timed out while the build was started anyway and went stuck at 10:22).
+
+# ── ADDENDUM 2026-11-13 (map, after 0.60.514) — RAID the hub of every interaction (AE_D8 confirmed); every intervention a COS proposal; Ollama first (his) ──
+# James, 2026-11-13: "And then we need to focus on the pipeline." · "Also, the proposals should run through the COS UI proposal system, like
+# anything that needs intervention, not just in the supervisor, but in Iderium or RAID. And also, let's hook in RAID finally as the hub for all
+# the interactions. Everything routes through RAID." · "let's find a Olama model, preferably abolished or obliterated [abliterated] ... And then
+# we'll let's start using Olama instead. And then use Guardian if we have to."
+# Census, read by the coder the same day (what waits for a person today, and where; none reaches COS's proposals, cos/manager/proposals.js):
+#   - RAID, contract gates: a gate with awaitsPerson waits as `awaiting` (cortex/core/raid/contract-gates.js 625-697), answered nowhere in COS.
+#   - RAID, officiator: a drop is parked after MAX_ATTEMPTS, tried once a day (cortex/core/raid/officiator.js parked()), read by hand.
+#   - Idearium: a phase run held `awaiting-verdict` (idearium/api/index.js 2112; POST /api/repos/:uuid/phases/verdict), seen only in Idearium.
+#   - Guardian: a job classified `needs-you` (login, captcha, rate limit, refusal; guardian/lib/job-retry.js 65), said in its own toast.
+#   - The pipeline: a step `blocked` by a failed dependency (lib/automation/pipeline.js 284) and a held run (PC8 slice b: pause, continue, retry).
+#   - COS itself: the supervisor's and the rules' held acts — the only kind that is a proposal now (MG18, SC4, 0.60.497 restart COS).
+# RAID as the hub: AE_D8 (2026-11-09, "TO CONFIRM") and its 2026-11-10 words ("Raid the supervisor, load balancer, compartment router, agent router,
+# the contract hub") are confirmed by "Everything routes through RAID." Built toward it: each COS request books one RAID contract (0.60.474);
+# not built (named in AE_D8's addendum): a contract per compartment, RAID as the agent router (lib/agent-router is its own), the ladder's
+# Ollama-first order chosen by RAID.
+# The model: the abliterated catalog (ollama/abliterated-catalog.js) lists nothing past 9B because it sizes dense models; a mixture-of-experts
+# model (DeepSeek-Coder-V2-Lite: 16B, 2.4B active) runs from RAM at a small model's speed, so the catalog's rule leaves out the best fit for his
+# machine. Ollama's library has deepseek-coder-v2:16b (Q4_0, ~8.9 GB); no huihui_ai abliterated build of it was found on 2026-11-13; one on
+# Hugging Face (gated, not huihui_ai) reports refusals 94/100 → 12/100, unverified. Which model is his, on his machine.
+
+decisions_2026_11_13:
+  PC_D15_raid_the_hub_of_every_interaction:
+    status: "DECIDED 2026-11-13 by James (confirms AE_D8)"
+    james: '"let''s hook in RAID finally as the hub for all the interactions. Everything routes through RAID."'
+    chosen: >-
+      Every interaction (a request, an agent's call, a held act, a verdict) is booked with RAID by its route (Cortex's, §5.15) before it runs, and
+      RAID routes it: which agent (Ollama first), which compartment, whether it waits for a person. COS stays the front door and the glue (his,
+      2026-11-10); RAID decides what and whether, COS does how and where.
+    axioms: ["§5.2 everything routes through RAID", "§5.15 each system reached by its routes, swappable", "§9.1 RAID the one write authority for contracts"]
+    still_his: "whether 'all the interactions' includes his own clicks in the UIs (booked as a person's act) or only agents' and systems' (the coder reads: all, a person's booked as by: person; to confirm)"
+  PC_D16_ollama_first_guardian_if_needed:
+    status: "DECIDED 2026-11-13 by James"
+    james: '"let''s start using Olama instead. And then use Guardian if we have to." · "preferably abolished or obliterated" (abliterated)'
+    chosen: "the ladder starts on a local Ollama model on his machine; Guardian's browser agents only when Ollama cannot (refused, too small, down); the model is his pick, abliterated preferred"
+    axioms: ["§1.2 a fallback says why", "local and free first (his, 2026-10-19: \"ollama first\")"]
+
+expanded_2026_11_13_hub:
+  PC11_every_intervention_a_cos_proposal:
+    status: OPEN
+    layer: integration
+    james: '"the proposals should run through the COS UI proposal system, like anything that needs intervention, not just in the supervisor, but in Iderium or RAID."'
+    depends_on: [PC_D15_raid_the_hub_of_every_interaction]
+    files: [cos/manager/proposals.js, cos/manager/server.js, cortex/core/raid/contract-gates.js, cortex/core/raid/officiator.js, idearium/api/index.js, guardian/lib/job-retry.js, lib/automation/pipeline.js, cos/ui/proposals/page.js, idearium/cli/route-commands.js]
+    reuse: "cos/manager/proposals.js kinds (register verb with check and run, SC4); POST /api/cos/proposals; the census above"
+    does: >-
+      Each place that waits for a person holds a COS proposal by COS's route (by: system:<name>), with a kind COS registers whose run answers the
+      owner by its own route: RAID's awaiting gate (verdict), RAID's parked drop (try now or drop), Idearium's awaiting-verdict (accept or
+      refuse, his words carried), Guardian's needs-you (opened in its tab), a blocked pipeline step (retry or skip). The owner keeps its state;
+      the proposal is the one place he answers. Slices: (a) RAID's two, (b) Idearium's verdict, (c) Guardian and the pipeline.
+    proof: "a stand-in of each owner: its wait becomes one open proposal; take runs the owner's route and closes it; drop says why; the owner down is said, the proposal kept"
+  PC12_raid_routes_every_interaction:
+    status: OPEN
+    layer: integration
+    james: '"Everything routes through RAID."'
+    depends_on: [PC_D15_raid_the_hub_of_every_interaction, PC_D16_ollama_first_guardian_if_needed]
+    files: [cortex/core/raid/contract-v2-door.js, cortex/core/raid/index.js, lib/agent-router.js, lib/pipeline-routing.js, cos/pipeline/index.js, cos/manager/server.js, idearium/api/index.js]
+    reuse: "AE_D8's built half (one RAID contract per COS request, 0.60.474); lib/pipeline-routing.js ladder (Ollama smallest first, then the chain); RAID's packet, split and budget"
+    does: >-
+      RAID answers 'who does this' for every agent call: the ladder (Ollama first, PC_D16) moves behind RAID's route, so Idearium, COS's pipeline
+      and copilot ask RAID instead of choosing; each call is booked on its contract, with the agent RAID picked and why. A census of every
+      agent call that bypasses RAID comes first (slice a), then each caller moves (one slice per system).
+    proof: "the census as a test (a call outside RAID fails it); a stand-in Ollama refused moves to Guardian, said, on the contract"
+  PC13_the_model_fits_by_what_it_runs:
+    status: OPEN
+    layer: backend
+    james: '"If we can squeeze enough, I could do a DeepSeek V2 16B quantisized ... 4K context, since Nexus is holding most of the context" · "the quanticized one is what I''m talking about."'
+    depends_on: [PC_D16_ollama_first_guardian_if_needed]
+    files: [lib/resource-monitor.js, ollama/abliterated-catalog.js, tests/modules/test-model-fit-ladder.test.js]
+    does: >-
+      fitsModel counts what the GPU holds (the card's free memory) and not only free RAM; the catalog sizes a mixture-of-experts model by its
+      file (memory) and its active parameters (speed), so a 16B with 2.4B active is listed for his machine.
+    proof: "MF tests: an 8.9 GB model on 4 GB VRAM and 9 GB free RAM fits; the same with 5 GB free RAM does not, saying both numbers"
