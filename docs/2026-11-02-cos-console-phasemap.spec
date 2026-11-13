@@ -375,3 +375,12 @@ phases_addendum_2026_11_09_sc7:
 # (portable, setup, SHA256SUMS), and 0.7.1's own update check announces it. The service itself is CA4's (COS 0.5.0, NexusCOS through
 # nssm.exe); 0.8.0 puts its switch in the cockpit beside the tray's. Also: test-cos-install IN-06 pinned COS to exactly 0.7.0 and failed
 # from 0.7.1 on; it now asks for 0.7.0 or later (install.js arrived in 0.7.0). On Windows, unverified until his run.
+
+# ── ADDENDUM 2026-11-13 (0.60.515) — SC16 expanded: the manager's own console, when COS.exe starts Nexus ──
+# James, 2026-11-13: "also that node instance needs to run in the taskbar using the service or something. spamming my screen." (two screenshots: an empty "C:\Program Files\nodejs\node.exe" window over the cockpit.)
+# Found on his machine, from the running processes: the window was COS's manager, started by lib/nexus/autopilot.js, itself started by COS.exe with
+# no console. Autopilot's attached start (stdio inherit) had no windowsHide, so Windows gave the manager a visible console. Also on the restart after
+# exit 75 (CE2b) and --legacy-supervisor. All three hidden; HW-02 reads lib/nexus/autopilot.js. His machine had also been running 0.60.391 (COS's
+# folder on D: never updated), so no SC16 fix had reached it; updated by hand the same day.
+# SC16 files expanded: lib/nexus/autopilot.js. By the axioms: §17.7 (never fix the symptom twice: the test now reads the file), §1.2.
+# On his machine: unverified until Nexus restarts on 0.60.515 (said).
