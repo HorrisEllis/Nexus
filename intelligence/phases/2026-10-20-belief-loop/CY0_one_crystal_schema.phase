@@ -7,11 +7,11 @@ intent: null
 summary: CY0_one_crystal_schema (foundation) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792841756073
+exported_at: 1794556764341
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792841756073
-lastSeenAt: 1792841756073
+firstSeenAt: 1794556764341
+lastSeenAt: 1794556764341
 fingerprint: null
 payload:
   id: CY0_one_crystal_schema
@@ -20,11 +20,11 @@ payload:
   layer: foundation
   status: OPEN
   files:
-    - lib/crystal.js
-    - lib/meta/crystal-lattice.js
+    - intelligence/lattice/crystal.js
+    - intelligence/lattice/crystal-lattice.js
     - intelligence/liminal-space/index.js
   depends_on: []
   blocks:
     - MOD-CRYSTAL
   spec: docs/belief-loop.spec
-  graph: 81657527b04b462b
+  graph: 9791605b63766310

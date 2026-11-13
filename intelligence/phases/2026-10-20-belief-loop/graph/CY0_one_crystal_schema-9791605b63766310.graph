@@ -1,36 +1,36 @@
 envelope: 1
-uuid: nexus-export-graph-phase:CY0_one_crystal_schema:81657527b04b462b
+uuid: nexus-export-graph-phase:CY0_one_crystal_schema:9791605b63766310
 type: graph
-id: phase:CY0_one_crystal_schema:81657527b04b462b
+id: phase:CY0_one_crystal_schema:9791605b63766310
 context: dependency graph of phase CY0_one_crystal_schema
 intent: null
-summary: 14 node(s), 3 crossing(s)
+summary: 10 node(s), 3 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792841756073
+exported_at: 1794556764341
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792841756073
-lastSeenAt: 1792841756073
+firstSeenAt: 1794556764341
+lastSeenAt: 1794556764341
 fingerprint: null
 payload:
   for: CY0_one_crystal_schema
   kind: phase
   repo: null
-  hash: 81657527b04b462b
+  hash: 9791605b63766310
   nodes:
+    - path: intelligence/lattice/crystal-lattice.js
+      role: changes
+      exists: false
+      system: intelligence
+    - path: intelligence/lattice/crystal.js
+      role: changes
+      exists: false
+      system: intelligence
     - path: intelligence/liminal-space/index.js
       role: changes
       exists: true
       system: intelligence
-    - path: lib/crystal.js
-      role: changes
-      exists: false
-      system: lib
-    - path: lib/meta/crystal-lattice.js
-      role: changes
-      exists: true
-      system: lib
     - path: intelligence/routes.js
       role: used-by
       exists: true
@@ -39,18 +39,6 @@ payload:
       role: used-by
       exists: true
       system: intelligence
-    - path: lib/case-library.js
-      role: used-by
-      exists: true
-      system: lib
-    - path: lib/compartment-engine.js
-      role: used-by
-      exists: true
-      system: lib
-    - path: lib/meta/index.js
-      role: used-by
-      exists: true
-      system: lib
     - path: lib/shadow.js
       role: used-by
       exists: true
@@ -59,10 +47,6 @@ payload:
       role: used-by
       exists: true
       system: orchestrator
-    - path: tests/modules/crystal-lattice.test.js
-      role: used-by
-      exists: true
-      system: null
     - path: tests/modules/test-liminal-space.js
       role: used-by
       exists: true
@@ -76,23 +60,11 @@ payload:
       exists: true
       system: intelligence
   edges:
-    - from: lib/meta/crystal-lattice.js
+    - from: intelligence/liminal-space/index.js
       to: cortex/memory/jaa-db.js
       kind: requires
     - from: intelligence/liminal-space/index.js
       to: intelligence/lib/domain-nodes.js
-      kind: requires
-    - from: lib/case-library.js
-      to: lib/meta/crystal-lattice.js
-      kind: requires
-    - from: lib/compartment-engine.js
-      to: lib/meta/crystal-lattice.js
-      kind: requires
-    - from: lib/meta/index.js
-      to: lib/meta/crystal-lattice.js
-      kind: requires
-    - from: tests/modules/crystal-lattice.test.js
-      to: lib/meta/crystal-lattice.js
       kind: requires
     - from: intelligence/routes.js
       to: intelligence/liminal-space/index.js
@@ -110,11 +82,11 @@ payload:
       to: intelligence/liminal-space/index.js
       kind: requires
   crossings:
-    - from: lib/meta/crystal-lattice.js
+    - from: intelligence/liminal-space/index.js
       to: cortex/memory/jaa-db.js
-      fromSystem: lib
+      fromSystem: intelligence
       toSystem: cortex
-      kind: upward
+      kind: system
       known: true
     - from: lib/shadow.js
       to: intelligence/liminal-space/index.js

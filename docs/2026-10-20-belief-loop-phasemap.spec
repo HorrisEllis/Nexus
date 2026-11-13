@@ -115,7 +115,11 @@ phases:
     layer: foundation
     status: OPEN
     depends_on: []
-    files: [lib/crystal.js, lib/node-schemas/schema.crystal, lib/meta/crystal-lattice.js, intelligence/liminal-space/index.js]
+    files: [intelligence/lattice/crystal.js, lib/node-schemas/schema.crystal, intelligence/lattice/crystal-lattice.js, intelligence/liminal-space/index.js]
+    expanded_2026_11_13: >-
+      James, 2026-11-13: "lib needs to stop acting like a system" (SW_D5, docs/2026-11-13-sovereign-and-wired-phasemap.spec). The one writer
+      is Intelligence's (intelligence/lattice/crystal.js, not lib/crystal.js), beside the crystal lattice, which moves there in SW7 slice a.
+      Other systems write a crystal through Intelligence's route, never by requiring the writer.
     spec: docs/belief-loop.spec
     blocks: [MOD-CRYSTAL]
     does: >-

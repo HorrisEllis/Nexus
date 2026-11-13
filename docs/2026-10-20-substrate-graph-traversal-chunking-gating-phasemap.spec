@@ -366,3 +366,27 @@ This supersedes the handoff's PN1 layout (2026-10-19: graph/<phase>-<hash>.graph
 - A phase lives with its system only. When the owner changes, the old copy is moved (EW1 made 12 phases emerge's; their lib/ copies went).
 - Dropped as true duplicates, and reported: the 2,149 .graph files and the 12 moved copies (all in git history).
 - Proof: 2,056 .phase files and 0 .graph files in the tree; test-phase-specs 7/7, test-phase-specs-tag 7/7.
+# ── ADDENDUM 2026-11-13 — his: a step is a chunk; steps reused; .step nodes crystallize (readings to confirm; no phase written) ──
+# James, 2026-11-13, on reusing pipeline steps and hooking them into CIE-EG: "think steps can be reused. anything deterministic can be reused."
+# · "then we should use .chunks as steps. thats what the dynamic chunking is for. with a agent tool for decomposing into steps, bricks or
+# chunks. all the same thing. its analysis, but thats what its for." · ".step nodes crystalize?"
+# Read in the tree the same day (§8.6):
+#   - the .chunk node type exists (lib/node-schemas/schema.chunk, idearium/lib/chunk-nodes.js); chunking has eight implementations (census
+#     above); the decomposing tool exists as idearium/architecture-spec/registry/decompose.js (anything with seams → node-sized pieces, wired).
+#   - crystallization exists: lib/meta/crystal-lattice.js — a (domain, verb, outcome) pattern seen pattern_frequency times becomes a CRYSTAL
+#     (PASS) or a NEGATIVE_CRYSTAL (FAIL), and lattice edges between nodes gain weight on success and lose it on failure; RAID's SNR filter
+#     (cortex/core/raid/snr-filter.js) resolves a known invariant (tier 1) or a crystallised pattern (tier 2) with zero tokens.
+#   - CIE-EG's deterministic_first ladder: DF-03 "Pay tokens once: an accepted rung-2 or rung-3 result is kept by boundary hash" (written, not
+#     built: emerge/emerge/lang/cie/synth.eg records the boundary hash, nothing looks it up); DF-04 a repeated model result becomes a template.
+#   - COS's pipeline steps (cos/pipeline/box.eg, runs.eg) keep no hash and reuse nothing.
+# The coder's reading, to confirm with him:
+#   (1) step = chunk = brick: one node type, .chunk, at every level; a pipeline step is a chunk with in and out hooks (CIE-EG §5).
+#   (2) two kinds of reuse, kept apart: EXACT — the same chunk (its definition and its inputs, by hash) is reused at once, after one verified
+#       pass, if it declares no outside reads (clock, network, files); CRYSTAL — a pattern across DIFFERENT inputs that keeps passing is
+#       crystallized by count (crystal-lattice's threshold) into a template or an invariant, one rung down (DF-04); a pattern that keeps
+#       failing becomes a negative crystal that stops the same mistake being tried again.
+#   (3) the decomposing tool is the agent's: it cuts work into chunks at seams; dynamic chunking (DK1) sizes them to who runs them.
+#   (4) lib/meta/crystal-lattice.js is in lib/, used by Cortex's side: by his rule it moves to its owner (the graph substrate, with the lattice).
+# CONFIRMED 2026-11-13 (his): asked "one .chunk node at every level, reused exactly by hash and crystallized by count?": "yes but lib needs to
+# stop acting like a system." Readings (1)-(3) above stand as his. Reading (4) settled: the crystal lattice goes to Intelligence, not a new
+# substrate system ("Yes, map the move"): SW7 slice a and SW_D5 in docs/2026-11-13-sovereign-and-wired-phasemap.spec; CY0 expanded.

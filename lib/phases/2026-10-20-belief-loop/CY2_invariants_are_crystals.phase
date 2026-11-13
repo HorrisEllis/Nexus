@@ -7,11 +7,11 @@ intent: null
 summary: CY2_invariants_are_crystals (integration) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792456303343
+exported_at: 1794556764345
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792456303343
-lastSeenAt: 1792456303343
+firstSeenAt: 1794556764345
+lastSeenAt: 1794556764345
 fingerprint: null
 payload:
   id: CY2_invariants_are_crystals
@@ -31,4 +31,4 @@ payload:
   blocks:
     - MOD-CRYSTAL-SOURCES
   spec: docs/belief-loop.spec
-  graph: 62464b4cfa1cd75a
+  graph: 986f26261b09c38d

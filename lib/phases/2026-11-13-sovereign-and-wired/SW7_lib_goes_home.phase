@@ -4,14 +4,14 @@ type: phase
 id: docs_2026-11-13-sovereign-and-wired-phasemap.spec::SW7_lib_goes_home
 context: pipeline phase SW7_lib_goes_home of docs/2026-11-13-sovereign-and-wired-phasemap.spec
 intent: null
-summary: SW7_lib_goes_home (integration) — 2 file(s)
+summary: SW7_lib_goes_home (integration) — 8 file(s)
 system: idearium
 tags: []
-exported_at: 1794550806518
+exported_at: 1794556756371
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794550806518
-lastSeenAt: 1794550806518
+firstSeenAt: 1794556756371
+lastSeenAt: 1794556756371
 fingerprint: null
 payload:
   id: SW7_lib_goes_home
@@ -22,9 +22,15 @@ payload:
   files:
     - lib/system-boundary.js
     - tests/modules/test-lib-goes-home.test.js
+    - lib/meta/crystal-lattice.js
+    - intelligence/lattice/crystal-lattice.js
+    - intelligence/routes.js
+    - lib/compartment-engine.js
+    - lib/case-library.js
+    - tests/modules/test-crystal-lattice-in-intelligence.test.js
   depends_on:
     - SW6_the_drawbridge_the_only_way_in
     - SW4_own_data_by_default
   blocks: []
   spec: null
-  graph: ebda86c6d39cc780
+  graph: 1f1a1bd32e72d05c

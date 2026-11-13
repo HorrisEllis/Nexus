@@ -44,6 +44,17 @@ decisions:
     chosen: '"each system to use their own data folder by default." <system>/data is the default; the root data/<system> is read only to move what is there.'
     by: "his; genesis 0a ownership"
 
+  SW_D5_lib_is_not_a_system:
+    status: DECIDED 2026-11-13 (his)
+    chosen: '"lib needs to stop acting like a system." Asked whether the crystal lattice goes into the substrate or into the intelligence system, after "Like isn''t pillar the replacement to lib": into Intelligence ("Yes, map the move").'
+    settles: "DB0a in docs/2026-10-17-system-drawbridge-phasemap.spec ('is lib a system: still his to settle'): it is not."
+    reading: >-
+      The coder's, by the axioms (§5.9, §5.16, PIL_D2): what is left of lib/ splits three ways. Primitives every system uses as code go to
+      Pillar, in Emerge (his "isn't pillar the replacement to lib"; SW7_R1 reading (c), to confirm). What one system's work is goes to that
+      system: learning (crystals, the lattice) to Intelligence, whose spec's purpose is to consolidate the cognition layer. What reaches into
+      a system calls its route. No new substrate system: the graph's primitives are Pillar's, the learning on them is Intelligence's.
+    by: "his; AXIOMS §5.9, §5.16; genesis 0a ownership"
+
 phases:
   SW0_the_scorecard:
     layer: backend
@@ -126,13 +137,38 @@ phases:
     layer: integration
     status: OPEN
     depends_on: [SW6_the_drawbridge_the_only_way_in, SW4_own_data_by_default]
-    files: [lib, lib/system-boundary.js, cortex, cos, intelligence, copilot, loom, tests/modules/test-lib-goes-home.test.js]
+    files: [lib, lib/system-boundary.js, cortex, cos, intelligence, copilot, loom, tests/modules/test-lib-goes-home.test.js, lib/meta/crystal-lattice.js, intelligence/lattice/crystal-lattice.js, intelligence/routes.js, lib/compartment-engine.js, lib/case-library.js, tests/modules/test-crystal-lattice-in-intelligence.test.js]
     reuse: "SV2 (core files go home), CS18 (one copy of the primitives), lib/system-boundary.js homes and blockerOf, DB0a (is lib a system: still his to settle)."
     does: >-
       The 246 crossings from lib/ up into a system: a file in lib/ that only one system uses moves into that system; one that reaches
       into a system calls its route instead; what is truly shared stays, reaching into nothing.
     proof: "0 upward crossings; each moved file's history kept (git mv); every test that named the old path passes at the new one"
     readings_to_confirm: ["SW7_R1 (his 2026-11-10, still open): the component store. (a) lib/ a shared library with per-system config, (b) a store copied into each system, or (c) Pillar."]
+    expanded_2026_11_13: >-
+      James, 2026-11-13: "yes but lib needs to stop acting like a system. should we move that into the substrate or into the intelligence
+      system?" · told the coder's reading (into Intelligence; its spec names it the home of the cognition layer): "Yes, map the move".
+      SW_D5 decides lib/ is not a system. Mapped ahead of the order (SW7 last) by his yes; slice a removes crossings and adds none.
+    slice_a_the_crystal_lattice_into_intelligence:
+      files: [lib/meta/crystal-lattice.js, intelligence/lattice/crystal-lattice.js, intelligence/routes.js, intelligence/registry-components.js, lib/compartment-engine.js, lib/case-library.js, lib/meta/index.js, lib/node-export.js, lib/agent-tools/tools/query/query-intelligence.js, idearium/cli/route-commands.js, tests/modules/crystal-lattice.test.js, tests/modules/case-library.test.js, tests/modules/intuition-upgrade.test.js, tests/modules/test-crystal-lattice-in-intelligence.test.js]
+      read_2026_11_13: >-
+        lib/meta/crystal-lattice.js (262 lines): a (domain, verb, outcome) pattern seen PATTERN_FREQUENCY_THRESHOLD times becomes a crystal
+        (PASS) or a negative crystal (FAIL); lattice edges gain weight on success, lose it on failure, and decay on a timer. Its tables,
+        crystals and lattice_edges, are in Cortex's JAA store, reached by require('../../cortex/memory/jaa-db') (a crossing). Live callers:
+        lib/compartment-engine.js (updateOnExecution on every compartment outcome; the engine runs in Cortex's process, so the decay timer
+        does too) and lib/case-library.js (_edgeKey, reading lattice_edges.success_rate). lib/meta/index.js keeps a lazy getter no one
+        calls; node-export.js and query-intelligence.js name it in comments. Intelligence already serves GET /api/intelligence/crystals and
+        /api/intelligence/lattice, reading the same tables read-only (intelligence/routes.js freshReader). cortex/cortex-v2.js reads
+        lattice_edges through Cortex's /api/memory (a route, not a crossing).
+      does: >-
+        Backend first: git mv lib/meta/crystal-lattice.js → intelligence/lattice/crystal-lattice.js (history kept); it runs in Intelligence's
+        process, and its decay timer with it. Route: POST /api/intelligence/lattice/outcome { compartment, outcome } is updateOnExecution;
+        GET /api/intelligence/lattice/edge?from&to answers what case-library reads. Then the callers: compartment-engine posts each outcome
+        (never blocking the compartment: Intelligence down is said on the ledger and the outcome counted as missed, not retried into a
+        storm, his "one system down breaks no other"); case-library asks the edge route; lib/meta/index.js loses its getter. Command row:
+        `intel lattice outcome|edge`. The tables stay where they are in this slice (Cortex's store, read by Intelligence already); their
+        move into intelligence/data is SW4's for Intelligence (his "own data folder by default"), a migration first (§0.3), nothing deleted.
+      proof: "lib/meta/crystal-lattice.js gone and git log --follow finds it at its new path; three PASS outcomes posted give one crystal, a FAIL pattern a negative crystal (the old tests at the new home); case-library's edge read through the route equals the old direct read; with Intelligence stopped a compartment still completes and the missed outcome is on the ledger; the census shows lib's crossing into cortex from crystal-lattice gone and none added"
+      depends_on_note: "needs nothing built first; CY0 (one crystal schema) writes through it later, in Intelligence (CY0 expanded the same day)"
 
 order: >-
   SW0 first (it measures every other phase). Then SW1 → SW2 → SW3 (the map, the command nodes, the events) and SW4 (data) beside them.
