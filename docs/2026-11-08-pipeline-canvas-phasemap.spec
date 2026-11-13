@@ -875,3 +875,21 @@ built_2026_11_09_plan:
 # to ask for. A held run does not outlive a COS restart.
 # After, the same day: James, "Firefox Closed." Free memory 11.3%, COS started Idearium by itself. The evidence answer is proved live
 # (IN0_baseline: already true, done, nothing left to judge). The hold is still not live: COS is not restarted.
+# ── ADDENDUM 2026-11-13 — his: the pipeline systematizes; make it visual, editable, debuggable, optimizable (PC4 and PC8 expanded; preview first) ──
+# James, 2026-11-13: "pipeline is meant to systematize things. make a visual aspect for pipelines. debugging, workflow optimization and automation,
+# coding chunk by chunk, like making it all visual, editable, debuggable, optimizable" · earlier the same day: "can't you use the pipeline recursively?
+# like each step to break down ideariums processes? like litterally the pipeline can be used for way too much i feel like? would that optimize
+# performance?" · "then we should use .chunks as steps" (a step is a .chunk: docs/2026-10-20-substrate-...-phasemap.spec addendum 2026-11-13).
+# Read the same day: COS's Pipelines page (cos/ui/pipelines, PC1 0.60.454) draws a pipeline's boxes by its DAG, read-only. PC4 (the canvas) is
+# OPEN; the canvas is ERAVOS's (PC_D10, his), not a copy in Nexus; his 2026-11-08 order: the canvas PREVIEW shown to him before any UI.
+# The four views he names, as the coder reads them onto the phases that own them (to confirm with the preview):
+#   - visual + editable: the canvas (PC4) — boxes, wires into hooks, a box opens into its own canvas (recursion, PC2); editing writes the
+#     .pipeline node first (cos/pipeline from_erv), the canvas never holds the truth.
+#   - debuggable: each box shows its last run — status, its error as written, its input and output, the gate's verdict and the gap it found
+#     (PC_D3); a failed box can be retried from there (PC8 slice b, built).
+#   - optimizable: each box's delta against its baseline (PC8 slice a, built: a delta and a baseline per step), the slowest box marked; a box
+#     reused by hash shown as reused (the chunk-as-step reading: exact reuse, crystals by count).
+#   - coding chunk by chunk: a build box opens into its chunks (the .chunk nodes of the phase it builds), each chunk a box with its rung
+#     (derive, template, model: CIE-EG deterministic_first) and its tests.
+# First real run to show: SW7a's build request (2026-11-13): context met, dag met after Idearium's snapshot was refreshed, build failed twice
+# (Idearium out of its 1 GB heap at 09:15; then the request timed out while the build was started anyway and went stuck at 10:22).
