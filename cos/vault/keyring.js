@@ -73,6 +73,24 @@ function unlock({ password, recoveryCode, keyFile = COS_VAULT_KEY_FILE, keyringF
 /** true once a keyring exists — the vault is password/recovery-protected, not a bare key file */
 function hasKeyring(keyringFile = COS_VAULT_KEYRING_FILE) { return fs.existsSync(keyringFile); }
 
+/**
+ * "just enough to get it integrated" (his, 2026-11-13) — every system that wants to protect something through the
+ * vault calls this once at its own startup, instead of each wiring its own prompt or its own copy of unlock()'s
+ * logic. It is the ONE lever: set COS_VAULT_PASSWORD once (the OS environment, or COS's own settings — COS's
+ * supervisor already forwards its env to every system it spawns, so one setting reaches every process) and every
+ * system that calls this gets the SAME root key, independently, with no process talking to another (AC_D1: a
+ * library, never a service). Leave it unset and nothing here changes: no password, no keyring touched, no error
+ * — a caller gets { ok:false } back and falls back to its own unprotected default, exactly as before this existed.
+ * Never throws: a wrong password (a keyring exists under a DIFFERENT password than the one now in the env) comes
+ * back as { ok:false, reason }, not an exception a caller must remember to catch.
+ */
+function unlockFromEnv({ envVar = 'COS_VAULT_PASSWORD', keyFile = COS_VAULT_KEY_FILE, keyringFile = COS_VAULT_KEYRING_FILE } = {}) {
+  const password = process.env[envVar];
+  if (!password) return { ok: false, reason: `${envVar} is not set` };
+  try { return { ok: true, ...unlock({ password, keyFile, keyringFile }) }; }
+  catch (e) { return { ok: false, reason: e.message }; }
+}
+
 /** add a slot (e.g. a future Windows Hello or recovery-keypair slot) once already unlocked this process */
 function addSlot({ openWith, name, newSecret, keyringFile = COS_VAULT_KEYRING_FILE }) {
   const existing = _readKeyring(keyringFile);
@@ -82,4 +100,4 @@ function addSlot({ openWith, name, newSecret, keyringFile = COS_VAULT_KEYRING_FI
   return true;
 }
 
-module.exports = { unlock, hasKeyring, addSlot };
+module.exports = { unlock, unlockFromEnv, hasKeyring, addSlot };

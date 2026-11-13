@@ -201,7 +201,7 @@ phases:
     proof: "a provider account signed in through its own Google button is one vault record, read back like a password-based one; an API-key record is used for a job with no browser tab at all"
   AC9_rewinds_plaintext_tokens:
     layer: library
-    status: OPEN
+    status: "BUILT 0.60.508 -- rewind encrypts through cos/vault when COS_VAULT_PASSWORD is set (his: 'just enough to get it integrated'); plain JSON unchanged when it is not; an old plain snapshot still loads"
     james: "found answering his 2026-11-13 'use the rewind system to take backups' -- AC_D5"
     depends_on: []
     files: [clear-glass/src/rewind/engine.js]

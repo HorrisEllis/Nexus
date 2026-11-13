@@ -36,6 +36,36 @@ const path = require('path');
 const fs   = require('fs');
 const { randomUUID } = require('crypto');
 
+// AC9 (2026-11-13, docs/2026-11-13-one-place-for-accounts-phasemap.spec) — James, weighing "use the rewind system
+// to take backups": answering it found this file's own header above already admits full localStorage/sessionStorage
+// is persisted here, which can hold auth tokens, in a plain JSON file on disk. "just enough to get it integrated"
+// (his words, the same day): through cos/vault, which already wraps its real root key under a password (AC6) —
+// set COS_VAULT_PASSWORD once (COS forwards its env to every system it starts) and every snapshot written from
+// here on is encrypted under it; leave it unset and this behaves exactly as before (plain JSON, said once, not
+// silently). An existing plain snapshot file from before this still loads — never a silent data loss.
+let _vault = null;
+function _vaultOnce() {
+  if (_vault !== null) return _vault;
+  try { _vault = { crypto: require('../../../cos/vault/crypto.js'), keyring: require('../../../cos/vault/keyring.js') }; }
+  catch (_) { _vault = false; }
+  return _vault;
+}
+// only a SUCCESSFUL unlock is remembered — the key cannot change once unlocked, so there is nothing to recheck.
+// A failure is NEVER cached: the env var (or the keyring it points at) might only be set after this process
+// started, and permanently giving up on the first early check (a real bug, found writing this test: a snapshot
+// taken before boot finished setting the password would otherwise disable protection for the process's whole
+// life) would be the opposite of "just enough to get it integrated".
+let _unlocked = false, _warnedUnprotected = false;
+function _rewindKey(log) {
+  if (_unlocked) return true;
+  const v = _vaultOnce();
+  if (!v) return false;
+  const r = v.keyring.unlockFromEnv();
+  _unlocked = !!r.ok;
+  if (!_unlocked && !_warnedUnprotected) { _warnedUnprotected = true; (log || console.log)('[rewind] COS_VAULT_PASSWORD not set — snapshots are written unencrypted, as before AC9'); }
+  return _unlocked;
+}
+
 const REWIND_DIR     = path.join(process.env.APPDATA || process.env.HOME || '.', '.clear-glass', 'rewind');
 const MAX_SNAPSHOTS  = 50; // per agent
 const AUTO_INTERVAL  = 30000; // 30s auto-snapshot when page is idle
@@ -313,7 +343,11 @@ class RewindEngine {
     try {
       const fp   = path.join(REWIND_DIR, `${agentId.replace(/[^a-z0-9-]/gi, '_')}.json`);
       const data = this._sessions.get(agentId) || [];
-      fs.writeFileSync(fp, JSON.stringify(data, null, 2), 'utf8');
+      const text = JSON.stringify(data, null, 2);
+      // AC9 — encrypted when COS_VAULT_PASSWORD is set (see _rewindKey above); the exact same plain JSON as
+      // before this existed when it is not, so an older, unencrypted snapshot file is never orphaned by this.
+      const out = _rewindKey() ? JSON.stringify({ encrypted: true, ..._vaultOnce().crypto.encrypt(text) }) : text;
+      fs.writeFileSync(fp, out, 'utf8');
     } catch (_) {}
   }
 
@@ -321,9 +355,13 @@ class RewindEngine {
     if (this._sessions.has(agentId)) return;
     try {
       const fp = path.join(REWIND_DIR, `${agentId.replace(/[^a-z0-9-]/gi, '_')}.json`);
-      if (fs.existsSync(fp)) {
-        this._sessions.set(agentId, JSON.parse(fs.readFileSync(fp, 'utf8')));
-      }
+      if (!fs.existsSync(fp)) return;
+      const raw = JSON.parse(fs.readFileSync(fp, 'utf8'));
+      // AC9 — an { encrypted: true, ... } file needs the vault unlocked (COS_VAULT_PASSWORD) with the SAME
+      // password it was written under; a plain array (every snapshot file from before this existed) loads
+      // exactly as before. _rewindKey() ensures an unlock was at least attempted before this reads one.
+      const data = (raw && raw.encrypted) ? (_rewindKey(), JSON.parse(_vaultOnce().crypto.decrypt(raw))) : raw;
+      this._sessions.set(agentId, data);
     } catch (_) {}
   }
 

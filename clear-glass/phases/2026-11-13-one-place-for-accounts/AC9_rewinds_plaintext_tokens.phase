@@ -9,21 +9,24 @@ intent: null
 summary: AC9_rewinds_plaintext_tokens (library) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1794578166697
+exported_at: 1794578969758
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794578166697
-lastSeenAt: 1794578166697
+firstSeenAt: 1794578969758
+lastSeenAt: 1794578969758
 fingerprint: null
 payload:
   id: AC9_rewinds_plaintext_tokens
   map: docs/2026-11-13-one-place-for-accounts-phasemap.spec
   repo: null
   layer: library
-  status: OPEN
+  status: >-
+    "BUILT 0.60.508 -- rewind encrypts through cos/vault when COS_VAULT_PASSWORD is set (his: 'just
+    enough to get it integrated'); plain JSON unchanged when it is not; an old plain snapshot still
+    loads"
   files:
     - clear-glass/src/rewind/engine.js
   depends_on: []
   blocks: []
   spec: null
-  graph: 412d235ff248793b
+  graph: a2c82a2f8ecbed88
