@@ -335,3 +335,6 @@ order: >-
 #   SW5_R2: :9000 after the move. (a) A forwarder kept as long as anything calls it; (b) kept one release, then gone. The coder leans (a).
 # Built alongside, 0.60.515 (Clear Glass's code, recorded in the changelog; found in his console while mapping): _erosHold out of scope
 # (ER2, 0.60.509) and the sign-in page re-injection loop (SI1). His console also shows SW5b's finding live: "orchestrator [raid-worker]".
+# ── ADDENDUM 2026-11-13 (0.60.516) — SW5g, a first act: the orchestrator's page no longer opens at boot ──
+# James, 2026-11-13: "no need to open 127.0.0.1:9000 on boot". orchestrator.config.json openUIOnBoot false (the existing switch; the
+# boot phase nexus.ui.open returns before asking Clear Glass or the system browser). The page itself is SW5g's, still to place (SW5_R1).
