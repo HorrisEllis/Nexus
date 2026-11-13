@@ -17,7 +17,7 @@
  * adaptive patterns).
  */
 (function () {
-  const { cg, h, call, wire, toast, busy, modal, confirmDo, field, pane, row, btn, chip, empty, ago, select, agentOptions, section } = window.CGS;
+  const { cg, h, call, wire, toast, busy, modal, confirmDo, field, pane, row, btn, chip, empty, ago, select, agentOptions, section, toggle } = window.CGS;
 
   /*
    * §0.39.281 EC10 — the workbench (James: "a huge editor for the ErosmancerOS … only if it's additive"). The views the
@@ -149,8 +149,20 @@
       try { sup = await wire('/eros-supervisor', { allowNotOk: true }); } catch (_) {}
       const port = h('input', { type: 'number', value: (sup && sup.cdpPort) || 9333, min: 1 });
       const supLine = sup ? (sup.external ? `running on :${sup.port} (started outside Clear Glass)`
-        : sup.state === 'manual' ? 'not started by Clear Glass (EROS_AUTOSTART=0)'
+        : sup.state === 'manual' ? `not started by Clear Glass (${sup.why || 'EROS_AUTOSTART=0'})`
         : `${sup.state} on :${sup.port}${sup.pid ? ` · pid ${sup.pid}` : ''}${sup.restarts ? ` · ${sup.restarts} restart(s)` : ''}${sup.lastError && sup.state !== 'running' ? ` · ${sup.lastError}` : ''}`) : null;
+      // 2026-11-13 — James: "can you add an autostart option with erosmanceros?" sup.autostartOption is what this
+      // boot actually decided (the persisted option, or EROS_AUTOSTART when it is explicitly set — see main/index.js);
+      // the toggle always writes the OPTION, and says plainly when an env var is what is really deciding instead.
+      const envForced = process?.env?.EROS_AUTOSTART === '0' || process?.env?.EROS_AUTOSTART === '1';
+      const autostartRow = pane({ title: 'Startup', body: row('Start ErosmancerOS with Clear Glass', envForced
+        ? `Set by the EROS_AUTOSTART environment variable (${process.env.EROS_AUTOSTART}) — this overrides the option below until it is unset.`
+        : 'On by default. Off, it only starts on demand (the button above, or an agent job that needs it).',
+        toggle(sup ? sup.autostartOption !== false : true, async (on) => {
+          const r = await wire('/eros-supervisor/autostart', { method: 'POST', body: { on }, allowNotOk: true });
+          if (!r.ok) throw new Error(r.error || 'could not save');
+          toast(on ? 'Will start with Clear Glass next launch' : 'Will not start with Clear Glass next launch');
+        }, 'Start ErosmancerOS with Clear Glass')) });
       const startBtn = btn(sup && sup.state === 'running' ? 'Reconnect to Clear Glass' : 'Start ErosmancerOS', (e) => busy(e.currentTarget, async () => {
         const r = await wire('/eros-supervisor/start', { method: 'POST', allowNotOk: true });
         toast(r.ok ? 'ErosmancerOS running and connected' : `ErosmancerOS: ${r.lastError || r.state}`, r.ok ? undefined : 'err'); rerender();
@@ -164,7 +176,7 @@
              h('p', { class: 'blurb', style: { marginTop: '14px' }, text: 'Or point Erosmancer at another Chrome DevTools port (a browser started with --remote-debugging-port).' }),
              h('div', { class: 'grid', style: { marginTop: '10px' } }, field('DevTools port', port)),
              h('div', { style: { marginTop: '10px' } }, btn('Connect', (e) => busy(e.currentTarget, async () => { await wire('/eros/connect', { method: 'POST', body: { target: { type: 'local', port: parseInt(port.value, 10) } } }); toast('Erosmancer connected'); rerender(); }), 'primary'))] });
-      if (!connected) return conn;
+      if (!connected) return [conn, autostartRow];
 
       const [profiles, hostile, patterns] = await Promise.all([
         wire('/eros/behavior/profiles').catch(() => ({ profiles: ['precise', 'cautious', 'exploratory', 'turbo'] })),
@@ -173,7 +185,7 @@
       ]);
       const prof = select(profiles.profiles, 'precise');
       const level = select([{ value: 'direct', label: 'Direct' }, { value: 'parallel', label: 'Parallel' }, { value: 'redundant', label: 'Redundant' }], (health.routing && health.routing.level) || 'direct');
-      return [conn,
+      return [conn, autostartRow,
         pane({ title: 'Behaviour', body: [h('div', { class: 'grid' }, field('Default behaviour profile', prof, 'How clicks, typing and mouse paths are timed'), field('Routing level', level, 'How many targets a command is sent through')),
           h('div', { style: { marginTop: '10px', display: 'flex', gap: '8px' } },
             btn('Apply profile', (e) => busy(e.currentTarget, async () => { await wire('/eros/behavior/profile', { method: 'POST', body: { sessionId: 'default', profile: prof.value } }); toast(`Profile set to ${prof.value}`); })),

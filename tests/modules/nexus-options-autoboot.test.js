@@ -41,14 +41,28 @@ async function main() {
   // change in one test can't silently leak into the next (found this the
   // hard way: the round-trip test below initially failed because an
   // earlier test's claude:false was still on disk when it ran).
+  // §TEST-ISOLATION BUGFIX (2026-11-13, found building tests/modules/clear-glass-eros-autostart.test.js) —
+  // store.js's real storage is JaaKV (src/storage/jaa.js), resolved from CG_JAA_DIR, not HOME. HOME alone is a
+  // NO-OP on any machine where APPDATA is set (every real Windows install — OPTIONS_PATH/cgDir() both read
+  // `process.env.APPDATA || process.env.HOME`), so every test below has been writing into and reading from this
+  // machine's REAL Clear Glass options store the whole time this file has existed, not an isolated temp dir.
+  // Confirmed directly before fixing: the real store's eros key (added the same day) carried exactly one test's
+  // leftover values after an unpatched run, found and repaired by hand. CG_JAA_DIR is the override that works.
   function freshOptions() {
-    const tmpHome = fs.mkdtempSync(path.join(os.tmpdir(), 'nexus-options-'));
-    process.env.HOME = tmpHome;
+    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'nexus-options-'));
+    process.env.CG_JAA_DIR = tmpDir;
+    process.env.HOME = tmpDir;
+    // OPTIONS_PATH (store.js's module-level const, what JaaKV's one-time legacy-file import reads) is
+    // `process.env.APPDATA || process.env.HOME || '.'` — APPDATA wins on every real Windows machine, so HOME
+    // alone never isolates it there. Cleared for the lifetime of this store.js require so writeRawOptions()'s
+    // simulated "old install" file is the one actually found (restored at the very end of this section, below).
+    delete process.env.APPDATA;
     delete require.cache[require.resolve('../../clear-glass/src/options/store.js')];
+    delete require.cache[require.resolve('../../clear-glass/src/storage/jaa.js')];
     const NexusOptions = require('../../clear-glass/src/options/store.js');
-    return { NexusOptions, cleanup: () => fs.rmSync(tmpHome, { recursive: true, force: true }) };
+    return { NexusOptions, cleanup: () => fs.rmSync(tmpDir, { recursive: true, force: true }) };
   }
-  const origHome = process.env.HOME;
+  const origHome = process.env.HOME, origJaaDir = process.env.CG_JAA_DIR, origAppData = process.env.APPDATA;
 
   await atest('defaults name every registry provider: ChatGPT + DeepSeek at boot, the rest on first use (0.39.265)', async () => {
     const { NexusOptions, cleanup } = freshOptions();
@@ -147,7 +161,7 @@ async function main() {
 
   await atest('MIGRATION: an existing file with the old about:blank default is upgraded once', async () => {
     const tmpHome = fs.mkdtempSync(path.join(os.tmpdir(), 'nexus-options-'));
-    process.env.HOME = tmpHome;
+    process.env.HOME = tmpHome; process.env.CG_JAA_DIR = tmpHome; delete process.env.APPDATA;
     writeRawOptions(tmpHome, { defaultStartUrl: 'about:blank', hideToTrayOnClose: true });
     delete require.cache[require.resolve('../../clear-glass/src/options/store.js')];
     const NexusOptions = require('../../clear-glass/src/options/store.js');
@@ -160,7 +174,7 @@ async function main() {
 
   await atest('MIGRATION: a real, already-customized start URL is left alone', async () => {
     const tmpHome = fs.mkdtempSync(path.join(os.tmpdir(), 'nexus-options-'));
-    process.env.HOME = tmpHome;
+    process.env.HOME = tmpHome; process.env.CG_JAA_DIR = tmpHome; delete process.env.APPDATA;
     writeRawOptions(tmpHome, { defaultStartUrl: 'https://claude.ai/new' });
     delete require.cache[require.resolve('../../clear-glass/src/options/store.js')];
     const NexusOptions = require('../../clear-glass/src/options/store.js');
@@ -173,7 +187,7 @@ async function main() {
 
   await atest('MIGRATION: about:blank chosen AFTER the migration (schema already current) is never re-overwritten', async () => {
     const tmpHome = fs.mkdtempSync(path.join(os.tmpdir(), 'nexus-options-'));
-    process.env.HOME = tmpHome;
+    process.env.HOME = tmpHome; process.env.CG_JAA_DIR = tmpHome; delete process.env.APPDATA;
     writeRawOptions(tmpHome, { defaultStartUrl: 'about:blank', _schemaVersion: 1 });
     delete require.cache[require.resolve('../../clear-glass/src/options/store.js')];
     const NexusOptions = require('../../clear-glass/src/options/store.js');
@@ -185,7 +199,7 @@ async function main() {
 
   await atest('MIGRATION: the upgrade round-trips through disk (persisted, not just in-memory)', async () => {
     const tmpHome = fs.mkdtempSync(path.join(os.tmpdir(), 'nexus-options-'));
-    process.env.HOME = tmpHome;
+    process.env.HOME = tmpHome; process.env.CG_JAA_DIR = tmpHome; delete process.env.APPDATA;
     writeRawOptions(tmpHome, { defaultStartUrl: 'about:blank' });
     delete require.cache[require.resolve('../../clear-glass/src/options/store.js')];
     const NexusOptions1 = require('../../clear-glass/src/options/store.js');
@@ -198,7 +212,9 @@ async function main() {
     fs.rmSync(tmpHome, { recursive: true, force: true });
   });
 
-  process.env.HOME = origHome;
+  if (origHome === undefined) delete process.env.HOME; else process.env.HOME = origHome;
+  if (origJaaDir === undefined) delete process.env.CG_JAA_DIR; else process.env.CG_JAA_DIR = origJaaDir;
+  if (origAppData === undefined) delete process.env.APPDATA; else process.env.APPDATA = origAppData;
 
   // ── autoBootSetting decision logic (extracted, real equivalent of the
   // logic added to src/main/index.js) ────────────────────────────────────

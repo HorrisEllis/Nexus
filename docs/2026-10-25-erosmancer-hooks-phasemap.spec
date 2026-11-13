@@ -42,7 +42,7 @@ spec:
     ER2_snowflake_and_accounts:
       status: DONE (0.60.253)
       depends_on: [ER1_the_right_tab, ER_D1_eros_gets_its_tabs_from_clear_glass]
-      files: [clear-glass/src/main/index.js, clear-glass/src/ipc/bridge.js, clear-glass/src/options/store.js, clear-glass/erosmancer/erosmancer-os/src/api/server.ts]
+      files: [clear-glass/src/main/index.js, clear-glass/src/ipc/bridge.js, clear-glass/src/options/store.js, clear-glass/erosmancer/erosmancer-os/src/api/server.ts, clear-glass/renderer/settings/sections/eros.js, tests/modules/clear-glass-eros-autostart.test.js]
       does: "POST /cli/eros/open { url, via: snowflake | account | plain, accountId? } → the page opened through its door, Eros attached, the account's erosProfile (options/store.js, one of the four) set for that session and used by every Eros input on it; /api/input takes profile (the pace of the pointer and the keys). GET /cli/eros/tabs: which agent each Eros tab is."
     ER3_the_dom_mutator_types_through_eros:
       status: DONE (0.60.253)
@@ -69,3 +69,24 @@ spec:
       decided_by: "§8.6 reuse (CL1's openTab, 0.60.231, his own call for a person's pick), §1.2 (each reason said). The 2026-07-09 fail-closed rule is kept behind noOpenTab, its test kept (T-006), superseded for the default by T-006b (§0.3)."
 
   verification_here: "Pure tab matching and the mesh's prepare script in a real page (Clear Glass glass.js); the wire's resolver, the open door and the mutate path against fakes for Eros and Electron; the TypeScript change compiled. Not run against a live Eros + Clear Glass (no display here)."
+
+## ADDENDUM 2026-11-13 (0.60.513, ER2 expanded) — a real, persisted autostart option
+James, 2026-11-13: "can you add an autostart option with erosmanceros?" (asked from Settings > ErosmancerOS > Workbench, shown
+disconnected, EROS_AUTOSTART=0).
+Before: whether Clear Glass starts ErosmancerOS with itself (src/main/index.js §14.4) was decided ONCE at boot, from the
+EROS_AUTOSTART env var alone — no UI, no persisted choice, a restart with a different environment the only way to change it.
+Built: clear-glass/src/options/store.js DEFAULTS.eros.autostart (default true, matching today's behaviour) and the real
+precedence, NexusOptions.decideErosAutostart(envVar, optionAutostart) — EROS_AUTOSTART still wins when explicitly '0' or '1'
+(nothing already scripting it changes); otherwise the persisted option decides. GET /eros-supervisor now reports
+autostartOption and why (when it is the reason nothing is running); POST /eros-supervisor/autostart persists a change for the
+next launch. Settings > ErosmancerOS shows a real toggle, wired to that route, with the env var's override named when it is
+in force.
+Found and fixed along the way, real and urgent: tests/modules/nexus-options-autoboot.test.js's isolation (process.env.HOME
+alone) has been a no-op on this machine the whole time — store.js's real storage is JaaKV, resolved from CG_JAA_DIR, and its
+one-time legacy-file import path reads APPDATA before HOME; both are always set on Windows. An early, unpatched run of the
+new eros-autostart test wrote test values into this machine's REAL Clear Glass options store (confirmed directly: eros:
+{autostart:false, someOtherFutureKey:"kept"}), repaired by hand before anything else touched it. Both test files now isolate
+CG_JAA_DIR (and APPDATA, where the legacy-import tests need it) as well as HOME, restored at the end; every write checked
+against the real store before and after, by hand, to confirm nothing leaked.
+Proof: tests/modules/clear-glass-eros-autostart.test.js, 13/13 (new). tests/modules/nexus-options-autoboot.test.js, 18/18
+(was silently never fully isolated; now is).

@@ -413,6 +413,7 @@ const SUITES = [
   'test-guardian-job-ledger.test.js',   // JL1/JL2 2026-11-13 — the job ledger: every Guardian job joined to its .response node
   'test-cos-vault-key-slots.test.js',   // AC6 2026-11-13 — the vault's root key wrapped under password + recovery slots, not a plain file
   'test-clear-glass-rewind-vault.test.js',   // AC9 2026-11-13 — rewind snapshots encrypted through the vault when COS_VAULT_PASSWORD is set
+  'clear-glass-eros-autostart.test.js',   // ER2 2026-11-13 — a real, persisted ErosmancerOS autostart option
   'test-project-decompose.test.js',   // 0.60.5 — a project (zip or folder) decomposed into the component store, each component bundled with its require closure; the drop zone; Clear Glass in the COS window style   // 0.60.2 — account routing by hat / intent / repo (Guardian, JAA) + Clear Glass's account switch on the JAA cookie vault; the COS-window attention panel; the pick checked by Clear Glass's selector check, anchored at x/y/z and used by every userscript (field map); ChatGPT works signed out; sign-in responses untouched
   'test-contract-gates.test.js',   // 0.60.15 — .contract v2: his four acceptance conditions (legacy files, evidence, invalidation, packet)
   'test-recursive-split.test.js', // 0.60.40 BR2 — splitting recursively to a depth bound; CK-247 runs

@@ -1090,13 +1090,25 @@ async function _startWire() {
 
       // §0.39.264 — ErosmancerOS's lifetime, owned by Clear Glass (src/eros/supervisor.js)
       if (u === '/eros-supervisor' && req.method === 'GET') {
-        return res.end(JSON.stringify({ ok: true, autostart: !!erosSupervisor, ...(erosSupervisor ? erosSupervisor.status() : { state: 'manual', port: EROS_PORT, cdpPort: CG_CDP_PORT }) }));
+        // 2026-11-13 — the real reason it is not running, for Settings > ErosmancerOS to show correctly (was
+        // always "EROS_AUTOSTART=0", even when the real cause was the new autostart option, lean mode, or memory).
+        const why = erosSupervisor ? null : _erosHold || (!_erosAutostart ? 'autostart is off' : null);
+        return res.end(JSON.stringify({ ok: true, autostart: !!erosSupervisor, autostartOption: _erosAutostart, ...(erosSupervisor ? erosSupervisor.status() : { state: 'manual', port: EROS_PORT, cdpPort: CG_CDP_PORT, why }) }));
       }
       if (u === '/eros-supervisor/start' && req.method === 'POST') {
         if (!erosSupervisor) erosSupervisor = new ErosSupervisor({ port: EROS_PORT, cdpPort: CG_CDP_PORT });
         const st = erosSupervisor.state === 'running' ? (await erosSupervisor.connect(), erosSupervisor.status()) : await erosSupervisor.start();
         if (st.state !== 'running') res.writeHead(502);
         return res.end(JSON.stringify({ ok: st.state === 'running', ...st }));
+      }
+      // 2026-11-13 — James: "can you add an autostart option with erosmanceros?" Persists for the NEXT launch
+      // (this process already decided whether to start it at boot); never overrides EROS_AUTOSTART when it is set.
+      if (u === '/eros-supervisor/autostart' && req.method === 'POST') {
+        if (!nexusOptions) { res.writeHead(503); return res.end(JSON.stringify({ ok: false, error: 'options not ready' })); }
+        const on = !!parsed.on;
+        await nexusOptions.set({ eros: { ...(nexusOptions.get().eros || {}), autostart: on } });
+        const envSet = process.env.EROS_AUTOSTART === '0' || process.env.EROS_AUTOSTART === '1';
+        return res.end(JSON.stringify({ ok: true, autostart: on, takesEffectNextLaunch: true, overriddenByEnv: envSet ? process.env.EROS_AUTOSTART : null }));
       }
 
       // ErosmancerOS proxy
@@ -1764,11 +1776,15 @@ async function bootstrap() {
     const h = require('../../../lib/prevention.js').heavyAllowedHere('clear-glass');
     _erosHold = lean.on ? 'lean mode is on' : !h.ok ? h.why : null;
   } catch (_) { _erosHold = null; }
+  // 2026-11-13 — James: "can you add an autostart option with erosmanceros?" A real, persisted setting
+  // (nexusOptions eros.autostart, Settings > ErosmancerOS) decides this now; EROS_AUTOSTART still wins when it is
+  // explicitly set (either value), for anyone already using it, so nothing already depending on the env var changes.
+  const _erosAutostart = NexusOptions.decideErosAutostart(process.env.EROS_AUTOSTART, nexusOptions?.get()?.eros?.autostart);
   if (_erosHold) console.log(`[ClearGlass/Eros] not started — ${_erosHold} (it starts on demand: POST :7702/eros-supervisor/start)`);
-  else if (process.env.EROS_AUTOSTART !== '0') {
+  else if (_erosAutostart) {
     erosSupervisor = new ErosSupervisor({ port: EROS_PORT, cdpPort: CG_CDP_PORT });
     erosSupervisor.start().catch(err => console.warn(`[ClearGlass/Eros] start failed (non-fatal): ${err.message}`));
-  }
+  } else console.log('[ClearGlass/Eros] not started — autostart is off (Settings > ErosmancerOS; POST :7702/eros-supervisor/start starts it on demand)');
 
   // 14.5. Wire — ErosmancerOS registration + :7704 HTTP server (non-fatal)
   _startWire().catch(err => console.warn(`[ClearGlass/Wire] start failed (non-fatal): ${err.message}`));

@@ -70,6 +70,10 @@ const DEFAULTS = {
   driver:   { navTimeoutMs: 30000, waitTimeoutMs: 10000, agentsMayDrive: true },   // src/driver/index.js (through the site resolver)
   mesh:     { retriesPerStrategy: 2, backoffMs: [1000, 3000, 8000, 15000] },       // src/mesh/agent-mesh.js drain: retries per strategy, backoff per tier
   guardian: { listen: true, capture: true },                                        // options.findListenersForUrl, downloads/chat-ledger.js
+  // 2026-11-13 — James: "can you add an autostart option with erosmanceros?" A real, persisted setting for whether
+  // Clear Glass starts ErosmancerOS with itself on boot (src/main/index.js §14.4). Default true matches
+  // today's behaviour (the EROS_AUTOSTART env var, when set, still overrides this either way — see that file).
+  eros:     { autostart: true },
 
   // Window behavior
   hideToTrayOnClose:    true,   // close (✕) button / OS close → hide to tray instead of destroying
@@ -1050,5 +1054,16 @@ class NexusOptions {
     });
   }
 }
+
+// 2026-11-13 — James: "can you add an autostart option with erosmanceros?" The precedence main/index.js §14.4
+// uses to decide whether to start ErosmancerOS with Clear Glass: the EROS_AUTOSTART env var wins when it is
+// EXPLICITLY '0' or '1' (anyone already scripting it keeps today's behaviour, either way); otherwise the persisted
+// option (eros.autostart) decides, defaulting on. A pure function, extracted (not inlined) so it is directly
+// testable without a full Electron environment — the main/index.js call site is checked by a source match instead.
+NexusOptions.decideErosAutostart = function decideErosAutostart(envVar, optionAutostart) {
+  if (envVar === '0') return false;
+  if (envVar === '1') return true;
+  return optionAutostart !== false;
+};
 
 module.exports = NexusOptions;

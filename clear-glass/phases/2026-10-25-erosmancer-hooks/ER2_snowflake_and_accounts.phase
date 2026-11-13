@@ -4,14 +4,14 @@ type: phase
 id: docs_2026-10-25-erosmancer-hooks-phasemap.spec::ER2_snowflake_and_accounts
 context: pipeline phase ER2_snowflake_and_accounts of docs/2026-10-25-erosmancer-hooks-phasemap.spec
 intent: null
-summary: ER2_snowflake_and_accounts (?) — 4 file(s)
+summary: ER2_snowflake_and_accounts (?) — 6 file(s)
 system: idearium
 tags: []
-exported_at: 1792973193744
+exported_at: 1794592419104
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792973193744
-lastSeenAt: 1792973193744
+firstSeenAt: 1794592419104
+lastSeenAt: 1794592419104
 fingerprint: null
 payload:
   id: ER2_snowflake_and_accounts
@@ -24,9 +24,11 @@ payload:
     - clear-glass/src/ipc/bridge.js
     - clear-glass/src/options/store.js
     - clear-glass/erosmancer/erosmancer-os/src/api/server.ts
+    - clear-glass/renderer/settings/sections/eros.js
+    - tests/modules/clear-glass-eros-autostart.test.js
   depends_on:
     - ER1_the_right_tab
     - ER_D1_eros_gets_its_tabs_from_clear_glass
   blocks: []
   spec: null
-  graph: 90b7a1973abbabfc
+  graph: 7ca488500e24ec18
