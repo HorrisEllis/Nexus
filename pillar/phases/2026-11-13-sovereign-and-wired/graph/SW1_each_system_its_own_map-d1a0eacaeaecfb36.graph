@@ -7,11 +7,11 @@ intent: null
 summary: 30 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1794608390800
+exported_at: 1794645020933
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794608390800
-lastSeenAt: 1794608390800
+firstSeenAt: 1794645020933
+lastSeenAt: 1794645020933
 fingerprint: null
 payload:
   for: SW1_each_system_its_own_map
@@ -216,6 +216,7 @@ payload:
     dependents:
       - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW2_routes_and_command_nodes
       - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW5_orchestrator_into_the_supervisor
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW8_ideariums_census_what_is_misplaced
     upstream:
       - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW0_the_scorecard
       - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW_D0_picked_up
@@ -235,19 +236,22 @@ payload:
       - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW5h_the_orchestrator_retired
       - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW6_the_drawbridge_the_only_way_in
       - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW7_lib_goes_home
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW8_ideariums_census_what_is_misplaced
     blockedBy: []
     unlocks:
       - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW2_routes_and_command_nodes
       - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW5_orchestrator_into_the_supervisor
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW8_ideariums_census_what_is_misplaced
     conflicts: []
     dangling: []
     lines:
       - layer 2 · ready
       - 'depends on (2): SW0_the_scorecard, SW_D2_each_system_keeps_its_own_map · all upstream 3'
       - >-
-        needed by (2): SW2_routes_and_command_nodes, SW5_orchestrator_into_the_supervisor · all
-        downstream 14 · finishing it unlocks SW2_routes_and_command_nodes,
-        SW5_orchestrator_into_the_supervisor
+        needed by (3): SW2_routes_and_command_nodes, SW5_orchestrator_into_the_supervisor,
+        SW8_ideariums_census_what_is_misplaced · all downstream 15 · finishing it unlocks
+        SW2_routes_and_command_nodes, SW5_orchestrator_into_the_supervisor,
+        SW8_ideariums_census_what_is_misplaced
     edges:
       - from: docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW0_the_scorecard
         kind: declared

@@ -9,11 +9,11 @@ intent: null
 summary: SW5i_the_automation_engine_into_cos (backend) — 20 file(s)
 system: idearium
 tags: []
-exported_at: 1794637392281
+exported_at: 1794645020965
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794637392281
-lastSeenAt: 1794637392281
+firstSeenAt: 1794645020965
+lastSeenAt: 1794645020965
 fingerprint: null
 payload:
   id: SW5i_the_automation_engine_into_cos
@@ -46,4 +46,4 @@ payload:
     - SW_D1_orchestrator_into_the_supervisor
   blocks: []
   spec: null
-  graph: 35bc47c2f91df843
+  graph: d73ef5227085637e

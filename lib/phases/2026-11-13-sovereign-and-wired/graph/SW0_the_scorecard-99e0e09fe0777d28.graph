@@ -7,11 +7,11 @@ intent: null
 summary: 29 node(s), 3 crossing(s)
 system: idearium
 tags: []
-exported_at: 1794608390792
+exported_at: 1794645020928
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794608390792
-lastSeenAt: 1794608390792
+firstSeenAt: 1794645020928
+lastSeenAt: 1794645020928
 fingerprint: null
 payload:
   for: SW0_the_scorecard
@@ -254,6 +254,7 @@ payload:
       - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW5h_the_orchestrator_retired
       - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW6_the_drawbridge_the_only_way_in
       - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW7_lib_goes_home
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW8_ideariums_census_what_is_misplaced
     blockedBy: []
     unlocks:
       - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW1_each_system_its_own_map
@@ -264,7 +265,7 @@ payload:
       - layer 1
       - 'depends on (1): SW_D0_picked_up'
       - >-
-        needed by (2): SW1_each_system_its_own_map, SW4_own_data_by_default · all downstream 16 ·
+        needed by (2): SW1_each_system_its_own_map, SW4_own_data_by_default · all downstream 17 ·
         finishing it unlocks SW1_each_system_its_own_map, SW4_own_data_by_default
     edges:
       - from: docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW_D0_picked_up

@@ -7,11 +7,11 @@ intent: null
 summary: 32 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1794557833645
+exported_at: 1794645020981
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794557833645
-lastSeenAt: 1794557833645
+firstSeenAt: 1794645020981
+lastSeenAt: 1794645020981
 fingerprint: null
 payload:
   for: SW7_lib_goes_home
@@ -253,6 +253,9 @@ payload:
       - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW4_own_data_by_default
     unlocks: []
     conflicts:
+      - with: docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW8_ideariums_census_what_is_misplaced
+        files:
+          - intelligence
       - with: docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW7a_the_crystal_lattice_into_intelligence
         files:
           - lib/meta/crystal-lattice.js
@@ -268,6 +271,9 @@ payload:
         depends on (2): SW6_the_drawbridge_the_only_way_in, SW4_own_data_by_default · all upstream
         12
       - 'needed by (0): —'
+      - >-
+        same files as SW8_ideariums_census_what_is_misplaced with no order between them:
+        intelligence
       - >-
         same files as SW7a_the_crystal_lattice_into_intelligence with no order between them:
         lib/meta/crystal-lattice.js, intelligence/lattice/crystal-lattice.js,
