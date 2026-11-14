@@ -136,6 +136,8 @@ function _cycle(tasks) {
   return null;
 }
 
+/** _unreachable(error) → true when the step's target did not answer at all (0.60.538): refused, reset, unreachable, no route, timed out connecting */
+function _unreachable(e) { return /fetch failed|ECONNREFUSED|ECONNRESET|EHOSTUNREACH|ENETUNREACH|socket hang up|ETIMEDOUT|not answering|did not answer/i.test(String(e || '')); }
 /** layers(pipeline) → [[ids]] — the order a checklist reads in; assumes validate() passed */
 function layers(p) {
   const tasks = p.tasks || [], done = new Set(), out = [];
@@ -290,7 +292,14 @@ class Pipelines {
     const parallel = Math.max(1, Math.min(4, (p.settings && p.settings.parallel) || 1));
     const running = new Map();
     let stop = false;
-    const set = (id, patch) => { Object.assign(run.tasks[id], patch); this._saveRun(run); this._emit('automation.pipeline.task', { pipelineId: p.id, pipeline: p.name, runId: run.id, task: id, label: (p.tasks.find(t => t.id === id) || {}).label || null, status: run.tasks[id].status, attempts: run.tasks[id].attempts, ...(run.tasks[id].status === 'failed' ? { error: run.tasks[id].error } : {}), ...(run.tasks[id].gate ? { gate: run.tasks[id].gate } : {}), ...(run.tasks[id].note ? { note: run.tasks[id].note } : {}), ...(run.tasks[id].output != null ? { output: run.tasks[id].output } : {}), ...(full.has(id) ? { value: full.get(id) } : {}) }); };   // PC4/PC5 2026-11-09: what passed (a preview; value: the whole of it, for the host's files) and what its gate decided   // GF6: a failed task's label and error, for the toast
+    // 0.60.538 — James, 2026-11-14: "need an event ledger per step also i feel like, so we can debug it". Every change to a step is kept, in
+    // order, on the step itself (run.tasks[id].events, saved with the run): when, what it became, the attempt, the note, the error, the gate.
+    const ledger = (id, patch) => { const e = { at: Date.now() };
+      for (const k of ['status', 'attempts', 'note', 'error', 'ms', 'waitMs']) if (patch[k] !== undefined && patch[k] !== null) e[k] = patch[k];
+      if (patch.gate) e.gate = { outcome: patch.gate.outcome, why: patch.gate.why || null }; if (patch.decisions) e.decision = patch.decisions[patch.decisions.length - 1];
+      if (patch.held) e.held = patch.held.why; if (patch.output !== undefined && patch.status === 'done') e.output = typeof patch.output === 'string' ? patch.output.slice(0, 300) : patch.output;
+      if (Object.keys(e).length < 2) return; const ev = run.tasks[id].events || (run.tasks[id].events = []); ev.push(e); if (ev.length > 200) ev.splice(0, ev.length - 200); };
+    const set = (id, patch) => { ledger(id, patch); Object.assign(run.tasks[id], patch); this._saveRun(run); this._emit('automation.pipeline.task', { pipelineId: p.id, pipeline: p.name, runId: run.id, task: id, label: (p.tasks.find(t => t.id === id) || {}).label || null, status: run.tasks[id].status, attempts: run.tasks[id].attempts, ...(run.tasks[id].status === 'failed' ? { error: run.tasks[id].error } : {}), ...(run.tasks[id].gate ? { gate: run.tasks[id].gate } : {}), ...(run.tasks[id].note ? { note: run.tasks[id].note } : {}), ...(run.tasks[id].output != null ? { output: run.tasks[id].output } : {}), ...(full.has(id) ? { value: full.get(id) } : {}) }); };   // PC4/PC5 2026-11-09: what passed (a preview; value: the whole of it, for the host's files) and what its gate decided   // GF6: a failed task's label and error, for the toast
     const block = (failedId) => {
       // every task downstream of a failure is blocked, said with the task that blocked it (PL-003)
       let changed = true;
@@ -334,6 +343,14 @@ class Pipelines {
         }
         if (r && r.ok) { const g = gateOpen({ ...(t.gate || {}), element: undefined }, r.output); if (t.gate) run.tasks[t.id].gate = { type: 'keys', outcome: g.open ? 'open' : 'closed', why: g.why || null }; if (g.open) { outputs[t.id] = r.output; full.set(t.id, r.output); set(t.id, { status: 'done', ms: Date.now() - t0, finishedAt: Date.now(), output: _preview(r.output), error: null }); return true; } last = { error: `gate: ${g.why}`, output: r.output }; }
         else last = { error: (r && r.error) || 'the step gave no answer' };
+        // 0.60.538 — his run of the Idearium build, 2026-11-14: Idearium restarted mid-build and "The build landed" spent its 6 attempts in 9 s
+        // ("fetch failed (after 6 attempts)") while Idearium took about 13 s to boot. A system that does not answer (refused, reset, unreachable)
+        // is waited for before the next attempt: 2, 4, 8, 16, 30 s, said on the step. Any other failure is retried at once, as before.
+        if (a < tries && last && _unreachable(last.error) && !run.cancelled) {
+          const wait = Math.min(2000 * 2 ** (a - 1), 30000);
+          set(t.id, { note: `${last.error} — the system did not answer; trying again in ${Math.round(wait / 1000)} s (attempt ${a + 1} of ${tries})` });
+          await new Promise(res => setTimeout(res, this._retryWaitMs != null ? Math.min(wait, this._retryWaitMs) : wait));
+        }
       }
       // 0.60.496 PC8 — James, 2026-10-26: "the gate doesn't wait for me to accept it or not before it fails." · 2026-11-11: "Do it". A step with
       // onFail hold does not fail the run: the run is paused by the pipeline, naming the step and why; the step stays waiting, and continue

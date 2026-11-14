@@ -137,7 +137,10 @@
     C.db.replaceChildren(...[el('div', { class: 'pc-row' }, [el('span', { text: r.status }), el('em', { text: r.ms != null ? (r.ms / 1000).toFixed(1) + ' s' : '' })]),
       el('div', { class: 'pc-term' + (r.error ? ' err' : ''), 'data-out': task.id, text: out || '(nothing)' }),
       r.gate ? el('p', { class: 'pc-say ' + (r.gate.outcome === 'open' ? 'ok' : 'bad'), text: `gate ${r.gate.outcome}${r.gate.why ? ': ' + r.gate.why : ''}` }) : null,
-      ...(r.decisions || []).map(d => el('p', { class: 'pc-say', text: `${(d.by || 'decision').toUpperCase()} ${d.kind || ''} ${d.chose || ''}${d.why ? ' — ' + d.why : ''}` }))].filter(Boolean));
+      ...(r.decisions || []).map(d => el('p', { class: 'pc-say', text: `${(d.by || 'decision').toUpperCase()} ${d.kind || ''} ${d.chose || ''}${d.why ? ' — ' + d.why : ''}` })),
+      // 0.60.538 — his "an event ledger per step … so we can debug it": every change to this step, in order
+      (r.events || []).length ? el('div', { class: 'pc-dh', style: 'padding:12px 0 6px;border:0' }, [el('b', { text: 'LEDGER' }), el('small', { text: `${r.events.length} event${r.events.length === 1 ? '' : 's'}, oldest first` })]) : null,
+      (r.events || []).length ? el('div', { class: 'pc-list', 'data-ledger': task.id }, r.events.map(e => el('div', { text: [new Date(e.at).toLocaleTimeString(), e.status, e.attempts ? 'attempt ' + e.attempts : '', e.ms != null ? secs(e.ms) : '', e.gate ? 'gate ' + e.gate.outcome + (e.gate.why ? ': ' + e.gate.why : '') : '', e.held ? 'held: ' + e.held : '', e.decision ? 'decision: ' + (e.decision.chose || e.decision.kind || '') : '', e.note || '', e.error || ''].filter(Boolean).join(' · ') }))) : null].filter(Boolean));
   }
   async function runsList() { let rs = []; try { rs = (await api('GET', A('/pipeline-runs?pipelineId=' + encodeURIComponent(C.p.id) + '&limit=20'))).runs || []; } catch (e) { return C.db.replaceChildren(el('p', { class: 'pc-say bad', text: e.message })); }
     C.db.replaceChildren(el('div', { class: 'pc-list' }, rs.length ? rs.map(r => el('div', { text: `${String(r.id).slice(0, 8)} · ${r.status} · ${r.startedAt ? new Date(r.startedAt).toLocaleString() : ''}` })) : [el('div', { text: 'No runs yet.' })])); }

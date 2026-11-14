@@ -249,6 +249,11 @@ phases:
       James, 2026-11-14: "Chunks, bricks, steps, etc. I feel like raid? Like with agent tools also."
       His leaning for the decomposition (Idearium's chunk builder and chunk-dispatch, bricks, steps): RAID, with the agent tools. Recorded as
       the census's first entry, his "I feel" kept as a leaning until he confirms the census.
+    his_ask_2026_11_14_split: >-
+      James, 2026-11-14, after his run of the Idearium build: Idearium (about 950 MB of heap) missed its heartbeat, went offline mid-build and
+      booted again: "maybe we split the nested containers up in idearium so we don't have to load all of them in idearium?" The census gives
+      each nested part (spec-engine, repo, agent-suite, the phase census of 2,697 phases, the UI) its own compartment or its owner, loaded
+      when asked rather than all at boot. To confirm with the census.
     proof: "the census lists every Idearium file with a home and why; he confirms it; each move keeps history and its callers' tests pass"
 
   SW7a_the_crystal_lattice_into_intelligence:

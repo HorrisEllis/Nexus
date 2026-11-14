@@ -269,6 +269,7 @@ const stand = async (answers) => { const hits = []; const s = http.createServer(
       assert.ok(await until(() => !!document.querySelector('#pc .pc-gate').dataset.outcome), 'the gate shows its outcome');
       await page.evaluate(() => { document.querySelector('#pc [data-step="a"]').click(); document.querySelector('#pc .pc-vt[data-tab="OUTPUTS"]').click(); });
       assert.ok(await until(() => !!document.querySelector('#pc [data-out="a"]')), 'OUTPUTS slid out with step a\'s output');
+      assert.ok(await until(() => { const l = document.querySelector('#pc [data-ledger="a"]'); return l && /running/.test(l.textContent) && /done/.test(l.textContent); }), 'its event ledger: running, then done (0.60.538)');
       if (process.env.HB_SHOTS) await page.screenshot({ path: path.join(process.env.HB_SHOTS, 'cos-pipeline-canvas-run.png') });
     } finally { await browser.close(); }
   });
