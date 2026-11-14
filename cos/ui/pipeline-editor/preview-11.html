@@ -1,0 +1,112 @@
+<!doctype html>
+<!--
+  cos/ui/pipeline-editor/preview-11.html — A PREVIEW, not the editor: sample data, nothing wired. 2026-11-14 (eleventh preview). James, 2026-11-14, of preview 10: "better but the tabs slide out from the side like ideariums ui." — a right tab slides out as a drawer over the canvas (OUTPUTS shown open); the corner Outputs window is gone, it lives in its tab. Earlier:
+  James, 2026-11-14, of preview 9: "okay now show the canvas. thats the workshop. okay now remove any noise. less overwhelm but same amount of
+  power and leverage."
+  The canvas that runs the pipeline, quiet. What preview 7 showed on every box is still one move away: double-click a compartment or gate
+  opens the Workshop (preview 9) on it; the right tabs hold outputs, changes, tasks, context, tools, control; the run's window holds the rest.
+  Removed from sight, not from reach: per-box ports and memory, usual times, gate checklists, three left windows (one now), the Field dock.
+-->
+<html lang="en"><head><meta charset="utf-8"><title>Pipeline canvas — preview 11</title>
+<style>
+:root{
+  --bg:#07090d; --bg2:#0c1118; --panel:#111823; --panel2:#16202d; --line:#223044; --line2:#2d3f57;
+  --text:#d6e4f0; --dim:#7f93a8; --faint:#4a5b6e;
+  --cyan:#00d4ff; --green:#00ff88; --pink:#ff2266; --violet:#b066ff; --amber:#ffaa00; --red:#ff3355;
+  --font:Inter,system-ui,'Segoe UI',sans-serif; --mono:'JetBrains Mono',ui-monospace,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:var(--bg);color:var(--text);font:13px/1.35 var(--font);overflow:hidden}
+#topbar{position:fixed;left:0;right:0;top:0;height:52px;display:flex;align-items:center;gap:10px;padding:0 12px;background:linear-gradient(#0e141d,#0a0f16);border-bottom:1px solid var(--line);z-index:10}
+#logo{font:700 17px var(--mono);letter-spacing:3px;background:linear-gradient(90deg,var(--cyan),var(--violet),var(--pink));-webkit-background-clip:text;background-clip:text;color:transparent;margin-right:6px}
+.tb-btn{background:var(--panel2);border:1px solid var(--line2);border-radius:7px;height:32px;padding:0 12px;color:var(--text);display:inline-flex;align-items:center;gap:6px;font-size:12.5px}
+.tb-btn.primary{background:linear-gradient(135deg,#ff2266,#b066ff);border:0;color:#fff;font-weight:600}
+.tb-spacer{flex:1}
+.rail{position:fixed;top:52px;bottom:0;width:38px;background:linear-gradient(#0b1018,#080b11);display:flex;flex-direction:column;align-items:center;gap:6px;padding-top:10px;z-index:9}
+.vt{writing-mode:vertical-rl;transform:rotate(180deg);font:600 9.5px var(--mono);letter-spacing:.16em;color:var(--faint);padding:11px 6px;border:1px solid var(--line);border-radius:6px;background:#0c121b}
+.vt.on{color:var(--cyan);border-color:#00d4ff66;background:#062030}
+.rail{opacity:.85}.rail.r{right:0;border-left:1px solid var(--line)}
+#cv{position:fixed;left:0;right:38px;top:52px;bottom:0;background:radial-gradient(circle,#161f2b 1px,transparent 1.2px) 0 0/24px 24px var(--bg)}
+svg.w{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.win{position:absolute;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.win h3{font:600 13px var(--font);display:flex;align-items:center;gap:8px}.win h3 small{margin-left:auto;font:10px var(--mono);color:var(--cyan)}
+.row{display:flex;justify-content:space-between;font:11px var(--mono);color:var(--dim);margin-top:8px}.row em{font-style:normal;color:var(--text)}
+.btns{display:flex;gap:6px;margin-top:12px}.btns span{flex:1;text-align:center;font:12px var(--font);border:1px solid var(--line2);border-radius:7px;padding:6px 0;color:var(--dim)}
+.btns .go{border-color:#00ff8866;color:var(--green)}
+.meter{height:3px;background:#1b2636;border-radius:2px;margin-top:5px}.meter i{display:block;height:100%;width:71%;background:var(--green);border-radius:2px}
+.c{position:absolute;width:176px;height:56px;background:var(--panel);border:1px solid var(--line2);border-radius:10px;padding:9px 12px}
+.c b{display:block;font:600 13px var(--font)}.c small{font:10.5px var(--mono);color:var(--faint)}
+.c::after{content:'';position:absolute;right:10px;top:12px;width:7px;height:7px;border-radius:50%;background:var(--dot,var(--line2))}
+.c.done{--dot:var(--green)}.c.run{border-color:var(--cyan);box-shadow:0 0 22px #00d4ff33;--dot:var(--cyan)}
+.c.run .p{position:absolute;left:12px;right:12px;bottom:7px;height:2px;background:#1b2636;border-radius:1px}.c.run .p i{display:block;width:62%;height:100%;background:var(--cyan)}
+.c.end{border-color:#b066ff66}.c.end b{color:var(--violet)}
+.c.in{width:150px;border-style:dashed;border-color:#b066ff55}
+.g{position:absolute;width:20px;height:20px;transform:rotate(45deg);border:1.5px solid var(--gc,var(--line2));background:var(--bg)}
+.g.ok{--gc:var(--green)}.g.you{--gc:var(--amber);background:#1d1405}
+.gl{position:absolute;width:110px;text-align:center;font:10.5px var(--mono);color:var(--faint)}
+.gl.you{color:var(--amber)}
+.out{position:absolute;right:16px;bottom:16px;width:330px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.out h3{font:600 12px var(--font);display:flex;gap:8px}.out h3 small{margin-left:auto;font:10px var(--mono);color:var(--faint)}
+.out pre{font:11px/1.5 var(--mono);color:var(--dim);margin-top:6px}.out pre b{font-weight:400;color:var(--cyan)}
+.drawer{position:fixed;top:52px;bottom:0;right:38px;width:400px;background:linear-gradient(#0d131c,#0a0f16);border-left:1px solid #00d4ff44;box-shadow:-24px 0 60px #000b;z-index:8;display:flex;flex-direction:column}
+.dh{display:flex;align-items:center;gap:8px;padding:12px 14px;border-bottom:1px solid var(--line)}
+.dh b{font:700 11px var(--mono);letter-spacing:.18em;color:var(--cyan)}.dh small{font:10.5px var(--mono);color:var(--faint)}.dh .x{margin-left:auto;color:var(--faint);font:12px var(--mono)}
+.seg{display:flex;gap:4px;padding:10px 14px 0}.seg span{font:10.5px var(--mono);color:var(--faint);padding:4px 9px;border-radius:6px;border:1px solid transparent}.seg .on{color:var(--text);border-color:var(--line2);background:var(--panel)}
+.term{white-space:pre;flex:1;margin:10px 14px;border:1px solid var(--line);border-radius:8px;background:#05070a;padding:10px 12px;font:11.5px/1.6 var(--mono);color:var(--dim);overflow:hidden}
+.term b{font-weight:400;color:var(--cyan)}.term .k{color:var(--violet)}.term .d{color:var(--faint)}
+.cur{display:inline-block;width:7px;height:13px;background:var(--cyan);vertical-align:-2px}
+.files{padding:0 14px 14px}.files div{display:flex;font:11px var(--mono);color:var(--dim);padding:4px 0;border-top:1px solid #18222f}.files div em{font-style:normal;margin-left:auto;color:var(--green)}
+.vt.on{box-shadow:-6px 0 14px #00d4ff33}
+.hint{position:absolute;left:50%;bottom:18px;transform:translateX(-50%);font:10.5px var(--mono);color:var(--faint)}
+.pv{position:fixed;left:16px;bottom:8px;font:10px var(--mono);color:var(--amber);opacity:.7}
+</style></head><body>
+<div id="topbar"><div id="logo">ERAVOS</div><span class="tb-btn">＋ Add</span><div class="tb-spacer"></div><span class="tb-btn">⋯ Options</span></div>
+<nav class="rail r"><span class="vt">PLAN</span><span class="vt on">OUTPUTS</span><span class="vt">CHANGES</span><span class="vt">TASKS</span><span class="vt">CONTEXT</span><span class="vt">TOOLS</span><span class="vt">CONTROL</span></nav>
+<aside class="drawer">
+ <div class="dh"><b>OUTPUTS</b><small>Write the files · streaming</small><span class="x">⇥</span></div>
+ <div class="seg"><span class="on">this step</span><span>this run</span><span>all runs</span></div>
+ <div class="term"><span class="d">qwen2.5-coder:3b · cpu · 18 tok/s</span>
+<b>write</b> scripts/tree-census.js
+<span class="k">const</span> fs = require('fs');
+<span class="k">const</span> path = require('path');
+<span class="k">function</span> census(root) {
+  <span class="k">const</span> out = { files: 0, lines: 0 };
+  <span class="k">for</span> (<span class="k">const</span> f <span class="k">of</span> walk(root)) {
+    out.files++;
+    out.lines += count(f);
+  }
+  <span class="k">return</span> out;
+}<span class="cur"></span></div>
+ <div class="files"><div>scripts/tree-census.js<em>+41</em></div><div>scripts/tree-census.test.js<em>+18</em></div></div>
+</aside>
+<div id="cv">
+ <svg class="w"><g fill="none" stroke-width="2" stroke-linecap="round">
+  <path d="M424 236 H470" stroke="#00ff88" opacity=".7"/>
+  <path d="M646 236 H750" stroke="#00ff88" opacity=".7"/>
+  <path d="M926 236 H968" stroke="#00ff88" opacity=".7"/>
+  <path d="M988 236 H1050 Q1090 236 1090 276 V326 Q1090 366 1050 366 H510 Q470 366 470 406 V412" stroke="#00ff88" opacity=".45"/>
+  <path d="M646 440 H750" stroke="#00d4ff"/>
+  <path d="M926 440 H1030" stroke="#2d3f57" stroke-dasharray="5 5"/>
+ </g></svg>
+ <div class="win" style="left:16px;top:16px;width:250px">
+  <h3>▾ Idearium build <small>● running</small></h3>
+  <div class="row"><span>step</span><em>5 of 9 · 4 min</em></div>
+  <div class="row"><span>agent</span><em>ollama · local</em></div>
+  <div class="row"><span>memory</span><em>71%</em></div><div class="meter"><i></i></div>
+  <div class="btns"><span>❚❚</span><span>↻ from…</span><span class="go">▶ Run</span></div>
+ </div>
+ <div class="c in" style="left:274px;top:208px"><b>.input</b><small>RAID · c-in-1794</small></div>
+ <div class="c done" style="left:470px;top:208px"><b>What can be built</b><small>idearium</small></div>
+ <div class="g ok" style="left:688px;top:226px"></div><div class="gl" style="left:643px;top:254px">Usable</div>
+ <div class="c done" style="left:750px;top:208px"><b>Not covered yet</b><small>idearium</small></div>
+ <div class="g ok" style="left:968px;top:226px"></div><div class="gl" style="left:923px;top:254px">DAG whole</div>
+ <div class="c run" style="left:470px;top:412px"><b>Write the files</b><small>ollama</small><span class="p"><i></i></span></div>
+ <div class="g" style="left:688px;top:430px"></div><div class="gl" style="left:643px;top:458px">Tests pass</div>
+ <div class="c" style="left:750px;top:412px"><b>Close on evidence</b><small>cortex</small></div>
+ <div class="g you" style="left:968px;top:430px"></div><div class="gl you" style="left:923px;top:458px">You approve</div>
+ <div class="c end" style="left:1030px;top:412px"><b>End state</b><small>IN0_baseline proven</small></div>
+
+ <div class="hint">double-click a step or gate to open it in the Workshop</div>
+</div>
+<div class="pv">preview · sample data · nothing wired</div>
+</body></html>

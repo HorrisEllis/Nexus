@@ -233,3 +233,37 @@ spec:
       gate_pipeline: ["GATE-PL-S1: PL-009, each fact shown once", "GATE-PL-S2: tested in Clear Glass"]
       behavioral_contracts: ["the surface reads and acts only through COS's and RAID's routes and events"]
       error_paths: ["COS not answering → the canvas says so; nothing is drawn as running that is not"]
+
+# ADDENDUM 2026-11-14 (b) — the Field is the editor; BrainOS's backend migrates, its UI is scrapped.
+# James, 2026-11-14, of preview 7: "no the field/workshop would be an extensive editor for gates and steps. all of the pipeline and workflow
+# automation, systems, commands, all of it, everything, migrating brainos backed not the ui its bad the ui and scrapping it"
+# - MOD-PL-WORKSHOP expands: the Field is the whole editor, not a dock under the canvas. It edits every step and gate in full: conditions
+#   (all/any groups, the 15 operators), on pass / on fail / on timeout (each explicit, each an event), triggers, the step's system, command,
+#   agent and hat, chunking, heartbeat, dry-run on a sample, history, the run's ledger as a debugger. Preview: cos/ui/pipeline-editor/preview-8.
+# - BrainOS's backend migrates into COS (sovereign, through COS's routes; Emerge where it replaces JS, §17.13): lib/automation/{engine, steps,
+#   pipeline, cron, templates, template, task-node, dom, routes}.js, lib/automation-nodes.js (.workflow, .macro), lib/automation-registry.js,
+#   clear-glass/src/mesh/route-graph.js. Its 8 step types, 28 browser actions and condition operators become the Field's palette.
+# - BrainOS's UI is scrapped, not migrated: lib/ui/brainos/, lib/ui/brainos-float/. Removed once the Field covers what they reach (his call
+#   stands; the removal is a phase, so nothing he still opens disappears first).
+
+# ADDENDUM 2026-11-14 (c) — the pipeline runs on the canvas; the Workshop edits ONE gate or step. Corrects (b)'s "the Field is the whole editor".
+# James, 2026-11-14, of preview 8: "okay but the pipeline runs in the canvas. the workshop only edits one gate or step at a time"
+# - The canvas (preview 7) holds and runs the whole pipeline: compartments, gates, wires, outputs, right side tabs.
+# - MOD-PL-WORKSHOP opens over the canvas on one gate or one step (double-click / Edit) and edits only that one, in full: its layers, its
+#   inputs and outputs on the canvas, its conditions or its bricks, outcomes, properties, dry-run samples, its own history in the ledger.
+#   Apply writes it back to the canvas through COS's routes. Preview: cos/ui/pipeline-editor/preview-9 (a gate). BrainOS's backend is the
+#   palette of what can be added to that one gate or step; BrainOS's UI stays scrapped.
+
+# ADDENDUM 2026-11-14 (d) — the canvas, quiet; right tabs slide out. James, 2026-11-14: "okay now show the canvas. thats the workshop. okay now
+# remove any noise. less overwhelm but same amount of power and leverage." · "better but the tabs slide out from the side like ideariums ui."
+# - MOD-PL-SURFACE: the canvas shows one run window, compartments (name, system, status), gates as diamonds on the wires; the detail is in the
+#   Workshop (preview 9). Each right tab slides out as a drawer over the canvas and slides back; Outputs lives in its tab, not a window.
+#   Previews: cos/ui/pipeline-editor/preview-10 (quiet), preview-11 (OUTPUTS slid out).
+
+# ADDENDUM 2026-11-14 (e) — where it lives; pipelines are agnostic. James, 2026-11-14: "okay. thats more like it. and this lives in the cos ui
+# when you click edit pipeline. also can edit it like clearglass' settings for automation. like the pipelines are agnostic."
+# - The canvas (preview 11) and the Workshop (preview 9) open from COS's UI (cos/ui/automation) on "Edit pipeline".
+# - A pipeline is one file and one shape (.pipeline, owned by COS), not tied to any editor. The same pipeline is edited on the canvas, in
+#   Clear Glass's Settings › Pipelines form (clear-glass/renderer/settings/sections/pipelines.js, today on /automation/pipelines), or by the
+#   CLI; every surface reads and writes it only through COS's routes, so an edit in one shows in the others. Clear Glass keeps its form; its
+#   door moves to COS's routes with BrainOS's backend (addendum b).
