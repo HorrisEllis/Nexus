@@ -84,9 +84,15 @@ const quiet = async (fn) => { const l = console.log, w = console.warn; console.l
 
   await test('HR-03', 'present(): uninstalled and unreachable Ollama rungs are left off, said; agents stay', () => {
     const rungs = PR.ladder(PR.policyFrom({ escalation: 'ollama:qwen2.5-coder:3b > ollama:qwen2.5-coder:7b > claude' })).rungs;
+    // 0.60.535 PC18 slice a — James, 2026-11-13: "Have it use any that's on my pc. Fallback to any other?" A missing model's rung now runs on an
+    // installed one not already on the ladder (swapped, said); it is left off only when none is left (the HP3 behaviour, kept for that case).
     const p = PR.present(rungs, { reachable: true, installed: ['qwen2.5-coder:7b', 'llama3.2:latest'] });
-    assert.deepStrictEqual(p.rungs.map(r => r.provider), ['ollama:qwen2.5-coder:7b', 'claude']);
-    assert.deepStrictEqual(p.skipped, [{ provider: 'ollama:qwen2.5-coder:3b', why: 'qwen2.5-coder:3b is not installed in Ollama' }]);
+    assert.deepStrictEqual(p.rungs.map(r => r.provider), ['ollama:llama3.2:latest', 'ollama:qwen2.5-coder:7b', 'claude']);
+    assert.deepStrictEqual(p.swapped, [{ provider: 'ollama:qwen2.5-coder:3b', to: 'ollama:llama3.2:latest', why: 'qwen2.5-coder:3b is not installed in Ollama — llama3.2:latest runs in its place' }]);
+    assert.deepStrictEqual(p.skipped, []);
+    const n = PR.present(rungs, { reachable: true, installed: ['qwen2.5-coder:7b'] });
+    assert.deepStrictEqual(n.rungs.map(r => r.provider), ['ollama:qwen2.5-coder:7b', 'claude']);
+    assert.deepStrictEqual(n.skipped, [{ provider: 'ollama:qwen2.5-coder:3b', why: 'qwen2.5-coder:3b is not installed in Ollama, and every installed model is already on the ladder' }]);
     const u = PR.present(rungs, { reachable: false, installed: [], error: 'ollama bridge unreachable: ECONNREFUSED' });
     assert.deepStrictEqual(u.rungs.map(r => r.provider), ['claude']);
     assert.strictEqual(u.skipped.length, 2); assert.match(u.skipped[0].why, /could not be reached — ollama bridge unreachable/);

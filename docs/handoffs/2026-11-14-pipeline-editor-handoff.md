@@ -135,3 +135,11 @@ chunking. thats what i mean about idearium. i feel a lot of idearium is misplace
 ## ADDENDUM: the brain and the mind (his, 2026-11-14)
 "Is that good? Like raid is like the brain." · "Raid the brain and oLlama the mind". RD9 decided_2026_11_14_brain_and_mind. Coder's
 recommendation awaiting his call: chunk builder to RAID, chunk dispatcher to COS's pipeline.
+
+## ADDENDUM: 0.60.535, the focus is the pipeline (his, 2026-11-14)
+"We need the highest leverage, that gets me closer to cutting depende on you and using it the pipeline to build nexus. Vital. The pipeline.
+Focus on that. Raid after since it works currently right?" Built: Ollama runs on whatever is installed (PC18 slice a); his PC lacked the
+default qwen2.5-coder:7b, so the build's Ollama rung was skipped and work went to paid agents. Next: run `idearium-build` on one small phase
+on his PC and fix whatever stops it, step by step, until a phase lands built by Ollama (thread T11's evidence).
+RAID today: records each input as a .input node and turns it into a contract (RD9 slices a, b; COS's Console reaches it, 0.60.532); it does
+not yet act on what it routes. The pipeline does not wait on that.
