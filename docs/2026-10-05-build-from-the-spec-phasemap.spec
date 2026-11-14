@@ -802,6 +802,19 @@ spec:
       overlaps: "SB19 (atlases per component); lib/atlas-generate.js; architecture-spec/registry/create-atlas.js (unwired)"
       depends_on: [SB17_the_system_template_is_complete]
       files: [idearium/spec-engine/templates/atlas-template.md, architecture-spec/registry/create-atlas.js, lib/atlas-generate.js]
+      status_2026_11_14: "OPEN — picked up by his words of 2026-11-14 (was LATER since the declutter of 2026-10-09)"
+      expanded_2026_11_14: >-
+        James, 2026-11-14: "We need to improve atlas. Everything nexus can do, proven with real results. What it can't currently do. What it's trying to be. What it's becoming. Every single system in full detail, with each component explained and why it exists. Nothing left unconverted."
+        The coder reads "unconverted" as "uncovered" (to confirm). Each system's atlas, in the template's structure, carries five parts:
+        (1) what it can do, each capability with its proof from a real run (the test that shows it and its count, or a benchmark row, or
+        "unproven"); (2) what it cannot do yet (its open phases and gaps, from the ledger and its maps); (3) what it is trying to be (its spec's
+        purpose, his words); (4) what it is becoming (its open maps in order, his latest calls); (5) every component (every code file of the
+        system) with what it does and why it exists (the file's own header, its spec module, the version line that made it, his words), its
+        routes, commands, events and node types. Nothing uncovered: a check lists every file of a system with no entry and fails while any
+        remain. The generated half reads each system's own component registry and contract, not Loom (being removed, AXIOMS §5.16);
+        lib/atlas-generate.js today reads loom/data/registry.json and is repointed. Deterministic first (headers, registries, tests, ledger,
+        maps); a model writes only what no source states, and says so on the line.
+      files_added_2026_11_14: [docs/atlases, scripts/generate-atlases.js, "<system>/registry-components.js", "<system>/interaction-contract.json", idearium/phases/LEDGER.jsonl, tests/modules/test-atlas-complete.test.js]
       does: >-
         The coder's reading: the atlas template follows the system template's structure — identity, context, file
         structure, then each module and, under it, each component with its capabilities, commands (the node and
