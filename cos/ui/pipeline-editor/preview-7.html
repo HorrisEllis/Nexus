@@ -1,0 +1,260 @@
+<!doctype html>
+<!--
+  cos/ui/pipeline-editor/preview-6.html — A PREVIEW, not the editor: sample data, nothing wired. 2026-11-14 (seventh preview, from the sixth). James, 2026-11-14: "right tabs yes, left tabs, absolutely not. the rest of those tabs can be in the cos ui automation tab." The left rail is gone; its tabs (PIPELINE, RAID, EVENTS, EMERGE, DEBUG, FRAMEWORKS, GAPS) are lenses in COS Automation (MOD-PL-LENSES).
+  James, 2026-11-14, of preview 4: "this is decent but kay but look at field or workshop, in  eravos canvas. also tabs on sides like iearium has
+  the tabs, remove the start just have the add. yes, like each step, gate, relationship, from raid to end state, anything, events from an
+  application, emerge coding word by word, visual debugging, running frameworks or pipelines, recursive and meta, like any process, system, etc
+  can be systematized, stepwise, broken down, chunked, or bricks, or gaps, step, analysis or decomposition, its my framework" · "its fine. eravos
+  canvas. field and workshop."
+  Earlier:
+  James, 2026-11-14: "that doesn't look better. remove all the tabs from the top. use the eravos canvas completely blank then make all the
+  tools you need."
+  ERAVOS's own canvas, as it is (cos/archetype/eravos-canvas/canvas/runtime/eravos.css): its top bar (the logo, ＋ Add, ⋯ Options, nothing
+  else), its dotted canvas, its windows (.wm-win, the accent line, the ports), its glowing wires. Everything the pipeline needs is a tool
+  window on it: Pipelines, Run, Machine, each compartment, each gate, the end state, Outputs, Changes.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Pipeline on ERAVOS — preview 7</title>
+<style>
+:root{
+  --bg:#07090d; --bg2:#0c1118; --panel:#111823; --panel2:#16202d; --line:#223044; --line2:#2d3f57;
+  --text:#d6e4f0; --dim:#7f93a8; --faint:#4a5b6e;
+  --cyan:#00d4ff; --green:#00ff88; --pink:#ff2266; --violet:#b066ff; --amber:#ffaa00; --red:#ff3355;
+  --font:Inter,system-ui,'Segoe UI',sans-serif; --mono:'JetBrains Mono',ui-monospace,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:var(--bg);color:var(--text);font:13px/1.35 var(--font);overflow:hidden}
+#topbar{position:fixed;left:0;right:0;top:0;height:52px;display:flex;align-items:center;gap:10px;padding:0 12px;background:linear-gradient(#0e141d,#0a0f16);border-bottom:1px solid var(--line);z-index:10}
+#logo{font:700 17px var(--mono);letter-spacing:3px;background:linear-gradient(90deg,var(--cyan),var(--violet),var(--pink));-webkit-background-clip:text;background-clip:text;color:transparent;margin-right:6px}
+.tb-btn{background:var(--panel2);border:1px solid var(--line2);border-radius:7px;height:32px;padding:0 12px;color:var(--text);display:inline-flex;align-items:center;gap:6px;font-size:12.5px}
+.tb-btn.primary{background:linear-gradient(135deg,#ff2266,#b066ff);border:0;color:#fff;font-weight:600}
+.tb-spacer{flex:1}
+#canvas{position:fixed;left:0;right:38px;top:52px;bottom:0;background:radial-gradient(circle,#1a2533 1px,transparent 1.2px) 0 0/24px 24px var(--bg)}
+svg.wires{position:absolute;left:0;top:0;width:1440px;height:808px;pointer-events:none;overflow:visible}
+.wire{fill:none;stroke-width:2.5;opacity:.9}
+.w-done{stroke:var(--green);filter:drop-shadow(0 0 3px #00ff88)}
+.w-live{stroke:var(--cyan);filter:drop-shadow(0 0 4px #00d4ff);stroke-dasharray:8 6}
+.w-wait{stroke:#2d3f57}
+/* ERAVOS windows */
+.wm-win{position:absolute;display:flex;flex-direction:column;background:var(--panel);border:1px solid var(--line2);border-radius:10px;box-shadow:0 10px 40px rgba(0,0,0,.55),0 0 0 1px rgba(0,0,0,.4)}
+.wm-win::before{content:'';position:absolute;left:0;right:0;top:0;height:2px;border-radius:10px 10px 0 0;background:var(--acc,var(--cyan));opacity:.9}
+.wm-win.focused{border-color:var(--acc,var(--cyan));box-shadow:0 10px 40px rgba(0,0,0,.6),0 0 0 1px var(--acc,var(--cyan)),0 0 26px color-mix(in srgb,var(--acc,var(--cyan)) 28%,transparent)}
+.wm-head{display:flex;align-items:center;gap:7px;height:32px;padding:0 6px 0 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+.wm-icon{width:16px;text-align:center;color:var(--acc,var(--cyan))}
+.wm-title{font-weight:650;letter-spacing:.3px;font-size:12.5px}
+.wm-tag{font:10px var(--mono);color:var(--faint)}
+.wm-sp{flex:1}.wm-b{color:var(--faint);font:12px var(--mono);padding:0 4px}
+.wm-body{padding:9px 10px;flex:1;overflow:hidden}
+.port{position:absolute;width:12px;height:12px;border-radius:50%;background:var(--bg);border:2px solid var(--acc,var(--cyan));top:50%;margin-top:-6px}
+.port.in{left:-7px}.port.out{right:-7px}
+.port.top{top:-7px;left:50%;margin:0 0 0 -6px}.port.bot{top:auto;bottom:-7px;left:50%;margin:0 0 0 -6px}
+.k{display:flex;justify-content:space-between;font:10.5px var(--mono);padding:2px 0}.k span:first-child{color:var(--faint)}
+.chk{font:10.5px/1.7 var(--mono)}.y{color:var(--green)}.n{color:var(--faint)}.h{color:var(--amber)}
+.bar{height:4px;background:#1b2636;border-radius:2px;overflow:hidden;margin-top:7px;position:relative}.bar i{display:block;height:100%;background:var(--green)}
+.bar u{position:absolute;top:0;bottom:0;width:2px;background:var(--dim)}
+.st{font:9.5px var(--mono);padding:1px 6px;border-radius:9px;border:1px solid}
+.st.done{color:var(--green);border-color:#00ff8855}.st.live{color:var(--cyan);border-color:#00d4ff66}.st.wait{color:var(--dim);border-color:var(--line2)}.st.yours{color:var(--amber);border-color:#ffaa0066}
+.btn{background:var(--panel2);border:1px solid var(--line2);border-radius:7px;height:28px;padding:0 10px;font-size:12px;display:inline-flex;align-items:center;gap:5px;white-space:nowrap}
+.btn.go{border-color:var(--green);color:var(--green)}
+.row{display:flex;gap:6px;margin-top:8px}
+.list div{display:flex;align-items:center;gap:8px;padding:6px 7px;border-radius:6px;font-size:12px}
+.list div.on{background:#0e2230;outline:1px solid #00d4ff44}
+.list i{width:7px;height:7px;border-radius:50%;flex:none}.list small{margin-left:auto;font:10px var(--mono);color:var(--faint)}
+.term{font:10.5px/1.6 var(--mono);color:#a9f5c8;background:#04060a;border:1px solid var(--line);border-radius:6px;padding:8px;height:100%}
+.term .c{color:var(--cyan)}.term .d{color:var(--faint)}.cur{display:inline-block;width:7px;height:12px;background:var(--cyan);vertical-align:-2px}
+.meter{height:6px;background:#1b2636;border-radius:3px;overflow:hidden;margin:4px 0 8px}.meter i{display:block;height:100%;background:linear-gradient(90deg,var(--green),var(--amber))}
+
+/* Idearium's side tabs, both edges */
+.rail{position:fixed;top:52px;bottom:0;width:38px;background:linear-gradient(#0b1018,#080b11);display:flex;flex-direction:column;align-items:center;gap:6px;padding-top:10px;z-index:9}
+.rail.l{left:0;border-right:1px solid var(--line)}.rail.r{right:0;border-left:1px solid var(--line)}
+.vt{writing-mode:vertical-rl;transform:rotate(180deg);font:600 9.5px var(--mono);letter-spacing:.16em;color:var(--faint);padding:11px 6px;border:1px solid var(--line);border-radius:6px;background:#0c121b}
+.vt.on{color:var(--cyan);border-color:#00d4ff66;background:#062030}
+.vt.onv{color:var(--violet);border-color:#b066ff66;background:#1a0f2a}
+.vs{font:9px var(--mono);color:var(--faint);border:1px solid var(--line);border-radius:5px;padding:3px 4px}
+/* ERAVOS's dock, the Field open in it */
+.fld{position:absolute;left:262px;right:12px;top:484px;bottom:12px;display:grid;grid-template-columns:210px 1fr 220px;grid-template-rows:34px 1fr 24px;--acc:var(--violet)}
+.fld .fbar{grid-column:1/4;display:flex;align-items:center;gap:12px;padding:0 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+.fld .fbar b{font-weight:650}
+.stn{font:10px var(--mono);letter-spacing:.14em;color:var(--faint);padding:3px 8px;border-radius:5px}.stn.on{color:var(--cyan);border:1px solid #00d4ff66;background:#062030}
+.fld .lay{border-right:1px solid var(--line);padding:8px;overflow:hidden}
+.fld .lay h6{font:9.5px var(--mono);letter-spacing:.16em;color:var(--faint);margin:6px 2px 5px}
+.ly{display:flex;align-items:center;gap:7px;padding:5px 6px;border-radius:6px;font-size:11.5px}
+.ly.sel{background:#1a0f2a;outline:1px solid #b066ff55}
+.bd{font:8.5px var(--mono);padding:1px 4px;border-radius:3px;border:1px solid}
+.bd.v{color:var(--amber);border-color:#ffaa0066}.bd.c{color:var(--cyan);border-color:#00d4ff66}.bd.e{color:var(--violet);border-color:#b066ff66}.bd.g{color:var(--pink);border-color:#ff226666}
+.ly small{margin-left:auto;font:9.5px var(--mono);color:var(--faint)}
+.fld .view{padding:12px 14px;position:relative;overflow:hidden;background:radial-gradient(circle,#141d29 1px,transparent 1.2px) 0 0/18px 18px #090d13}
+.fld .view h6{font:9.5px var(--mono);letter-spacing:.16em;color:var(--faint);margin-bottom:7px}
+.words{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+.wd{border:1px solid var(--line2);border-radius:7px;padding:5px 8px 4px;background:#0f1622;font-size:12px;line-height:1.15}
+.wd small{display:block;font:9px var(--mono);color:var(--faint);margin-top:2px}
+.wd.kw{border-color:#00ff8866}.wd.kw small{color:var(--green)}.wd.n{border-color:#00d4ff66}.wd.n small{color:var(--cyan)}.wd.gp{border-color:#ff226688;border-style:dashed}.wd.gp small{color:var(--pink)}
+.tl{position:relative;height:56px;border-top:1px solid var(--line);margin-top:4px}
+.tk{position:absolute;bottom:20px;width:2px;background:var(--line2)}.tk.d{background:var(--green)}.tk.l{background:var(--cyan)}
+.scrub{position:absolute;bottom:14px;width:2px;height:36px;background:var(--violet);box-shadow:0 0 8px var(--violet)}
+.tlab{position:absolute;bottom:0;font:9.5px var(--mono);color:var(--faint)}
+.fld .props{border-left:1px solid var(--line);padding:10px}
+.fld .props h5{font-weight:650;font-size:12.5px;margin-bottom:6px}
+.fld .fst{grid-column:1/4;border-top:1px solid var(--line);display:flex;gap:18px;align-items:center;padding:0 10px;font:9.5px var(--mono);color:var(--faint)}
+.fld .fst b{color:var(--text);font-weight:500}
+.pv{position:fixed;left:48px;bottom:10px;font:10px var(--mono);color:var(--amber);opacity:.8}
+</style>
+</head>
+<body>
+<div id="topbar">
+  <div id="logo">ERAVOS</div>
+  <span class="tb-btn">＋ Add</span>
+  <div class="tb-spacer"></div>
+  <span class="tb-btn">⋯ Options</span>
+</div>
+
+
+
+<nav class="rail r"><span class="vt">PLAN</span><span class="vt on">OUTPUTS</span><span class="vt">CHANGES</span><span class="vt">TASKS</span><span class="vt">CONTEXT</span><span class="vt">TOOLS</span><span class="vt">CONTROL</span><span class="vs">all</span><span class="vs">none</span></nav>
+<div id="canvas">
+  <svg class="wires" viewBox="0 0 1440 808">
+    <path class="wire w-done" d="M480 104 C500 104,500 104,520 104"/>
+    <path class="wire w-done" d="M660 104 C680 104,680 104,700 104"/>
+    <path class="wire w-done" d="M890 104 C910 104,910 104,930 104"/>
+    <path class="wire w-live" d="M1070 104 C1112 104,1112 212,1050 212 L 330 212 C 272 212,272 344,310 344"/>
+    <path class="wire w-wait" d="M500 344 C520 344,520 344,540 344"/>
+    <path class="wire w-wait" d="M680 344 C700 344,700 344,720 344"/>
+    <path class="wire w-wait" d="M910 344 C930 344,930 344,950 344"/>
+    <path class="wire w-wait" d="M1090 344 C1108 344,1106 388,1124 388"/>
+  </svg>
+
+  <!-- tools: the pipelines, the run, the machine -->
+  <div class="wm-win" style="left:16px;top:16px;width:232px;height:236px;--acc:var(--violet)">
+    <div class="wm-head"><span class="wm-icon">☰</span><span class="wm-title">Pipelines</span><span class="wm-sp"></span><span class="wm-b">–</span></div>
+    <div class="wm-body list">
+      <div class="on"><i style="background:var(--cyan)"></i>Idearium build<small>running</small></div>
+      <div><i style="background:var(--amber)"></i>RAID: fix the parser<small>yours</small></div>
+      <div><i style="background:var(--green)"></i>Framework trial<small>ok</small></div>
+      <div><i style="background:var(--green)"></i>Clear Glass gig flow<small>ok</small></div>
+      <div><i style="background:var(--red)"></i>SW1 · cortex map<small>failed</small></div>
+      <div><i style="background:var(--green)"></i>Nightly census<small>02:00</small></div>
+    </div>
+  </div>
+  <div class="wm-win" style="left:16px;top:266px;width:232px;height:150px;--acc:var(--green)">
+    <div class="wm-head"><span class="wm-icon">▶</span><span class="wm-title">Run</span><span class="wm-tag">a91f</span><span class="wm-sp"></span><span class="wm-b">–</span></div>
+    <div class="wm-body">
+      <div class="k"><span>phase</span><span>IN0_baseline</span></div>
+      <div class="k"><span>passed</span><span>5 of 9 · 4 min</span></div>
+      <div class="row"><span class="btn go">▶ Run</span><span class="btn">❚❚</span><span class="btn">↻ from…</span></div>
+    </div>
+  </div>
+  <div class="wm-win" style="left:16px;top:430px;width:232px;height:146px;--acc:var(--amber)">
+    <div class="wm-head"><span class="wm-icon">◔</span><span class="wm-title">Machine</span><span class="wm-sp"></span><span class="wm-b">–</span></div>
+    <div class="wm-body">
+      <div class="k"><span>memory</span><span>71% used</span></div><div class="meter"><i style="width:71%"></i></div>
+      <div class="k"><span>heavy work</span><span>at ≥ 25% free</span></div>
+      <div class="k"><span>agent</span><span style="color:var(--green)">ollama · local</span></div>
+    </div>
+  </div>
+
+  <!-- the pipeline: compartments and gates, wired -->
+  <div class="wm-win" style="left:290px;top:36px;width:190px;height:136px;--acc:var(--green)">
+    <span class="port out"></span>
+    <div class="wm-head"><span class="wm-icon">▣</span><span class="wm-title">What can be built</span><span class="wm-sp"></span><span class="st done">done</span></div>
+    <div class="wm-body"><div class="k"><span>idearium</span><span>:4800 · 412 MB</span></div><div class="k"><span>GET</span><span>/api/phases/next</span></div>
+      <div class="bar"><i style="width:44%"></i><u style="left:55%"></u></div><div class="k"><span>0.4 s</span><span>usual 0.5 s</span></div></div>
+  </div>
+  <div class="wm-win" style="left:520px;top:48px;width:140px;height:112px;--acc:var(--green)">
+    <span class="port in"></span><span class="port out"></span>
+    <div class="wm-head"><span class="wm-icon">◇</span><span class="wm-title">Usable</span><span class="wm-sp"></span><span class="st done">open</span></div>
+    <div class="wm-body chk"><div class="y">✓ ok is true</div><div class="y">✓ phase named</div></div>
+  </div>
+  <div class="wm-win" style="left:700px;top:36px;width:190px;height:136px;--acc:var(--green)">
+    <span class="port in"></span><span class="port out"></span>
+    <div class="wm-head"><span class="wm-icon">▣</span><span class="wm-title">Not covered yet</span><span class="wm-sp"></span><span class="st done">done</span></div>
+    <div class="wm-body"><div class="k"><span>idearium</span><span>:4800 · 418 MB</span></div><div class="k"><span>POST</span><span>ledger/covers</span></div>
+      <div class="bar"><i style="width:58%"></i><u style="left:52%"></u></div><div class="k"><span>1.1 s</span><span>usual 1.0 s</span></div></div>
+  </div>
+  <div class="wm-win" style="left:930px;top:48px;width:140px;height:112px;--acc:var(--green)">
+    <span class="port in"></span><span class="port out"></span>
+    <div class="wm-head"><span class="wm-icon">◇</span><span class="wm-title">DAG whole</span><span class="wm-sp"></span><span class="st done">open</span></div>
+    <div class="wm-body chk"><div class="y">✓ deps resolve</div><div class="y">✓ no cycle</div><div class="y">✓ files named</div></div>
+  </div>
+
+  <div class="wm-win focused" style="left:310px;top:276px;width:190px;height:136px;--acc:var(--cyan)">
+    <span class="port in"></span><span class="port out"></span>
+    <div class="wm-head"><span class="wm-icon">▣</span><span class="wm-title">Write the files</span><span class="wm-sp"></span><span class="st live">running</span></div>
+    <div class="wm-body"><div class="k"><span>ollama</span><span>:3749 · 1.9 GB</span></div><div class="k"><span>hat</span><span>the_builder</span></div>
+      <div class="bar"><i style="width:62%;background:var(--cyan)"></i><u style="left:99%"></u></div><div class="k"><span>2 m 41 s</span><span>usual 4 m 20 s</span></div></div>
+  </div>
+  <div class="wm-win" style="left:540px;top:288px;width:140px;height:112px;--acc:#2d3f57">
+    <span class="port in"></span><span class="port out"></span>
+    <div class="wm-head"><span class="wm-icon">◇</span><span class="wm-title">Tests pass</span><span class="wm-sp"></span><span class="st wait">wait</span></div>
+    <div class="wm-body chk"><div class="n">○ tree-census</div><div class="n">○ nothing breaks</div></div>
+  </div>
+  <div class="wm-win" style="left:720px;top:276px;width:190px;height:136px;--acc:#2d3f57">
+    <span class="port in"></span><span class="port out"></span>
+    <div class="wm-head"><span class="wm-icon">▣</span><span class="wm-title">Close on evidence</span><span class="wm-sp"></span><span class="st wait">wait</span></div>
+    <div class="wm-body"><div class="k"><span>cortex</span><span>:3748 · 63 MB</span></div><div class="k"><span>RAID</span><span>evidence</span></div>
+      <div class="bar"><i style="width:0"></i><u style="left:40%"></u></div><div class="k"><span>—</span><span>usual 2 s</span></div></div>
+  </div>
+  <div class="wm-win" style="left:950px;top:288px;width:140px;height:112px;--acc:var(--amber)">
+    <span class="port in"></span><span class="port out"></span>
+    <div class="wm-head"><span class="wm-icon">◇</span><span class="wm-title">You approve</span><span class="wm-sp"></span><span class="st yours">yours</span></div>
+    <div class="wm-body chk"><div class="h">◐ diff · tests · proof</div><div class="n">nothing lands until</div></div>
+  </div>
+  <div class="wm-win" style="left:1124px;top:322px;width:236px;height:132px;--acc:var(--violet)">
+    <span class="port in"></span>
+    <div class="wm-head"><span class="wm-icon">◎</span><span class="wm-title">End state</span><span class="wm-sp"></span><span class="wm-tag">2 / 4</span></div>
+    <div class="wm-body"><div style="font-size:12px;margin-bottom:6px">IN0_baseline built, its proof passes</div><div class="k"><span>contract</span><span>RAID · c-in-1794</span></div></div>
+  </div>
+
+  <!-- tools: outputs, changes -->
+  <div class="wm-win" style="left:1124px;top:16px;width:236px;height:290px;--acc:var(--cyan)">
+    <div class="wm-head"><span class="wm-icon">▤</span><span class="wm-title">Outputs</span><span class="wm-tag">streaming</span><span class="wm-sp"></span><span class="wm-b">–</span></div>
+    <div class="wm-body"><div class="term"><div class="d">qwen2.5-coder:3b · cpu · 18 tok/s</div><div><span class="c">write</span> scripts/tree-census.js</div><div>const fs = require('fs');</div><div>function census(root) {</div><div>&nbsp;&nbsp;const out = { files: 0 };</div><div>&nbsp;&nbsp;for (const f of walk(root)) {<span class="cur"></span></div></div></div>
+  </div>
+  
+  <!-- ERAVOS's Field (tools/core/field), open in the dock on the selected compartment: decomposed, word by word, scrubbed -->
+  <div class="wm-win fld focused">
+    <div class="fbar"><span class="wm-icon">◳</span><b>Field</b><span class="wm-tag">Write the files</span>
+      <span class="stn">RAID</span><span class="stn">PLAN</span><span class="stn on">BUILD</span><span class="stn">PROVE</span><span class="stn">END STATE</span>
+      <span class="wm-sp" style="flex:1"></span><span class="wm-b">apply</span><span class="wm-b">✕</span></div>
+    <div class="lay">
+      <h6>▾ BRICKS</h6>
+      <div class="ly"><span class="bd v">VAL</span>read the tree<small>✓ 0.8 s</small></div>
+      <div class="ly sel"><span class="bd e">EMR</span>write census.js<small>● 62%</small></div>
+      <div class="ly"><span class="bd c">CON</span>check it parses<small>○</small></div>
+      <h6>▾ GAPS</h6>
+      <div class="ly"><span class="bd g">GAP</span>which tree?<small>asked</small></div>
+      <h6>▾ EVENTS</h6>
+      <div class="ly"><span class="bd c">EVT</span>task.running<small>4 s ago</small></div>
+    </div>
+    <div class="view">
+      <h6>YOUR WORDS → EMERGE, WORD BY WORD</h6>
+      <div class="words">
+        <span class="wd n">census<small>a name</small></span><span class="wd kw">counts<small>adds to a value</small></span><span class="wd">the<small>filler</small></span>
+        <span class="wd n">files<small>a field</small></span><span class="wd kw">so that<small>end state</small></span><span class="wd">it<small>filler</small></span>
+        <span class="wd kw">never negative<small>a gate</small></span><span class="wd gp">tree<small>gap · teach it</small></span>
+      </div>
+      <h6>DEBUG · THE RUN'S LEDGER, STEP BY STEP</h6>
+      <div class="tl">
+        <span class="tk d" style="left:4%;height:14px"></span><span class="tk d" style="left:12%;height:18px"></span><span class="tk d" style="left:19%;height:12px"></span>
+        <span class="tk d" style="left:27%;height:20px"></span><span class="tk d" style="left:36%;height:16px"></span><span class="tk l" style="left:48%;height:24px"></span>
+        <span class="tk l" style="left:55%;height:22px"></span><span class="tk" style="left:66%;height:10px"></span><span class="tk" style="left:78%;height:10px"></span>
+        <span class="scrub" style="left:55%"></span>
+        <span class="tlab" style="left:0">#1 input</span><span class="tlab" style="left:44%">#7 write · hash 3f9a…</span><span class="tlab" style="right:0">#11 end</span>
+      </div>
+    </div>
+    <div class="props"><h5>write census.js</h5>
+      <div class="k"><span>kind</span><span>brick of a compartment</span></div>
+      <div class="k"><span>agent</span><span>ollama · the_builder</span></div>
+      <div class="k"><span>takes</span><span>tree (from read)</span></div>
+      <div class="k"><span>gives</span><span>scripts/tree-census.js</span></div>
+      <div class="k"><span>gate</span><span>it parses</span></div>
+      <div class="k"><span>delta</span><span>2 m 41 s / 4 m 20</span></div>
+      <div class="k"><span>open as</span><span>a pipeline ▸</span></div>
+    </div>
+    <div class="fst"><span>LAYERS <b>5</b></span><span>BRICKS <b>3</b></span><span>GAPS <b>1</b></span><span>LEDGER <b>#7 of 11</b></span><span style="margin-left:auto">UNDO <b>Ctrl+Z</b></span></div>
+  </div>
+</div>
+<div class="pv">preview · sample data · nothing wired</div>
+</body>
+</html>
