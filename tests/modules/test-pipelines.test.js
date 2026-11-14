@@ -94,6 +94,25 @@ async function test(id, desc, fn) { try { await fn(); console.log(`  ✓ ${id} $
   });
 
   // 0.60.496 PC8 — his 2026-10-26 "the gate doesn't wait for me to accept it or not before it fails."
+  // PC13 (0.60.526) — James, 2026-11-13: "need the pipeline building all of my requests." A held step asks him; his answer rides on Continue.
+  await test('PL-03c', 'PC13: Continue can give the run values (his answers), merged with earlier ones; a closed gate says the open gaps by id and question, never an answered one', async () => {
+    const G = require(path.join(ROOT, 'lib/automation/pipeline.js')).gateOpen;
+    const out = { body: { blockedBy: ['b'], gaps: [{ id: 'a', question: 'Which file?', answer: 'x.js' }, { id: 'b', question: 'How will you know it is done?', answer: null }] } };
+    assert.deepStrictEqual(G({ matches: '"blockedBy":\\[\\]', reasonAt: 'body.gaps' }, out), { open: false, why: 'b: How will you know it is done?' });
+    assert.strictEqual(G({ matches: '"blockedBy":\\[\\]', reasonAt: 'body.gaps' }, { body: { blockedBy: [] } }).open, true);
+    const c = P.create({ name: 'Asks him', vars: { answers: '{}' }, tasks: [{ id: 'ask', step: { type: 'set', config: { assign: { got: '{{vars.answers}}' } } }, gate: { contains: 'second' }, onFail: 'hold' }] });
+    assert.ok(c.ok, JSON.stringify(c));
+    const s = await P.run(c.pipeline.id, { wait: false });
+    const until = async (f) => { for (let i = 0; i < 200; i++) { const r = P.getRun(s.runId); if (r && f(r)) return r; await new Promise(x => setTimeout(x, 10)); } throw new Error('not reached: ' + JSON.stringify(P.getRun(s.runId)).slice(0, 400)); };
+    await until(x => x.status === 'paused');
+    assert.ok(P.unpause(s.runId, { by: 'him', vars: { answers: '{"one":"first"}', __pipelineChain: ['x'] } }).ok);
+    await until(x => x.status === 'paused' && x.tasks.ask.held.times === 2);
+    assert.ok(P.unpause(s.runId, { by: 'him', vars: { answers: '{"two":"second"}' } }).ok);
+    for (let i = 0; i < 200 && P._active.has(s.runId); i++) await new Promise(x => setTimeout(x, 10));
+    const r = P.getRun(s.runId);
+    assert.strictEqual(r.status, 'ok', JSON.stringify(r.tasks.ask).slice(0, 300));
+    assert.ok(/first/.test(JSON.stringify(r.tasks.ask.output)) && /second/.test(JSON.stringify(r.tasks.ask.output)), 'the second answer kept the first: ' + JSON.stringify(r.tasks.ask.output));
+  });
   await test('PL-03b', 'onFail hold: the step that cannot pass pauses the run with its reason; continue asks it again; it passes and the rest run', async () => {
     assert.match(v({ name: 'x', tasks: [{ id: 'a', step: macro('m'), onFail: 'wait' }] }).problems.join(' '), /onFail is stop, continue or hold/);
     flaky = 0;

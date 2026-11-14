@@ -733,6 +733,22 @@ built_2026_11_09_plan:
            what breaks it, and COS shows why.
     proof: "per slice: the census shows it in COS; its steps run from COS and their states read back from the owner; for (a) a fixture contract's gates become steps in order, a passed gate's step is met, a failed one carries RAID's reasons"
     axioms: "§5.15 (the owner keeps the truth, COS reaches it by route), §8.6 (the sync, the box shape and RAID's check route are used), §1.2 (a step's failure is the owner's words), USER_AUTONOMY (his: all of them, step by step)"
+  PC13_his_request_built_by_the_pipeline:
+    status: OPEN
+    depends_on: [PC8_operate_a_pipeline, PC11_nothing_sent_teaches_nothing]
+    james: '"put a pin in the can be moved anywhere. need the pipeline building all of my requests." (2026-11-13) · "like the pipeline can build all of this if we get ollama working with emerge and the pipeline"'
+    files: [idearium/pipelines/his-request.pipeline, docs/2026-11-13-his-requests-phasemap.spec, cos/manager/cli.js, tests/modules/test-cos-pipeline.test.js]
+    does: >-
+      One pipeline from his words to the work built, every step a route that exists: (1) the intent (Idearium's POST /api/repos/:uuid/intent,
+      lib/intent-flow.js: the context needed, the DAG, what was found, the gaps); a gap holds the run and is asked of him, his answer goes
+      in and the run goes on; (2) a phase written from his words into his requests' map (POST …/phases/add, docs/2026-11-13-his-requests-
+      phasemap.spec, ids HR<n>), his words kept verbatim as its origin; (3) the phase built by Idearium's own build pipeline, run as a step
+      (idearium-build: covered, mapped, DAG, graph, build on the Ollama ladder first, landed, evidence holding for his yes). Typed where he is:
+      `request <his words>` in COS's console, or run from the Automation tab with vars.words.
+      Said: mapping a phase's files from words is the build's own agent step (SL8, the first rung, Ollama), so what Ollama can write decides
+      how far a request gets alone (EMB2's benchmarks measure it); a request it cannot finish holds with the step's own reason.
+    proof: "a stand-in Idearium answering intent, add and the build pipeline's routes: words in, a phase HR1 written, the build pipeline run with phase HR1; a gap holds the run with the gap's words"
+    axioms: "§8.6 (every step is a route that exists), his order (the pipeline builds his requests), USER_AUTONOMY (gaps and the final yes are his)"
 # ── ADDENDUM 2026-11-11 (0.60.483) — PC9 slice a: the desktop driver for agents (his PC_D14) ──────────────────────────────────────────────
 # James, 2026-11-11: "I’m saying for you. Like look at clearglass. Nexus nerve, cleardriver injecting coordinates into the dom."
 # Built: cos/remote-desktop/desktop-driver.js (screen, move, click, type, key, scroll; backends: Windows PowerShell user32/System.Drawing,
@@ -963,3 +979,8 @@ built_2026_11_09_plan:
 # a stand-in Cortex with Cortex's real door, run from COS, held with RAID's own reason, done after evidence and Continue.
 # Open: slices b-d; his "raid to be the hub": readings asked (RAID decides every system's work · every call between systems passes
 # through RAID · RAID moves into COS).
+
+# ── ADDENDUM 2026-11-13 (0.60.526) — PC13 built: his request, built by the pipeline ──
+# James, 2026-11-13: "need the pipeline building all of my requests." his-request.pipeline (intent → a phase HR<n> → idearium-build as a step →
+# told); `request <words>` and `request answer <run> <gap> <answer>` in COS's console; Continue carries values; a gate names the open gaps.
+# Proof: real Idearium to the intent step; a stand-in for the whole chain; PL-03c. Not proved: a real Ollama build (his machine).

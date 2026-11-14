@@ -1,0 +1,86 @@
+# His request, built by the pipeline (PC13, docs/2026-11-08-pipeline-canvas-phasemap.spec) — James, 2026-11-13: "put a pin in the can be moved
+# anywhere. need the pipeline building all of my requests." · "like the pipeline can build all of this if we get ollama working with emerge and the pipeline"
+# His words → the intent (a gap holds the run and is asked of him) → a phase written from his words (docs/2026-11-13-his-requests-phasemap.spec,
+# HR<n>) → Idearium's own build pipeline, run as one step (built on the Ollama ladder first, landed, evidence holding for his yes). Every step is a
+# route Idearium already serves. Typed in COS's console: request <his words>.
+envelope: 1
+uuid: nexus-export-pipeline-his-request
+type: pipeline
+id: his-request
+context: Idearium › pipelines (served at GET /api/pipelines, run by COS)
+intent: >-
+  His words built by the pipeline: the intent and its gaps (asked of him), a phase written from his words, then Idearium's build pipeline for it.
+summary: 4 tasks · Idearium's own routes · the build pipeline as a step
+system: idearium
+tags:
+  - pipeline
+  - idearium
+  - request
+  - bundled
+source: idearium/pipelines
+occurrences: 1
+payload:
+  id: his-request
+  format: nexus-pipeline
+  version: 1
+  name: His request
+  description: >-
+    His words built by the pipeline. The intent (the context needed, the DAG, what is found, the gaps): a gap holds the run with its question,
+    his answers go in vars.answers and Continue asks again. Then a phase is written from his words into his requests' map, and Idearium's build
+    pipeline builds it (Ollama's ladder first; evidence holds for his yes).
+  vars:
+    words: ''          # his request, verbatim
+    answers: '{}'      # his answers to the gaps, as JSON: { "<gap id>": "<answer>" }
+    repo: nexus
+    map: docs/2026-11-13-his-requests-phasemap.spec
+  settings:
+    parallel: 1
+  tasks:
+    - id: intent
+      label: What he means, what it needs, what is missing
+      depends_on: []
+      step:
+        type: api
+        config:
+          url: nexus://idearium/api/repos/{{vars.repo}}/intent
+          method: POST
+          body: '{"text":{{vars.words | json}},"answers":{{vars.answers}}}'
+          timeoutMs: 120000
+      gate:
+        matches: '"blockedBy":\[\]'
+        reasonAt: body.gaps
+      onFail: hold   # a gap: answer it (vars.answers), then Continue
+    - id: phase
+      label: His request written as a phase
+      depends_on:
+        - intent
+      step:
+        type: api
+        config:
+          url: nexus://idearium/api/repos/{{vars.repo}}/phases/add
+          method: POST
+          body: '{"map":{{vars.map | json}},"title":{{vars.words | slice:0,90 | json}},"does":{{vars.words | json}},"prefix":"HR"}'
+      gate:
+        contains: '"id":"HR'
+    - id: build
+      label: Built by Idearium's build pipeline
+      depends_on:
+        - phase
+      step:
+        type: pipeline
+        config:
+          pipeline: Idearium build pipeline
+          vars:
+            repo: '{{vars.repo}}'
+            phase: '{{tasks.phase.output.body.id}}'
+            does: '{{vars.words}}'
+            why: 'his request'
+    - id: told
+      label: Said to him
+      depends_on:
+        - build
+      step:
+        type: notify
+        config:
+          title: Your request was built
+          body: '{{tasks.phase.output.body.id}}: {{vars.words | slice:0,120}}'
