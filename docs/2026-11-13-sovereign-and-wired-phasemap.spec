@@ -224,6 +224,10 @@ phases:
       call to a route that system's map declares (added to its map and command nodes when missing). After each pair the ratchet's
       baseline falls and is written back. At zero, a new crossing fails the build, not only the count.
     proof: "per pair: the census shows 0 for it and its callers' tests pass; at the end 0 system crossings, and a fixture require() across a seam fails by name"
+    expanded_2026_11_14: >-
+      James, 2026-11-14: "each systems wires branch from the hooks (drawbridge) to raid. like the hook and wire registry, thats what its for. like each system is wired into raid, cos wired into that, copilot as a reasoning and assistent. automation. this is meant to be autonomous"
+      Recorded on RD9 (decided_2026_11_14_wiring). If his reading (1) there holds, each crossing ends as a wire from the caller's drawbridge
+      to RAID, which routes it to the owner's route, not as a direct call between two systems. To confirm before SW6 is built.
   SW7a_the_crystal_lattice_into_intelligence:
     layer: integration
     status: OPEN

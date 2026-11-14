@@ -356,6 +356,14 @@ spec:
         and no system routes to another around it. The coder's drawing of it: COS → RAID → {cortex, idearium, clear-glass, copilot, emerge, …}.
         Reading to confirm: CS11 (RAID moves into COS, his 2026-11-13) — RAID's code living in COS's folder, or RAID its own compartment
         under COS that every other compartment hangs from.
+      decided_2026_11_14_wiring: >-
+        James, 2026-11-14: "each systems wires branch from the hooks (drawbridge) to raid. like the hook and wire registry, thats what its for. like each system is wired into raid, cos wired into that, copilot as a reasoning and assistent. automation. this is meant to be autonomous"
+        Each system's wires start at its hooks, its drawbridge (its own component registry: routes, commands, events, hooks; AXIOMS §5.16),
+        and end at RAID. The hook-and-wire registry is what records them. COS is wired into RAID the same way; copilot is wired in as
+        the reasoning agent and assistant RAID calls, not a way around RAID; automation runs through it, so Nexus runs without him (autonomous).
+        Readings to confirm: (1) a system that needs another system goes by its wire to RAID and RAID routes it on, rather than calling the
+        other system's route directly (this re-aims SW6's target, docs/2026-11-13-sovereign-and-wired-phasemap.spec); (2) "cos wired into
+        that" read as COS wired into RAID like every system, while it still supervises the processes (decided_2026_11_14_topology).
       also_asked_2026_11_12_not_yet_mapped: "the panel's 27 engines (cos/services/anonymous/engines) as templates for networking compartments, in the catalog, as test-environment and DAG dependency options (cos-services map, after SV2); .erv opened by ERAVOS on install (Windows file association); `cos import` a system into cos.exe (cos-console map, after SC4). Each is mapped in its own map before it is built."
     RD2_idearium_routes_through_raid:
       layer: library
