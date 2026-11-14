@@ -1,0 +1,82 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CH1_the_console_reaches_raid_and_the_agents:e0ccd59915c87067
+type: graph
+id: phase:CH1_the_console_reaches_raid_and_the_agents:e0ccd59915c87067
+context: dependency graph of phase CH1_the_console_reaches_raid_and_the_agents
+intent: null
+summary: 6 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1794626874863
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794626874863
+lastSeenAt: 1794626874863
+fingerprint: null
+payload:
+  for: CH1_the_console_reaches_raid_and_the_agents
+  kind: phase
+  repo: null
+  hash: e0ccd59915c87067
+  nodes:
+    - path: cos/manager/cli.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/ui/automation/engine.js
+      role: changes
+      exists: true
+      system: cos
+    - path: tests/modules/test-cos-console.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: cos/manager/server.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/manager/automation-door.js
+      role: uses
+      exists: true
+      system: cos
+    - path: lib/test-sandbox.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: cos/manager/cli.js
+      to: cos/manager/automation-door.js
+      kind: requires
+    - from: tests/modules/test-cos-console.test.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/cli.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-11-02-cos-console-phasemap.spec::SC3_system_command_line
+    dependents: []
+    upstream:
+      - docs/2026-11-02-cos-console-phasemap.spec::SC1_the_bell
+      - docs/2026-11-02-cos-console-phasemap.spec::SC2_configuration_per_system
+      - docs/2026-11-02-cos-console-phasemap.spec::SC3_system_command_line
+      - docs/2026-11-02-cos-console-phasemap.spec::SC_D1_units_and_what_the_os_enforces
+      - docs/2026-11-02-cos-console-phasemap.spec::SC_D2_where_the_configuration_lives
+      - docs/2026-11-02-cos-console-phasemap.spec::SC_D3_ports_are_announced_not_guessed
+      - docs/2026-11-02-cos-console-phasemap.spec::SC_D5_cos_has_its_own_command_line
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 3
+      - 'depends on (1): SC3_system_command_line · all upstream 7'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-11-02-cos-console-phasemap.spec::SC3_system_command_line
+        kind: declared

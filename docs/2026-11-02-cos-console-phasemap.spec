@@ -397,3 +397,36 @@ phases_addendum_2026_11_09_sc7:
 # is his to say (SC10_R1): (a) Guardian's agents (its providers and tabs), by Guardian's routes; (b) the co-pilot, by copilot's /api/prompt;
 # (c) Ollama's models, by ollama-bridge; (d) all three, each named as a target the Console can address (`@guardian:chatgpt ...`, `@copilot ...`).
 # State read 2026-11-14: of the systems, Cortex has a door (DO3a); DO1, DO2, DO5, DO7, DO8 are open, so the Console reaches COS and Cortex today.
+
+# ── ADDENDUM 2026-11-14 (0.60.532) — the Console reaches RAID and the agents; his request goes through RAID; the phase readers read CRLF ──
+# James, 2026-11-14: "that pipeline needs to be from the cli into raid or copilot. like integrate this better" (a screenshot of Automation › "His request" held at its first step: "say what you want — the flow starts from your words")
+# James, 2026-11-14: "thats a problem also the console in cos, is supposed to hook into each system, and agent. floating menu 3 way cli, nexus-cli, etc."
+# "floating menu 3 way cli" read from lib/ui/tv-shell/menu.js: its command line reaches Ollama, the co-pilot or a Guardian agent by copilot's
+# /api/prompt. That answers which agents (SC10's question of the same day): those three, by that route.
+phases_addendum_2026_11_14_ch:
+  CH1_the_console_reaches_raid_and_the_agents:
+    status: "BUILT 0.60.532 — test-cos-console 10/10 (CC-12). Against his live copilot and Cortex, and the Automation page's box on his screen: not yet seen by the coder"
+    origin: 'James, 2026-11-14: "that pipeline needs to be from the cli into raid or copilot. like integrate this better" · "the console in cos, is supposed to hook into each system, and agent. floating menu 3 way cli, nexus-cli, etc."'
+    depends_on: [SC3_system_command_line]
+    spec: cos/spec/cos-manager.spec
+    files: [cos/manager/cli.js, cos/ui/automation/engine.js, tests/modules/test-cos-console.test.js]
+    requires: ["Cortex answering POST /api/raid/input (RD9 slices a, b)", "copilot's /api/prompt; copilot woken by the supervisor's touch"]
+    does: >-
+      COS's Console: ask [@ollama|@copilot|@guardian[:agent]] <words> (or a line starting with @) asks an agent by the floating menu's own route;
+      raid <words> hands his words to RAID (a .input node, a contract, its gaps listed); a line the table does not know goes to RAID as an
+      input and is said as such (RD9 slice c, for COS's Console); request <words> reaches RAID first and the run carries the input and
+      contract ids, and still runs, said, when RAID does not answer (§5.15). COS reaches Cortex and copilot by their routes, on the ports its
+      supervisor holds. The Automation page asks for a value a pipeline declares and leaves empty (its words) before Run starts.
+    by_the_axioms: "§5.2/§9.1 (routing goes through RAID), §8.6 (the floating menu's route and RAID's input route reused), §5.15 (routes, never files; RAID down breaks no request), §1.2 (what went to RAID, and what did not, is said)"
+    not_built: "each system's own commands in the Console (SC10: the doors DO1, DO2, DO5, DO7, DO8); the Nexus CLI's unknown lines to RAID; RAID acting on what it routes (RD9)"
+  LE1_phase_readers_accept_crlf:
+    status: "BUILT 0.60.532 — on his PC the phase ledger reads 2692 phases in 245 maps (116 in 11 before); test-cos-pipeline CP-15 passes; test-phase-dag 8/8"
+    origin: 'Found on his PC, 2026-11-13 and 2026-11-14 (no words of his: a fault found while doing what he asked; §4.2)'
+    depends_on: []
+    spec: cos/spec/cos-manager.spec
+    files: [lib/phase-dag.js, lib/phase-files.js, lib/phasemap-parse.js]
+    does: >-
+      The three readers of a phase map split lines on \n only; his Windows checkout has \r\n, so every phase line ended in \r and matched
+      nothing. They split on \r?\n. Idearium's build pipeline, the DAG and the ledger read his maps whole.
+    by_the_axioms: "§4.2 (fix bugs pre-emptively), §17.4 (reproducible from his machine, not only the sandbox's), §17.7"
+    not_built: "a .gitattributes that checks text out with LF everywhere (it would also make graph hashes the same on every machine): to phase; two Windows-only test failures (CP-13, PL-06) named in the changelog"

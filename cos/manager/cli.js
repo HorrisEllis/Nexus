@@ -33,6 +33,9 @@ const TABLE = [
   // CA7 slice a (2026-11-13), his "can be moved anbd changed in each systems individual settings"
   // PC13 (2026-11-13) — James: "need the pipeline building all of my requests."
   ['request', 'request <your words> | request answer <run> <gap-id> <your answer>', 'your request built by the pipeline: what it means and its gaps (asked of you), a phase written from your words, then built (Ollama first); the run shows in Automation'],
+  // CH1 (0.60.532) — James, 2026-11-14: "the console in cos, is supposed to hook into each system, and agent. floating menu 3 way cli, nexus-cli, etc."
+  ['ask', 'ask [@ollama|@copilot|@guardian[:agent]] <your words>   (or: @ollama <your words>)', 'ask an agent, by the floating menu\'s own route (copilot\'s three ways); copilot is woken if asleep; default @copilot'],
+  ['raid', 'raid <your words>', 'hand your words to RAID: kept as a .input node, drafted into a contract, its gaps asked of you; any line COS\'s table does not know goes the same way'],
   ['location', 'location [system]', 'where each system lives on this machine, its size, and whether it can be moved (and what holds it if not)'],
   ['pipeline-sync', 'pipeline-sync', 'import every pipeline in Nexus into the Automation tab now: COS\'s own files and each system\'s, by its route; a system that does not answer is named'],
   // AE7 (2026-11-08) — James: "Then an api that eravos can use for the step. So needs full cli commands, events, nodes."
@@ -52,7 +55,22 @@ function split(line) {
 }
 const pad = (s, n) => String(s ?? '—').padEnd(n);
 
-function createCli({ sup, resources = null, config = null, notices = null, proposals = null, addSystem = null, usage = null, disks = null, vdisks = null, pipelineSync = null, graphCensus = null, locationOf = null } = {}) {
+// CH1 — COS reaches another system by its route, on the port its own supervisor holds for it (§5.15): never its files
+function reachBy(sup) {
+  return (system, method, p, body = null, { timeoutMs = 30000 } = {}) => new Promise((resolve) => {
+    let port = null; try { const v = sup.list().find(x => x.name === system || x.system === system); port = v && v.port; } catch (_) {}
+    if (!port) return resolve({ status: 0, error: `${system} is not a system COS holds a port for` });
+    const data = body ? JSON.stringify(body) : null;
+    const rq = require('http').request({ host: '127.0.0.1', port, path: p, method, timeout: timeoutMs, headers: data ? { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(data) } : {} }, (res) => {
+      let t = ''; res.on('data', c => { t += c; }); res.on('end', () => { let b = null; try { b = JSON.parse(t); } catch (_) { b = { text: t }; } resolve({ status: res.statusCode, body: b }); });
+    });
+    rq.on('error', (e) => resolve({ status: 0, error: e.code === 'ECONNREFUSED' ? `${system} is not answering on :${port}` : (e.code || e.message) }));
+    rq.on('timeout', () => { rq.destroy(); resolve({ status: 0, error: `${system} did not answer in ${Math.round(timeoutMs / 1000)} s` }); });
+    if (data) rq.write(data); rq.end();
+  });
+}
+
+function createCli({ sup, resources = null, config = null, notices = null, proposals = null, addSystem = null, usage = null, disks = null, vdisks = null, pipelineSync = null, graphCensus = null, locationOf = null, reach = reachBy(sup), wakeMs = 25000 } = {}) {
   async function run(line, { by = 'person' } = {}) {
     // 0.60.517 — "cos <verb>" typed in COS's own console is the verb (his 2026-11-13 `cos pipeline-sync` answered "no verb cos")
     let [verb, ...a] = split(line); if (verb === 'cos' && a.length) verb = a.shift(); const L = [];
@@ -61,7 +79,23 @@ function createCli({ sup, resources = null, config = null, notices = null, propo
     if (/^agent:/.test(String(by)) && (acts.includes(verb) || (verb === 'disk' && a[1] === 'make') || (verb === 'vdisk' && /^(make|refresh|snapshot|revert|drop)$/.test(a[1] || '')) || (verb === 'config' && a.length > 1) || (verb === 'notices' && a[0] === 'read')))
       return { ok: false, lines: [`an agent proposes; ${verb} is a person's act (POST /api/cos/proposals)`] };
     const need = (n, usage) => { if (a.length < n) throw Object.assign(new Error(`usage: ${usage}`), { code: 400 }); };
+    if (verb.startsWith('@')) { a.unshift(verb); verb = 'ask'; }   // CH1: "@ollama what is …" is `ask @ollama what is …`
     const row = TABLE.find(r => r[0] === verb);
+    // CH1 — an on-demand system is woken by the supervisor's own rule (touch) and waited for; RAID's answer to an input, in plain lines
+    const awake = async (system) => {
+      if ((await reach(system, 'GET', '/health', null, { timeoutMs: 1500 })).status === 200) return true;
+      try { sup.touch(system); } catch (_) { return false; }
+      for (const until = Date.now() + wakeMs; Date.now() < until;) { await new Promise(r => setTimeout(r, Math.min(500, wakeMs))); if ((await reach(system, 'GET', '/health', null, { timeoutMs: 1500 })).status === 200) return true; }
+      return false;
+    };
+    const fileWithRaid = async (text) => {
+      const r = await reach('cortex', 'POST', '/api/raid/input', { text, from: 'cos-console', by }, { timeoutMs: 60000 });
+      if (r.status !== 200 || !r.body || r.body.ok === false) return { ok: false, why: (r.body && r.body.error) || r.error || `Cortex answered HTTP ${r.status}` };
+      const b = r.body, d = b.decision || {}, c = b.contract || null;
+      const lines = [`  RAID kept it as input ${b.id}${d.error ? `; not decided: ${d.error}` : `; routed to ${d.provider || d.target || d.agent || 'a decision it did not name'}${d.why ? ` (${d.why})` : ''}`}`];
+      if (c) { lines.push(c.booked ? `  contract ${c.id}${(c.gaps || []).length ? `, with ${c.gaps.length} gap${c.gaps.length > 1 ? 's' : ''} asked of you:` : ', every field answered'}` : `  no contract booked${c.error ? `: ${c.error}` : (c.problems || []).length ? `: ${c.problems.join('; ')}` : ''}`); for (const g of c.gaps || []) lines.push(`    · ${g}`); }
+      return { ok: true, lines, input: b.id || null, contract: (c && c.id) || null };
+    };
     try {
       switch (verb) {
         case 'help': {
@@ -183,7 +217,12 @@ function createCli({ sup, resources = null, config = null, notices = null, propo
           const call = async (method, url, body) => { const r = await door.handle({ method, url: '/automation' + url, body: body || {} }); if (!r || r.status >= 400) throw new Error((r && r.body && r.body.error) || `${method} ${url}: ${r ? r.status : 'no answer'}`); return r.body; };
           const p = ((await call('GET', '/pipelines')).pipelines || []).find(x => x.name === 'His request');
           if (!p) throw new Error('the pipeline "His request" is not in COS yet: Idearium serves it (idearium/pipelines/his-request.pipeline); run `pipeline-sync` once Idearium is up');
-          const r = await call('POST', `/pipelines/${encodeURIComponent(p.id)}/run`, { vars: { words }, wait: false, by });
+          // CH1 (0.60.532) — James, 2026-11-14, of this pipeline: "that pipeline needs to be from the cli into raid or copilot." His words
+          // reach RAID first (RD9: kept as a .input node, drafted into a contract); the run carries what they became. RAID not answering
+          // does not stop his request (§5.15: one system down breaks no other): it is said, and the run goes without its contract.
+          const filed = await fileWithRaid(words);
+          if (filed.ok) L.push(...filed.lines); else L.push(`RAID did not take it (${filed.why}): the request runs without its contract`);
+          const r = await call('POST', `/pipelines/${encodeURIComponent(p.id)}/run`, { vars: { words, ...(filed.ok && filed.input ? { input: filed.input } : {}), ...(filed.ok && filed.contract ? { contract: filed.contract } : {}) }, wait: false, by });
           L.push(`your request is running: run ${String(r.runId || '').slice(0, 8)} of "His request"`, '  its steps show in Automation › Pipelines › His request; a gap or the final yes waits for you there');
           break; }
         case 'location': {
@@ -211,7 +250,31 @@ function createCli({ sup, resources = null, config = null, notices = null, propo
           for (const x of r.systems || []) { L.push(`  ${x.system}: ${x.ok ? x.files + ' of ' + x.listed + ' fetched' : 'did not answer (' + x.why + '): its last files kept'}`); for (const k of x.skipped || []) L.push(`    skipped ${k.id}: ${k.why}`); }
           for (const f of r.failed || []) L.push(`  refused ${f.file}: ${f.why}`);
           break; }
-        default: return { ok: false, lines: [`no verb "${verb}". The table:`, ...TABLE.map(r => `  ${r[1]}`)] };
+        // CH1 (0.60.532) — James, 2026-11-14: "the console in cos, is supposed to hook into each system, and agent. floating menu 3 way cli,
+        // nexus-cli, etc." The agents, by the route the floating menu's own command line uses (copilot's /api/prompt, its three ways:
+        // Ollama, the co-pilot, a Guardian agent). Copilot starts on demand: it is woken first, and one that does not start is said.
+        case 'ask': {
+          let provider = 'copilot';
+          if (a[0] && a[0].startsWith('@')) { const t = a.shift().slice(1).toLowerCase(); provider = t === 'guardian' ? 'auto' : t.startsWith('guardian:') ? t.slice(9) : t; }
+          const words = a.join(' ').trim(); if (!words) throw Object.assign(new Error(`usage: ${row[1]}`), { code: 400 });
+          if (!(await awake('copilot'))) throw new Error('copilot did not start, so no agent could be asked (ps shows its state; logs copilot says why)');
+          const r = await reach('copilot', 'POST', '/api/prompt', { prompt: words, provider, source: 'cos-console', channel: 'cos-console', channelName: 'COS Console' }, { timeoutMs: 120000 });
+          if (r.status !== 200 || !r.body || r.body.ok === false) throw new Error(`${provider} did not answer: ${(r.body && (r.body.error || r.body.reason || (r.body.errors || []).join('; '))) || r.error || 'HTTP ' + r.status}`);
+          const text = r.body.text ?? r.body.response; L.push(...String(typeof text === 'string' ? text : JSON.stringify(text ?? r.body)).split('\n'));
+          L.push(`  — asked ${provider}${r.body.modelUsed ? `, answered by ${r.body.modelUsed}` : ''}`);
+          break; }
+        // RD9 slice c — James, 2026-11-12: "we can have the cli in nexus hooked into raid, inputs into raid, saved as a .input node, then raid
+        // decides what to do with using the routing." `raid <words>` files them; so does any line COS's table does not know (below).
+        case 'raid': {
+          const words = a.join(' ').trim(); if (!words) throw Object.assign(new Error(`usage: ${row[1]}`), { code: 400 });
+          const f = await fileWithRaid(words); if (!f.ok) throw new Error(`RAID did not take it: ${f.why}`);
+          L.push(...f.lines); break; }
+        default: {
+          // RD9 slice c: what COS's table does not know goes to RAID as an input (kept as a .input node, drafted into a contract), said as such
+          const f = await fileWithRaid(String(line).trim());
+          if (f.ok) return { ok: true, lines: [`"${verb}" is not one of COS's verbs, so the line went to RAID as an input:`, ...f.lines, '  (help shows COS\'s own verbs)'] };
+          return { ok: false, lines: [`no verb "${verb}", and RAID did not take it (${f.why}). The table:`, ...TABLE.map(r => `  ${r[1]}`)] };
+        }
       }
       return { ok: true, lines: L };
     } catch (e) { return { ok: false, lines: [...L, e.message] }; }
