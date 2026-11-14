@@ -91,3 +91,9 @@ copilot. RD9 slice c is the next build for item 1 above.
 "basically like the hub/raid in the center, cos above that, then each system/compartment stems or branches off of raid". RD9
 decided_2026_11_14_topology: COS above (supervises every system, RAID included); RAID the hub; every system branches off RAID. Open: how this
 reads against CS11 (RAID's code in COS's folder, or RAID its own compartment under COS).
+
+## ADDENDUM: the wiring (his, 2026-11-14)
+"each systems wires branch from the hooks (drawbridge) to raid. like the hook and wire registry, thats what its for. like each system is wired
+into raid, cos wired into that, copilot as a reasoning and assistent. automation. this is meant to be autonomous"
+Recorded on RD9 (decided_2026_11_14_wiring) and SW6 (expanded_2026_11_14). To confirm: does system → system go by its wire to RAID and RAID
+routes it on, instead of a direct route call? That changes SW6's target.
