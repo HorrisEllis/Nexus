@@ -1,0 +1,385 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SW5i_the_automation_engine_into_cos:d73ef5227085637e
+type: graph
+id: phase:SW5i_the_automation_engine_into_cos:d73ef5227085637e
+context: dependency graph of phase SW5i_the_automation_engine_into_cos
+intent: null
+summary: 44 node(s), 12 crossing(s)
+system: idearium
+tags: []
+exported_at: 1794645020965
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794645020965
+lastSeenAt: 1794645020965
+fingerprint: null
+payload:
+  for: SW5i_the_automation_engine_into_cos
+  kind: phase
+  repo: null
+  hash: d73ef5227085637e
+  nodes:
+    - path: clear-glass/src/ipc/bridge.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/macros/live-recording.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/mesh/agent-mesh.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: cos/manager/automation-door.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/manager/server.js
+      role: changes
+      exists: true
+      system: cos
+    - path: lib/automation-nodes.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/automation-registry.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/automation/cron.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/automation/dom.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/automation/engine.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/automation/from-macro.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/automation/pipeline.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/automation/routes.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/automation/scripts.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/automation/steps.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/automation/task-node.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/automation/template.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/automation/templates.js
+      role: changes
+      exists: true
+      system: lib
+    - path: tests/modules/test-cos-automation-home.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: clear-glass/src/main/index.pre-userscripts.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: cos/manager/cli.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/agent-tools/tools/clear-glass/macro.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/repo-procedures.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/agent-mesh-drainer.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/agent-mesh-hostile.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/automation-engine.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-automation-registry.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-chatgpt-scrape-template.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-orchestrator-automation.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-release-deliver.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cos/automation/cron.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/automation/dom.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/automation/engine.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/automation/from-macro.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/automation/nodes.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/automation/pipeline.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/automation/routes.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/automation/scripts.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/automation/steps.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/automation/task-node.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/automation/template.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/automation/templates.js
+      role: uses
+      exists: true
+      system: cos
+  edges:
+    - from: lib/automation/cron.js
+      to: cos/automation/cron.js
+      kind: requires
+    - from: lib/automation/dom.js
+      to: cos/automation/dom.js
+      kind: requires
+    - from: lib/automation/engine.js
+      to: cos/automation/engine.js
+      kind: requires
+    - from: lib/automation/from-macro.js
+      to: cos/automation/from-macro.js
+      kind: requires
+    - from: lib/automation/pipeline.js
+      to: cos/automation/pipeline.js
+      kind: requires
+    - from: lib/automation/routes.js
+      to: cos/automation/routes.js
+      kind: requires
+    - from: lib/automation/scripts.js
+      to: cos/automation/scripts.js
+      kind: requires
+    - from: lib/automation/steps.js
+      to: cos/automation/steps.js
+      kind: requires
+    - from: lib/automation/task-node.js
+      to: cos/automation/task-node.js
+      kind: requires
+    - from: lib/automation/template.js
+      to: cos/automation/template.js
+      kind: requires
+    - from: lib/automation/templates.js
+      to: cos/automation/templates.js
+      kind: requires
+    - from: lib/automation-nodes.js
+      to: cos/automation/nodes.js
+      kind: requires
+    - from: tests/modules/test-chatgpt-scrape-template.test.js
+      to: lib/automation/dom.js
+      kind: requires
+    - from: tests/modules/automation-engine.test.js
+      to: lib/automation/engine.js
+      kind: requires
+    - from: tests/modules/test-orchestrator-automation.test.js
+      to: lib/automation/engine.js
+      kind: requires
+    - from: lib/repo-procedures.js
+      to: lib/automation/pipeline.js
+      kind: requires
+    - from: tests/modules/test-release-deliver.test.js
+      to: lib/automation/templates.js
+      kind: requires
+    - from: lib/agent-tools/tools/clear-glass/macro.js
+      to: lib/automation-nodes.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/automation-registry.js
+      kind: requires
+    - from: tests/modules/test-automation-registry.test.js
+      to: lib/automation-registry.js
+      kind: requires
+    - from: cos/manager/cli.js
+      to: cos/manager/automation-door.js
+      kind: requires
+    - from: clear-glass/src/main/index.pre-userscripts.js
+      to: clear-glass/src/mesh/agent-mesh.js
+      kind: requires
+    - from: tests/modules/agent-mesh-drainer.test.js
+      to: clear-glass/src/mesh/agent-mesh.js
+      kind: requires
+    - from: tests/modules/agent-mesh-hostile.test.js
+      to: clear-glass/src/mesh/agent-mesh.js
+      kind: requires
+  crossings:
+    - from: lib/automation/cron.js
+      to: cos/automation/cron.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: false
+    - from: lib/automation/dom.js
+      to: cos/automation/dom.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: false
+    - from: lib/automation/engine.js
+      to: cos/automation/engine.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: false
+    - from: lib/automation/from-macro.js
+      to: cos/automation/from-macro.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: false
+    - from: lib/automation/pipeline.js
+      to: cos/automation/pipeline.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: false
+    - from: lib/automation/routes.js
+      to: cos/automation/routes.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: false
+    - from: lib/automation/scripts.js
+      to: cos/automation/scripts.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: false
+    - from: lib/automation/steps.js
+      to: cos/automation/steps.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: false
+    - from: lib/automation/task-node.js
+      to: cos/automation/task-node.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: false
+    - from: lib/automation/template.js
+      to: cos/automation/template.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: false
+    - from: lib/automation/templates.js
+      to: cos/automation/templates.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: false
+    - from: lib/automation-nodes.js
+      to: cos/automation/nodes.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: false
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW_D1_orchestrator_into_the_supervisor
+    dependents: []
+    upstream:
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW_D1_orchestrator_into_the_supervisor
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts:
+      - with: docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW5_orchestrator_into_the_supervisor
+        files:
+          - cos/manager/server.js
+      - with: docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW5a_autopilots_remains_into_the_supervisor
+        files:
+          - cos/manager/server.js
+      - with: docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW5c_the_orchestrators_own_background_assigned
+        files:
+          - cos/manager/server.js
+      - with: docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW5d_the_bus_into_cos
+        files:
+          - cos/manager/server.js
+    dangling: []
+    lines:
+      - layer 1 · ready
+      - 'depends on (1): SW_D1_orchestrator_into_the_supervisor'
+      - 'needed by (0): —'
+      - >-
+        same files as SW5_orchestrator_into_the_supervisor with no order between them:
+        cos/manager/server.js
+      - >-
+        same files as SW5a_autopilots_remains_into_the_supervisor with no order between them:
+        cos/manager/server.js
+      - >-
+        same files as SW5c_the_orchestrators_own_background_assigned with no order between them:
+        cos/manager/server.js
+      - 'same files as SW5d_the_bus_into_cos with no order between them: cos/manager/server.js'
+    edges:
+      - from: docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW_D1_orchestrator_into_the_supervisor
+        kind: declared
