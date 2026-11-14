@@ -897,6 +897,12 @@ export const SPEC = [
     req: (a) => ({ system: 'cos', method: 'GET', path: `/api/cos/deployments${a.args[0] ? `?system=${encodeURIComponent(a.args[0])}` : ''}` }) },
   { key: 'cos.pipelines', repo: false, usage: 'cos pipelines', about: 'every pipeline COS\'s automation engine holds (id, name, tasks), and Idearium\'s procedures beside them (PC1)',
     req: () => ({ system: 'cos', method: 'GET', path: '/api/cos/automation/pipelines' }) },
+  // 0.60.536 PC4 slice 1 — James, 2026-11-14: "this lives in the cos ui when you click edit pipeline … the pipelines are agnostic". What the canvas
+  // reads and saves, for every agent and the CLI too: one pipeline and its order; the pipeline saved (the same file the canvas and Clear Glass edit).
+  { key: 'cos.pipeline-show', repo: false, usage: 'cos pipeline-show <id>', about: 'one pipeline: its steps, gates, wires (depends_on) and the order its steps run in (layers) — what the canvas draws',
+    req: (a) => ({ system: 'cos', method: 'GET', path: `/api/cos/automation/pipelines/${encodeURIComponent(String((a.args || [])[0] || ''))}` }) },
+  { key: 'cos.pipeline-save', repo: false, usage: 'cos pipeline-save <id> --json \'{"tasks":[…]}\'', about: 'save a pipeline (its tasks, gates, vars): validated by the engine first; the same file the canvas, Clear Glass and the CLI edit',
+    req: (a) => { let j = {}; try { j = JSON.parse(String(a.flags.json || '{}')); } catch (_) {} return { system: 'cos', method: 'PUT', path: `/api/cos/automation/pipelines/${encodeURIComponent(String((a.args || [])[0] || ''))}`, body: { ...j, by: a.by || 'agent' } }; } },
   // PC5 (2026-11-09) — James: "Gates can hold context, test, verify, gates would do a lot. But not the same everytime."
   { key: 'cos.gate-types', repo: false, usage: 'cos gate-types [<id>]', about: 'COS\'s gate types (PC5): each a .gatetype file — what decides (checks), what it asks its owners first, what it holds across runs, what it does on open, closed or gap; decided in Emerge (cos/pipeline/gate.eg)',
     req: (a) => ({ system: 'cos', method: 'GET', path: (a.args || [])[0] ? `/api/cos/gate-types/${encodeURIComponent(String(a.args[0]))}` : '/api/cos/gate-types' }) },

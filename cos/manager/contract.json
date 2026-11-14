@@ -108,6 +108,16 @@
       "out": "a webhook (?token=); the one route another machine may call"
     },
     {
+      "method": "GET",
+      "path": "/api/cos/automation/pipelines/:id",
+      "out": "\u2192 { pipeline, layers } \u2014 one pipeline and the order its steps run in (PC4 slice 1, the canvas)"
+    },
+    {
+      "method": "PUT",
+      "path": "/api/cos/automation/pipelines/:id",
+      "out": "{ name, tasks, vars, \u2026, by } \u2192 { pipeline } \u2014 the pipeline saved from the canvas, the same file Clear Glass and the CLI edit (PC4 slice 1)"
+    },
+    {
       "method": "POST",
       "path": "/api/cos/automation/pipelines/:id/run",
       "out": "{ by } \u2192 { runId, status } \u2014 a pipeline run (AE5)"
@@ -926,6 +936,8 @@
         "GET /api/cos/systems/:name/config",
         "PATCH /api/cos/systems/:name/config",
         "GET /api/cos/automation/pipelines",
+        "GET /api/cos/automation/pipelines/:id",
+        "PUT /api/cos/automation/pipelines/:id",
         "POST /api/cos/automation/pipelines/:id/run",
         "GET /api/cos/automation/pipelines/:id/node",
         "GET /api/cos/automation/pipeline-runs",

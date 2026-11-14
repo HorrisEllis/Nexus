@@ -13,6 +13,7 @@ require('../../lib/test-sandbox.js').ensure();
  *   HB-09 (2026-11-12) a run that needs a value asks in the page, never a browser prompt ("no phase selected"), and runs with it
  *   HB-10 (0.60.517, his "also all pipelines in nexus need to be here") the Pipelines tab: Sync, what the last sync read, a pipeline
  *         imported elsewhere shows without reloading the page
+ *   HB-11 (0.60.536 PC4 slice 1) Edit pipeline: the canvas on the real pipeline, a step edited and saved, run from the canvas, OUTPUTS
  *   HB-04 GET /api/cos/hub through the manager; the Hub page in Clear Glass through the real cockpit shows each slot and its state
  */
 const assert = require('assert'), fs = require('fs'), os = require('os'), path = require('path'), http = require('http'), net = require('net');
@@ -233,6 +234,44 @@ const stand = async (answers) => { const hits = []; const s = http.createServer(
       const last = await req(mp, 'GET', '/api/cos/pipeline/sync'); assert.ok(last.body.last && last.body.last.systems.length >= 1, JSON.stringify(last.body));
     } finally { await browser.close(); }
   });
+  await test('HB-11', '0.60.536 PC4 slice 1 in Clear Glass: Edit pipeline opens the canvas on the real pipeline (steps, wires, a gate); a step edited, saved to the file; run from the canvas to done; its output in the OUTPUTS tab', async () => {
+    const SET = (v) => ({ type: 'set', config: { assign: { v } } });
+    const id = (await req(mp, 'POST', '/api/cos/automation/pipelines', { name: 'canvas', by: 'person', tasks: [
+      { id: 'a', label: 'First', step: SET('x') }, { id: 'b', label: 'Second', depends_on: ['a'], step: SET('y'), gate: { contains: 'y' } }, { id: 'c', label: 'Third', depends_on: ['b'], step: SET('z') }] })).body;
+    const pid = (id.pipeline || id).id; assert.ok(pid, JSON.stringify(id));
+    const glass = require(path.join(ROOT, 'clear-glass/src/driver/glass.js'));
+    let browser; try { browser = await glass.chromium.launch(); } catch (e) { console.log(`  - HB-11 SKIPPED: the engine could not start (${e.message.split('\n')[0]})`); return; }
+    try {
+      const page = await browser.newPage({ viewport: { width: 1440, height: 860 } });
+      await page.goto(`http://127.0.0.1:${cp}/automation/index.html`);
+      const until = async (fn, arg, ms = 12000) => { const t = Date.now() + ms; while (Date.now() < t) { const v = await page.evaluate(fn, arg); if (v) return v; await new Promise(r => setTimeout(r, 120)); } return null; };
+      await until((i) => !!document.querySelector(`[data-pipeline="${i}"]`), pid);
+      await page.evaluate((i) => document.querySelector(`[data-pipeline="${i}"]`).click(), pid);
+      assert.ok(await until(() => !!document.querySelector('[data-act="edit-pipeline"]')), 'an Edit pipeline button');
+      await page.evaluate(() => document.querySelector('[data-act="edit-pipeline"]').click());
+      assert.ok(await until(() => document.querySelector('#pc.open') && document.querySelectorAll('#pc .pc-node').length === 3), 'the canvas, its three steps: ' + await page.evaluate(() => `pc=${!!document.getElementById('pc')} open=${!!document.querySelector('#pc.open')} nodes=${document.querySelectorAll('#pc .pc-node').length} msg=${document.getElementById('ae-msg').textContent} canvas=${typeof window.PipelineCanvas}`));
+      assert.strictEqual(await page.evaluate(() => document.querySelectorAll('#pc .pc-gate').length), 1, 'one gate, after Second');
+      assert.strictEqual(await page.evaluate(() => document.querySelectorAll('#pc .pc-svg path').length), 2, 'two wires');
+      // one step edited at a time: double-click, the EDIT tab slides out, the label changed, applied, saved
+      await page.evaluate(() => document.querySelector('#pc [data-step="b"]').dispatchEvent(new MouseEvent('dblclick', { bubbles: true })));
+      assert.ok(await until(() => document.querySelector('#pc .pc-drawer.open') && !!document.querySelector('#pc [data-f="label"]')), 'EDIT slid out on the step');
+      await page.evaluate(() => { const i = document.querySelector('#pc [data-f="label"]'); i.value = 'Second, edited'; document.querySelector('#pc [data-act="apply"]').click(); });
+      assert.ok(await until(() => !document.querySelector('#pc [data-act="save"]').disabled), 'Save offered after an edit');
+      await page.evaluate(() => document.querySelector('#pc [data-act="save"]').click());
+      assert.ok(await until(() => document.querySelector('#pc [data-act="save"]').disabled), 'saved: ' + await page.evaluate(() => [...document.querySelectorAll('#pc .pc-say')].map(x => x.textContent).join(' | ')));
+      const back = (await req(mp, 'GET', '/api/cos/automation/pipelines/' + pid)).body.pipeline;
+      assert.strictEqual(back.tasks.find(t => t.id === 'b').label, 'Second, edited', 'the file holds the edit: ' + JSON.stringify(back.tasks.map(t => t.label)) + ' say=' + await page.evaluate(() => [...document.querySelectorAll('#pc .pc-say')].map(x => x.textContent).join(' | ')));
+      if (process.env.HB_SHOTS) await page.screenshot({ path: path.join(process.env.HB_SHOTS, 'cos-pipeline-canvas-edit.png') });
+      // run from the canvas; the steps light; OUTPUTS shows what a step gave
+      await page.evaluate(() => document.querySelector('#pc .pc-run [data-act="run"]').click());
+      assert.ok(await until(() => [...document.querySelectorAll('#pc .pc-node')].every(n => n.dataset.state === 'done'), null, 20000), 'run to done on the canvas: ' + await page.evaluate(() => [...document.querySelectorAll('#pc .pc-node')].map(n => n.dataset.step + '=' + n.dataset.state).join(' ')));
+      assert.ok(await until(() => !!document.querySelector('#pc .pc-gate').dataset.outcome), 'the gate shows its outcome');
+      await page.evaluate(() => { document.querySelector('#pc [data-step="a"]').click(); document.querySelector('#pc .pc-vt[data-tab="OUTPUTS"]').click(); });
+      assert.ok(await until(() => !!document.querySelector('#pc [data-out="a"]')), 'OUTPUTS slid out with step a\'s output');
+      if (process.env.HB_SHOTS) await page.screenshot({ path: path.join(process.env.HB_SHOTS, 'cos-pipeline-canvas-run.png') });
+    } finally { await browser.close(); }
+  });
+
   cockpit.close(); mgr.close(); cortex.s.close(); idearium.s.close(); sup.shutdown({ by: 'test' }); fs.rmSync(dir, { recursive: true, force: true });
   console.log(`\n  ${passed} passed, ${failed} failed\n`); process.exit(failed ? 1 : 0);
 })();

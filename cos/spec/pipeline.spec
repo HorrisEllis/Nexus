@@ -275,3 +275,8 @@ spec:
 # ADDENDUM 2026-11-14 (g) — the builder first; a step decomposes dynamically. James, 2026-11-14 (asked whether the pipeline builder comes first, since the pipeline could do the rest): "need the pipeline builder first? the pipeline could do all of this in theory" · then: "each step can be dynamically decomposed into smaller steps."
 # PC4 (the canvas) is built before RD9 slice c and the RAID compartment, so the pipeline runs them. A live step can become a sub-pipeline of
 # smaller steps (PC8 expanded_2026_11_14), decided and recorded by RAID, until each step is one a model can do and a gate can check.
+
+# ADDENDUM 2026-11-14 (h) — 0.60.536: MOD-PL-SURFACE's first slice is built. James, 2026-11-14, of COS's Automation tab: "i have none of that".
+# cos/ui/automation/canvas.js: ✎ Edit pipeline opens the canvas on the real pipeline (steps, wires, gates, the last run's state); the run window
+# runs, pauses, continues and retries from a step; the right tabs slide out (OUTPUTS, EDIT one step or gate, RUNS); Save goes through
+# PUT /api/cos/automation/pipelines/:id. MOD-PL-WORKSHOP's full editor (preview 9) is the next slice.

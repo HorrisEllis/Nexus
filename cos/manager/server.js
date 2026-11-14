@@ -146,7 +146,8 @@ function createServer(sup, opts = {}) {
   const server = http.createServer(async (req, res) => {
     const u = new URL(req.url, 'http://x'), p = u.pathname.replace(/\/+$/, ''), m = req.method;
     let body = {}, rawBody = '';
-    if ((m === 'POST' || m === 'PATCH') && p.startsWith('/api/cos')) { let raw = ''; for await (const c of req) raw += c; rawBody = raw; try { body = raw ? JSON.parse(raw) : {}; } catch (_) { return send(res, 400, { ok: false, error: 'the body is not JSON' }); } }
+    if ((m === 'POST' || m === 'PATCH' || m === 'PUT') && p.startsWith('/api/cos'))   // 0.60.536: PUT too (the canvas saves a pipeline)
+     { let raw = ''; for await (const c of req) raw += c; rawBody = raw; try { body = raw ? JSON.parse(raw) : {}; } catch (_) { return send(res, 400, { ok: false, error: 'the body is not JSON' }); } }
     try {
       if (m === 'GET' && p === '/api/cos/health') return send(res, 200, { ok: true, service: 'cos-manager', pid: process.pid, systems: sup.list().length, ledger: sup.ledgerFile });   // MG17: pid, so a launcher can prove it is the one it started
       if (m === 'GET' && p === '/api/cos/systems') return send(res, 200, { ok: true, systems: sup.list() });
