@@ -253,3 +253,9 @@ spec:
 #   inputs and outputs on the canvas, its conditions or its bricks, outcomes, properties, dry-run samples, its own history in the ledger.
 #   Apply writes it back to the canvas through COS's routes. Preview: cos/ui/pipeline-editor/preview-9 (a gate). BrainOS's backend is the
 #   palette of what can be added to that one gate or step; BrainOS's UI stays scrapped.
+
+# ADDENDUM 2026-11-14 (d) — the canvas, quiet; right tabs slide out. James, 2026-11-14: "okay now show the canvas. thats the workshop. okay now
+# remove any noise. less overwhelm but same amount of power and leverage." · "better but the tabs slide out from the side like ideariums ui."
+# - MOD-PL-SURFACE: the canvas shows one run window, compartments (name, system, status), gates as diamonds on the wires; the detail is in the
+#   Workshop (preview 9). Each right tab slides out as a drawer over the canvas and slides back; Outputs lives in its tab, not a window.
+#   Previews: cos/ui/pipeline-editor/preview-10 (quiet), preview-11 (OUTPUTS slid out).
