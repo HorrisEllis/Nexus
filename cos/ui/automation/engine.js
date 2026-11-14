@@ -49,6 +49,8 @@
       run && run.status === 'paused' ? el('button', { class: 'btn primary', 'data-act': 'continue', onclick: () => ctl(run.id, 'continue'), text: '▶ Continue' }) : null,
       run && (run.status === 'running' || run.status === 'paused') ? el('button', { class: 'btn', 'data-act': 'stop', onclick: () => stopIt(run.id), text: '■ Stop' }) : null,
       run && (run.status === 'failed' || run.status === 'cancelled') ? el('button', { class: 'btn', 'data-act': 'retry', onclick: () => retryIt(run.id), text: '↻ Retry' }) : null,
+      // 0.60.536 PC4 slice 1 — James, 2026-11-14: "this lives in the cos ui when you click edit pipeline" (cos/ui/automation/canvas.js)
+      el('button', { class: 'btn primary', 'data-act': 'edit-pipeline', onclick: () => editIt(p.id), text: '✎ Edit pipeline' }),
       el('button', { class: 'btn', 'data-act': 'export', onclick: () => exportIt(p), text: '⇩ Export .pipeline' }),
       el('button', { class: 'btn', 'data-act': 'erv', onclick: () => ervIt(p), text: '⧉ Open on canvas (.erv)' })]);
     const base = (S.base && S.base.steps) || {};
@@ -87,6 +89,7 @@
   // 2026-11-12 — James: "the pipeline says no phase selected". What a run needs is asked in the page: a phase is chosen from the phases that can
   // be built now (Idearium's queue, through COS), anything else is typed.
   async function askNeeds(id, needs, vars, { optional = false } = {}) {
+    if (window.PipelineCanvas && window.PipelineCanvas._state.root) window.PipelineCanvas._state.root.classList.remove('open');   // 0.60.536: the form shows on the page, not under the canvas
     let ready = []; if (needs.includes('phase')) { try { ready = (await api('GET', '/api/cos/pipeline/ready?limit=30')).phases || []; } catch (e) { say('bad', 'The phases that can be built could not be read: ' + e.message); } }
     const rows = needs.map(n => el('label', { class: 'ae-need' }, [el('span', { text: n }),
       n === 'phase' && ready.length ? el('select', { 'data-need': n }, ready.map(ph => el('option', { value: ph.id, text: ph.id + (ph.map ? '  (' + String(ph.map).split('/').pop() + ')' : '') })))
@@ -98,6 +101,12 @@
     const old = $('ae-needs'); if (old) old.remove(); $('ae-p-body').prepend(form); say(optional ? 'ok' : 'bad', (optional ? 'Give ' : 'Choose ') + needs.join(', ') + ' to run it.');
   }
   // PC8 slice b (2026-11-11): pause, continue, and retry (all of a failed run, or from a step) — each a COS route and a command too
+  // 0.60.536 PC4 slice 1 — the canvas runs and steers the same engine through the same functions as this page
+  function editIt(id) {
+    if (!window.PipelineCanvas) { say('bad', 'The canvas did not load (canvas.js).'); return; }
+    window.PipelineCanvas.open(id, { run: runIt, ctl, retry: retryIt, stop: stopIt,
+      onSaved: async () => { await pipes(); }, onClose: async () => { const p = S.pipes.find(x => x.id === id); if (p) open(id); } }).catch(e => say('bad', 'The canvas could not open: ' + e.message));
+  }
   async function ctl(runId, what) { try { const r = await api('POST', A('/pipeline-runs/' + encodeURIComponent(runId) + '/' + what), { by: 'person' }); say('ok', what === 'pause' ? 'Paused: the step running now finishes, nothing new starts' : 'Continued');
     if (S.run && S.run.id === runId) { S.run.status = r.status; const p = S.pipes.find(x => x.id === S.sel); if (p) draw(p); } follow(runId); } catch (e) { say('bad', e.message); } }
   async function retryIt(runId, from) { try { const r = await api('POST', '/api/cos/pipeline/runs/' + encodeURIComponent(runId) + '/retry', { by: 'person', ...(from ? { from } : {}) });

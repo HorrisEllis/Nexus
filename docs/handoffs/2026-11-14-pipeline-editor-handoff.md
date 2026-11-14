@@ -143,3 +143,10 @@ default qwen2.5-coder:7b, so the build's Ollama rung was skipped and work went t
 on his PC and fix whatever stops it, step by step, until a phase lands built by Ollama (thread T11's evidence).
 RAID today: records each input as a .input node and turns it into a contract (RD9 slices a, b; COS's Console reaches it, 0.60.532); it does
 not yet act on what it routes. The pipeline does not wait on that.
+
+## ADDENDUM: 0.60.536, the canvas is in COS (his "i have none of that", 2026-11-14)
+COS › Automation › pick a pipeline › ✎ Edit pipeline. Steps, wires, gates from the real pipeline; Run / Pause / Continue / Retry from a step;
+right tabs slide out (OUTPUTS, EDIT, RUNS); Save writes the .pipeline. HB-11 in Clear Glass. Fixed on the way: COS's server dropped PUT
+bodies (saves were lost). Next: run idearium-build on his PC on one small phase, watch it on the canvas, fix what stops it; then the full
+Workshop (preview 9). His screenshot also showed idearium and clear-glass not answering COS's sync, and ollama-bridge, copilot,
+intelligence, architect, loom down (6/13 up): the build pipeline needs idearium and ollama-bridge up.
