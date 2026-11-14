@@ -34,7 +34,7 @@ const stop = (p) => new Promise(r => { if (p.child.exitCode != null) return r();
       await p.wait(/\[cos\] cockpit on http:\/\/127\.0\.0\.1:\d+\//);
       const root = await get(up, '/'); assert.strictEqual(root.status, 302); assert.strictEqual(root.headers.location, '/shell/');
       const shell = await get(up, '/shell/'); assert.strictEqual(shell.status, 200); assert.match(shell.body, /<html/i);
-      const c = JSON.parse((await get(up, '/api/cos/contract')).body); assert.ok(c.ok && c.contract.pages.some(x => x.id === 'emergence'), 'the contract, through the cockpit');
+      const c = JSON.parse((await get(up, '/api/cos/contract')).body); assert.ok(c.ok && c.contract.pages.some(x => x.id === 'automation') && !c.contract.pages.some(x => x.id === 'emergence'), 'the contract, through the cockpit (Emergence moved to Intelligence, his b, 2026-11-14)');
     } finally { await stop(p); }
   });
   await test('CS-02', 'the cockpit\'s port held: the manager still answers, and says why', async () => {

@@ -142,14 +142,26 @@ const PATTERNS = [
     if (browser || true) {
       let b2; try { b2 = await glass.chromium.launch(); } catch (_) { return; }
       try {
+        // 2026-11-14 — James: "b) Move it into Intelligence as its own view, since it's Intelligence's work, and drop it from COS's sidebar."
+        // The view is Intelligence's own (intelligence/ui/emergence/); here it is served as Intelligence serves it, its reads answered with the
+        // same data COS's door gives (the stand-in Intelligence behind it).
+        const IV = path.join(__dirname, '..', '..', 'intelligence', 'ui', 'emergence');
+        const iv = require('http').createServer(async (q, r) => { const u = q.url.split('?')[0];
+          const m = /^\/api\/intelligence\/emergence\/(patterns|liminal|sessions)$/.exec(u);
+          if (m) { const x = await getJ(`${cp}/api/cos/emergence/${m[1]}`); r.writeHead(x.status, { 'content-type': 'application/json' }); return r.end(x.body); }
+          const f = u.replace(/^\/ui\/emergence\/?/, '') || 'index.html'; const fp = path.join(IV, f);
+          if (!fs.existsSync(fp)) { r.statusCode = 404; return r.end(); } r.writeHead(200, { 'content-type': f.endsWith('.js') ? 'application/javascript' : f.endsWith('.css') ? 'text/css' : 'text/html' }); r.end(fs.readFileSync(fp)); });
+        await new Promise(x => iv.listen(0, '127.0.0.1', x));
         const pg = await b2.newPage({ viewport: { width: 1280, height: 800 } });
-        await pg.goto(`${cp}/emergence/index.html`);
+        await pg.goto(`http://127.0.0.1:${iv.address().port}/ui/emergence/`);
+        pg._iv = iv;
         await pg.waitForFunction(() => !/reading…/.test(document.getElementById('em-runs').textContent) && !/reading…/.test(document.getElementById('em-liminal').textContent));
         const t = await pg.evaluate(() => document.body.textContent);
         assert.ok(/systemic bottleneck/.test(t) && /Pattern-Causality Membrane/.test(t) && /a parser that passes/.test(t), t.slice(0, 600));
         if (process.env.EC_SHOTS) await pg.screenshot({ path: path.join(process.env.EC_SHOTS, 'emergence-cos.png') });
       } finally { await b2.close(); }
     }
+    assert.ok(!JSON.parse((await getJ(`${cp}/api/cos/contract`)).body).contract.pages.some(x => x.id === 'emergence'), 'not in COS\'s sidebar any more (his b, 2026-11-14)');
   });
   cockpit.close(); mgr.close(); intel.close();
   console.log(`\n  ${passed} passed, ${failed} failed\n`);

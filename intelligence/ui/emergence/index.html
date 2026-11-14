@@ -1,0 +1,22 @@
+<!doctype html>
+<!-- intelligence/ui/emergence/index.html — Intelligence's own view of what emerges (TV3 expanded 2026-11-14), served by Intelligence at /ui/emergence/.
+     James, 2026-11-14: "b) Move it into Intelligence as its own view, since it's Intelligence's work, and drop it from COS's sidebar."
+     Every read is Intelligence's own route: /api/intelligence/emergence/{patterns,liminal,sessions}. The script and style were the TV's
+     (lib/ui/tv-shell/channels/emergence/), copied here; the TV's copy goes when the TV does (SW5h). -->
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Emergence · Intelligence</title>
+<meta name="emergence-api" content="/api/intelligence/emergence">
+<link rel="stylesheet" href="emergence.css">
+</head><body>
+<header class="em-head">
+  <div class="em-title"><span class="em-mark">✦</span> INTELLIGENCE · EMERGENCE <span class="em-sub">what crystallises · what is forming · what was tried</span></div>
+  <div class="em-counts" id="em-counts"></div>
+  <label class="em-switch" title="Patterns where one side is Intelligence's own event: Intelligence watching itself, not the system"><input type="checkbox" id="em-hide-self" checked> hide what Intelligence sees of itself <span id="em-self-n"></span></label>
+</header>
+<main class="em-grid">
+  <section class="em-col" id="em-crystals"><h2>Crystallised <span class="em-hint">patterns that held</span></h2><div class="em-body" data-body>reading…</div></section>
+  <section class="em-col" id="em-liminal"><h2>Forming <span class="em-hint">the liminal spaces</span></h2><div class="em-body" data-body>reading…</div></section>
+  <section class="em-col" id="em-runs"><h2>Runs <span class="em-hint">axioms → end state</span></h2><div class="em-body" data-body>reading…</div></section>
+</main>
+<script src="emergence.js"></script>
+</body></html>
