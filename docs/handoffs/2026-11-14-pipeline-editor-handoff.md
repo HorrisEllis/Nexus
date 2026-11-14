@@ -113,3 +113,11 @@ confirm). Cortex keeps the books by route.
 "Cos ui needs complete ai assistance though. The only at in to nexus". CH1 (docs/2026-11-02-cos-console-phasemap.spec) expanded: an
 assistant on every COS page that sees the screen, answers and acts, each ask an input to RAID. To confirm: "at in" = "way in"; other
 surfaces route through COS (not closed); "complete" = it acts, not only answers.
+
+## ADDENDUM: decomposition already exists in Idearium; Idearium's census (his, 2026-11-14)
+"intelligence system to help with complex tasks, agent tools also, gates hold persistence and decomposing reduces load. look at ideariums
+chunking. thats what i mean about idearium. i feel a lot of idearium is misplaced"
+- PC8 expanded_2026_11_14_b: dynamic decomposition reuses Idearium's chunk builder (spec-compiler/chunk/index.js: tiers 0–3, token budgets)
+  and chunk-dispatch.js (retry ladder, answer checked); gates hold persistence (a run resumes from its last passed gate).
+- SW8_ideariums_census_what_is_misplaced (new): census of Idearium's ~62k lines, each part given a home by the axioms, shown to him before
+  anything moves.

@@ -652,6 +652,16 @@ built_2026_11_09_plan:
       dynamically building each step, as it goes"); each new step is shown on the canvas under its parent and opens like any step. It stops
       at a step one model can do and one gate can check, or names a gap. Prediction registered before any run (FRAMEWORK-THREADS): multi-file
       moves pass on local Ollama once decomposed to one file per step, with a reasoning agent only for the plan.
+    expanded_2026_11_14_b: >-
+      James, 2026-11-14: "intelligence system to help with complex tasks, agent tools also, gates hold persistence and decomposing reduces load. look at ideariums chunking. thats what i mean about idearium. i feel a lot of idearium is misplaced"
+      The decomposition is not new code: Idearium already has it. idearium/spec-engine/spec-compiler/chunk/index.js builds a CHUNK, the least a
+      small model needs to do one node (subject, signature, constraints, deps, events, errors, gates, gaps, the contract it is tested against,
+      what Cortex already knows, a token budget), in tiers (0 and 1 deterministic, 2 for a small model, 3 for a better one); chunk-dispatch.js
+      runs each chunk with a retry ladder and a check of the answer (lib/seam/queue.js QueueCompartment). PC8's dynamic decomposition reuses
+      both: a step too big for its model becomes chunks, each a step. Around it: Intelligence helps where a task is complex (it plans and finds
+      the pattern, PC6); agents use their tools (the agent tools, through RAID); each gate holds persistence (what passed is kept at the gate,
+      so a run resumes from its last passed gate and nothing passed is redone); decomposing reduces load (each step fits its model, PC17).
+      Where the chunker and dispatcher live is SW8's question (Idearium's census).
     does: >-
       A pipeline is operable from COS, the way a person and an agent would want it: run, pause, resume and retry a step; test it dry, the steps
       planned and their gates checked with nothing changed; see each step's state live; diagnose a failed step (its gate, its input, its output,
