@@ -7,11 +7,11 @@ intent: null
 summary: 18 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1794177105508
+exported_at: 1794626874797
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794177105508
-lastSeenAt: 1794177105508
+firstSeenAt: 1794626874797
+lastSeenAt: 1794626874797
 fingerprint: null
 payload:
   for: SC2_configuration_per_system
@@ -145,6 +145,7 @@ payload:
       - docs/2026-11-02-cos-console-phasemap.spec::SC_D2_where_the_configuration_lives
       - docs/2026-11-02-cos-console-phasemap.spec::SC_D3_ports_are_announced_not_guessed
     downstream:
+      - docs/2026-11-02-cos-console-phasemap.spec::CH1_the_console_reaches_raid_and_the_agents
       - docs/2026-11-02-cos-console-phasemap.spec::SC10_the_zip_history
       - docs/2026-11-02-cos-console-phasemap.spec::SC11_the_console_tab
       - docs/2026-11-02-cos-console-phasemap.spec::SC12_start_at_boot_each_system
@@ -171,7 +172,7 @@ payload:
         SC_D3_ports_are_announced_not_guessed
       - >-
         needed by (3): SC3_system_command_line, SC5_the_console_ui, SC12_start_at_boot_each_system ·
-        all downstream 12 · finishing it unlocks SC3_system_command_line, SC5_the_console_ui,
+        all downstream 13 · finishing it unlocks SC3_system_command_line, SC5_the_console_ui,
         SC12_start_at_boot_each_system
     edges:
       - from: docs/2026-11-02-cos-console-phasemap.spec::SC_D1_units_and_what_the_os_enforces

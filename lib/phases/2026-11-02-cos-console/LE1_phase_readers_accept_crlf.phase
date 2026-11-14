@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-02-cos-console-phasemap.spec::LE1_phase_readers_accept_crlf
+type: phase
+id: docs_2026-11-02-cos-console-phasemap.spec::LE1_phase_readers_accept_crlf
+context: pipeline phase LE1_phase_readers_accept_crlf of docs/2026-11-02-cos-console-phasemap.spec
+intent: null
+summary: LE1_phase_readers_accept_crlf (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1794626874865
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794626874865
+lastSeenAt: 1794626874865
+fingerprint: null
+payload:
+  id: LE1_phase_readers_accept_crlf
+  map: docs/2026-11-02-cos-console-phasemap.spec
+  repo: null
+  layer: null
+  status: >-
+    "BUILT 0.60.532 — on his PC the phase ledger reads 2692 phases in 245 maps (116 in 11 before);
+    test-cos-pipeline CP-15 passes; test-phase-dag 8/8"
+  files:
+    - lib/phase-dag.js
+    - lib/phase-files.js
+    - lib/phasemap-parse.js
+  depends_on: []
+  blocks: []
+  spec: cos/spec/cos-manager.spec
+  graph: f59b1c3f475a3a75

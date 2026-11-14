@@ -71,6 +71,11 @@
   // 2026-11-10: a value a step's address needs, left empty, is asked for before the run starts (the engine answers { needs }), never a broken
   // address three steps in ("GET /api/repos//phases/map")
   async function runIt(id, vars = {}) {
+    // CH1 (0.60.532) — James, 2026-11-14, a screenshot of "His request" run from here, held at its first step on "say what you want — the flow
+    // starts from your words": a value the pipeline declares and leaves empty (its words) is asked for here before the run starts, as the
+    // engine's own needs are. It may be left empty (not every empty value is required); the run then says what it lacks, as before.
+    const p0 = S.pipes.find(x => x.id === id), empty = p0 && p0.vars ? Object.keys(p0.vars).filter(k => p0.vars[k] === '' && !(k in vars)) : [];
+    if (empty.length) return askNeeds(id, empty, vars, { optional: true });
     try { const r = await api('POST', A('/pipelines/' + encodeURIComponent(id) + '/run'), { by: 'person', vars }); const runId = r.runId || (r.run && r.run.id); say('ok', 'Running ' + (S.pipes.find(x => x.id === id) || {}).name);
       if (runId) { try { S.run = (await api('GET', A('/pipeline-runs/' + encodeURIComponent(runId)))).run; } catch (_) {} draw(S.pipes.find(x => x.id === id)); follow(runId); } }
     catch (e) {
@@ -81,16 +86,16 @@
   }
   // 2026-11-12 — James: "the pipeline says no phase selected". What a run needs is asked in the page: a phase is chosen from the phases that can
   // be built now (Idearium's queue, through COS), anything else is typed.
-  async function askNeeds(id, needs, vars) {
+  async function askNeeds(id, needs, vars, { optional = false } = {}) {
     let ready = []; if (needs.includes('phase')) { try { ready = (await api('GET', '/api/cos/pipeline/ready?limit=30')).phases || []; } catch (e) { say('bad', 'The phases that can be built could not be read: ' + e.message); } }
     const rows = needs.map(n => el('label', { class: 'ae-need' }, [el('span', { text: n }),
       n === 'phase' && ready.length ? el('select', { 'data-need': n }, ready.map(ph => el('option', { value: ph.id, text: ph.id + (ph.map ? '  (' + String(ph.map).split('/').pop() + ')' : '') })))
         : el('input', { 'data-need': n, type: 'text', placeholder: n === 'phase' ? 'a phase id, e.g. PC8_operate_a_pipeline' : n })]));
-    const form = el('div', { class: 'ae-needs', id: 'ae-needs' }, [el('p', { text: 'This run needs ' + needs.join(', ') + ' (part of a step\'s address):' }), ...rows,
+    const form = el('div', { class: 'ae-needs', id: 'ae-needs' }, [el('p', { text: optional ? 'This pipeline starts from ' + needs.join(', ') + ' (yours to give; the same as typing `request <your words>` in the Console):' : 'This run needs ' + needs.join(', ') + ' (part of a step\'s address):' }), ...rows,
       el('div', { class: 'ae-btns' }, [el('button', { class: 'btn primary', 'data-act': 'needs-run', text: '▶ Run with these', onclick: () => { const v = { ...vars };
-        for (const f of form.querySelectorAll('[data-need]')) { const a = String(f.value || '').trim(); if (!a) return say('bad', `Not run: ${f.dataset.need} was not given`); v[f.dataset.need] = a; } form.remove(); runIt(id, v); } }),
+        for (const f of form.querySelectorAll('[data-need]')) { const a = String(f.value || '').trim(); if (!a && !optional) return say('bad', `Not run: ${f.dataset.need} was not given`); v[f.dataset.need] = a; } form.remove(); runIt(id, v); } }),
       el('button', { class: 'btn', text: 'Cancel', onclick: () => form.remove() })])]);
-    const old = $('ae-needs'); if (old) old.remove(); $('ae-p-body').prepend(form); say('bad', 'Choose ' + needs.join(', ') + ' to run it.');
+    const old = $('ae-needs'); if (old) old.remove(); $('ae-p-body').prepend(form); say(optional ? 'ok' : 'bad', (optional ? 'Give ' : 'Choose ') + needs.join(', ') + ' to run it.');
   }
   // PC8 slice b (2026-11-11): pause, continue, and retry (all of a failed run, or from a step) — each a COS route and a command too
   async function ctl(runId, what) { try { const r = await api('POST', A('/pipeline-runs/' + encodeURIComponent(runId) + '/' + what), { by: 'person' }); say('ok', what === 'pause' ? 'Paused: the step running now finishes, nothing new starts' : 'Continued');

@@ -7,11 +7,11 @@ intent: null
 summary: 29 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1794177105512
+exported_at: 1794626874803
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794177105512
-lastSeenAt: 1794177105512
+firstSeenAt: 1794626874803
+lastSeenAt: 1794626874803
 fingerprint: null
 payload:
   for: SC3_system_command_line
@@ -219,6 +219,7 @@ payload:
     dependents:
       - docs/2026-11-02-cos-console-phasemap.spec::SC5_the_console_ui
       - docs/2026-11-02-cos-console-phasemap.spec::SC11_the_console_tab
+      - docs/2026-11-02-cos-console-phasemap.spec::CH1_the_console_reaches_raid_and_the_agents
     upstream:
       - docs/2026-11-02-cos-console-phasemap.spec::SC1_the_bell
       - docs/2026-11-02-cos-console-phasemap.spec::SC2_configuration_per_system
@@ -227,6 +228,7 @@ payload:
       - docs/2026-11-02-cos-console-phasemap.spec::SC_D3_ports_are_announced_not_guessed
       - docs/2026-11-02-cos-console-phasemap.spec::SC_D5_cos_has_its_own_command_line
     downstream:
+      - docs/2026-11-02-cos-console-phasemap.spec::CH1_the_console_reaches_raid_and_the_agents
       - docs/2026-11-02-cos-console-phasemap.spec::SC10_the_zip_history
       - docs/2026-11-02-cos-console-phasemap.spec::SC11_the_console_tab
       - docs/2026-11-02-cos-console-phasemap.spec::SC14_each_system_opens_in_its_own_window
@@ -240,6 +242,7 @@ payload:
     unlocks:
       - docs/2026-11-02-cos-console-phasemap.spec::SC5_the_console_ui
       - docs/2026-11-02-cos-console-phasemap.spec::SC11_the_console_tab
+      - docs/2026-11-02-cos-console-phasemap.spec::CH1_the_console_reaches_raid_and_the_agents
     conflicts: []
     dangling: []
     lines:
@@ -248,8 +251,9 @@ payload:
         depends on (3): SC_D5_cos_has_its_own_command_line, SC1_the_bell,
         SC2_configuration_per_system · all upstream 6
       - >-
-        needed by (2): SC5_the_console_ui, SC11_the_console_tab · all downstream 9 · finishing it
-        unlocks SC5_the_console_ui, SC11_the_console_tab
+        needed by (3): SC5_the_console_ui, SC11_the_console_tab,
+        CH1_the_console_reaches_raid_and_the_agents · all downstream 10 · finishing it unlocks
+        SC5_the_console_ui, SC11_the_console_tab, CH1_the_console_reaches_raid_and_the_agents
     edges:
       - from: docs/2026-11-02-cos-console-phasemap.spec::SC_D5_cos_has_its_own_command_line
         kind: declared

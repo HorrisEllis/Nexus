@@ -123,6 +123,52 @@ const SERVER = (envVar, def) => `const http=require('http');const PORT=parseInt(
     r = await send(M, 'POST', '/api/cos/cli', { line: 'config beta', by: 'agent:helper' }); assert.ok(r.j.ok, 'reading is anyone\'s');
   });
 
+  // CH1 (0.60.532) — James, 2026-11-14: "that pipeline needs to be from the cli into raid or copilot." · "the console in cos, is supposed to
+  // hook into each system, and agent. floating menu 3 way cli, nexus-cli, etc."
+  await test('CC-12', 'the Console reaches the agents and RAID: ask (three ways, copilot woken), raid, an unknown line to RAID, RAID down said', async () => {
+    const { createCli } = require(path.join(ROOT, 'cos/manager/cli.js'));
+    const calls = []; let copilotUp = false, touched = 0, raidUp = true;
+    const fakeSup = { list: () => [{ name: 'copilot', port: 3750 }, { name: 'cortex', port: 3748 }], touch: (n) => { touched++; if (n === 'copilot') copilotUp = true; } };
+    const reach = async (system, method, p, body) => {
+      calls.push([system, method, p, body]);
+      if (system === 'copilot' && p === '/health') return copilotUp ? { status: 200, body: { ok: true } } : { status: 0, error: 'copilot is not answering on :3750' };
+      if (system === 'copilot' && p === '/api/prompt') return { status: 200, body: { ok: true, text: `heard: ${body.prompt}`, modelUsed: 'qwen' } };
+      if (system === 'cortex' && p === '/api/raid/input') return raidUp ? { status: 200, body: { ok: true, id: 'in-1', decision: { provider: 'ollama', why: 'a build' }, contract: { id: 'c-9', booked: true, gaps: ['which system owns it'] } } } : { status: 0, error: 'cortex is not answering on :3748' };
+      return { status: 404, body: {} };
+    };
+    const cli = createCli({ sup: fakeSup, reach, wakeMs: 50 });
+    // ask: asleep copilot woken by the supervisor's touch, then asked by the floating menu's route, with the way named
+    let r = await cli.run('ask @ollama what is a gate', { by: 'person' });
+    assert.ok(r.ok, r.lines.join('\n')); assert.strictEqual(touched, 1);
+    assert.deepStrictEqual(r.lines, ['heard: what is a gate', '  — asked ollama, answered by qwen']);
+    const sent = calls.find(c => c[2] === '/api/prompt')[3];
+    assert.deepStrictEqual([sent.prompt, sent.provider, sent.source], ['what is a gate', 'ollama', 'cos-console']);
+    // "@guardian:chatgpt …" is ask; a Guardian agent is the provider by its name; bare ask is the co-pilot
+    calls.length = 0; r = await cli.run('@guardian:chatgpt review this', { by: 'person' }); assert.ok(r.ok);
+    assert.strictEqual(calls.find(c => c[2] === '/api/prompt')[3].provider, 'chatgpt');
+    calls.length = 0; r = await cli.run('ask hello there', { by: 'person' }); assert.strictEqual(calls.find(c => c[2] === '/api/prompt')[3].provider, 'copilot');
+    r = await cli.run('ask', { by: 'person' }); assert.ok(!r.ok && /usage: ask/.test(r.lines[0]));
+    // raid: his words to RAID's input route, what they became in plain lines
+    calls.length = 0; r = await cli.run('raid make the wizard show free space', { by: 'person' });
+    assert.ok(r.ok, r.lines.join('\n'));
+    assert.deepStrictEqual(calls[0].slice(0, 3), ['cortex', 'POST', '/api/raid/input']);
+    assert.deepStrictEqual(calls[0][3], { text: 'make the wizard show free space', from: 'cos-console', by: 'person' });
+    assert.deepStrictEqual(r.lines, ['  RAID kept it as input in-1; routed to ollama (a build)', '  contract c-9, with 1 gap asked of you:', '    · which system owns it']);
+    // a line COS's table does not know goes to RAID, whole, and is said as such (RD9 slice c)
+    calls.length = 0; r = await cli.run('launch rockets at dawn', { by: 'person' });
+    assert.ok(r.ok); assert.match(r.lines[0], /"launch" is not one of COS's verbs, so the line went to RAID as an input/);
+    assert.strictEqual(calls[0][3].text, 'launch rockets at dawn');
+    // RAID not answering: said with why, and the table shown as before
+    raidUp = false; r = await cli.run('launch rockets', { by: 'person' });
+    assert.strictEqual(r.ok, false); assert.match(r.lines[0], /no verb "launch", and RAID did not take it \(cortex is not answering on :3748\)\. The table:/);
+    // copilot that cannot start: said
+    copilotUp = false; const dead = createCli({ sup: { list: fakeSup.list, touch: () => {} }, reach, wakeMs: 30 });
+    r = await dead.run('ask anything', { by: 'person' }); assert.ok(!r.ok && /copilot did not start/.test(r.lines[0]), r.lines.join('\n'));
+    // the page: an empty value a pipeline declares (its words) is asked for before the run
+    const page = fs.readFileSync(path.join(ROOT, 'cos/ui/automation/engine.js'), 'utf8');
+    assert.match(page, /p0\.vars\[k\] === '' && !\(k in vars\)/); assert.match(page, /askNeeds\(id, empty, vars, \{ optional: true \}\)/);
+  });
+
   await test('CC-06', 'add a system: written and declared live; again refused; an agent\'s add held', async () => {
     const pG = await freePort();
     let r = await send(M, 'POST', '/api/cos/systems', { name: 'gamma', dir: 'gamma', args: 'server.js', port: pG, by: 'person' });
