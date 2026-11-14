@@ -259,6 +259,13 @@ phases:
     prerequisites: ["a preview of the canvas shown to him and his go, before the UI is built (his 2026-11-08: 'show me the preview for the ui before building it')"]
     files: [Eravos-Canvas:tools/orchestration/work, Eravos-Canvas:tools/orchestration/flow, cos/ui/orchestration, tests/modules/test-pipeline-canvas.test.js]
     interface: [html]
+    expanded_2026_11_14: >-
+      James, 2026-11-14 (asked whether the pipeline builder comes first, since the pipeline could do the rest): "need the pipeline builder first? the pipeline could do all of this in theory" · then: "each step can be dynamically decomposed into smaller steps."
+      The preview prerequisite is met: his "okay. thats more like it" to cos/ui/pipeline-editor/preview-11 (the quiet canvas, right tabs that
+      slide out) and preview-9 (the Workshop on one gate). The canvas opens from COS's "Edit pipeline" (cos/spec/pipeline.spec addenda c–e).
+      Built first, before RD9 slice c and the RAID compartment, so those are run by the pipeline rather than coded by hand. First slice: the
+      canvas wired to real runs (run window, compartments and gates, Run / Pause / Retry from a step), a plain properties editor on double-click;
+      the full Workshop later (MOD-PL-WORKSHOP).
     does: >-
       His "a beautiful visual, steps as boxes, with wires as the flow into the hooks of gates". Each kind is an ERAVOS tool with its own face (gate,
       system, agent, macro, pipeline, procedure, tool, build). Wires go from a box's out-hook into the next box's gate (PC_D1). A pipeline or procedure
@@ -637,6 +644,14 @@ built_2026_11_09_plan:
       (dry) run; a diagnosis per failed step; the run's live state on the boxes (PC4's next slice); a delta per step (PC6); RAID's decisions shown
       as steps of the run (each request is booked with RAID gate by gate since 0.60.474, but the decisions are not steps); a met contract
       replayed as a node (PC7).
+    expanded_2026_11_14: >-
+      James, 2026-11-14 (asked whether the pipeline builder comes first, since the pipeline could do the rest): "need the pipeline builder first? the pipeline could do all of this in theory" · then: "each step can be dynamically decomposed into smaller steps."
+      A step decomposes, while the run is live, into smaller steps: a sub-pipeline under it, recursive (its framework: bricks, chunks, gaps).
+      When: a gate fails in a way a smaller step would pass; the work does not fit the model that would run it (PC17); or RAID's contract
+      names more than one outcome. RAID decides and records the decomposition as its decision (his "record each step in raids decision,
+      dynamically building each step, as it goes"); each new step is shown on the canvas under its parent and opens like any step. It stops
+      at a step one model can do and one gate can check, or names a gap. Prediction registered before any run (FRAMEWORK-THREADS): multi-file
+      moves pass on local Ollama once decomposed to one file per step, with a reasoning agent only for the plan.
     does: >-
       A pipeline is operable from COS, the way a person and an agent would want it: run, pause, resume and retry a step; test it dry, the steps
       planned and their gates checked with nothing changed; see each step's state live; diagnose a failed step (its gate, its input, its output,

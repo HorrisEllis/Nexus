@@ -271,3 +271,7 @@ spec:
 # ADDENDUM 2026-11-14 (f) — 0.60.534: BrainOS's backend now lives in COS. The automation engine (workflows, runs, pipelines, macros, triggers,
 # steps) moved from lib/ to cos/automation/ (SW5i slice a, docs/2026-11-13-sovereign-and-wired-phasemap.spec); lib/ keeps forwarders until its
 # callers reach COS by route. The Workshop's palette (addendum b) reads from there.
+
+# ADDENDUM 2026-11-14 (g) — the builder first; a step decomposes dynamically. James, 2026-11-14 (asked whether the pipeline builder comes first, since the pipeline could do the rest): "need the pipeline builder first? the pipeline could do all of this in theory" · then: "each step can be dynamically decomposed into smaller steps."
+# PC4 (the canvas) is built before RD9 slice c and the RAID compartment, so the pipeline runs them. A live step can become a sub-pipeline of
+# smaller steps (PC8 expanded_2026_11_14), decided and recorded by RAID, until each step is one a model can do and a gate can check.
