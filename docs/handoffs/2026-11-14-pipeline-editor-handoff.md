@@ -81,3 +81,8 @@ Main is at 0.60.534. Everything below is merged.
   passed for "no output".
 - He could not attach his PC: the computer "Idonotcare" does not offer its folders (nexus, COS, nexus-0.60.356) to cloud sessions. The likely
   fix is updating the Claude app on Windows.
+
+## ADDENDUM: RAID as the hub, confirmed (his, 2026-11-14)
+"yes. like each request or input into the cli or copilot goes to raid." Recorded as RD9's expanded_2026_11_14_b
+(docs/2026-10-13-projects-raid-and-gates-phasemap.spec): slice c widened to every input into the Nexus CLI, cos.exe's command line and
+copilot. RD9 slice c is the next build for item 1 above.

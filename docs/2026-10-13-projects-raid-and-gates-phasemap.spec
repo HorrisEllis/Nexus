@@ -340,6 +340,15 @@ spec:
         His, 2026-11-14: "look at emerge it does the same thing. end state. raid is meant to route every request, from a contract or request." · then, asked how RAID's contract and Emerge's end state fit: "only emerge based contracts that need emerges code". Read as (to confirm): RAID routes every
         request and books its own contract; a request whose work is Emerge code is read first by Emerge's say (by its route), which gives the
         end state and names its gaps; no other request asks Emerge. Built 0.60.530.
+      expanded_2026_11_14_b: >-
+        Asked whether RAID is the hub (the coder's reading of his "make raid the beginning step in it all. every system routes through it.
+        the hub. i want the pipeline doing all of the work through it."), James, 2026-11-14: "yes. like each request or input into the cli or
+        copilot goes to raid." Slice c widens: not only what the CLI does not recognise, but each request or input typed into the Nexus CLI,
+        cos.exe's command line, or copilot is first a .input node and reaches RAID; RAID routes it (a command a system owns → that system's
+        route; a request → a contract run by COS as a pipeline, RAID its first step; a question → the agent RAID picks; nothing fits → a gap).
+        Files added for slice c: copilot's way in (copilot/ ask and chat routes) beside cos/manager/cli.js and idearium/cli/route-commands.js.
+        Readings to confirm when built: whether a plain read-only command (e.g. `status`) is recorded as an input and passed straight to its
+        owner, or also decided by RAID (the coder reads: recorded and routed by RAID's router, which sends it straight on; nothing skips RAID).
       also_asked_2026_11_12_not_yet_mapped: "the panel's 27 engines (cos/services/anonymous/engines) as templates for networking compartments, in the catalog, as test-environment and DAG dependency options (cos-services map, after SV2); .erv opened by ERAVOS on install (Windows file association); `cos import` a system into cos.exe (cos-console map, after SC4). Each is mapped in its own map before it is built."
     RD2_idearium_routes_through_raid:
       layer: library
