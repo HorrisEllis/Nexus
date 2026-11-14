@@ -124,9 +124,18 @@ function engine() {
   return _engine;
 }
 
+/** resume() — 0.60.538, his "persistence is non negiatiable until the contract has been fullfilled, or dag is complete": at COS's boot, every run
+ *  the engine left "running" (COS restarted under it) resumes from its last finished step, its step nodes read from disk. Returns what it did. */
+async function resume() {
+  const e = engine(); const P = e.pipelines || (e.pipelines = new (require('../automation/pipeline.js').Pipelines)(e));
+  const out = await P.resumeInterrupted();
+  for (const x of out) console.log(`[cos/automation] run ${String(x.was).slice(0, 8)} was cut off by a restart: resumed as ${String(x.now || '?').slice(0, 8)} (${x.met.length} step(s) already met: ${x.met.join(', ') || 'none'})`);
+  return out;
+}
+
 /** handle(req) — the /automation/* door, served by COS's manager at /api/cos/automation/*. Delegates to the engine's routes.js. */
 async function handle({ method, url, body = {}, headers = {}, rawBody = '' } = {}) {
   return require('../automation/routes.js').handle(engine(), { method, url, body, headers, rawBody }, {});
 }
 
-module.exports = { engine, handle, buildHooks, setBus, setResolver, setGate, setFramework, _dispatchAgent, _cg, _guardian, _raidDecide, CG_PORT, GUARDIAN_PORT };
+module.exports = { resume, engine, handle, buildHooks, setBus, setResolver, setGate, setFramework, _dispatchAgent, _cg, _guardian, _raidDecide, CG_PORT, GUARDIAN_PORT };

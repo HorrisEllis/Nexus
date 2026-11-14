@@ -14,6 +14,7 @@ require('../../lib/test-sandbox.js').ensure();
  *   HB-10 (0.60.517, his "also all pipelines in nexus need to be here") the Pipelines tab: Sync, what the last sync read, a pipeline
  *         imported elsewhere shows without reloading the page
  *   HB-11 (0.60.536 PC4 slice 1) Edit pipeline: the canvas on the real pipeline, a step edited and saved, run from the canvas, OUTPUTS
+ *   HB-12 (0.60.537) ▶ Run opens the canvas and shows the run live
  *   HB-04 GET /api/cos/hub through the manager; the Hub page in Clear Glass through the real cockpit shows each slot and its state
  */
 const assert = require('assert'), fs = require('fs'), os = require('os'), path = require('path'), http = require('http'), net = require('net');
@@ -268,8 +269,35 @@ const stand = async (answers) => { const hits = []; const s = http.createServer(
       assert.ok(await until(() => !!document.querySelector('#pc .pc-gate').dataset.outcome), 'the gate shows its outcome');
       await page.evaluate(() => { document.querySelector('#pc [data-step="a"]').click(); document.querySelector('#pc .pc-vt[data-tab="OUTPUTS"]').click(); });
       assert.ok(await until(() => !!document.querySelector('#pc [data-out="a"]')), 'OUTPUTS slid out with step a\'s output');
+      assert.ok(await until(() => { const l = document.querySelector('#pc [data-ledger="a"]'); return l && /running/.test(l.textContent) && /done/.test(l.textContent); }), 'its event ledger: running, then done (0.60.538)');
       if (process.env.HB_SHOTS) await page.screenshot({ path: path.join(process.env.HB_SHOTS, 'cos-pipeline-canvas-run.png') });
     } finally { await browser.close(); }
+  });
+
+  await test('HB-12', '0.60.537 his "clicking play should show it running in real time": ▶ Run opens the canvas; a slow step shows running, live from COS\'s event stream, then done', async () => {
+    const slow = http.createServer((q, r) => { r.setHeader('content-type', 'application/json'); setTimeout(() => r.end('{"ok":true}'), 2500); });
+    await new Promise(x => slow.listen(0, '127.0.0.1', x));
+    const pid = ((await req(mp, 'POST', '/api/cos/automation/pipelines', { name: 'live', by: 'person', tasks: [
+      { id: 'a', label: 'Quick', step: { type: 'set', config: { assign: { v: 'x' } } } },
+      { id: 'b', label: 'Slow call', depends_on: ['a'], step: { type: 'api', config: { url: `http://127.0.0.1:${slow.address().port}/slow`, method: 'GET' } } }] })).body.pipeline || {}).id;
+    assert.ok(pid);
+    const glass = require(path.join(ROOT, 'clear-glass/src/driver/glass.js'));
+    let browser; try { browser = await glass.chromium.launch(); } catch (e) { slow.close(); console.log(`  - HB-12 SKIPPED: the engine could not start (${e.message.split('\n')[0]})`); return; }
+    try {
+      const page = await browser.newPage({ viewport: { width: 1440, height: 860 } });
+      await page.goto(`http://127.0.0.1:${cp}/automation/index.html`);
+      const until = async (fn, arg, ms = 12000) => { const t = Date.now() + ms; while (Date.now() < t) { const v = await page.evaluate(fn, arg); if (v) return v; await new Promise(r => setTimeout(r, 80)); } return null; };
+      await until((i) => !!document.querySelector(`[data-pipeline="${i}"]`), pid);
+      await page.evaluate((i) => document.querySelector(`[data-pipeline="${i}"]`).click(), pid);
+      await until(() => document.querySelectorAll('.ae-step').length === 2);
+      await page.evaluate(() => document.querySelector('.ae-btns [data-act="run"]').click());
+      assert.ok(await until(() => !!document.querySelector('#pc.open')), 'Run opened the canvas');
+      assert.ok(await until(() => { const n = document.querySelector('#pc [data-step="b"]'); return n && n.dataset.state === 'running' && /running ·/.test(n.textContent); }), 'the slow step shown running, with its time');
+      if (process.env.HB_SHOTS) await page.screenshot({ path: path.join(process.env.HB_SHOTS, 'cos-pipeline-canvas-live.png') });
+      assert.ok(await until(() => document.querySelector('#pc [data-step="b"]').dataset.state === 'done'), 'then done');
+      const live = await page.evaluate(() => (document.querySelector('#pc [data-live]') || {}).dataset?.live);
+      console.log(`    (updates: ${live === 'on' ? 'live from COS\'s event stream' : 'the 1.5 s fallback — the stream did not open through this cockpit'})`);
+    } finally { await browser.close(); slow.close(); }
   });
 
   cockpit.close(); mgr.close(); cortex.s.close(); idearium.s.close(); sup.shutdown({ by: 'test' }); fs.rmSync(dir, { recursive: true, force: true });

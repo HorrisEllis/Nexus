@@ -72,6 +72,9 @@ function createServer(sup, opts = {}) {
   // COS runs the automation engine (moved from the orchestrator) and streams its run events on /api/cos/events
   const automation = require('./automation-door.js');
   automation.setBus((type, data) => { if (data && (data.value !== undefined || data.vars !== undefined)) { const { value, vars, ...rest } = data; broadcast(type, rest); } else broadcast(type, data); if (pipeline && /^automation\.pipeline\./.test(type)) pipeline.onEvent(type, data); });   // the whole value goes to the request's files, the stream keeps the preview   // 2026-11-09: a request's files follow its run (cos/pipeline/runs.js)
+  // 0.60.538 — James, 2026-11-14: "persistence is non negiatiable until the contract has been fullfilled, or dag is complete". Once COS is up, a run
+  // left "running" by a restart resumes from its last finished step (its step nodes on disk); said in the log, never silent.
+  setTimeout(() => { automation.resume().catch(e => console.warn(`[cos/automation] resuming interrupted runs failed: ${e.message}`)); }, 8000).unref();
   let pipeline = null;
   // the api step's nexus://<system>: the address of a system COS declares, from its health URL (never a fixed port)
   automation.setResolver((name) => { const d = sup.declarations().find(x => x.name === name || x.system === name); try { return d && d.healthUrl ? new URL(d.healthUrl).origin : null; } catch (_) { return null; } });

@@ -280,3 +280,11 @@ spec:
 # cos/ui/automation/canvas.js: ✎ Edit pipeline opens the canvas on the real pipeline (steps, wires, gates, the last run's state); the run window
 # runs, pauses, continues and retries from a step; the right tabs slide out (OUTPUTS, EDIT one step or gate, RUNS); Save goes through
 # PUT /api/cos/automation/pipelines/:id. MOD-PL-WORKSHOP's full editor (preview 9) is the next slice.
+
+# ADDENDUM 2026-11-14 (i) — 0.60.538: persistence, every part a node file. James, 2026-11-14: "thats wrong. dag is a node file, contract is a node
+# file, each step can be a node file. each .pileline is a node file. stop using memory for storage. persistence is non negiatiable until the contract
+# has been fullfilled, or dag is complete". A new rule beside PL-001..PL-010, PL-011: no state of a run lives only in memory; each step of a run is a
+# .process_step node (runs/<run>/<step>.process_step: its state, its event ledger, its whole output), the run keeps its vars on disk, and a run
+# cut off by a restart resumes from its last finished step when COS boots (resumeInterrupted). Open: a run paused before the restart (it stays
+# paused; Continue after a restart is not yet proven); Idearium's own build is still driven in its process (its build resumes on Idearium's boot:
+# the next phase); the run's .dag and .contract as node files beside its steps.

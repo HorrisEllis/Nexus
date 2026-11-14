@@ -620,3 +620,13 @@ the relevant systems data folder. Cortex is the book keeper."
 - Cortex is the book keeper: the ledgers, the failure modes, the records of what happened are Cortex's, reached by its routes.
 - Readings to confirm: which files in a system's data folder are committed (the 15 cortex/data/nodes/failure_mode files are; three more written by
   the coder's test runs on 2026-11-09 were left uncommitted and asked about), and that each request COS keeps is booked with Cortex too.
+
+## ADDENDUM 2026-11-14 (0.60.538) — persistence is non-negotiable; every part a node file (his)
+James, 2026-11-14, after his run of the Idearium build lost its build when Idearium restarted: "thats wrong. dag is a node file, contract is a node
+file, each step can be a node file. each .pileline is a node file. stop using memory for storage. persistence is non negiatiable until the contract
+has been fullfilled, or dag is complete"
+- **No state lives only in memory.** What a run, a step, a build or a request needs to go on is written to disk as it changes, as node files
+  (`lib/node-export.js` envelope): the `.pipeline`, its `.dag`, its `.contract`, each step (`.process_step`, its event ledger and its whole output).
+- **A run is finished only when its contract is met or its DAG is complete.** A restart, a crash or a reboot is not an end: the work resumes from
+  what is on disk, from its last passed gate, and says that it resumed.
+- **Reviewing,** treat a `Map`, a variable or a cache that is the only copy of work in flight as a defect to close.

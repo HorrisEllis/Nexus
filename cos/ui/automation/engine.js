@@ -79,7 +79,9 @@
     const p0 = S.pipes.find(x => x.id === id), empty = p0 && p0.vars ? Object.keys(p0.vars).filter(k => p0.vars[k] === '' && !(k in vars)) : [];
     if (empty.length) return askNeeds(id, empty, vars, { optional: true });
     try { const r = await api('POST', A('/pipelines/' + encodeURIComponent(id) + '/run'), { by: 'person', vars }); const runId = r.runId || (r.run && r.run.id); say('ok', 'Running ' + (S.pipes.find(x => x.id === id) || {}).name);
-      if (runId) { try { S.run = (await api('GET', A('/pipeline-runs/' + encodeURIComponent(runId)))).run; } catch (_) {} draw(S.pipes.find(x => x.id === id)); follow(runId); } }
+      if (runId) { try { S.run = (await api('GET', A('/pipeline-runs/' + encodeURIComponent(runId)))).run; } catch (_) {} draw(S.pipes.find(x => x.id === id)); follow(runId);
+        // 0.60.537 — James, 2026-11-14: "okay clicking play should show it running in real time": the run opens on the canvas, live
+        if (window.PipelineCanvas && !window.PipelineCanvas._state.root?.classList.contains('open')) window.PipelineCanvas.watch(id, runId, hooksFor(id)).catch(() => {}); } }
     catch (e) {
       const needs = (e.body && e.body.needs) || [];
       if (needs.length) return askNeeds(id, needs, vars);   // 2026-11-12: asked in the page (COS's app window shows no browser prompt: "no phase selected")
@@ -104,9 +106,9 @@
   // 0.60.536 PC4 slice 1 — the canvas runs and steers the same engine through the same functions as this page
   function editIt(id) {
     if (!window.PipelineCanvas) { say('bad', 'The canvas did not load (canvas.js).'); return; }
-    window.PipelineCanvas.open(id, { run: runIt, ctl, retry: retryIt, stop: stopIt,
-      onSaved: async () => { await pipes(); }, onClose: async () => { const p = S.pipes.find(x => x.id === id); if (p) open(id); } }).catch(e => say('bad', 'The canvas could not open: ' + e.message));
+    window.PipelineCanvas.open(id, hooksFor(id)).catch(e => say('bad', 'The canvas could not open: ' + e.message));
   }
+  const hooksFor = (id) => ({ run: runIt, ctl, retry: retryIt, stop: stopIt, onSaved: async () => { await pipes(); }, onClose: async () => { const p = S.pipes.find(x => x.id === id); if (p) open(id); } });
   async function ctl(runId, what) { try { const r = await api('POST', A('/pipeline-runs/' + encodeURIComponent(runId) + '/' + what), { by: 'person' }); say('ok', what === 'pause' ? 'Paused: the step running now finishes, nothing new starts' : 'Continued');
     if (S.run && S.run.id === runId) { S.run.status = r.status; const p = S.pipes.find(x => x.id === S.sel); if (p) draw(p); } follow(runId); } catch (e) { say('bad', e.message); } }
   async function retryIt(runId, from) { try { const r = await api('POST', '/api/cos/pipeline/runs/' + encodeURIComponent(runId) + '/retry', { by: 'person', ...(from ? { from } : {}) });

@@ -20,6 +20,8 @@ Money matters now ("I need to be paid, at all."). The Fiverr autofill is built (
 - **The axioms are law, for every decision:** `docs/AXIOMS-v3.1.md`. Read Part IV (one line per law) every session, and Group 5C (sovereignty)
   in full. Cite the axioms a decision rests on in the owning map's `decisions:`. A question goes to him only when the axioms do not settle it,
   they conflict, or it is his: what he meant, or the direction.
+- **Persistence is non-negotiable** (his, 2026-11-14): "stop using memory for storage. persistence is non negiatiable until the contract has been
+  fullfilled, or dag is complete". Every part is a node file (.pipeline, .dag, .contract, each step); work in flight resumes from disk. docs/CLAUDE.md.
 - **Do not guess.** "Ambiguity must be reconciled by me." Ask with the readings side by side. Read first: the atlas (`docs/atlases/`) and the
   system's own `<system>/spec/`.
 - **Think dialectically** (his, 2026-11-07). Before "can't" or "no other way", write the alternatives down: change the method, reframe, another
