@@ -194,3 +194,13 @@ spec:
 #     vision-capable agent (the right agent for the job: RA1 routing) turns it into HTML + CSS, and it lands in the editor as a
 #     BLOCK, a proposal he places and edits, never applied by itself. Images are pictures, not code: the result is a draft to
 #     correct, said on the block. Licence: an image on a site is someone's design; the block is marked with its source URL.
+
+# ## ADDENDUM 2026-11-14 — the UI editor from a UI picker (his): UE3 first, then UE2
+# James, 2026-11-14: "i am back on my main driver. everything runs in the pipeline. litterally like the pipes of the system. i really want a ui editor, for editing the ui from a ui picker. copy idearium ui, i want a lot of it for the pipeline editor. like migrate brainos"
+# Built: UE0 (GrapesJS vendored), UE1 (a repo's HTML page opened, edited, saved; idearium/ui/ui-editor.html). His ask is UE3: pick a UI on
+# screen (any Nexus page, the pipeline editor's too), edit it in the editor, write it back. Expanded:
+#   - the picker: every UI page of every system, listed by each system's own route (its registry), and an element picked on a live page
+#     (Clear Glass's field and picker, clear-glass/src/page/field.js), opening the editor on that page with that element selected;
+#   - UE2 next: most Nexus pages are built by script, so a save goes to the file and rule that made the element (code-intel's CSS chunks),
+#     or to an agent as { element, change, file }, never over the page.
+# Readings to confirm: the editor lives with the pipeline editor in COS (it edits every system's UI), or stays in Idearium.

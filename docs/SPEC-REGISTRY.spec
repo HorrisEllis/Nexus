@@ -2084,3 +2084,8 @@ spec:
 # ADDENDUM 2026-11-08 — registered: cos/spec/pipeline-canvas.spec + docs/2026-11-08-pipeline-canvas-phasemap.spec (PC_D0–PC_D4; PC1–PC4).
 # James, 2026-11-08: "steps as boxes, with wires as the flow into the hooks of gates as compartments." One box shape over every kind, procedures and
 # frameworks as steps, the build-request step, the boxes on the ERAVOS canvas. Owner: COS. Compiles in SS-01. PC_D1–PC_D3 asked, his.
+
+# ADDENDUM 2026-11-14 — registered: cos/spec/pipeline.spec (the pipeline, formally: glossary, lifecycle 1–9, PL-001..PL-010,
+# MOD-PL-WORKSHOP, MOD-PL-ORCHESTRATE, MOD-PL-LENSES, MOD-PL-SURFACE). James, 2026-11-14: "can we make a spec or some formal document for the
+# pipeline, im sick of trying to put it into words." · "right tabs yes, left tabs, absolutely not. the rest of those tabs can be in the cos ui
+# automation tab." Owner: COS. Compiles in kg-builder: 10 nodes, every one at full depth, invariants valid. Builds on cos/spec/pipeline-canvas.spec.

@@ -1,0 +1,189 @@
+<!doctype html>
+<!--
+  cos/ui/pipeline-editor/preview-canvas.html — A PREVIEW, not the editor: sample data, nothing wired. 2026-11-14 (second preview).
+  James, 2026-11-14, with a screenshot of Idearium's Notes tab and its right edge (PLAN · OUTPUTS · CHANGES · TASKS · CONTEXT · TOOLS · CONTROL):
+  "decouple from the ui editor. need all the side tabs like in the image. i like some of that but in the eravos canvas as tools? give me a
+  preview" · "the pipeline needs to be fully built, using ollama primarily."
+  The pipeline is the canvas; Idearium's side tabs down the right edge each open a tool as an ERAVOS window on it (the window chrome of
+  cos/archetype/eravos-canvas/canvas/runtime/eravos.css: .wm-win, .wm-head, the accent line, the grip). No UI-editor button (decoupled).
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Pipeline canvas — preview</title>
+<style>
+:root{
+  --bg:#080814; --bg1:#0d0d1f; --bg2:#111128; --bg3:#1e1e3a; --panel:#111823; --panel2:#16202d; --line:#223044; --line2:#2d3f57;
+  --b0:rgba(34,211,238,.10); --b1:rgba(34,211,238,.22); --b2:rgba(34,211,238,.45);
+  --text:#d0d4f0; --dim:#7070a0; --faint:#4a4a7a; --sky:#22d3ee; --cyan:#00d4ff; --mint:#34d399; --amber:#ffaa00; --red:#ff3355; --violet:#a78bfa;
+  --mono:'IBM Plex Mono','JetBrains Mono',ui-monospace,monospace; --sans:'IBM Plex Sans',Inter,system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100vh;overflow:hidden;background:var(--bg);color:var(--text);font:13px var(--sans)}
+body{display:flex;flex-direction:column;
+  background:radial-gradient(1200px 700px at 78% 105%, rgba(70,90,180,.18), transparent 60%), var(--bg)}
+.stars{position:fixed;inset:0;pointer-events:none;
+  background-image:radial-gradient(1px 1px at 20px 30px,#fff8,transparent),radial-gradient(1px 1px at 140px 90px,#fff6,transparent),
+  radial-gradient(1px 1px at 260px 160px,#fff5,transparent),radial-gradient(1px 1px at 380px 60px,#fff7,transparent),radial-gradient(1px 1px at 90px 220px,#fff4,transparent);
+  background-size:420px 260px;opacity:.6}
+/* Idearium's bars */
+.top{height:44px;display:flex;align-items:center;gap:22px;padding:0 16px;border-bottom:1px solid var(--b0);background:rgba(8,8,20,.85);position:relative;z-index:3}
+.logo{font:600 12px var(--mono);color:var(--sky);letter-spacing:.24em}
+.tab{font:11px var(--mono);color:var(--faint);padding:12px 2px}
+.tab.on{color:var(--sky);border-bottom:2px solid var(--sky)}
+.top .r{margin-left:auto;display:flex;gap:8px;align-items:center}
+.pill{font:10px var(--mono);padding:3px 8px;border:1px solid var(--b1);border-radius:4px;color:var(--dim)}
+.pill.ok{color:var(--mint);border-color:rgba(52,211,153,.5)}
+.pill.amb{color:var(--amber);border-color:rgba(255,170,0,.4)}
+.sub{height:34px;display:flex;align-items:center;gap:10px;padding:0 16px;border-bottom:1px solid var(--b0);background:rgba(8,8,20,.6);position:relative;z-index:3}
+.sub .crumb{font:600 11px var(--mono);color:var(--text)}
+.sub .r{margin-left:auto;display:flex;gap:6px}
+.btn{white-space:nowrap;background:var(--bg2);border:1px solid var(--b1);color:var(--text);font:11px var(--mono);padding:5px 10px;border-radius:5px}
+.btn.p{color:var(--sky);border-color:var(--b2)}
+.subtabs{display:flex;gap:4px;padding:8px 16px;position:relative;z-index:3}
+.st{font:11px var(--mono);color:var(--faint);padding:6px 13px;border:1px solid transparent;border-radius:5px}
+.st.on{color:var(--text);background:var(--b0);border-color:var(--b1)}
+/* the canvas */
+.stage{flex:1;position:relative;overflow:hidden}
+.grid{position:absolute;inset:0;background-image:radial-gradient(rgba(34,211,238,.10) 1px,transparent 1px);background-size:24px 24px}
+svg.wires{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.node{position:absolute;width:168px;border-radius:8px;background:rgba(17,17,40,.92);border:1px solid var(--b1);padding:9px 10px}
+.node .k{font:9px var(--mono);letter-spacing:.12em;color:var(--faint)}
+.node .t{font-size:12px;margin:3px 0 6px}
+.node .bar{height:4px;background:var(--bg3);border-radius:2px;overflow:hidden}.node .bar i{display:block;height:100%;background:var(--sky)}
+.node .x{font:10px var(--mono);color:var(--dim);margin-top:5px;display:flex;justify-content:space-between}
+.node.done{border-color:rgba(52,211,153,.45)}.node.done .bar i{background:var(--mint)}
+.node.run{border-color:var(--b2);box-shadow:0 0 0 1px var(--b2),0 0 22px rgba(34,211,238,.2)}
+.node.held{border-color:rgba(255,170,0,.55)}.node.held .bar i{background:var(--amber)}
+.gate{position:absolute;width:28px;height:28px;transform:rotate(45deg);background:var(--bg);border:1px solid var(--b2)}
+.gate.open{border-color:rgba(52,211,153,.75)}
+.gate span{position:absolute;inset:0;transform:rotate(-45deg);display:flex;align-items:center;justify-content:center;font:10px var(--mono)}
+/* ERAVOS windows (cos/archetype/eravos-canvas/canvas/runtime/eravos.css) */
+.wm-win{position:absolute;display:flex;flex-direction:column;background:var(--panel);border:1px solid var(--line2);border-radius:10px;
+  box-shadow:0 10px 40px rgba(0,0,0,.55),0 0 0 1px rgba(0,0,0,.4);z-index:4}
+.wm-win::before{content:'';position:absolute;left:0;right:0;top:0;height:2px;border-radius:10px 10px 0 0;background:var(--acc,var(--cyan));opacity:.9}
+.wm-win.focused{border-color:var(--cyan);box-shadow:0 10px 40px rgba(0,0,0,.6),0 0 0 1px var(--cyan),0 0 24px rgba(0,212,255,.22)}
+.wm-head{display:flex;align-items:center;gap:7px;height:32px;padding:0 6px 0 10px;border-bottom:1px solid var(--line)}
+.wm-icon{width:16px;text-align:center}.wm-title{font-weight:650;letter-spacing:.3px;font-size:12.5px}.wm-tag{font:10px var(--mono);color:var(--dim)}
+.wm-sp{flex:1}.wm-b{color:var(--dim);font:12px var(--mono);padding:0 5px}
+.wm-body{padding:10px;overflow:auto;flex:1}
+.wm-grip{position:absolute;right:0;bottom:0;width:14px;height:14px;background:linear-gradient(135deg,transparent 50%,var(--line2) 50%);border-radius:0 0 10px 0}
+.card{background:var(--panel2);border:1px solid var(--line);border-radius:7px;padding:9px 10px;margin-bottom:8px}
+.card h5{font:600 11px var(--sans);margin-bottom:6px}
+.prog{height:3px;background:var(--line);border-radius:2px;overflow:hidden;margin:6px 0}.prog i{display:block;height:100%;background:var(--mint)}
+.mono{font:10.5px var(--mono);color:var(--dim)}
+.term{background:#05060c;border:1px solid var(--line);border-radius:6px;padding:8px;font:10.5px/1.5 var(--mono);color:#a9f5c8;height:150px;overflow:hidden}
+.term .c{color:var(--sky)}.term .d{color:var(--dim)}
+.row{display:flex;justify-content:space-between;font-size:11.5px;padding:3px 0}.row span:first-child{color:var(--dim)}
+.task{display:flex;gap:8px;align-items:center;font-size:11.5px;padding:5px 0;border-bottom:1px solid var(--line)}
+.dot{width:7px;height:7px;border-radius:50%}.dot.ok{background:var(--mint)}.dot.run{background:var(--sky)}.dot.held{background:var(--amber)}.dot.wait{background:var(--faint)}
+.diff{font:10.5px/1.5 var(--mono)}.diff .a{color:var(--mint)}.diff .r{color:var(--red)}.diff .f{color:var(--sky)}
+/* Idearium's side tabs, right edge */
+.side{position:absolute;right:0;top:10px;display:flex;flex-direction:column;gap:6px;z-index:5;padding-right:4px}
+.vt{writing-mode:vertical-rl;transform:rotate(180deg);font:600 10px var(--mono);letter-spacing:.14em;color:var(--dim);
+  border:1px solid var(--line2);border-radius:6px;padding:12px 5px;background:rgba(17,24,35,.85)}
+.vt.on{color:var(--sky);border-color:var(--b2);background:rgba(34,211,238,.08)}
+.vt small{color:var(--faint);font-weight:400;margin-bottom:6px}
+.vs{font:9px var(--mono);color:var(--faint);border:1px solid var(--line);border-radius:5px;padding:4px 3px;text-align:center;background:rgba(17,24,35,.85)}
+.dock{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);display:flex;gap:10px;align-items:center;padding:9px 16px;
+  border:1px solid var(--line2);border-radius:22px;background:rgba(10,12,24,.9);font:600 10.5px var(--mono);letter-spacing:.14em;z-index:5}
+.dock .ol{color:var(--mint)}.dock .tag{font-weight:400;color:var(--violet);border:1px solid rgba(167,139,250,.5);border-radius:10px;padding:1px 6px;font-size:9px}
+.preview{position:absolute;left:16px;bottom:16px;font:10px var(--mono);color:var(--amber);border:1px solid rgba(255,170,0,.4);padding:3px 8px;border-radius:4px;z-index:5;background:rgba(8,8,20,.8)}
+</style>
+</head>
+<body>
+<div class="stars"></div>
+<div class="top">
+  <span class="logo">COS</span>
+  <span class="tab">⌂ Home</span><span class="tab on">⇄ Pipelines 6</span><span class="tab">◇ Gates</span><span class="tab">⚙ Automation</span><span class="tab">▦ Systems</span>
+  <div class="r"><span class="pill amb">memory 71% · heavy work waits under 25% free</span><span class="pill ok">● ollama · qwen2.5-coder:3b · local</span><span class="pill">guardian · fallback</span></div>
+</div>
+<div class="sub">
+  <span class="pill">← all pipelines</span><span class="crumb">IDEARIUM-BUILD</span><span class="mono">· run a91f · RAID → ollama</span>
+  <div class="r"><button class="btn p">▶ Run</button><button class="btn">❚❚ Pause</button><button class="btn">↻ Retry from…</button><button class="btn">＋ Step</button><button class="btn">◇ Gate</button><button class="btn">Diagnose</button></div>
+</div>
+<div class="subtabs"><span class="st on">Canvas</span><span class="st">Steps</span><span class="st">DAG</span><span class="st">Contract</span><span class="st">Runs</span><span class="st">Ledger</span><span class="st">Settings</span></div>
+
+<div class="stage">
+  <div class="grid"></div>
+  <svg class="wires" viewBox="0 0 1440 700" preserveAspectRatio="xMinYMin slice">
+    <g stroke="rgba(34,211,238,.45)" stroke-width="1.5" fill="none">
+      <path d="M208 108 L250 108"/><path d="M278 108 L320 108"/><path d="M488 108 L530 108"/><path d="M558 108 L600 108"/>
+      <path d="M684 142 L684 230"/><path d="M600 266 L558 266"/><path d="M530 266 L488 266"/><path d="M320 266 L278 266"/><path d="M250 266 L208 266"/>
+      <path d="M124 300 L124 390"/>
+    </g>
+  </svg>
+  <div class="node done" style="left:40px;top:74px"><div class="k">IDEARIUM · ROUTE</div><div class="t">What can be built now</div><div class="bar"><i style="width:100%"></i></div><div class="x"><span>0.4 s</span><span>base 0.5 s</span></div></div>
+  <div class="gate open" style="left:250px;top:94px"><span>✓</span></div>
+  <div class="node done" style="left:320px;top:74px"><div class="k">IDEARIUM · ROUTE</div><div class="t">Does a phase cover it</div><div class="bar"><i style="width:100%"></i></div><div class="x"><span>1.1 s</span><span>base 1.0 s</span></div></div>
+  <div class="gate open" style="left:530px;top:94px"><span>✓</span></div>
+  <div class="node done" style="left:600px;top:74px"><div class="k">IDEARIUM · ROUTE</div><div class="t">The phase is mapped</div><div class="bar"><i style="width:100%"></i></div><div class="x"><span>0.7 s</span><span>base 0.8 s</span></div></div>
+  <div class="node run" style="left:600px;top:232px"><div class="k">AGENT · OLLAMA (LOCAL)</div><div class="t">Build the files</div><div class="bar"><i style="width:62%"></i></div><div class="x"><span>2 m 41 s</span><span>62% of base</span></div></div>
+  <div class="gate" style="left:530px;top:252px"><span>·</span></div>
+  <div class="node" style="left:320px;top:232px"><div class="k">VERIFICATION · TESTS</div><div class="t">Prove it</div><div class="bar"><i style="width:0"></i></div><div class="x"><span>waiting</span><span>base 18 s</span></div></div>
+  <div class="gate" style="left:250px;top:252px"><span>·</span></div>
+  <div class="node" style="left:40px;top:232px"><div class="k">CORTEX · EVIDENCE</div><div class="t">Close on evidence</div><div class="bar"><i style="width:0"></i></div><div class="x"><span>waiting</span><span>base 2 s</span></div></div>
+  <div class="node held" style="left:40px;top:392px"><div class="k">HOLD · YOU</div><div class="t">Your verdict on the landing</div><div class="bar"><i style="width:100%"></i></div><div class="x"><span>held</span><span>onFail: hold</span></div></div>
+
+  <!-- PLAN tool (Idearium's Plan panel, as an ERAVOS window) -->
+  <div class="wm-win focused" style="left:850px;top:12px;width:330px;height:300px">
+    <div class="wm-head"><span class="wm-icon">☰</span><span class="wm-title">Plan</span><span class="wm-tag">1114/2687 done</span><span class="wm-sp"></span><span class="wm-b">–</span><span class="wm-b">✕</span></div>
+    <div class="wm-body">
+      <div class="card"><h5>Progress</h5><div class="mono">1114/2687 phases done</div><div class="prog"><i style="width:41%"></i></div>
+        <div class="mono">now: IN0_baseline · step 4 of 8 · build</div></div>
+      <div class="card"><h5>Next in the queue</h5>
+        <div class="task"><i class="dot run"></i>IN0_baseline<span class="mono" style="margin-left:auto">building</span></div>
+        <div class="task"><i class="dot wait"></i>SW1 cortex: its own map<span class="mono" style="margin-left:auto">ready</span></div>
+        <div class="task"><i class="dot wait"></i>CIE13 sockets<span class="mono" style="margin-left:auto">ready</span></div>
+      </div>
+    </div><div class="wm-grip"></div>
+  </div>
+
+  <!-- OUTPUTS tool: what the agent writes, streamed -->
+  <div class="wm-win" style="left:850px;top:326px;width:330px;height:230px">
+    <div class="wm-head"><span class="wm-icon">▤</span><span class="wm-title">Outputs</span><span class="wm-tag">ollama · streaming</span><span class="wm-sp"></span><span class="wm-b">–</span><span class="wm-b">✕</span></div>
+    <div class="wm-body"><div class="term">
+      <div class="d">▸ ollama qwen2.5-coder:3b · ctx 4096 · cpu</div>
+      <div><span class="c">write</span> scripts/tree-census.js</div>
+      <div>  const fs = require('fs');</div>
+      <div>  function census(root) {</div>
+      <div>    const out = { files: 0, bytes: 0 };</div>
+      <div class="d">… 41 lines · 312 tokens · 18 tok/s</div>
+    </div></div><div class="wm-grip"></div>
+  </div>
+
+  <!-- CHANGES tool -->
+  <div class="wm-win" style="left:1194px;top:12px;width:210px;height:200px">
+    <div class="wm-head"><span class="wm-icon">±</span><span class="wm-title">Changes</span><span class="wm-sp"></span><span class="wm-b">✕</span></div>
+    <div class="wm-body"><div class="diff"><div class="f">scripts/tree-census.js</div><div class="a">+ 41 lines</div><div class="f">idearium/phases/LEDGER.jsonl</div><div class="a">+ 1 line</div><div class="f">docs/…-phasemap.spec</div><div class="r">- status: OPEN</div><div class="a">+ status: BUILT</div></div></div><div class="wm-grip"></div>
+  </div>
+
+  <!-- CONTROL tool -->
+  <div class="wm-win" style="left:1194px;top:226px;width:210px;height:200px">
+    <div class="wm-head"><span class="wm-icon">◉</span><span class="wm-title">Control</span><span class="wm-sp"></span><span class="wm-b">✕</span></div>
+    <div class="wm-body">
+      <div class="row"><span>Agent</span><span class="mono">ollama first</span></div>
+      <div class="row"><span>Fallback</span><span class="mono">guardian</span></div>
+      <div class="row"><span>Parallel</span><span class="mono">1 (8 GB)</span></div>
+      <div class="row"><span>On a fail</span><span class="mono">hold for you</span></div>
+      <div class="row"><span>Heavy work</span><span class="mono">≥ 25% free</span></div>
+    </div><div class="wm-grip"></div>
+  </div>
+
+  <!-- the side tabs (Idearium's right edge) -->
+  <div class="side">
+    <span class="vt on"><small>1114/2687</small> PLAN</span>
+    <span class="vt on">OUTPUTS</span>
+    <span class="vt on">CHANGES</span>
+    <span class="vt">TASKS</span>
+    <span class="vt">CONTEXT</span>
+    <span class="vt">TOOLS</span>
+    <span class="vt on">CONTROL</span>
+    <span class="vs">all</span><span class="vs">none</span>
+  </div>
+
+  <div class="dock"><span>⬡ COS</span><span class="ol">● ollama</span><span class="tag">PIPELINE</span></div>
+  <div class="preview">PREVIEW · SAMPLE DATA · NOTHING WIRED</div>
+</div>
+</body>
+</html>

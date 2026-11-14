@@ -1,0 +1,175 @@
+<!doctype html>
+<!--
+  cos/ui/pipeline-editor/preview.html — A PREVIEW, not the editor: sample data, nothing wired. 2026-11-14.
+  James, 2026-11-14: "i really want a ui editor, for editing the ui from a ui picker. copy idearium ui, i want a lot of it for the pipeline
+  editor. like migrate brainos" · "make a preview first. no i need those"
+  Idearium's look, copied as COS's own (its tokens from idearium/ui/css/nexus-theme.css and idearium/ui/index.html :root, its sub-tab bar,
+  rail, cards, dock); BrainOS's parts in it (the canvas of boxes and wires, node controls, the chain builder, automation, the right dock).
+  Map: docs/2026-10-21-brainos-into-idearium-phasemap.spec (addendum 2026-11-14), docs/2026-10-10-design-surface-phasemap.spec (UE3).
+-->
+<html lang="en" data-theme="nexus">
+<head>
+<meta charset="utf-8">
+<title>Pipeline editor — preview</title>
+<style>
+:root {
+  --nx-ink:#080814; --nx-plate:#0d0d1f; --nx-panel:#111128; --nx-edge:#1e1e3a; --nx-rim:#2a2a4a; --nx-muted:#4a4a7a; --nx-dim:#7070a0;
+  --nx-text:#d0d4f0; --nx-bright:#eeeeff; --nx-ok:#00ff88; --nx-err:#ff3355; --nx-warn:#ffaa00; --nx-violet:#a78bfa; --nx-emerald:#34d399;
+  --ac:#22d3ee; --ac-soft:#67e8f9; --ac-ghost:rgba(34,211,238,.10); --ac-dim:rgba(34,211,238,.22); --ac-border-hi:rgba(34,211,238,.45);
+  --bg:var(--nx-ink); --bg1:var(--nx-plate); --bg2:var(--nx-panel); --bg3:var(--nx-edge); --b0:var(--ac-ghost); --b1:var(--ac-dim); --b2:var(--ac-border-hi);
+  --sky:var(--ac); --mint:var(--nx-emerald); --amber:var(--nx-warn); --coral:var(--nx-err); --violet:var(--nx-violet);
+  --text:var(--nx-text); --text2:var(--nx-dim); --text3:var(--nx-muted);
+  --mono:'IBM Plex Mono','DM Mono',ui-monospace,monospace; --sans:'IBM Plex Sans','Space Grotesk',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:13px;height:100vh;overflow:hidden}
+body{display:flex;flex-direction:column}
+.top{height:44px;display:flex;align-items:center;gap:14px;padding:0 16px;border-bottom:1px solid var(--b0);background:var(--bg1)}
+.logo{font-family:var(--mono);font-size:12px;font-weight:600;color:var(--sky);letter-spacing:.18em}
+.crumb{font-family:var(--mono);font-size:11px;color:var(--text2)}
+.crumb b{color:var(--text)}
+.preview-tag{margin-left:auto;font-family:var(--mono);font-size:10px;color:var(--amber);border:1px solid rgba(255,170,0,.4);padding:3px 8px;border-radius:4px;letter-spacing:.08em}
+.btn{white-space:nowrap;background:var(--bg2);border:1px solid var(--b1);color:var(--text);font-family:var(--mono);font-size:11px;padding:6px 11px;border-radius:5px;cursor:pointer}
+.btn.primary{border-color:var(--b2);color:var(--sky)}
+.btn.pick{border-color:rgba(167,139,250,.5);color:var(--violet)}
+.wrap{flex:1;display:grid;grid-template-columns:230px 1fr 320px;overflow:hidden;gap:1px;background:var(--b0)}
+.rail,.main,.dock{background:var(--bg);overflow:auto}
+.rail{padding:10px}
+.rail input{width:100%;background:var(--bg2);border:1px solid var(--b0);color:var(--text);padding:7px 9px;border-radius:5px;font-family:var(--mono);font-size:11px;margin-bottom:10px}
+.rail h4{font-family:var(--mono);font-size:9px;letter-spacing:.14em;color:var(--text3);margin:12px 4px 6px}
+.pipe{padding:9px 10px;border:1px solid var(--b0);border-radius:6px;margin-bottom:6px;background:var(--bg1);cursor:pointer}
+.pipe.sel{border-color:var(--b2);background:var(--bg2)}
+.pipe .n{font-size:12px;color:var(--text)}
+.pipe .m{font-family:var(--mono);font-size:10px;color:var(--text2);margin-top:3px;display:flex;gap:8px}
+.dot{width:7px;height:7px;border-radius:50%;display:inline-block;margin-right:5px;vertical-align:middle}
+.ok{background:var(--mint)}.run{background:var(--sky)}.held{background:var(--amber)}.fail{background:var(--coral)}
+.subnav{display:flex;gap:4px;padding:8px 12px;border-bottom:1px solid var(--b0);background:var(--bg1);position:sticky;top:0;z-index:2}
+.repo-subtab-btn{background:none;border:1px solid transparent;color:var(--text3);font-family:var(--mono);font-size:11px;letter-spacing:.03em;padding:6px 13px;border-radius:5px;cursor:pointer}
+.repo-subtab-btn.active{color:var(--text);background:var(--b0);border-color:var(--b1)}
+.toolbar{display:flex;align-items:center;gap:8px;padding:10px 14px;border-bottom:1px solid var(--b0)}
+.toolbar .sp{flex:1}
+.status{font-family:var(--mono);font-size:11px;color:var(--text2)}
+.status b{color:var(--sky)}
+.canvas{position:relative;margin:16px;height:440px;border:1px solid var(--b0);border-radius:8px;
+  background-color:var(--bg1);background-image:radial-gradient(rgba(34,211,238,.12) 1px,transparent 1px);background-size:22px 22px}
+.box{position:absolute;width:150px;border-radius:7px;background:var(--bg2);border:1px solid var(--b1);padding:9px 10px}
+.box .k{font-family:var(--mono);font-size:9px;letter-spacing:.12em;color:var(--text3)}
+.box .t{font-size:12px;color:var(--text);margin:3px 0 6px}
+.box .bar{height:4px;background:var(--bg3);border-radius:2px;overflow:hidden}
+.box .bar i{display:block;height:100%;background:var(--sky)}
+.box .x{font-family:var(--mono);font-size:10px;color:var(--text2);margin-top:5px;display:flex;justify-content:space-between}
+.box.done{border-color:rgba(52,211,153,.45)} .box.done .bar i{background:var(--mint)}
+.box.running{border-color:var(--b2);box-shadow:0 0 0 1px var(--b2),0 0 18px rgba(34,211,238,.18)}
+.box.held{border-color:rgba(255,170,0,.5)} .box.held .bar i{background:var(--amber)}
+.box.sel{outline:2px solid var(--violet);outline-offset:2px}
+.gate{position:absolute;width:30px;height:30px;transform:rotate(45deg);background:var(--bg);border:1px solid var(--b2)}
+.gate.open{border-color:rgba(52,211,153,.7)} .gate.closed{border-color:rgba(255,170,0,.8)}
+.gate span{position:absolute;inset:0;transform:rotate(-45deg);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:10px;color:var(--text)}
+svg.wires{position:absolute;inset:0;pointer-events:none}
+.legend{display:flex;gap:14px;padding:0 16px 14px;font-family:var(--mono);font-size:10px;color:var(--text2)}
+.dock{padding:12px}
+.card{background:var(--bg1);border:1px solid var(--b0);border-radius:7px;padding:11px 12px;margin-bottom:10px}
+.card h5{font-family:var(--mono);font-size:9px;letter-spacing:.14em;color:var(--text3);margin-bottom:8px}
+.row{display:flex;justify-content:space-between;font-size:12px;padding:3px 0}
+.row span:first-child{color:var(--text2)}
+.mono{font-family:var(--mono);font-size:11px}
+.raid{border-left:2px solid var(--violet);padding-left:9px;margin-top:6px;font-size:11.5px;color:var(--text)}
+.raid .w{color:var(--text2);font-size:10.5px;margin-top:2px}
+.ev{font-family:var(--mono);font-size:10.5px;color:var(--text2);padding:2px 0;border-bottom:1px solid rgba(34,211,238,.05)}
+.ev b{color:var(--text)}
+.chips{display:flex;flex-wrap:wrap;gap:5px}
+.chip{font-family:var(--mono);font-size:10px;color:var(--text2);background:var(--bg3);border:1px solid var(--b0);padding:2px 6px;border-radius:3px}
+</style>
+</head>
+<body>
+  <div class="top">
+    <span class="logo">COS</span>
+    <span class="crumb">Automation › <b>Pipeline editor</b> › idearium-build</span>
+    <span class="preview-tag">PREVIEW · SAMPLE DATA · NOTHING WIRED</span>
+    <button class="btn pick" title="UE3: pick any UI element on screen and open it in the UI editor">◎ Pick UI to edit</button>
+  </div>
+
+  <div class="wrap">
+    <aside class="rail">
+      <input placeholder="filter pipelines…">
+      <h4>RUNNING</h4>
+      <div class="pipe sel"><div class="n">Idearium build</div><div class="m"><span><i class="dot run"></i>step 4 of 8</span><span>IN0_baseline</span></div></div>
+      <h4>HELD FOR YOU</h4>
+      <div class="pipe"><div class="n">RAID: fix the parser</div><div class="m"><span><i class="dot held"></i>2 gaps</span><span>contract</span></div></div>
+      <h4>PIPELINES</h4>
+      <div class="pipe"><div class="n">Framework trial</div><div class="m"><span><i class="dot ok"></i>ok · 3 runs</span><span>ollama</span></div></div>
+      <div class="pipe"><div class="n">Clear Glass: gig flow</div><div class="m"><span><i class="dot ok"></i>ok</span><span>macro</span></div></div>
+      <div class="pipe"><div class="n">Sovereignty: SW1 cortex</div><div class="m"><span><i class="dot fail"></i>failed at gate</span><span>retry</span></div></div>
+      <div class="pipe"><div class="n">Nightly census</div><div class="m"><span><i class="dot ok"></i>trigger · 02:00</span><span>automation</span></div></div>
+    </aside>
+
+    <main class="main">
+      <nav class="subnav">
+        <button class="repo-subtab-btn">Pipelines</button>
+        <button class="repo-subtab-btn active">Steps</button>
+        <button class="repo-subtab-btn">Gates</button>
+        <button class="repo-subtab-btn">DAG</button>
+        <button class="repo-subtab-btn">Contract</button>
+        <button class="repo-subtab-btn">Runs</button>
+        <button class="repo-subtab-btn">Ledger</button>
+        <button class="repo-subtab-btn">Automation</button>
+        <button class="repo-subtab-btn">Settings</button>
+      </nav>
+      <div class="toolbar">
+        <button class="btn primary">▶ Run</button><button class="btn">❚❚ Pause</button><button class="btn">↻ Retry from…</button>
+        <button class="btn">＋ Step</button><button class="btn">◇ Gate</button><button class="btn">⇩ Export .pipeline</button>
+        <span class="sp"></span>
+        <span class="status">run <b>a91f</b> · started 4 min ago · RAID chose <b>ollama</b></span>
+      </div>
+
+      <div class="canvas">
+        <svg class="wires" viewBox="0 0 900 440" preserveAspectRatio="none">
+          <g stroke="rgba(34,211,238,.45)" stroke-width="1.5" fill="none">
+            <path d="M175 80 L225 80"/><path d="M255 80 L305 80"/><path d="M455 80 L505 80"/><path d="M535 80 L585 80"/>
+            <path d="M660 115 C660 170, 660 170, 660 215"/>
+            <path d="M585 250 L535 250"/><path d="M505 250 L455 250"/><path d="M305 250 L255 250"/><path d="M225 250 L175 250"/>
+            <path d="M100 285 C100 330, 100 330, 100 360"/>
+          </g>
+        </svg>
+        <div class="box done" style="left:25px;top:45px"><div class="k">COMPARTMENT · IDEARIUM</div><div class="t">What can be built now</div><div class="bar"><i style="width:100%"></i></div><div class="x"><span>0.4 s</span><span>base 0.5 s</span></div></div>
+        <div class="gate open" style="left:225px;top:65px"><span>✓</span></div>
+        <div class="box done" style="left:305px;top:45px"><div class="k">COMPARTMENT · IDEARIUM</div><div class="t">Does a phase cover it</div><div class="bar"><i style="width:100%"></i></div><div class="x"><span>1.1 s</span><span>base 1.0 s</span></div></div>
+        <div class="gate open" style="left:505px;top:65px"><span>✓</span></div>
+        <div class="box done" style="left:585px;top:45px"><div class="k">COMPARTMENT · IDEARIUM</div><div class="t">The phase is mapped</div><div class="bar"><i style="width:100%"></i></div><div class="x"><span>0.7 s</span><span>base 0.8 s</span></div></div>
+        <div class="box running sel" style="left:585px;top:215px"><div class="k">AGENT · RAID → OLLAMA</div><div class="t">Build the files</div><div class="bar"><i style="width:62%"></i></div><div class="x"><span>2 m 41 s</span><span>62% of base</span></div></div>
+        <div class="gate" style="left:505px;top:235px"><span>·</span></div>
+        <div class="box" style="left:305px;top:215px"><div class="k">VERIFICATION · TESTS</div><div class="t">Prove it</div><div class="bar"><i style="width:0"></i></div><div class="x"><span>waiting</span><span>base 18 s</span></div></div>
+        <div class="gate" style="left:225px;top:235px"><span>·</span></div>
+        <div class="box" style="left:25px;top:215px"><div class="k">CONTEXT · CORTEX</div><div class="t">Close on evidence</div><div class="bar"><i style="width:0"></i></div><div class="x"><span>waiting</span><span>base 2 s</span></div></div>
+        <div class="box held" style="left:25px;top:360px"><div class="k">HOLD · YOU</div><div class="t">Your verdict on the landing</div><div class="bar"><i style="width:100%"></i></div><div class="x"><span>held</span><span>onFail: hold</span></div></div>
+      </div>
+      <div class="legend"><span>▭ step (a compartment, an agent, a test)</span><span>◇ gate between each step</span><span>bar: this run against its baseline (σ from 3 runs)</span><span>violet outline: selected</span></div>
+    </main>
+
+    <aside class="dock">
+      <div class="card"><h5>SELECTED STEP</h5>
+        <div class="row"><span>Step</span><span>Build the files</span></div>
+        <div class="row"><span>Kind</span><span class="mono">agent</span></div>
+        <div class="row"><span>System</span><span class="mono">idearium</span></div>
+        <div class="row"><span>Hat</span><span class="mono">the_builder</span></div>
+        <div class="row"><span>Command</span><span class="mono">repo.build</span></div>
+        <div class="row"><span>Waits on</span><span class="mono">mapped</span></div>
+        <div class="row"><span>Baseline</span><span class="mono">4 m 20 s ± 38 s</span></div>
+      </div>
+      <div class="card"><h5>RAID DECIDED</h5>
+        <div class="raid">chose <b>ollama</b> (asked: coder)<div class="w">health=100 · regime stable · smallest that passed this phase kind 3 of 3 times</div></div>
+      </div>
+      <div class="card"><h5>CONTRACT · END STATE</h5>
+        <div style="font-size:12px;margin-bottom:6px">IN0_baseline built and its proof passes</div>
+        <div class="chips"><span class="chip">system:idearium</span><span class="chip">phase:IN0</span><span class="chip">hat:the_builder</span><span class="chip">input:in-1794…</span></div>
+      </div>
+      <div class="card"><h5>LIVE EVENTS</h5>
+        <div class="ev"><b>task</b> mapped → done · 0.7 s</div>
+        <div class="ev"><b>decision</b> raid chose ollama</div>
+        <div class="ev"><b>task</b> build → running</div>
+        <div class="ev"><b>heartbeat</b> idearium · ok</div>
+      </div>
+    </aside>
+  </div>
+</body>
+</html>

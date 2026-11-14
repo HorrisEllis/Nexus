@@ -264,3 +264,37 @@ phases whose map is Idearium's or that name an idearium/ file or the idearium sy
   the title was a true duplicate and is dropped. This is reported, not silent (§0.3).
 - Order of delivery: backend, route, and command row are built. The screen is BX2/BX3's Flow view, which draws the census per phase. It is
   deferred to those phases and said here.
+
+## ADDENDUM 2026-11-14 — BrainOS lands in COS's pipeline editor, built from Idearium's UI (his; supersedes BX0a's landing, kept §0.3)
+James, 2026-11-14: "i am back on my main driver. everything runs in the pipeline. litterally like the pipes of the system. i really want a ui editor, for editing the ui from a ui picker. copy idearium ui, i want a lot of it for the pipeline editor. like migrate brainos"
+- BX0a decided (by his axioms, 2026-10-21) that BrainOS's features land as a Flow view in Idearium's Code tab. Since then he made COS the meta
+  system (PC_D12, 2026-11-10: "cos is going to be the entire meta system for nexus") and every pipeline COS's to run and manage (PC12, 2026-11-13:
+  "i want all pipelines managable, orchastratred, and programmable in cos"). Now: the pipeline editor is built from "a lot of" Idearium's UI,
+  and BrainOS migrates into it. So BrainOS's features (the canvas, node controls, the pipeline chain builder, the automation editor, the dock
+  panels; BX3–BX8) land in COS's pipeline editor, not Idearium's Code tab. BX0a is superseded in its landing; its rules stand (data through the
+  owner's own routes, never browser calls to other ports (BX-001); command rows first).
+- "copy idearium ui": read as (to confirm) Idearium's look and parts copied into COS as COS's own (its tab layout, panels, cards, theme, the
+  phase and DAG views), so COS owns its copy (§5.9, §5.15) and Idearium keeps its own; a part both need stays one copy only once it is a shared
+  component of the pipeline editor's own registry. Not: COS's pages reaching into Idearium's folder.
+- The pipeline editor's tabs (the coder's first cut, to confirm): Pipelines · Steps · Gates · DAG · Contract · Runs · Ledger · Automation
+  (BrainOS's workflow editor) · Settings; the canvas (BX3) as the Steps view's drawing.
+- 2026-11-14, later, his, with a screenshot of Idearium's Notes tab and its right edge (PLAN · OUTPUTS · CHANGES · TASKS · CONTEXT · TOOLS ·
+  CONTROL, all/none): "decouple from the ui editor. need all the side tabs like in the image. i like some of that but in the eravos canvas as
+  tools? give me a preview" · "the pipeline needs to be fully built, using ollama primarily." So: the pipeline editor carries no UI-editor
+  control (the UI editor, UE3, stands on its own); the pipeline is the canvas, and Idearium's side tabs each open a tool as an ERAVOS window
+  on it. Preview: cos/ui/pipeline-editor/preview-canvas.html (and .png), sample data, nothing wired. Ollama is the pipeline's first agent;
+  Guardian is the fallback.
+- 2026-11-14, later again, his, shown preview 3 (a canvas with Idearium's bars and tabs): "that doesn't look better. remove all the tabs from
+  the top. use the eravos canvas completely blank then make all the tools you need." So: the pipeline editor is ERAVOS's canvas as it is (its
+  top bar: the logo, Start, Add, Options; no tabs), and everything is a tool window on it: Pipelines, Run, Machine, each compartment, each gate,
+  the end state, Outputs, Changes, wired port to port. Preview: cos/ui/pipeline-editor/preview-4.html (and .png). This supersedes the tab
+  layouts of the three earlier previews (kept, §0.3).
+- 2026-11-14, of preview 4, his: "this is decent but kay but look at field or workshop, in  eravos canvas. also tabs on sides like iearium has
+  the tabs, remove the start just have the add. yes, like each step, gate, relationship, from raid to end state, anything, events from an
+  application, emerge coding word by word, visual debugging, running frameworks or pipelines, recursive and meta, like any process, system, etc
+  can be systematized, stepwise, broken down, chunked, or bricks, or gaps, step, analysis or decomposition, its my framework" · "its fine. eravos
+  canvas. field and workshop." Preview 6 (cos/ui/pipeline-editor/preview-6.html, .png): preview 4 with Add only; Idearium's side tabs on both
+  edges (left: what is on the canvas: pipeline, RAID, events, Emerge, debug, frameworks, gaps; right: the tools); ERAVOS's Field
+  (tools/core/field in the eravos-canvas repo) open in the dock on the selected compartment: its bricks, gaps and events as layers, his words to
+  Emerge word by word, the run's ledger scrubbed step by step, the brick's properties, and "open as a pipeline" (recursive). Previews 1–3 and 5
+  borrowed Idearium's look and are set aside (his: "those are idearium. looks like shit"), kept §0.3.
