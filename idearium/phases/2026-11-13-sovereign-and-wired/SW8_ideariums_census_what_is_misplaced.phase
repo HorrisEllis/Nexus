@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-13-sovereign-and-wired-phasemap.spec::SW8_ideariums_census_what_is_misplaced
+type: phase
+id: docs_2026-11-13-sovereign-and-wired-phasemap.spec::SW8_ideariums_census_what_is_misplaced
+context: >-
+  pipeline phase SW8_ideariums_census_what_is_misplaced of
+  docs/2026-11-13-sovereign-and-wired-phasemap.spec
+intent: null
+summary: SW8_ideariums_census_what_is_misplaced (integration) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1794645020976
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794645020976
+lastSeenAt: 1794645020976
+fingerprint: null
+payload:
+  id: SW8_ideariums_census_what_is_misplaced
+  map: docs/2026-11-13-sovereign-and-wired-phasemap.spec
+  repo: null
+  layer: integration
+  status: OPEN
+  files:
+    - idearium/api/index.js
+    - idearium/registry-components.js
+    - docs/atlases/idearium-atlas.md
+    - tests/modules/test-idearium-census.test.js
+  depends_on:
+    - SW1_each_system_its_own_map
+  blocks: []
+  spec: null
+  graph: c263c4f128fc3a3e

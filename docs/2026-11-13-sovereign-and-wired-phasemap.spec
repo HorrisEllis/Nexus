@@ -231,6 +231,22 @@ phases:
     confirmed_2026_11_14: >-
       James, 2026-11-14 (answering whether a system reaches another by its wire to RAID, RAID passing it on): "yes and with that you can find bottlenecks, tension and friction. like looms map. thats thepoint of cfr and now the pipeline is the final layer"
       Reading (1) confirmed: a system reaches another by its wire to RAID, and RAID routes it on; SW6's crossings end as wires to RAID.
+  SW8_ideariums_census_what_is_misplaced:
+    layer: integration
+    status: OPEN
+    depends_on: [SW1_each_system_its_own_map]
+    files: [idearium/spec-engine, idearium/agent-suite, idearium/api/index.js, idearium/repo, idearium/lib, idearium/cli, idearium/core, idearium/registry-components.js, docs/atlases/idearium-atlas.md, cos/pipeline, intelligence, tests/modules/test-idearium-census.test.js]
+    reuse: "SW5's census pattern (each part assigned: stays, to its owner, or retired), IM6 (Cortex unclumped, the same move for Cortex), lib/system-boundary.js, the Idearium atlas, his operating-system picture (Idearium the explorer.exe, 2026-11-12)."
+    does: >-
+      James, 2026-11-14: "intelligence system to help with complex tasks, agent tools also, gates hold persistence and decomposing reduces load. look at ideariums chunking. thats what i mean about idearium. i feel a lot of idearium is misplaced"
+      Idearium is about 62,000 lines of JavaScript (spec-engine 14,431, api 12,489, repo 9,534, lib 4,234, cli 3,403, agent-suite 437, by
+      wc on 2026-11-14). First a census: each part of Idearium named with what it does and its home by the axioms (§5.9, §5.15): stays in
+      Idearium (the explorer: projects, specs, phases, the atlas), goes to COS (running work: the pipeline, chunk dispatch and its retry ladder),
+      to Intelligence (help with complex tasks, patterns), to RAID (routing, contracts), or retired. The census is shown to him before anything
+      moves (his "i feel": the homes are his to confirm). Then moved one part at a time by git mv, the old path forwarding, as SW5i did for the
+      automation engine. First candidates, read 2026-11-14: spec-compiler/chunk and chunk-dispatch.js (decomposition for the pipeline, PC8).
+    proof: "the census lists every Idearium file with a home and why; he confirms it; each move keeps history and its callers' tests pass"
+
   SW7a_the_crystal_lattice_into_intelligence:
     layer: integration
     status: OPEN
