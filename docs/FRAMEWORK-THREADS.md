@@ -446,3 +446,18 @@ by the focus.
   Both came from Section 10 (hostile verification). Cost: about eight extra reads. Counter-evidence kept: on a small, measured job the plain
   estimate already held (OC4: estimated one session, built in one, 0.60.445). So the framework's added value showed on the large job with
   hidden constraints, not the small one. Whether its 3-session number is more accurate is still **open** until the sessions are counted.
+
+## T11 — "each step can be dynamically decomposed into smaller steps": decomposition lets local models carry large work, registered 2026-11-14
+
+- **His words:** 2026-11-14, "need the pipeline builder first? the pipeline could do all of this in theory" · "each step can be dynamically
+  decomposed into smaller steps."
+- **What the coder did with it:** **conceptual.** Mapped as PC8 expanded_2026_11_14 (docs/2026-11-08-pipeline-canvas-phasemap.spec): a live
+  step becomes a sub-pipeline when a gate fails, the work does not fit its model (PC17), or the contract names more than one outcome; RAID
+  records the decomposition; it stops at a step one model can do and one gate can check. PC4 (the canvas) built first so the pipeline runs the
+  rest (RD9 slice c, the RAID compartment, SW6's wires).
+- **Prediction, written before any run:** a multi-file move (e.g. RAID out of Cortex into its own compartment) fails as one step on local
+  Ollama, and passes once decomposed to one file per step, with a reasoning agent used only for the plan. Measured by: the run's gates (pass or
+  fail per step), the number of decompositions, and which model ran each step, from the run's ledger. Held if the decomposed run passes its
+  end-state test with Ollama doing every file step; failed if steps of one file still fail on Ollama after two retries.
+- **Bias named:** the same coder that predicts this will build and judge it, so a pass is post-hoc evidence until a run he starts reproduces it.
+- **Evidence:** open.
