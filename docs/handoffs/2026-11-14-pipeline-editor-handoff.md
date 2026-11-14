@@ -108,3 +108,8 @@ friction, CFR sigma as tension); the pipeline runs on them, the final layer. Sti
 "yes compartment". CS11 (docs/2026-10-23-cos-spine-phasemap.spec) expanded: RAID leaves Cortex as its own system and compartment (own folder,
 server.js, drawbridge, routes, commands, events, data), supervised by COS, the hub every system's wires end at. Folder name read as raid/ (to
 confirm). Cortex keeps the books by route.
+
+## ADDENDUM: COS's UI, the one way in, with complete AI assistance (his, 2026-11-14)
+"Cos ui needs complete ai assistance though. The only at in to nexus". CH1 (docs/2026-11-02-cos-console-phasemap.spec) expanded: an
+assistant on every COS page that sees the screen, answers and acts, each ask an input to RAID. To confirm: "at in" = "way in"; other
+surfaces route through COS (not closed); "complete" = it acts, not only answers.

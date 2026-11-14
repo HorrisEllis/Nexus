@@ -417,6 +417,13 @@ phases_addendum_2026_11_14_ch:
       input and is said as such (RD9 slice c, for COS's Console); request <words> reaches RAID first and the run carries the input and
       contract ids, and still runs, said, when RAID does not answer (§5.15). COS reaches Cortex and copilot by their routes, on the ports its
       supervisor holds. The Automation page asks for a value a pipeline declares and leaves empty (its words) before Run starts.
+    expanded_2026_11_14: >-
+      James, 2026-11-14, after RAID was settled as its own compartment, the hub: "Cos ui needs complete ai assistance though. The only at in to
+      nexus". The coder's reading ("at in" as "way in", to confirm): COS's UI is the one way into Nexus, and AI assistance is complete there:
+      on every COS page an assistant (copilot, the reasoning agent RAID calls, RD9 decided_2026_11_14_wiring) that sees what is on screen,
+      answers, and does anything a person can do in COS, each ask an input to RAID like any other (RD9 slice c). Other surfaces (the Nexus
+      CLI, Clear Glass, Idearium) reach Nexus through COS, not beside it. Readings to confirm: (1) "only way in" means every other surface
+      routes through COS, not that the others close; (2) "complete" means the assistant can act (run, edit, approve what he allows), not only answer.
     by_the_axioms: "§5.2/§9.1 (routing goes through RAID), §8.6 (the floating menu's route and RAID's input route reused), §5.15 (routes, never files; RAID down breaks no request), §1.2 (what went to RAID, and what did not, is said)"
     not_built: "each system's own commands in the Console (SC10: the doors DO1, DO2, DO5, DO7, DO8); the Nexus CLI's unknown lines to RAID; RAID acting on what it routes (RD9)"
   LE1_phase_readers_accept_crlf:
