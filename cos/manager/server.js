@@ -77,7 +77,13 @@ function createServer(sup, opts = {}) {
   setTimeout(() => { automation.resume().catch(e => console.warn(`[cos/automation] resuming interrupted runs failed: ${e.message}`)); }, 8000).unref();
   let pipeline = null;
   // the api step's nexus://<system>: the address of a system COS declares, from its health URL (never a fixed port)
-  automation.setResolver((name) => { const d = sup.declarations().find(x => x.name === name || x.system === name); try { return d && d.healthUrl ? new URL(d.healthUrl).origin : null; } catch (_) { return null; } });
+  // 0.60.543 — his run, 2026-11-14, with 3 of 13 systems up and Idearium down: a pipeline step that needs a system starts it. Resolving
+  // nexus://<system> marks it busy (touch: COS's idle rule does not stop it mid-step) and, when it is down and not held (circuit open, paused),
+  // COS starts it, said in the ledger as by 'pipeline'; the step then waits for it to answer (2, 4, 8, 16, 30 s, 0.60.538).
+  automation.setResolver((name) => { const d = sup.declarations().find(x => x.name === name || x.system === name);
+    if (d) { try { sup.touch(d.name); const v = sup.get(d.name);
+      if (!v.pid && !['paused', 'starting', 'restarting'].includes(v.state) && !(v.circuit && v.circuit.open)) sup.start(d.name, { by: 'pipeline' }); } catch (_) {} }
+    try { return d && d.healthUrl ? new URL(d.healthUrl).origin : null; } catch (_) { return null; } });
   // PC1 — the box shape, through COS's door (cos/pipeline/boxes.js → Emerge's cos/pipeline/box.eg); Idearium's procedures by its route
   const _ideariumGet = (pth) => new Promise((resolve, reject) => {
     const d = sup.declarations().find(x => x.name === 'idearium'); let o; try { o = new URL(d && d.healthUrl).origin; } catch (_) { return reject(new Error('idearium declares no address')); }
