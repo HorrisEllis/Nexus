@@ -264,3 +264,17 @@ phases whose map is Idearium's or that name an idearium/ file or the idearium sy
   the title was a true duplicate and is dropped. This is reported, not silent (§0.3).
 - Order of delivery: backend, route, and command row are built. The screen is BX2/BX3's Flow view, which draws the census per phase. It is
   deferred to those phases and said here.
+
+## ADDENDUM 2026-11-14 — BrainOS lands in COS's pipeline editor, built from Idearium's UI (his; supersedes BX0a's landing, kept §0.3)
+James, 2026-11-14: "i am back on my main driver. everything runs in the pipeline. litterally like the pipes of the system. i really want a ui editor, for editing the ui from a ui picker. copy idearium ui, i want a lot of it for the pipeline editor. like migrate brainos"
+- BX0a decided (by his axioms, 2026-10-21) that BrainOS's features land as a Flow view in Idearium's Code tab. Since then he made COS the meta
+  system (PC_D12, 2026-11-10: "cos is going to be the entire meta system for nexus") and every pipeline COS's to run and manage (PC12, 2026-11-13:
+  "i want all pipelines managable, orchastratred, and programmable in cos"). Now: the pipeline editor is built from "a lot of" Idearium's UI,
+  and BrainOS migrates into it. So BrainOS's features (the canvas, node controls, the pipeline chain builder, the automation editor, the dock
+  panels; BX3–BX8) land in COS's pipeline editor, not Idearium's Code tab. BX0a is superseded in its landing; its rules stand (data through the
+  owner's own routes, never browser calls to other ports (BX-001); command rows first).
+- "copy idearium ui": read as (to confirm) Idearium's look and parts copied into COS as COS's own (its tab layout, panels, cards, theme, the
+  phase and DAG views), so COS owns its copy (§5.9, §5.15) and Idearium keeps its own; a part both need stays one copy only once it is a shared
+  component of the pipeline editor's own registry. Not: COS's pages reaching into Idearium's folder.
+- The pipeline editor's tabs (the coder's first cut, to confirm): Pipelines · Steps · Gates · DAG · Contract · Runs · Ledger · Automation
+  (BrainOS's workflow editor) · Settings; the canvas (BX3) as the Steps view's drawing.
