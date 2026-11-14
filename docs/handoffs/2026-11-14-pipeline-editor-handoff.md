@@ -86,3 +86,8 @@ Main is at 0.60.534. Everything below is merged.
 "yes. like each request or input into the cli or copilot goes to raid." Recorded as RD9's expanded_2026_11_14_b
 (docs/2026-10-13-projects-raid-and-gates-phasemap.spec): slice c widened to every input into the Nexus CLI, cos.exe's command line and
 copilot. RD9 slice c is the next build for item 1 above.
+
+## ADDENDUM: the shape (his, 2026-11-14)
+"basically like the hub/raid in the center, cos above that, then each system/compartment stems or branches off of raid". RD9
+decided_2026_11_14_topology: COS above (supervises every system, RAID included); RAID the hub; every system branches off RAID. Open: how this
+reads against CS11 (RAID's code in COS's folder, or RAID its own compartment under COS).

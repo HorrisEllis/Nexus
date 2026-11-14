@@ -349,6 +349,13 @@ spec:
         Files added for slice c: copilot's way in (copilot/ ask and chat routes) beside cos/manager/cli.js and idearium/cli/route-commands.js.
         Readings to confirm when built: whether a plain read-only command (e.g. `status`) is recorded as an input and passed straight to its
         owner, or also decided by RAID (the coder reads: recorded and routed by RAID's router, which sends it straight on; nothing skips RAID).
+      decided_2026_11_14_topology: >-
+        James, 2026-11-14: "basically like the hub/raid in the center, cos above that, then each system/compartment stems or branches off of
+        raid". The shape: RAID is the hub at the center; COS sits above it (the runtime and supervisor: it starts, watches, restarts and
+        resources every system, RAID included); each system or compartment branches off RAID, so every request reaches a system through RAID
+        and no system routes to another around it. The coder's drawing of it: COS → RAID → {cortex, idearium, clear-glass, copilot, emerge, …}.
+        Reading to confirm: CS11 (RAID moves into COS, his 2026-11-13) — RAID's code living in COS's folder, or RAID its own compartment
+        under COS that every other compartment hangs from.
       also_asked_2026_11_12_not_yet_mapped: "the panel's 27 engines (cos/services/anonymous/engines) as templates for networking compartments, in the catalog, as test-environment and DAG dependency options (cos-services map, after SV2); .erv opened by ERAVOS on install (Windows file association); `cos import` a system into cos.exe (cos-console map, after SC4). Each is mapped in its own map before it is built."
     RD2_idearium_routes_through_raid:
       layer: library
