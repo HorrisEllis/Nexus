@@ -270,7 +270,7 @@ function main(argv) {
       const SAY = path.join(__dirname, 'say', 'say.eg');
       let argv;
       if (cmd === 'say') {
-        if (!rest[0]) die('usage: eg say "<a sentence in your words>" [folder]');
+        if (!rest[0]) die('usage: eg say "<a sentence in your words>" [folder] [--json]');
         argv = ['say', rest[0]];
       } else if (cmd === 'teach') {
         if (!rest[0] || rest[1] !== 'as' || !rest[2]) die('usage: eg teach "<phrase>" as <word>');
@@ -280,6 +280,7 @@ function main(argv) {
       if (r.status !== 0) die((r.stderr || r.stdout).trim(), 1);
       if (cmd === 'words') { process.stdout.write(r.stdout); return; }
       const out = JSON.parse(r.stdout.trim().split('\n').pop());
+      if (cmd === 'say' && rest.includes('--json')) { process.stdout.write(JSON.stringify(out) + '\n'); return; }   // RD9 (2026-11-14): the reading as data, for a contract; nothing written
       if (cmd === 'teach') {
         const file = path.join(__dirname, 'say', 'taught.eg');
         const c = lang.compileSource(out.text, 'taught.eg');

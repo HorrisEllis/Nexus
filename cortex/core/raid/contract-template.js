@@ -70,11 +70,17 @@ function fill(t = {}, { root = ROOT } = {}) {
   if (!t.system) need('system', 'which system owns this work');
   if (!t.agent || !t.agent.name) need('agent', 'which agent does it');
   if (!t.capability && !t.command) need('command', 'what is invoked: a capability or a command');
+  // his 2026-11-14: "only emerge based contracts that need emerges code". A request whose work is Emerge code is read by Emerge's own
+  // say (his words → what it is, its end state, its gates; no model): its end state is the outcome unless one was given, and what say could
+  // not understand is a gap in its own words (with the line that teaches it).
+  const em = t.emerge || null;
+  if (em && (!t.outcome || !t.outcome.what) && em.intent) t.outcome = { what: em.intent, why: 'read by Emerge\'s say from his words' };
+  if (em) (em.gaps || []).forEach((g, i) => gaps.push({ id: `gap-emerge-${i + 1}`, missing: `Emerge: ${g.what}`, inspected: ['emerge say'], blocks: ['template'], resolve_when: { evidence: `answer:emerge-${i + 1}` }, ...(g.say ? { hint: g.say } : {}) }));
   if (!t.outcome || !t.outcome.what) need('outcome', 'the end state: what must be true when it is done');
   const dag = Array.isArray(t.dag) ? t.dag : [];
   if (!dag.length) need('dag', 'what must be known or done first (the DAG)');
 
-  const tags = [...new Set([...(t.tags || []), ...(t.system ? [`system:${slug(t.system)}`] : []), ...(t.hat ? [`hat:${slug(t.hat)}`] : []), ...(t.input && t.input.id ? [`input:${slug(t.input.id)}`] : [])])];
+  const tags = [...new Set([...(t.tags || []), ...(t.emerge ? ['kind:emerge'] : []), ...(t.system ? [`system:${slug(t.system)}`] : []), ...(t.hat ? [`hat:${slug(t.hat)}`] : []), ...(t.input && t.input.id ? [`input:${slug(t.input.id)}`] : [])])];
   for (const g of tags) if (!TAG.test(g)) problems.push(`tag "${g}" is not in the grammar (request: phase: gate: outcome: rung: kind: system: hat: input:)`);
 
   const { refs, gaps: dataGaps } = _refs(t.data, root, problems); gaps.push(...dataGaps);
@@ -104,6 +110,7 @@ function fill(t = {}, { root = ROOT } = {}) {
     template: { system: t.system || null, agent: t.agent ? { name: t.agent.name || null, why: t.agent.why || null } : null, hat: t.hat || null,
       capability: t.capability || null, command: t.command || null, input: t.input ? { id: t.input.id || null, text: t.input.text || null, by: t.input.by || null } : null },
     tags,
+    ...(em ? { emerge: { kind: em.kind || null, name: em.name || null, intent: em.intent || null, gates: em.gates || [], fields: em.fields || [], read: 'emerge say' } } : {}),
     // B1's fields (schema.contract), mapped in so its readers find what they know
     forAgent: t.hat || (t.agent && t.agent.name) || null, intention: t.intention || null, system: t.system || null,
     endState: (t.outcome && t.outcome.what) || null, conditions: outcome.done_when.map(c => `gate ${c.gate} passed`),
@@ -111,6 +118,15 @@ function fill(t = {}, { root = ROOT } = {}) {
   const CG = require('./contract-gates.js');
   problems.push(...CG.validate(payload));
   return { ok: !problems.length, payload, gaps, problems };
+}
+
+/** needsEmerge(input, extras) — the work is Emerge code: said so, or it names Emerge, an emerge command, or a .eg file */
+function needsEmerge(input = {}, extras = {}) {
+  const a = (input.args && typeof input.args === 'object') ? input.args : {}; const x = { ...a, ...extras };
+  if (x.emerge === true) return true; if (x.emerge === false) return false;
+  if (String(x.system || '').toLowerCase() === 'emerge') return true;
+  if (/^emerge\./.test(String(x.command || ''))) return true;
+  return [...(x.files || []), ...((x.data || []).map(d => d && d.path))].some(p => /\.eg$/.test(String(p || '')));
 }
 
 /** draft(inputNode, decision, extras) — what RAID knows from a .input node and its own decision; the rest is given in extras or asked */
@@ -129,8 +145,9 @@ function draft(input = {}, decision = {}, extras = {}, opts = {}) {
     dag: extras.dag || a.dag || [],
     // his words are the request, not yet an end state: the outcome is given, or asked
     outcome: extras.outcome || a.outcome || null,
+    emerge: extras.emergeMeaning || null,
   };
   return fill(t, opts);
 }
 
-module.exports = { TEMPLATE, TAG, fill, draft, MODULE_ID: 'cortex.raid.contract-template', VERSION: '1.0.0' };
+module.exports = { TEMPLATE, TAG, fill, draft, needsEmerge, MODULE_ID: 'cortex.raid.contract-template', VERSION: '1.0.0' };

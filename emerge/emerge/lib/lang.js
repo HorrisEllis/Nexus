@@ -71,9 +71,11 @@ function build(args, ctx) {
   return _eg(['build', 'main.eg', '-o', 'out', ...(args.standalone ? ['--standalone'] : [])], { args, ctx, prepare: _main(_source(args)), collect: 'out' });
 }
 
-/** POST /lang/say { sentence } — his words to Emerge, no model; files are what it wrote */
+/** POST /lang/say { sentence, json? } — his words to Emerge, no model; files are what it wrote (json: the reading, as data) */
 function say(args, ctx) {
   if (typeof args.sentence !== 'string' || !args.sentence.trim()) throw _bad('sentence (his words)');
+  // { json: true } (RD9, 2026-11-14): the reading as data — what it is, its end state, gates, fields, gaps — and nothing written
+  if (args.json) return _eg(['say', args.sentence, '--json'], { args, ctx });
   return _eg(['say', args.sentence, 'out'], { args, ctx, prepare: (w) => fs.mkdirSync(path.join(w, 'out')), collect: 'out' });
 }
 

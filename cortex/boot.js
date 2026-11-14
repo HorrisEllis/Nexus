@@ -1124,7 +1124,10 @@ const server = http.createServer(async (req, res) => {
     let b = await readBody(req); if (typeof b === 'string') { try { b = JSON.parse(b || '{}'); } catch (_) { b = {}; } }
     // RD9 slice b (2026-11-14): booked as RAID's v2 contract through its own door, in this process (the same system)
     const book = async (id, payload) => { const o = await require('./core/raid/contract-v2-door.js').handle('POST', '/api/raid/contracts/v2', { id, payload, by: 'raid' }); return o ? o.json : { ok: false, error: 'the v2 door did not answer' }; };
-    const r = await RI.take(b || {}, { dir, book, decide: async (intent) => _raidDecide(intent, { sigmaFloor: _field.entropy, regime: _field.regime }) });
+    // Emerge reads a request whose work is Emerge code (its own route, POST /lang/say { json: true }); Cortex never runs Emerge's files
+    const say = async (sentence) => { const o = await require('../lib/nexus-client.js').post('emerge', '/lang/say', { sentence, json: true });
+      const line = String((o && o.stdout) || '').trim().split('\n').pop(); try { return JSON.parse(line); } catch (_) { return { error: (o && (o.error || o.stderr)) || 'Emerge gave no reading' }; } };
+    const r = await RI.take(b || {}, { dir, book, say, decide: async (intent) => _raidDecide(intent, { sigmaFloor: _field.entropy, regime: _field.regime }) });
     json(res, r.ok ? 200 : (r.code || 400), r); return;
   }
 

@@ -694,7 +694,10 @@ if a[0] == "say" {
     src = source(m)
     if m.kind != "program" { nd = node(m) }
   }
-  print(json({ ok: len(m.gaps) == 0, name: lower(m.name ?? ""), source: src, node: nd, report: report(m) }))
+  // RD9 (2026-11-14): the meaning too, so a contract can be made from it (RAID, by Emerge's route): what it is, its end state, its gates
+  // and fields, and what was not understood (a gap is named, never guessed). His: "only emerge based contracts that need emerges code"
+  let meaning = { kind: m.kind, name: m.name, intent: m.intent, fields: m.fields, gates: m.gates, events: len(m.handlers), test: m.test, record: m.record, gaps: m.gaps }
+  print(json({ ok: len(m.gaps) == 0, name: lower(m.name ?? ""), source: src, node: nd, report: report(m), meaning: meaning }))
 } else if a[0] == "teach" {
   print(json(teach(at(a, 1, ""), at(a, 2, ""))))
 } else if a[0] == "words" {

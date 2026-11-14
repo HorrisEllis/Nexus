@@ -18,7 +18,7 @@ const fileOf = (dir, id) => path.join(dir, `${id}.input`);
 const write = (dir, id, payload, summary) => { fs.mkdirSync(dir, { recursive: true });
   fs.writeFileSync(fileOf(dir, id), NE.toYaml(NE.wrap('input', id, payload, { system: 'cortex', context: 'an input to RAID, kept before it is routed (RD9)', intent: String(payload.text).slice(0, 120), summary }))); };
 
-async function take({ text, from, by, args } = {}, { dir, decide, book = null, now = Date.now } = {}) {
+async function take({ text, from, by, args } = {}, { dir, decide, book = null, say = null, now = Date.now } = {}) {
   const words = String(text == null ? '' : text).trim();
   if (!words) return { ok: false, code: 400, error: 'an input needs its words: { "text": "…" }' };
   if (!by) return { ok: false, code: 400, error: 'say who asks: { "by": "person" }' };
@@ -33,7 +33,14 @@ async function take({ text, from, by, args } = {}, { dir, decide, book = null, n
   let contract = null;
   if (book) {
     const T = require('./contract-template.js');
-    const d = T.draft(payload, decision.error ? {} : decision, (args && args.contract) || {});
+    const extras = { ...((args && args.contract) || {}) };
+    // only a request whose work is Emerge code gets an Emerge-based contract (his 2026-11-14): Emerge reads the words, by its route
+    if (T.needsEmerge(payload, extras)) {
+      let m = null; try { m = say ? await say(words) : null; } catch (e) { m = { error: e.message }; }
+      if (m && m.meaning) extras.emergeMeaning = m.meaning;
+      else extras.emergeMeaning = { gaps: [{ what: `Emerge could not read it: ${(m && m.error) || 'no answer from Emerge'}` }] };
+    }
+    const d = T.draft(payload, decision.error ? {} : decision, extras);
     const cid = `c-${id}`;
     if (!d.ok) contract = { id: null, booked: false, problems: d.problems, gaps: d.gaps.map(g => g.missing) };
     else { let r; try { r = await book(cid, d.payload); } catch (e) { r = { ok: false, error: e.message }; }

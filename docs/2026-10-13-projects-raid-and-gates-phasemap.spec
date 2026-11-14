@@ -336,6 +336,10 @@ spec:
         cortex/schemas/schema.raid_contract, cortex/core/raid/contract-v2-door.js, idearium/cli/route-commands.js, tests/modules/test-raid-input.test.js.
         Proof for slice b: an input with a file, one with a zip, one that needs context: each a valid v2 contract with every field filled or a
         gap named; its DAG's nodes are its gates; booked through the v2 door; the .input node points at it.
+      decided_2026_11_14: >-
+        His, 2026-11-14: "look at emerge it does the same thing. end state. raid is meant to route every request, from a contract or request." · then, asked how RAID's contract and Emerge's end state fit: "only emerge based contracts that need emerges code". Read as (to confirm): RAID routes every
+        request and books its own contract; a request whose work is Emerge code is read first by Emerge's say (by its route), which gives the
+        end state and names its gaps; no other request asks Emerge. Built 0.60.530.
       also_asked_2026_11_12_not_yet_mapped: "the panel's 27 engines (cos/services/anonymous/engines) as templates for networking compartments, in the catalog, as test-environment and DAG dependency options (cos-services map, after SV2); .erv opened by ERAVOS on install (Windows file association); `cos import` a system into cos.exe (cos-console map, after SC4). Each is mapped in its own map before it is built."
     RD2_idearium_routes_through_raid:
       layer: library
