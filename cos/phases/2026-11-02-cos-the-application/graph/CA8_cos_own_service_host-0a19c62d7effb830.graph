@@ -7,11 +7,11 @@ intent: null
 summary: 16 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1794607002499
+exported_at: 1794621619769
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794607002499
-lastSeenAt: 1794607002499
+firstSeenAt: 1794621619769
+lastSeenAt: 1794621619769
 fingerprint: null
 payload:
   for: CA8_cos_own_service_host
@@ -119,17 +119,20 @@ payload:
   dag:
     layer: 0
     deps: []
-    dependents: []
+    dependents:
+      - docs/2026-11-02-cos-the-application-phasemap.spec::CA9_first_run_wizard
     upstream: []
-    downstream: []
+    downstream:
+      - docs/2026-11-02-cos-the-application-phasemap.spec::CA9_first_run_wizard
     blockedBy: []
-    unlocks: []
+    unlocks:
+      - docs/2026-11-02-cos-the-application-phasemap.spec::CA9_first_run_wizard
     conflicts: []
     dangling:
       - CA4_the_supervisor_as_a_windows_service
     lines:
       - layer 0
       - 'depends on (0): —'
-      - 'needed by (0): —'
+      - 'needed by (1): CA9_first_run_wizard · finishing it unlocks CA9_first_run_wizard'
       - 'DANGLING depends_on: CA4_the_supervisor_as_a_windows_service'
     edges: []

@@ -1,0 +1,45 @@
+envelope: 1
+uuid: nexus-export-graph-phase:RC2_cos_assistant_navigates_with_him:e7c64f6701f32e50
+type: graph
+id: phase:RC2_cos_assistant_navigates_with_him:e7c64f6701f32e50
+context: dependency graph of phase RC2_cos_assistant_navigates_with_him
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1794621617889
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794621617889
+lastSeenAt: 1794621617889
+fingerprint: null
+payload:
+  for: RC2_cos_assistant_navigates_with_him
+  kind: phase
+  repo: null
+  hash: e7c64f6701f32e50
+  nodes:
+    - path: cos/spec/remote-control.spec
+      role: changes
+      exists: true
+      system: cos
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling:
+      - PC10_our_own_remote_control
+    lines:
+      - layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+      - 'DANGLING depends_on: PC10_our_own_remote_control'
+    edges: []

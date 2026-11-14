@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-08-pipeline-canvas-phasemap.spec::RC2_cos_assistant_navigates_with_him
+type: phase
+id: docs_2026-11-08-pipeline-canvas-phasemap.spec::RC2_cos_assistant_navigates_with_him
+context: >-
+  pipeline phase RC2_cos_assistant_navigates_with_him of
+  docs/2026-11-08-pipeline-canvas-phasemap.spec
+intent: null
+summary: RC2_cos_assistant_navigates_with_him (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1794621617889
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794621617889
+lastSeenAt: 1794621617889
+fingerprint: null
+payload:
+  id: RC2_cos_assistant_navigates_with_him
+  map: docs/2026-11-08-pipeline-canvas-phasemap.spec
+  repo: null
+  layer: null
+  status: '"OPEN — mapped 2026-11-13; his readings first (do not guess)"'
+  files:
+    - cos/spec/remote-control.spec
+  depends_on: []
+  blocks: []
+  spec: cos/spec/remote-control.spec
+  graph: e7c64f6701f32e50

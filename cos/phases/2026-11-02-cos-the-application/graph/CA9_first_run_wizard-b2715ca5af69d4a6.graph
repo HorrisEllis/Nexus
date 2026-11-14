@@ -1,0 +1,207 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CA9_first_run_wizard:b2715ca5af69d4a6
+type: graph
+id: phase:CA9_first_run_wizard:b2715ca5af69d4a6
+context: dependency graph of phase CA9_first_run_wizard
+intent: null
+summary: 27 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1794621619772
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794621619772
+lastSeenAt: 1794621619772
+fingerprint: null
+payload:
+  for: CA9_first_run_wizard
+  kind: phase
+  repo: null
+  hash: b2715ca5af69d4a6
+  nodes:
+    - path: cos/app/controller.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/app/desktop/main.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/app/desktop/starting-preload.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/app/desktop/starting.html
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/app/install.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/app/settings.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/app/version.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/app/window.js
+      role: changes
+      exists: true
+      system: cos
+    - path: tests/modules/test-cos-install.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: cos/app/cli.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/manager/deps.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: tests/modules/test-cos-app-build.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-cos-app-self-update.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-cos-app-shell.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-cos-app-ui.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-cos-app-update.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cos/app/app-update.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/app/desktop-systems.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/app/logon.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/app/runtime.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/app/service.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/app/shell.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/app/store.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/app/switch.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/app/versionium.js
+      role: uses
+      exists: true
+      system: cos
+    - path: lib/test-sandbox.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/zip.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: cos/app/install.js
+      to: lib/zip.js
+      kind: requires
+    - from: cos/app/controller.js
+      to: cos/app/store.js
+      kind: requires
+    - from: cos/app/controller.js
+      to: cos/app/runtime.js
+      kind: requires
+    - from: cos/app/controller.js
+      to: cos/app/switch.js
+      kind: requires
+    - from: cos/app/controller.js
+      to: cos/app/versionium.js
+      kind: requires
+    - from: cos/app/controller.js
+      to: cos/app/app-update.js
+      kind: requires
+    - from: cos/app/controller.js
+      to: cos/app/service.js
+      kind: requires
+    - from: cos/app/controller.js
+      to: cos/app/desktop-systems.js
+      kind: requires
+    - from: cos/app/desktop/main.js
+      to: cos/app/shell.js
+      kind: requires
+    - from: cos/app/desktop/main.js
+      to: cos/app/logon.js
+      kind: requires
+    - from: tests/modules/test-cos-install.test.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: cos/manager/deps.js
+      to: cos/app/install.js
+      kind: requires
+    - from: tests/modules/test-cos-app-self-update.test.js
+      to: cos/app/controller.js
+      kind: requires
+    - from: tests/modules/test-cos-app-ui.test.js
+      to: cos/app/controller.js
+      kind: requires
+    - from: tests/modules/test-cos-app-update.test.js
+      to: cos/app/controller.js
+      kind: requires
+    - from: cos/app/cli.js
+      to: cos/app/settings.js
+      kind: requires
+    - from: tests/modules/test-cos-app-shell.test.js
+      to: cos/app/settings.js
+      kind: requires
+    - from: tests/modules/test-cos-app-build.test.js
+      to: cos/app/version.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-11-02-cos-the-application-phasemap.spec::CA8_cos_own_service_host
+    dependents: []
+    upstream:
+      - docs/2026-11-02-cos-the-application-phasemap.spec::CA8_cos_own_service_host
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling:
+      - CA6_install_asks_where_and_npm_in_program_files
+    lines:
+      - layer 1 · ready
+      - 'depends on (1): CA8_cos_own_service_host'
+      - 'needed by (0): —'
+      - 'DANGLING depends_on: CA6_install_asks_where_and_npm_in_program_files'
+    edges:
+      - from: docs/2026-11-02-cos-the-application-phasemap.spec::CA8_cos_own_service_host
+        kind: declared

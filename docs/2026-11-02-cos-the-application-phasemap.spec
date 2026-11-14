@@ -195,3 +195,27 @@ phases_addendum_2026_11_13:
       when the host is missing. The exe ships inside COS (scripts/build-cos-app.js FILES). The switch's words no longer ask for nssm.exe.
     proof: "SV-08 the config and the commands exactly; SV-09 apply prefers the host, writes its config, removes through it, falls back to nssm, says when neither; SV-10 the exe matches its SHA256 and is in the exe's file list; SV-11 (Windows) the built exe starts a process with its env and arguments, logs it, restarts it at 200, 400, 800 ms, ends it on stop, and says a missing service"
     not_built: "the first-run wizard and where Nexus installs (his, the same day): its own phase, to write"
+
+# ── ADDENDUM 2026-11-13 (map only) — his: a full first-run wizard; where Nexus installs; his C: drive ────────────────────────────────────
+# James, 2026-11-13: "and can we that feature to the install for cos, like when downloading it, asks where nexus should install to. my c drive
+# is almost full.  cos have a full first time run wizard."
+# Found on his machine the same day: C: 0.6 GB free, D: 3,001 GB free; COS's installDir is on D: (he chose it in CA6's folder dialog). CA6
+# already asks where (a bare folder dialog); the COS setup exe already lets him choose COS's own folder (nsis oneClick false). No wizard exists.
+phases_addendum_2026_11_13_b:
+  CA9_first_run_wizard:
+    status: "OPEN — mapped 2026-11-13; his readings first"
+    origin: 'James, 2026-11-13: "cos have a full first time run wizard." · "asks where nexus should install to. my c drive is almost full."'
+    depends_on: [CA6_install_asks_where_and_npm_in_program_files, CA8_cos_own_service_host]
+    spec: cos/spec/cos-console.spec
+    files: [cos/app/install.js, cos/app/controller.js, cos/app/settings.js, cos/app/window.js, cos/app/desktop/main.js, cos/app/desktop/starting.html, cos/app/desktop/starting-preload.js, cos/app/version.js, tests/modules/test-cos-install.test.js]
+    does: >-
+      First launch with nothing linked opens a wizard in place of the bare folder dialog. The coder's proposed steps, his to change: (1) where
+      Nexus installs, each drive shown with its free space, a nearly full drive warned, never C: by default when another drive has more room;
+      (2) start with Windows, in the tray; (3) run as a Windows service (CA8, one admin approval); (4) a summary, then the install with its
+      progress (CA5's steps). Every answer is a setting he can change later in Settings.
+    readings_to_confirm:
+      - id: CA9_R1
+        question: '"when downloading it, asks where nexus should install to"'
+        reading_a: "the COS setup exe asks where Nexus goes, before COS ever opens"
+        reading_b: "COS's first launch asks, in the wizard (closest to what exists)"
+        reading_c: "both"

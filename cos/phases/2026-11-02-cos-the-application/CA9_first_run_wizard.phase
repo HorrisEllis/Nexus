@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-02-cos-the-application-phasemap.spec::CA9_first_run_wizard
+type: phase
+id: docs_2026-11-02-cos-the-application-phasemap.spec::CA9_first_run_wizard
+context: pipeline phase CA9_first_run_wizard of docs/2026-11-02-cos-the-application-phasemap.spec
+intent: null
+summary: CA9_first_run_wizard (?) — 9 file(s)
+system: idearium
+tags: []
+exported_at: 1794621619772
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794621619772
+lastSeenAt: 1794621619772
+fingerprint: null
+payload:
+  id: CA9_first_run_wizard
+  map: docs/2026-11-02-cos-the-application-phasemap.spec
+  repo: null
+  layer: null
+  status: '"OPEN — mapped 2026-11-13; his readings first"'
+  files:
+    - cos/app/install.js
+    - cos/app/controller.js
+    - cos/app/settings.js
+    - cos/app/window.js
+    - cos/app/desktop/main.js
+    - cos/app/desktop/starting.html
+    - cos/app/desktop/starting-preload.js
+    - cos/app/version.js
+    - tests/modules/test-cos-install.test.js
+  depends_on:
+    - CA8_cos_own_service_host
+  blocks: []
+  spec: cos/spec/cos-console.spec
+  graph: b2715ca5af69d4a6

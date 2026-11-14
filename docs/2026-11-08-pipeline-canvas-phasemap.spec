@@ -893,3 +893,37 @@ built_2026_11_09_plan:
 #     (derive, template, model: CIE-EG deterministic_first) and its tests.
 # First real run to show: SW7a's build request (2026-11-13): context met, dag met after Idearium's snapshot was refreshed, build failed twice
 # (Idearium out of its 1 GB heap at 09:15; then the request timed out while the build was started anyway and went stuck at 10:22).
+
+# ── ADDENDUM 2026-11-13 (map only) — his: the remote control as a COS module, and an assistant that navigates with him ──────────────────────
+# James, 2026-11-13: "like can we decompose the claude application for windows and make a remote control module for cos? also cos needs a
+# completely ai assistant that can navigate with the user, look at the remote control spec that comes from the nexus nerve, interaction field,
+# tv ui, etc."
+# Read the same day: cos/spec/remote-control.spec (PC10, specced 2026-11-11 from his Nerve, interaction field, ClearDriver) is that module's
+# spec; of its five modules only PC9's desktop-driver.js exists (desktop-field.js, overlay.ps1, remote-control.js are not written). PC10 is held
+# behind his PC_D13 ("so pipeline working needs to happen. then cos optimized." · 2026-11-11: "Just map it. Maybe spec it. Then back to the high
+# leverage. Can't get distracted"). Whether today's ask moves PC10 ahead of that order is his (RC2_R2).
+# "decompose the claude application": not done by the coder. Claude for Windows is Anthropic's program, not his or the coder's to unpack and
+# copy; what it does that he wants (a session on one device seen and steered from another, acts approved by the person) is taken as behaviour
+# to match, from what it shows on screen and its public documentation, and built from his own parts (PC10's spec). Said, not hidden (§1.2).
+phases_addendum_2026_11_13_rc:
+  RC2_cos_assistant_navigates_with_him:
+    status: "OPEN — mapped 2026-11-13; his readings first (do not guess)"
+    origin: 'James, 2026-11-13: "also cos needs a completely ai assistant that can navigate with the user, look at the remote control spec that comes from the nexus nerve, interaction field, tv ui, etc."'
+    depends_on: [PC10_our_own_remote_control]
+    spec: cos/spec/remote-control.spec
+    files: [cos/spec/remote-control.spec]
+    requires: ["PC10's see, show, act, verify (the field and the overlay)", "a local model through Ollama's bridge (his 2026-11-13: \"now we can use ollama for the pipeline\"); measured on his PC the same day: huihui_ai/qwen2.5-coder-abliterate:3b, 61.66 tokens/s on one short run"]
+    does: >-
+      An assistant inside COS that works on the screen with him: it reads the interaction field (numbered targets, not pixels), knows from Nerve
+      where he is looking and what just changed, shows what it means on the overlay (the spotlight and its label), and speaks in COS's Console.
+      It reaches every system's commands through each system's own door (SC10), never their files (§5.15). Nothing acts until he arms it (PC9).
+    readings_to_confirm:
+      - id: RC2_R1
+        question: '"navigate with the user"'
+        reading_a: "it guides: it spotlights where to go and says why, and he clicks"
+        reading_b: "it drives: it acts by number itself while he watches and can stop it"
+        reading_c: "both, a switch per session: guide by default, drive when he arms it"
+      - id: RC2_R2
+        question: "does this move PC10 ahead of PC_D13's order (the pipeline operable, then COS optimised)?"
+        reading_a: "no: mapped now, built after PC8 and the canvas (his 2026-11-11 order stands)"
+        reading_b: "yes: PC10 and this assistant are built next"
