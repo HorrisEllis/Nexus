@@ -1350,6 +1350,8 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
     if (rungs.some(x => x.base === 'ollama')) {
       const om = await _ollamaModels();
       const pr = PRt.present(rungs, { reachable: om.ok, installed: om.models, error: om.error });
+      // 0.60.535 PC18 slice a: a missing model's rung runs on an installed one, said on the run
+      if (pr.swapped && pr.swapped.length) { rungs = pr.rungs; ladderFrom = `${ladderFrom} — swapped: ${pr.swapped.map(s => s.why).join('; ')}`; }
       if (pr.skipped.length) {
         rungsSkipped = pr.skipped; rungs = pr.rungs;
         ladderFrom = `${ladderFrom} — left off: ${pr.skipped.map(s => `${s.provider} (${s.why})`).join('; ')}`;

@@ -12,6 +12,36 @@ const { state } = require('./state.js');
 
 const OLLAMA_HOST = config.OLLAMA_HOST;
 
+// 0.60.535 PC18 slice a — James, 2026-11-13: "Have it use any that's on my pc. Fallback to any other?" · 2026-11-14: "We need the highest
+// leverage, that gets me closer to cutting depende on you and using it the pipeline to build nexus." A call that names a model not installed
+// (his PC lacked the default qwen2.5-coder:7b, 2026-11-14) runs on the best installed one, said in the log, instead of failing.
+// pickInstalled(wanted, installed) → the model to run: the wanted one when installed; else a coder model; else the first Ollama lists; null when none.
+function _same(a, b) { const n = (x) => String(x || '').replace(/:latest$/, ''); return n(a) === n(b); }
+function pickInstalled(wanted, installed = []) {
+  const names = (installed || []).map(m => (m && m.name) || String(m || '')).filter(Boolean);
+  if (!names.length) return null;
+  if (wanted && names.some(n => _same(n, wanted))) return names.find(n => _same(n, wanted));
+  return names.find(n => /coder/i.test(n)) || names[0];
+}
+let _tags = { at: 0, names: null };
+function _installed() {
+  if (_tags.names && Date.now() - _tags.at < 30000) return Promise.resolve(_tags.names);
+  return new Promise(res => {
+    const u = new URL(OLLAMA_HOST);
+    http.get({ hostname: u.hostname, port: u.port || 11434, path: '/api/tags', timeout: config.HEALTH_CHECK_TIMEOUT_MS }, r => {
+      let d = ''; r.on('data', c => d += c);
+      r.on('end', () => { try { _tags = { at: Date.now(), names: (JSON.parse(d).models || []).map(m => m.name) }; res(_tags.names); } catch (_) { res(null); } });
+    }).on('error', () => res(null)).on('timeout', function () { this.destroy(); res(null); });
+  });
+}
+async function resolveModel(wanted, caller = '') {
+  const names = await _installed();
+  if (!names) return wanted;                       // the list could not be read: ask for what was named, as before
+  const m = pickInstalled(wanted, names);
+  if (m && !_same(m, wanted)) console.warn(`[ollama-bridge] ${wanted || '(no model named)'} is not installed — using ${m}${caller ? ` for ${caller}` : ''}`);
+  return m || wanted;
+}
+
 async function checkOllama() {
   return new Promise(res => {
     const u = new URL(OLLAMA_HOST);
@@ -176,6 +206,7 @@ function _ollamaCut(text, { doneReason } = {}) {
 // opts (0.39.291): { system, temperature } (0.39.356: onDelta) — so idearium's chunk builds (idearium/agent-suite generateWithOllama) use this
 // one hardened path too: streamed, idle timeout, thinking-only retry, a cut reply continued
 async function callOllamaRaw(model, prompt, maxTokens, timeoutMs, caller = 'ollama-bridge.job', opts = {}) {
+  model = await resolveModel(model, caller);   // 0.60.535 PC18 slice a: an installed model, never one that is missing
   // §0.39.356 LS1 — opts.onDelta(delta, 'text' | 'thinking'): every round's tokens (the think:false retry and each continuation too)
   const base = { ...(opts.system ? { system: opts.system } : {}), ...(opts.temperature != null ? { temperature: opts.temperature } : {}), ...(typeof opts.onDelta === 'function' ? { onDelta: opts.onDelta } : {}) };
   let first = await _generateOnce(model, prompt, maxTokens, timeoutMs, caller, base);
@@ -224,4 +255,4 @@ async function _generateOnce(model, prompt, maxTokens, idleMs, caller, extra = {
   }
 }
 
-module.exports = { checkOllama, callOllamaChatWithTools, callOllamaRaw, dispatchWithTools, _generateOnce, _ollamaCut };
+module.exports = { checkOllama, callOllamaChatWithTools, callOllamaRaw, dispatchWithTools, _generateOnce, _ollamaCut, pickInstalled, resolveModel };

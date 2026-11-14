@@ -393,7 +393,8 @@ const SUITES = [
   'test-setup-job-settles.test.js',
   'test-spec-document.test.js',   // 0.49.0 RS3 — a .spec / .eg as blocks with ids, byte-identical
   'test-thread.test.js',
-  'test-hardening-pass.test.js',   // 0.52.0 HP2–HP4 — interrupted runs, the ladder climbs only what is installed, signals weighted
+  'test-hardening-pass.test.js',
+  'test-ollama-uses-what-is-installed.test.js',   // 0.60.535 PC18 slice a — Ollama runs on what is installed   // 0.52.0 HP2–HP4 — interrupted runs, the ladder climbs only what is installed, signals weighted
   'test-guardian-stack-sim.test.js',   // 0.55.2 HP13–HP22 — the stack run end to end: right gate, pickup, never resend, cancel, no tab, economy, tab order
   'test-idearium-solid.test.js',   // 0.56.0 SD0 versionium dropped → retried and said · SD2 copilot never ok with nothing · SD3 the person goes first
   'test-options.test.js',   // 0.57.0 OP0–OP3 — one options shape for every system (lib/options.js), guardian first, its routes, the console's System tab

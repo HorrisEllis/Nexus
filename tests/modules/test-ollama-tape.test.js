@@ -17,7 +17,9 @@ const quiet = async (fn) => { const l = console.log, w = console.warn; console.l
   const seen = [];
   const srv = http.createServer((req, res) => {
     let b = ''; req.on('data', c => { b += c; }); req.on('end', () => {
-      const body = JSON.parse(b || '{}'); seen.push(body);
+      const body = JSON.parse(b || '{}');
+      if (req.url === '/api/tags') { res.writeHead(404); res.end('{}'); return; }   // 0.60.535: the bridge asks what is installed first (PC18 slice a); not a model call
+      seen.push(body);
       const n = seen.length;
       if (req.url === '/api/generate') {
         res.writeHead(200, { 'Content-Type': 'application/x-ndjson' });

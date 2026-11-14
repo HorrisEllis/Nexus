@@ -1099,6 +1099,17 @@ expanded_2026_11_13_ollama:
     depends_on: [PC_D16_ollama_first_guardian_if_needed]
     files: [ollama/compartment.json, lib/cli/compartments.js, cos/manager/supervisor.js, ollama/lib/model-inventory.js, cos/manager/proposals.js, idearium/cli/route-commands.js, tests/modules/test-cos-model-server.test.js]
     reuse: "runtime.processes (a system's second process, MG15a); the supervisor's start, restart and circuit; MG35b's adopt-what-already-answers; COS proposals for acts on his machine (PC15)"
+    slice_a_2026_11_14: >-
+      James, 2026-11-14: "We need the highest leverage, that gets me closer to cutting depende on you and using it the pipeline to build nexus.
+      Vital. The pipeline. Focus on that." His own words for this slice, 2026-11-13: "Have it use any that's on my pc. Fallback to any other?"
+      Found: the build's ladder leaves an Ollama rung off when its model is not installed (lib/pipeline-routing.js present, §HP3), and the
+      bridge calls the default qwen2.5-coder:7b, which his PC's log of 2026-11-14 shows missing. So the pipeline's Ollama rung never runs on his
+      PC and the build climbs to the paid agents. Slice a: (1) present() puts the best installed model in place of a missing one (a coder
+      model first, then the order Ollama lists), said on the run as swapped, and skips only when nothing is installed; (2) the bridge's one
+      door (ollama/lib/ollama-client.js callOllamaRaw) does the same for every caller (copilot, the chunk builds), said in its log. Changes
+      existing JS, no new file (§17.13).
+      files: [lib/pipeline-routing.js, idearium/api/index.js, ollama/lib/ollama-client.js, tests/modules/test-ollama-uses-what-is-installed.test.js]
+      proof: "a ladder naming a missing model runs on an installed one and says which; with nothing installed it is skipped as before; the bridge's call for a missing model goes to an installed one"
     does: >-
       The ollama system declares a second process, the model server: `ollama serve`, the binary found on his PC (PATH, %LOCALAPPDATA%\Programs\
       Ollama, Program Files; the first that exists, named), with his models where they already are (OLLAMA_MODELS unset = his ~/.ollama). COS
