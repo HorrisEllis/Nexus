@@ -1,0 +1,20 @@
+{
+  "name": "testenv",
+  "description": "NEXUS Test Environment — PHP, MySQL, Apache, Redis sandbox manager",
+  "script": "service/testenv-runner.js",
+  "env": {
+    "NEXUS_BRIDGE": "http://127.0.0.1:3747",
+    "TESTENV_PHP_VERSION": "8.3",
+    "TESTENV_AUTO_START": "false"
+  },
+  "maxRestarts": 3,
+  "restartDelay": 5000,
+  "windowsName": "NexusTestEnv",
+  "verbose": true,
+  "services": ["apache2", "mysql", "php8.3-fpm", "redis"],
+  "sandboxes": {
+    "php": { "docroot": "/var/www/nexus-sandbox", "port": 8081 },
+    "node": { "port": 8082 },
+    "mysql": { "db": "nexus_sandbox", "user": "nexus", "pass": "nexus_dev" }
+  }
+}

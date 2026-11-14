@@ -219,6 +219,14 @@ phases_addendum_2026_11_13:
     spec: cos/spec/cos-console.spec
     files: [cos/app/service-host/cos-svc.cs, cos/app/service-host/build.cmd, cos/app/bin/cos-svc.exe, cos/app/bin/cos-svc.exe.sha256, cos/app/service.js, cos/app/window.js, cos/app/desktop/main.js, cos/app/version.js, scripts/build-cos-app.js, tests/modules/test-cos-service.test.js]
     requires: ["Windows 10/11 with .NET Framework 4.x (in-box)", "one admin approval to install or remove the service"]
+    expanded_2026_11_14: >-
+      James, 2026-11-14, after his COS app (older than 0.9.0) said "nssm.exe was not found": "need to create nssm.exe" · sharing his NSM v2
+      (NSSM.7z): "use this and create a exe and build it into cos" · asked A/B/C: "a. im not attached to it. do what ever. write it in emerge if
+      possible." Decided by the axioms (§8.6 reuse before build, §17.13 Emerge first, §1.2 said): no second exe. cos-svc.exe already is the nssm.exe
+      replacement and answers Windows' Service Control Manager, which Node (and so an nsm.exe from NSM v2) cannot; Emerge cannot build a Windows exe
+      yet (native_windows, E2). His NSM v2 is kept whole in _archive/2026-11-14-nsm-v2-upload/. Its remaining inventions go to COS's supervisor, in
+      Emerge, as their own slice once E2 lands: start order by dependency (after:), a JSONL metrics stream per service, profiles, secrets masked
+      in logs, drain in reverse dependency order. What he needs now: COS 0.9.0 (release cos-v0.9.0), whose switch uses cos-svc.exe.
     does: >-
       cos-svc.exe (cos/app/service-host/cos-svc.cs): install <config> creates NexusCOS (auto start, LocalSystem) running itself with that config;
       start, stop, remove, status (in NSSM's words, so service.js reads either); run is what Windows starts; console runs the same loop in a
