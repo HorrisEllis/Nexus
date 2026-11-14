@@ -984,3 +984,165 @@ built_2026_11_09_plan:
 # James, 2026-11-13: "need the pipeline building all of my requests." his-request.pipeline (intent → a phase HR<n> → idearium-build as a step →
 # told); `request <words>` and `request answer <run> <gap> <answer>` in COS's console; Continue carries values; a gate names the open gaps.
 # Proof: real Idearium to the intent step; a stand-in for the whole chain; PL-03c. Not proved: a real Ollama build (his machine).
+# (Merged 2026-11-14 from claude/exciting-noether-lo55tr: its phases PC11–PC14 renumbered PC15–PC18, because main had built different PC11, PC12 and PC13 meanwhile.)
+# ── ADDENDUM 2026-11-13 (map, after 0.60.514) — RAID the hub of every interaction (AE_D8 confirmed); every intervention a COS proposal; Ollama first (his) ──
+# James, 2026-11-13: "And then we need to focus on the pipeline." · "Also, the proposals should run through the COS UI proposal system, like
+# anything that needs intervention, not just in the supervisor, but in Iderium or RAID. And also, let's hook in RAID finally as the hub for all
+# the interactions. Everything routes through RAID." · "let's find a Olama model, preferably abolished or obliterated [abliterated] ... And then
+# we'll let's start using Olama instead. And then use Guardian if we have to."
+# Census, read by the coder the same day (what waits for a person today, and where; none reaches COS's proposals, cos/manager/proposals.js):
+#   - RAID, contract gates: a gate with awaitsPerson waits as `awaiting` (cortex/core/raid/contract-gates.js 625-697), answered nowhere in COS.
+#   - RAID, officiator: a drop is parked after MAX_ATTEMPTS, tried once a day (cortex/core/raid/officiator.js parked()), read by hand.
+#   - Idearium: a phase run held `awaiting-verdict` (idearium/api/index.js 2112; POST /api/repos/:uuid/phases/verdict), seen only in Idearium.
+#   - Guardian: a job classified `needs-you` (login, captcha, rate limit, refusal; guardian/lib/job-retry.js 65), said in its own toast.
+#   - The pipeline: a step `blocked` by a failed dependency (lib/automation/pipeline.js 284) and a held run (PC8 slice b: pause, continue, retry).
+#   - COS itself: the supervisor's and the rules' held acts — the only kind that is a proposal now (MG18, SC4, 0.60.497 restart COS).
+# RAID as the hub: AE_D8 (2026-11-09, "TO CONFIRM") and its 2026-11-10 words ("Raid the supervisor, load balancer, compartment router, agent router,
+# the contract hub") are confirmed by "Everything routes through RAID." Built toward it: each COS request books one RAID contract (0.60.474);
+# not built (named in AE_D8's addendum): a contract per compartment, RAID as the agent router (lib/agent-router is its own), the ladder's
+# Ollama-first order chosen by RAID.
+# The model: the abliterated catalog (ollama/abliterated-catalog.js) lists nothing past 9B because it sizes dense models; a mixture-of-experts
+# model (DeepSeek-Coder-V2-Lite: 16B, 2.4B active) runs from RAM at a small model's speed, so the catalog's rule leaves out the best fit for his
+# machine. Ollama's library has deepseek-coder-v2:16b (Q4_0, ~8.9 GB); no huihui_ai abliterated build of it was found on 2026-11-13; one on
+# Hugging Face (gated, not huihui_ai) reports refusals 94/100 → 12/100, unverified. Which model is his, on his machine.
+
+decisions_2026_11_13:
+  PC_D15_raid_the_hub_of_every_interaction:
+    status: "DECIDED 2026-11-13 by James (confirms AE_D8)"
+    james: '"let''s hook in RAID finally as the hub for all the interactions. Everything routes through RAID."'
+    chosen: >-
+      Every interaction (a request, an agent's call, a held act, a verdict) is booked with RAID by its route (Cortex's, §5.15) before it runs, and
+      RAID routes it: which agent (Ollama first), which compartment, whether it waits for a person. COS stays the front door and the glue (his,
+      2026-11-10); RAID decides what and whether, COS does how and where.
+    axioms: ["§5.2 everything routes through RAID", "§5.15 each system reached by its routes, swappable", "§9.1 RAID the one write authority for contracts"]
+    still_his: "whether 'all the interactions' includes his own clicks in the UIs (booked as a person's act) or only agents' and systems' (the coder reads: all, a person's booked as by: person; to confirm)"
+  PC_D16_ollama_first_guardian_if_needed:
+    status: "DECIDED 2026-11-13 by James"
+    james: '"let''s start using Olama instead. And then use Guardian if we have to." · "preferably abolished or obliterated" (abliterated)'
+    chosen: "the ladder starts on a local Ollama model on his machine; Guardian's browser agents only when Ollama cannot (refused, too small, down); the model is his pick, abliterated preferred"
+    axioms: ["§1.2 a fallback says why", "local and free first (his, 2026-10-19: \"ollama first\")"]
+
+expanded_2026_11_13_hub:
+  PC15_every_intervention_a_cos_proposal:
+    status: OPEN
+    layer: integration
+    james: '"the proposals should run through the COS UI proposal system, like anything that needs intervention, not just in the supervisor, but in Iderium or RAID."'
+    depends_on: [PC_D15_raid_the_hub_of_every_interaction]
+    files: [cos/manager/proposals.js, cos/manager/server.js, cortex/core/raid/contract-gates.js, cortex/core/raid/officiator.js, idearium/api/index.js, guardian/lib/job-retry.js, lib/automation/pipeline.js, cos/ui/proposals/page.js, idearium/cli/route-commands.js]
+    reuse: "cos/manager/proposals.js kinds (register verb with check and run, SC4); POST /api/cos/proposals; the census above"
+    does: >-
+      Each place that waits for a person holds a COS proposal by COS's route (by: system:<name>), with a kind COS registers whose run answers the
+      owner by its own route: RAID's awaiting gate (verdict), RAID's parked drop (try now or drop), Idearium's awaiting-verdict (accept or
+      refuse, his words carried), Guardian's needs-you (opened in its tab), a blocked pipeline step (retry or skip). The owner keeps its state;
+      the proposal is the one place he answers. Slices: (a) RAID's two, (b) Idearium's verdict, (c) Guardian and the pipeline.
+    proof: "a stand-in of each owner: its wait becomes one open proposal; take runs the owner's route and closes it; drop says why; the owner down is said, the proposal kept"
+  PC16_raid_routes_every_interaction:
+    status: OPEN
+    layer: integration
+    james: '"Everything routes through RAID."'
+    depends_on: [PC_D15_raid_the_hub_of_every_interaction, PC_D16_ollama_first_guardian_if_needed]
+    files: [cortex/core/raid/contract-v2-door.js, cortex/core/raid/index.js, lib/agent-router.js, lib/pipeline-routing.js, cos/pipeline/index.js, cos/manager/server.js, idearium/api/index.js]
+    reuse: "AE_D8's built half (one RAID contract per COS request, 0.60.474); lib/pipeline-routing.js ladder (Ollama smallest first, then the chain); RAID's packet, split and budget"
+    does: >-
+      RAID answers 'who does this' for every agent call: the ladder (Ollama first, PC_D16) moves behind RAID's route, so Idearium, COS's pipeline
+      and copilot ask RAID instead of choosing; each call is booked on its contract, with the agent RAID picked and why. A census of every
+      agent call that bypasses RAID comes first (slice a), then each caller moves (one slice per system).
+    proof: "the census as a test (a call outside RAID fails it); a stand-in Ollama refused moves to Guardian, said, on the contract"
+  PC17_the_model_fits_by_what_it_runs:
+    status: OPEN
+    layer: backend
+    james: '"If we can squeeze enough, I could do a DeepSeek V2 16B quantisized ... 4K context, since Nexus is holding most of the context" · "the quanticized one is what I''m talking about."'
+    depends_on: [PC_D16_ollama_first_guardian_if_needed]
+    files: [lib/resource-monitor.js, ollama/abliterated-catalog.js, tests/modules/test-model-fit-ladder.test.js]
+    does: >-
+      fitsModel counts what the GPU holds (the card's free memory) and not only free RAM; the catalog sizes a mixture-of-experts model by its
+      file (memory) and its active parameters (speed), so a 16B with 2.4B active is listed for his machine.
+    proof: "MF tests: an 8.9 GB model on 4 GB VRAM and 9 GB free RAM fits; the same with 5 GB free RAM does not, saying both numbers"
+
+# ── ADDENDUM 2026-11-13 (map) — Ollama baked into COS: COS runs the server, Ollama's own app retired (his) ──
+# James, 2026-11-13: "Can we just replace the fucking Olama default application and just bake fucking Olama into cos? I'm fucking sick of the
+# Olama. Have it use any that's on my pc. Fallback to any other?"
+# Read first: Nexus's ollama system is a bridge only (ollama/server.js, :3749, compartment.json runtime.process "ollama-bridge"); the server it
+# talks to (:11434) is started by Ollama's own Windows app (its tray and its Startup entry), outside COS. COS's supervisor already runs a second
+# process per system (runtime.processes, MG15a) and picks a binary from cmdCandidates, but appends .cmd on Windows (made for electron), so
+# ollama.exe needs its own lookup. Nothing in COS starts, adopts or stops `ollama serve` today.
+expanded_2026_11_13_ollama:
+  PC18_cos_runs_the_model_server:
+    status: OPEN
+    layer: backend
+    james: '"replace the fucking Olama default application and just bake fucking Olama into cos" · "Have it use any that''s on my pc. Fallback to any other?"'
+    depends_on: [PC_D16_ollama_first_guardian_if_needed]
+    files: [ollama/compartment.json, lib/cli/compartments.js, cos/manager/supervisor.js, ollama/lib/model-inventory.js, cos/manager/proposals.js, idearium/cli/route-commands.js, tests/modules/test-cos-model-server.test.js]
+    reuse: "runtime.processes (a system's second process, MG15a); the supervisor's start, restart and circuit; MG35b's adopt-what-already-answers; COS proposals for acts on his machine (PC15)"
+    does: >-
+      The ollama system declares a second process, the model server: `ollama serve`, the binary found on his PC (PATH, %LOCALAPPDATA%\Programs\
+      Ollama, Program Files; the first that exists, named), with his models where they already are (OLLAMA_MODELS unset = his ~/.ollama). COS
+      starts it with the ollama system, restarts it on a crash, and stops it with COS. A server already answering on :11434 is adopted, never a
+      second one started. Retiring Ollama's own app (its tray process and its Startup entry) is a proposal he takes, never done silently.
+      Fallback, as read (to confirm): no Ollama binary → another local server that answers (LM Studio :1234, llama.cpp :8080, both
+      OpenAI-shaped) → Guardian's browser agents, each fallback said.
+    proof: "a stand-in binary: found and started; an answering :11434 adopted, nothing started; a crash restarted; no binary refused and the fallback named; the app's retirement only as a proposal"
+
+# Answered the same day (his, to three questions):
+#   - the fallback: "Other local, then Guardian" — no Ollama → another local server that answers (LM Studio, llama.cpp) → Guardian, each said.
+#   - the language: "Emerge only" — the lookup and the start are written in Emerge, not JavaScript (his 2026-11-07 rule, applied).
+#   - Ollama's own app: "No. Let’s build our own with emerge. Completely ours." — two readings, his to choose (PC_D17).
+decisions_2026_11_13_model_server:
+  PC_D17_our_own_model_server_in_emerge:
+    status: "DECIDED 2026-11-13 by James: reading a, widened to an inference supervisor in Emerge, Ollama its first backend (see the addendum after)"
+    james: '"No. Let’s build our own with emerge. Completely ours." · "Emerge only" · "Other local, then Guardian"'
+    readings:
+      a_the_manager: >-
+        Ours replaces Ollama's APP: finding models on his PC, starting, adopting and stopping the server, loading and unloading, serving
+        Nexus's ladder, in Emerge, in COS. The inference itself stays a binary that is already on his PC (ollama or llama.cpp), run as a
+        process. Weeks, not months; lands on PC18 as written.
+      b_the_engine: >-
+        Ours replaces Ollama ENTIRELY: an inference engine written in Emerge that reads a GGUF file and runs the model (quantized matrix
+        multiply, attention, mixture-of-experts routing, the tokenizer). Emerge compiles to x86 by syscalls with no libc and has no GPU access,
+        so it runs on the 3700X alone: a 2.4B-active model is feasible on CPU only with SIMD kernels Emerge does not have yet. Months; a project
+        of its own (its own map), and the GTX 1650 unused until Emerge reaches the GPU.
+    coder_recommends: "a first (it is what makes Ollama's app unnecessary now); b mapped as its own project after, if he wants it"
+
+# ── ADDENDUM 2026-11-13 (map) — PC_D17 decided: an inference supervisor defined in Emerge, Ollama its first backend (his) ──
+# James, 2026-11-13, choosing between "our own manager" and "our own engine": "YES. You’re talking about building the supervisor itself in Emerge,
+# not JavaScript. That is a substantially different proposition. And potentially a better fit for Nexus. ... you define the supervisor in Emerge as
+# a system of processes, conditions, constraints, routes and executable operations. ... * Detect whether Ollama is running. * Inspect available
+# models. * Receive inference requests. * Evaluate resource availability. * Queue or dispatch requests. * Monitor execution. * Recover from
+# failures. Each operation becomes an Emerge-defined process. ... Ollama becomes just one backend implementation. You could eventually build the
+# same supervisor around llama.cpp, another local inference runtime or even a remote inference service. Emerge defines the management logic. The
+# backend performs inference. One important caveat: Emerge still needs mechanisms to interact with the operating system, HTTP interfaces and
+# native executables. ... I would investigate building this as a complete Emerge-defined inference supervisor, with Ollama as its first backend,
+# rather than making an Ollama-specific controller. That would test Emerge’s ability to build an actual reusable infrastructure system."
+# PC_D17: DECIDED, reading a (the manager, not the engine), widened by him to a backend-agnostic inference supervisor. Inference stays a backend's.
+# What Emerge has for it, read the same day (emerge/emerge/lang/runtime.js, native/rt.eg): proc_start, proc_wait, proc_wait_ms, proc_signal,
+# proc_run; read_file, write_file, path_exists, is_dir, list_dir, make_dir, move_path, remove_path. Not there: an HTTP client or server, sockets,
+# environment variables, the platform's name. Native emerge.exe is Linux (syscalls); on his Windows machine Emerge runs interpreted (eg.js on
+# node), and a Windows PE is a milestone only (native/milestone.eg). So, his caveat in the tree: the OS, HTTP and native executables.
+# The other angle, before calling HTTP a blocker (his rule, 2026-11-07): Ollama's own CLI answers detect, inventory and load without HTTP
+# (`ollama ps`, `ollama list`, `ollama run --keepalive`), all by proc_run; HTTP is needed only to serve requests and to stream a reply. Slices
+# a-c use the CLI; d needs the door; the gaps go to CIE14 (gaps found while coding).
+expanded_2026_11_13_inference_supervisor:
+  PC18_cos_runs_the_model_server:
+    status: OPEN
+    expanded: "2026-11-13, PC_D17 (his): an inference supervisor defined in Emerge, Ollama its first backend; replaces Ollama's app"
+    files_added: [cos/inference/supervisor.eg, cos/inference/backend.eg, cos/inference/backends/ollama.eg, cos/inference/backends/llamacpp.eg, cos/inference/test/supervisor.test.eg, cos/manager/inference-door.js]
+    slices:
+      a_the_backend_contract: "backend.eg: what a backend is — detect, models, load, unload, infer, health, stop — as Emerge records and processes; a stand-in backend passes it"
+      b_ollama_detected_and_started: "backends/ollama.eg: the binary found (candidates by path_exists), a running server adopted (`ollama ps` answers), else `ollama serve` started by proc_start, kept by pid; needs env and platform (CIE14 gap, said)"
+      c_models_and_fit: "inventory by `ollama list`; fit by memory (PC17's rule in Emerge: RAM, the card, active parameters)"
+      d_requests: "receive, queue and dispatch inference requests with constraints (one model loaded at a time on a 4 GB card; a request over budget waits or falls back); served through COS's door (the JS host as cos/pipeline already is, until Emerge has sockets)"
+      e_monitor_and_recover: "a crash restarted with backoff; a hung request timed out and said; a server that stops answering adopted again or restarted"
+      f_fallback_backends: "llama.cpp's server and any OpenAI-shaped local server, then Guardian (remote), each fallback said (his: Other local, then Guardian)"
+      g_ollamas_app_retired: "a COS proposal (PC15) to stop Ollama's tray app and remove its Startup entry, once b runs on his machine"
+    proof_added: "supervisor.test.eg on a stand-in backend: detect, adopt, start, crash and restart, over budget waits, fallback said; then his machine, Ollama's app closed, Nexus's ladder answered by COS"
+
+# ── PINNED 2026-11-13 (his idea; not mapped, not built) — a model of our own: a base model trained on Emerge and his framework, as Nexus's copilot ──
+# James, 2026-11-13: "Also huge idea to put a pin in. What if we load a base model for emerge and the framework to train completely for nexus as
+# the copilot"
+# Context, the coder's, for when it is unpinned: the inference supervisor (PC18) would serve it as one more backend. What there is to train on:
+# Emerge's own sources, examples and tests (lang/, cie/), every .phase and map, his framework (docs/innovation-toolkit*.md, FRAMEWORK-THREADS),
+# his words (docs/his-words). Small for training a model from nothing; a fit for adapting a small base model (LoRA). On his machine a 4 GB GTX 1650
+# can adapt a model up to about 3B, slowly; a rented GPU for hours is the other way. Open, his: "base model" as a pretrained small model adapted
+# (the coder's reading) or a model trained from nothing; and what "completely for nexus" excludes. A prediction goes in FRAMEWORK-THREADS before any run.
+pinned_2026_11_13:
+  - "a base model trained on Emerge and his framework, completely for Nexus, as the copilot (his, 2026-11-13); after PC18, unmapped"

@@ -1,0 +1,319 @@
+envelope: 1
+uuid: nexus-export-graph-phase:PC15_every_intervention_a_cos_proposal:6bc4bdb2a51f8029
+type: graph
+id: phase:PC15_every_intervention_a_cos_proposal:6bc4bdb2a51f8029
+context: dependency graph of phase PC15_every_intervention_a_cos_proposal
+intent: null
+summary: 33 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1794618104726
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794618104726
+lastSeenAt: 1794618104726
+fingerprint: null
+payload:
+  for: PC15_every_intervention_a_cos_proposal
+  kind: phase
+  repo: null
+  hash: 6bc4bdb2a51f8029
+  nodes:
+    - path: cortex/core/raid/contract-gates.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/officiator.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: cos/manager/proposals.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/manager/server.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/ui/proposals/page.js
+      role: changes
+      exists: true
+      system: cos
+    - path: guardian/lib/job-retry.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: idearium/api/index.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/cli/route-commands.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: lib/automation/pipeline.js
+      role: changes
+      exists: true
+      system: lib
+    - path: cortex/boot.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/contract-adapters.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/contract-intake.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/contract-v2-door.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: idearium/cli/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/idearium-service.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/checks/ck-247-decomposition.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: orchestrator/orchestrator.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: tests/modules/idearium-build-queue-poller.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/idearium-guardian-dispatch.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/idearium-ingest-stability.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-agent-hat-agnostic.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cos/disk/disk.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/disk/vdisk.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/add-system.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/autopilot-door.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/deploy.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/hub.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/notices.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/resources.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/supervisor.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/system-config.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/updates.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/usage.js
+      role: uses
+      exists: true
+      system: cos
+  edges:
+    - from: cos/manager/server.js
+      to: cos/manager/supervisor.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/usage.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/autopilot-door.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/resources.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/updates.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/notices.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/system-config.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/add-system.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/deploy.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/hub.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/disk/disk.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/disk/vdisk.js
+      kind: requires
+    - from: cortex/core/raid/contract-adapters.js
+      to: cortex/core/raid/contract-gates.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: cortex/core/raid/contract-gates.js
+      kind: requires
+    - from: cortex/core/raid/contract-v2-door.js
+      to: cortex/core/raid/contract-gates.js
+      kind: requires
+    - from: lib/checks/ck-247-decomposition.js
+      to: cortex/core/raid/contract-gates.js
+      kind: requires
+    - from: cortex/boot.js
+      to: cortex/core/raid/officiator.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: cortex/core/raid/officiator.js
+      kind: requires
+    - from: idearium/cli/index.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: idearium/idearium-service.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/idearium-build-queue-poller.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/idearium-guardian-dispatch.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/idearium-ingest-stability.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/test-agent-hat-agnostic.test.js
+      to: idearium/api/index.js
+      kind: requires
+  crossings:
+    - from: lib/checks/ck-247-decomposition.js
+      to: cortex/core/raid/contract-gates.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+    - from: orchestrator/orchestrator.js
+      to: cortex/core/raid/officiator.js
+      fromSystem: orchestrator
+      toSystem: cortex
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC18_cos_runs_the_model_server
+    upstream: []
+    downstream:
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC18_cos_runs_the_model_server
+    blockedBy: []
+    unlocks:
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC18_cos_runs_the_model_server
+    conflicts:
+      - with: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC2_procedures_and_frameworks_as_steps
+        files:
+          - idearium/api/index.js
+          - cos/manager/server.js
+      - with: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC3_the_build_request_step
+        files:
+          - cos/manager/server.js
+          - idearium/cli/route-commands.js
+      - with: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC4_the_box_kinds_on_the_canvas
+        files:
+          - lib/automation/pipeline.js
+          - cos/manager/server.js
+      - with: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC5_programmable_gate_types
+        files:
+          - cos/manager/server.js
+          - idearium/cli/route-commands.js
+      - with: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC7_iterate_to_the_end_state
+        files:
+          - cos/manager/server.js
+          - idearium/cli/route-commands.js
+          - idearium/api/index.js
+          - lib/automation/pipeline.js
+      - with: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC8_operate_a_pipeline
+        files:
+          - lib/automation/pipeline.js
+          - idearium/cli/route-commands.js
+          - cos/manager/server.js
+          - idearium/api/index.js
+      - with: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC9_the_desktop_driver
+        files:
+          - cos/manager/server.js
+          - idearium/cli/route-commands.js
+      - with: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC10_our_own_remote_control
+        files:
+          - cos/manager/server.js
+          - idearium/cli/route-commands.js
+      - with: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC16_raid_routes_every_interaction
+        files:
+          - cos/manager/server.js
+          - idearium/api/index.js
+    dangling:
+      - PC_D15_raid_the_hub_of_every_interaction
+    lines:
+      - layer 0 · ready
+      - 'depends on (0): —'
+      - >-
+        needed by (1): PC18_cos_runs_the_model_server · finishing it unlocks
+        PC18_cos_runs_the_model_server
+      - 'DANGLING depends_on: PC_D15_raid_the_hub_of_every_interaction'
+      - >-
+        same files as PC2_procedures_and_frameworks_as_steps with no order between them:
+        idearium/api/index.js, cos/manager/server.js
+      - >-
+        same files as PC3_the_build_request_step with no order between them: cos/manager/server.js,
+        idearium/cli/route-commands.js
+      - >-
+        same files as PC4_the_box_kinds_on_the_canvas with no order between them:
+        lib/automation/pipeline.js, cos/manager/server.js
+      - >-
+        same files as PC5_programmable_gate_types with no order between them: cos/manager/server.js,
+        idearium/cli/route-commands.js
+      - >-
+        same files as PC7_iterate_to_the_end_state with no order between them:
+        cos/manager/server.js, idearium/cli/route-commands.js, idearium/api/index.js,
+        lib/automation/pipeline.js
+      - … and 4 more phases sharing its files without an order
+    edges: []

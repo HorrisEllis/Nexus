@@ -1,0 +1,37 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-08-pipeline-canvas-phasemap.spec::PC15_every_intervention_a_cos_proposal
+type: phase
+id: docs_2026-11-08-pipeline-canvas-phasemap.spec::PC15_every_intervention_a_cos_proposal
+context: >-
+  pipeline phase PC15_every_intervention_a_cos_proposal of
+  docs/2026-11-08-pipeline-canvas-phasemap.spec
+intent: null
+summary: PC15_every_intervention_a_cos_proposal (integration) — 9 file(s)
+system: idearium
+tags: []
+exported_at: 1794618104726
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794618104726
+lastSeenAt: 1794618104726
+fingerprint: null
+payload:
+  id: PC15_every_intervention_a_cos_proposal
+  map: docs/2026-11-08-pipeline-canvas-phasemap.spec
+  repo: null
+  layer: integration
+  status: OPEN
+  files:
+    - cos/manager/proposals.js
+    - cos/manager/server.js
+    - cortex/core/raid/contract-gates.js
+    - cortex/core/raid/officiator.js
+    - idearium/api/index.js
+    - guardian/lib/job-retry.js
+    - lib/automation/pipeline.js
+    - cos/ui/proposals/page.js
+    - idearium/cli/route-commands.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 6bc4bdb2a51f8029

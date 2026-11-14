@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-08-pipeline-canvas-phasemap.spec::PC16_raid_routes_every_interaction
+type: phase
+id: docs_2026-11-08-pipeline-canvas-phasemap.spec::PC16_raid_routes_every_interaction
+context: pipeline phase PC16_raid_routes_every_interaction of docs/2026-11-08-pipeline-canvas-phasemap.spec
+intent: null
+summary: PC16_raid_routes_every_interaction (integration) — 7 file(s)
+system: idearium
+tags: []
+exported_at: 1794618104731
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794618104731
+lastSeenAt: 1794618104731
+fingerprint: null
+payload:
+  id: PC16_raid_routes_every_interaction
+  map: docs/2026-11-08-pipeline-canvas-phasemap.spec
+  repo: null
+  layer: integration
+  status: OPEN
+  files:
+    - cortex/core/raid/contract-v2-door.js
+    - cortex/core/raid/index.js
+    - lib/agent-router.js
+    - lib/pipeline-routing.js
+    - cos/pipeline/index.js
+    - cos/manager/server.js
+    - idearium/api/index.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: c717eec91031041e

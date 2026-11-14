@@ -7,11 +7,11 @@ intent: null
 summary: 36 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1794613745504
+exported_at: 1794618104672
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794613745504
-lastSeenAt: 1794613745504
+firstSeenAt: 1794618104672
+lastSeenAt: 1794618104672
 fingerprint: null
 payload:
   for: PC4_the_box_kinds_on_the_canvas
@@ -335,6 +335,14 @@ payload:
       - with: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC13_his_request_built_by_the_pipeline
         files:
           - tests/modules/test-cos-pipeline.test.js
+      - with: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC15_every_intervention_a_cos_proposal
+        files:
+          - lib/automation/pipeline.js
+          - cos/manager/server.js
+      - with: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC16_raid_routes_every_interaction
+        files:
+          - cos/pipeline/index.js
+          - cos/manager/server.js
     dangling: []
     lines:
       - >-
@@ -355,7 +363,7 @@ payload:
       - >-
         same files as PC12_every_pipeline_in_cos with no order between them: cos/pipeline/cli.eg,
         cos/pipeline/index.js, cos/pipeline/registry.json, tests/modules/test-cos-pipeline.test.js
-      - … and 1 more phases sharing its files without an order
+      - … and 3 more phases sharing its files without an order
     edges:
       - from: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC1_one_box_shape
         kind: declared

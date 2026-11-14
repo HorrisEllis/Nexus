@@ -1,0 +1,84 @@
+envelope: 1
+uuid: nexus-export-graph-phase:PC18_cos_runs_the_model_server:f95ab67f47ba1623
+type: graph
+id: phase:PC18_cos_runs_the_model_server:f95ab67f47ba1623
+context: dependency graph of phase PC18_cos_runs_the_model_server
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1794618104739
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794618104739
+lastSeenAt: 1794618104739
+fingerprint: null
+payload:
+  for: PC18_cos_runs_the_model_server
+  kind: phase
+  repo: null
+  hash: f95ab67f47ba1623
+  nodes:
+    - path: cos/manager/inference-door.js
+      role: changes
+      exists: false
+      system: cos
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC15_every_intervention_a_cos_proposal
+    dependents: []
+    upstream:
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC15_every_intervention_a_cos_proposal
+    downstream: []
+    blockedBy:
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC15_every_intervention_a_cos_proposal
+    unlocks: []
+    conflicts:
+      - with: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC3_the_build_request_step
+        files:
+          - idearium/cli/route-commands.js
+      - with: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC5_programmable_gate_types
+        files:
+          - idearium/cli/route-commands.js
+      - with: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC7_iterate_to_the_end_state
+        files:
+          - idearium/cli/route-commands.js
+      - with: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC8_operate_a_pipeline
+        files:
+          - idearium/cli/route-commands.js
+      - with: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC9_the_desktop_driver
+        files:
+          - idearium/cli/route-commands.js
+      - with: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC10_our_own_remote_control
+        files:
+          - idearium/cli/route-commands.js
+    dangling:
+      - PC_D16_ollama_first_guardian_if_needed
+    lines:
+      - layer 1 · blocked by PC15_every_intervention_a_cos_proposal
+      - 'depends on (1): PC15_every_intervention_a_cos_proposal'
+      - 'needed by (0): —'
+      - 'DANGLING depends_on: PC_D16_ollama_first_guardian_if_needed'
+      - >-
+        same files as PC3_the_build_request_step with no order between them:
+        idearium/cli/route-commands.js
+      - >-
+        same files as PC5_programmable_gate_types with no order between them:
+        idearium/cli/route-commands.js
+      - >-
+        same files as PC7_iterate_to_the_end_state with no order between them:
+        idearium/cli/route-commands.js
+      - >-
+        same files as PC8_operate_a_pipeline with no order between them:
+        idearium/cli/route-commands.js
+      - >-
+        same files as PC9_the_desktop_driver with no order between them:
+        idearium/cli/route-commands.js
+      - … and 1 more phases sharing its files without an order
+    edges:
+      - from: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC15_every_intervention_a_cos_proposal
+        kind: inferred
