@@ -289,3 +289,12 @@ James, 2026-11-14: "i am back on my main driver. everything runs in the pipeline
   top bar: the logo, Start, Add, Options; no tabs), and everything is a tool window on it: Pipelines, Run, Machine, each compartment, each gate,
   the end state, Outputs, Changes, wired port to port. Preview: cos/ui/pipeline-editor/preview-4.html (and .png). This supersedes the tab
   layouts of the three earlier previews (kept, §0.3).
+- 2026-11-14, of preview 4, his: "this is decent but kay but look at field or workshop, in  eravos canvas. also tabs on sides like iearium has
+  the tabs, remove the start just have the add. yes, like each step, gate, relationship, from raid to end state, anything, events from an
+  application, emerge coding word by word, visual debugging, running frameworks or pipelines, recursive and meta, like any process, system, etc
+  can be systematized, stepwise, broken down, chunked, or bricks, or gaps, step, analysis or decomposition, its my framework" · "its fine. eravos
+  canvas. field and workshop." Preview 6 (cos/ui/pipeline-editor/preview-6.html, .png): preview 4 with Add only; Idearium's side tabs on both
+  edges (left: what is on the canvas: pipeline, RAID, events, Emerge, debug, frameworks, gaps; right: the tools); ERAVOS's Field
+  (tools/core/field in the eravos-canvas repo) open in the dock on the selected compartment: its bricks, gaps and events as layers, his words to
+  Emerge word by word, the run's ledger scrubbed step by step, the brick's properties, and "open as a pipeline" (recursive). Previews 1–3 and 5
+  borrowed Idearium's look and are set aside (his: "those are idearium. looks like shit"), kept §0.3.
