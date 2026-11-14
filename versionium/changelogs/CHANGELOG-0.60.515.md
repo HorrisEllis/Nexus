@@ -27,5 +27,10 @@ to run in the taskbar using the service or something. spamming my screen."
 
 Coder's part: the diagnosis and the fix. The call that the windows must go is his, four times now (2026-11-05 twice, 2026-11-08, 2026-11-13).
 
+## Correction, the same day (the first wording is kept below, §0.3)
+- The cause named below (CRLF) is wrong. Later the same day the same tool, on the same machine, logged CA8, RC2 and CA9 without trouble. Why
+  it does not find `SC16_no_console_windows` is not established. The gap stands (a phase with ledger notes that the tool cannot log to); its
+  cause is to find.
+
 ## Gap found
 - On Windows `node idearium/spec-engine/phase-ledger.cjs log SC16_no_console_windows ...` answers "no phase ... in any map": the maps are checked out with CRLF (core.autocrlf=true) and the ledger's reader counts 116 phases in 11 maps. The ledger line for this release was written by hand in the tool's shape, and says so. To phase: the reader accepts CRLF.
