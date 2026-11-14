@@ -284,3 +284,8 @@ James, 2026-11-14: "i am back on my main driver. everything runs in the pipeline
   control (the UI editor, UE3, stands on its own); the pipeline is the canvas, and Idearium's side tabs each open a tool as an ERAVOS window
   on it. Preview: cos/ui/pipeline-editor/preview-canvas.html (and .png), sample data, nothing wired. Ollama is the pipeline's first agent;
   Guardian is the fallback.
+- 2026-11-14, later again, his, shown preview 3 (a canvas with Idearium's bars and tabs): "that doesn't look better. remove all the tabs from
+  the top. use the eravos canvas completely blank then make all the tools you need." So: the pipeline editor is ERAVOS's canvas as it is (its
+  top bar: the logo, Start, Add, Options; no tabs), and everything is a tool window on it: Pipelines, Run, Machine, each compartment, each gate,
+  the end state, Outputs, Changes, wired port to port. Preview: cos/ui/pipeline-editor/preview-4.html (and .png). This supersedes the tab
+  layouts of the three earlier previews (kept, §0.3).
