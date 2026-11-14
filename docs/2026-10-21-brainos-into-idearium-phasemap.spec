@@ -278,3 +278,9 @@ James, 2026-11-14: "i am back on my main driver. everything runs in the pipeline
   component of the pipeline editor's own registry. Not: COS's pages reaching into Idearium's folder.
 - The pipeline editor's tabs (the coder's first cut, to confirm): Pipelines · Steps · Gates · DAG · Contract · Runs · Ledger · Automation
   (BrainOS's workflow editor) · Settings; the canvas (BX3) as the Steps view's drawing.
+- 2026-11-14, later, his, with a screenshot of Idearium's Notes tab and its right edge (PLAN · OUTPUTS · CHANGES · TASKS · CONTEXT · TOOLS ·
+  CONTROL, all/none): "decouple from the ui editor. need all the side tabs like in the image. i like some of that but in the eravos canvas as
+  tools? give me a preview" · "the pipeline needs to be fully built, using ollama primarily." So: the pipeline editor carries no UI-editor
+  control (the UI editor, UE3, stands on its own); the pipeline is the canvas, and Idearium's side tabs each open a tool as an ERAVOS window
+  on it. Preview: cos/ui/pipeline-editor/preview-canvas.html (and .png), sample data, nothing wired. Ollama is the pipeline's first agent;
+  Guardian is the fallback.
