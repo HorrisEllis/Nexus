@@ -7,11 +7,11 @@ intent: null
 summary: 9 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1794611411158
+exported_at: 1794618104680
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794611411158
-lastSeenAt: 1794611411158
+firstSeenAt: 1794618104680
+lastSeenAt: 1794618104680
 fingerprint: null
 payload:
   for: PC5_programmable_gate_types
@@ -138,6 +138,7 @@ payload:
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D8_options_not_neat_boxes
     downstream:
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC12_every_pipeline_in_cos
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC13_his_request_built_by_the_pipeline
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC2_procedures_and_frameworks_as_steps
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC4_the_box_kinds_on_the_canvas
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC6_intelligence_watches_the_runs
@@ -165,6 +166,16 @@ payload:
           - cos/manager/server.js
           - cos/manager/contract.json
           - idearium/cli/route-commands.js
+      - with: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC15_every_intervention_a_cos_proposal
+        files:
+          - cos/manager/server.js
+          - idearium/cli/route-commands.js
+      - with: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC16_raid_routes_every_interaction
+        files:
+          - cos/manager/server.js
+      - with: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC18_cos_runs_the_model_server
+        files:
+          - idearium/cli/route-commands.js
     dangling: []
     lines:
       - layer 14 · blocked by MB3_one_shape_with_pipelines
@@ -174,7 +185,7 @@ payload:
         all upstream 40
       - >-
         needed by (4): PC4_the_box_kinds_on_the_canvas, PC6_intelligence_watches_the_runs,
-        PC8_operate_a_pipeline, PC2_procedures_and_frameworks_as_steps · all downstream 6 ·
+        PC8_operate_a_pipeline, PC2_procedures_and_frameworks_as_steps · all downstream 7 ·
         finishing it unlocks PC6_intelligence_watches_the_runs, PC8_operate_a_pipeline
       - >-
         same files as PC3_the_build_request_step with no order between them: cos/manager/server.js,
@@ -185,6 +196,13 @@ payload:
       - >-
         same files as PC10_our_own_remote_control with no order between them: cos/manager/server.js,
         cos/manager/contract.json, idearium/cli/route-commands.js
+      - >-
+        same files as PC15_every_intervention_a_cos_proposal with no order between them:
+        cos/manager/server.js, idearium/cli/route-commands.js
+      - >-
+        same files as PC16_raid_routes_every_interaction with no order between them:
+        cos/manager/server.js
+      - … and 1 more phases sharing its files without an order
     edges:
       - from: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC1_one_box_shape
         kind: declared

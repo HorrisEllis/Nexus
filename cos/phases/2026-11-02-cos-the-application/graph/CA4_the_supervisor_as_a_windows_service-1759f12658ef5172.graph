@@ -7,11 +7,11 @@ intent: null
 summary: 27 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1794613330842
+exported_at: 1794618060950
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794613330842
-lastSeenAt: 1794613330842
+firstSeenAt: 1794618060950
+lastSeenAt: 1794618060950
 fingerprint: null
 payload:
   for: CA4_the_supervisor_as_a_windows_service
@@ -191,6 +191,7 @@ payload:
       - docs/2026-10-24-cos-manager-phasemap.spec::MG37_starts_with_windows
     dependents:
       - docs/2026-11-02-cos-enterprise-phasemap.spec::CE2b_updates_restart_cos
+      - docs/2026-11-02-cos-the-application-phasemap.spec::CA9_cos_own_service_host
     upstream:
       - docs/2026-10-15-cos-app-phasemap.spec::COSA13_auto_update
       - docs/2026-10-15-cos-app-phasemap.spec::COSA14_versionium_record
@@ -216,9 +217,11 @@ payload:
       - docs/2026-11-02-cos-the-application-phasemap.spec::CA_D1b_the_supervisor_as_a_service
     downstream:
       - docs/2026-11-02-cos-enterprise-phasemap.spec::CE2b_updates_restart_cos
+      - docs/2026-11-02-cos-the-application-phasemap.spec::CA9_cos_own_service_host
     blockedBy: []
     unlocks:
       - docs/2026-11-02-cos-enterprise-phasemap.spec::CE2b_updates_restart_cos
+      - docs/2026-11-02-cos-the-application-phasemap.spec::CA9_cos_own_service_host
     conflicts: []
     dangling: []
     lines:
@@ -226,7 +229,9 @@ payload:
       - >-
         depends on (2): CA_D1b_the_supervisor_as_a_service, MG37_starts_with_windows · all upstream
         22
-      - 'needed by (1): CE2b_updates_restart_cos · finishing it unlocks CE2b_updates_restart_cos'
+      - >-
+        needed by (2): CE2b_updates_restart_cos, CA9_cos_own_service_host · finishing it unlocks
+        CE2b_updates_restart_cos, CA9_cos_own_service_host
     edges:
       - from: docs/2026-11-02-cos-the-application-phasemap.spec::CA_D1b_the_supervisor_as_a_service
         kind: declared

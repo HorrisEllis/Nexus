@@ -31,6 +31,8 @@ const TABLE = [
   // GR0 (2026-11-13) — his "find them.": every graph in Nexus, read from the tree
   ['census', 'census graph [--md]', 'every graph Nexus keeps: its store, what its edges rest on, the files that write and read it, its rows on this machine\'s data; --md prints the atlas page'],
   // CA7 slice a (2026-11-13), his "can be moved anbd changed in each systems individual settings"
+  // PC13 (2026-11-13) — James: "need the pipeline building all of my requests."
+  ['request', 'request <your words> | request answer <run> <gap-id> <your answer>', 'your request built by the pipeline: what it means and its gaps (asked of you), a phase written from your words, then built (Ollama first); the run shows in Automation'],
   ['location', 'location [system]', 'where each system lives on this machine, its size, and whether it can be moved (and what holds it if not)'],
   ['pipeline-sync', 'pipeline-sync', 'import every pipeline in Nexus into the Automation tab now: COS\'s own files and each system\'s, by its route; a system that does not answer is named'],
   // AE7 (2026-11-08) — James: "Then an api that eravos can use for the step. So needs full cli commands, events, nodes."
@@ -55,7 +57,7 @@ function createCli({ sup, resources = null, config = null, notices = null, propo
     // 0.60.517 — "cos <verb>" typed in COS's own console is the verb (his 2026-11-13 `cos pipeline-sync` answered "no verb cos")
     let [verb, ...a] = split(line); if (verb === 'cos' && a.length) verb = a.shift(); const L = [];
     if (!verb) return { ok: true, lines: [] };
-    const acts = ['start', 'stop', 'restart', 'boot', 'take', 'drop', 'add'];   // and `disk <system> make` (below)
+    const acts = ['start', 'stop', 'restart', 'boot', 'take', 'drop', 'add', 'request'];   // PC13: a request is his   // and `disk <system> make` (below)
     if (/^agent:/.test(String(by)) && (acts.includes(verb) || (verb === 'disk' && a[1] === 'make') || (verb === 'vdisk' && /^(make|refresh|snapshot|revert|drop)$/.test(a[1] || '')) || (verb === 'config' && a.length > 1) || (verb === 'notices' && a[0] === 'read')))
       return { ok: false, lines: [`an agent proposes; ${verb} is a person's act (POST /api/cos/proposals)`] };
     const need = (n, usage) => { if (a.length < n) throw Object.assign(new Error(`usage: ${usage}`), { code: 400 }); };
@@ -167,6 +169,23 @@ function createCli({ sup, resources = null, config = null, notices = null, propo
           if (o.args) o.args = o.args.split(','); if (o.port) o.port = Number(o.port);
           const r = addSystem.propose(o); L.push(`proposal ${r.proposal.id}: add ${o.name} from ${o.dir}${r.taken ? ` — taken: ${r.taken.status}` : ' — held: take it to add'}`); break;
         }
+        case 'request': {
+          if (a[0] === 'answer') {   // request answer <run> <gap-id> <your answer>: the held run gets your answer and goes on
+            if (a.length < 4) throw Object.assign(new Error('usage: request answer <run> <gap-id> <your answer>'), { code: 400 });
+            const door = require('./automation-door.js'); const q = async (method, url, body) => { const r = await door.handle({ method, url: '/automation' + url, body: body || {} }); if (!r || r.status >= 400) throw new Error((r && r.body && r.body.error) || `${method} ${url}: ${r ? r.status : 'no answer'}`); return r.body; };
+            const live = ((await q('GET', '/pipeline-runs?limit=50')).runs || []).filter(x => x.id.startsWith(a[1]) && x.status === 'paused');
+            if (live.length !== 1) throw new Error(live.length ? `${live.length} held runs start with ${a[1]}: give more of its id` : `no held run starts with ${a[1]}`);
+            const run = live[0]; const answers = JSON.stringify({ [a[2]]: a.slice(3).join(' ') });   // merged with earlier answers by the run itself
+            const r = await q('POST', `/pipeline-runs/${encodeURIComponent(run.id)}/continue`, { by, vars: { answers } });
+            L.push(`answered ${a[2]} on run ${run.id.slice(0, 8)}: ${r.status}`); break; }
+          const words = a.join(' ').trim(); if (!words) throw Object.assign(new Error('usage: request <your words> · request answer <run> <gap-id> <your answer>'), { code: 400 });
+          const door = require('./automation-door.js');
+          const call = async (method, url, body) => { const r = await door.handle({ method, url: '/automation' + url, body: body || {} }); if (!r || r.status >= 400) throw new Error((r && r.body && r.body.error) || `${method} ${url}: ${r ? r.status : 'no answer'}`); return r.body; };
+          const p = ((await call('GET', '/pipelines')).pipelines || []).find(x => x.name === 'His request');
+          if (!p) throw new Error('the pipeline "His request" is not in COS yet: Idearium serves it (idearium/pipelines/his-request.pipeline); run `pipeline-sync` once Idearium is up');
+          const r = await call('POST', `/pipelines/${encodeURIComponent(p.id)}/run`, { vars: { words }, wait: false, by });
+          L.push(`your request is running: run ${String(r.runId || '').slice(0, 8)} of "His request"`, '  its steps show in Automation › Pipelines › His request; a gap or the final yes waits for you there');
+          break; }
         case 'location': {
           if (typeof locationOf !== 'function') throw new Error('COS cannot read locations here');
           const r = await locationOf(a[0] || null); if (!r.ok) throw new Error(r.error || 'no answer');

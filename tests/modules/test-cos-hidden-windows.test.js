@@ -36,7 +36,8 @@ async function test(id, d, fn) { try { await fn(); console.log(`  ✓ ${id} ${d}
     sup.shutdown({ by: 'test' });
   });
   await test('HW-02', 'every spawn in the supervisor, the door\'s test runner and core-duties hides its window', () => {
-    for (const f of ['cos/manager/supervisor.js', 'cos/manager/autopilot-door.js', 'cos/manager/duties.js']) {
+    // 0.60.527 (numbered 0.60.515 on its branch): lib/nexus/autopilot.js added — its attached start of COS's manager had no windowsHide, the window on his screen 2026-11-13
+    for (const f of ['cos/manager/supervisor.js', 'cos/manager/autopilot-door.js', 'cos/manager/duties.js', 'lib/nexus/autopilot.js']) {
       const src = fs.readFileSync(path.join(ROOT, f), 'utf8');
       const spawns = [...src.matchAll(/\b(spawnFn|spawn|spawnSync)\((?:[^()]|\([^()]*\))*\)/g)].map(m => m[0]).filter(x => !/^spawn\(\s*\)/.test(x) && /\{/.test(x));
       for (const sp of spawns) assert.match(sp, /windowsHide/, `${f}: ${sp.slice(0, 90)}`);

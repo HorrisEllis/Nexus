@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-08-pipeline-canvas-phasemap.spec::PC13_his_request_built_by_the_pipeline
+type: phase
+id: docs_2026-11-08-pipeline-canvas-phasemap.spec::PC13_his_request_built_by_the_pipeline
+context: >-
+  pipeline phase PC13_his_request_built_by_the_pipeline of
+  docs/2026-11-08-pipeline-canvas-phasemap.spec
+intent: null
+summary: PC13_his_request_built_by_the_pipeline (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1794613745545
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794613745545
+lastSeenAt: 1794613745545
+fingerprint: null
+payload:
+  id: PC13_his_request_built_by_the_pipeline
+  map: docs/2026-11-08-pipeline-canvas-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - docs/2026-11-13-his-requests-phasemap.spec
+    - cos/manager/cli.js
+    - tests/modules/test-cos-pipeline.test.js
+  depends_on:
+    - PC8_operate_a_pipeline
+    - PC11_nothing_sent_teaches_nothing
+  blocks: []
+  spec: null
+  graph: 22c1e897a94438f4

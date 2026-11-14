@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-08-pipeline-canvas-phasemap.spec::PC18_cos_runs_the_model_server
+type: phase
+id: docs_2026-11-08-pipeline-canvas-phasemap.spec::PC18_cos_runs_the_model_server
+context: pipeline phase PC18_cos_runs_the_model_server of docs/2026-11-08-pipeline-canvas-phasemap.spec
+intent: null
+summary: PC18_cos_runs_the_model_server (backend) — 7 file(s)
+system: idearium
+tags: []
+exported_at: 1794618104739
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794618104739
+lastSeenAt: 1794618104739
+fingerprint: null
+payload:
+  id: PC18_cos_runs_the_model_server
+  map: docs/2026-11-08-pipeline-canvas-phasemap.spec
+  repo: null
+  layer: backend
+  status: OPEN
+  files:
+    - ollama/compartment.json
+    - lib/cli/compartments.js
+    - cos/manager/supervisor.js
+    - ollama/lib/model-inventory.js
+    - cos/manager/proposals.js
+    - idearium/cli/route-commands.js
+    - tests/modules/test-cos-model-server.test.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: f95ab67f47ba1623

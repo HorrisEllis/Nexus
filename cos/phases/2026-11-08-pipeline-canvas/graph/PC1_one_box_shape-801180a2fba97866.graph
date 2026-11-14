@@ -7,11 +7,11 @@ intent: null
 summary: 7 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1794611411131
+exported_at: 1794613745485
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794611411131
-lastSeenAt: 1794611411131
+firstSeenAt: 1794613745485
+lastSeenAt: 1794613745485
 fingerprint: null
 payload:
   for: PC1_one_box_shape
@@ -83,6 +83,7 @@ payload:
     downstream:
       - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE9_each_tool_carries_its_dag
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC12_every_pipeline_in_cos
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC13_his_request_built_by_the_pipeline
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC2_procedures_and_frameworks_as_steps
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC3_the_build_request_step
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC4_the_box_kinds_on_the_canvas
@@ -105,7 +106,7 @@ payload:
       - >-
         needed by (6): AE9_each_tool_carries_its_dag, PC2_procedures_and_frameworks_as_steps,
         PC3_the_build_request_step, PC4_the_box_kinds_on_the_canvas, PC5_programmable_gate_types,
-        PC6_intelligence_watches_the_runs · all downstream 9 · finishing it unlocks
+        PC6_intelligence_watches_the_runs · all downstream 10 · finishing it unlocks
         AE9_each_tool_carries_its_dag
     edges:
       - from: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D0_reuse_first

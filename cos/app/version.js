@@ -27,4 +27,8 @@
 // 0.8.1 (Nexus 0.60.518–0.60.525): James, 2026-11-13: "then merge push and release cos.exe and nexus." · "when you are done". The exe changed in
 // cos/app/runtime.js (SW5a, 0.60.518: a release whose duties live in cos/manager/duties.js is recognised as one that hands over to COS's manager,
 // not only one with lib/nexus/core-duties.js), so it is a new exe; without it, his COS would start a 0.60.518+ Nexus as an old self-supervising one.
-module.exports = { version: '0.8.1' };
+// 0.9.0 (Nexus 0.60.528, CA8; numbered 0.60.516 on its branch): James, 2026-11-13, told the service switch needs nssm.exe, which is not on his machine and not in his NSSM.zip
+// (that is his NSM v2): "need to build it from scratch." COS carries its own service host, cos/app/bin/cos-svc.exe (C#, built with the compiler
+// Windows carries): it answers the service control manager, runs node + autopilot as NexusCOS (LocalSystem, at boot), rotates the logs, starts
+// Nexus again when it exits or stops answering its health URL (his NSM v2's rule). The switch no longer needs nssm.exe.
+module.exports = { version: '0.9.0' };

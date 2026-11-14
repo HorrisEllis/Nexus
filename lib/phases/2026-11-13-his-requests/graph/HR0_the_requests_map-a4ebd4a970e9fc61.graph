@@ -1,0 +1,43 @@
+envelope: 1
+uuid: nexus-export-graph-phase:HR0_the_requests_map:a4ebd4a970e9fc61
+type: graph
+id: phase:HR0_the_requests_map:a4ebd4a970e9fc61
+context: dependency graph of phase HR0_the_requests_map
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1794613746994
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794613746994
+lastSeenAt: 1794613746994
+fingerprint: null
+payload:
+  for: HR0_the_requests_map
+  kind: phase
+  repo: null
+  hash: a4ebd4a970e9fc61
+  nodes:
+    - path: docs/2026-11-13-his-requests-phasemap.spec
+      role: changes
+      exists: true
+      system: null
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+    edges: []

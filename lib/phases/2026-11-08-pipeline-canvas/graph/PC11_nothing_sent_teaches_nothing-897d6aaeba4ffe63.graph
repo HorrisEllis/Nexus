@@ -7,11 +7,11 @@ intent: null
 summary: 15 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1794610657563
+exported_at: 1794618104713
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794610657563
-lastSeenAt: 1794610657563
+firstSeenAt: 1794618104713
+lastSeenAt: 1794618104713
 fingerprint: null
 payload:
   for: PC11_nothing_sent_teaches_nothing
@@ -127,15 +127,23 @@ payload:
   dag:
     layer: 0
     deps: []
-    dependents: []
+    dependents:
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC13_his_request_built_by_the_pipeline
     upstream: []
-    downstream: []
+    downstream:
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC13_his_request_built_by_the_pipeline
     blockedBy: []
     unlocks: []
-    conflicts: []
+    conflicts:
+      - with: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC16_raid_routes_every_interaction
+        files:
+          - lib/pipeline-routing.js
     dangling: []
     lines:
       - layer 0 · ready
       - 'depends on (0): —'
-      - 'needed by (0): —'
+      - 'needed by (1): PC13_his_request_built_by_the_pipeline'
+      - >-
+        same files as PC16_raid_routes_every_interaction with no order between them:
+        lib/pipeline-routing.js
     edges: []

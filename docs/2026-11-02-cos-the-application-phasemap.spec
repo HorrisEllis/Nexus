@@ -196,3 +196,36 @@ phases_addendum_2026_11_04_b:
 # James, 2026-11-13: "okay, just make it so nexus can be anywhere." then "put a pin in the can be moved anywhere. need the pipeline building all of
 # my requests." Built: cos/sovereign/location.eg, GET /api/cos/locations, GET /api/cos/systems/:name/location, `location [system]`. Pinned: CA7 b
 # (the move; his last reading: Nexus as a whole anywhere, not each system) and CA8 (the first-time setup), until he picks them up.
+# ── ADDENDUM 2026-11-13 (0.60.528, COS 0.9.0; numbered 0.60.516 on its branch, and its phase CA8, renamed CA9 at the merge 2026-11-14: main had a different CA8, the first-time setup) — his: the service host built from scratch, no nssm.exe ─────────────────────────────────────
+# James, 2026-11-13, told the service switch needs nssm.exe, which is not on his machine and not in his NSSM.zip (that is his NSM v2): "need to build it from scratch."
+# Earlier the same day, pointing at NSSM.zip: "might need to add or integrate into the superviser. also look at emerge the latest commit, can be used for cos more"
+# Found on his machine: COS 0.8.0's switch answers "nssm.exe was not found"; no nssm.exe in NSSM_EXE, beside COS or on PATH. Emerge's native
+# binary (0.60.512, process control) is a Linux ELF: it cannot answer Windows' service control manager today, so the host cannot be Emerge yet.
+decisions_addendum_2026_11_13:
+  CA_D9_the_host_is_csharp_built_by_windows_own_compiler:
+    chosen: >-
+      Decided by his axioms (the coder applies them): the host is one C# file built by csc.exe, the compiler every Windows 10/11 carries with
+      .NET Framework 4.x. Options weighed: (a) nssm.exe downloaded or bundled (not "from scratch", a third party's binary); (b) Emerge (no
+      Windows target: a whole compiler back end first); (c) a boot task as SYSTEM in Task Scheduler (no new program, but not a service: not in
+      services.msc, no stop/start contract); (d) C# with the in-box compiler (a real service, nothing to download, builds on his machine and on
+      the CI's Windows runner, runs with nothing installed). (d).
+    by_the_axioms: "§17.13 (non-Emerge code named by the project: his 'build it from scratch'), §17.4 (reproducible from an empty machine: the compiler is Windows' own), §0.5 (one file, 19 KB), §5.14 (service.js keeps the NSSM way behind the same contract: either satisfies it), §0.3 (NSSM's path kept)"
+    to_move_later: "when Emerge has a Windows target, the host's loop (start, wait, restart, health) is Emerge's proc_* primitives; the SCM handshake stays native"
+phases_addendum_2026_11_13:
+  CA9_cos_own_service_host:
+    status: "BUILT 0.60.528 (COS 0.9.0; 0.60.516 on its branch) — test-cos-service 11/11 on his machine (SV-08..SV-11; SV-11 runs the built exe). The service itself installed on Windows: unverified until his switch (it needs his admin approval)"
+    origin: "James, 2026-11-13, told the service switch needs nssm.exe, which is not on his machine and not in his NSSM.zip (that is his NSM v2): \"need to build it from scratch.\""
+    depends_on: [CA4_the_supervisor_as_a_windows_service]
+    spec: cos/spec/cos-console.spec
+    files: [cos/app/service-host/cos-svc.cs, cos/app/service-host/build.cmd, cos/app/bin/cos-svc.exe, cos/app/bin/cos-svc.exe.sha256, cos/app/service.js, cos/app/window.js, cos/app/desktop/main.js, cos/app/version.js, scripts/build-cos-app.js, tests/modules/test-cos-service.test.js]
+    requires: ["Windows 10/11 with .NET Framework 4.x (in-box)", "one admin approval to install or remove the service"]
+    does: >-
+      cos-svc.exe (cos/app/service-host/cos-svc.cs): install <config> creates NexusCOS (auto start, LocalSystem) running itself with that config;
+      start, stop, remove, status (in NSSM's words, so service.js reads either); run is what Windows starts; console runs the same loop in a
+      terminal. The loop: node + autopilot with COS_SERVICE=1, output to service.log and service-error.log rotated at 10 MB, started again when
+      it exits (2 s, doubling to 30 s, back to 2 s after a minute up) and, his NSM v2's rule, when it is up but its health URL has not answered
+      three checks in a row (after a two-minute grace). Stop ends the whole process tree. service.js: findHost, hostConfig (the one JSON file,
+      written to <folder>/data/cos-service/service.json), hostInstallCommands, hostRemoveCommands; apply uses the host first and nssm.exe only
+      when the host is missing. The exe ships inside COS (scripts/build-cos-app.js FILES). The switch's words no longer ask for nssm.exe.
+    proof: "SV-08 the config and the commands exactly; SV-09 apply prefers the host, writes its config, removes through it, falls back to nssm, says when neither; SV-10 the exe matches its SHA256 and is in the exe's file list; SV-11 (Windows) the built exe starts a process with its env and arguments, logs it, restarts it at 200, 400, 800 ms, ends it on stop, and says a missing service"
+    not_built: "the first-run wizard and where Nexus installs (his, the same day): its own phase, to write"

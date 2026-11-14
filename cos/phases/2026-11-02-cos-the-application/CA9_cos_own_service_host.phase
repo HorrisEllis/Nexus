@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-02-cos-the-application-phasemap.spec::CA9_cos_own_service_host
+type: phase
+id: docs_2026-11-02-cos-the-application-phasemap.spec::CA9_cos_own_service_host
+context: pipeline phase CA9_cos_own_service_host of docs/2026-11-02-cos-the-application-phasemap.spec
+intent: null
+summary: CA9_cos_own_service_host (?) — 6 file(s)
+system: idearium
+tags: []
+exported_at: 1794618060970
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794618060970
+lastSeenAt: 1794618060970
+fingerprint: null
+payload:
+  id: CA9_cos_own_service_host
+  map: docs/2026-11-02-cos-the-application-phasemap.spec
+  repo: null
+  layer: null
+  status: >-
+    "BUILT 0.60.528 (COS 0.9.0; 0.60.516 on its branch) — test-cos-service 11/11 on his machine
+    (SV-08..SV-11; SV-11 runs the built exe). The service itself installed on Windows: unverified
+    until his switch (it needs his admin approval)"
+  files:
+    - cos/app/service.js
+    - cos/app/window.js
+    - cos/app/desktop/main.js
+    - cos/app/version.js
+    - scripts/build-cos-app.js
+    - tests/modules/test-cos-service.test.js
+  depends_on:
+    - CA4_the_supervisor_as_a_windows_service
+  blocks: []
+  spec: cos/spec/cos-console.spec
+  graph: 10a9d4531e5761f1
