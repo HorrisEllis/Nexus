@@ -384,3 +384,9 @@ phases_addendum_2026_11_09_sc7:
 # folder on D: never updated), so no SC16 fix had reached it; updated by hand the same day.
 # SC16 files expanded: lib/nexus/autopilot.js. By the axioms: §17.7 (never fix the symptom twice: the test now reads the file), §1.2.
 # On his machine: unverified until Nexus restarts on 0.60.515 (said).
+
+# ── ADDENDUM 2026-11-13 (map only, merged 2026-11-14) — SC10 expanded: the floating menu's commands, per system, in the Console ───────────────
+# James, 2026-11-13: "also can commands for the console tab. like all of the floating menu commands for each system. like in the tv ui floating
+# menu button." Expands SC10 (his 2026-11-06: "all the systems cli interfaces (command nodes) should be accessable there"): the Console lists,
+# per system, the same commands the TV UI's floating menu button offers for that system (lib/ui/tv-shell/menu.js), read from each system's own
+# registry or door (§5.16), not copied into COS, so both show one list.
