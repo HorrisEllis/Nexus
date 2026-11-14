@@ -1,0 +1,36 @@
+/* the EMERGENCE channel (TV3) — the TV's own dark: near-black, thin rules, mono labels, one accent per kind */
+:root { --bg: #05060a; --panel: rgba(255,255,255,.025); --line: rgba(255,255,255,.07); --fg: rgba(255,255,255,.86); --dim: rgba(255,255,255,.42);
+  --faint: rgba(255,255,255,.22); --acc: #c4b5fd; --co: #7dd3fc; --pre: #fca5a5; --bot: #fcd34d; --cause: #86efac; --bad: #f87171; }
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; background: var(--bg); color: var(--fg); font: 13px/1.45 system-ui, -apple-system, 'Segoe UI', sans-serif; }
+.em-head { display: flex; align-items: center; gap: 18px; padding: 14px 18px 10px; border-bottom: 1px solid var(--line); flex-wrap: wrap; }
+.em-title { font: 600 12px 'Space Mono', ui-monospace, monospace; letter-spacing: .14em; color: var(--fg); }
+.em-mark { color: var(--acc); }
+.em-sub { margin-left: 10px; font-weight: 400; letter-spacing: .04em; color: var(--faint); text-transform: none; }
+.em-counts { display: flex; gap: 8px; flex: 1; }
+.em-pill { font: 10px ui-monospace, monospace; padding: 2px 8px; border-radius: 999px; border: 1px solid var(--line); color: var(--dim); }
+.em-switch { font-size: 11px; color: var(--dim); display: flex; align-items: center; gap: 6px; cursor: pointer; }
+.em-grid { display: grid; grid-template-columns: 1.35fr 1fr 1fr; gap: 1px; background: var(--line); height: calc(100% - 52px); }
+@media (max-width: 900px) { .em-grid { grid-template-columns: 1fr; height: auto; } }
+.em-col { background: var(--bg); padding: 12px 14px; overflow: auto; min-height: 0; }
+.em-col h2 { margin: 0 0 10px; font: 600 10px 'Space Mono', ui-monospace, monospace; letter-spacing: .14em; text-transform: uppercase; color: var(--dim); }
+.em-hint { font-weight: 400; letter-spacing: .02em; text-transform: none; color: var(--faint); margin-left: 6px; }
+.em-body { display: flex; flex-direction: column; gap: 8px; color: var(--dim); }
+.em-card { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 9px 11px; color: var(--fg); }
+.em-card.noise { opacity: .45; }
+.em-kind { font: 9px ui-monospace, monospace; letter-spacing: .08em; text-transform: uppercase; padding: 1px 6px; border-radius: 4px; border: 1px solid currentColor; margin-right: 6px; }
+.k-co_occurrence { color: var(--co); } .k-failure_precursor { color: var(--pre); } .k-bottleneck { color: var(--bot); } .k-cross_system_causal { color: var(--cause); }
+.em-said { margin-top: 5px; }
+.em-meta { margin-top: 6px; display: flex; gap: 10px; align-items: center; font: 10px ui-monospace, monospace; color: var(--dim); }
+.em-bar { flex: 1; height: 3px; background: var(--line); border-radius: 2px; overflow: hidden; max-width: 140px; }
+.em-bar > i { display: block; height: 100%; background: var(--acc); }
+.em-space { display: grid; grid-template-columns: 54px 1fr; gap: 2px 10px; }
+.em-fp { font: 600 11px ui-monospace, monospace; color: var(--acc); grid-row: span 3; }
+.em-space .em-name { color: var(--fg); }
+.em-space .em-inv { color: var(--faint); font-size: 11px; }
+.em-run.passed { border-left: 2px solid var(--cause); } .em-run.exhausted { border-left: 2px solid var(--pre); }
+.em-axiom { font-size: 11px; color: var(--dim); }
+.em-bad { color: var(--bad); }
+.em-empty { color: var(--faint); font-style: italic; }
+.em-runaway { color: var(--pre); font-weight: 600; }
+.em-meta { flex-wrap: wrap; } .em-meta > span { white-space: nowrap; }

@@ -101,5 +101,12 @@
       "intelligence/server.js -> cortex/memory/jaa-db.js",
       "intelligence/spatial/system-lattice.js -> cortex/memory/jaa-db"
     ]
-  }
+  },
+  "ui": [
+    {
+      "path": "/ui/emergence/",
+      "title": "Emergence",
+      "what": "what Intelligence has crystallised, what is forming, and the emergence runs (moved here from COS's sidebar, 2026-11-14)"
+    }
+  ]
 }

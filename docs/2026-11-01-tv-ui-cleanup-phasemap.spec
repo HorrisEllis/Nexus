@@ -77,6 +77,24 @@ phases:
       "all systems" beside VIEW shows them again, remembered per screen. Their ids stay, so the code that fills them is untouched.
 
   TV3_the_emergence_channel:
+
+    expanded_2026_11_14: >-
+
+      James, 2026-11-14, asked what COS's Emergence page has to do with his language (it does not: it is Intelligence's pattern finder, the name older
+
+      than Emerge), offered (a) rename it Patterns, (b) move it into Intelligence as its own view and drop it from COS's sidebar, (c) leave it:
+
+      "b) Move it into Intelligence as its own view, since it's Intelligence's work, and drop it from COS's sidebar." Intelligence serves the view
+
+      itself (§5.15: its data, its page): intelligence/ui/emergence/ at GET /ui/emergence/ on its own port, reading its own routes
+
+      GET /api/intelligence/emergence/{patterns,liminal,sessions}. COS's sidebar entry and page leave (kept in _archive, §0.3); COS's
+
+      /api/cos/emergence/:what stays for the TV until the TV is retired with the orchestrator (SW5h). Files added: intelligence/server.js,
+
+      intelligence/ui/emergence/index.html, intelligence/ui/emergence/emergence.js, intelligence/ui/emergence/emergence.css, cos/manager/contract.json,
+
+      intelligence/registry-components.js, tests/modules/test-intelligence-emergence-view.test.js.
     status: "DONE 0.60.344"
     depends_on: [TV_D1_one_endpoint, TV_D2_each_channel_its_own_page]
     files: [lib/emergence.js, orchestrator/orchestrator.js, idearium/cli/route-commands.js, lib/ui/tv-shell/channels/emergence/emergence.html, lib/ui/tv-shell/channels/emergence/emergence.css, lib/ui/tv-shell/channels/emergence/emergence.js, lib/ui/tv-shell/index.html]

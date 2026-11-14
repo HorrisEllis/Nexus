@@ -123,6 +123,25 @@ const server = http.createServer(async (req, res) => {
   const u = url.parse(req.url, true);
   const pathname = u.pathname;
 
+  // TV3 expanded 2026-11-14 — James: "b) Move it into Intelligence as its own view, since it's Intelligence's work, and drop it from COS's
+  // sidebar." Intelligence serves the view (/ui/emergence/) and its data (/api/intelligence/emergence/{patterns,liminal,sessions}): what has
+  // crystallised and what is forming are its own routes, asked here on its own port; the runs are the kernel's (lib/emergence.js).
+  if (req.method === 'GET' && /^\/ui\/emergence\/?([\w.-]*)$/.test(pathname)) {
+    const f = pathname.replace(/^\/ui\/emergence\/?/, '') || 'index.html', fp = path.join(__dirname, 'ui', 'emergence', f);
+    if (!/^[\w.-]+$/.test(f) || !fs.existsSync(fp)) { json(res, 404, { ok: false, error: `no file ${f}` }); return; }
+    res.writeHead(200, { 'Content-Type': f.endsWith('.js') ? 'application/javascript' : f.endsWith('.css') ? 'text/css' : 'text/html; charset=utf-8' }); res.end(fs.readFileSync(fp)); return;
+  }
+  { const em = /^\/api\/intelligence\/emergence\/(patterns|liminal|sessions)$/.exec(pathname);
+    if (em && req.method === 'GET') {
+      if (em[1] === 'sessions') { const r = require('../lib/emergence.js').sessions({ limit: Number(u.query.limit) || 20 }); json(res, r.ok ? 200 : 503, r); return; }
+      const ask = (p) => new Promise((resolve) => { const q = http.get(`http://127.0.0.1:${PORT}${p}`, { timeout: 8000 }, (r) => { let t = ''; r.on('data', c => t += c); r.on('end', () => { try { resolve(JSON.parse(t)); } catch (_) { resolve({ ok: false, error: `not JSON (${r.statusCode})` }); } }); });
+        q.on('timeout', () => q.destroy(new Error('no answer in 8 s'))); q.on('error', (e) => resolve({ ok: false, error: e.message })); });
+      if (em[1] === 'patterns') { const r = await ask('/api/intelligence/patterns'); json(res, r && r.ok !== false ? 200 : 503, r && r.ok !== false ? r : { ok: false, error: (r && r.error) || 'no reply' }); return; }
+      const fpq = u.query.focalPoint; const [st, ls] = await Promise.all([ask('/api/liminal-space/status'), ask(`/api/liminal-space/list${fpq ? `?focalPoint=${encodeURIComponent(fpq)}` : ''}`)]);
+      if (!st || st.ok === false) { json(res, 503, { ok: false, error: (st && st.error) || 'no reply' }); return; }
+      json(res, 200, { ok: true, status: st, items: (ls && ls.items) || [] }); return;
+    } }
+
   if (pathname === '/api/commands/history') {
     const rows = require('../cortex/memory/jaa-db.js').jaaDB.query('event_log', r => r.type === 'intelligence.command.invoked', 200);
     json(res, 200, { ok: true, history: rows.sort((a, b) => b.ts - a.ts), total: rows.length });
