@@ -931,3 +931,22 @@ phases_addendum_2026_11_01_mg33:
 James, 2026-11-12: "Need to be able to propose restarts."
 - A proposal kind restart-cos (target cos, a reason required), held; taken by him, COS restarts itself (opts.restartCos, as CE2b). An agent
   cannot take it. Command row cos.propose (restart cos, and restart|start|stop <system>). Proof: test-cos-propose-restart 3/3.
+
+# ── ADDENDUM 2026-11-14 (0.60.531) — a caller wakes an on-demand system: the TV's co-pilot bar ──────────────────────────────────────────────
+# James, 2026-11-14: "thats a problem also the console is supposed to hook into each system, and agent" (a screenshot of Nexus's home, its co-pilot bar reading "Co-pilot bridge error: Failed to fetch").
+# Found on his PC: copilot on demand and asleep; the bar calls :3750 directly; nothing woke it. 0.60.524's fault (Emergence and Intelligence) in a
+# second place (§17.7). COS's touch route had copilot answering in 2 s.
+phases_addendum_2026_11_14_cbw:
+  CBW1_the_tv_copilot_bar_wakes_copilot:
+    status: "BUILT 0.60.531 — test-cos-ui-starts 4/4 (CS-04). On his screen, in Clear Glass: not yet seen by the coder"
+    origin: 'James, 2026-11-14: "thats a problem also the console is supposed to hook into each system, and agent"'
+    depends_on: []
+    spec: cos/spec/cos-manager.spec
+    files: [lib/ui/tv-shell/index.html, tests/modules/test-cos-ui-starts.test.js]
+    requires: ["COS's manager answering on :7799 (POST /api/cos/systems/:name/touch, the supervisor's on-demand rule)"]
+    does: >-
+      The bar's ask to copilot, when refused, wakes copilot through COS's route (sent no-cors: the answer is not needed), waits for its health
+      (25 s) and asks again. COS not answering, or copilot not starting, is said with where to look; a slow copilot's timeout stands.
+      _wakeOnDemand(name, port) serves the page's other direct calls.
+    by_the_axioms: "§1.2 (a raw network error is a silent failure to him), §17.7 (the second place of 0.60.524's fault), §5.15 (woken by COS's route, not by reaching into the supervisor)"
+    not_built: "the page's other ten direct calls to a system's port do not wake yet; each is its owner's panel, to move onto _wakeOnDemand as it is touched"

@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-cos-manager-phasemap.spec::CBW1_the_tv_copilot_bar_wakes_copilot
+type: phase
+id: docs_2026-10-24-cos-manager-phasemap.spec::CBW1_the_tv_copilot_bar_wakes_copilot
+context: pipeline phase CBW1_the_tv_copilot_bar_wakes_copilot of docs/2026-10-24-cos-manager-phasemap.spec
+intent: null
+summary: CBW1_the_tv_copilot_bar_wakes_copilot (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1794625354333
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794625354333
+lastSeenAt: 1794625354333
+fingerprint: null
+payload:
+  id: CBW1_the_tv_copilot_bar_wakes_copilot
+  map: docs/2026-10-24-cos-manager-phasemap.spec
+  repo: null
+  layer: null
+  status: >-
+    "BUILT 0.60.531 — test-cos-ui-starts 4/4 (CS-04). On his screen, in Clear Glass: not yet seen by
+    the coder"
+  files:
+    - lib/ui/tv-shell/index.html
+    - tests/modules/test-cos-ui-starts.test.js
+  depends_on: []
+  blocks: []
+  spec: cos/spec/cos-manager.spec
+  graph: 8d35d27b1e349011
