@@ -226,6 +226,17 @@ test('G2', 'streamGenerate returns an abort function', async () => {
   abort(); // should not throw
 });
 
+// OA1 (0.60.533) — found on James's PC, 2026-11-14: OLLAMA_HOST=0.0.0.0:11434 (where Ollama's server listens) was dialled as it stood,
+// and copilot answered "ollama unavailable" with Ollama running
+test('H1', 'OLLAMA_HOST that says "listen everywhere" (0.0.0.0, [::]) is dialled on loopback; any other address is used as given', () => {
+  const { clientAddress } = require('../../ollama/config.js');
+  for (const [given, want] of [['0.0.0.0:11434', 'http://127.0.0.1:11434'], ['http://0.0.0.0:11434/', 'http://127.0.0.1:11434'], ['[::]:11434', 'http://127.0.0.1:11434'],
+    ['', 'http://127.0.0.1:11434'], [undefined, 'http://127.0.0.1:11434'], ['127.0.0.1:11434', 'http://127.0.0.1:11434'], ['192.168.1.5:11434', 'http://192.168.1.5:11434'],
+    ['https://box.lan:8443/ollama/', 'https://box.lan:8443/ollama']]) assert.strictEqual(clientAddress(given), want, JSON.stringify(given));
+  const tool = require('fs').readFileSync(require('path').join(__dirname, '..', '..', 'lib/agent-tools/tools/ollama/generate.js'), 'utf8');
+  assert.ok(/0\\\.0\\\.0\\\.0\|\\\[::\\\]/.test(tool), 'the agent tool dials loopback for a listen-everywhere address too');
+});
+
 // ── RUN ───────────────────────────────────────────────────────────────────────
 runAll();
 

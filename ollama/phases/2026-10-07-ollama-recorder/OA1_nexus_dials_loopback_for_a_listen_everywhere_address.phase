@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-07-ollama-recorder-phasemap.spec::OA1_nexus_dials_loopback_for_a_listen_everywhere_address
+type: phase
+id: docs_2026-10-07-ollama-recorder-phasemap.spec::OA1_nexus_dials_loopback_for_a_listen_everywhere_address
+context: >-
+  pipeline phase OA1_nexus_dials_loopback_for_a_listen_everywhere_address of
+  docs/2026-10-07-ollama-recorder-phasemap.spec
+intent: null
+summary: OA1_nexus_dials_loopback_for_a_listen_everywhere_address (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1794627146364
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794627146364
+lastSeenAt: 1794627146364
+fingerprint: null
+payload:
+  id: OA1_nexus_dials_loopback_for_a_listen_everywhere_address
+  map: docs/2026-10-07-ollama-recorder-phasemap.spec
+  repo: null
+  layer: null
+  status: >-
+    "BUILT 0.60.533 — ollama-runtime.test 9/9 (H1). Through COS's Console on his PC: see the
+    changelog's proof line"
+  files:
+    - ollama/config.js
+    - ollama/ollama-runtime.js
+    - lib/agent-tools/tools/ollama/generate.js
+    - tests/modules/ollama-runtime.test.js
+  depends_on: []
+  blocks: []
+  spec: ollama/spec/ollama.spec
+  graph: 7dc5470b9a304398

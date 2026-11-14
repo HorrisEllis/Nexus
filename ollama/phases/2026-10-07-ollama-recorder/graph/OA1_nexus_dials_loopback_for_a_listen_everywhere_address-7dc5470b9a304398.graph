@@ -1,0 +1,182 @@
+envelope: 1
+uuid: nexus-export-graph-phase:OA1_nexus_dials_loopback_for_a_listen_everywhere_address:7dc5470b9a304398
+type: graph
+id: phase:OA1_nexus_dials_loopback_for_a_listen_everywhere_address:7dc5470b9a304398
+context: dependency graph of phase OA1_nexus_dials_loopback_for_a_listen_everywhere_address
+intent: null
+summary: 19 node(s), 3 crossing(s)
+system: idearium
+tags: []
+exported_at: 1794627146364
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794627146364
+lastSeenAt: 1794627146364
+fingerprint: null
+payload:
+  for: OA1_nexus_dials_loopback_for_a_listen_everywhere_address
+  kind: phase
+  repo: null
+  hash: 7dc5470b9a304398
+  nodes:
+    - path: lib/agent-tools/tools/ollama/generate.js
+      role: changes
+      exists: true
+      system: lib
+    - path: ollama/config.js
+      role: changes
+      exists: true
+      system: ollama
+    - path: ollama/ollama-runtime.js
+      role: changes
+      exists: true
+      system: ollama
+    - path: tests/modules/ollama-runtime.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: idearium/agent-suite/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/cli/nexus-repl.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/vector-memory.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: ollama/lib/dispatch.js
+      role: used-by
+      exists: true
+      system: ollama
+    - path: ollama/lib/model-inventory.js
+      role: used-by
+      exists: true
+      system: ollama
+    - path: ollama/lib/ollama-client.js
+      role: used-by
+      exists: true
+      system: ollama
+    - path: ollama/lib/state.js
+      role: used-by
+      exists: true
+      system: ollama
+    - path: ollama/routes/jobs.js
+      role: used-by
+      exists: true
+      system: ollama
+    - path: ollama/routes/models.js
+      role: used-by
+      exists: true
+      system: ollama
+    - path: ollama/routes/stream.js
+      role: used-by
+      exists: true
+      system: ollama
+    - path: ollama/routes/system.js
+      role: used-by
+      exists: true
+      system: ollama
+    - path: ollama/server.js
+      role: used-by
+      exists: true
+      system: ollama
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/ollama-activity.js
+      role: uses
+      exists: true
+      system: lib
+    - path: ollama/lib/tape.js
+      role: uses
+      exists: true
+      system: ollama
+  edges:
+    - from: ollama/config.js
+      to: lib/data-home.js
+      kind: requires
+    - from: ollama/ollama-runtime.js
+      to: lib/ollama-activity.js
+      kind: requires
+    - from: ollama/ollama-runtime.js
+      to: ollama/lib/tape.js
+      kind: requires
+    - from: idearium/agent-suite/index.js
+      to: ollama/config.js
+      kind: requires
+    - from: lib/cli/nexus-repl.js
+      to: ollama/config.js
+      kind: requires
+    - from: lib/vector-memory.js
+      to: ollama/config.js
+      kind: requires
+    - from: ollama/lib/dispatch.js
+      to: ollama/config.js
+      kind: requires
+    - from: ollama/lib/model-inventory.js
+      to: ollama/config.js
+      kind: requires
+    - from: ollama/lib/ollama-client.js
+      to: ollama/config.js
+      kind: requires
+    - from: ollama/lib/state.js
+      to: ollama/config.js
+      kind: requires
+    - from: ollama/routes/jobs.js
+      to: ollama/config.js
+      kind: requires
+    - from: ollama/routes/models.js
+      to: ollama/config.js
+      kind: requires
+    - from: ollama/routes/stream.js
+      to: ollama/config.js
+      kind: requires
+    - from: ollama/routes/system.js
+      to: ollama/config.js
+      kind: requires
+    - from: ollama/server.js
+      to: ollama/config.js
+      kind: requires
+  crossings:
+    - from: idearium/agent-suite/index.js
+      to: ollama/config.js
+      fromSystem: idearium
+      toSystem: ollama
+      kind: system
+      known: true
+    - from: lib/cli/nexus-repl.js
+      to: ollama/config.js
+      fromSystem: lib
+      toSystem: ollama
+      kind: upward
+      known: true
+    - from: lib/vector-memory.js
+      to: ollama/config.js
+      fromSystem: lib
+      toSystem: ollama
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-07-ollama-recorder-phasemap.spec::OR1_one_door
+    dependents: []
+    upstream:
+      - docs/2026-10-07-ollama-recorder-phasemap.spec::OR1_one_door
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1
+      - 'depends on (1): OR1_one_door'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-07-ollama-recorder-phasemap.spec::OR1_one_door
+        kind: inferred

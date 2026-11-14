@@ -16,7 +16,7 @@ function normalizeEndpoint(url) {
   return url;
 }
 
-const ENDPOINT = normalizeEndpoint(process.env.OLLAMA_HOST);
+const ENDPOINT = process.env.OLLAMA_HOST ? require('./config.js').clientAddress(process.env.OLLAMA_HOST) : normalizeEndpoint(process.env.OLLAMA_HOST);   // OA1: 0.0.0.0 (Ollama's listen address) is dialled on loopback
 
 async function ping() {
   return new Promise(resolve => {
