@@ -367,6 +367,7 @@ spec:
       confirmed_2026_11_14: >-
         James, 2026-11-14 (answering whether a system reaches another by its wire to RAID, RAID passing it on): "yes and with that you can find bottlenecks, tension and friction. like looms map. thats thepoint of cfr and now the pipeline is the final layer"
         Reading (1) confirmed: a system reaches another by its wire to RAID, and RAID routes it on; SW6's crossings end as wires to RAID.
+      decided_2026_11_14_compartment: 'James, 2026-11-14: "yes compartment". RAID is its own compartment and system (CS11 expanded_2026_11_14), not code inside COS''s folder.'
       also_asked_2026_11_12_not_yet_mapped: "the panel's 27 engines (cos/services/anonymous/engines) as templates for networking compartments, in the catalog, as test-environment and DAG dependency options (cos-services map, after SV2); .erv opened by ERAVOS on install (Windows file association); `cos import` a system into cos.exe (cos-console map, after SC4). Each is mapped in its own map before it is built."
     RD2_idearium_routes_through_raid:
       layer: library

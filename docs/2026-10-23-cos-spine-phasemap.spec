@@ -232,6 +232,14 @@ phases:
     files: [cos/raid/index.js, cos/raid/store.js, cos/raid/routes.js, cos/app/desktop/main.js, cortex/core/raid/router.js, cortex/core/raid/worker.js, cortex/core/raid/officiator.js]
     spec: cos/spec/cos-spine.spec
     blocks: [MOD-CS-RAID]
+    expanded_2026_11_14: >-
+      Asked whether RAID's code lives inside COS's folder or RAID is its own compartment that COS runs and every system wires into, James,
+      2026-11-14: "yes compartment". His shape the same day (RD9 decided_2026_11_14_topology and _wiring, docs/2026-10-13-projects-raid-and-gates-phasemap.spec):
+      "the hub/raid in the center, cos above that, then each system/compartment stems or branches off of raid" · "each systems wires branch from
+      the hooks (drawbridge) to raid". So RAID leaves Cortex as its own system and compartment, not into COS's folder: its own folder with its
+      own server.js, component registry (drawbridge), routes, command rows, events and data (AXIOMS §5.9, §5.15, §5.16), supervised by COS
+      like every system, and the hub every system's wires end at. The files above (cos/raid/*) are superseded by that folder; the coder reads
+      its name as raid/ at the top level (to confirm). Cortex keeps the books (his, 2026-11-09): RAID's decisions are booked with Cortex by route.
     does: >-
       The last step of his order: once every caller reaches RAID by its route (DB6; 25 files load it in-process today, 50 tests) and its
       tables are its own (IM6; data/raid 168 files), RAID's always-on half moves into the COS app's process and serves the same /api/raid/*
