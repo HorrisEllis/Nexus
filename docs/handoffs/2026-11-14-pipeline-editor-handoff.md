@@ -150,3 +150,12 @@ right tabs slide out (OUTPUTS, EDIT, RUNS); Save writes the .pipeline. HB-11 in 
 bodies (saves were lost). Next: run idearium-build on his PC on one small phase, watch it on the canvas, fix what stops it; then the full
 Workshop (preview 9). His screenshot also showed idearium and clear-glass not answering COS's sync, and ollama-bridge, copilot,
 intelligence, architect, loom down (6/13 up): the build pipeline needs idearium and ollama-bridge up.
+
+## ADDENDUM: 0.60.537 and 0.60.538 (his first run of the Idearium build, 2026-11-14)
+- 0.60.537: ▶ Run opens the canvas live (COS's event stream).
+- His run: 6 of 9 steps done; Idearium restarted mid-build (missed heartbeat ~17 s, ~950 MB heap); "The build landed" failed; asked again:
+  "no build of CS12_the_mover_is_proven has been started here".
+- 0.60.538, his law: "stop using memory for storage. persistence is non negiatiable until the contract has been fullfilled, or dag is complete".
+  Each step a .process_step node with its ledger and whole output; runs resume at COS boot; unreachable systems waited for.
+- Next: why no build of CS12 was recorded (his Build-the-phase OUTPUTS and GET /api/repos/nexus/phases/runs?phase=CS12_the_mover_is_proven);
+  Idearium's build resuming on its own boot; what restarts Idearium mid-build; his "split the nested containers" (SW8).

@@ -39,6 +39,38 @@ const freePort = () => new Promise(r => { const s = net.createServer(); s.listen
     assert.ok(ev.every((e, i) => i === 0 || e.at >= ev[i - 1].at), 'in order');
     const saved = P.getRun(r.run.id); assert.deepStrictEqual(saved.tasks.s.events.length, ev.length, 'saved with the run');
   });
+  await t('PW-04', 'his "each step can be a node file … stop using memory for storage": every step is a .process_step node on disk with its ledger and its whole output', async () => {
+    const P = new Pipelines(new AutomationEngine({}), { dir: path.join(tmp, 'd') });
+    const c = P.create({ name: 'nodes', tasks: [{ id: 'one', label: 'One', step: { type: 'set', config: { assign: { v: 'x'.repeat(3000) } } } }, { id: 'two', depends_on: ['one'], step: { type: 'set', config: { assign: { w: 'y' } } } }] });
+    const r = await P.run((c.pipeline || c).id, { wait: true });
+    const f = path.join(tmp, 'd', 'runs', r.run.id, 'one.process_step'); assert.ok(fs.existsSync(f), 'the step node file');
+    const NX = require(path.join(ROOT, 'lib/node-export.js')); const d = NX.fromYaml(fs.readFileSync(f, 'utf8'));
+    assert.strictEqual(d.type, 'process_step'); assert.strictEqual(d.payload.status, 'done'); assert.ok(d.payload.events.length >= 2, 'its ledger');
+    assert.strictEqual(JSON.stringify(d.payload.output).includes('x'.repeat(3000)), true, 'the whole output, not a preview');
+    assert.deepStrictEqual(Object.keys(P.steps(r.run.id)).sort(), ['one', 'two']);
+  });
+  await t('PW-05', 'his "persistence is non negiatiable until … the dag is complete": a run cut off by a restart resumes from disk; its finished steps are not run again', async () => {
+    const dir = path.join(tmp, 'e'); const hits = [];
+    const srv = http.createServer((q, r) => { hits.push(q.url); r.setHeader('content-type', 'application/json'); r.end('{"ok":true}'); }); await new Promise(x => srv.listen(0, '127.0.0.1', x));
+    const A1 = new Pipelines(new AutomationEngine({}), { dir });
+    const c = A1.create({ name: 'resume', vars: { tag: '' }, tasks: [{ id: 'first', step: { type: 'api', config: { url: `http://127.0.0.1:${srv.address().port}/first?t={{vars.tag}}`, method: 'GET' } } },
+      { id: 'second', depends_on: ['first'], step: { type: 'api', config: { url: `http://127.0.0.1:${srv.address().port}/second?t={{vars.tag}}`, method: 'GET' } } }] });
+    const pid = (c.pipeline || c).id;
+    const done = await A1.run(pid, { wait: true, vars: { tag: 'x1' } }); assert.strictEqual(done.status, 'ok');
+    // a restart in the middle: rewrite the run on disk as COS would leave it (second still running), and forget it in memory
+    const runFile = path.join(dir, 'runs', `${done.run.id}.json`); const left = JSON.parse(fs.readFileSync(runFile, 'utf8'));
+    left.status = 'running'; left.finishedAt = null; left.tasks.second = { status: 'running', attempts: 1 }; fs.writeFileSync(runFile, JSON.stringify(left));
+    hits.length = 0;
+    const A2 = new Pipelines(new AutomationEngine({}), { dir });   // the new process after the restart
+    const out = await A2.resumeInterrupted();
+    assert.strictEqual(out.length, 1, JSON.stringify(out)); assert.deepStrictEqual(out[0].met, ['first']);
+    let now = null; for (let k = 0; k < 50 && !(now && now.status === 'ok'); k++) { await new Promise(x => setTimeout(x, 100)); now = A2.getRun(out[0].now); }
+    srv.close();
+    assert.strictEqual(now.status, 'ok', JSON.stringify(now && now.tasks)); assert.strictEqual(now.resume_of, done.run.id);
+    assert.deepStrictEqual(hits.map(h => h.split('?')[0]), ['/second'], 'only the unfinished step ran, with the run\'s own vars: ' + hits.join(' '));
+    assert.ok(hits[0].includes('t=x1'), 'its vars came from disk');
+    assert.strictEqual(A2.getRun(done.run.id).status, 'interrupted'); assert.strictEqual(A2.getRun(done.run.id).resumedBy, out[0].now);
+  });
   fs.rmSync(tmp, { recursive: true, force: true });
   console.log(`\n${passed} passed, ${failed} failed`); process.exit(failed ? 1 : 0);
 })();

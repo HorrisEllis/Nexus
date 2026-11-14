@@ -238,7 +238,8 @@ const SUITES = [
   'test-dispatcher-deepseek-ncp.js',
   'route-graph.test.js',
   'automation-engine.test.js',
-  'test-cos-automation-home.test.js',   // 0.60.534 SW5i slice a — the engine in cos/automation/, lib/ forwards
+  'test-cos-automation-home.test.js',
+  'test-pipeline-waits-for-a-system.test.js',   // 0.60.538 — waits for a system; step node files with their ledger; runs resume after a restart   // 0.60.534 SW5i slice a — the engine in cos/automation/, lib/ forwards
   'automation-v2.test.js',                // §0.39.265 — workflows v2: DOM steps, data, loops, triggers, runs, tools
   'automation-settings-ui.test.js',       // §0.39.265 — Settings → Automation against a real engine
   'automation-nodes.test.js',             // §0.39.266 — .workflow / .macro node files: export, bundle, import, library
