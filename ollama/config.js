@@ -23,13 +23,25 @@
  */
 const path = require('path');
 
+// OA1 (0.60.533) — found on James's PC, 2026-11-14, when COS's Console asked Ollama and copilot answered "ollama unavailable" with Ollama
+// running: his OLLAMA_HOST is 0.0.0.0:11434. That variable is Ollama's own, and tells its SERVER where to listen (0.0.0.0: every interface).
+// Nexus read the same variable as the address to DIAL, and 0.0.0.0 is not an address a client can reach on Windows. A listen-everywhere
+// address is dialled on this machine's loopback; any other value is used as given.
+function clientAddress(raw) {
+  let s = String(raw || '').trim() || '127.0.0.1:11434';
+  if (!/^https?:\/\//i.test(s)) s = `http://${s}`;
+  try {
+    const u = new URL(s);
+    if (u.hostname === '0.0.0.0' || u.hostname === '[::]' || u.hostname === '::') u.hostname = '127.0.0.1';
+    return `${u.protocol}//${u.host}${u.pathname.replace(/\/+$/, '')}`;
+  } catch (_) { return s; }
+}
+
 module.exports = {
+  clientAddress,
   // ── Network ────────────────────────────────────────────────────────────
   PORT: parseInt(process.env.OLLAMA_BRIDGE_PORT || '3749', 10),
-  OLLAMA_HOST: (() => {
-    const raw = process.env.OLLAMA_HOST || '127.0.0.1:11434';
-    return raw.startsWith('http') ? raw : `http://${raw}`;
-  })(),
+  OLLAMA_HOST: clientAddress(process.env.OLLAMA_HOST),
   ORCH_URL: process.env.ORCHESTRATOR_URL || 'http://127.0.0.1:9000',
   CX_URL:   process.env.CORTEX_URL || 'http://127.0.0.1:3748',
 

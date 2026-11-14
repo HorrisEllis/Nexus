@@ -54,3 +54,20 @@ spec:
       proof: "two models alternating → load_duration rises, said as a violation naming the callers"
 
   ordering: "OR1 → OR2 → OR3 → OR4 → OR5; OR3 also lets the test suite run model tests without Ollama. Slots after PF4 and alongside EX2 (OR5 is an EX2 input)."
+
+# ── ADDENDUM 2026-11-14 (0.60.533) — Nexus reaches Ollama on his PC: its listen address is no longer dialled ──────────────────────────────
+# Found on his PC proving 0.60.532's `ask @ollama` (his, of that release: "the console in cos, is supposed to hook into each system, and agent"):
+# copilot answered "ollama unavailable" with Ollama running. His OLLAMA_HOST is 0.0.0.0:11434: Ollama's own variable for where its server
+# LISTENS. Nexus dialled it. On his PC nothing in Nexus could use Ollama (the co-pilot's Ollama way, the pipeline's Ollama rung).
+phases_addendum_2026_11_14_oa:
+  OA1_nexus_dials_loopback_for_a_listen_everywhere_address:
+    status: "BUILT 0.60.533 — ollama-runtime.test 9/9 (H1). Through COS's Console on his PC: see the changelog's proof line"
+    origin: 'Found on his PC, 2026-11-14 (a fault found while proving what he asked for; §4.2). His words of the day before: "now we can use ollama for the pipeline. i need to be able to use it fully."'
+    depends_on: []
+    spec: ollama/spec/ollama.spec
+    files: [ollama/config.js, ollama/ollama-runtime.js, lib/agent-tools/tools/ollama/generate.js, tests/modules/ollama-runtime.test.js]
+    does: >-
+      ollama/config.js clientAddress(): an OLLAMA_HOST that says listen everywhere (0.0.0.0, [::]) is dialled on this machine's loopback; any
+      other value is used as given. The runtime and the agent tool follow the same rule.
+    by_the_axioms: "§4.2, §1.2 (the bridge said 'offline' of an Ollama that was up), §17.7"
+    his_not_changed: "the bridge's default model is qwen2.5-coder:7b; installed on his PC is only huihui_ai/qwen2.5-coder-abliterate:3b. Which answers is the bridge's setting (PUT /api/model), his."
