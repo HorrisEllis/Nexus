@@ -294,7 +294,7 @@ spec:
       layer: library
       systems: [cortex, idearium, cos]
       component: cortex.raid
-      status: "OPEN — slice a BUILT 0.60.486 (the .input node, the route, the decision recorded; test-raid-input 2/2). Next: slice b, the router acts"
+      status: "OPEN — slice a BUILT 0.60.486 (the .input node, the route, the decision recorded); slice b BUILT 0.60.529 (the contract template, filled and booked as v2; test-raid-input 6/6). Next: RAID drafts the DAG and outcome itself (RQ6, RQ7), the gap as a question on screen (RQ8), the booked contract run by COS (PC12a)"
       james: '"I want raid to get done. That way we can have the cli in nexus hooked into raid, inputs into raid, saved as a .input node, then raid decides what to do with using the routing." (2026-11-12) · "I meant as cos.exe. like i feel like im trying to make a operating system. eravos the desktop ui, cos the runtime, resource manager the task manager, clearglass the browser, idearium the explorer.exe." (2026-11-12)'
       depends_on: [RD0_raid_has_its_own_contract]
       files: [cortex/core/raid/input.js, cortex/core/raid/envelope.js, cortex/core/raid/router.js, cortex/boot.js, cortex/interaction-contract.json, lib/node-export.js, idearium/cli/route-commands.js, cos/manager/cli.js, tests/modules/test-raid-input.test.js]
