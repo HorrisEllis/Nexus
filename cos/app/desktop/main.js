@@ -103,7 +103,7 @@ function buildTray() {
       { type: 'separator' }, { label: 'Start COS with Windows', type: 'checkbox', checked: !!S.startWithWindows, click: flip('startWithWindows') },
       { label: 'Start in the tray', type: 'checkbox', checked: !!S.startHidden, click: flip('startHidden') },
       { label: 'Admin rights at startup (one approval)', type: 'checkbox', checked: !!S.startElevated, enabled: !!S.startWithWindows, click: flip('startElevated') },
-      { label: 'Run Nexus as a Windows service (admin, at boot; needs nssm.exe)', type: 'checkbox', checked: !!S.runAsService, click: async () => { ctl.setSetting('runAsService', !S.runAsService); await applyService(true); } },   // CA4
+      { label: 'Run Nexus as a Windows service (admin, at boot)', type: 'checkbox', checked: !!S.runAsService, click: async () => { ctl.setSetting('runAsService', !S.runAsService); await applyService(true); } },   // CA4
       { type: 'separator' },   // CE1 — what the window's buttons do
       { label: 'Closing the window', submenu: [
         { label: 'Hides COS to the tray (systems keep running)', type: 'radio', checked: S.onClose !== 'quit', click: () => ctl.setSetting('onClose', 'tray') },

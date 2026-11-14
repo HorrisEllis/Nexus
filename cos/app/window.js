@@ -57,7 +57,7 @@ const STARTUP = Object.freeze([
   { key: 'startWithWindows', label: 'Start COS with Windows', about: 'a logon task with admin rights; or the login item, if the approval is declined', kind: 'bool', applies: 'logon' },
   { key: 'startElevated', label: 'Start with admin rights', about: 'the logon task runs with the highest privileges (one approval)', kind: 'bool', applies: 'logon' },
   { key: 'startHidden', label: 'Start in the tray', about: 'started at logon, COS goes to the tray instead of opening its window', kind: 'bool', applies: null },
-  { key: 'runAsService', label: 'Run Nexus as a Windows service', about: 'NexusCOS, through nssm.exe: systems stay up with no one signed in; windowed systems start when you sign in', kind: 'bool', applies: 'service' },
+  { key: 'runAsService', label: 'Run Nexus as a Windows service', about: 'NexusCOS, through COS\'s own service host (one admin approval): systems stay up with no one signed in; windowed systems start when you sign in', kind: 'bool', applies: 'service' },
   { key: 'onClose', label: 'Closing the window', about: 'the tray keeps every system running; quitting stops what COS started', kind: 'choice', choices: [{ value: 'tray', label: 'hides it to the tray' }, { value: 'quit', label: 'quits COS' }], applies: null },
   { key: 'onMinimize', label: 'Minimizing the window', about: 'where the window goes', kind: 'choice', choices: [{ value: 'taskbar', label: 'the taskbar' }, { value: 'tray', label: 'the tray' }], applies: null },
 ]);
