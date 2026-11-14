@@ -10,6 +10,7 @@
   const el = (t, a = {}, kids = []) => { const e = document.createElement(t); for (const [k, v] of Object.entries(a)) { if (k === 'text') e.textContent = v; else if (k.startsWith('on')) e.addEventListener(k.slice(2), v); else if (v != null) e.setAttribute(k, v); } for (const c of [].concat(kids)) if (c) e.append(c); return e; };
   const api = async (method, p, body) => { const r = await fetch(p, { method, headers: { 'Content-Type': 'application/json' }, ...(body !== undefined ? { body: JSON.stringify(body) } : {}) }); const j = await r.json().catch(() => ({ ok: false, error: `not JSON (${r.status})` })); if (!r.ok || j.ok === false) throw new Error(j.error || `HTTP ${r.status}`); return j; };
   const A = (p) => '/api/cos/automation' + p;
+  const secs = (ms) => ms == null ? '' : ms < 60000 ? (ms / 1000).toFixed(1) + ' s' : Math.floor(ms / 60000) + ' min ' + Math.round(ms % 60000 / 1000) + ' s';
   const W = 176, H = 56, GX = 92, GY = 104, X0 = 300, Y0 = 70;
   const C = { root: null, p: null, layers: [], run: null, sel: null, dirty: false, tab: null, poll: null, hooks: {} };
 
@@ -33,8 +34,27 @@
     build(); C.hooks = hooks; C.sel = null; C.dirty = false; C.tab = null;
     const d = await api('GET', A('/pipelines/' + encodeURIComponent(id)));
     C.p = JSON.parse(JSON.stringify(d.pipeline)); C.layers = d.layers || [];
-    C.root.classList.add('open'); await refreshRun(); draw(); tab(null);
+    C.root.classList.add('open'); live(); await refreshRun(); draw(); tab(null);
+    clearInterval(C.clock); C.clock = setInterval(() => { if (C.run && C.run.status === 'running' && C.root.classList.contains('open') && !C.root.querySelector('.pc-drawer.open [data-f]:focus')) draw(); }, 1000);
     clearInterval(C.poll); C.poll = setInterval(async () => { if (!C.root.classList.contains('open')) return; const was = JSON.stringify(C.run && C.run.tasks); await refreshRun(); if (JSON.stringify(C.run && C.run.tasks) !== was) { draw(); if (C.tab === 'OUTPUTS') tab('OUTPUTS'); } }, 1500);
+  }
+  // 0.60.537 — James, 2026-11-14: "okay clicking play should show it running in real time". The engine's events on COS's stream
+  // (/api/cos/events: automation.pipeline.task, one per step change) light each step as it happens; the 1.5 s read stays as the fallback.
+  function live() {
+    if (C.es || typeof EventSource === 'undefined') return;
+    try { C.es = new EventSource('/api/cos/events'); } catch (_) { return; }
+    C.es.addEventListener('open', () => { C.liveOn = true; });
+    C.es.addEventListener('error', () => { C.liveOn = false; });
+    C.es.addEventListener('automation.pipeline.task', async (ev) => {
+      let d; try { d = JSON.parse(ev.data); } catch (_) { return; }
+      if (!C.p || d.pipelineId !== C.p.id || !C.root.classList.contains('open')) return;
+      if (!C.run || C.run.id !== d.runId) { await refreshRun(); draw(); return; }
+      const t = C.run.tasks[d.task] || (C.run.tasks[d.task] = {});
+      t.status = d.status; if (d.error) t.error = d.error; if (d.gate) t.gate = d.gate; if (d.note) t.note = d.note;
+      if (d.status === 'running') t.startedAt = t.startedAt || Date.now();
+      if (d.status === 'running' && C.run.status !== 'running') C.run.status = 'running';
+      C.lastEvent = Date.now(); draw(); if (C.tab === 'OUTPUTS') { await refreshRun(); tab('OUTPUTS'); }
+    });
   }
   function close() { if (C.dirty && !confirm('Close without saving the changes?')) return; C.root.classList.remove('open'); clearInterval(C.poll); if (C.hooks.onClose) C.hooks.onClose(); }
   async function refreshRun() { try { const r = await api('GET', A('/pipeline-runs?pipelineId=' + encodeURIComponent(C.p.id) + '&limit=1')); const last = (r.runs || [])[0]; C.run = last ? (await api('GET', A('/pipeline-runs/' + encodeURIComponent(last.id)))).run : null; } catch (_) { C.run = null; } }
@@ -65,7 +85,7 @@
       const r = (C.run && C.run.tasks && C.run.tasks[t.id]) || {};
       kids.push(el('div', { class: 'pc-node' + (C.sel && C.sel.id === t.id && C.sel.kind === 'step' ? ' sel' : ''), 'data-step': t.id, 'data-state': st(t.id), title: r.error || r.note || '',
         onclick: () => select('step', t.id), ondblclick: () => { select('step', t.id); tab('EDIT'); } },
-        [el('b', { text: t.label || t.id }), el('small', { text: kindOf(t) })]));
+        [el('b', { text: t.label || t.id }), el('small', { text: st(t.id) === 'running' && r.startedAt ? 'running · ' + secs(Date.now() - r.startedAt) : r.ms != null && st(t.id) ? `${st(t.id)} · ${secs(r.ms)}` : kindOf(t) })]));
       if (t.gate) { const gx = p.x + W + 12, gy = p.y + H / 2 - 9, g = r.gate || null;
         kids.push(el('div', { class: 'pc-gate' + (C.sel && C.sel.id === t.id && C.sel.kind === 'gate' ? ' sel' : ''), 'data-gate': t.id, 'data-outcome': g ? g.outcome : '', style: `left:${gx}px;top:${gy}px`, title: g && g.why ? g.why : 'gate',
           onclick: () => select('gate', t.id), ondblclick: () => { select('gate', t.id); tab('EDIT'); } }));
@@ -86,13 +106,14 @@
     const b = (act, text, fn, cls = '') => el('button', { class: 'pc-btn ' + cls, 'data-act': act, onclick: fn, text });
     const h = C.hooks;
     const btns = [];
-    if (run && run.status === 'running') btns.push(b('pause', '❚❚', () => h.ctl && h.ctl(run.id, 'pause').then(tick)), b('stop', '■', () => h.stop && h.stop(run.id).then(tick)));
+    if (run && run.status === 'running') btns.push(b('pause', '❚❚ Pause', () => h.ctl && h.ctl(run.id, 'pause').then(tick)), b('stop', '■ Stop', () => h.stop && h.stop(run.id).then(tick)));
     else if (run && run.status === 'paused') btns.push(b('continue', '▶ Continue', () => h.ctl && h.ctl(run.id, 'continue').then(tick), 'go'));
     else { if (run && (run.status === 'failed' || run.status === 'cancelled')) btns.push(b('retry', C.sel && C.sel.kind === 'step' ? '↻ from here' : '↻ Retry', () => h.retry && h.retry(run.id, C.sel && C.sel.kind === 'step' ? C.sel.id : undefined).then(tick)));
       btns.push(b('run', '▶ Run', () => { if (C.dirty) { say('bad', 'Save first: a run runs the saved pipeline.'); tab('EDIT'); return; } h.run && Promise.resolve(h.run(C.p.id)).then(tick); }, 'go')); }
     return el('div', { class: 'pc-run' }, [el('h3', {}, [el('span', { text: C.p.name || C.p.id }), el('small', { class: status, text: '● ' + status })]),
       el('div', { class: 'pc-row' }, [el('span', { text: 'step' }), el('em', { text: run ? `${done} of ${tasks.length}${on ? ' · ' + (on.label || on.id) : ''}` : `${tasks.length} steps` })]),
-      run && run.startedAt ? el('div', { class: 'pc-row' }, [el('span', { text: 'started' }), el('em', { text: new Date(run.startedAt).toLocaleTimeString() })]) : null,
+      run && run.startedAt ? el('div', { class: 'pc-row' }, [el('span', { text: run.status === 'running' ? 'running for' : 'took' }), el('em', { 'data-elapsed': '', text: secs((run.finishedAt || Date.now()) - run.startedAt) })]) : null,
+      el('div', { class: 'pc-row' }, [el('span', { text: 'updates' }), el('em', { 'data-live': C.liveOn ? 'on' : 'off', text: C.liveOn ? '● live' : 'every 1.5 s' })]),
       el('div', { class: 'pc-btns' }, btns)]);
   }
   async function tick() { await refreshRun(); draw(); if (C.tab) tab(C.tab); }
@@ -164,5 +185,7 @@
       draw(); say('ok', 'Saved: the pipeline file is updated; Clear Glass and the CLI see the same.'); if (C.hooks.onSaved) C.hooks.onSaved(C.p);
     } catch (e) { say('bad', 'Not saved: ' + e.message); }
   }
-  window.PipelineCanvas = { open, close, _state: C };
+  // open the canvas on a run just started (the page's ▶ Run): the run is drawn live from its first step
+  async function watch(id, runId, hooks) { await open(id, hooks); if (runId && (!C.run || C.run.id !== runId)) { try { C.run = (await api('GET', A('/pipeline-runs/' + encodeURIComponent(runId)))).run; } catch (_) {} draw(); } }
+  window.PipelineCanvas = { open, close, watch, _state: C };
 })();

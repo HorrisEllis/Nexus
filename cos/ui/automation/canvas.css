@@ -39,3 +39,6 @@
 .pc-kv textarea { min-height: 70px; resize: vertical; }
 .pc-say { font: 11px ui-monospace, monospace; color: #7f93a8; margin-top: 8px; } .pc-say.bad { color: #ff8095; } .pc-say.ok { color: #00ff88; }
 .pc-list div { font: 11px ui-monospace, monospace; color: #9fb3c8; padding: 5px 0; border-top: 1px solid #18222f; }
+.pc-node[data-state="running"] { animation: pc-pulse 1.2s ease-in-out infinite; }
+@keyframes pc-pulse { 50% { box-shadow: 0 0 34px #00d4ff66; } }
+.pc-row em[data-live="on"] { color: #00ff88; }
