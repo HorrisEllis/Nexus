@@ -228,6 +228,9 @@ phases:
       James, 2026-11-14: "each systems wires branch from the hooks (drawbridge) to raid. like the hook and wire registry, thats what its for. like each system is wired into raid, cos wired into that, copilot as a reasoning and assistent. automation. this is meant to be autonomous"
       Recorded on RD9 (decided_2026_11_14_wiring). If his reading (1) there holds, each crossing ends as a wire from the caller's drawbridge
       to RAID, which routes it to the owner's route, not as a direct call between two systems. To confirm before SW6 is built.
+    confirmed_2026_11_14: >-
+      James, 2026-11-14 (answering whether a system reaches another by its wire to RAID, RAID passing it on): "yes and with that you can find bottlenecks, tension and friction. like looms map. thats thepoint of cfr and now the pipeline is the final layer"
+      Reading (1) confirmed: a system reaches another by its wire to RAID, and RAID routes it on; SW6's crossings end as wires to RAID.
   SW7a_the_crystal_lattice_into_intelligence:
     layer: integration
     status: OPEN

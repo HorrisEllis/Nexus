@@ -97,3 +97,9 @@ reads against CS11 (RAID's code in COS's folder, or RAID its own compartment und
 into raid, cos wired into that, copilot as a reasoning and assistent. automation. this is meant to be autonomous"
 Recorded on RD9 (decided_2026_11_14_wiring) and SW6 (expanded_2026_11_14). To confirm: does system → system go by its wire to RAID and RAID
 routes it on, instead of a direct route call? That changes SW6's target.
+
+## ADDENDUM: confirmed, and why (his, 2026-11-14)
+"yes and with that you can find bottlenecks, tension and friction. like looms map. thats thepoint of cfr and now the pipeline is the final
+layer". A system reaches another by its wire to RAID (SW6's crossings become wires to RAID). CP11 (the diagnostic map,
+docs/2026-11-01-the-compartment-phasemap.spec) expanded: its edges are those wires, measured where they cross RAID (RFR2 bottlenecks and
+friction, CFR sigma as tension); the pipeline runs on them, the final layer. Still open: RAID's code in COS's folder, or its own compartment.

@@ -287,6 +287,12 @@ phases:
     depends_on: [CP_D4_the_diagnostic_map_on_the_eravos_canvas, CI1_one_feed, CI3_the_measures_chained, CP1_the_machine_and_its_door, RF1_relational_field, CF1_cfr_improved_with_rfr2, EM2_warp_his_own]
     files: [cos/ui/map, cos/archetype/eravos-canvas, intelligence/cfr, intelligence/rfr2, cos/manager/server.js]
     interface: [html, route]
+    expanded_2026_11_14: >-
+      James, 2026-11-14 (answering whether a system reaches another by its wire to RAID, RAID passing it on): "yes and with that you can find bottlenecks, tension and friction. like looms map. thats thepoint of cfr and now the pipeline is the final layer"
+      The map's edges are no longer Loom's registry (Loom is being removed): they are the wires from each system's drawbridge to RAID
+      (RD9 decided_2026_11_14_wiring). Because every call passes RAID, every wire is measured where it crosses: its load, waits and failures
+      give RFR2's bottlenecks and friction, CFR's sigma gives each compartment's tension, as Loom's map once drew it. The pipeline is the
+      final layer over the map: its steps run on those wires, so a run is drawn and measured on the same map.
     does: >-
       The map, on the ERAVOS canvas, opened from COS: compartments as nodes (their state from COS's supervisor), wires as edges (Loom's
       registry), CFR's sigma as each node's tension, RFR2's bottlenecks and friction as each edge's weight, the event stream (COS's bus,
