@@ -259,3 +259,11 @@ spec:
 # - MOD-PL-SURFACE: the canvas shows one run window, compartments (name, system, status), gates as diamonds on the wires; the detail is in the
 #   Workshop (preview 9). Each right tab slides out as a drawer over the canvas and slides back; Outputs lives in its tab, not a window.
 #   Previews: cos/ui/pipeline-editor/preview-10 (quiet), preview-11 (OUTPUTS slid out).
+
+# ADDENDUM 2026-11-14 (e) — where it lives; pipelines are agnostic. James, 2026-11-14: "okay. thats more like it. and this lives in the cos ui
+# when you click edit pipeline. also can edit it like clearglass' settings for automation. like the pipelines are agnostic."
+# - The canvas (preview 11) and the Workshop (preview 9) open from COS's UI (cos/ui/automation) on "Edit pipeline".
+# - A pipeline is one file and one shape (.pipeline, owned by COS), not tied to any editor. The same pipeline is edited on the canvas, in
+#   Clear Glass's Settings › Pipelines form (clear-glass/renderer/settings/sections/pipelines.js, today on /automation/pipelines), or by the
+#   CLI; every surface reads and writes it only through COS's routes, so an edit in one shows in the others. Clear Glass keeps its form; its
+#   door moves to COS's routes with BrainOS's backend (addendum b).
