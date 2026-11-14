@@ -71,3 +71,10 @@ phases_addendum_2026_11_14_oa:
       other value is used as given. The runtime and the agent tool follow the same rule.
     by_the_axioms: "§4.2, §1.2 (the bridge said 'offline' of an Ollama that was up), §17.7"
     his_not_changed: "the bridge's default model is qwen2.5-coder:7b; installed on his PC is only huihui_ai/qwen2.5-coder-abliterate:3b. Which answers is the bridge's setting (PUT /api/model), his."
+# OA1 proved on his PC, 2026-11-14 (0.60.533 running): the bridge reports ollama_host http://127.0.0.1:11434 and lists his installed model; in COS's
+# Console `ask @ollama reply with exactly: console reaches ollama` answered "console reaches ollama" (asked ollama, answered by ollama), and a bare
+# `ask` (the co-pilot) was answered by Ollama. For that, the bridge's model was set to the one installed (huihui_ai/qwen2.5-coder-abliterate:3b;
+# his 2026-08-23: "now using huihui_ai/qwen2.5-coder-abliterate:3b for ollama/co-pilot"): by PUT /api/model for the running bridge, and kept across
+# restarts as COS's setting env.OLLAMA_DEFAULT_MODEL on ollama-bridge (undo: `config ollama-bridge clear env.OLLAMA_DEFAULT_MODEL`). The coder set
+# it, said here; the choice of model stays his. 0.60.532's CH1 proved the same hour: `raid <words>` kept as input in-1794626974354-3e15a5, booked as
+# contract c-in-1794626974354-3e15a5 with four gaps.
