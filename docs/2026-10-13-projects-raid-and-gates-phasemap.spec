@@ -368,6 +368,13 @@ spec:
         James, 2026-11-14 (answering whether a system reaches another by its wire to RAID, RAID passing it on): "yes and with that you can find bottlenecks, tension and friction. like looms map. thats thepoint of cfr and now the pipeline is the final layer"
         Reading (1) confirmed: a system reaches another by its wire to RAID, and RAID routes it on; SW6's crossings end as wires to RAID.
       decided_2026_11_14_compartment: 'James, 2026-11-14: "yes compartment". RAID is its own compartment and system (CS11 expanded_2026_11_14), not code inside COS''s folder.'
+      decided_2026_11_14_brain_and_mind: >-
+        James, 2026-11-14, asked whether decomposition belongs to RAID: "Is that good? Like raid is like the brain." · then: "Raid the brain
+        and oLlama the mind". RAID is the brain: it decides, routes, splits work and records each decision. Ollama is the mind: the local
+        model that does the thinking by default (his "using ollama primarily", 2026-11-13), the one RAID gives each step to unless the step
+        needs more (PC17, the model fits by what it runs). The coder's recommendation, not yet his call: the chunk builder (deciding the split)
+        to RAID, the chunk dispatcher (running the chunks, the retry ladder) to COS's pipeline; RAID holds no running work, gates hold progress,
+        COS supervises RAID, a run in flight continues on its last decision if RAID does not answer (§5.15).
       also_asked_2026_11_12_not_yet_mapped: "the panel's 27 engines (cos/services/anonymous/engines) as templates for networking compartments, in the catalog, as test-environment and DAG dependency options (cos-services map, after SV2); .erv opened by ERAVOS on install (Windows file association); `cos import` a system into cos.exe (cos-console map, after SC4). Each is mapped in its own map before it is built."
     RD2_idearium_routes_through_raid:
       layer: library

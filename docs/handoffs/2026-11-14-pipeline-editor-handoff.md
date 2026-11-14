@@ -131,3 +131,7 @@ chunking. thats what i mean about idearium. i feel a lot of idearium is misplace
   emerge 20/154 (.eg mostly), orchestrator 12/27.
 - "Chunks, bricks, steps, etc. I feel like raid? Like with agent tools also." → SW8 his_leaning_2026_11_14: the decomposition's home leans
   RAID, with the agent tools; confirmed with the census.
+
+## ADDENDUM: the brain and the mind (his, 2026-11-14)
+"Is that good? Like raid is like the brain." · "Raid the brain and oLlama the mind". RD9 decided_2026_11_14_brain_and_mind. Coder's
+recommendation awaiting his call: chunk builder to RAID, chunk dispatcher to COS's pipeline.
