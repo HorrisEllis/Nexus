@@ -188,7 +188,7 @@ function createPipeline({ automation, idearium = null, call = null, dataDir } = 
   // imported by a physical node fil"). Sources: COS's shipped folder, COS's own nodes folder (what it writes: planned phases, compiled frameworks, and
   // a copy of each system's own, fetched by its route — registry.json pipelineSources). A file new or changed is imported (made, or updated by name,
   // keeping its id); one unchanged is left. JavaScript here because the files are YAML and Emerge has no YAML reader yet (CIE14).
-  const NE = require(path.join(root, 'lib/node-export.js')), AN = require(path.join(root, 'lib/automation-nodes.js'));
+  const NE = require(path.join(root, 'lib/node-export.js')), AN = require(path.join(root, 'cos/automation/nodes.js'));
   const shippedDir = path.join(__dirname, 'pipelines'), nodesDir = path.join(dataDir, 'pipeline', 'nodes'), syncedFile = path.join(nodesDir, '.synced.json');
   const slug = (s) => String(s).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 80) || 'pipeline';
   const sha = (t) => require('crypto').createHash('sha256').update(t).digest('hex');

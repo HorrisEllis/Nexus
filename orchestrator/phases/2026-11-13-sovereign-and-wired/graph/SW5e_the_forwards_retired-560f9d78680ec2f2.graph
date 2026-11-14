@@ -1,0 +1,253 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SW5e_the_forwards_retired:560f9d78680ec2f2
+type: graph
+id: phase:SW5e_the_forwards_retired:560f9d78680ec2f2
+context: dependency graph of phase SW5e_the_forwards_retired
+intent: null
+summary: 26 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1794637381457
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794637381457
+lastSeenAt: 1794637381457
+fingerprint: null
+payload:
+  for: SW5e_the_forwards_retired
+  kind: phase
+  repo: null
+  hash: 560f9d78680ec2f2
+  nodes:
+    - path: lib/nexus-client.js
+      role: changes
+      exists: true
+      system: lib
+    - path: orchestrator/orchestrator.js
+      role: changes
+      exists: true
+      system: orchestrator
+    - path: architect/service.js
+      role: used-by
+      exists: true
+      system: architect
+    - path: clear-glass/src/ipc/bridge.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: copilot/adversarial.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/lifeline.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/module-builder.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: cortex/boot.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cos/host/index.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: guardian/agents/index.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: guardian/ask.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: guardian/lib/ncp.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: lib/cli/run-supervised.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: intelligence/cfr/ledger.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/boot-sequence.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/cli/boot-systems.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/event-taxonomy-pattern.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/gap-field.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus/nexus-bus.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus/nexus-cfr-influence.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus/nexus-knowledge.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus/nexus-query.js
+      role: uses
+      exists: true
+      system: lib
+    - path: orchestrator/event-taxonomy.js
+      role: uses
+      exists: true
+      system: orchestrator
+    - path: orchestrator/lib/intent-map.js
+      role: uses
+      exists: true
+      system: orchestrator
+  edges:
+    - from: orchestrator/orchestrator.js
+      to: lib/data-home.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: orchestrator/event-taxonomy.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: lib/event-taxonomy-pattern.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: orchestrator/lib/intent-map.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: lib/boot-sequence.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: lib/cli/boot-systems.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: intelligence/cfr/ledger.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: lib/nexus/nexus-bus.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: lib/nexus/nexus-query.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: lib/nexus/nexus-knowledge.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: lib/nexus/nexus-cfr-influence.js
+      kind: requires
+    - from: lib/cli/run-supervised.js
+      to: orchestrator/orchestrator.js
+      kind: requires
+    - from: architect/service.js
+      to: lib/nexus-client.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: lib/nexus-client.js
+      kind: requires
+    - from: copilot/adversarial.js
+      to: lib/nexus-client.js
+      kind: requires
+    - from: copilot/lifeline.js
+      to: lib/nexus-client.js
+      kind: requires
+    - from: copilot/module-builder.js
+      to: lib/nexus-client.js
+      kind: requires
+    - from: copilot/server.js
+      to: lib/nexus-client.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/nexus-client.js
+      kind: requires
+    - from: cos/host/index.js
+      to: lib/nexus-client.js
+      kind: requires
+    - from: guardian/agents/index.js
+      to: lib/nexus-client.js
+      kind: requires
+    - from: guardian/ask.js
+      to: lib/nexus-client.js
+      kind: requires
+    - from: guardian/lib/ncp.js
+      to: lib/nexus-client.js
+      kind: requires
+  crossings:
+    - from: orchestrator/orchestrator.js
+      to: intelligence/cfr/ledger.js
+      fromSystem: orchestrator
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: lib/cli/run-supervised.js
+      to: orchestrator/orchestrator.js
+      fromSystem: lib
+      toSystem: orchestrator
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 7
+    deps:
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW5d_the_bus_into_cos
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW6_the_drawbridge_the_only_way_in
+    dependents:
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW5f_others_data_goes_home
+    upstream:
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW0_the_scorecard
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW1_each_system_its_own_map
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW2_routes_and_command_nodes
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW3_an_event_per_call_in_its_own_ledger
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW5_orchestrator_into_the_supervisor
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW5a_autopilots_remains_into_the_supervisor
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW5b_cortexs_workers_go_home
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW5c_the_orchestrators_own_background_assigned
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW5d_the_bus_into_cos
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW6_the_drawbridge_the_only_way_in
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW_D0_picked_up
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW_D1_orchestrator_into_the_supervisor
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW_D2_each_system_keeps_its_own_map
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW_D3_an_event_for_every_call
+    downstream:
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW5f_others_data_goes_home
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW5g_the_pages_and_auth
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW5h_the_orchestrator_retired
+    blockedBy:
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW5d_the_bus_into_cos
+      - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW6_the_drawbridge_the_only_way_in
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 7 · blocked by SW5d_the_bus_into_cos, SW6_the_drawbridge_the_only_way_in
+      - 'depends on (2): SW5d_the_bus_into_cos, SW6_the_drawbridge_the_only_way_in · all upstream 14'
+      - 'needed by (1): SW5f_others_data_goes_home · all downstream 3'
+    edges:
+      - from: docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW5d_the_bus_into_cos
+        kind: declared
+      - from: docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW6_the_drawbridge_the_only_way_in
+        kind: declared

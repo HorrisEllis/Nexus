@@ -174,6 +174,24 @@ phases:
       diagnostic 4, loom 3, copilot 3, versionium 2, emerge 1). Each caller goes to the owner's route through lib/nexus-client.js, one owner at a
       time, smallest first; the forward then answers with where it went.
     proof: "per owner: a grep finds no caller of the forwarded path on :9000; the callers' tests pass"
+  SW5i_the_automation_engine_into_cos:
+    layer: backend
+    status: OPEN
+    depends_on: [SW_D1_orchestrator_into_the_supervisor]
+    files: [lib/automation/cron.js, lib/automation/dom.js, lib/automation/engine.js, lib/automation/from-macro.js, lib/automation/pipeline.js, lib/automation/routes.js, lib/automation/scripts.js, lib/automation/steps.js, lib/automation/task-node.js, lib/automation/template.js, lib/automation/templates.js, lib/automation-nodes.js, lib/automation-registry.js, cos/automation, cos/manager/automation-door.js, cos/manager/server.js, clear-glass/src/mesh/agent-mesh.js, clear-glass/src/main/index.js, clear-glass/src/ipc/bridge.js, clear-glass/src/macros/live-recording.js, tests/modules/test-cos-automation-home.test.js]
+    expands: "AE6 slice b (docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec): the files into cos/automation/. AE6 waited on AE5 (Clear Glass off its own copy); here the move comes first, with forwarders at the old paths, and Clear Glass follows in slice b. Found after SW5i was written (the ledger's covers did not name AE6); kept as one phase, said."
+    reuse: "AE_D4 and AE6 (COS already serves the engine: cos/manager/automation-door.js), the engine itself whole (git mv, not rewritten), lib/node-export.js and lib/versionium-record.js (shared, stay in lib)."
+    does: >-
+      His "migrating brainos backed not the ui its bad the ui and scrapping it" and "yes and orchastrator, and autopilot are supposed to
+      migrate to the super viser" (2026-11-14). BrainOS's backend is the automation engine, which COS already runs but which still lives in
+      lib/. Slice a: the engine's eleven files, automation-nodes.js and automation-registry.js move into cos/automation/ by git mv; COS's
+      door requires them there; each old path keeps a one-line forwarder that names where it went, so Clear Glass, Idearium and the tests keep
+      working. Slice b: Clear Glass stops running its own copy (agent-mesh.js, main/index.js, bridge.js, live-recording.js) and reaches
+      COS's /api/cos/automation routes; its browser actions become Clear Glass's own capability COS calls by route. Slice c: the forwarders
+      retired once no caller names them. BrainOS's UI (lib/ui/brainos, lib/ui/brainos-float) is not moved: it is scrapped by its own phase
+      once the Workshop covers it.
+    proof: "slice a: COS's automation tests pass with the files in cos/automation; a test reads each forwarder and finds it names its new home; the engine's history is kept (git log --follow)"
+
   SW5f_others_data_goes_home:
     layer: integration
     status: OPEN

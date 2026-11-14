@@ -6,6 +6,8 @@
  * "Automation needs done, orchastrator as the engine, which need to be cos now." Moved here from orchestrator/automation/index.js (git mv):
  * COS's manager serves it at /api/cos/automation/* and streams its run events; the orchestrator's /automation/* forwards here. The engine's
  * files stay in lib/automation/ until Clear Glass stops running its own copy (AE5), then move into cos/automation/ (AE6 slice b).
+ * 0.60.534 SW5i slice a (expands AE6 slice b, order flipped): moved now, by git mv, to cos/automation/; lib/automation/ keeps forwarders
+ * until Clear Glass reaches COS by route. James, 2026-11-14: "migrating brainos backed not the ui".
  * Its store keeps the namespace 'orchestrator-automation', so no workflow written before the move is lost (§0.3); a rename comes with a
  * migration, never by a silent new namespace.
  * (History, kept: this door was the orchestrator's from 0.60.256 to 0.60.448.)
@@ -14,7 +16,7 @@
  * James, 2026-10-25: "rememeber each system is sovereign … the automation engine. supposed to be soveriegn." · "the orchastrator"
  * 2026-10-30: "need to finish the automation in orchestrator."
  *
- * The engine (lib/automation/engine.js) is the platform's, run by the system whose job is orchestration. It is a dependency-
+ * The engine (cos/automation/engine.js; was lib/automation/engine.js) is the platform's, run by the system whose job is orchestration. It is a dependency-
  * injected neutral core — it RECEIVES its hooks and never reaches into a system (§8.6). This host provides those hooks from the
  * orchestrator's side, each a RUNTIME PORT (no static cross-system require), fail-soft (§1.2):
  *   - agent steps   → RAID DECIDES the provider (lib/raid-port.js, §5.2 — the decision stays RAID's), then the task is dispatched
@@ -27,7 +29,7 @@
 const http = require('http');
 // §0.60.256 AE1 — one engine instance, its store its own namespace, set before the engine loads (AE6: the same namespace, now run by COS).
 process.env.NEXUS_AUTOMATION_NS = process.env.NEXUS_AUTOMATION_NS || 'orchestrator-automation';
-const { AutomationEngine } = require('../../lib/automation/engine.js');
+const { AutomationEngine } = require('../automation/engine.js');
 
 const CG_PORT = parseInt(process.env.WIRE_PORT || '7704', 10);         // Clear Glass's wire server (browser driver + mesh)
 const GUARDIAN_PORT = parseInt(process.env.GUARDIAN_PORT || '7820', 10); // Guardian — the agent runner
@@ -124,7 +126,7 @@ function engine() {
 
 /** handle(req) — the /automation/* door, served by COS's manager at /api/cos/automation/*. Delegates to the engine's routes.js. */
 async function handle({ method, url, body = {}, headers = {}, rawBody = '' } = {}) {
-  return require('../../lib/automation/routes.js').handle(engine(), { method, url, body, headers, rawBody }, {});
+  return require('../automation/routes.js').handle(engine(), { method, url, body, headers, rawBody }, {});
 }
 
 module.exports = { engine, handle, buildHooks, setBus, setResolver, setGate, setFramework, _dispatchAgent, _cg, _guardian, _raidDecide, CG_PORT, GUARDIAN_PORT };

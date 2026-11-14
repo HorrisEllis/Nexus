@@ -1,0 +1,49 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-13-sovereign-and-wired-phasemap.spec::SW5i_the_automation_engine_into_cos
+type: phase
+id: docs_2026-11-13-sovereign-and-wired-phasemap.spec::SW5i_the_automation_engine_into_cos
+context: >-
+  pipeline phase SW5i_the_automation_engine_into_cos of
+  docs/2026-11-13-sovereign-and-wired-phasemap.spec
+intent: null
+summary: SW5i_the_automation_engine_into_cos (backend) — 20 file(s)
+system: idearium
+tags: []
+exported_at: 1794637392281
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794637392281
+lastSeenAt: 1794637392281
+fingerprint: null
+payload:
+  id: SW5i_the_automation_engine_into_cos
+  map: docs/2026-11-13-sovereign-and-wired-phasemap.spec
+  repo: null
+  layer: backend
+  status: OPEN
+  files:
+    - lib/automation/cron.js
+    - lib/automation/dom.js
+    - lib/automation/engine.js
+    - lib/automation/from-macro.js
+    - lib/automation/pipeline.js
+    - lib/automation/routes.js
+    - lib/automation/scripts.js
+    - lib/automation/steps.js
+    - lib/automation/task-node.js
+    - lib/automation/template.js
+    - lib/automation/templates.js
+    - lib/automation-nodes.js
+    - lib/automation-registry.js
+    - cos/manager/automation-door.js
+    - cos/manager/server.js
+    - clear-glass/src/mesh/agent-mesh.js
+    - clear-glass/src/main/index.js
+    - clear-glass/src/ipc/bridge.js
+    - clear-glass/src/macros/live-recording.js
+    - tests/modules/test-cos-automation-home.test.js
+  depends_on:
+    - SW_D1_orchestrator_into_the_supervisor
+  blocks: []
+  spec: null
+  graph: 35bc47c2f91df843

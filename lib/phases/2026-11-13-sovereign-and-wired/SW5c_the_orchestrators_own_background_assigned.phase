@@ -9,11 +9,11 @@ intent: null
 summary: SW5c_the_orchestrators_own_background_assigned (backend) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1794608390834
+exported_at: 1794637381451
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794608390834
-lastSeenAt: 1794608390834
+firstSeenAt: 1794637381451
+lastSeenAt: 1794637381451
 fingerprint: null
 payload:
   id: SW5c_the_orchestrators_own_background_assigned
@@ -32,4 +32,4 @@ payload:
     - SW5b_cortexs_workers_go_home
   blocks: []
   spec: null
-  graph: 779d9da1bded7024
+  graph: f7e315acdeae92e2
