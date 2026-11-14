@@ -191,3 +191,7 @@ page is kept whole and keeps its own route (§0.3). Backend first: the exe's doo
 is answered by the shell directly (for every page in the shell's own frame, top is its parent: nothing changes). The preview's "Boot set"
 row is not built: no such setting exists (what starts at boot is each system's Start at boot), said rather than invented.
 
+
+# ADDENDUM 2026-11-14 (0.60.540, COS 0.10.0) — CA10: COS updates itself. James, 2026-11-14: "so this cant use the update tool?" · "yes."
+# Settings › Update shows COS itself beside Nexus (the window's door: appCheck, appInstall). Install downloads the newest cos-v setup and its
+# SHA256SUMS into COS's folder, runs it only when the SHA-256 matches, silently (/S --force-run); COS closes and starts again; the last installer kept.

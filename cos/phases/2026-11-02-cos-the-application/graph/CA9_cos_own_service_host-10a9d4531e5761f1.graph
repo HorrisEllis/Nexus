@@ -7,11 +7,11 @@ intent: null
 summary: 16 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1794618060970
+exported_at: 1794660349406
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794618060970
-lastSeenAt: 1794618060970
+firstSeenAt: 1794660349406
+lastSeenAt: 1794660349406
 fingerprint: null
 payload:
   for: CA9_cos_own_service_host
@@ -120,7 +120,8 @@ payload:
     layer: 11
     deps:
       - docs/2026-11-02-cos-the-application-phasemap.spec::CA4_the_supervisor_as_a_windows_service
-    dependents: []
+    dependents:
+      - docs/2026-11-02-cos-the-application-phasemap.spec::CA10_cos_updates_itself
     upstream:
       - docs/2026-10-15-cos-app-phasemap.spec::COSA13_auto_update
       - docs/2026-10-15-cos-app-phasemap.spec::COSA14_versionium_record
@@ -145,15 +146,17 @@ payload:
       - docs/2026-11-02-cos-the-application-phasemap.spec::CA4_the_supervisor_as_a_windows_service
       - docs/2026-11-02-cos-the-application-phasemap.spec::CA_D1_with_windows_elevated_no_service
       - docs/2026-11-02-cos-the-application-phasemap.spec::CA_D1b_the_supervisor_as_a_service
-    downstream: []
+    downstream:
+      - docs/2026-11-02-cos-the-application-phasemap.spec::CA10_cos_updates_itself
     blockedBy: []
-    unlocks: []
+    unlocks:
+      - docs/2026-11-02-cos-the-application-phasemap.spec::CA10_cos_updates_itself
     conflicts: []
     dangling: []
     lines:
       - layer 11
       - 'depends on (1): CA4_the_supervisor_as_a_windows_service · all upstream 23'
-      - 'needed by (0): —'
+      - 'needed by (1): CA10_cos_updates_itself · finishing it unlocks CA10_cos_updates_itself'
     edges:
       - from: docs/2026-11-02-cos-the-application-phasemap.spec::CA4_the_supervisor_as_a_windows_service
         kind: declared

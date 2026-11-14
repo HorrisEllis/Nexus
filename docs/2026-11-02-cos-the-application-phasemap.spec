@@ -238,6 +238,22 @@ phases_addendum_2026_11_13:
     proof: "SV-08 the config and the commands exactly; SV-09 apply prefers the host, writes its config, removes through it, falls back to nssm, says when neither; SV-10 the exe matches its SHA256 and is in the exe's file list; SV-11 (Windows) the built exe starts a process with its env and arguments, logs it, restarts it at 200, 400, 800 ms, ends it on stop, and says a missing service"
     not_built: "the first-run wizard and where Nexus installs (his, the same day): its own phase, to write"
 
+  CA10_cos_updates_itself:
+    status: OPEN
+    origin: "James, 2026-11-14, told the COS app only says a newer COS is out and he installs it by hand (cos/app/app-update.js: \"it downloads nothing and replaces nothing\"): \"so this cant use the update tool?\" · offered COS updating itself from Settings › Update: \"yes.\""
+    depends_on: [CA9_cos_own_service_host]
+    spec: cos/spec/cos-console.spec
+    files: [cos/app/app-update.js, cos/app/controller.js, cos/app/desktop/main.js, cos/app/desktop/starting-preload.js, cos/app/version.js, cos/ui/updates/index.html, cos/ui/updates/page.js, tests/modules/test-cos-app-self-update.test.js]
+    requires: ["Windows (the installer is a Windows NSIS setup)", "the release reachable: public, or his GitHub sign-in kept by git's credential helper"]
+    does: >-
+      COS updates itself from Settings › Update, beside Nexus. The window's door gains appCheck and appInstall (the cockpit page reaches only those).
+      appInstall: the newest cos-v release's COS-<v>-setup.exe and SHA256SUMS are downloaded into COS's own folder (cos-updates/<v>/); the setup's
+      SHA-256 must equal its line in SHA256SUMS, else nothing runs and the files are removed; the setup runs silently (/S), COS closes, the new
+      one starts on the same Nexus folder; the last installer is kept for a roll back. A private repo: the download uses the GitHub sign-in git
+      already keeps (git credential fill, no prompt), so one sign-in serves both updates; none found is said with the fix.
+    by_the_axioms: "§8.6 (checkApp's release list reused; git's own credential store reused, no second login), §1.2 (a mismatch, no sign-in, not Windows: each said), REVERSIBILITY (the previous installer kept), §5.15 (the app updates itself; the cockpit page asks through the window's door only)"
+    proof: "a stub release: the checksum matches → the setup is run with /S and COS asks to close; a mismatch → nothing runs, the files are gone, said; not Windows → refused, said; a private release → the token from git credential fill is sent"
+
 # ── ADDENDUM 2026-11-13 (map only, merged 2026-11-14) — CA8 expanded: his second ask for the wizard, from his own PC, with what was found there ──
 # James, 2026-11-13 (a local session on his PC, after the ask CA8 quotes): "and can we that feature to the install for cos, like when downloading
 # it, asks where nexus should install to. my c drive is almost full.  cos have a full first time run wizard."

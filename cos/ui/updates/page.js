@@ -12,6 +12,19 @@
   $('gear').innerHTML = icon('gear');
   const open = (on) => { $('settings').hidden = !on; $('gear').setAttribute('aria-expanded', String(on)); if (on) $('settings').scrollIntoView({ block: 'nearest' }); };
   $('gear').onclick = () => open($('settings').hidden);
+  // CA10 (COS 0.10.0) — James, 2026-11-14: "so this cant use the update tool?" · "yes.". COS itself, through the window's door only (cosStart.appCheck /
+  // appInstall): the newest COS, and Install, which downloads it, checks its SHA-256 against the release, runs it silently, and COS starts again.
+  (async () => {
+    const door = (() => { try { return window.top.cosStart && window.top.cosStart.appCheck ? window.top.cosStart : null; } catch (_) { return null; } })();
+    if (!door) return; $('app-panel').hidden = false;
+    const draw = (r, busy) => { $('app-ver').textContent = r && r.current ? 'this COS ' + r.current : '';
+      const body = !r ? '<p class="faint">Asking GitHub…</p>' : !r.ok ? `<p class="faint">${esc(r.error || 'GitHub did not answer')}</p>`
+        : r.newer ? `<p>COS <b>${esc(r.latest)}</b> is out. Install downloads it, checks it against the release's SHA256SUMS, runs it, and COS starts again on the same Nexus.</p><button class="btn primary" id="app-install"${busy ? ' disabled' : ''}>${busy ? 'Installing…' : 'Install COS ' + esc(r.latest)}</button>`
+        : `<p class="faint">This is the newest COS (${esc(r.latest)}).</p>`;
+      $('app').innerHTML = body; const b = $('app-install');
+      if (b) b.onclick = async () => { draw(r, true); const x = await door.appInstall(); if (x && x.ok) COS.notice('ok', `COS ${x.version} is installing; COS closes and starts again.`); else { COS.notice('err', 'COS was not updated: ' + ((x && x.error) || 'no answer')); draw(r, false); } }; };
+    draw(null); try { draw(await door.appCheck()); } catch (e) { draw({ ok: false, error: e.message }); }
+  })();
   // SC7 (2026-11-08): the top frame is the shell, also when this page is a tab of Settings (#/settings/updates/settings)
   const fromHash = () => { try { if (/^#\/(settings\/)?updates\/settings/.test(window.top.location.hash)) open(true); } catch (_) {} };
   fromHash(); try { window.top.addEventListener('hashchange', fromHash); } catch (_) {}
