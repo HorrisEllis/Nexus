@@ -182,9 +182,15 @@ export function migrateOnce(table, legacyRows, idField = 'uuid') {
  * the wrong thing (and cost an O(n) reload) for what is really just "add
  * one row." Row must carry its own `.uuid` — reused as jaaDB's row id.
  */
+// 0.60.539 — James, 2026-11-14: "stop using memory for storage. persistence is non negiatiable until the contract has been fullfilled, or dag is
+// complete". His run of the Idearium build: Idearium restarted mid-build and the build's rows, still waiting in the store's debounce, were lost
+// (GET …/phases/runs?phase=CS12_the_mover_is_proven → runs: []). These tables are written to disk as each row is added.
+const DURABLE = new Set(['idearium_phase_runs']);
 export function appendRow(table, row) {
   if (row.uuid == null) throw new Error(`[idearium/db] appendRow(${table}): row missing uuid`);
-  return jaaDB.insert(table, { ...row, id: row.uuid });
+  const out = jaaDB.insert(table, { ...row, id: row.uuid });
+  if (DURABLE.has(table)) { try { jaaDB.flushTable(table); } catch (e) { console.error(`[idearium/db] §1.2 ${table} not written now: ${e.message}`); } }
+  return out;
 }
 
 export { jaaDB };

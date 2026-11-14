@@ -901,6 +901,9 @@ export const SPEC = [
   // reads and saves, for every agent and the CLI too: one pipeline and its order; the pipeline saved (the same file the canvas and Clear Glass edit).
   { key: 'cos.pipeline-show', repo: false, usage: 'cos pipeline-show <id>', about: 'one pipeline: its steps, gates, wires (depends_on) and the order its steps run in (layers) — what the canvas draws',
     req: (a) => ({ system: 'cos', method: 'GET', path: `/api/cos/automation/pipelines/${encodeURIComponent(String((a.args || [])[0] || ''))}` }) },
+  // 0.60.539 — James, 2026-11-14: "then we can track each file moving through the backend. tagging each step, and gate"
+  { key: 'cos.file-trail', repo: false, usage: 'cos file-trail <path>', about: 'a file\'s trail through the pipelines: every step, across runs, that read or wrote it, oldest first, with each step\'s state and its gate\'s outcome',
+    req: (a) => ({ system: 'cos', method: 'GET', path: `/api/cos/automation/pipeline-trail?file=${encodeURIComponent(String((a.args || [])[0] || ''))}` }) },
   { key: 'cos.pipeline-save', repo: false, usage: 'cos pipeline-save <id> --json \'{"tasks":[…]}\'', about: 'save a pipeline (its tasks, gates, vars): validated by the engine first; the same file the canvas, Clear Glass and the CLI edit',
     req: (a) => { let j = {}; try { j = JSON.parse(String(a.flags.json || '{}')); } catch (_) {} return { system: 'cos', method: 'PUT', path: `/api/cos/automation/pipelines/${encodeURIComponent(String((a.args || [])[0] || ''))}`, body: { ...j, by: a.by || 'agent' } }; } },
   // PC5 (2026-11-09) — James: "Gates can hold context, test, verify, gates would do a lot. But not the same everytime."

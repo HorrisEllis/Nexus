@@ -138,10 +138,17 @@
       el('div', { class: 'pc-term' + (r.error ? ' err' : ''), 'data-out': task.id, text: out || '(nothing)' }),
       r.gate ? el('p', { class: 'pc-say ' + (r.gate.outcome === 'open' ? 'ok' : 'bad'), text: `gate ${r.gate.outcome}${r.gate.why ? ': ' + r.gate.why : ''}` }) : null,
       ...(r.decisions || []).map(d => el('p', { class: 'pc-say', text: `${(d.by || 'decision').toUpperCase()} ${d.kind || ''} ${d.chose || ''}${d.why ? ' — ' + d.why : ''}` })),
+      // 0.60.539 — his "track each file moving through the backend": the files this step named; click one for its trail across runs
+      (r.files || []).length ? el('div', { class: 'pc-dh', style: 'padding:12px 0 6px;border:0' }, [el('b', { text: 'FILES' }), el('small', { text: 'click one for its trail' })]) : null,
+      (r.files || []).length ? el('div', { class: 'pc-list' }, r.files.map(f => el('div', { 'data-file': f, style: 'cursor:pointer;color:#00d4ff', onclick: () => trail(f), text: f }))) : null,
       // 0.60.538 — his "an event ledger per step … so we can debug it": every change to this step, in order
       (r.events || []).length ? el('div', { class: 'pc-dh', style: 'padding:12px 0 6px;border:0' }, [el('b', { text: 'LEDGER' }), el('small', { text: `${r.events.length} event${r.events.length === 1 ? '' : 's'}, oldest first` })]) : null,
       (r.events || []).length ? el('div', { class: 'pc-list', 'data-ledger': task.id }, r.events.map(e => el('div', { text: [new Date(e.at).toLocaleTimeString(), e.status, e.attempts ? 'attempt ' + e.attempts : '', e.ms != null ? secs(e.ms) : '', e.gate ? 'gate ' + e.gate.outcome + (e.gate.why ? ': ' + e.gate.why : '') : '', e.held ? 'held: ' + e.held : '', e.decision ? 'decision: ' + (e.decision.chose || e.decision.kind || '') : '', e.note || '', e.error || ''].filter(Boolean).join(' · ') }))) : null].filter(Boolean));
   }
+  async function trail(f) { let t = []; try { t = (await api('GET', A('/pipeline-trail?file=' + encodeURIComponent(f)))).trail || []; } catch (e) { return C.db.replaceChildren(el('p', { class: 'pc-say bad', text: e.message })); }
+    C.dt.textContent = 'TRAIL'; C.ds.textContent = f;
+    C.db.replaceChildren(el('div', { class: 'pc-list', 'data-trail': f }, t.length ? t.map(x => el('div', { text: [x.at ? new Date(x.at).toLocaleString() : '', x.pipelineName || x.pipeline, x.label || x.step, x.status, x.gate ? 'gate ' + x.gate : '', x.error || ''].filter(Boolean).join(' · ') })) : [el('div', { text: 'No step has named this file yet.' })]),
+      el('button', { class: 'pc-btn', style: 'margin-top:10px', onclick: () => tab('OUTPUTS'), text: '← back to the step' })); }
   async function runsList() { let rs = []; try { rs = (await api('GET', A('/pipeline-runs?pipelineId=' + encodeURIComponent(C.p.id) + '&limit=20'))).runs || []; } catch (e) { return C.db.replaceChildren(el('p', { class: 'pc-say bad', text: e.message })); }
     C.db.replaceChildren(el('div', { class: 'pc-list' }, rs.length ? rs.map(r => el('div', { text: `${String(r.id).slice(0, 8)} · ${r.status} · ${r.startedAt ? new Date(r.startedAt).toLocaleString() : ''}` })) : [el('div', { text: 'No runs yet.' })])); }
   const field = (label, input) => el('div', { class: 'pc-kv' }, [el('label', { text: label }), input]);
