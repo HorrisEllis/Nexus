@@ -1116,11 +1116,15 @@ const server = http.createServer(async (req, res) => {
   }
 
   // RD9 slice a (2026-11-12), his: "inputs into raid, saved as a .input node, then raid decides what to do with using the routing."
+  // RD9 slice b (2026-11-14): the contract template an input is filled into, its fields and what fills each
+  if (p === '/api/raid/contract-template' && req.method === 'GET') { const T = require('./core/raid/contract-template.js'); json(res, 200, { ok: true, fields: T.TEMPLATE, tags: String(T.TAG) }); return; }
   if (p === '/api/raid/input' || p === '/api/raid/inputs') {
     const RI = require('./core/raid/input.js'); const dir = process.env.RAID_INPUTS_DIR || path.join(__dirname, 'data', 'raid', 'inputs');
     if (req.method !== 'POST') { json(res, 200, { ok: true, inputs: RI.list({ dir, limit: Number(url.searchParams.get('limit')) || 50 }) }); return; }
     let b = await readBody(req); if (typeof b === 'string') { try { b = JSON.parse(b || '{}'); } catch (_) { b = {}; } }
-    const r = await RI.take(b || {}, { dir, decide: async (intent) => _raidDecide(intent, { sigmaFloor: _field.entropy, regime: _field.regime }) });
+    // RD9 slice b (2026-11-14): booked as RAID's v2 contract through its own door, in this process (the same system)
+    const book = async (id, payload) => { const o = await require('./core/raid/contract-v2-door.js').handle('POST', '/api/raid/contracts/v2', { id, payload, by: 'raid' }); return o ? o.json : { ok: false, error: 'the v2 door did not answer' }; };
+    const r = await RI.take(b || {}, { dir, book, decide: async (intent) => _raidDecide(intent, { sigmaFloor: _field.entropy, regime: _field.regime }) });
     json(res, r.ok ? 200 : (r.code || 400), r); return;
   }
 

@@ -117,6 +117,21 @@
     },
     {
       "method": "POST",
+      "path": "/api/raid/input",
+      "description": "RD9 (0.60.486, slice b 0.60.529): an input to RAID { text, from, by, args: { contract?: template fields } }: kept as a .input node first, decided, drafted into a contract from the template and booked as RAID's v2 contract; what it cannot fill is a gap"
+    },
+    {
+      "method": "GET",
+      "path": "/api/raid/inputs",
+      "description": "RD9: the latest inputs, newest first, each with its decision and the contract it became"
+    },
+    {
+      "method": "GET",
+      "path": "/api/raid/contract-template",
+      "description": "RD9 slice b: the contract template's fields (system, agent, hat, capability, command, data, tags, dag, outcome), what fills each, the tag grammar"
+    },
+    {
+      "method": "POST",
       "path": "/api/raid/decide",
       "description": "Real RR1 fidelity decision (cross-process, MCO2/decideForContract's callers)"
     },
