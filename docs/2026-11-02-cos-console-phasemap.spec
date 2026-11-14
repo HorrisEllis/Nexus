@@ -390,3 +390,10 @@ phases_addendum_2026_11_09_sc7:
 # menu button." Expands SC10 (his 2026-11-06: "all the systems cli interfaces (command nodes) should be accessable there"): the Console lists,
 # per system, the same commands the TV UI's floating menu button offers for that system (lib/ui/tv-shell/menu.js), read from each system's own
 # registry or door (§5.16), not copied into COS, so both show one list.
+
+# ── ADDENDUM 2026-11-14 (map only) — SC10 expanded: the Console hooks into each system, and each agent ─────────────────────────────────────
+# James, 2026-11-14: "thats a problem also the console is supposed to hook into each system, and agent"
+# SC10 already owns "every system's commands in the Console, through each system's own door". New here: agents. Which agents, and through what,
+# is his to say (SC10_R1): (a) Guardian's agents (its providers and tabs), by Guardian's routes; (b) the co-pilot, by copilot's /api/prompt;
+# (c) Ollama's models, by ollama-bridge; (d) all three, each named as a target the Console can address (`@guardian:chatgpt ...`, `@copilot ...`).
+# State read 2026-11-14: of the systems, Cortex has a door (DO3a); DO1, DO2, DO5, DO7, DO8 are open, so the Console reaches COS and Cortex today.

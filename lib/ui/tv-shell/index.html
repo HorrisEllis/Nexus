@@ -1684,14 +1684,39 @@ document.getElementById('cp-provider').onchange = function() { _asProvider = thi
 // calls copilot's real, direct /api/prompt — same real endpoint clear-glass's
 // bridge.js was fixed to call, same real fix, just a second file that needed
 // it independently.
+// §FIXED 0.60.531 — James, 2026-11-14, a screenshot of this bar reading "Co-pilot bridge error: Failed to fetch": "thats a problem".
+// Copilot starts on demand (COS's supervisor) and this bar called :3750 directly, so an asleep copilot was a raw network error and nothing
+// woke it. Now a refused ask wakes it through COS's own route (POST /api/cos/systems/:name/touch, the supervisor's on-demand rule, as
+// 0.60.524 did for Intelligence), waits for its health (25 s), and asks again; one that cannot start is said with what to look at.
+// _wakeOnDemand(name, port) is for any system this page reaches directly.
+async function _wakeOnDemand(name, port, waitMs = 25000) {
+  const cos = (window.NEXUS_PORTS && window.NEXUS_PORTS.cosManager) || 7799;
+  // no-cors: the request is sent and the answer is not read; COS's manager is local and this starts only a system it already declares
+  try { await fetch(`http://127.0.0.1:${cos}/api/cos/systems/${encodeURIComponent(name)}/touch`, { method: 'POST', mode: 'no-cors', signal: AbortSignal.timeout(5000) }); }
+  catch (_) { return { up: false, why: `COS's manager did not answer on :${cos}, so ${name} could not be started` }; }
+  const until = Date.now() + waitMs;
+  while (Date.now() < until) {
+    try { const h = await fetch(`http://127.0.0.1:${port}/health`, { signal: AbortSignal.timeout(1500) }); if (h.ok) return { up: true }; } catch (_) {}
+    await new Promise(r => setTimeout(r, 700));
+  }
+  return { up: false, why: `${name} was asked to start and did not answer its health in ${Math.round(waitMs / 1000)} s (COS › Overview shows its state and why)` };
+}
 async function _copilotDispatch(payload, timeout = 30000) {
   const copilotPort = (window.NEXUS_PORTS && window.NEXUS_PORTS.copilot) || 3750;
-  const r = await fetch(`http://127.0.0.1:${copilotPort}/api/prompt`, {
+  const ask = () => fetch(`http://127.0.0.1:${copilotPort}/api/prompt`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
     signal: AbortSignal.timeout(timeout),
   });
+  let r;
+  try { r = await ask(); }
+  catch (e) {
+    if (e && (e.name === 'TimeoutError' || e.name === 'AbortError')) throw e;   // it was reached and was slow: not asleep
+    const woke = await _wakeOnDemand('copilot', copilotPort);
+    if (!woke.up) throw new Error(`copilot is not running: ${woke.why}`);
+    r = await ask();
+  }
   if (!r.ok) {
     let detail = '';
     try { const errBody = await r.json(); detail = errBody?.errors?.join('; ') || errBody?.error || ''; } catch (_) {}
