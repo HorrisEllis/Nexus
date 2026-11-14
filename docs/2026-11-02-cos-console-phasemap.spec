@@ -430,3 +430,5 @@ phases_addendum_2026_11_14_ch:
       nothing. They split on \r?\n. Idearium's build pipeline, the DAG and the ledger read his maps whole.
     by_the_axioms: "§4.2 (fix bugs pre-emptively), §17.4 (reproducible from his machine, not only the sandbox's), §17.7"
     not_built: "a .gitattributes that checks text out with LF everywhere (it would also make graph hashes the same on every machine): to phase; two Windows-only test failures (CP-13, PL-06) named in the changelog"
+# CH1 confirmed by him, 2026-11-14, from COS's Console on his PC: "console reaches copilot, ollama and gaurdian". The Guardian way was the one the
+# coder had not tried (it sends a message to his agent); his run is its proof.
