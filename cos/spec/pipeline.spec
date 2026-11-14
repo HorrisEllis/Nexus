@@ -245,3 +245,11 @@ spec:
 #   clear-glass/src/mesh/route-graph.js. Its 8 step types, 28 browser actions and condition operators become the Field's palette.
 # - BrainOS's UI is scrapped, not migrated: lib/ui/brainos/, lib/ui/brainos-float/. Removed once the Field covers what they reach (his call
 #   stands; the removal is a phase, so nothing he still opens disappears first).
+
+# ADDENDUM 2026-11-14 (c) — the pipeline runs on the canvas; the Workshop edits ONE gate or step. Corrects (b)'s "the Field is the whole editor".
+# James, 2026-11-14, of preview 8: "okay but the pipeline runs in the canvas. the workshop only edits one gate or step at a time"
+# - The canvas (preview 7) holds and runs the whole pipeline: compartments, gates, wires, outputs, right side tabs.
+# - MOD-PL-WORKSHOP opens over the canvas on one gate or one step (double-click / Edit) and edits only that one, in full: its layers, its
+#   inputs and outputs on the canvas, its conditions or its bricks, outcomes, properties, dry-run samples, its own history in the ledger.
+#   Apply writes it back to the canvas through COS's routes. Preview: cos/ui/pipeline-editor/preview-9 (a gate). BrainOS's backend is the
+#   palette of what can be added to that one gate or step; BrainOS's UI stays scrapped.
