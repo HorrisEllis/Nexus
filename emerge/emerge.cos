@@ -19,7 +19,7 @@ payload:
   repo:
     url: https://github.com/HorrisEllis/emerge
     commit: f02324025d60b9fe8a38e201f65770e2f13f0079
-    lockedAt: '2026-11-13'
+    lockedAt: '2026-11-14'
     path: emerge/
     note: >-
       the snapshot changes only by a new lock (scripts/emerge-lock.js --write). Since 2026-11-05 (EAS_D6, his "A": Emerge is a system in Nexus, emerge/ its
@@ -160,6 +160,7 @@ payload:
       emerge/core/transition.js: db1972f0205978cd7b028c8adea82b0c5efd861c0a7e22a84bcdc7fffe8bb772
       emerge/data/baseline/.gitkeep: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
       emerge/data/ledger/2026-11-10T23-42-04-235Z/events.jsonl: 7fee96f8c053cd4af1c03e492b74ee6b60a19b798f90de9e3da94300f5f3eab5
+      emerge/data/ledger/2026-11-14T02-06-10-968Z/events.jsonl: 81136e6d03ea15528e6cc9cde3ebd8de6ecd14f5adab959eaaa64ec8b33286de
       emerge/data/node-index/nodes_bundle.json: 53459f7bf89d7fe9566cf7296a51472a57e1bea4e7fd0c32e67dd6912a46e37b
       emerge/data/node-index/nodes_bundle_ledger.jsonl: d34547d4d560371ab673411dd819adcf02cbe203c77b6cdda7b5812802539e40
       emerge/data/node-index/nodes_capability.json: ef1c5cb92509ad96929d167ab65aba65fa0f534f03f576817197cbf46ebf4413
@@ -275,7 +276,7 @@ payload:
       emerge/lang/core/prelude.eg: fd1ee82069e7d176238d7402f50d7df3c1d2ef420d2eab10978e39d7874ed25a
       emerge/lang/core/primitives.eg: 89375c0d376ddbafff5b82056d27391de6457d225d79d8afbf4b618be3706b8e
       emerge/lang/core/selftest.eg: 7a1b4f60fde76fb51565a73b189279bd4d1f3f8312e0a17d4a30b53f0c9bb56b
-      emerge/lang/eg.js: eb80e882643f25144967ee5b106eb6fca70ad5f55861565c08439efa01550b6f
+      emerge/lang/eg.js: f172bb8396cc84867f19d2817f3ec924a7ace6f38bb5949ec8ebe30ca09b0296
       emerge/lang/emerge-lang.spec: b726425baa7c2af35b35bdee43374b6423ac0514dfac8c684fbff31a32b397e1
       emerge/lang/emitter.js: fc313225c77bc2203bace0b05f64f50a402162dd3d6cdf02e0897ff97392705b
       emerge/lang/errors.js: 4414b600ed1f41842876782f0f149384dde220fc3aef04c83192e9514d07c20d
@@ -330,7 +331,7 @@ payload:
       emerge/lang/native/x64.eg: e0ab26508f708c05cb4c27bed288db92e9a4802c99618f52f745e5a7e6044e17
       emerge/lang/parser.js: 3e2f3348d2ffe45042c187974256aa8bcdad43b18958ca12e1341ecbec7e7634
       emerge/lang/runtime.js: 25580e81651fbe9680d1912a877733ada0ecadbd6039cd541a1095121912cb5c
-      emerge/lang/say/say.eg: 2bfdb4ec5556eec969736722958bdd05940d5950c69aa2ba6e091ecb3a388c66
+      emerge/lang/say/say.eg: c01c25d2078dafc9f222305ba6de5cb86eeafc8790b8df54848e2c0056c3a2bb
       emerge/lang/say/taught.eg: 01ccaa67647c10d0bee09729bedeee18a5841993c35c8ac070d90c3ed9bc9b0d
       emerge/lang/say/words.eg: 98b4efade48a8c5b26c77caa5c0cf90a6d5c7558b23682c5d5d0dc39a520a092
       emerge/lang/self.eg: dea95f1b3eb78ad109fe88505b5011a546e59d325f94bf267307ad93ba6dd7f2
@@ -366,7 +367,7 @@ payload:
       emerge/lib/envelope.js: 31818d4ae1dec65f2c3ac3f4b4714812beb26af85d72b42d97d501d9b87b6c55
       emerge/lib/handoff.js: 7a9b2e6e19a2c80a304e2d6f5e64cecf5c77c38a65e33d8e1009f541ab92e430
       emerge/lib/heartbeat.js: 11bffecbc28656510b630cff49f96ba3618fb142cf847e74b06f8fb4abb379e9
-      emerge/lib/lang.js: 8a212439dcad4e3da1992017124b37d2e380609fe52bf93acdf5e8914f8fd79e
+      emerge/lib/lang.js: 872ab3381fa3ed2ee1ed944756f016398d5824d96fc4b4b41d8692b6ac27cf02
       emerge/lib/ledger.js: ef0f7b2e871612811dc13c88441aa04887a762d833ab33eb3109f9b83924e01e
       emerge/lib/listener.js: fdbcd76168e6e1b54ed99be09ac9b49b8a9309327e4f23837867aa76c462cdeb
       emerge/lib/modules.js: 73b74f559645475b452604037ad952c85ffdc3236b5f0ae58ac511610df570b5
@@ -432,6 +433,8 @@ payload:
       phases/2026-10-02-emerge-field-memory-build/graph/CRF1_the_axioms_as_constraints-6b50ac38551278d5.graph: 17ea2b7310d84aaf6c10a4ad43c29e087a52ac47ac744f0e4143148e90d8c126
       phases/2026-10-02-emerge-field-memory-build/graph/MR11_rewind_the_mind-253f63ad6dbcd990.graph: a93f04a7be057ae151b0302b335d6c910addc5377c995cbdcccf0c61fa7f2f4e
       phases/2026-10-02-emerge-field-memory-build/graph/_superseded/CRF1_the_axioms_as_constraints-697fc41691bf6a2f.graph: 818f006e869aecb05e669cc3a626d7ae88af7c98f81565307cc8fe378aab75c5
+      phases/2026-10-17-pieces-not-order/EMB2_ollama_writes_emerge_for_the_pipeline.phase: d90ea3e81109b3013be7b3551a18856abeb4e7b940accb5446dedb2b87bde7a1
+      phases/2026-10-17-pieces-not-order/graph/EMB2_ollama_writes_emerge_for_the_pipeline-579a25f18ba2e73f.graph: 365ed44933ef1d28b3e79172a79987821af0ff75ac35aab8f643e9547fdc3b67
       phases/2026-10-31-emerge-as-a-system/EAS4a_L0_evaluate.phase: 56625f30bc93e53c2d659c7b692e7ad13995404b13d00d466f37f805eecb4d70
       phases/2026-10-31-emerge-as-a-system/EAS4b_L1_compile.phase: 27e5dec4abb700a78548cbf346e1498219e46fa2f4abc5455a2a51d566393e92
       phases/2026-10-31-emerge-as-a-system/EAS4c_L2_build.phase: 29a37991e8d819875a2d94be3964bc85aead13afefb5612f0ef1e1d037fd439f

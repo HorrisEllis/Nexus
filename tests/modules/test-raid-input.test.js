@@ -68,6 +68,24 @@ const RI = require('../../cortex/core/raid/input.js'); const NE = require('../..
     const r = await ask({ contract: { ...FULL, tags: ['nope'] } }); assert.strictEqual(r.contract.booked, false); assert.ok(r.contract.problems.length);
     assert.strictEqual(T.TEMPLATE.length, 9);
   });
+  await t('RI-07', 'his "only emerge based contracts that need emerges code": Emerge work is read by Emerge\'s own say (end state, gaps); other work never asks Emerge', async () => {
+    // the real say, as Emerge's route runs it (eg say <words> --json); Cortex reaches it by route, here stood in by the same command
+    const realSay = async (sentence) => { const r = require('child_process').spawnSync(process.execPath, [path.join(__dirname, '../../emerge/emerge/lang/eg.js'), 'say', sentence, '--json'], { encoding: 'utf8' }); return JSON.parse(r.stdout.trim().split('\n').pop()); };
+    let asked = 0; const say = async (w) => { asked++; return realSay(w); };
+    const words = 'a compartment called counter so that it counts the visits, never negative, at most 100';
+    const r = await RI.take({ text: words, from: 'cli', by: 'person', args: { contract: { system: 'emerge', command: 'emerge.lang.build', dag: [{ id: 'write' }] } } }, { dir, book, say, decide: async () => ({ agent: 'ollama', reason: 'local' }) });
+    assert.strictEqual(asked, 1); assert.ok(r.contract.booked, JSON.stringify(r.contract));
+    const p = CG.load(path.join(cdir, `${r.contract.id}.contract`)).payload;
+    assert.strictEqual(p.outcome.what, 'it counts the visits', 'the end state, read by Emerge from his words');
+    assert.strictEqual(p.emerge.kind, 'compartment'); assert.strictEqual(p.emerge.name, 'Counter'); assert.ok(p.tags.includes('kind:emerge'));
+    assert.ok(r.contract.gaps.some(g => /^Emerge: what at most applies to/.test(g)), r.contract.gaps.join(' | '));
+    assert.ok(p.gaps.find(g => /what at most applies to/.test(g.missing)).hint, 'with the words that teach it');
+    const plain = await RI.take({ text: 'fix the parser', from: 'cli', by: 'person', args: { contract: { ...FULL } } }, { dir, book, say, decide: async () => ({ agent: 'ollama' }) });
+    assert.strictEqual(asked, 1, 'not Emerge work: Emerge is not asked'); assert.ok(!CG.load(path.join(cdir, `${plain.contract.id}.contract`)).payload.emerge);
+    assert.ok(T.needsEmerge({ args: { files: ['x/y.eg'] } })); assert.ok(T.needsEmerge({}, { command: 'emerge.lang.run' })); assert.ok(!T.needsEmerge({}, { system: 'idearium' }));
+    const down = await RI.take({ text: 'write it in emerge', from: 'cli', by: 'person', args: { contract: { emerge: true, system: 'emerge', command: 'emerge.lang.build', dag: [{ id: 'w' }], outcome: { what: 'x' } } } }, { dir, book, say: async () => { throw new Error('ECONNREFUSED'); }, decide: async () => ({ agent: 'ollama' }) });
+    assert.ok(down.contract.gaps.some(g => /Emerge could not read it: ECONNREFUSED/.test(g)), 'Emerge down is a gap, said');
+  });
   fs.rmSync(cdir, { recursive: true, force: true }); fs.rmSync(root, { recursive: true, force: true });
   fs.rmSync(dir, { recursive: true, force: true });
   console.log(`\n  ${p} passed, ${f} failed`); process.exit(f ? 1 : 0);
