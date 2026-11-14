@@ -121,3 +121,13 @@ chunking. thats what i mean about idearium. i feel a lot of idearium is misplace
   and chunk-dispatch.js (retry ladder, answer checked); gates hold persistence (a run resumes from its last passed gate).
 - SW8_ideariums_census_what_is_misplaced (new): census of Idearium's ~62k lines, each part given a home by the axioms, shown to him before
   anything moves.
+
+## ADDENDUM: the atlas, and the chunker's leaning (his, 2026-11-14)
+- "We need to improve atlas. Everything nexus can do, proven with real results. What it can't currently do. What it's trying to be. What it's
+  becoming. Every single system in full detail, with each component explained and why it exists. Nothing left unconverted." → SB25
+  (docs/2026-10-05-build-from-the-spec-phasemap.spec) picked up and expanded: five parts per system, every file covered, a check that fails
+  while any is missing, generated from each system's own registry (not Loom). Measured 2026-11-14, files with a header that says what or why:
+  cos 197/413, cortex 39/52, idearium 106/170, clear-glass 219/256, copilot 39/45, intelligence 29/82, guardian 56/68, versionium 17/25,
+  emerge 20/154 (.eg mostly), orchestrator 12/27.
+- "Chunks, bricks, steps, etc. I feel like raid? Like with agent tools also." → SW8 his_leaning_2026_11_14: the decomposition's home leans
+  RAID, with the agent tools; confirmed with the census.

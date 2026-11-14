@@ -245,6 +245,10 @@ phases:
       to Intelligence (help with complex tasks, patterns), to RAID (routing, contracts), or retired. The census is shown to him before anything
       moves (his "i feel": the homes are his to confirm). Then moved one part at a time by git mv, the old path forwarding, as SW5i did for the
       automation engine. First candidates, read 2026-11-14: spec-compiler/chunk and chunk-dispatch.js (decomposition for the pipeline, PC8).
+    his_leaning_2026_11_14: >-
+      James, 2026-11-14: "Chunks, bricks, steps, etc. I feel like raid? Like with agent tools also."
+      His leaning for the decomposition (Idearium's chunk builder and chunk-dispatch, bricks, steps): RAID, with the agent tools. Recorded as
+      the census's first entry, his "I feel" kept as a leaning until he confirms the census.
     proof: "the census lists every Idearium file with a home and why; he confirms it; each move keeps history and its callers' tests pass"
 
   SW7a_the_crystal_lattice_into_intelligence:
