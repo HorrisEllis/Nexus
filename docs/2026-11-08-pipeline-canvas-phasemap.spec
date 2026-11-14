@@ -662,6 +662,14 @@ built_2026_11_09_plan:
       the pattern, PC6); agents use their tools (the agent tools, through RAID); each gate holds persistence (what passed is kept at the gate,
       so a run resumes from its last passed gate and nothing passed is redone); decomposing reduces load (each step fits its model, PC17).
       Where the chunker and dispatcher live is SW8's question (Idearium's census).
+    expanded_2026_11_14_c: >-
+      James, 2026-11-14, after each step became a node file (0.60.538): "then we can track each file moving through the backend. tagging each step,
+      and gate". Each step node and each gate's verdict carries tags: the run, the pipeline, the step, the gate's outcome, and every file the step
+      read or wrote (file:<path>, taken from what the step gives: its output's files, a build's changed list, Versionium's record of the change).
+      A file's trail is then a query over the step nodes on disk: which runs and steps touched it, in order, through which gates, with what
+      outcome. Slice a: the tags written; GET /api/cos/automation/trail?file=<path> and `cos file-trail <path>`; then the canvas shows a file's
+      trail from OUTPUTS. Reading to confirm: "moving through the backend" read as across every system the step calls (each through RAID), not
+      only COS's engine.
     does: >-
       A pipeline is operable from COS, the way a person and an agent would want it: run, pause, resume and retry a step; test it dry, the steps
       planned and their gates checked with nothing changed; see each step's state live; diagnose a failed step (its gate, its input, its output,

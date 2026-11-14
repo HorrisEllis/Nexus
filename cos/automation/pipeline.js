@@ -139,6 +139,16 @@ function _cycle(tasks) {
 /** _unreachable(error) → true when the step's target did not answer at all (0.60.538): refused, reset, unreachable, no route, timed out connecting */
 /** _cap(output) — a step's whole output kept on its node, up to 2 MB of text (past that, the start and the size, said) */
 function _cap(o) { const t = typeof o === 'string' ? o : (() => { try { return JSON.stringify(o); } catch (_) { return String(o); } })(); if (t.length <= 2e6) return o; return { truncated: true, size: t.length, start: t.slice(0, 200000) }; }
+/** _filesIn(output) → the files a step's output names (0.60.539): keys file, path, files, paths, changed, written, read, created, modified, deleted,
+ *  at any depth, as strings that look like paths; normalised, unique, at most 200 */
+function _normPath(f) { return String(f || '').trim().replace(/\\/g, '/').replace(/^\.\//, ''); }
+function _filesIn(o) { const out = new Set(), KEYS = /^(file|path|files|paths|changed|written|read|created|modified|deleted|landed_files|touched)$/i;
+  const looks = (v) => typeof v === 'string' && v.length < 400 && /[\/\\]|\.[A-Za-z0-9]{1,8}$/.test(v) && !/^https?:|\s{2,}|\n/.test(v);
+  const walk = (v, key, d) => { if (d > 6 || out.size >= 200 || v == null) return;
+    if (typeof v === 'string') { if (key && KEYS.test(key) && looks(v)) out.add(_normPath(v)); return; }
+    if (Array.isArray(v)) { for (const x of v) walk(x, key, d + 1); return; }
+    if (typeof v === 'object') for (const [k, x] of Object.entries(v)) walk(x, KEYS.test(k) ? k : (typeof x === 'object' ? null : k), d + 1); };
+  let v = o; if (typeof v === 'string') { try { v = JSON.parse(v); } catch (_) { return []; } } walk(v, null, 0); return [...out]; }
 function _unreachable(e) { return /fetch failed|ECONNREFUSED|ECONNRESET|EHOSTUNREACH|ENETUNREACH|socket hang up|ETIMEDOUT|not answering|did not answer/i.test(String(e || '')); }
 /** layers(pipeline) → [[ids]] — the order a checklist reads in; assumes validate() passed */
 function layers(p) {
@@ -241,9 +251,22 @@ class Pipelines {
       const payload = { id, run: run.id, pipeline: p.id, pipelineName: p.name, label: def.label || id, after: def.depends_on || [], gives: ['output'], run_step: def.step || null,
         gate: def.gate || null, status: t.status, attempts: t.attempts, startedAt: t.startedAt || null, finishedAt: t.finishedAt || null, ms: t.ms != null ? t.ms : null,
         error: t.error || null, note: t.note || null, outcome: t.gate || null, events: t.events || [], ...(output !== undefined ? { output: _cap(output) } : {}) };
-      const env = NX.wrap('process_step', `${run.id}.${id}`, payload, { context: `COS's automation engine — step ${id} of run ${run.id} (${p.name})`, intent: def.label || id, system: 'cos', tags: ['run:' + run.id, 'pipeline:' + p.id, 'step:' + id] });
+      // 0.60.539 — James, 2026-11-14: "then we can track each file moving through the backend. tagging each step, and gate". Each step node is
+      // tagged with its run, pipeline, step, its gate's outcome and every file it named (file:<path>); a file's trail is a read over these nodes.
+      const files = _filesIn(output); payload.files = files; if (files.length) t.files = files;   // the run record names them too, for the canvas
+      const tags = ['run:' + run.id, 'pipeline:' + p.id, 'step:' + id, ...(t.status ? ['status:' + t.status] : []), ...(t.gate && t.gate.outcome ? ['gate:' + t.gate.outcome] : []), ...files.map(f => 'file:' + f)];
+      const env = NX.wrap('process_step', `${run.id}.${id}`, payload, { context: `COS's automation engine — step ${id} of run ${run.id} (${p.name})`, intent: def.label || id, system: 'cos', tags });
       fs.mkdirSync(path.join(this.runsDir, run.id), { recursive: true }); this._write(path.join(this.runsDir, run.id, `${id}.process_step`), null, NX.toYaml(env));
     } catch (e) { run.saveError = `step ${id}: ${e.message}`; }
+  }
+  /** trail(file) → every step, across runs, that named this file, oldest first: run, pipeline, step, status, its gate's outcome, when (0.60.539) */
+  trail(file, { limit = 500 } = {}) {
+    const want = _normPath(file), out = []; if (!want) return out; let runs = [];
+    try { runs = fs.readdirSync(this.runsDir, { withFileTypes: true }).filter(d => d.isDirectory()).map(d => d.name); } catch (_) { return out; }
+    for (const r of runs) { const st = this.steps(r);
+      for (const x of Object.values(st)) if ((x.files || []).some(f => f === want || f.endsWith('/' + want) || want.endsWith('/' + f)))
+        out.push({ at: x.finishedAt || x.startedAt || null, run: x.run, pipeline: x.pipeline, pipelineName: x.pipelineName, step: x.id, label: x.label, status: x.status, gate: x.outcome ? x.outcome.outcome : null, why: x.outcome ? x.outcome.why || null : null, error: x.error || null }); }
+    return out.sort((a, b) => (a.at || 0) - (b.at || 0)).slice(-limit);
   }
   /** steps(runId) → { <step>: payload } — a run's step nodes, read from disk */
   steps(runId) { const NX = require('../../lib/node-export.js'), dir = path.join(this.runsDir, String(runId)), out = {};

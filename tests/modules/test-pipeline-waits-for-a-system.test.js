@@ -71,6 +71,16 @@ const freePort = () => new Promise(r => { const s = net.createServer(); s.listen
     assert.ok(hits[0].includes('t=x1'), 'its vars came from disk');
     assert.strictEqual(A2.getRun(done.run.id).status, 'interrupted'); assert.strictEqual(A2.getRun(done.run.id).resumedBy, out[0].now);
   });
+  await t('PW-06', 'his "track each file moving through the backend. tagging each step, and gate": a step\'s files are tags on its node; a file\'s trail spans runs, oldest first', async () => {
+    const P = new Pipelines(new AutomationEngine({}), { dir: path.join(tmp, 'f') });
+    const c = P.create({ name: 'files', tasks: [{ id: 'write', step: { type: 'set', config: { assign: { files: ['cos/x.js', 'lib\\y.js'], note: 'not a path' } } }, gate: { contains: 'x.js' } }] });
+    const pid = (c.pipeline || c).id; const r1 = await P.run(pid, { wait: true }); const r2 = await P.run(pid, { wait: true });
+    const NX = require(path.join(ROOT, 'lib/node-export.js')); const d = NX.fromYaml(fs.readFileSync(path.join(tmp, 'f', 'runs', r1.run.id, 'write.process_step'), 'utf8'));
+    assert.deepStrictEqual(d.payload.files, ['cos/x.js', 'lib/y.js']);
+    for (const tag of ['file:cos/x.js', 'file:lib/y.js', 'step:write', 'status:done', 'gate:open']) assert.ok(d.tags.includes(tag), `tag ${tag}: ${d.tags}`);
+    const tr = P.trail('cos/x.js'); assert.deepStrictEqual(tr.map(x => x.run), [r1.run.id, r2.run.id]); assert.strictEqual(tr[0].gate, 'open');
+    assert.deepStrictEqual(P.trail('nowhere.js'), []);
+  });
   fs.rmSync(tmp, { recursive: true, force: true });
   console.log(`\n${passed} passed, ${failed} failed`); process.exit(failed ? 1 : 0);
 })();

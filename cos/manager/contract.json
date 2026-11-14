@@ -113,6 +113,11 @@
       "out": "\u2192 { pipeline, layers } \u2014 one pipeline and the order its steps run in (PC4 slice 1, the canvas)"
     },
     {
+      "method": "GET",
+      "path": "/api/cos/automation/pipeline-trail",
+      "out": "?file=<path> \u2192 { file, trail: [{ at, run, pipeline, step, status, gate, why, error }] } \u2014 every step, across runs, that named the file, oldest first (0.60.539)"
+    },
+    {
       "method": "PUT",
       "path": "/api/cos/automation/pipelines/:id",
       "out": "{ name, tasks, vars, \u2026, by } \u2192 { pipeline } \u2014 the pipeline saved from the canvas, the same file Clear Glass and the CLI edit (PC4 slice 1)"
@@ -938,6 +943,7 @@
         "GET /api/cos/automation/pipelines",
         "GET /api/cos/automation/pipelines/:id",
         "PUT /api/cos/automation/pipelines/:id",
+        "GET /api/cos/automation/pipeline-trail",
         "POST /api/cos/automation/pipelines/:id/run",
         "GET /api/cos/automation/pipelines/:id/node",
         "GET /api/cos/automation/pipeline-runs",

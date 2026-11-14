@@ -94,6 +94,8 @@ async function handle(A, { method, url, body = {}, headers = {}, rawBody = '' },
         if (p[5] === 'save' && method === 'POST') { const fp = NN.saveNode(deps.nodesDir || NN.NODES_DIR, n); return ok({ ok: true, path: fp, file: require('path').basename(fp), missing: n.missing }); }
       }
     }
+    // 0.60.539 — his "track each file moving through the backend. tagging each step, and gate": a file's trail across every run
+    if (path === '/automation/pipeline-trail' && method === 'GET') { const f = q('file'); return f ? ok({ ok: true, file: f, trail: P.trail(f) }) : ok({ ok: false, error: 'file is required: ?file=<path>' }, 400); }
     if (path === '/automation/pipeline-runs' && method === 'GET') return ok({ ok: true, runs: P.runs(q('pipelineId') || null, parseInt(q('limit'), 10) || 20) });
     if (p[2] === 'pipeline-runs' && p[3]) {
       if (!p[4] && method === 'GET') { const r = P.getRun(p[3]); return r ? ok({ ok: true, run: r }) : ok({ ok: false, error: `no run ${p[3]}` }, 404); }
