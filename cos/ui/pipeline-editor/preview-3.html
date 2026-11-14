@@ -1,0 +1,223 @@
+<!doctype html>
+<!--
+  cos/ui/pipeline-editor/preview-3.html — A PREVIEW, not the editor: sample data, nothing wired. 2026-11-14 (third preview).
+  James, 2026-11-14: "okay, but the steps are compartments in cos. the gates need to be explicit. no redundancy. enterprise grade,
+  breathtaking, organized. show me another preview"
+  Each step is a COS compartment (its system, its process, its memory, its command, its delta against its baseline). Each gate is its own
+  node between two compartments (its type, its checks one by one, its verdict, what it does on a fail). The run ends at its contract's end
+  state. Each fact appears once: the machine in the top bar, the run in the run bar, the work on the canvas, the rest in the side-tab tools.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Pipeline — preview 3</title>
+<style>
+:root{
+  --void:#05060f; --bg:#080814; --bg1:#0c0c1c; --bg2:#101024; --bg3:#1a1a34; --line:#1f2440; --line2:#2b3358;
+  --text:#d6daf2; --dim:#7a7fa8; --faint:#4c5078; --bright:#f2f3ff;
+  --sky:#22d3ee; --sky-g:rgba(34,211,238,.14); --mint:#34d399; --mint-g:rgba(52,211,153,.14); --amber:#f5a524; --amber-g:rgba(245,165,36,.14);
+  --red:#ff4d6a; --violet:#a78bfa; --violet-g:rgba(167,139,250,.14);
+  --mono:'IBM Plex Mono','JetBrains Mono',ui-monospace,monospace; --sans:'IBM Plex Sans',Inter,system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100vh;overflow:hidden;background:var(--void);color:var(--text);font:13px var(--sans)}
+body{display:flex;flex-direction:column;background:radial-gradient(900px 520px at 30% 120%, rgba(34,211,238,.07), transparent 60%),radial-gradient(800px 500px at 85% -10%, rgba(167,139,250,.07), transparent 60%),var(--void)}
+.mono{font-family:var(--mono)}
+/* bar 1: the system (once) */
+.sys{height:42px;display:flex;align-items:center;gap:24px;padding:0 18px;border-bottom:1px solid var(--line);background:rgba(8,8,20,.9)}
+.logo{font:600 12px var(--mono);color:var(--sky);letter-spacing:.28em}
+.nav{display:flex;gap:20px}.nav span{font:11px var(--mono);color:var(--faint);padding:12px 0}.nav .on{color:var(--text);box-shadow:inset 0 -2px 0 var(--sky)}
+.health{margin-left:auto;display:flex;gap:16px;align-items:center;font:10.5px var(--mono);color:var(--dim)}
+.health b{color:var(--text);font-weight:500}
+.meter{width:70px;height:4px;background:var(--bg3);border-radius:2px;overflow:hidden;display:inline-block;vertical-align:middle;margin-left:6px}.meter i{display:block;height:100%;background:var(--amber)}
+.led{width:6px;height:6px;border-radius:50%;display:inline-block;margin-right:6px;vertical-align:middle;background:var(--mint);box-shadow:0 0 8px var(--mint)}
+/* bar 2: this run (once) */
+.run{height:52px;display:flex;align-items:center;gap:18px;padding:0 18px;border-bottom:1px solid var(--line);background:rgba(12,12,28,.75)}
+.run h1{font:600 15px var(--sans);color:var(--bright);letter-spacing:.2px}
+.run .meta{font:10.5px var(--mono);color:var(--dim)}
+.run .meta b{color:var(--sky);font-weight:500}
+.views{display:flex;gap:2px;margin-left:18px;background:var(--bg1);border:1px solid var(--line);border-radius:7px;padding:2px}
+.views span{font:11px var(--mono);color:var(--faint);padding:5px 12px;border-radius:5px}.views .on{color:var(--text);background:var(--bg3)}
+.actions{margin-left:auto;display:flex;gap:6px}
+.btn{white-space:nowrap;font:11px var(--mono);color:var(--text);background:var(--bg2);border:1px solid var(--line2);padding:6px 12px;border-radius:6px}
+.btn.p{color:var(--void);background:var(--sky);border-color:var(--sky);font-weight:600}
+/* the canvas */
+.body{flex:1;display:flex;min-height:0}
+.stage{flex:1;position:relative;overflow:hidden}
+.grid{position:absolute;inset:0;background-image:linear-gradient(rgba(122,127,168,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(122,127,168,.05) 1px,transparent 1px);background-size:32px 32px}
+.lane{position:absolute;left:24px;font:9.5px var(--mono);letter-spacing:.2em;color:var(--faint)}
+svg.wires{position:absolute;left:0;top:0;width:1080px;height:640px;pointer-events:none}
+.c,.g,.e{position:absolute;border-radius:10px;background:linear-gradient(180deg,rgba(18,18,40,.96),rgba(13,13,30,.96));border:1px solid var(--line2)}
+.c{width:200px;height:200px;padding:12px 13px}
+.g{width:164px;height:200px;padding:12px 12px;border-style:dashed}
+.e{width:200px;height:200px;padding:12px 13px;border-color:rgba(167,139,250,.5);background:linear-gradient(180deg,rgba(28,22,52,.96),rgba(16,14,34,.96))}
+.hd{white-space:nowrap;display:flex;align-items:center;gap:7px;font:9.5px var(--mono);letter-spacing:.14em;color:var(--faint)}
+.hd .ic{font-size:11px;letter-spacing:0}
+.chip{white-space:nowrap;margin-left:auto;font:9.5px var(--mono);letter-spacing:.06em;padding:2px 7px;border-radius:10px;border:1px solid var(--line2);color:var(--dim)}
+.chip.done{color:var(--mint);border-color:rgba(52,211,153,.45);background:var(--mint-g)}
+.chip.live{color:var(--sky);border-color:rgba(34,211,238,.5);background:var(--sky-g)}
+.chip.open{color:var(--mint);border-color:rgba(52,211,153,.45);background:var(--mint-g)}
+.chip.wait{color:var(--dim)}
+.chip.held{color:var(--amber);border-color:rgba(245,165,36,.5);background:var(--amber-g)}
+.ti{font:600 13.5px var(--sans);color:var(--bright);margin:9px 0 3px}
+.sub{font:10.5px var(--mono);color:var(--dim)}
+.kv{margin-top:9px;display:grid;grid-template-columns:auto 1fr;gap:3px 10px;font:10.5px var(--mono)}
+.kv span:nth-child(odd){color:var(--faint)}.kv span:nth-child(even){color:var(--text);text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.delta{position:absolute;left:13px;right:13px;bottom:12px}
+.delta .tr{height:5px;background:var(--bg3);border-radius:3px;position:relative;overflow:visible}
+.delta .tr i{position:absolute;left:0;top:0;bottom:0;border-radius:3px;background:var(--mint)}
+.delta .tr u{position:absolute;top:-3px;width:1px;height:11px;background:var(--dim)}
+.delta .lb{display:flex;justify-content:space-between;font:10px var(--mono);color:var(--dim);margin-top:5px}
+.c.live{border-color:rgba(34,211,238,.7);box-shadow:0 0 0 1px rgba(34,211,238,.35),0 18px 50px rgba(34,211,238,.12)}
+.c.live .delta .tr i{background:var(--sky)}
+.c.wait{opacity:.72}
+.checks{margin-top:8px;font:10.5px var(--mono);line-height:1.75}
+.checks .y{color:var(--mint)}.checks .n{color:var(--faint)}.checks .h{color:var(--amber)}
+.fail{position:absolute;left:12px;right:12px;bottom:11px;font:9.5px var(--mono);color:var(--faint);border-top:1px solid var(--line);padding-top:7px}
+.g.open{border-style:solid;border-color:rgba(52,211,153,.45)}
+.g.held{border-style:solid;border-color:rgba(245,165,36,.6);box-shadow:0 0 0 1px rgba(245,165,36,.25)}
+.e .ti{color:#e9e2ff}
+.e ul{list-style:none;margin-top:8px;font:10.5px var(--mono);line-height:1.75;color:var(--dim)}
+.e li b{color:var(--mint);font-weight:500}.e li i{color:var(--faint);font-style:normal}
+.legend{position:absolute;left:24px;bottom:18px;display:flex;gap:18px;font:10px var(--mono);color:var(--faint)}
+.legend span{display:flex;align-items:center;gap:6px}
+.sw{width:14px;height:10px;border-radius:3px;border:1px solid var(--line2)}
+.sw.sg{border-style:dashed;border-color:var(--mint)}.sw.se{border-color:var(--violet)}
+.pv{position:absolute;right:16px;top:12px;font:9.5px var(--mono);color:var(--amber);letter-spacing:.08em;border:1px solid rgba(245,165,36,.35);padding:3px 8px;border-radius:4px}
+/* tools: Idearium's side tabs, ERAVOS windows, docked and aligned */
+.tools{width:330px;border-left:1px solid var(--line);background:rgba(8,8,20,.7);padding:12px;display:flex;flex-direction:column;gap:12px}
+.wm{border:1px solid var(--line2);border-radius:10px;background:rgba(16,16,36,.95);position:relative;overflow:hidden}
+.wm::before{content:'';position:absolute;left:0;right:0;top:0;height:2px;background:var(--sky)}
+.wm.v::before{background:var(--violet)}
+.wh{display:flex;align-items:center;gap:8px;height:34px;padding:0 10px;border-bottom:1px solid var(--line);font:600 12px var(--sans)}
+.wh .t{font:10px var(--mono);color:var(--dim);font-weight:400}.wh .x{margin-left:auto;color:var(--faint);font:11px var(--mono)}
+.wb{padding:10px 11px}
+.term{font:10.5px/1.65 var(--mono);color:#b9f3d3;background:#04050b;border:1px solid var(--line);border-radius:7px;padding:9px 10px;height:168px;overflow:hidden}
+.term .k{color:var(--sky)}.term .d{color:var(--faint)}.term .cur{display:inline-block;width:7px;height:12px;background:var(--sky);vertical-align:-2px}
+.ch{font:10.5px/1.75 var(--mono)}.ch .f{color:var(--text)}.ch .a{color:var(--mint)}.ch .r{color:var(--red)}.ch .n{color:var(--faint)}
+.tabs{width:34px;border-left:1px solid var(--line);display:flex;flex-direction:column;align-items:center;gap:6px;padding-top:12px;background:rgba(8,8,20,.85)}
+.vt{writing-mode:vertical-rl;transform:rotate(180deg);font:600 9.5px var(--mono);letter-spacing:.16em;color:var(--faint);padding:11px 6px;border:1px solid transparent;border-radius:6px}
+.vt.on{color:var(--sky);border-color:rgba(34,211,238,.4);background:var(--sky-g)}
+.vs{font:9px var(--mono);color:var(--faint);padding:3px}
+</style>
+</head>
+<body>
+<div class="sys">
+  <span class="logo">COS</span>
+  <div class="nav"><span>Home</span><span class="on">Pipelines</span><span>Compartments</span><span>Gate types</span><span>Automation</span></div>
+  <div class="health">
+    <span>memory <b>71%</b><span class="meter"><i style="width:71%"></i></span></span>
+    <span>heavy work at <b>≥ 25% free</b></span>
+    <span><span class="led"></span>ollama <b>qwen2.5-coder:3b</b> · local</span>
+  </div>
+</div>
+<div class="run">
+  <h1>Idearium build</h1>
+  <span class="meta">run <b>a91f</b> · IN0_baseline · started 4 min ago · 5 of 9 passed</span>
+  <div class="views"><span class="on">Canvas</span><span>Contract</span><span>Runs</span><span>Ledger</span><span>Settings</span></div>
+  <div class="actions"><span class="btn">❚❚ Pause</span><span class="btn">↻ Retry from…</span><span class="btn">＋ Compartment</span><span class="btn">◇ Gate</span><span class="btn p">▶ Run</span></div>
+</div>
+
+<div class="body">
+<div class="stage">
+  <div class="grid"></div>
+  <span class="lane" style="top:14px">PLAN</span>
+  <span class="lane" style="top:292px">BUILD &amp; PROVE</span>
+  <svg class="wires" viewBox="0 0 1080 640">
+    <defs><marker id="a" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="rgba(52,211,153,.8)"/></marker>
+      <marker id="b" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="rgba(122,127,168,.7)"/></marker>
+      <marker id="c" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="rgba(34,211,238,.9)"/></marker></defs>
+    <g fill="none" stroke-width="1.6">
+      <path d="M224 136 L244 136" stroke="rgba(52,211,153,.7)" marker-end="url(#a)"/>
+      <path d="M410 136 L430 136" stroke="rgba(52,211,153,.7)" marker-end="url(#a)"/>
+      <path d="M632 136 L652 136" stroke="rgba(52,211,153,.7)" marker-end="url(#a)"/>
+      <path d="M818 136 L838 136" stroke="rgba(52,211,153,.7)" marker-end="url(#a)"/>
+      <path d="M940 236 L940 310" stroke="rgba(34,211,238,.85)" stroke-dasharray="5 4" marker-end="url(#c)"/>
+      <path d="M858 412 L838 412" stroke="rgba(122,127,168,.6)" marker-end="url(#b)"/>
+      <path d="M636 412 L616 412" stroke="rgba(122,127,168,.6)" marker-end="url(#b)"/>
+      <path d="M450 412 L430 412" stroke="rgba(122,127,168,.6)" marker-end="url(#b)"/>
+    </g>
+  </svg>
+
+  <!-- row 1 -->
+  <div class="c" style="left:24px;top:36px">
+    <div class="hd"><span class="ic">▣</span>COMPARTMENT<span class="chip done">done</span></div>
+    <div class="ti">What can be built now</div><div class="sub">idearium · GET /api/phases/next</div>
+    <div class="kv"><span>process</span><span>pid 4120 · :4800</span><span>memory</span><span>412 MB of 1 GB</span></div>
+    <div class="delta"><div class="tr"><i style="width:44%"></i><u style="left:55%"></u></div><div class="lb"><span>0.4 s</span><span>base 0.5 s ±0.1</span></div></div>
+  </div>
+  <div class="g open" style="left:246px;top:36px">
+    <div class="hd"><span class="ic">◇</span>GATE<span class="chip open">open</span></div>
+    <div class="ti">Answer is usable</div><div class="sub">type · check</div>
+    <div class="checks"><div class="y">✓ ok is true</div><div class="y">✓ a phase is named</div></div>
+    <div class="fail">on fail · retry 2 · then hold</div>
+  </div>
+  <div class="c" style="left:432px;top:36px">
+    <div class="hd"><span class="ic">▣</span>COMPARTMENT<span class="chip done">done</span></div>
+    <div class="ti">Nothing covers it yet</div><div class="sub">idearium · POST /phases/ledger/covers</div>
+    <div class="kv"><span>process</span><span>pid 4120 · :4800</span><span>memory</span><span>418 MB of 1 GB</span></div>
+    <div class="delta"><div class="tr"><i style="width:58%"></i><u style="left:52%"></u></div><div class="lb"><span>1.1 s</span><span>base 1.0 s ±0.2</span></div></div>
+  </div>
+  <div class="g open" style="left:654px;top:36px">
+    <div class="hd"><span class="ic">◇</span>GATE<span class="chip open">open</span></div>
+    <div class="ti">Mapped, DAG whole</div><div class="sub">type · dag</div>
+    <div class="checks"><div class="y">✓ depends_on resolves</div><div class="y">✓ no cycle</div><div class="y">✓ files named</div></div>
+    <div class="fail">on fail · hold · ask you</div>
+  </div>
+  <div class="c live" style="left:840px;top:36px">
+    <div class="hd"><span class="ic">▣</span>COMPARTMENT<span class="chip live">running</span></div>
+    <div class="ti">Write the files</div><div class="sub">agent · ollama · repo.build · the_builder</div>
+    <div class="kv"><span>process</span><span>pid 7712 · :3749</span><span>memory</span><span>1.9 GB (cpu)</span></div>
+    <div class="delta"><div class="tr"><i style="width:62%"></i><u style="left:100%"></u></div><div class="lb"><span>2 m 41 s</span><span>base 4 m 20 s ±38 s</span></div></div>
+  </div>
+
+  <!-- row 2, right to left -->
+  <div class="g" style="left:858px;top:312px">
+    <div class="hd"><span class="ic">◇</span>GATE<span class="chip wait">waiting</span></div>
+    <div class="ti">Tests pass</div><div class="sub">type · tests</div>
+    <div class="checks"><div class="n">○ test-tree-census</div><div class="n">○ nothing else breaks</div></div>
+    <div class="fail">on fail · back to the agent · 2×</div>
+  </div>
+  <div class="c wait" style="left:636px;top:312px">
+    <div class="hd"><span class="ic">▣</span>COMPARTMENT<span class="chip wait">waiting</span></div>
+    <div class="ti">Close on evidence</div><div class="sub">cortex · RAID contract · evidence</div>
+    <div class="kv"><span>process</span><span>pid 3998 · :3748</span><span>memory</span><span>63 MB of 512 MB</span></div>
+    <div class="delta"><div class="tr"><i style="width:0"></i><u style="left:40%"></u></div><div class="lb"><span>—</span><span>base 2 s ±0.4</span></div></div>
+  </div>
+  <div class="g held" style="left:450px;top:312px">
+    <div class="hd"><span class="ic">◇</span>GATE<span class="chip held">yours</span></div>
+    <div class="ti">You approve the landing</div><div class="sub">type · person</div>
+    <div class="checks"><div class="h">◐ the diff, the tests, the proof</div></div>
+    <div class="fail">on fail · nothing lands · said</div>
+  </div>
+  <div class="e" style="left:228px;top:312px">
+    <div class="hd"><span class="ic">◎</span>END STATE<span class="chip">2 of 4</span></div>
+    <div class="ti">IN0_baseline built, its proof passes</div><div class="sub">booked with RAID · c-in-1794</div>
+    <ul><li><b>✓</b> answer usable</li><li><b>✓</b> mapped, DAG whole</li><li><i>○</i> tests pass</li><li><i>○</i> you approve</li></ul>
+  </div>
+
+  <div class="legend"><span><i class="sw"></i>compartment (a COS process)</span><span><i class="sw sg"></i>gate (its own node: checks, verdict, on fail)</span><span><i class="sw se"></i>end state (the contract)</span><span>bar: this run · tick: its baseline</span></div>
+  <div class="pv">PREVIEW · SAMPLE DATA · NOTHING WIRED</div>
+</div>
+
+<aside class="tools">
+  <div class="wm"><div class="wh">Outputs <span class="t">· write the files · streaming</span><span class="x">–  ✕</span></div>
+    <div class="wb"><div class="term">
+      <div class="d">qwen2.5-coder:3b · ctx 4096 · cpu · 18 tok/s</div>
+      <div><span class="k">write</span> scripts/tree-census.js</div>
+      <div>const fs = require('fs');</div>
+      <div>function census(root) {</div>
+      <div>&nbsp;&nbsp;const out = { files: 0, bytes: 0 };</div>
+      <div>&nbsp;&nbsp;for (const f of walk(root)) {<span class="cur"></span></div>
+    </div></div></div>
+  <div class="wm"><div class="wh">Changes <span class="t">· this run</span><span class="x">–  ✕</span></div>
+    <div class="wb ch"><div class="f">scripts/tree-census.js <span class="a">+41</span></div><div class="f">tests/…/test-tree-census.js <span class="a">+28</span></div><div class="n">nothing lands until the gates open</div></div></div>
+  <div class="wm v"><div class="wh">Plan <span class="t">· the queue after this run</span><span class="x">–  ✕</span></div>
+    <div class="wb ch"><div class="f">SW1 · cortex keeps its own map <span class="n">ready</span></div><div class="f">CIE13 · sockets in Emerge <span class="n">ready</span></div><div class="f">PR6 · heartbeat, no polling <span class="n">waits on SW3</span></div></div></div>
+</aside>
+<nav class="tabs">
+  <span class="vt">PLAN</span><span class="vt on">OUTPUTS</span><span class="vt on">CHANGES</span><span class="vt">TASKS</span><span class="vt">CONTEXT</span><span class="vt">TOOLS</span><span class="vt">CONTROL</span><span class="vs">all</span><span class="vs">none</span>
+</nav>
+</div>
+</body>
+</html>
