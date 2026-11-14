@@ -1,0 +1,45 @@
+envelope: 1
+uuid: nexus-export-graph-phase:RCA1_cos_assistant_navigates_with_him:49eda5c54c78ad89
+type: graph
+id: phase:RCA1_cos_assistant_navigates_with_him:49eda5c54c78ad89
+context: dependency graph of phase RCA1_cos_assistant_navigates_with_him
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1794621875319
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794621875319
+lastSeenAt: 1794621875319
+fingerprint: null
+payload:
+  for: RCA1_cos_assistant_navigates_with_him
+  kind: phase
+  repo: null
+  hash: 49eda5c54c78ad89
+  nodes:
+    - path: cos/spec/remote-control.spec
+      role: changes
+      exists: true
+      system: cos
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling:
+      - PC10_our_own_remote_control
+    lines:
+      - layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+      - 'DANGLING depends_on: PC10_our_own_remote_control'
+    edges: []

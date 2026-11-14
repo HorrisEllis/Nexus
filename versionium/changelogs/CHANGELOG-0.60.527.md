@@ -31,3 +31,6 @@ Coder's part: the diagnosis and the fix. The call that the windows must go is hi
 
 ## Gap found
 - On Windows `node idearium/spec-engine/phase-ledger.cjs log SC16_no_console_windows ...` answers "no phase ... in any map": the maps are checked out with CRLF (core.autocrlf=true) and the ledger's reader counts 116 phases in 11 maps. The ledger line for this release was written by hand in the tool's shape, and says so. To phase: the reader accepts CRLF.
+
+## Confirmed, 2026-11-13 (tested on his PC)
+- The cause under "Gap found" holds, by test: every phase whose line ends CRLF (the checkout, core.autocrlf=true) is answered "no phase ... in any map" (SC16_no_console_windows, CA8_first_time_setup, CA9_cos_own_service_host, PC10_our_own_remote_control); a phase appended with LF endings the same day (RCA1_cos_assistant_navigates_with_him) is found and logged. To phase: the ledger's reader accepts CRLF.
