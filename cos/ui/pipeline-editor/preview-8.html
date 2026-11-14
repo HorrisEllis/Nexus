@@ -1,0 +1,198 @@
+<!doctype html>
+<!--
+  cos/ui/pipeline-editor/preview-8.html — A PREVIEW, not the editor: sample data, nothing wired. 2026-11-14 (eighth preview).
+  James, 2026-11-14, of preview 7: "no the field/workshop would be an extensive editor for gates and steps. all of the pipeline and workflow
+  automation, systems, commands, all of it, everything, migrating brainos backed not the ui its bad the ui and scrapping it"
+  So the Field is not a dock under the canvas: it is the whole editor. Opened on a gate (Tests pass). The left column is the decomposition
+  (input → RAID → compartments and gates → end state) and the palette of everything that can be added, taken from BrainOS's backend
+  (lib/automation: triggers, the 28 browser actions, command, agent, http, macro, workflow, delay, branch, notification; the 7 gate types
+  in cos/pipeline/types; the 15 condition operators). BrainOS's UI is not used. Right tabs only (his, 2026-11-14).
+-->
+<html lang="en"><head><meta charset="utf-8"><title>The Field — preview 8</title>
+<style>
+:root{
+  --bg:#07090d; --bg2:#0c1118; --panel:#111823; --panel2:#16202d; --line:#223044; --line2:#2d3f57;
+  --text:#d6e4f0; --dim:#7f93a8; --faint:#4a5b6e;
+  --cyan:#00d4ff; --green:#00ff88; --pink:#ff2266; --violet:#b066ff; --amber:#ffaa00; --red:#ff3355;
+  --font:Inter,system-ui,'Segoe UI',sans-serif; --mono:'JetBrains Mono',ui-monospace,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:var(--bg);color:var(--text);font:13px/1.35 var(--font);overflow:hidden}
+#topbar{position:fixed;left:0;right:0;top:0;height:52px;display:flex;align-items:center;gap:10px;padding:0 12px;background:linear-gradient(#0e141d,#0a0f16);border-bottom:1px solid var(--line);z-index:10}
+#logo{font:700 17px var(--mono);letter-spacing:3px;background:linear-gradient(90deg,var(--cyan),var(--violet),var(--pink));-webkit-background-clip:text;background-clip:text;color:transparent;margin-right:6px}
+.tb-btn{background:var(--panel2);border:1px solid var(--line2);border-radius:7px;height:32px;padding:0 12px;color:var(--text);display:inline-flex;align-items:center;gap:6px;font-size:12.5px}
+.tb-btn.primary{background:linear-gradient(135deg,#ff2266,#b066ff);border:0;color:#fff;font-weight:600}
+.tb-spacer{flex:1}
+.rail{position:fixed;top:52px;bottom:0;width:38px;background:linear-gradient(#0b1018,#080b11);display:flex;flex-direction:column;align-items:center;gap:6px;padding-top:10px;z-index:9}
+.rail.l{left:0;border-right:1px solid var(--line)}.rail.r{right:0;border-left:1px solid var(--line)}
+.vt{writing-mode:vertical-rl;transform:rotate(180deg);font:600 9.5px var(--mono);letter-spacing:.16em;color:var(--faint);padding:11px 6px;border:1px solid var(--line);border-radius:6px;background:#0c121b}
+.vt.on{color:var(--cyan);border-color:#00d4ff66;background:#062030}
+.vt.onv{color:var(--violet);border-color:#b066ff66;background:#1a0f2a}
+.vs{font:9px var(--mono);color:var(--faint);border:1px solid var(--line);border-radius:5px;padding:3px 4px}
+.rail.r{right:0;border-left:1px solid var(--line)}
+#f{position:fixed;left:0;right:38px;top:52px;bottom:0;display:grid;grid-template-columns:268px 1fr 352px;grid-template-rows:40px 1fr 168px;background:var(--bg)}
+#f>*{border-color:var(--line)}
+.hd{grid-column:1/4;display:flex;align-items:center;gap:8px;padding:0 12px;border-bottom:1px solid var(--line);background:linear-gradient(#0d131c,#0a0f16)}
+.hd b{font:700 12px var(--mono);letter-spacing:.18em;color:var(--violet)}
+.crumb{font:12px var(--mono);color:var(--dim)}.crumb em{font-style:normal;color:var(--text)}
+.tool{font:11px var(--mono);color:var(--dim);border:1px solid var(--line2);border-radius:6px;padding:4px 8px;background:var(--panel)}
+.tool.on{color:var(--cyan);border-color:#00d4ff66;background:#062030}
+.tool.go{color:#00140a;background:var(--green);border:0;font-weight:700}
+.sp{flex:1}
+.col{overflow:hidden;padding:10px}
+.l{border-right:1px solid var(--line);background:var(--bg2)}
+.r{border-left:1px solid var(--line);background:var(--bg2)}
+.h{font:600 9.5px var(--mono);letter-spacing:.18em;color:var(--faint);margin:10px 0 6px}.h:first-child{margin-top:0}
+.o{display:flex;align-items:center;gap:7px;font-size:12px;padding:3px 6px;border-radius:5px;color:var(--dim)}
+.o.sel{background:#0b2233;color:var(--text);outline:1px solid #00d4ff55}
+.o i{width:8px;height:8px;flex:none}.o .st{border-radius:2px}.o .gt{transform:rotate(45deg)}
+.o small{margin-left:auto;font:9.5px var(--mono);color:var(--faint)}
+.ind1{padding-left:18px}.ind2{padding-left:32px}
+.pal{display:flex;flex-wrap:wrap;gap:4px}
+.pal span{font:10.5px var(--mono);border:1px solid var(--line2);border-radius:5px;padding:2px 6px;color:var(--dim);background:var(--panel)}
+.pal span em{font-style:normal;color:var(--faint)}
+.mid{display:grid;grid-template-rows:212px 1fr;overflow:hidden}
+.dag{position:relative;border-bottom:1px solid var(--line);background:radial-gradient(circle,#1a2533 1px,transparent 1.2px) 0 0/24px 24px var(--bg)}
+.n{position:absolute;height:44px;border:1px solid var(--line2);border-radius:8px;background:var(--panel);padding:5px 9px;font-size:11.5px}
+.n small{display:block;font:9.5px var(--mono);color:var(--faint)}
+.n.done{border-color:#00ff8855}.n.run{border-color:var(--cyan);box-shadow:0 0 14px #00d4ff44}
+.g{position:absolute;width:30px;height:30px;transform:rotate(45deg);border:1.5px solid var(--green);background:#06180f}
+.g.sel{border-color:var(--cyan);background:#062030;box-shadow:0 0 16px #00d4ffaa}.g.wait{border-color:var(--line2);background:var(--panel)}
+.g.you{border-color:var(--amber);background:#1d1405}
+.gl{position:absolute;font:9.5px var(--mono);color:var(--dim);width:90px;text-align:center}
+svg.w{position:absolute;inset:0;width:100%;height:100%}
+.ed{padding:12px 14px;overflow:hidden}
+.et{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.et h2{font:600 16px var(--font)}.pill{font:10px var(--mono);padding:2px 7px;border-radius:9px;border:1px solid}
+.cy{color:var(--cyan);border-color:#00d4ff66}.gr{color:var(--green);border-color:#00ff8866}.am{color:var(--amber);border-color:#ffaa0066}.rd{color:var(--red);border-color:#ff335566}.vi{color:var(--violet);border-color:#b066ff66}
+.cond{display:grid;grid-template-columns:44px 1.3fr 1fr 1fr 70px 22px;gap:6px;align-items:center;margin-bottom:6px}
+.cond>*{font:11.5px var(--mono);background:var(--panel);border:1px solid var(--line2);border-radius:6px;padding:5px 8px;color:var(--text);white-space:nowrap;overflow:hidden}
+.cond .j{background:none;border:0;color:var(--violet);text-align:right;padding:0}
+.cond .x{background:none;border:0;color:var(--faint)}
+.cond .ok{color:var(--green);border-color:#00ff8844}.cond .no{color:var(--red);border-color:#ff335544}
+.grp{border:1px dashed var(--line2);border-radius:8px;padding:8px 8px 2px;margin:4px 0 8px 50px}
+.add{font:11px var(--mono);color:var(--cyan);margin:2px 0 12px}
+.out{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.box{border:1px solid var(--line2);border-radius:8px;padding:8px 10px;background:var(--panel)}
+.box b{display:block;font:600 9.5px var(--mono);letter-spacing:.14em;color:var(--faint);margin-bottom:4px}
+.box div{font-size:12px}.box small{font:10.5px var(--mono);color:var(--dim)}
+.kv{display:flex;font-size:11.5px;padding:3.5px 0;border-bottom:1px solid #18222f}
+.kv span{color:var(--faint);width:112px;flex:none;font:10.5px var(--mono);padding-top:1px}.kv em{font-style:normal;color:var(--text)}
+.kv code{font:10.5px var(--mono);color:var(--cyan)}
+.ft{grid-column:1/4;border-top:1px solid var(--line);display:grid;grid-template-columns:268px 1fr 352px}
+.ft>div{padding:8px 10px;overflow:hidden}.ft>div+div{border-left:1px solid var(--line)}
+.hi{font:11px var(--mono);color:var(--dim);padding:2px 0}.hi.now{color:var(--text)}.hi small{color:var(--faint)}
+.tl{position:relative;height:74px;margin-top:6px;border-bottom:1px solid var(--line2)}
+.tk{position:absolute;bottom:0;width:3px;border-radius:2px;background:var(--green)}.tk.c{background:var(--cyan)}.tk.f{background:var(--red)}.tk.w{background:var(--line2)}
+.ev{font:10.5px var(--mono);color:var(--dim);padding:1.5px 0}.ev b{font-weight:400;color:var(--violet)}
+.pv{position:fixed;left:278px;bottom:4px;font:10px var(--mono);color:var(--amber);opacity:.8;z-index:20}
+</style></head><body>
+<div id="topbar"><div id="logo">ERAVOS</div><span class="tb-btn">＋ Add</span><div class="tb-spacer"></div><span class="tb-btn">⋯ Options</span></div>
+<nav class="rail r"><span class="vt">PLAN</span><span class="vt">OUTPUTS</span><span class="vt">CHANGES</span><span class="vt">TASKS</span><span class="vt">CONTEXT</span><span class="vt">TOOLS</span><span class="vt">CONTROL</span></nav>
+<div id="f">
+ <div class="hd"><b>FIELD</b><span class="crumb">COS › pipelines › <em>Idearium build</em> › <em>◇ Tests pass</em></span><span class="sp"></span>
+  <span class="tool on">↖ select</span><span class="tool">▣ compartment</span><span class="tool">◇ gate</span><span class="tool">⟶ relation</span><span class="tool">▤ brick</span><span class="tool">⋯ gap</span><span class="tool">⧉ chunk</span>
+  <span class="tool">▶ dry-run gate</span><span class="tool go">▶ Run</span><span class="tool">↶ Ctrl+Z</span></div>
+
+ <div class="col l">
+  <div class="h">OUTLINER · input → end state</div>
+  <div class="o"><i class="st" style="background:var(--violet)"></i>.input "build Idearium"<small>RD9</small></div>
+  <div class="o"><i class="st" style="background:var(--violet)"></i>RAID · contract c-in-1794<small>routed</small></div>
+  <div class="o ind1"><i class="st" style="background:var(--green)"></i>What can be built<small>idearium</small></div>
+  <div class="o ind1"><i class="gt" style="background:var(--green)"></i>Usable<small>check</small></div>
+  <div class="o ind1"><i class="st" style="background:var(--green)"></i>Not covered yet<small>idearium</small></div>
+  <div class="o ind1"><i class="gt" style="background:var(--green)"></i>DAG whole<small>node</small></div>
+  <div class="o ind1"><i class="st" style="background:var(--cyan)"></i>Write the files<small>ollama</small></div>
+  <div class="o ind2"><i class="st" style="background:var(--line2)"></i>▤ read the tree<small>0.8 s</small></div>
+  <div class="o ind2"><i class="st" style="background:var(--cyan)"></i>▤ write census.js<small>62%</small></div>
+  <div class="o ind2"><i class="st" style="background:var(--amber)"></i>⋯ which tree?<small>gap</small></div>
+  <div class="o ind1 sel"><i class="gt" style="background:var(--cyan)"></i>Tests pass<small>test</small></div>
+  <div class="o ind1"><i class="st" style="background:var(--line2)"></i>Close on evidence<small>cortex</small></div>
+  <div class="o ind1"><i class="gt" style="background:var(--amber)"></i>You approve<small>options</small></div>
+  <div class="o"><i class="st" style="background:var(--violet)"></i>End state · IN0_baseline<small>2 / 4</small></div>
+  <div class="h">ADD · from BrainOS's backend</div>
+  <div class="h" style="margin:4px 0">triggers</div>
+  <div class="pal"><span>schedule</span><span>interval</span><span>event</span><span>.input</span><span>file changed</span><span>webhook</span><span>heartbeat</span></div>
+  <div class="h" style="margin:8px 0 4px">steps</div>
+  <div class="pal"><span>command <em>412</em></span><span>agent</span><span>http</span><span>browser <em>28</em></span><span>macro</span><span>workflow</span><span>pipeline</span><span>delay</span><span>branch</span><span>notify</span><span>emerge</span></div>
+  <div class="h" style="margin:8px 0 4px">gates</div>
+  <div class="pal"><span>check</span><span>context</span><span>emerge</span><span>node</span><span>options</span><span>test</span><span>verify</span></div>
+  <div class="h" style="margin:8px 0 4px">systems</div>
+  <div class="pal"><span>cos</span><span>raid</span><span>cortex</span><span>idearium</span><span>clear-glass</span><span>emerge</span><span>versionium</span><span>…</span></div>
+ </div>
+
+ <div class="mid">
+  <div class="dag">
+   <svg class="w"><g fill="none" stroke-width="2">
+    <path d="M150 60 H186" stroke="#00ff88"/><path d="M226 60 H262" stroke="#00ff88"/><path d="M412 60 H448" stroke="#00ff88"/><path d="M488 60 H524 Q560 60 560 100 V112 Q560 150 520 150 H170 Q120 150 120 170" stroke="#00ff88" opacity=".55"/>
+    <path d="M190 170 H226" stroke="#00d4ff"/><path d="M266 170 H302" stroke="#2d3f57" stroke-dasharray="4 4"/><path d="M452 170 H488" stroke="#2d3f57" stroke-dasharray="4 4"/><path d="M528 170 H580" stroke="#2d3f57" stroke-dasharray="4 4"/>
+   </g></svg>
+   <div class="n done" style="left:14px;top:38px;width:136px">What can be built<small>idearium · GET /phases/next</small></div>
+   <div class="g" style="left:191px;top:45px"></div><div class="gl" style="left:161px;top:82px">Usable</div>
+   <div class="n done" style="left:262px;top:38px;width:150px">Not covered yet<small>idearium · ledger covers</small></div>
+   <div class="g" style="left:453px;top:45px"></div><div class="gl" style="left:423px;top:82px">DAG whole</div>
+   <div class="n run" style="left:44px;top:148px;width:146px">Write the files<small>ollama · the_builder</small></div>
+   <div class="g sel" style="left:231px;top:155px"></div><div class="gl" style="left:201px;top:190px;color:var(--cyan)">Tests pass</div>
+   <div class="n" style="left:302px;top:148px;width:150px">Close on evidence<small>cortex · RAID</small></div>
+   <div class="g you" style="left:493px;top:155px"></div><div class="gl" style="left:463px;top:190px">You approve</div>
+   <div class="n" style="left:580px;top:148px;width:170px;border-color:#b066ff66">End state<small>IN0_baseline, proof passes</small></div>
+  </div>
+  <div class="ed">
+   <div class="et"><h2>◇ Tests pass</h2><span class="pill cy">test gate</span><span class="pill gr">dry-run: passes 3 of 3</span><span class="pill vi">explicit · no default path</span></div>
+   <div class="h">PASSES WHEN</div>
+   <div class="cond"><span class="j">if</span><span>Write the files › exit</span><span>is</span><span>0</span><span class="ok">✓ 0</span><span class="x">✕</span></div>
+   <div class="cond"><span class="j">and</span><span>file scripts/tree-census.js</span><span>exists</span><span>—</span><span class="ok">✓</span><span class="x">✕</span></div>
+   <div class="cond"><span class="j">and</span><span>cmd node --check ‹file›</span><span>is</span><span>ok</span><span class="ok">✓ ok</span><span class="x">✕</span></div>
+   <div class="grp">
+    <div class="cond"><span class="j">any</span><span>tests › failed</span><span>is at most</span><span>0</span><span class="ok">✓ 0</span><span class="x">✕</span></div>
+    <div class="cond"><span class="j">or</span><span>baseline › delta (σ)</span><span>is less than</span><span>2.0</span><span class="ok">✓ 0.6</span><span class="x">✕</span></div>
+   </div>
+   <div class="add">＋ condition   ＋ group   ＋ from a template   15 operators: is · contains · matches · changed since the last run …</div>
+   <div class="out">
+    <div class="box"><b>ON PASS</b><div>→ Close on evidence</div><small>event pipeline.gate.passed</small></div>
+    <div class="box"><b>ON FAIL</b><div>retry Write the files × 2, then a gap to RAID</div><small>event pipeline.gate.failed · never skipped</small></div>
+    <div class="box"><b>ON TIMEOUT · 5 m</b><div>hold; propose to you</div><small>event pipeline.gate.held</small></div>
+   </div>
+  </div>
+ </div>
+
+ <div class="col r">
+  <div class="h">PROPERTIES · gate</div>
+  <div class="kv"><span>id</span><em>g.tests-pass</em></div>
+  <div class="kv"><span>type</span><em>test</em>&nbsp;<code>cos/pipeline/types/test.gatetype</code></div>
+  <div class="kv"><span>between</span><em>Write the files → Close on evidence</em></div>
+  <div class="kv"><span>owner</span><em>COS</em></div>
+  <div class="kv"><span>command</span><code>cos.pipeline-gate</code></div>
+  <div class="kv"><span>route</span><code>POST /api/cos/pipeline/gate</code></div>
+  <div class="kv"><span>judge</span><em>deterministic (no model)</em></div>
+  <div class="kv"><span>reads</span><em>step output · files · baseline</em></div>
+  <div class="kv"><span>evidence</span><em>ledger entry, hash kept</em></div>
+  <div class="kv"><span>heartbeat</span><em>on event, not polling</em></div>
+  <div class="kv"><span>chunk</span><em>by memory, ≤ 25% free kept</em></div>
+  <div class="kv"><span>sample</span><em>run a91f · step #7</em>&nbsp;<code>dry-run</code></div>
+  <div class="kv"><span>rules</span><em style="color:var(--green)">PL-001…PL-010 hold</em></div>
+  <div class="h">EVENTS IT EMITS</div>
+  <div class="ev"><b>pipeline.gate.checked</b> · passed · failed · held</div>
+  <div class="h">THE STEP BEFORE IT · Write the files</div>
+  <div class="kv"><span>compartment</span><em>cos › idearium :3749</em></div>
+  <div class="kv"><span>agent · hat</span><em>ollama qwen2.5-coder:3b · the_builder</em></div>
+  <div class="kv"><span>takes</span><em>the tree (Not covered yet)</em></div>
+  <div class="kv"><span>gives</span><em>scripts/tree-census.js</em></div>
+  <div class="kv"><span>open as</span><em>a pipeline ›  (recursive)</em></div>
+ </div>
+
+ <div class="ft">
+  <div><div class="h">HISTORY</div>
+   <div class="hi">add gate Tests pass <small>2 m</small></div><div class="hi">condition: exit is 0 <small>1 m</small></div><div class="hi">group: any of 2 <small>40 s</small></div><div class="hi now">on fail: retry × 2 → gap <small>now</small></div></div>
+  <div><div class="h">DEBUG · THE RUN'S LEDGER, STEP BY STEP · run a91f</div>
+   <div class="tl">
+    <span class="tk" style="left:3%;height:30px"></span><span class="tk" style="left:11%;height:22px"></span><span class="tk" style="left:19%;height:34px"></span><span class="tk" style="left:28%;height:26px"></span>
+    <span class="tk" style="left:37%;height:30px"></span><span class="tk c" style="left:49%;height:48px"></span><span class="tk w" style="left:61%;height:16px"></span><span class="tk w" style="left:74%;height:16px"></span><span class="tk w" style="left:88%;height:16px"></span>
+   </div>
+   <div class="ev" style="margin-top:6px"><b>#7</b> write census.js · hash 3f9a… · 2 m 41 s of a usual 4 m 20 s · δ −38% · σ 0.6</div></div>
+  <div><div class="h">EVENTS · live</div>
+   <div class="ev"><b>task.running</b> Write the files · 4 s ago</div><div class="ev"><b>brick.done</b> read the tree · 41 s ago</div><div class="ev"><b>gap.asked</b> which tree? · 1 m ago</div><div class="ev"><b>gate.passed</b> DAG whole · 2 m ago</div></div>
+ </div>
+</div>
+<div class="pv">preview · sample data · nothing wired</div>
+</body></html>

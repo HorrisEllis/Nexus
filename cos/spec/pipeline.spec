@@ -233,3 +233,15 @@ spec:
       gate_pipeline: ["GATE-PL-S1: PL-009, each fact shown once", "GATE-PL-S2: tested in Clear Glass"]
       behavioral_contracts: ["the surface reads and acts only through COS's and RAID's routes and events"]
       error_paths: ["COS not answering → the canvas says so; nothing is drawn as running that is not"]
+
+# ADDENDUM 2026-11-14 (b) — the Field is the editor; BrainOS's backend migrates, its UI is scrapped.
+# James, 2026-11-14, of preview 7: "no the field/workshop would be an extensive editor for gates and steps. all of the pipeline and workflow
+# automation, systems, commands, all of it, everything, migrating brainos backed not the ui its bad the ui and scrapping it"
+# - MOD-PL-WORKSHOP expands: the Field is the whole editor, not a dock under the canvas. It edits every step and gate in full: conditions
+#   (all/any groups, the 15 operators), on pass / on fail / on timeout (each explicit, each an event), triggers, the step's system, command,
+#   agent and hat, chunking, heartbeat, dry-run on a sample, history, the run's ledger as a debugger. Preview: cos/ui/pipeline-editor/preview-8.
+# - BrainOS's backend migrates into COS (sovereign, through COS's routes; Emerge where it replaces JS, §17.13): lib/automation/{engine, steps,
+#   pipeline, cron, templates, template, task-node, dom, routes}.js, lib/automation-nodes.js (.workflow, .macro), lib/automation-registry.js,
+#   clear-glass/src/mesh/route-graph.js. Its 8 step types, 28 browser actions and condition operators become the Field's palette.
+# - BrainOS's UI is scrapped, not migrated: lib/ui/brainos/, lib/ui/brainos-float/. Removed once the Field covers what they reach (his call
+#   stands; the removal is a phase, so nothing he still opens disappears first).

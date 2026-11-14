@@ -298,3 +298,8 @@ James, 2026-11-14: "i am back on my main driver. everything runs in the pipeline
   (tools/core/field in the eravos-canvas repo) open in the dock on the selected compartment: its bricks, gaps and events as layers, his words to
   Emerge word by word, the run's ledger scrubbed step by step, the brick's properties, and "open as a pipeline" (recursive). Previews 1–3 and 5
   borrowed Idearium's look and are set aside (his: "those are idearium. looks like shit"), kept §0.3.
+
+# ADDENDUM 2026-11-14 (c) — James, 2026-11-14: "migrating brainos backed not the ui its bad the ui and scrapping it". BrainOS's backend
+# (lib/automation/*, lib/automation-nodes.js, lib/automation-registry.js, clear-glass/src/mesh/route-graph.js) migrates into COS's pipeline and
+# becomes the Field's palette (cos/spec/pipeline.spec ADDENDUM 2026-11-14 b). Its UI (lib/ui/brainos/, lib/ui/brainos-float/) is scrapped once
+# the Field covers it. This supersedes the UI landings above.
