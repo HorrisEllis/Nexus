@@ -308,6 +308,34 @@ spec:
         Slices: (a) the .input node, the route, the decision recorded, nothing acted on; (b) the router acts; (c) cos.exe's command line and
         the Nexus CLI send what they do not recognise to it; (d) inputs listed and replayed.
       proof: "an input by route is a .input file before RAID decides; each of the four routings from a stand-in; the decision and its why on the node; cos.exe's unknown words arrive as an input"
+      expanded_2026_11_14: >-
+        James, 2026-11-14: "input -> raid uses agent and contract tool with the schema or template listing the system, agent, what hat if
+        applicaple, capability/command, the data from the compartment whether the contents of a file, zip or context synthesized from a dag,
+        tags, dag to determin the conditions, etc. contract as the end state. already mapped this at one point"
+        Where he mapped it, read 2026-11-14: his 2026-11-08 words in the request spine (docs/2026-10-12-request-spine-phasemap.spec RQ7:
+        "raid creates compartments using a contract and the test and the dag for the stopping conditions … using a hat that any agent can
+        ware, then creates a dag as whats needed for the outcome"), RQ6 (one intent map), RQ7 (the context obligations: a DAG of what is
+        needed, each answered from Nexus's sources), RQ8 (what is not found is a question to him), RQ21 (the .contract file is the record,
+        tags in a closed grammar); PC16 (RAID answers 'who does this' for every agent call). All but PC16 were shelved 2026-11-07; this picks
+        their contract-building part up, by his word. Built already: the .input node (slice a, 0.60.486), contract v2 with outcome, gates,
+        invariants and completion (cortex/core/raid/contract-gates.js, its door contract-v2-door.js), B1's synthesizeContract (forAgent,
+        intention, system, endState, conditions), COS's request through a pipeline booked as a RAID contract (0.60.474).
+        Two contract shapes exist today: B1's (schema.contract: forAgent, intention, system, endState, conditions) and v2's (outcome.what,
+        outcome.done_when, gates, invariants). Neither carries the hat, the capability or command, where the data came from, or tags.
+        Slice b, the contract template his words list, filled by RAID from an input, as v2 (the shape RAID executes), the B1 fields mapped in:
+          system      the system that owns the work (its registry, SW1)            agent  the one RAID picks, and why (PC16)
+          hat         the persona any agent can wear, when one applies (.hat)      capability / command  what is invoked (a .command node)
+          data        from the compartment: a file (its path and hash), a zip (its manifest and hash), or context synthesized from the DAG
+                      (each piece a reference with its source and hash, RQ7's evidence shape: the original stays the authority)
+          tags        RQ21's closed grammar (request:, phase:, gate:, outcome:, rung:, kind:) plus system: and hat:
+          dag         what must be known or done first; each node is a gate, so the DAG is the conditions (done_when) and the stopping rule
+          outcome     the end state: what must be true when it is done; completion is derived from the gates, never declared
+        From the .input node: RAID reads the words, matches an intent (RQ6, deterministic first), drafts the DAG (RQ7), fills the template
+        from Nexus's own sources, and what it cannot fill is a gap put to him (RQ8). The .input node names the contract it became.
+        Files for slice b: cortex/core/raid/input.js, cortex/core/raid/contract-template.js (new, or .eg if RAID's Emerge port lands first),
+        cortex/schemas/schema.raid_contract, cortex/core/raid/contract-v2-door.js, idearium/cli/route-commands.js, tests/modules/test-raid-input.test.js.
+        Proof for slice b: an input with a file, one with a zip, one that needs context: each a valid v2 contract with every field filled or a
+        gap named; its DAG's nodes are its gates; booked through the v2 door; the .input node points at it.
       also_asked_2026_11_12_not_yet_mapped: "the panel's 27 engines (cos/services/anonymous/engines) as templates for networking compartments, in the catalog, as test-environment and DAG dependency options (cos-services map, after SV2); .erv opened by ERAVOS on install (Windows file association); `cos import` a system into cos.exe (cos-console map, after SC4). Each is mapped in its own map before it is built."
     RD2_idearium_routes_through_raid:
       layer: library
