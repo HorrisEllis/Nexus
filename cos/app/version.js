@@ -31,4 +31,8 @@
 // (that is his NSM v2): "need to build it from scratch." COS carries its own service host, cos/app/bin/cos-svc.exe (C#, built with the compiler
 // Windows carries): it answers the service control manager, runs node + autopilot as NexusCOS (LocalSystem, at boot), rotates the logs, starts
 // Nexus again when it exits or stops answering its health URL (his NSM v2's rule). The switch no longer needs nssm.exe.
-module.exports = { version: '0.9.0' };
+// 0.10.0 (Nexus 0.60.540, CA10): James, 2026-11-14, told the COS app only says a newer COS is out and he installs it by hand: "so this cant use the
+// update tool?" · offered COS updating itself: "yes." Settings › Update gains COS itself: Install downloads the newest cos-v setup and its SHA256SUMS
+// into COS's folder (cos-updates/<version>), runs it only when its SHA-256 is the release's, silently (/S --force-run), and COS closes and starts
+// again; a private release uses the GitHub sign-in git keeps. The last installer is kept for a roll back.
+module.exports = { version: '0.10.0' };

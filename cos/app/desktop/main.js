@@ -159,6 +159,8 @@ function ipc() {
   h('install', () => installNexus());   // CA5: Install Nexus (from GitHub), from the starting page
   // 0.1.2 — a newer COS: the check, and the release page opened in the browser (only a github.com release page of this repo)
   h('appUpdate', () => ctl.appUpdate());
+  // CA10 (COS 0.10.0) — COS updates itself: the checked installer runs silently, then COS closes so it can be replaced (it starts again after)
+  h('appInstall', async () => { const r = await ctl.appInstall(); if (r.ok && r.launched) { notify('COS update', `COS ${r.version} is installing; COS closes now and starts again.`); setTimeout(() => quit(), 1500); } return r; });
   h('openRelease', (url) => { if (typeof url !== 'string' || !/^https:\/\/github\.com\/HorrisEllis\/[Nn]exus\/releases\/tag\/cos-v\d+\.\d+\.\d+$/.test(url)) return { ok: false, error: 'not a COS release page' }; shell.openExternal(url); return { ok: true }; });
   h('pickZip', async () => { const r = await dialog.showOpenDialog(win, { title: 'Pick a release zip', properties: ['openFile'], filters: [{ name: 'Release zip', extensions: ['zip'] }] }); return r.canceled ? {} : { path: r.filePaths[0] }; });
   h('importPath', async (p) => { if (typeof p !== 'string' || !/\.zip$/i.test(p)) return { ok: false, error: 'that is not a .zip file' }; const r = ctl.importZip(p); if (r.ok && !r.already) r.policy = await ctl.applyPolicy(r); return r; });

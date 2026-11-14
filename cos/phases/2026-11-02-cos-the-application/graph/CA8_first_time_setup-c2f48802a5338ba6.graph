@@ -7,11 +7,11 @@ intent: null
 summary: 24 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1794613330853
+exported_at: 1794660349400
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794613330853
-lastSeenAt: 1794613330853
+firstSeenAt: 1794660349400
+lastSeenAt: 1794660349400
 fingerprint: null
 payload:
   for: CA8_first_time_setup
@@ -202,7 +202,10 @@ payload:
     blockedBy:
       - docs/2026-11-02-cos-the-application-phasemap.spec::CA7_each_compartment_its_own_location
     unlocks: []
-    conflicts: []
+    conflicts:
+      - with: docs/2026-11-02-cos-the-application-phasemap.spec::CA10_cos_updates_itself
+        files:
+          - cos/app/desktop/main.js
     dangling: []
     lines:
       - layer 13 · blocked by CA7_each_compartment_its_own_location
@@ -211,6 +214,7 @@ payload:
         CA6_install_asks_where_and_npm_in_program_files, CA7_each_compartment_its_own_location · all
         upstream 24
       - 'needed by (0): —'
+      - 'same files as CA10_cos_updates_itself with no order between them: cos/app/desktop/main.js'
     edges:
       - from: docs/2026-11-02-cos-the-application-phasemap.spec::CA5_cos_installs_nexus_from_github
         kind: declared

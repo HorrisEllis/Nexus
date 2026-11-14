@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-02-cos-the-application-phasemap.spec::CA10_cos_updates_itself
+type: phase
+id: docs_2026-11-02-cos-the-application-phasemap.spec::CA10_cos_updates_itself
+context: pipeline phase CA10_cos_updates_itself of docs/2026-11-02-cos-the-application-phasemap.spec
+intent: null
+summary: CA10_cos_updates_itself (?) — 8 file(s)
+system: idearium
+tags: []
+exported_at: 1794660349409
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794660349409
+lastSeenAt: 1794660349409
+fingerprint: null
+payload:
+  id: CA10_cos_updates_itself
+  map: docs/2026-11-02-cos-the-application-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/app/app-update.js
+    - cos/app/controller.js
+    - cos/app/desktop/main.js
+    - cos/app/desktop/starting-preload.js
+    - cos/app/version.js
+    - cos/ui/updates/index.html
+    - cos/ui/updates/page.js
+    - tests/modules/test-cos-app-self-update.test.js
+  depends_on:
+    - CA9_cos_own_service_host
+  blocks: []
+  spec: cos/spec/cos-console.spec
+  graph: bd3885025863bb3a

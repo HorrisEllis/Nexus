@@ -73,8 +73,19 @@ class Controller {
   /** appUpdate() — is a newer COS out? (cos/app/app-update.js; checked at most once an hour, the answer kept meanwhile) */
   async appUpdate({ fetch } = {}) {
     if (this._appUpd && Date.now() - this._appUpd.at < 3600000) return this._appUpd.r;
-    const r = await require('./app-update.js').checkApp({ current: require('./version.js').version, ...(fetch ? { fetch } : {}) });
+    const U = require('./app-update.js'); const token = this._ghToken !== undefined ? this._ghToken : (this._ghToken = U.githubToken());   // CA10: a private release needs his sign-in
+    const r = await U.checkApp({ current: require('./version.js').version, ...(fetch ? { fetch } : {}), ...(token ? { token } : {}) });
     this._appUpd = { at: Date.now(), r }; return r;
+  }
+  /** appInstall() — CA10 (COS 0.10.0): the newer COS downloaded into <root>/cos-updates, checked against the release's SHA256SUMS, run silently; the
+   *  caller closes COS so the installer can replace it. James, 2026-11-14: "so this cant use the update tool?" · "yes." */
+  async appInstall({ fetch, platform, spawn } = {}) {
+    this._appUpd = null; const check = await this.appUpdate({ fetch });
+    const U = require('./app-update.js');
+    const r = await U.installApp({ check, dir: require('path').join(this.root, 'cos-updates'), current: require('./version.js').version, token: this._ghToken || null,
+      ...(fetch ? { fetch } : {}), ...(platform ? { platform } : {}), ...(spawn ? { spawn } : {}) });
+    this.emit({ type: 'app.install', ok: !!r.ok, version: r.version || (check && check.latest) || null, error: r.error || null });
+    return r;
   }
   async state() {
     const s = this.store.status(this.root);

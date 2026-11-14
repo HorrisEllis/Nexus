@@ -13,6 +13,9 @@ contextBridge.exposeInMainWorld('cosStart', {
   // names its own options; the page shows what it is given and asks for one change at a time, which the exe applies as the tray menu does.
   startup: () => ipcRenderer.invoke('cos:startup'),
   setStartup: (key, value) => ipcRenderer.invoke('cos:setStartup', String(key), value),
+  // CA10 (COS 0.10.0) — Settings › Update: is a newer COS out, and install it (checked, silent; COS closes and starts again)
+  appCheck: () => ipcRenderer.invoke('cos:appUpdate'),
+  appInstall: () => ipcRenderer.invoke('cos:appInstall'),
 });
 // CE7 — "Also make it borderless.": the window has no frame unless he chose Windows' one, so the page is told, and its top bar becomes where the
 // window is dragged (cos/ui/shell/page.css). In a browser the same page has no mark and is unchanged. The overlay's height rides on the mark.
