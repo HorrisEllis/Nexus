@@ -7,11 +7,11 @@ intent: null
 summary: 19 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1794608390822
+exported_at: 1794637392264
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794608390822
-lastSeenAt: 1794608390822
+firstSeenAt: 1794637392264
+lastSeenAt: 1794637392264
 fingerprint: null
 payload:
   for: SW5_orchestrator_into_the_supervisor
@@ -182,7 +182,10 @@ payload:
     unlocks:
       - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW5a_autopilots_remains_into_the_supervisor
       - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW5b_cortexs_workers_go_home
-    conflicts: []
+    conflicts:
+      - with: docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW5i_the_automation_engine_into_cos
+        files:
+          - cos/manager/server.js
     dangling: []
     lines:
       - layer 3 · blocked by SW1_each_system_its_own_map
@@ -194,6 +197,9 @@ payload:
         SW5b_cortexs_workers_go_home, SW6_the_drawbridge_the_only_way_in · all downstream 11 ·
         finishing it unlocks SW5a_autopilots_remains_into_the_supervisor,
         SW5b_cortexs_workers_go_home
+      - >-
+        same files as SW5i_the_automation_engine_into_cos with no order between them:
+        cos/manager/server.js
     edges:
       - from: docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW1_each_system_its_own_map
         kind: declared

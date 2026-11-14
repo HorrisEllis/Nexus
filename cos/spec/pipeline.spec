@@ -267,3 +267,7 @@ spec:
 #   Clear Glass's Settings › Pipelines form (clear-glass/renderer/settings/sections/pipelines.js, today on /automation/pipelines), or by the
 #   CLI; every surface reads and writes it only through COS's routes, so an edit in one shows in the others. Clear Glass keeps its form; its
 #   door moves to COS's routes with BrainOS's backend (addendum b).
+
+# ADDENDUM 2026-11-14 (f) — 0.60.534: BrainOS's backend now lives in COS. The automation engine (workflows, runs, pipelines, macros, triggers,
+# steps) moved from lib/ to cos/automation/ (SW5i slice a, docs/2026-11-13-sovereign-and-wired-phasemap.spec); lib/ keeps forwarders until its
+# callers reach COS by route. The Workshop's palette (addendum b) reads from there.

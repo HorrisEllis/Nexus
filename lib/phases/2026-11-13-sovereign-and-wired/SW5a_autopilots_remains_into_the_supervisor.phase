@@ -9,11 +9,11 @@ intent: null
 summary: SW5a_autopilots_remains_into_the_supervisor (backend) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1794608390826
+exported_at: 1794637381444
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794608390826
-lastSeenAt: 1794608390826
+firstSeenAt: 1794637381444
+lastSeenAt: 1794637381444
 fingerprint: null
 payload:
   id: SW5a_autopilots_remains_into_the_supervisor
@@ -31,4 +31,4 @@ payload:
     - SW5_orchestrator_into_the_supervisor
   blocks: []
   spec: null
-  graph: 00b9de91f9da8108
+  graph: 5ec60cb8728a16df

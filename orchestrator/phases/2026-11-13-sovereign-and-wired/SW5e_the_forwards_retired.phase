@@ -7,11 +7,11 @@ intent: null
 summary: SW5e_the_forwards_retired (integration) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1794608390841
+exported_at: 1794637381457
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794608390841
-lastSeenAt: 1794608390841
+firstSeenAt: 1794637381457
+lastSeenAt: 1794637381457
 fingerprint: null
 payload:
   id: SW5e_the_forwards_retired
@@ -27,4 +27,4 @@ payload:
     - SW6_the_drawbridge_the_only_way_in
   blocks: []
   spec: null
-  graph: 671cfdb9569173cf
+  graph: 560f9d78680ec2f2

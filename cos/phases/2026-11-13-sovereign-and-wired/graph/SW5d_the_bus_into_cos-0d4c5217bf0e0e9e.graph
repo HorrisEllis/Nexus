@@ -7,11 +7,11 @@ intent: null
 summary: 16 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1794608390837
+exported_at: 1794637392276
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794608390837
-lastSeenAt: 1794608390837
+firstSeenAt: 1794637392276
+lastSeenAt: 1794637392276
 fingerprint: null
 payload:
   for: SW5d_the_bus_into_cos
@@ -161,12 +161,18 @@ payload:
     blockedBy:
       - docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW5c_the_orchestrators_own_background_assigned
     unlocks: []
-    conflicts: []
+    conflicts:
+      - with: docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW5i_the_automation_engine_into_cos
+        files:
+          - cos/manager/server.js
     dangling: []
     lines:
       - layer 6 · blocked by SW5c_the_orchestrators_own_background_assigned
       - 'depends on (1): SW5c_the_orchestrators_own_background_assigned · all upstream 9'
       - 'needed by (1): SW5e_the_forwards_retired · all downstream 4'
+      - >-
+        same files as SW5i_the_automation_engine_into_cos with no order between them:
+        cos/manager/server.js
     edges:
       - from: docs/2026-11-13-sovereign-and-wired-phasemap.spec::SW5c_the_orchestrators_own_background_assigned
         kind: declared

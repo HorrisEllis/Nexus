@@ -1,0 +1,421 @@
+'use strict';
+/**
+ * clear-glass/src/automation/steps.js — what every workflow step is, for the UI and for validation.
+ * component_id: cg.automation.steps
+ *
+ * §0.39.265 — one catalogue, read by three places:
+ *   - the engine's validate(), so a workflow with a missing URL is caught when saved, not at 3am;
+ *   - Settings → Automation, which draws each step's form from `fields` (GET /automation/catalogue);
+ *   - the co-pilot's automation tool, which lists it so an agent can build workflows.
+ *
+ * A field: { key, label, type, required, options, placeholder, help, default, when }
+ *   type: text | textarea | code | number | bool | select | duration | kv | json
+ *         | agent | account | macro | page | branch | system | workflow      (options filled in by the UI)
+ *   when: { otherKey: [values…] } — the field only applies when another field has one of those values
+ * Every text field takes {{placeholders}} (see template.js).
+ */
+
+const BROWSER_ACTIONS = [
+  { value: 'navigate', label: 'Go to a URL' },
+  { value: 'click', label: 'Click (real mouse)' },
+  { value: 'dom_click', label: 'Click (in the page — works on hidden pages)' },
+  { value: 'fill', label: 'Fill a field' },
+  { value: 'type', label: 'Type text (real keys)' },
+  { value: 'press', label: 'Press a key' },
+  { value: 'network', label: 'Network (Snowflake)' },   // 0.60.281 SN1
+  { value: 'select', label: 'Choose from a dropdown' },
+  { value: 'check', label: 'Tick a checkbox' },
+  { value: 'uncheck', label: 'Untick a checkbox' },
+  { value: 'submit', label: 'Submit a form' },
+  { value: 'hover', label: 'Hover' },
+  { value: 'scroll', label: 'Scroll the page' },
+  { value: 'scroll_to', label: 'Scroll to an element' },
+  { value: 'scroll_until', label: 'Scroll slowly until nothing new loads' },
+  { value: 'upload_text', label: 'Attach a file made from text' },
+  { value: 'highlight', label: 'Highlight what a selector matches' },
+  { value: 'back', label: 'Back' }, { value: 'forward', label: 'Forward' }, { value: 'reload', label: 'Reload' },
+  { value: 'screenshot', label: 'Screenshot (saved to the output folder)' },
+  { value: 'eval', label: 'Run JavaScript in the page' },
+  { value: 'cookies_get', label: 'Read cookies' },
+  { value: 'cookies_clear', label: 'Clear cookies' },
+  { value: 'storage_get', label: 'Read localStorage' },
+  { value: 'storage_set', label: 'Write localStorage' },
+  { value: 'show', label: 'Show the automation page' },
+  { value: 'close', label: 'Close the automation page' },
+];
+const SEL_ACTIONS = ['click', 'dom_click', 'fill', 'type', 'select', 'check', 'uncheck', 'submit', 'hover', 'scroll_to', 'upload_text', 'highlight'];
+const VALUE_ACTIONS = ['fill', 'type', 'select', 'upload_text', 'storage_set'];
+
+const OPS = [
+  { value: '==', label: 'is' }, { value: '!=', label: 'is not' },
+  { value: '>', label: 'is more than' }, { value: '<', label: 'is less than' },
+  { value: '>=', label: 'is at least' }, { value: '<=', label: 'is at most' },
+  { value: 'contains', label: 'contains' }, { value: 'not_contains', label: 'does not contain' },
+  { value: 'starts', label: 'starts with' }, { value: 'ends', label: 'ends with' },
+  { value: 'matches', label: 'matches the pattern (regex)' },
+  { value: 'in', label: 'is one of (comma list)' },
+  { value: 'empty', label: 'is empty' }, { value: 'not_empty', label: 'is not empty' },
+  { value: 'exists', label: 'exists' }, { value: 'missing', label: 'does not exist' },
+  { value: 'changed', label: 'changed since the last run' },
+];
+const UNARY_OPS = ['empty', 'not_empty', 'exists', 'missing', 'changed'];
+
+const PAGE_HELP = '“Automation page” is this workflow’s own hidden tab (its own cookies, kept between runs). Or pick an open window.';
+
+const CATALOGUE = [
+  // ── Browser ──────────────────────────────────────────────────────────────
+  { type: 'browser', group: 'Browser', icon: '🌐', label: 'Browser action',
+    help: 'Open pages, click, fill forms, press keys, scroll, take screenshots — in a hidden automation page or an open window.',
+    output: 'what the action returned (the URL and title after navigating, the screenshot file, the JavaScript result …)',
+    fields: [
+      { key: 'action', label: 'Do', type: 'select', options: BROWSER_ACTIONS, required: true, default: 'navigate' },
+      { key: 'page', label: 'In', type: 'page', default: 'auto', help: PAGE_HELP },
+      { key: 'url', label: 'URL', type: 'text', placeholder: 'https://www.upwork.com/nx/find-work/', required: true, when: { action: ['navigate'] } },
+      { key: 'selector', label: 'Element', type: 'text', placeholder: 'button.submit · text=Sign in · label=Email · //a[@href]', required: true, when: { action: SEL_ACTIONS }, help: 'CSS, text=…, label=…, or XPath; chain with >>' },
+      { key: 'value', label: 'Value', type: 'textarea', placeholder: '{{vars.email}}', when: { action: VALUE_ACTIONS }, help: 'For “attach a file”: the file’s text. For localStorage: the value.' },
+      { key: 'fileName', label: 'File name', type: 'text', placeholder: 'cover-letter.txt', when: { action: ['upload_text'] } },
+      { key: 'key', label: 'Key', type: 'text', placeholder: 'Enter, Tab, Escape, ArrowDown …', default: 'Enter', when: { action: ['press', 'storage_get', 'storage_set'] }, help: 'For localStorage: the storage key' },
+      // 0.60.280 KB5 — the same key N times (Down ×6 reaches a dropdown's seventh option)
+      { key: 'times', label: 'Times', type: 'number', default: 1, when: { action: ['press'] }, help: 'Press the key this many times (for example ArrowDown 6 times to reach a dropdown\'s seventh value)' },
+      // 0.60.281 SN1 — James, 2026-10-29: "also snowflake plugin support to macros and automation." (clear-glass/src/net/step.js)
+      { key: 'netDo', label: 'Snowflake', type: 'select', default: 'route', when: { action: ['network'] }, options: [
+        { value: 'route', label: 'Route this site through Snowflake' }, { value: 'unroute', label: 'Put this site back (the rule a step made)' },
+        { value: 'start', label: 'Start Snowflake' }, { value: 'wait', label: 'Wait until Snowflake is ready' }, { value: 'check', label: 'Check it is Tor' },
+        { value: 'stop', label: 'Stop Snowflake' }, { value: 'status', label: 'Read its status' }],
+        help: 'Turns the Snowflake plugin on if it is off, and routing a site starts Snowflake (a routed site is blocked while it is off); both are said. A site routed another way already is left as it is.' },
+      { key: 'site', label: 'Site', type: 'text', placeholder: 'blank = the page this step runs in · example.com', when: { action: ['network'] } },
+      { key: 'timeoutMs', label: 'Wait at most', type: 'duration', default: 90000, when: { action: ['network'] } },
+      { key: 'deltaY', label: 'Scroll by (pixels)', type: 'number', default: 600, when: { action: ['scroll'] } },
+      // 0.60.56 — James: "use erosmanceros, scroll slowly, using the arrow keys or something, could also make it a macro and or automation in clearglass"
+      { key: 'via', label: 'Scroll with', type: 'select', default: 'erosmancer', when: { action: ['scroll_until'] }, options: [
+        { value: 'erosmancer', label: 'ErosmancerOS (real mouse wheel)' }, { value: 'keys', label: 'Arrow keys (real keystrokes)' }, { value: 'page', label: 'In the page (scrollBy)' }],
+        help: 'ErosmancerOS needs to be running and connected (Settings → ErosmancerOS). The step says which path ran; it never quietly uses another.' },
+      { key: 'direction', label: 'Direction', type: 'select', default: 'down', when: { action: ['scroll_until'] }, options: [{ value: 'down', label: 'down' }, { value: 'up', label: 'up (older messages load upward in a chat)' }] },
+      { key: 'stepPx', label: 'Each step (pixels)', type: 'number', default: 120, when: { action: ['scroll_until'] }, help: 'Small on purpose: slow scrolling lets a page load what it lazily loads.' },
+      { key: 'keysPerRound', label: 'Key presses per step', type: 'number', default: 5, when: { action: ['scroll_until'] } },
+      { key: 'key', label: 'Key', type: 'text', placeholder: 'ArrowDown, ArrowUp, PageDown …', when: { action: ['scroll_until'] }, help: 'Only for “arrow keys”. Blank = ArrowDown (or ArrowUp when scrolling up).' },
+      { key: 'pauseMs', label: 'Wait after each step', type: 'duration', default: 700, when: { action: ['scroll_until'] } },
+      { key: 'countSelector', label: 'What counts as content', type: 'text', placeholder: '[data-message-id] · article', when: { action: ['scroll_until'] }, help: 'Elements counted after each step. When their number, the scroll position and the page height all stop changing, it is done. Also used to find the scrolling area.' },
+      { key: 'stableRounds', label: 'Done after this many steps with no change', type: 'number', default: 4, when: { action: ['scroll_until'] } },
+      { key: 'maxRounds', label: 'Most steps', type: 'number', default: 200, when: { action: ['scroll_until'] } },
+      { key: 'code', label: 'JavaScript', type: 'code', placeholder: 'return document.querySelectorAll(".job").length', required: true, when: { action: ['eval'] }, help: 'Runs in the page; `return` a value to keep it' },
+      // §0.39.281 EC9 — James: "the jobs types using ErosmancerOS". Additive: the same click / hover / type, sent as real input through
+      // ErosmancerOS (the driver's pointer, via 'eros' → POST /api/input) for pages that ignore in-page events. Default unchanged.
+      { key: 'input', label: 'Input', type: 'select', default: 'page', when: { action: ['click', 'hover', 'type', 'scroll', 'press'] }, options: [
+        { value: 'page', label: 'in the page (events in the page)' }, { value: 'erosmancer', label: 'ErosmancerOS (real mouse, wheel and typing — no key press)' }, { value: 'native', label: 'a real keystroke (press only)' }],
+        help: 'ErosmancerOS input needs it running and connected (Settings → ErosmancerOS). The step says which path ran.' },
+      { key: 'waitAfterMs', label: 'Then wait', type: 'duration', default: 0 },
+    ] },
+  { type: 'extract', group: 'Browser', icon: '⛏', label: 'Read from the page',
+    help: 'Scrape text, links, attributes, whole records or tables from the page into a value later steps can use.',
+    output: 'the value read — text, a number, a list, or a list of records',
+    fields: [
+      { key: 'page', label: 'From', type: 'page', default: 'auto', help: PAGE_HELP },
+      { key: 'mode', label: 'Read', type: 'select', required: true, default: 'text', options: [
+        { value: 'text', label: 'the text of an element' }, { value: 'list', label: 'the text of every match (a list)' },
+        { value: 'attr', label: 'an attribute (href, src, data-…)' }, { value: 'value', label: 'a form field’s value' },
+        { value: 'html', label: 'the HTML of an element' }, { value: 'count', label: 'how many elements match' },
+        { value: 'exists', label: 'whether an element exists (true/false)' },
+        { value: 'records', label: 'records — several fields from each match' }, { value: 'table', label: 'a table (rows)' },
+        { value: 'links', label: 'links (text + address)' }, { value: 'page', label: 'the whole page (URL, title, text)' }] },
+      { key: 'selector', label: 'Element', type: 'text', placeholder: '.job-tile h2 · text=Price · table#results', required: true, when: { mode: ['text', 'list', 'attr', 'value', 'html', 'count', 'exists', 'records'] } },
+      { key: 'selector', label: 'Table / area', type: 'text', placeholder: 'table (optional)', when: { mode: ['table', 'links'] } },
+      { key: 'attr', label: 'Attribute', type: 'text', placeholder: 'href', default: 'href', when: { mode: ['attr'] } },
+      { key: 'all', label: 'Every match (a list)', type: 'bool', when: { mode: ['attr', 'html', 'value'] } },
+      { key: 'fields', label: 'Fields', type: 'kv', placeholder: 'title = h2\nlink = a@href\nprice = .price\nid = @data-id', required: true, when: { mode: ['records'] }, help: 'name = sub-selector, add @attribute to read one' },
+      { key: 'match', label: 'Only links matching', type: 'text', placeholder: '/jobs/ (text or regex)', when: { mode: ['links'] } },
+      { key: 'limit', label: 'At most', type: 'number', default: 200, when: { mode: ['list', 'records', 'links', 'table', 'attr', 'html', 'value'] } },
+      { key: 'transform', label: 'Then', type: 'text', placeholder: 'number · trim · first · match:"\\$(\\d+)"', help: 'Optional filters, as in {{value | number}}' },
+    ] },
+  { type: 'wait_until', group: 'Browser', icon: '⌛', label: 'Wait until…',
+    help: 'Wait for an element, some text, a URL, or any value — checking again and again until it is true or time runs out.',
+    output: 'how long it waited (ms)',
+    fields: [
+      { key: 'kind', label: 'Until', type: 'select', required: true, default: 'present', options: [
+        { value: 'present', label: 'an element appears' }, { value: 'absent', label: 'an element is gone' },
+        { value: 'visible', label: 'an element is visible' }, { value: 'hidden', label: 'an element is hidden' },
+        { value: 'enabled', label: 'an element is enabled' },
+        { value: 'text', label: 'text appears' }, { value: 'no_text', label: 'text disappears' },
+        { value: 'url', label: 'the URL contains…' }, { value: 'ready', label: 'the page has loaded' },
+        { value: 'expression', label: 'a value matches (no page needed)' }] },
+      { key: 'page', label: 'On', type: 'page', default: 'auto', when: { kind: ['present', 'absent', 'visible', 'hidden', 'enabled', 'text', 'no_text', 'url', 'ready'] } },
+      { key: 'selector', label: 'Element', type: 'text', required: true, when: { kind: ['present', 'absent', 'visible', 'hidden', 'enabled'] } },
+      { key: 'selector', label: 'Inside (optional)', type: 'text', when: { kind: ['text', 'no_text'] } },
+      { key: 'text', label: 'Text', type: 'text', required: true, when: { kind: ['text', 'no_text'] } },
+      { key: 'url', label: 'URL contains', type: 'text', placeholder: '/dashboard or /regex/', required: true, when: { kind: ['url'] } },
+      { key: 'left', label: 'Value', type: 'text', placeholder: '{{steps.Check.output}}', required: true, when: { kind: ['expression'] } },
+      { key: 'op', label: '', type: 'select', options: OPS, default: '==', when: { kind: ['expression'] } },
+      { key: 'value', label: 'Compared with', type: 'text', when: { kind: ['expression'] } },
+      { key: 'timeoutMs', label: 'Give up after', type: 'duration', default: 30000 },
+      { key: 'intervalMs', label: 'Check every', type: 'duration', default: 500 },
+    ] },
+  { type: 'macro', group: 'Browser', icon: '⌘', label: 'Run a macro',
+    help: 'Replay a saved macro (Macros page) in a window.', output: 'the macro’s result',
+    fields: [
+      { key: 'name', label: 'Macro', type: 'macro', required: true },
+      { key: 'agentId', label: 'Run in', type: 'page', default: 'default' },
+      { key: 'params', label: 'Values for the macro', type: 'kv', placeholder: 'name = Jane Doe\nemail = {{vars.email}}', help: 'Fills the macro’s {{name}} slots' },
+    ] },
+
+  // ── Data ──────────────────────────────────────────────────────────────────
+  { type: 'set', group: 'Data', icon: '𝑥', label: 'Set variables',
+    help: 'Keep values for later steps: {{vars.name}}. Values can use filters — {{last | number}}, {{steps.Jobs.output | length}}.',
+    output: 'the variables set',
+    fields: [{ key: 'assign', label: 'Variables', type: 'kv', required: true, placeholder: 'count = {{steps.Jobs.output | length}}\ntoday = {{now:YYYY-MM-DD}}' }] },
+  { type: 'http', group: 'Data', icon: '⇵', label: 'Web request',
+    help: 'Call any web API or webhook (Slack, Discord, Zapier, your own server) and keep the answer.',
+    output: '{ status, ok, body } — body parsed from JSON when it is JSON',
+    fields: [
+      { key: 'method', label: 'Method', type: 'select', options: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'], default: 'GET' },
+      { key: 'url', label: 'URL', type: 'text', required: true, placeholder: 'https://hooks.slack.com/services/…' },
+      { key: 'headers', label: 'Headers', type: 'kv', placeholder: 'Authorization = Bearer {{vars.token}}' },
+      { key: 'body', label: 'Body', type: 'textarea', placeholder: '{"text": "Found {{vars.count}} new jobs"}', when: { method: ['POST', 'PUT', 'PATCH', 'DELETE'] } },
+      { key: 'failOnHttpError', label: 'Fail on 4xx/5xx', type: 'bool', default: true },
+    ] },
+  { type: 'file', group: 'Data', icon: '🗎', label: 'Save to a file',
+    help: 'Write or append text, JSON or CSV rows to a file in the automation output folder.',
+    output: 'the file’s full path',
+    fields: [
+      { key: 'path', label: 'File', type: 'text', required: true, placeholder: 'jobs/{{now:YYYY-MM-DD}}.csv', help: 'Inside the automation output folder' },
+      { key: 'format', label: 'As', type: 'select', default: 'text', options: [{ value: 'text', label: 'text' }, { value: 'json', label: 'JSON' }, { value: 'jsonl', label: 'JSON lines' }, { value: 'csv', label: 'CSV rows' }] },
+      { key: 'mode', label: 'Mode', type: 'select', default: 'append', options: [{ value: 'append', label: 'add to the end' }, { value: 'write', label: 'replace the file' }] },
+      { key: 'content', label: 'Content', type: 'textarea', required: true, placeholder: '{{steps.Jobs.output}}', help: 'For CSV: a record or a list of records' },
+    ] },
+  // 2026-11-08 — James: "API for anything. Agnostic remeber. Nexus systems, APIs from web services. Etc. http sockets etc"
+  { type: 'api', group: 'Data', icon: '⟷', label: 'Call any API',
+    help: 'Any API, by its address: http(s):// (a web service), ws(s):// (a socket: send, then collect replies), tcp://host:port (a raw socket), or nexus://<system>/<path> (any Nexus system by name: its address comes from COS, never a fixed port).',
+    output: '{ ok, status, body } for http and nexus · { ok, messages } for ws · { ok, data } for tcp',
+    fields: [
+      { key: 'url', label: 'Address', type: 'text', required: true, placeholder: 'https://api.example.com/v1/x · wss://… · tcp://host:7000 · nexus://idearium/api/phases/next' },
+      { key: 'method', label: 'Method (http, nexus)', type: 'select', options: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'], default: 'GET' },
+      { key: 'headers', label: 'Headers (http, nexus)', type: 'kv', placeholder: 'Authorization = Bearer {{vars.token}}' },
+      { key: 'body', label: 'Body or message', type: 'code' },
+      { key: 'expect', label: 'Replies to wait for (ws)', type: 'number', default: 1 },
+      { key: 'timeoutMs', label: 'Wait at most (ms)', type: 'number', default: 10000 }] },
+  { type: 'command', group: 'Data', icon: '⇄', label: 'Call a NEXUS system',
+    help: 'Call Guardian, Ollama, Co-pilot or Clear Glass over HTTP.', output: 'the response (parsed JSON when it is JSON)',
+    fields: [
+      { key: 'system', label: 'System', type: 'system', required: true, default: 'guardian' },
+      { key: 'method', label: 'Method', type: 'select', options: ['GET', 'POST'], default: 'GET' },
+      { key: 'endpoint', label: 'Endpoint', type: 'text', default: '/health', help: 'Each system lists what it offers at GET /commands' },
+      { key: 'body', label: 'Body (JSON)', type: 'code', when: { method: ['POST'] } },
+    ] },
+
+  // 2026-11-05 PA1/PA2 — James: "maybe add conditions for detection of elements, scripts and type scripts, .macro nodes, workflows, autofill"
+  { type: 'script', group: 'Data', icon: '{ }', label: 'Run your script',
+    help: 'Run one of your own scripts (.js or .ts) from your scripts folder. It gets the values below as JSON in NEXUS_STEP_INPUT and prints its answer; the last line that is JSON is the output.',
+    output: 'what the script printed (its last JSON line, or its text)',
+    fields: [
+      { key: 'script', label: 'Script', type: 'script', required: true, placeholder: 'count-jobs.ts', help: 'A file in your scripts folder (GET /automation/scripts lists them)' },
+      { key: 'input', label: 'Values to hand it', type: 'kv', placeholder: 'url = {{vars.url}}\njobs = {{steps.Jobs.output}}' },
+      { key: 'timeoutMs', label: 'Stop it after', type: 'duration', default: 60000 },
+    ] },
+  { type: 'autofill', group: 'Browser', icon: '✍', label: 'Autofill the form',
+    help: 'Fill the form on the page from one of your autofill profiles, the same as the Autofill button.',
+    output: 'what was filled',
+    fields: [
+      { key: 'page', label: 'On', type: 'page', default: 'auto', help: PAGE_HELP },
+      { key: 'profileId', label: 'Profile', type: 'text', placeholder: 'empty: your default profile' },
+      { key: 'minConfidence', label: 'Only fields it is at least', type: 'select', default: 'medium', options: [{ value: 'high', label: 'sure of' }, { value: 'medium', label: 'fairly sure of' }, { value: 'low', label: 'unsure of, or surer' }] },
+    ] },
+
+  // ── Logic ─────────────────────────────────────────────────────────────────
+  { type: 'condition', group: 'Logic', icon: '⑂', label: 'If…',
+    help: 'Compare a value, then continue, jump to a step, stop, or break out of a loop.',
+    output: 'true or false',
+    fields: [
+      // 2026-11-05 PA3 — "conditions for detection of elements, scripts and type scripts"
+      { key: 'test', label: 'Check', type: 'select', default: 'value', options: [{ value: 'value', label: 'a value' }, { value: 'element', label: 'an element on the page' }, { value: 'script', label: 'your script\u2019s answer' }] },
+      { key: 'element', label: 'The element', type: 'select', default: 'present', when: { test: ['element'] }, options: [
+        { value: 'present', label: 'is on the page' }, { value: 'visible', label: 'is visible' }, { value: 'gone', label: 'is not on the page' },
+        { value: 'text', label: 'contains the text…' }, { value: 'value', label: 'holds the value…' }, { value: 'checked', label: 'is ticked' }, { value: 'page_text', label: 'the page shows the text…' }, { value: 'url', label: 'the address matches…' }] },
+      { key: 'selector', label: 'Element', type: 'text', placeholder: '#apply · text=Sign in · //button', when: { test: ['element'] } },
+      { key: 'page', label: 'On', type: 'page', default: 'auto', when: { test: ['element'] } },
+      { key: 'script', label: 'Script', type: 'script', when: { test: ['script'] }, help: 'True when it prints true, yes, a non-zero number or anything non-empty' },
+      { key: 'input', label: 'Values to hand it', type: 'kv', when: { test: ['script'] } },
+      { key: 'left', label: 'If', type: 'text', when: { test: ['value'] }, placeholder: '{{steps.Price.output | number}} — or leave empty and pick a live value', help: 'Any value; or a mesh value below' },
+      { key: 'var', label: 'or the live value', type: 'meshvar', when: { test: ['value'] } },
+      { key: 'op', label: '', type: 'select', options: OPS, default: '==', required: true, when: { test: ['value'] } },
+      { key: 'value', label: 'This value', type: 'text', placeholder: '0, online, {{vars.max}}', when: { test: ['value', 'element'] } },
+      { key: 'onTrue', label: 'If it matches', type: 'branch', default: 'next' },
+      { key: 'onFalse', label: 'Otherwise', type: 'branch', default: 'stop' },
+    ] },
+  { type: 'loop', group: 'Logic', icon: '↺', label: 'For each…',
+    help: 'Repeat the next steps for every item of a list ({{item}}, {{index}}) or a number of times.',
+    output: 'how many times it went round',
+    fields: [
+      { key: 'items', label: 'For each item in', type: 'text', placeholder: '{{steps.Jobs.output}} — or leave empty and set Times' },
+      { key: 'times', label: 'Or this many times', type: 'number' },
+      { key: 'body', label: 'Repeat the next', type: 'number', default: 1, required: true, help: 'How many steps after this one are inside the loop' },
+      { key: 'max', label: 'At most', type: 'number', default: 500, help: 'A safety limit' },
+      { key: 'delayMs', label: 'Pause between rounds', type: 'duration', default: 0 },
+    ] },
+  { type: 'delay', group: 'Logic', icon: '⏱', label: 'Wait', help: 'Pause before the next step (up to an hour).', output: 'the time waited (ms)',
+    fields: [{ key: 'ms', label: 'Wait', type: 'duration', default: 60000, required: true }, { key: 'jitterMs', label: 'Plus up to (random)', type: 'duration', default: 0, help: 'Randomises the wait — looks less robotic' }] },
+  // 2026-10-30 PL6/PL9 — James: "gates are for the pipelines for macro atuomation" · "make sure macros, automations, and pipelines are interconnected"
+  { type: 'gate', group: 'Logic', icon: '⛩', label: 'Wait at a gate',
+    help: 'Wait until a condition on the page holds before going on: one of your gates (pick an element › Gate this element), or a condition on an element. Fails with what it saw if it does not open in time.',
+    output: 'what the gate saw',
+    fields: [
+      { key: 'gateId', label: 'Your gate (id)', type: 'text', placeholder: 'empty: the condition below', help: 'Settings › ClearDriver › Gates on sites lists them' },
+      { key: 'condition', label: 'Until', type: 'select', default: 'value', options: [
+        { value: 'value', label: 'the element holds…' }, { value: 'equals', label: 'the element holds exactly…' }, { value: 'matches', label: 'the element matches a pattern…' },
+        { value: 'shows', label: 'the dropdown shows…' }, { value: 'checked', label: 'the box is ticked' }, { value: 'unchecked', label: 'the box is clear' },
+        { value: 'text', label: 'the element contains text…' }, { value: 'visible', label: 'the element is visible' }, { value: 'gone', label: 'the element is gone' },
+        { value: 'page_text', label: 'the page shows text…' }, { value: 'url', label: 'the address matches…' }] },
+      { key: 'selector', label: 'Element', type: 'text', placeholder: '#email · //input[@name="email"]', when: { condition: ['value', 'equals', 'matches', 'shows', 'checked', 'unchecked', 'text', 'visible', 'gone'] } },
+      { key: 'value', label: 'Value', type: 'text', placeholder: '{{vars.email}} · /^\\S+@\\S+$/ · *fiverr.com/*', when: { condition: ['value', 'equals', 'matches', 'shows', 'text', 'page_text', 'url'] } },
+      { key: 'page', label: 'On', type: 'page', default: 'auto', help: PAGE_HELP },
+      { key: 'timeoutMs', label: 'Wait at most (ms)', type: 'number', default: 10000 }] },
+  { type: 'pipeline', group: 'Logic', icon: '⛓', label: 'Run a pipeline',
+    help: 'Run one of your pipelines (Settings › Pipelines) and wait for its checklist; its tasks\' outputs come back as this step\'s output. A pipeline never runs itself.',
+    output: 'each task\'s output',
+    fields: [
+      { key: 'pipeline', label: 'Pipeline', type: 'text', required: true, placeholder: 'its name' },
+      { key: 'vars', label: 'Values to hand it', type: 'kv', placeholder: 'email = {{vars.email}}' }] },
+  // PC2 (docs/2026-11-08-pipeline-canvas-phasemap.spec) — James, 2026-11-08: "A .framework shouldn't just be a document describing what to do. It
+  // should be an executable, composable procedure with defined inputs, outputs, contracts and execution behavior."
+  { type: 'procedure', group: 'Logic', icon: '☰', label: 'Run a procedure',
+    help: 'Run one of Idearium\'s procedures (its library, by route) and use its run as this step\'s output. A confirm step in it waits for your yes: the run stops there and says so. A procedure never runs itself, and the chain it joins is shared with pipelines.',
+    output: 'the procedure\'s run: each step\'s result',
+    fields: [
+      { key: 'procedure', label: 'Procedure', type: 'text', required: true, placeholder: 'its id' },
+      { key: 'yes', label: 'Pass its confirm steps (your yes)', type: 'checkbox', default: false }] },
+  // 2026-11-09 — James: "Frameworks as steps. Or a framework as a step. Recursive. Fully programmable. Executable processes. Schemas for them."
+  { type: 'framework', group: 'Logic', icon: '◈', label: 'Run a framework',
+    help: 'Run a .framework that declares its steps (schema.process) as a step: the host compiles it — and every framework its steps run, at any depth — into pipelines, and runs it. One that only describes is refused, said. Its steps\' outputs come back as this step\'s output.',
+    output: 'each of its steps\' output',
+    fields: [
+      { key: 'framework', label: 'Framework', type: 'text', required: true, placeholder: 'its id (or its file)' },
+      { key: 'vars', label: 'Hand it values', type: 'kv' }] },
+  { type: 'workflow', group: 'Logic', icon: '⧉', label: 'Run another workflow',
+    help: 'Run a workflow as a step, handing it values; its variables come back as this step’s output.',
+    output: 'the other workflow’s variables at its end',
+    fields: [{ key: 'workflow', label: 'Workflow', type: 'workflow', required: true }, { key: 'vars', label: 'Values to hand it', type: 'kv', placeholder: 'url = {{item.link}}' }] },
+  { type: 'stop', group: 'Logic', icon: '■', label: 'Finish here', help: 'End the run successfully at this step.', output: '', fields: [] },
+  { type: 'fail', group: 'Logic', icon: '✕', label: 'Fail the run', help: 'End the run as failed, with a message (shows in the run history).', output: '',
+    fields: [{ key: 'message', label: 'Message', type: 'text', required: true, placeholder: 'Login failed for {{vars.user}}' }] },
+
+  // ── Agents & you ──────────────────────────────────────────────────────────
+  { type: 'agent', group: 'Agents & you', icon: '✦', label: 'Ask an agent',
+    help: 'Send a prompt to Claude, ChatGPT, DeepSeek or another agent. Wait for the reply to use it in later steps.',
+    output: 'the reply (when “wait for the reply” is on)',
+    fields: [
+      { key: 'agentKey', label: 'Agent', type: 'agent', required: true },
+      { key: 'accountId', label: 'Send as', type: 'account' },
+      { key: 'prompt', label: 'Prompt', type: 'textarea', required: true, placeholder: 'Rate this job 1-10 for a Node developer, answer with the number only:\n{{item.title}}\n{{item.description}}' },
+      { key: 'await', label: 'Wait for the reply (and keep it)', type: 'bool', default: false },
+    ] },
+  { type: 'notify', group: 'Agents & you', icon: '🔔', label: 'Notify me', help: 'Show a desktop notification.', output: '',
+    fields: [{ key: 'title', label: 'Title', type: 'text', default: '{{workflow}}' }, { key: 'body', label: 'Message', type: 'textarea' }] },
+  { type: 'log', group: 'Agents & you', icon: '✎', label: 'Write to the run log', help: 'Record a line in this run’s history — handy for checking values.', output: 'the message',
+    fields: [{ key: 'message', label: 'Message', type: 'textarea', required: true, placeholder: 'Found {{steps.Jobs.output | length}} jobs' }] },
+  { type: 'emit', group: 'Agents & you', icon: '📣', label: 'Send an event',
+    help: 'Fire a named event; any workflow whose trigger listens for it starts, with these values as {{trigger}}.', output: 'the number of workflows started',
+    fields: [{ key: 'event', label: 'Event name', type: 'text', required: true, placeholder: 'jobs.found' }, { key: 'payload', label: 'Values', type: 'kv', placeholder: 'count = {{vars.count}}' }] },
+];
+
+const TRIGGER = {
+  type: 'trigger', label: 'When', help: 'What starts the workflow. A workflow can have several triggers.',
+  kinds: [
+    { value: 'manual', label: 'Only when I press Run' },
+    { value: 'every', label: 'Every N minutes / hours' },
+    { value: 'daily', label: 'At a time of day' },
+    { value: 'cron', label: 'On a cron schedule' },
+    { value: 'event', label: 'When something happens' },
+    { value: 'webhook', label: 'When a web request arrives (webhook)' },
+  ],
+  events: [
+    { value: 'page.visited', label: 'I open a page (URL matches)', match: 'url' },
+    { value: 'download.done', label: 'A download finishes', match: 'file name' },
+    { value: 'app.start', label: 'Clear Glass starts' },
+    { value: 'workflow.finished', label: 'Another workflow finishes', match: 'workflow name' },
+    { value: 'workflow.failed', label: 'Another workflow fails', match: 'workflow name' },
+    { value: 'custom', label: 'A named event (Send an event step, or POST /automation/events/<name>)', match: 'event name' },
+  ],
+};
+
+const COMMON = [
+  { key: 'saveAs', label: 'Keep the output as', type: 'text', placeholder: 'jobs → {{vars.jobs}}', help: 'Also stores the output in a variable' },
+  { key: 'retry.count', label: 'On failure, retry', type: 'number', default: 0, help: 'times' },
+  { key: 'retry.delayMs', label: 'Between retries', type: 'duration', default: 2000 },
+  { key: 'timeoutMs', label: 'Time limit', type: 'duration', default: 0, help: '0 = none' },
+  { key: 'onError', label: 'If it still fails', type: 'branch', default: 'fail', extra: [{ value: 'fail', label: 'Fail the run' }, { value: 'continue', label: 'Carry on with the next step' }] },
+];
+
+const byType = new Map(CATALOGUE.map(c => [c.type, c]));
+const KNOWN_TYPES = ['trigger', ...CATALOGUE.map(c => c.type)];
+
+function fieldApplies(f, cfg) {
+  if (!f.when) return true;
+  return Object.entries(f.when).every(([k, vals]) => {
+    const def = (byType.get(cfg.__type) || { fields: [] }).fields.find(x => x.key === k);
+    const v = cfg[k] !== undefined && cfg[k] !== '' ? cfg[k] : def && def.default;
+    return vals.includes(v);
+  });
+}
+
+/** validateStep(step, allIds) -> [problems] (empty = fine) */
+function validateStep(step, allIds = []) {
+  const out = [];
+  if (!step || !step.type) return ['a step has no type'];
+  if (step.type === 'trigger') {
+    const c = step.config || {};
+    if (c.cron) { try { require('./cron').parse(c.cron); } catch (e) { out.push(`trigger: ${e.message}`); } }
+    if (c.at && !/^\d{1,2}:\d{2}$/.test(c.at)) out.push('trigger: the time is HH:MM');
+    return out;
+  }
+  const cat = byType.get(step.type);
+  if (!cat) return [`unknown step type "${step.type}"`];
+  const cfg = { ...(step.config || {}), __type: step.type };
+  const name = step.label || cat.label;
+  const seen = new Set();
+  for (const f of cat.fields) {
+    if (!f.required || seen.has(f.key) || !fieldApplies(f, cfg)) continue;
+    seen.add(f.key);
+    const v = cfg[f.key];
+    const empty = v === undefined || v === null || v === '' || (typeof v === 'object' && !Array.isArray(v) && !Object.keys(v).length) || (Array.isArray(v) && !v.length);
+    if (empty && f.default === undefined) out.push(`${name}: “${f.label || f.key}” is empty`);
+  }
+  if (step.type === 'condition') {
+    const test = cfg.test || 'value';
+    if (test === 'value' && !cfg.left && !cfg.var) out.push(`${name}: pick a value to check`);
+    if (test === 'element' && !cfg.selector && !['page_text', 'url'].includes(cfg.element)) out.push(`${name}: name the element (a selector or XPath)`);
+    if (test === 'script' && !cfg.script) out.push(`${name}: name the script`);
+    for (const k of ['onTrue', 'onFalse']) {
+      const t = cfg[k];
+      if (t && !['next', 'stop', 'break', 'continue', 'end', 'fail'].includes(t) && !allIds.includes(t)) out.push(`${name}: “${k === 'onTrue' ? 'if it matches' : 'otherwise'}” goes to a step that is gone`);
+    }
+  }
+  if (step.type === 'loop' && !cfg.items && !(parseInt(cfg.times, 10) > 0) && !String(cfg.times || '').includes('{{')) out.push(`${name}: give it a list or a number of times`);
+  if (step.type === 'http' && cfg.url && !/^https?:\/\//i.test(String(cfg.url)) && !String(cfg.url).startsWith('{{')) out.push(`${name}: the URL starts with http:// or https://`);
+  // 2026-11-05 PA4 — a gate after the step: the same gate as a macro's (MB1) and the gate step's (PL6)
+  if (step.after) out.push(...afterProblems(step.after).map(p => `${name}: the gate after it — ${p}`));
+  if (step.onError && !['fail', 'continue', 'stop'].includes(step.onError) && !allIds.includes(step.onError)) out.push(`${name}: “if it still fails” goes to a step that is gone`);
+  return out;
+}
+
+// PA4 — step.after = { gateId | condition + selector + value (the gate step's fields), timeoutMs, delay: { kind: fixed|range|human, ms, min, max },
+// onClosed: stop | skip | retry }. Without a gate it is only a delay.
+const AFTER_CLOSED = ['stop', 'skip', 'retry'];
+function afterProblems(a) {
+  const out = [];
+  if (!a || typeof a !== 'object' || Array.isArray(a)) return ['it is { gateId } or { condition, selector, value }, with a delay and what to do when it stays closed'];
+  if (a.onClosed && !AFTER_CLOSED.includes(a.onClosed)) out.push(`when it stays closed: one of ${AFTER_CLOSED.join(', ')}`);
+  if (a.delay) { const k = a.delay.kind || 'fixed'; if (!['fixed', 'range', 'human'].includes(k)) out.push('the delay is fixed, range or human');
+    if (k === 'range' && !(Number(a.delay.max) >= Number(a.delay.min))) out.push('a range delay needs min ≤ max'); }
+  const gated = a.gateId || a.condition;
+  if (a.condition && !['page_text', 'url'].includes(a.condition) && !a.selector) out.push('the gate names no element');
+  if (!gated && !a.delay) out.push('it has neither a gate nor a delay');
+  return out;
+}
+
+function validateWorkflow(wf) {
+  const steps = (wf && wf.steps) || [];
+  const ids = steps.map(s => s.id).filter(Boolean);
+  const out = [];
+  steps.forEach((s, i) => validateStep(s, ids).forEach(p => out.push({ index: i, stepId: s.id, problem: p })));
+  return out;
+}
+
+module.exports = { afterProblems, AFTER_CLOSED, CATALOGUE, TRIGGER, COMMON, OPS, UNARY_OPS, BROWSER_ACTIONS, KNOWN_TYPES, byType, validateStep, validateWorkflow, fieldApplies };
