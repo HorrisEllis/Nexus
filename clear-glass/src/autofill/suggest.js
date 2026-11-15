@@ -90,7 +90,8 @@ function dropdownScript() {
   leaves.forEach(function (e) { var t = norm(e.textContent).toUpperCase();
     if (t === 'SELECT A CATEGORY') mark(e, 'category', { kind: 'gig' });
     else if (t === 'SELECT A SUBCATEGORY') mark(e, 'subcategory', { kind: 'gig' });
-    else if (t === 'DELIVERY TIME') { var c = colOf(e); if (c) mark(e, c.toLowerCase() + '.delivery', { kind: 'gig' }); } });
+    else if (t === 'DELIVERY TIME' || /^\\d+ DAYS? DELIVERY$/.test(t)) {   // 2026-11-14 TB3: once chosen it shows '3 DAYS DELIVERY'
+      var c = colOf(e); if (c) mark(e, c.toLowerCase() + '.delivery', { kind: 'gig' }); } });
   document.querySelectorAll('[role=combobox],[aria-haspopup=listbox]').forEach(function (e) {
     if (!vis(e) || e.hasAttribute('data-cg-dd') || /^(INPUT|SELECT|TEXTAREA)$/.test(e.tagName)) return;
     var row = rowOf(e), col = colOf(e);

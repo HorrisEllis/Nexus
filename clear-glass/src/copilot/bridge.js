@@ -369,6 +369,7 @@ class CoPilotBridge {
     // §GA1 0.60.161 — "fill this in for me" on a Fiverr gig page: run the engine, do not chat
     if (action === 'autofill.gig') return this._ipcPost('/cli/autofill/gig/autofill', { agentId: aid, offer: cmd.offer || '', profileId: cmd.profileId || null, minConfidence: cmd.minConfidence || 'medium' });
     if (action === 'autofill.pick') return this._ipcPost('/cli/autofill/pick', { agentId: aid, fieldType: cmd.fieldType || '', profileId: cmd.profileId || null, label: cmd.label || null }, 5 * 60000);
+    if (action === 'autofill.takeback') return this._ipcPost('/cli/autofill/gig/takeback', { agentId: aid, dryRun: cmd.dryRun === true || cmd.dryRun === 'true' });   // TB1
     if (action === 'autofill.learned') return this._ipcGet(`/cli/autofill/learned${cmd.url ? `?url=${encodeURIComponent(cmd.url)}` : ''}`);
     if (action === 'autofill.forget') return this._ipcPost('/cli/autofill/forget', { url: cmd.url || '', fieldKey: cmd.fieldKey || '' });
     if (action === 'autofill.export') return this._ipcGet('/cli/autofill/export');   // §AT2 0.60.256
