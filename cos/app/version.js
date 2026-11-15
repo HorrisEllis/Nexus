@@ -35,4 +35,8 @@
 // update tool?" · offered COS updating itself: "yes." Settings › Update gains COS itself: Install downloads the newest cos-v setup and its SHA256SUMS
 // into COS's folder (cos-updates/<version>), runs it only when its SHA-256 is the release's, silently (/S --force-run), and COS closes and starts
 // again; a private release uses the GitHub sign-in git keeps. The last installer is kept for a roll back.
-module.exports = { version: '0.10.0' };
+// 0.10.1 (Nexus 0.60.545): James, 2026-11-15, Settings › Update still saying "an unzipped release folder (no .git yet)": "you fixed this right? like
+// do i reinstall? this needs to be automatic." The fix in lib/nexus-update.js lives in his Nexus folder, which only that broken updater could update.
+// COS's exe is what reaches him: when it opens it tells git, once, to trust exactly his linked folder for every user (git config --system
+// safe.directory; elevated, or one UAC prompt remembered), so the service's check works and the automatic update brings the new code (git-trust.js).
+module.exports = { version: '0.10.1' };
