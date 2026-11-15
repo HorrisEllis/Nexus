@@ -215,7 +215,20 @@ async function installNexus() {
   notify(r.ok ? 'Nexus is installed' : 'Nexus was not installed', r.ok ? `from GitHub (${r.via}${r.version ? `, ${r.version}` : ''}) into ${r.dir}${r.started ? ' — starting' : r.startError ? ` — it did not start: ${r.startError}` : ''}` : String(r.error).slice(0, 220));
   return r;
 }
+// COS 0.10.1 — James, 2026-11-15: "you fixed this right? like do i reinstall? this needs to be automatic." The service's git refuses his folder
+// (another user's), so the Nexus updater could never fetch its own fix. COS's exe updates without that folder: it tells git, once, to trust it.
+function trustLinkedFolder() {
+  try {
+    const T = require('../git-trust.js'), dir = ctl.linkedDir(); const asked = new Set(ctl.settings().settings.gitTrustAsked || []);
+    const r = T.ensure({ dir, asked: (d) => asked.has(d), save: (d) => { asked.add(d); ctl.setSetting('gitTrustAsked', [...asked]); } });
+    send({ type: 'git.trust', ...r });
+    if (r.action === 'trusted' || r.action === 'trusted-elevated') notify('Updates can run again', 'Git now trusts your Nexus folder for the service; the next update check reaches GitHub.');
+    else if (!r.ok) notify('Updates still blocked', String(r.why || '').slice(0, 200));
+    return r;
+  } catch (e) { return { ok: false, action: 'skipped', why: e.message }; }
+}
 async function startOnLaunch() {
+  trustLinkedFolder();
   // CA5 — nothing linked and nothing installed: COS installs Nexus itself (his "it should be installing"), then it starts like a linked folder
   if (!ctl.linkedDir() && ctl.settings().settings.autoInstall !== false) { const st = ctl.store.list(ctl.root, 'nexus')[0]; if (!st || !st.current) { await installNexus(); return; } }
   const p = ctl.settings().settings.startOnLaunch; if (!p) return;

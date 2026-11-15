@@ -164,3 +164,10 @@ spec:
         dropped mid-way (his page: "read ECONNRESET") is tried once more.
 
   verification_here: "Proven against real git repos built in a temp folder (an origin with a newer release, a clone behind it): check, a refused code collision, an archived data collision, apply, rollback. Not run on his machine; GitHub itself is reached by git, not by this test."
+
+## ADDENDUM 2026-11-15 — 0.60.545 (COS 0.10.1): the fix has to arrive by a road that is not broken
+James, 2026-11-15: "you fixed this right? like do i reinstall? this needs to be automatic." UPA1's fix (10a02b08) lives in the folder the
+broken updater could not update. COS's exe updates on its own road (cos-v releases), so COS now tells git, once, to trust exactly his linked
+folder for every user (cos/app/git-trust.js; elevated, or one remembered UAC prompt). The service's old check then reaches GitHub, and the
+automatic update brings the new code. Rule learned: an updater's own fix must be deliverable without that updater, and every fix carries a
+version bump so his page can show it. Tests: tests/modules/test-cos-git-trust.test.js (GT-01..04).
