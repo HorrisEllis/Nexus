@@ -351,7 +351,7 @@ async function loadGaps()     { try { GAPS  = (await api('/api/gaps')).gaps  || 
 // read it, and the topbar count uses it. A refresh re-renders whichever of those
 // two subtabs is open, and only those — an open builder is no longer painted
 // into a hidden pane on every SSE chunk event.
-async function loadSpecs()    { try { loadAgentOptions(); SPECS = (await api('/api/specs')).specs|| []; if (CURRENT_REPO_SUBTAB === 'architect' || CURRENT_REPO_SUBTAB === 'spec') renderCurrentRepoSubtab(); } catch(e){ console.warn('[idearium] loadSpecs failed:', e.message); toast('failed to load specs: '+e.message,'err'); } }
+async function loadSpecs()    { try { loadAgentOptions(); SPECS = (await api('/api/specs?lite=1')).specs|| [];   /* 2026-11-14 IL2 — counts, not chunks; the opened spec is read whole */ if (CURRENT_REPO_SUBTAB === 'architect' || CURRENT_REPO_SUBTAB === 'spec') renderCurrentRepoSubtab(); } catch(e){ console.warn('[idearium] loadSpecs failed:', e.message); toast('failed to load specs: '+e.message,'err'); } }
 async function loadSnapshots(){ try { SNAPSHOTS = (await api('/api/snapshots')).snapshots || []; renderVersionium(); } catch(e){ console.warn('[idearium] loadSnapshots failed:', e.message); } }
 async function loadStats()    { try { STATS = (await api('/api/stats')).stats; } catch(e){ console.warn('[idearium] loadStats failed:', e.message); } updateStats(); }
 // Ideas/Repo merge: repos are no longer their own rail tab — they're looked
@@ -360,7 +360,7 @@ async function loadStats()    { try { STATS = (await api('/api/stats')).stats; }
 let API_REPOS = [];
 async function loadApiRepos() {
   try {
-    API_REPOS = (await api('/api/repos')).repos || [];
+    API_REPOS = (await api('/api/repos?lite=1')).repos || [];   // 2026-11-14 IL1 — the list without files; the opened compartment is read whole (_fullRepo)
     renderRepoLibrary();
     updateStats(); if (document.getElementById('idea-list')) renderIdeaList();   // 0.39.263 — which ideas have a repo
     if (CURRENT_API_REPO) {
@@ -1023,6 +1023,7 @@ async function assistBrainstormCard(uuid) {
 let BUILDER_ACTIVE_SECTION = SECTION_IDS[0];
 
 function specConfidence(spec) {
+  if (spec && spec.lite) return spec.sectionCount ? Math.round((spec.sectionsDone / spec.sectionCount) * 100) : 0;   // 2026-11-14 IL2
   const secs = spec.sections || [];
   if (!secs.length) return 0;
   const filled = secs.filter(s=>s.content && s.content.trim().length>0).length;
@@ -1060,7 +1061,10 @@ function openSpecRepo(specUuid) {
   setRepoSubtab('spec');
 }
 
+// 2026-11-14 IL2 — a spec from the list is counts only; it is read whole when it is opened, then shown
+async function _fullSpec(uuid) { try { return ((await api(`/api/specs?only=${encodeURIComponent(uuid)}`)).specs || [])[0] || null; } catch (e) { console.warn('[idearium] could not load the spec:', e.message); return null; } }
 function renderSpecBuilder(spec) {
+  if (spec && spec.lite) { _fullSpec(spec.uuid).then(full => { if (!full) return; const i = SPECS.findIndex(s => s.uuid === full.uuid); if (i >= 0) SPECS[i] = full; if (!(full.sections || []).some(x => x.id === BUILDER_ACTIVE_SECTION)) BUILDER_ACTIVE_SECTION = (full.sections || [])[0]?.id || SECTION_IDS[0]; renderSpecBuilder(full); }); return; }
   // §BUG FIXED 2026-07-11 — every spec in SPECS renders through this
   // function regardless of origin, but saveSection/checkSpec/buildSpec
   // below all call the LEGACY-only /api/specs/:uuid/* endpoints. A
@@ -1572,7 +1576,7 @@ async function submitUploadProjectImport() {
         await new Promise(r => setTimeout(r, 3000));
         try { landed = ((await api('/api/repos')).repos || []).find(r => r.compartmentId === UP_COMPARTMENT_ID) || null; } catch (_) {}
       }
-      if (landed) res = { repo: landed, fileCount: (landed.files || []).length, git: {}, late: true };
+      if (landed) res = { repo: landed, fileCount: landed.fileCount != null ? landed.fileCount : (landed.files || []).length, git: {}, late: true };
     }
   }
   if (!res) {
@@ -1638,7 +1642,7 @@ async function chunkRepoWithProgress(repoUuid, repoName) {
   await loadApiRepos();
   if (CURRENT_API_REPO?.uuid === repoUuid) {
     const fresh = API_REPOS.find(x => x.uuid === repoUuid);
-    if (fresh) CURRENT_API_REPO = fresh;
+    if (fresh) CURRENT_API_REPO = (fresh.lite ? (await _fullRepo(repoUuid)) : null) || _keepFiles(fresh);
     renderCurrentRepoSubtab();
   }
 }
@@ -3747,7 +3751,17 @@ function openSettingsConsole(repoUuid) {
 // previously a flat, unnested list of every path (unusable at scale —
 // the repo this was built against has 502 files); now a real tree.
 let REPO_TREE_COLLAPSED = new Set(); // dir paths the user closed (opt OUT, default open)
+// 2026-11-14 IL1 — only the compartment that is open is loaded whole. A list entry (lite) is swapped for its full record before it is shown;
+// a refresh of the open one keeps its files until the full record arrives.
+async function _fullRepo(uuid) { try { return (await api(`/api/repos/${encodeURIComponent(uuid)}`)).repo || null; } catch (e) { console.warn('[idearium] could not load the compartment:', e.message); return null; } }
+function _keepFiles(fresh) { return fresh && fresh.lite && CURRENT_API_REPO && CURRENT_API_REPO.uuid === fresh.uuid && Array.isArray(CURRENT_API_REPO.files) ? { ...fresh, files: CURRENT_API_REPO.files, lite: false } : fresh; }
 function renderApiRepoPanel(repo) {
+  if (repo && repo.lite) {
+    const kept = _keepFiles(repo);
+    if (kept && !kept.lite) repo = kept;
+    else { _fullRepo(repo.uuid).then(full => { if (full) renderApiRepoPanel(full); }); return; }
+    _fullRepo(repo.uuid).then(full => { if (full && CURRENT_API_REPO && CURRENT_API_REPO.uuid === full.uuid) { CURRENT_API_REPO = full; const i = API_REPOS.findIndex(r => r.uuid === full.uuid); if (i >= 0) API_REPOS[i] = { ...full, lite: false }; } });
+  }
   if (repo && typeof rtRepoShown === 'function') { try { rtRepoShown(repo); } catch (_) {} }   // §0.39.366 the repo's Tasks panel
   const tree = document.getElementById('file-tree');
   if (!ACTIVE_API_FILE) {

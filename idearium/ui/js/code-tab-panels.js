@@ -35,7 +35,7 @@ function cxMatches(p) { const q = CX.filter.trim().toLowerCase(); return !q || S
 async function _cxReloadRepo(repo) {
   if (typeof loadApiRepos === 'function') await loadApiRepos();
   const fresh = typeof API_REPOS !== 'undefined' ? API_REPOS.find(r => r.uuid === repo.uuid) : null;
-  if (fresh) CURRENT_API_REPO = fresh;
+  if (fresh) CURRENT_API_REPO = (fresh.lite && typeof _fullRepo === 'function' ? (await _fullRepo(repo.uuid)) : null) || fresh;   // 2026-11-14 IL1
   if (typeof loadFileStates === 'function') await loadFileStates(CURRENT_API_REPO, { force: true });
 }
 async function cxAddFile() {

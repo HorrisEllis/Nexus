@@ -316,9 +316,24 @@ function createSupervisor({ root, declarations = null, policy = {}, ledgerFile =
     for (const s of S.values()) if (s.decl.onDemand && running(s) && s.state !== 'paused' && s.lastActivity && Date.now() - s.lastActivity > P.idleMs) { s.state = 'idling'; try { s.proc.kill('SIGTERM'); } catch (_) {} }
   }, P.idleCheckMs); if (reaper.unref) reaper.unref();
 
+  // 2026-11-14 DW1 — James: "says clear glass isn't working" while Clear Glass was open on his screen. Under the Windows service a windowed system
+  // is left to his session (state 'desktop', no pid of COS's), and nothing ever asked its health again, so COS showed it down forever. Every 10 s a
+  // desktop system's health is asked; answering, it is shown up (in his session, not COS's child: COS still never stops or restarts it).
+  async function watchDesktop() {
+    for (const s of S.values()) {
+      if (s.state !== 'desktop' || s.proc) continue;
+      const url = eff(s.decl).healthUrl; if (!url) continue;
+      let ok = false; try { ok = !!(await checkHealth(url)); } catch (_) {}
+      if (ok && !s.desktopUp) write('desktop-up', s.decl.name, `running in your session: its health answers at ${url}`);
+      if (!ok && s.desktopUp) write('desktop-down', s.decl.name, `no longer answers at ${url} (closed in your session?)`);
+      s.desktopUp = ok;
+    }
+  }
+  const desktopWatch = setInterval(watchDesktop, 10000); if (desktopWatch.unref) desktopWatch.unref();
+
   function view(s) {
     const d = eff(s.decl);
-    return { name: d.name, system: d.system, state: s.state, pause: s.pause ? { ...s.pause, pids: [...s.pause.pids] } : null, pid: s.pid, port: d.healthUrl ? Number((/:(\d+)/.exec(d.healthUrl) || [])[1]) || null : null,
+    return { name: d.name, system: d.system, state: s.state === 'desktop' && s.desktopUp ? 'up' : s.state, inYourSession: s.state === 'desktop' ? !!s.desktopUp : undefined, pause: s.pause ? { ...s.pause, pids: [...s.pause.pids] } : null, pid: s.pid, port: d.healthUrl ? Number((/:(\d+)/.exec(d.healthUrl) || [])[1]) || null : null,
       healthUrl: d.healthUrl || null, critical: !!d.critical, compartment: d.compartment || null, walled: !!(d.boundary && d.boundary.allow), wallMode: d.boundary ? (d.boundary.mode || 'enforce') : null, wallVia: d.boundary && d.boundary.allow ? (/electron/i.test(String(d.cmd)) ? 'NODE_OPTIONS' : '--require') : null, bootPhase: d.onDemand ? null : (d.phase ?? null), onDemand: !!d.onDemand,
       restarts: { count: s.restarts, last: s.lastExit ? s.lastExit.ts : null, backoffMs: s.backoffMs }, circuit: { ...s.circuit }, startedAt: s.startedAt, by: s.by,
       // MG16: what autopilot's /status carried, so the door answers in its shape
@@ -328,14 +343,14 @@ function createSupervisor({ root, declarations = null, policy = {}, ledgerFile =
     let lines = []; try { lines = fs.readFileSync(LEDGER, 'utf8').split('\n').filter(Boolean).map(l => JSON.parse(l)); } catch (_) {}
     return (system ? lines.filter(e => e.system === system) : lines).slice(-limit);
   }
-  function shutdown({ by = 'person' } = {}) { clearInterval(reaper); for (const [n, s] of S) if (running(s)) stop(n, { by }); write('stop', null, 'supervisor shutdown', { by }); }
+  function shutdown({ by = 'person' } = {}) { clearInterval(reaper); clearInterval(desktopWatch); for (const [n, s] of S) if (running(s)) stop(n, { by }); write('stop', null, 'supervisor shutdown', { by }); }
 
   // MG17: a line the supervisor did not act on but must keep (the handover, naming the version that made it)
   function note(kind, why, { by = 'person', system = null } = {}) { if (!/^[a-z][a-z-]{1,30}$/.test(String(kind))) throw new Error(`a note's kind is a word: ${kind}`); return write(kind, system, why, { by }); }
 
   function logs(name, { limit = 200 } = {}) { const s = must(name); return s.out.slice(-Math.max(1, Math.min(LOG_KEEP, limit))); }
 
-  const api = { boot, note, logs, pause, resume, on: (ev, fn) => bus.on(ev, fn), off: (ev, fn) => bus.off(ev, fn), declarations: () => decls.map(d => ({ ...d })), list: () => [...S.values()].map(view), get: (n) => view(must(n)), start, stop, restart, touch, resetCircuit, ledger,
+  const api = { watchDesktop, boot, note, logs, pause, resume, on: (ev, fn) => bus.on(ev, fn), off: (ev, fn) => bus.off(ev, fn), declarations: () => decls.map(d => ({ ...d })), list: () => [...S.values()].map(view), get: (n) => view(must(n)), start, stop, restart, touch, resetCircuit, ledger,
     policy: () => JSON.parse(JSON.stringify(P)), setPolicy: (patch, { by = 'person' } = {}) => { Object.assign(P, patch || {}); write('policy', null, `policy changed: ${JSON.stringify(patch)}`, { by }); return JSON.parse(JSON.stringify(P)); },
     shutdown, DEFAULTS, ledgerFile: LEDGER, beat, memoryObserve, memoryBaseline, memoryJudge, lastBoot: null, setHooks: (h) => { Object.assign(hooks, h || {}); },
     // SC4 — a system added while COS runs (its declaration just written by add-system.js): declared live, never started by this

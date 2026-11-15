@@ -1204,7 +1204,12 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
     // before, the first file's owner decided alone
     const owner = _require('../../lib/phase-plan.js').targetSystem({ files: node.files || [], tags: node.systems || [], ownerOf: SYS.ownerOf, tagSystem: SYS.systemForLoomTag }).system || 'core';
     target = getRepoLayer().list({}).find(r => r.nexusSelf && r.nexusSelf.role === 'system' && r.nexusSelf.system === owner) || null;
-    if (!target) return { ok: false, status: 409, error: `nexus/${owner} has no repo yet — sync the nexus repo first` };
+    // 2026-11-14 IS1 — synced when asked for: only the system this phase builds, not all of Nexus
+    if (!target) {
+      try { await _nexusSelfSync({ only: [owner] }); } catch (e) { console.warn(`[idearium] on-demand sync of ${owner} failed: ${e.message}`); }
+      target = getRepoLayer().list({}).find(r => r.nexusSelf && r.nexusSelf.role === 'system' && r.nexusSelf.system === owner) || null;
+    }
+    if (!target) return { ok: false, status: 409, error: `nexus/${owner} has no repo yet — and syncing only ${owner} did not make one; sync it: POST /api/nexus-self/sync {"only":["${owner}"]}` };
   }
   // §0.60.0 PC2 — the system this phase builds, checked against the repo that builds it: a conflict is said on the run
   let systemCheck = null;
@@ -4987,7 +4992,12 @@ async function handle(req, res, route, query, body) {
         }
       } catch (e) { console.warn('[idearium/api] spec-engine list failed, legacy only:', e.message); }
       const seen = new Set(legacy.map(s => s.uuid));
-      const merged = [...legacy, ...engine.filter(s => !seen.has(s.uuid))];
+      let merged = [...legacy, ...engine.filter(s => !seen.has(s.uuid))];
+      // 2026-11-14 IL2 — only what is needed: each system's spec carries one chunk per file (core alone 5351, 6.9 MB for all of Nexus, and
+      // a chip per section rendered for every spec). ?only=<uuid> answers one spec whole; ?lite=1 lists each with its counts, not its chunks.
+      if (query.only) merged = merged.filter(s => s.uuid === query.only);
+      else if (query.lite === '1') merged = merged.map(s => { const { chunks, sections, ...rest } = s; const secs = sections || [];
+        return { ...rest, lite: true, sectionCount: secs.length, sectionsDone: secs.filter(x => x && x.content && String(x.content).trim()).length, chunkCount: (chunks || []).length }; });
       return ok(res, { specs: merged, sources: { legacy: legacy.length, engine: engine.length } });
     }
 
@@ -5240,7 +5250,12 @@ async function handle(req, res, route, query, body) {
 
     case 'repo.list': {
       try { for (const r of ((getRepoLayer().repos && getRepoLayer().repos.repos) || [])) if (r.source === 'spec.codegen') _linkCodeRepo(r); } catch (_) {}   // §0.39.276 — code repos made before the link existed
-      return ok(res, { repos: getRepoLayer().list(query) });
+      // 2026-11-14 IL1 — James: "we need to stop loading the entirety of idearium … only loading the compartment thats needed". The list
+      // carried every file of every compartment (3.3 MB here: files was 99% of it). ?lite=1 lists without files (fileCount instead); the
+      // compartment opened is read whole from GET /api/repos/:uuid.
+      const all = getRepoLayer().list(query);
+      if (query.lite === '1') return ok(res, { repos: all.map(r => { const { files, ...rest } = r; return { ...rest, fileCount: Array.isArray(files) ? files.length : 0, lite: true }; }) });
+      return ok(res, { repos: all });
     }
 
     case 'repo.show': {
@@ -12031,7 +12046,11 @@ export function startAPI() {
     // cost one hash-cache pass (~0.1 s); the sync yields between systems and
     // stages, so /health keeps answering. Off in test processes (a test must
     // not snapshot the real tree) and with NEXUS_SELF_AUTOSYNC=0.
-    if (process.env.NEXUS_SELF_AUTOSYNC !== '0' && !_require('../../lib/test-sandbox.js').isTestProcess()) {
+    // 2026-11-14 IS1 — James: "need idearium to only load whats needed. i think it loads all of nexus including all the nested compartments.
+    // instead of per system." Measured the same night: idle 95 MB; the first scheduled full sync copied and indexed every system (core alone
+    // 5381 files, 60 MB) and Idearium held ~575 MB after it, peak ~620 MB. The full sync on a timer is now opt-in (NEXUS_SELF_AUTOSYNC=1);
+    // a system is synced when it is asked for: a write or apply to it, its gate, a build of a phase it owns (_phaseBuild), or `nexus sync`.
+    if (process.env.NEXUS_SELF_AUTOSYNC === '1' && !_require('../../lib/test-sandbox.js').isTestProcess()) {
       const every = Math.max(60000, parseInt(process.env.NEXUS_SELF_SYNC_MS, 10) || 600000);
       // §0.60.7 — the full sync re-reads and re-writes ~2300 files (25 MB, ~125 s on the first pass) and was running while the
       // machine was at 5-10% free memory (Ollama then failed to load its model, and Idearium itself crashed). Under memory
