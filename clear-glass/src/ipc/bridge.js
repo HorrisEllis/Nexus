@@ -704,6 +704,7 @@ class IpcBridge {
       const r = await this._autofillForget(req.query?.url || req.body?.url, req.query?.fieldKey || req.body?.fieldKey);
       res.status(r.ok ? 200 : (this.siteSettings ? 404 : 503)).json(r);
     };
+    this.app.post('/cli/autofill/gig/takeback', async (req, res) => { const r = await this._gigTakeBack(req.body || {}); res.status(r.ok ? 200 : 400).json(r); });   // TB1
     this.app.delete('/cli/autofill/learned', forget);
     this.app.post('/cli/autofill/forget', forget);
     // §AT2 0.60.256 — James, 2026-10-26: "i want to be able to import and export the data." The whole autofill data as one .autofill file
@@ -1875,7 +1876,8 @@ class IpcBridge {
     ipcMain.handle('autofill:gig:menu', async (e, d = {}) => this._gigMenu(d));                    // 0.60.286 GM2 — the fill menu for the page in the tab
     ipcMain.handle('autofill:suggest', async (e, d = {}) => this._autofillSuggest(d));              // 0.60.267 AF3 — the chips
     ipcMain.handle('autofill:gig:setLast', async (e, { gig } = {}) => { try { if (gig && gig.title && this.autofillStore) { this.autofillStore.setLastGig(gig); return { ok: true }; } } catch (err) { return { ok: false, error: err.message }; } return { ok: false, error: 'no gig' }; });   // 0.60.267 — the panel's gig is the chips' gig
-    ipcMain.handle('autofill:fillOne', async (e, d = {}) => this._autofillFillOne(d));              // 0.60.267 AF3 — a chip clicked
+    ipcMain.handle('autofill:fillOne', async (e, d = {}) => this._autofillFillOne(d));
+    ipcMain.handle('autofill:gig:takeBack', async (e, d = {}) => this._gigTakeBack(d));   // 2026-11-14 TB1 — what he typed becomes the autofill's gig              // 0.60.267 AF3 — a chip clicked
     ipcMain.handle('autofill:anchor', async (e, d = {}) => this._autofillAnchor(d));                // 0.60.268 AF5 — a field anchored to what it is
     ipcMain.handle('applications:call', async (e, d = {}) => this._opportunityCall(d));          // 0.60.281 AP4 — Settings › Applications, through Copilot
     ipcMain.handle('about:info', async () => this._aboutInfo());                                   // 0.60.269 — Settings › About
@@ -3213,6 +3215,22 @@ class IpcBridge {
     if (r && r.error) return { ok: false, error: r.error };
     try { require('../processes').activity().push({ kind: 'nav', what: `autofill chip filled ${cgId}`, by: 'person', level: 'info' }); } catch (_) {}
     return { ok: true };
+  }
+
+  // 2026-11-14 TB1 — James: "i want to be able to update the autofill from what i use instead." The Scope & Pricing table as the page shows it,
+  // written back into the last gig; only values he set (never SELECT / blank). dryRun: the changes said, nothing kept.
+  async _gigTakeBack({ agentId = 'default', dryRun = false } = {}) {
+    if (!this.driver || !this.autofillStore) return { ok: false, error: 'driver or autofill store not wired' };
+    const TB = require('../autofill/gig-takeback');
+    let read = null;
+    try { const x = await this.driver.exec({ agentId, action: 'eval', by: 'person', code: TB.pricingReadScript() }); read = x && x.result; }
+    catch (e) { return { ok: false, error: e.message }; }
+    const gig = this.autofillStore.getLastGig();
+    if (!gig) return { ok: false, error: 'no gig in the autofill yet: write or import one first' };
+    const r = TB.applyPricingRead(gig, read);
+    if (!dryRun && r.changes.length) this.autofillStore.setLastGig(r.gig);
+    try { require('../processes').activity().push({ kind: 'nav', what: `autofill took ${r.changes.length} value(s) back from the page${dryRun ? ' (dry run)' : ''}`, by: 'person', level: 'info' }); } catch (_) {}
+    return { ok: true, kept: !dryRun && r.changes.length > 0, changes: r.changes, skipped: r.skipped };
   }
 
   _chipLog(cgId, what) { try { require('../processes').activity().push({ kind: 'nav', what: `autofill chip ${what} (${cgId})`, by: 'person', level: 'info' }); } catch (_) {} }
