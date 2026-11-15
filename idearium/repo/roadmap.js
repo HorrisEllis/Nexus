@@ -321,12 +321,22 @@ export function addPhase({ text = null, mapName = 'roadmap-phasemap', title, doe
   const id = `${prefix}${n + 1}_${slug}`;
   const deps = (dependsOn || []).filter(d => existing.some(p => p.id === d || p.id.split('_')[0] === d));
   const esc = (s) => String(s).replace(/\s+/g, ' ').trim();
+  // 2026-11-15 — the block was always indented for this file's own layout (spec: → phases: → id at 4 spaces). A Nexus map has phases: at
+  // the top, ids at 2; the added phase landed at 4, inside the phase before it (a strict YAML reader saw HR1 as a field of HR0; loom's
+  // parser is lenient and read it, so the round trip below passed). The indent is now read from the map: its phases' own, or phases: + 2.
+  const reEsc = (x) => x.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const lead = (() => {
+    if (!text) return '    ';
+    for (const p of existing) { const m = text.match(new RegExp(`^( *)${reEsc(p.id)}:`, 'm')); if (m) return m[1]; }
+    const ph = text.match(/^( *)phases:\s*$/m);
+    return ph ? ph[1] + '  ' : '    ';
+  })();
   const block = [
-    `    ${id}:`,
-    `      status: pending`,
-    `      depends_on: [${deps.map(d => d.split('_')[0]).join(', ')}]`,
-    `      does: >`,
-    `        ${esc(does || clean)}`,
+    `${lead}${id}:`,
+    `${lead}  status: pending`,
+    `${lead}  depends_on: [${deps.map(d => d.split('_')[0]).join(', ')}]`,
+    `${lead}  does: >`,
+    `${lead}    ${esc(does || clean)}`,
     '',
   ].join('\n');
   let out;

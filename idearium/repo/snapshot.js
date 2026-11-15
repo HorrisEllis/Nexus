@@ -166,8 +166,8 @@ function atlasField(repoDir) {
 // requires it (docs/2026-10-19-infrastructure-spine-phasemap.spec IN3a). Ports and health checks are not read from code: not claimed.
 const REGISTRY_READ_MAX = 400000;
 function registryField(repoDir) {
-  let intel;
-  try { intel = _require('../../lib/code-intel/index.js').load(repoDir); } catch (e) { return unavailable(`code-intel not loadable: ${e.message}`); }
+  let intel;   // read once per snapshot, not kept in code-intel's cache (SB34 2026-11-15: core's index alone is ~240 MB in memory)
+  try { intel = _require('../../lib/code-intel/index.js').load(repoDir, { cache: false }); } catch (e) { return unavailable(`code-intel not loadable: ${e.message}`); }
   const root = path.resolve(repoDir);
   const readFile = (rel) => {
     const abs = path.resolve(root, rel);

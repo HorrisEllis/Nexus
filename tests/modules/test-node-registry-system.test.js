@@ -13,7 +13,7 @@ const quiet = async (fn) => { const k = { log: console.log, warn: console.warn, 
 const wait = (ms) => new Promise(r => setTimeout(r, ms));
 const root = fs.mkdtempSync(path.join(os.tmpdir(), 'nr-root-'));
 const capDir = path.join(root, 'alpha', 'data', 'nodes', 'capability');
-const sample = NX.importFromFile(path.join(REPO, 'cortex/data/nodes/capability', fs.readdirSync(path.join(REPO, 'cortex/data/nodes/capability'))[0]));
+const sample = NX.importFromFile(path.join(REPO, 'cortex/data/nodes/capability', fs.readdirSync(path.join(REPO, 'cortex/data/nodes/capability')).filter(f => f.endsWith('.capability')).sort()[0]));
 const write = (id, extra = {}) => NX.exportToFile('capability', id, { ...sample.payload, id, ...extra }, { system: 'alpha', context: 'test', source: 'test' }, capDir);
 let reg;
 
@@ -87,17 +87,18 @@ test('NR-09 P33b: every system with its own process starts its own listener at b
 });
 test('NR-10 one writer per database (N8): a system with its own process owns its database; the boot sync leaves it alone', async () => {
   assert.strictEqual(NR.ownsItsDatabase('cortex'), true);
-  assert.strictEqual(NR.ownsItsDatabase('emerge'), false);
+  // every registered system has its own process since Emerge's server (:4900); a folder the registry does not list stands for one without
+  assert.strictEqual(NR.ownsItsDatabase('loner'), false);
   const r2 = fs.mkdtempSync(path.join(os.tmpdir(), 'nr-own-'));
-  for (const sys of ['cortex', 'emerge']) {
+  for (const sys of ['cortex', 'loner']) {
     fs.mkdirSync(path.join(r2, sys), { recursive: true });
     fs.writeFileSync(path.join(r2, sys, 'registry-components.js'), `module.exports = [{ id: '${sys}.ping', namespace: '${sys}', name: 'ping', version: '1.0.0', route: { method: 'GET', path: '/ping' } }];\n`);
   }
   const SN = require('../../lib/system-nodes.js');
   const out = await quiet(async () => SN.sync({ root: r2, agents: false }));
-  assert.ok(out.systems.emerge.index && !out.systems.emerge.index.error, 'emerge (no process) is indexed by the sync');
+  assert.ok(out.systems.loner && out.systems.loner.index && !out.systems.loner.index.error, 'loner (no process) is indexed by the sync');
   assert.strictEqual(out.systems.cortex.index, undefined, 'cortex (its own process) is not: its listener is the one writer');
-  assert.ok(fs.existsSync(path.join(r2, 'emerge/data/node-index')) && !fs.existsSync(path.join(r2, 'cortex/data/node-index')));
+  assert.ok(fs.existsSync(path.join(r2, 'loner/data/node-index')) && !fs.existsSync(path.join(r2, 'cortex/data/node-index')));
   fs.rmSync(r2, { recursive: true, force: true });
 });
 test('NR-11 startForSystem: skipped in a test process (the real tree is not touched) and says why; forced, it starts and listens', async () => {
@@ -109,6 +110,29 @@ test('NR-11 startForSystem: skipped in a test process (the real tree is not touc
   f.stop();
   assert.ok(f.started, JSON.stringify({ lines, error: f.error }));
   assert.ok(/\[alpha\] node registry: .* listening on \d+ type folder/.test(lines[0]) && /no bus/.test(lines[0]), lines[0]);
+});
+
+test('NR-12 RC2 2026-11-15: a burst of node files folds the store once, not once per file (the event loop stays free), and every row is kept', async () => {
+  const r3 = fs.mkdtempSync(path.join(os.tmpdir(), 'nr-burst-'));
+  const dir = path.join(r3, 'beta', 'data', 'nodes', 'capability');
+  fs.mkdirSync(dir, { recursive: true });
+  const reg3 = await quiet(async () => { const x = NR.createNodeRegistry({ system: 'beta', root: r3, fresh: true }); x.start(); return x; });
+  let lag = 0, last = Date.now();
+  const lv = setInterval(() => { const n = Date.now(); lag = Math.max(lag, n - last - 20); last = n; }, 20);
+  const N = 600;
+  await quiet(async () => {
+    for (let i = 0; i < N; i++) {
+      NX.exportToFile('capability', `beta.c${i}`, { ...sample.payload, id: `beta.c${i}` }, { system: 'beta', context: 'test', source: 'test' }, dir);
+      if (i % 50 === 0) await wait(5);
+    }
+    await wait(2500);
+    reg3.stop();
+  });
+  clearInterval(lv);
+  const fresh = NR.storeFor('beta', { root: r3, fresh: true });
+  assert.strictEqual(fresh.count('nodes_capability'), N, 'every node indexed and on disk');
+  assert.ok(lag < 1000, `the event loop was held ${lag} ms (a fold per file holds it seconds)`);
+  fs.rmSync(r3, { recursive: true, force: true });
 });
 
 (async () => {

@@ -255,3 +255,10 @@ spec:
 # P4's Phases manager rebuilt on the thread: specs on the left, lanes by build order (Board and Layers became Lanes;
 # Table and Maps kept), each phase with its spec blocks, the Plan's gates and ledger, its files and waiting changes.
 # Every action kept. idearium/repo/roadmap.js passes each phase's blocks.
+
+## ADDENDUM 2026-11-15 (0.60.547, P2 expanded) — a phase added to a Nexus map landed inside the phase before it
+- Found running his request end to end (his words, 2026-11-15: "pipeline needs to run fully"): `addPhase` (idearium/repo/roadmap.js) always
+  indented a new phase for its own layout (spec: → phases: → id at 4 spaces). A Nexus map has `phases:` at the top and ids at 2, so HR1
+  was written as a field of HR0. Loom's parser is lenient, read it, and the round-trip check passed; a strict YAML reader saw one phase.
+- The change: the indent is read from the map, either its phases' own or `phases:` + 2. Proof: test-nexus-self-and-cos-run RP-001b (fails on
+  the old code).
