@@ -7,11 +7,11 @@ intent: null
 summary: 28 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1794748294994
+exported_at: 1794748647163
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794748294994
-lastSeenAt: 1794748294994
+firstSeenAt: 1794748647163
+lastSeenAt: 1794748647163
 fingerprint: null
 payload:
   for: IF1_idearium_asks_agents_through_the_pipeline
@@ -219,18 +219,25 @@ payload:
     dependents:
       - docs/2026-11-15-the-factory-phasemap.spec::IF2_the_build_as_a_pipeline
       - docs/2026-11-15-the-factory-phasemap.spec::IF7_the_factory_builds_itself
+      - docs/2026-11-15-the-factory-phasemap.spec::IF9_everything_raid_does_through_the_pipeline
+      - docs/2026-11-15-the-factory-phasemap.spec::IF11_agents_deployed_per_system_by_hat
     upstream:
       - docs/2026-11-15-the-factory-phasemap.spec::IF0_the_census
     downstream:
+      - docs/2026-11-15-the-factory-phasemap.spec::IF10_the_map_of_nexus_on_the_canvas
+      - docs/2026-11-15-the-factory-phasemap.spec::IF11_agents_deployed_per_system_by_hat
+      - docs/2026-11-15-the-factory-phasemap.spec::IF12_nexus_builds_itself_autonomously
       - docs/2026-11-15-the-factory-phasemap.spec::IF2_the_build_as_a_pipeline
       - docs/2026-11-15-the-factory-phasemap.spec::IF3_one_gate
       - docs/2026-11-15-the-factory-phasemap.spec::IF4_rewind_in_the_compartment
       - docs/2026-11-15-the-factory-phasemap.spec::IF6_the_loop_is_cos
       - docs/2026-11-15-the-factory-phasemap.spec::IF7_the_factory_builds_itself
       - docs/2026-11-15-the-factory-phasemap.spec::IF8_the_substrate_under_it
+      - docs/2026-11-15-the-factory-phasemap.spec::IF9_everything_raid_does_through_the_pipeline
     blockedBy: []
     unlocks:
       - docs/2026-11-15-the-factory-phasemap.spec::IF2_the_build_as_a_pipeline
+      - docs/2026-11-15-the-factory-phasemap.spec::IF9_everything_raid_does_through_the_pipeline
     conflicts:
       - with: docs/2026-11-15-the-factory-phasemap.spec::IF5_one_compartment
         files:
@@ -240,8 +247,10 @@ payload:
       - layer 1 · ready
       - 'depends on (1): IF0_the_census'
       - >-
-        needed by (2): IF2_the_build_as_a_pipeline, IF7_the_factory_builds_itself · all downstream 6
-        · finishing it unlocks IF2_the_build_as_a_pipeline
+        needed by (4): IF2_the_build_as_a_pipeline, IF7_the_factory_builds_itself,
+        IF9_everything_raid_does_through_the_pipeline, IF11_agents_deployed_per_system_by_hat · all
+        downstream 10 · finishing it unlocks IF2_the_build_as_a_pipeline,
+        IF9_everything_raid_does_through_the_pipeline
       - 'same files as IF5_one_compartment with no order between them: idearium/api/index.js'
     edges:
       - from: docs/2026-11-15-the-factory-phasemap.spec::IF0_the_census

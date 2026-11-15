@@ -7,11 +7,11 @@ intent: null
 summary: 11 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1794748295007
+exported_at: 1794748647173
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794748295007
-lastSeenAt: 1794748295007
+firstSeenAt: 1794748647173
+lastSeenAt: 1794748647173
 fingerprint: null
 payload:
   for: IF4_rewind_in_the_compartment
@@ -103,12 +103,16 @@ payload:
     blockedBy:
       - docs/2026-11-15-the-factory-phasemap.spec::IF2_the_build_as_a_pipeline
     unlocks: []
-    conflicts: []
+    conflicts:
+      - with: docs/2026-11-15-the-factory-phasemap.spec::IF11_agents_deployed_per_system_by_hat
+        files:
+          - cos/manager
     dangling: []
     lines:
       - layer 3 · blocked by IF2_the_build_as_a_pipeline
       - 'depends on (1): IF2_the_build_as_a_pipeline · all upstream 3'
       - 'needed by (0): —'
+      - 'same files as IF11_agents_deployed_per_system_by_hat with no order between them: cos/manager'
     edges:
       - from: docs/2026-11-15-the-factory-phasemap.spec::IF2_the_build_as_a_pipeline
         kind: declared

@@ -7,11 +7,11 @@ intent: null
 summary: 1 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1794748294967
+exported_at: 1794748647148
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794748294967
-lastSeenAt: 1794748294967
+firstSeenAt: 1794748647148
+lastSeenAt: 1794748647148
 fingerprint: null
 payload:
   for: IF0_the_census
@@ -34,6 +34,9 @@ payload:
       - docs/2026-11-15-the-factory-phasemap.spec::IF5_one_compartment
     upstream: []
     downstream:
+      - docs/2026-11-15-the-factory-phasemap.spec::IF10_the_map_of_nexus_on_the_canvas
+      - docs/2026-11-15-the-factory-phasemap.spec::IF11_agents_deployed_per_system_by_hat
+      - docs/2026-11-15-the-factory-phasemap.spec::IF12_nexus_builds_itself_autonomously
       - docs/2026-11-15-the-factory-phasemap.spec::IF1_idearium_asks_agents_through_the_pipeline
       - docs/2026-11-15-the-factory-phasemap.spec::IF2_the_build_as_a_pipeline
       - docs/2026-11-15-the-factory-phasemap.spec::IF3_one_gate
@@ -42,6 +45,7 @@ payload:
       - docs/2026-11-15-the-factory-phasemap.spec::IF6_the_loop_is_cos
       - docs/2026-11-15-the-factory-phasemap.spec::IF7_the_factory_builds_itself
       - docs/2026-11-15-the-factory-phasemap.spec::IF8_the_substrate_under_it
+      - docs/2026-11-15-the-factory-phasemap.spec::IF9_everything_raid_does_through_the_pipeline
     blockedBy: []
     unlocks:
       - docs/2026-11-15-the-factory-phasemap.spec::IF1_idearium_asks_agents_through_the_pipeline
@@ -53,6 +57,6 @@ payload:
       - 'depends on (0): —'
       - >-
         needed by (2): IF1_idearium_asks_agents_through_the_pipeline, IF5_one_compartment · all
-        downstream 8 · finishing it unlocks IF1_idearium_asks_agents_through_the_pipeline,
+        downstream 12 · finishing it unlocks IF1_idearium_asks_agents_through_the_pipeline,
         IF5_one_compartment
     edges: []

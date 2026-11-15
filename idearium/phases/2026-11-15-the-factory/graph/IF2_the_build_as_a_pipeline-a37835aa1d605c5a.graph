@@ -7,11 +7,11 @@ intent: null
 summary: 28 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1794748294999
+exported_at: 1794748647167
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794748294999
-lastSeenAt: 1794748294999
+firstSeenAt: 1794748647167
+lastSeenAt: 1794748647167
 fingerprint: null
 payload:
   for: IF2_the_build_as_a_pipeline
@@ -222,10 +222,14 @@ payload:
       - docs/2026-11-15-the-factory-phasemap.spec::IF6_the_loop_is_cos
       - docs/2026-11-15-the-factory-phasemap.spec::IF7_the_factory_builds_itself
       - docs/2026-11-15-the-factory-phasemap.spec::IF8_the_substrate_under_it
+      - docs/2026-11-15-the-factory-phasemap.spec::IF10_the_map_of_nexus_on_the_canvas
     upstream:
       - docs/2026-11-15-the-factory-phasemap.spec::IF0_the_census
       - docs/2026-11-15-the-factory-phasemap.spec::IF1_idearium_asks_agents_through_the_pipeline
     downstream:
+      - docs/2026-11-15-the-factory-phasemap.spec::IF10_the_map_of_nexus_on_the_canvas
+      - docs/2026-11-15-the-factory-phasemap.spec::IF11_agents_deployed_per_system_by_hat
+      - docs/2026-11-15-the-factory-phasemap.spec::IF12_nexus_builds_itself_autonomously
       - docs/2026-11-15-the-factory-phasemap.spec::IF3_one_gate
       - docs/2026-11-15-the-factory-phasemap.spec::IF4_rewind_in_the_compartment
       - docs/2026-11-15-the-factory-phasemap.spec::IF6_the_loop_is_cos
@@ -247,9 +251,10 @@ payload:
       - layer 2 · blocked by IF1_idearium_asks_agents_through_the_pipeline
       - 'depends on (1): IF1_idearium_asks_agents_through_the_pipeline · all upstream 2'
       - >-
-        needed by (5): IF3_one_gate, IF4_rewind_in_the_compartment, IF6_the_loop_is_cos,
-        IF7_the_factory_builds_itself, IF8_the_substrate_under_it · finishing it unlocks
-        IF3_one_gate, IF4_rewind_in_the_compartment, IF6_the_loop_is_cos, IF8_the_substrate_under_it
+        needed by (6): IF3_one_gate, IF4_rewind_in_the_compartment, IF6_the_loop_is_cos,
+        IF7_the_factory_builds_itself, IF8_the_substrate_under_it,
+        IF10_the_map_of_nexus_on_the_canvas · all downstream 8 · finishing it unlocks IF3_one_gate,
+        IF4_rewind_in_the_compartment, IF6_the_loop_is_cos, IF8_the_substrate_under_it
       - 'same files as IF5_one_compartment with no order between them: idearium/api/index.js'
     edges:
       - from: docs/2026-11-15-the-factory-phasemap.spec::IF1_idearium_asks_agents_through_the_pipeline

@@ -1,0 +1,158 @@
+envelope: 1
+uuid: nexus-export-graph-phase:IF9_everything_raid_does_through_the_pipeline:777c3a24d3f09269
+type: graph
+id: phase:IF9_everything_raid_does_through_the_pipeline:777c3a24d3f09269
+context: dependency graph of phase IF9_everything_raid_does_through_the_pipeline
+intent: null
+summary: 15 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1794748647185
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794748647185
+lastSeenAt: 1794748647185
+fingerprint: null
+payload:
+  for: IF9_everything_raid_does_through_the_pipeline
+  kind: phase
+  repo: null
+  hash: 777c3a24d3f09269
+  nodes:
+    - path: lib/hat-forge.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/tool-forge.js
+      role: changes
+      exists: true
+      system: lib
+    - path: clear-glass/src/copilot/hat.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/ipc/bridge.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: copilot/lib/self-model.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: cortex/core/raid/contract-intake.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/officiator.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: guardian/lib/jobs.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/agent-intent-contract.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/index.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/identity/hat-forge.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/hat-seed-ollama-personalities.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/node-export.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/hat-forge.js
+      to: lib/node-export.js
+      kind: requires
+    - from: lib/agent-tools/index.js
+      to: lib/tool-forge.js
+      kind: requires
+    - from: clear-glass/src/copilot/hat.js
+      to: lib/hat-forge.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: lib/hat-forge.js
+      kind: requires
+    - from: copilot/lib/self-model.js
+      to: lib/hat-forge.js
+      kind: requires
+    - from: copilot/server.js
+      to: lib/hat-forge.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: lib/hat-forge.js
+      kind: requires
+    - from: cortex/core/raid/officiator.js
+      to: lib/hat-forge.js
+      kind: requires
+    - from: guardian/lib/jobs.js
+      to: lib/hat-forge.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/hat-forge.js
+      kind: requires
+    - from: lib/agent-intent-contract.js
+      to: lib/hat-forge.js
+      kind: requires
+    - from: lib/agent-tools/tools/identity/hat-forge.js
+      to: lib/hat-forge.js
+      kind: requires
+    - from: lib/hat-seed-ollama-personalities.js
+      to: lib/hat-forge.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-11-15-the-factory-phasemap.spec::IF1_idearium_asks_agents_through_the_pipeline
+    dependents:
+      - docs/2026-11-15-the-factory-phasemap.spec::IF12_nexus_builds_itself_autonomously
+    upstream:
+      - docs/2026-11-15-the-factory-phasemap.spec::IF0_the_census
+      - docs/2026-11-15-the-factory-phasemap.spec::IF1_idearium_asks_agents_through_the_pipeline
+    downstream:
+      - docs/2026-11-15-the-factory-phasemap.spec::IF12_nexus_builds_itself_autonomously
+    blockedBy:
+      - docs/2026-11-15-the-factory-phasemap.spec::IF1_idearium_asks_agents_through_the_pipeline
+    unlocks: []
+    conflicts:
+      - with: docs/2026-11-15-the-factory-phasemap.spec::IF7_the_factory_builds_itself
+        files:
+          - cos/pipeline/pipelines
+      - with: docs/2026-11-15-the-factory-phasemap.spec::IF11_agents_deployed_per_system_by_hat
+        files:
+          - lib/hat-forge.js
+    dangling: []
+    lines:
+      - layer 2 · blocked by IF1_idearium_asks_agents_through_the_pipeline
+      - 'depends on (1): IF1_idearium_asks_agents_through_the_pipeline · all upstream 2'
+      - 'needed by (1): IF12_nexus_builds_itself_autonomously'
+      - >-
+        same files as IF7_the_factory_builds_itself with no order between them:
+        cos/pipeline/pipelines
+      - >-
+        same files as IF11_agents_deployed_per_system_by_hat with no order between them:
+        lib/hat-forge.js
+    edges:
+      - from: docs/2026-11-15-the-factory-phasemap.spec::IF1_idearium_asks_agents_through_the_pipeline
+        kind: declared

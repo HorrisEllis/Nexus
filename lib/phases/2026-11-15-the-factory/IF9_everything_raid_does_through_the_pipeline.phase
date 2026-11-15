@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-15-the-factory-phasemap.spec::IF9_everything_raid_does_through_the_pipeline
+type: phase
+id: docs_2026-11-15-the-factory-phasemap.spec::IF9_everything_raid_does_through_the_pipeline
+context: >-
+  pipeline phase IF9_everything_raid_does_through_the_pipeline of
+  docs/2026-11-15-the-factory-phasemap.spec
+intent: null
+summary: IF9_everything_raid_does_through_the_pipeline (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1794748647185
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794748647185
+lastSeenAt: 1794748647185
+fingerprint: null
+payload:
+  id: IF9_everything_raid_does_through_the_pipeline
+  map: docs/2026-11-15-the-factory-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/tool-forge.js
+    - lib/hat-forge.js
+  depends_on:
+    - IF1_idearium_asks_agents_through_the_pipeline
+  blocks: []
+  spec: null
+  graph: 777c3a24d3f09269

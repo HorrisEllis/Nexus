@@ -111,6 +111,48 @@ phases:
     does: "the factory's runs, stages, gates and chunks as the substrate's one graph (GR1's blocks and edges; his §3: process kinds), so the intelligence system reads its friction and gaps (his §7)"
     proof: "a run's stages and gates as blocks and edges, with evidence"
 
+  IF9_everything_raid_does_through_the_pipeline:
+    status: OPEN
+    depends_on: [IF1_idearium_asks_agents_through_the_pipeline]
+    james: '"then anything we can use the pipeline for, like tool forge, copilot automation tasks and jobs, everything that raid does at least." (2026-11-15)'
+    files: [lib/tool-forge.js, lib/hat-forge.js, copilot, cortex/core/raid, cos/pipeline/pipelines]
+    does: >-
+      After the pipeline runs fully, every kind of work Nexus does runs as a pipeline, each its own tool for its own job: the tool forge (a tool
+      made, tested, registered), copilot's automation tasks and jobs, and at least everything RAID does (contracts, routing, gates, intake, the
+      worker and officiator's work). One census first: each kind of work, where it runs today, and its pipeline.
+    proof: "per kind: a run of its pipeline in COS doing the work it did before, the same result"
+  IF10_the_map_of_nexus_on_the_canvas:
+    status: OPEN
+    depends_on: [IF2_the_build_as_a_pipeline, PC4_the_box_kinds_on_the_canvas]
+    james: '"i want a visual map with each system on it using the compartment, each with the wires to each system visually, all the pipelines step by step, and visual animation of actual data moving from system to system like a flight recorder. the canvas, look at the canvas." (2026-11-15)'
+    files: [cos/ui/canvas, cos/manager/server.js, lib/flight-data.js]
+    does: >-
+      On Nexus's canvas (cos/ui/canvas, imported 2026-11-15): each system a compartment box; the wires between systems as they really are (their
+      routes, from each system's own map, SW1); every pipeline step by step; and the actual data moving along the wires, animated from what was
+      recorded (each call between systems, COS's stream and the runs' files), replayable like a flight recorder (lib/flight-data.js, FR6). Nothing
+      drawn that did not happen. Shown to him as a preview first (PC4's prerequisite).
+    proof: "a recorded run replayed on the canvas: each call drawn on its wire in order, with what it carried and how long it took"
+  IF11_agents_deployed_per_system_by_hat:
+    status: OPEN
+    depends_on: [IF1_idearium_asks_agents_through_the_pipeline, IF10_the_map_of_nexus_on_the_canvas]
+    james: '"having agents deployable per system using the hat, like a pin or location marker on a map showing where each agent is by hat?" (2026-11-15)'
+    files: [lib/hat-forge.js, lib/intent-hat-router.js, cos/manager, cos/ui/canvas]
+    does: >-
+      An agent is deployed to a system by its hat (hat-forge's hats; OC4a's deployments in COS), and on the canvas map it is a pin on that
+      system's compartment, named by its hat, moving as it moves, showing what it is doing now (its current pipeline step).
+    proof: "two agents deployed by hat to two systems: two pins in the right places; one moved: its pin moves"
+  IF12_nexus_builds_itself_autonomously:
+    status: OPEN
+    depends_on: [IF7_the_factory_builds_itself, IF9_everything_raid_does_through_the_pipeline, IF11_agents_deployed_per_system_by_hat]
+    james: '"we need the pipeline building nexus, for all of this, different tools for different jobs, to build step by step, so we can get this building autonomously" (2026-11-15)'
+    files: [cos/pipeline/pipelines]
+    does: "the factory takes the open phases of every map, the ready ones first, each with the tool for its job, deployed agents by hat doing the work, step by step, on its own; what holds is a gap said where it stopped"
+    proof: "a day of the factory on his machine: phases built, each with its run and proof, the holds listed"
+order_2026_11_15_his: >-
+  His order of 2026-11-15: "pipeline needs to run fully. then anything we can use the pipeline for … like i want a visual map …" So: first the
+  pipeline runs fully, end to end (idearium-build and his-request, the real routes, agents on the Ollama ladder); then IF1 and IF9 (everything
+  through the pipeline); IF10 and IF11 (the map, the flight recorder, the pins) shown to him first; IF12 last, standing on all of them.
+
 order: >-
   IF0 → IF1 (agents through the pipeline: his first words, the smallest seam, and every later stage reuses it) → IF2 (the build, stage by
   stage) → IF3 and IF4 beside each other → IF6 → IF5 → IF7 from the first stage that can be built by the factory; IF8 with GR1.
