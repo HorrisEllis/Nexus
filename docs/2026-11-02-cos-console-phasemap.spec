@@ -439,3 +439,10 @@ phases_addendum_2026_11_14_ch:
     not_built: "a .gitattributes that checks text out with LF everywhere (it would also make graph hashes the same on every machine): to phase; two Windows-only test failures (CP-13, PL-06) named in the changelog"
 # CH1 confirmed by him, 2026-11-14, from COS's Console on his PC: "console reaches copilot, ollama and gaurdian". The Guardian way was the one the
 # coder had not tried (it sends a message to his agent); his run is its proof.
+
+# ── ADDENDUM 2026-11-15 (0.60.546) — SC18: a system's Files tab is its whole folder; its Data tab is its data folders ──
+# James, 2026-11-15: "data per system needs to be the data folders, or setup when creating a new system. also the files tab needs to be each
+# systems entire compartment backend." Built: GET /api/cos/systems/:name/tree (in=backend|data, read-only, secrets withheld, a path that
+# leaves refused); the Files and Data tabs as one browser with a reading pane; the old Data tab archived. Proof: Clear Glass's driver on a real
+# COS. Open, his same message: updates automatic or a prompt, with reinstall, verify and location settings; a data folder made when a new
+# system is set up.

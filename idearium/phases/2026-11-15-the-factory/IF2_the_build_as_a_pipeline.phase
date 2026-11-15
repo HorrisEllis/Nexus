@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-15-the-factory-phasemap.spec::IF2_the_build_as_a_pipeline
+type: phase
+id: docs_2026-11-15-the-factory-phasemap.spec::IF2_the_build_as_a_pipeline
+context: pipeline phase IF2_the_build_as_a_pipeline of docs/2026-11-15-the-factory-phasemap.spec
+intent: null
+summary: IF2_the_build_as_a_pipeline (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1794748294999
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794748294999
+lastSeenAt: 1794748294999
+fingerprint: null
+payload:
+  id: IF2_the_build_as_a_pipeline
+  map: docs/2026-11-15-the-factory-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/api/index.js
+    - idearium/repo/build-plan.js
+    - idearium/repo/proof-run.js
+    - idearium/lib/emerge-rung.cjs
+  depends_on:
+    - IF1_idearium_asks_agents_through_the_pipeline
+  blocks: []
+  spec: null
+  graph: a37835aa1d605c5a

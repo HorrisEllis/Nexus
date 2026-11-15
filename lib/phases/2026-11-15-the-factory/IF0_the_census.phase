@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-15-the-factory-phasemap.spec::IF0_the_census
+type: phase
+id: docs_2026-11-15-the-factory-phasemap.spec::IF0_the_census
+context: pipeline phase IF0_the_census of docs/2026-11-15-the-factory-phasemap.spec
+intent: null
+summary: IF0_the_census (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1794748294968
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794748294968
+lastSeenAt: 1794748294968
+fingerprint: null
+payload:
+  id: IF0_the_census
+  map: docs/2026-11-15-the-factory-phasemap.spec
+  repo: null
+  layer: null
+  status: DONE 2026-11-15
+  files:
+    - docs/2026-11-15-the-factory-phasemap.spec
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: bb1bbb5a43887fee

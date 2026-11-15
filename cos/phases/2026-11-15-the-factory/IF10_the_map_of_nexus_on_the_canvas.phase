@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-15-the-factory-phasemap.spec::IF10_the_map_of_nexus_on_the_canvas
+type: phase
+id: docs_2026-11-15-the-factory-phasemap.spec::IF10_the_map_of_nexus_on_the_canvas
+context: pipeline phase IF10_the_map_of_nexus_on_the_canvas of docs/2026-11-15-the-factory-phasemap.spec
+intent: null
+summary: IF10_the_map_of_nexus_on_the_canvas (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1794748647188
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794748647188
+lastSeenAt: 1794748647188
+fingerprint: null
+payload:
+  id: IF10_the_map_of_nexus_on_the_canvas
+  map: docs/2026-11-15-the-factory-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/manager/server.js
+    - lib/flight-data.js
+  depends_on:
+    - IF2_the_build_as_a_pipeline
+    - PC4_the_box_kinds_on_the_canvas
+  blocks: []
+  spec: null
+  graph: 066f51fbb7b708a1

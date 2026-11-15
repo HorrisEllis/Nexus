@@ -1224,3 +1224,13 @@ phases_addendum_2026_11_13_rca:
         question: "does this move PC10 ahead of PC_D13's order (the pipeline operable, then COS optimised)?"
         reading_a: "no: mapped now, built after PC8 and the canvas (his 2026-11-11 order stands)"
         reading_b: "yes: PC10 and this assistant are built next"
+
+# ── ADDENDUM 2026-11-15 — PC4 expanded: the canvas imported into Nexus, blank (his); PC_D10 superseded in part ──
+# James, 2026-11-14: "i want you to pull the canvas from the eravos canvas repo and remove the tools. make just the tools for nexus and the build
+# pipeline" · asked where it lives, the three places side by side: "importing eravos' canvas. isolated from the repo and start blank and make the
+# tools for nexus." This supersedes PC_D10's "I don't need a copy" (2026-11-08) for the canvas itself: Nexus now holds its own copy, by his word.
+# Done (not released): cos/ui/canvas/ — ERAVOS's canvas/ at 0ace521 (3.48.3) unchanged, its tool-free core and dataflow folders, its schemas;
+# tools/index.js loads core, dataflow, nexus; served by COS's cockpit server at /canvas/canvas/. Boots blank, no errors (Clear Glass's driver).
+# Open: Nexus's tools (tools/nexus/): the Step box (ERAVOS's eravos.agents.step, the id COS's box.eg already writes into a .erv) and a Pipeline
+# tool (COS's pipelines listed, one opened as boxes, run, each step's state live), shown to him first (PC4's prerequisite, his 2026-11-08).
+# The older template copy, cos/archetype/eravos-canvas, is left as it is.

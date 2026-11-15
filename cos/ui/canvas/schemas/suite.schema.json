@@ -1,0 +1,214 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "eravos/suite.schema.json",
+  "title": "ERAVOS suite (suite.json) — a system of tools, each still a tool of its own",
+  "description": "Data only: a suite never holds code; it names tools by id. Lives in tools/<domain>/suites/<id>/suite.json and is indexed into tools/catalog.js by build/index-tools.mjs. On the canvas a suite is its suite window (hub) — the parts connect to it. Spec: specs/eravos.suites.spec (ADDENDUM 2026-10-21).",
+  "type": "object",
+  "required": [
+    "schema",
+    "id",
+    "label",
+    "hub",
+    "parts"
+  ],
+  "properties": {
+    "schema": {
+      "const": "eravos.suite/1"
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*\\.[a-z][a-z0-9-]*$",
+      "description": "<domain>.<name>"
+    },
+    "label": {
+      "type": "string"
+    },
+    "icon": {
+      "type": "string"
+    },
+    "accent": {
+      "type": "string"
+    },
+    "blurb": {
+      "type": "string"
+    },
+    "version": {
+      "type": "string"
+    },
+    "hub": {
+      "type": "string",
+      "description": "the tool that is this suite's window on the canvas (its input takes every output part)"
+    },
+    "parts": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "tool"
+        ],
+        "properties": {
+          "tool": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string",
+            "description": "a short name shown with it: voice, mouth, rhythm, low end"
+          },
+          "required": {
+            "type": "boolean"
+          },
+          "as": {
+            "enum": [
+              "linked",
+              "mod"
+            ],
+            "default": "linked"
+          },
+          "slot": {
+            "type": "string",
+            "description": "as mod: the slot it lives in"
+          },
+          "in": {
+            "type": "string",
+            "description": "as mod: the part whose slot it lives in"
+          },
+          "preset": {
+            "type": "string"
+          },
+          "why": {
+            "type": "string"
+          },
+          "notes": {
+            "type": "boolean",
+            "description": "false: the suite window's keyboard does not play it (it follows another part on its own)"
+          }
+        }
+      }
+    },
+    "wiring": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "from",
+          "to"
+        ],
+        "properties": {
+          "from": {
+            "type": "array",
+            "prefixItems": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "minItems": 2,
+            "maxItems": 2
+          },
+          "to": {
+            "type": "array",
+            "prefixItems": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "minItems": 2,
+            "maxItems": 2
+          }
+        }
+      }
+    },
+    "output": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "the parts whose sound ends in the suite window (default: every linked part whose signal goes to no other part)"
+    },
+    "scenes": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": {
+          "type": "object",
+          "properties": {
+            "preset": {
+              "type": "string"
+            },
+            "params": {
+              "type": "object"
+            }
+          }
+        }
+      }
+    },
+    "starter": {
+      "type": "string"
+    },
+    "macros": {
+      "type": "array",
+      "maxItems": 4,
+      "description": "P48.8: up to four knobs on the suite window; each turns its targets' keys across their range (the part's own min…max unless narrowed)",
+      "items": {
+        "type": "object",
+        "required": [
+          "label",
+          "targets"
+        ],
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "default": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "hint": {
+            "type": "string"
+          },
+          "targets": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "tool",
+                "key"
+              ],
+              "properties": {
+                "tool": {
+                  "type": "string"
+                },
+                "key": {
+                  "type": "string"
+                },
+                "min": {
+                  "type": "number"
+                },
+                "max": {
+                  "type": "number"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "kind": {
+      "type": "string",
+      "enum": ["suite", "setup"],
+      "description": "3.126: suite (default) = a tool and its components wired together; setup = a system of whole tools, offered under Start › SETUPS"
+    },
+    "user": { "type": "boolean", "description": "3.126: saved from the canvas by its user (deletable)" },
+    "allInOne": {
+      "type": "string",
+      "description": "P49.4: the all-in-one tool these parts rebuild (its 📘 page offers 'As parts: <suite>')"
+    }
+  }
+}

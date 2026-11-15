@@ -1,0 +1,118 @@
+envelope: 1
+uuid: nexus-export-graph-phase:IF4_rewind_in_the_compartment:6aa79080963c263c
+type: graph
+id: phase:IF4_rewind_in_the_compartment:6aa79080963c263c
+context: dependency graph of phase IF4_rewind_in_the_compartment
+intent: null
+summary: 11 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1794748647173
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794748647173
+lastSeenAt: 1794748647173
+fingerprint: null
+payload:
+  for: IF4_rewind_in_the_compartment
+  kind: phase
+  repo: null
+  hash: 6aa79080963c263c
+  nodes:
+    - path: docs/2026-11-01-the-compartment-phasemap.spec
+      role: changes
+      exists: true
+      system: null
+    - path: idearium/repo/snapshot-restore.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/repo/snapshot.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/api/build-surface.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: tests/modules/test-versionium-repo-history.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: idearium/repo/architecture.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/repo/snapshot-files.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/repo/verify-lazy.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: lib/code-intel/index.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: idearium/repo/snapshot.js
+      to: idearium/repo/verify-lazy.js
+      kind: requires
+    - from: idearium/repo/snapshot.js
+      to: idearium/repo/snapshot-files.js
+      kind: requires
+    - from: idearium/repo/snapshot.js
+      to: idearium/repo/architecture.js
+      kind: requires
+    - from: idearium/repo/snapshot.js
+      to: lib/code-intel/index.js
+      kind: requires
+    - from: idearium/api/build-surface.js
+      to: idearium/repo/snapshot.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/repo/snapshot.js
+      kind: requires
+    - from: idearium/index.js
+      to: idearium/repo/snapshot.js
+      kind: requires
+    - from: tests/modules/test-versionium-repo-history.test.js
+      to: idearium/repo/snapshot.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-11-15-the-factory-phasemap.spec::IF2_the_build_as_a_pipeline
+    dependents: []
+    upstream:
+      - docs/2026-11-15-the-factory-phasemap.spec::IF0_the_census
+      - docs/2026-11-15-the-factory-phasemap.spec::IF1_idearium_asks_agents_through_the_pipeline
+      - docs/2026-11-15-the-factory-phasemap.spec::IF2_the_build_as_a_pipeline
+    downstream: []
+    blockedBy:
+      - docs/2026-11-15-the-factory-phasemap.spec::IF2_the_build_as_a_pipeline
+    unlocks: []
+    conflicts:
+      - with: docs/2026-11-15-the-factory-phasemap.spec::IF11_agents_deployed_per_system_by_hat
+        files:
+          - cos/manager
+    dangling: []
+    lines:
+      - layer 3 · blocked by IF2_the_build_as_a_pipeline
+      - 'depends on (1): IF2_the_build_as_a_pipeline · all upstream 3'
+      - 'needed by (0): —'
+      - 'same files as IF11_agents_deployed_per_system_by_hat with no order between them: cos/manager'
+    edges:
+      - from: docs/2026-11-15-the-factory-phasemap.spec::IF2_the_build_as_a_pipeline
+        kind: declared

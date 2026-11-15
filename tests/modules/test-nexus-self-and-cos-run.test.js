@@ -264,6 +264,16 @@ async function main() {
     assert.strictEqual(rm.phases[1].blocked_by.length, 1);
   });
 
+  await test('RP-001b', 'addPhase into a Nexus map (phases: at the top, ids at 2) writes a sibling phase, not a field of the one before (2026-11-15)', async () => {
+    const R = await import('../../idearium/repo/roadmap.js');
+    const y = require('js-yaml');
+    const text = 'origin:\n  date: 2026-11-13\nphases:\n  HR0_the_map:\n    status: DONE\n    depends_on: []\n    files: [a.spec]\n    does: "the map"\n';
+    const a = R.addPhase({ text, mapName: 'x-phasemap', title: 'his request', prefix: 'HR' });
+    assert.strictEqual(a.id, 'HR1_his_request');
+    assert.deepStrictEqual(Object.keys(y.load(a.text).phases), ['HR0_the_map', 'HR1_his_request'], 'a strict YAML reader sees two phases');
+    assert.ok(!('HR1_his_request' in y.load(a.text).phases.HR0_the_map));
+  });
+
   await test('RP-002', "a new repo starts 'specced', and the idea it came from becomes its idea", async () => {
     const se = await import('../../idearium/spec-engine/index.js');
     const { RepoLayer } = await import('../../idearium/repo/index.js');

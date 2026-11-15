@@ -515,3 +515,17 @@ it need an atlas for?"
     found, it closes, opens the repo and indexes it. A real failure shows its reason in the drop zone, never "ready".
 - Proof: test-pipeline-root-causes RC-16 (an unindexed repo is refused, the pipeline runs, the snapshot record builds) and RC-17 (a source
   check of the dialog; not driven in Clear Glass, said).
+
+## ADDENDUM 2026-11-15 (0.60.547, RC2 expanded) — the registry folded its whole store on every file event
+- His words, 2026-11-15: "pipeline needs to run fully." Running it end to end in the sandbox, the full nexus-self sync (the step that makes
+  the "nexus" parent repo) left Idearium unresponsive for 25+ minutes: 141 % CPU, its pulse missed for up to 206 s.
+- Found by a CPU profile of the running process (the inspector), not guessed: 88.6 % inclusive under the registry's watcher, line 163,
+  `db.flush()` → JaaStore `flushAll()` → `_fold` (self 40.6 %), `_loadTable` (15.6 %), readFileSync and GC. Each file event re-read,
+  merged, re-wrote and re-loaded the whole table; the sync writes ~1,400 chunk nodes per system, so the work grew with the square.
+- The change (lib/node-registry.js): each file is still indexed when it lands (its row appended at once); the fold waits until the burst is
+  quiet for 1 s, and runs at least every 10 s while it lasts. stop() clears the timer and flushes. Axioms: §1.1 (measured first), §0.1.
+- Measured here (1,400 node files written in a burst): 14.1 s → 0.5 s; the longest event-loop stall 3,460 ms → 43 ms; all 1,400 rows on
+  disk after stop. Not measured on his machine.
+- Proof: test-node-registry-system NR-12 (600 files: every row kept, the loop held under 1 s; it fails on the old code, 1,629 ms).
+  NR-10's premise had drifted (every registered system has its own process since Emerge's server on :4900); it now uses a folder the
+  registry does not list. The sample node is picked by its .capability extension, as a running Cortex keeps a log in that folder.

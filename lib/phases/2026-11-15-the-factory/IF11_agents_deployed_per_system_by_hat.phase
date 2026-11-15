@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-15-the-factory-phasemap.spec::IF11_agents_deployed_per_system_by_hat
+type: phase
+id: docs_2026-11-15-the-factory-phasemap.spec::IF11_agents_deployed_per_system_by_hat
+context: pipeline phase IF11_agents_deployed_per_system_by_hat of docs/2026-11-15-the-factory-phasemap.spec
+intent: null
+summary: IF11_agents_deployed_per_system_by_hat (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1794748647190
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794748647190
+lastSeenAt: 1794748647190
+fingerprint: null
+payload:
+  id: IF11_agents_deployed_per_system_by_hat
+  map: docs/2026-11-15-the-factory-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/hat-forge.js
+    - lib/intent-hat-router.js
+  depends_on:
+    - IF1_idearium_asks_agents_through_the_pipeline
+    - IF10_the_map_of_nexus_on_the_canvas
+  blocks: []
+  spec: null
+  graph: 0de1a7fc8f0a521d

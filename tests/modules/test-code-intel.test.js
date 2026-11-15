@@ -338,6 +338,25 @@ async function main() {
     } finally { mod.buildIntel = orig; }
   });
 
+  await t('CI-701', 'SB34 2026-11-15: the loaded-index cache is bounded by size (least recently used goes first; the last loaded stays), so a sync of every system does not keep them all', () => {
+    const base = fs.mkdtempSync(path.join(os.tmpdir(), 'ci-cache-'));
+    const dirs = ['a', 'b', 'c'].map(n => { const d = path.join(base, n, 'indexes'); fs.mkdirSync(d, { recursive: true });
+      const pad = 'x'.repeat(40000);
+      fs.writeFileSync(path.join(d, 'cards.json'), JSON.stringify({ byChunk: { [n + '1']: { id: n + '1', file: 'f.js', name: n, range: { start_line: 1, end_line: 1 }, pad } } }));
+      return path.join(base, n); });
+    const script = `const CI = require(${JSON.stringify(path.join(ROOT, 'lib/code-intel/index.js'))}); const d = ${JSON.stringify(dirs)};
+      CI.load(d[0]); CI.load(d[1]); CI.load(d[0]); CI.load(d[2]); const a = CI.cacheInfo();
+      const once = CI.load(d[1], { cache: false }); const b = CI.cacheInfo();
+      process.stdout.write(JSON.stringify({ repos: a.repos.map(r => r.slice(-1)), over: a.bytes > a.maxBytes, ok: !once.error, after: b.repos.map(r => r.slice(-1)) }));`;
+    // a budget of ~0.1 MB: two of the three ~40 KB indexes fit
+    const out = JSON.parse(require('child_process').execFileSync(process.execPath, ['-e', script], { env: { ...process.env, CODE_INTEL_CACHE_MB: '0.09' } }).toString());
+    fs.rmSync(base, { recursive: true, force: true });
+    assert.deepStrictEqual(out.repos, ['a', 'c'], 'b, used least recently, went first; a (used again) and c (just loaded) stay');
+    assert.strictEqual(out.over, false);
+    assert.strictEqual(out.ok, true, 'an evicted repo loads again from disk');
+    assert.deepStrictEqual(out.after, ['a', 'c'], 'a read-once load ({ cache: false }, a snapshot\'s registry) is not kept');
+  });
+
   console.log('\n── measured on this repo\'s own source ─────────────────');
   await t('CI-601', 'idearium/ and lib/code-intel: no unforced cut mid-statement, no doc split from its declaration, nothing over the cap', () => {
     const L = require(path.join(ROOT, 'lib/languages.js'));

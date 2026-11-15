@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-15-the-factory-phasemap.spec::IF4_rewind_in_the_compartment
+type: phase
+id: docs_2026-11-15-the-factory-phasemap.spec::IF4_rewind_in_the_compartment
+context: pipeline phase IF4_rewind_in_the_compartment of docs/2026-11-15-the-factory-phasemap.spec
+intent: null
+summary: IF4_rewind_in_the_compartment (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1794748295007
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794748295007
+lastSeenAt: 1794748295007
+fingerprint: null
+payload:
+  id: IF4_rewind_in_the_compartment
+  map: docs/2026-11-15-the-factory-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/repo/snapshot.js
+    - idearium/repo/snapshot-restore.js
+    - docs/2026-11-01-the-compartment-phasemap.spec
+  depends_on:
+    - IF2_the_build_as_a_pipeline
+  blocks: []
+  spec: null
+  graph: 6aa79080963c263c

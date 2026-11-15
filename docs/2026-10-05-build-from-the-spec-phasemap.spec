@@ -1341,3 +1341,15 @@ spec:
         Each file the agent is writing is a card while it writes (from the DOM-mutator / Ollama feed): its lines as they
         come, writing while its fence is open, written — landing once closed, gone when its real card lands.
       proof: "a reply fed mid-stream paints one writing card; closed, written; landed, gone"
+
+## ADDENDUM 2026-11-15 (0.60.547, SB34 expanded) — code-intel's cache kept every repo's index; a sync ran Idearium out of memory
+- His words, 2026-11-15: "pipeline needs to run fully." The whole run, in the sandbox, ended with Idearium out of its 1 GB heap during the
+  census that follows a nexus-self sync, before the build was called.
+- Found by a sampling heap profile across one sync, not guessed: 480 of 490 MB still alive afterwards came from lib/code-intel `load`,
+  through idearium/repo/snapshot.js `registryField`. The cache kept every repo's cards and search index for the life of the process, and a
+  sync snapshots every system (core's own index alone is ~240 MB in memory). A second sync in a row ran it out of memory.
+- The change: the cache is bounded by the indexes' size on disk (CODE_INTEL_CACHE_MB, default 48; least recently used first; the one just
+  loaded stays; a stale entry is let go before the new one is read). A reader that reads once loads with `{ cache: false }`, and a snapshot's
+  registry does. `cacheInfo()` says what is held (§2.3).
+- Measured here: live after one sync 490 MB → 4 MB (sampled); heap after a full GC across five forced syncs 194 → 282 MB, steady (it was
+  717 MB after one, then out of memory). Not measured on his machine. Proof: test-code-intel CI-701.

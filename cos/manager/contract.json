@@ -528,6 +528,11 @@
     },
     {
       "method": "GET",
+      "path": "/api/cos/systems/:name/tree",
+      "out": "?in=backend|data &path= \u2014 a folder: { dirs, files: [{ name, bytes, mtime }] }; a file: { file, text | rows, total | withheld }; in=data with no path: { roots: [{ id: own|root, label, about, exists }] } \u2014 a system's whole folder, or its data folders, read-only (SC18)"
+    },
+    {
+      "method": "GET",
       "path": "/api/cos/systems/:name/location",
       "out": "{ system, folder, inside, disk: { bytes, files, cut }, movable, why, out, out_to, in, in_from, root_data } \u2014 one system's location on this machine (CA7a)"
     },
@@ -885,6 +890,7 @@
         "GET /ledger/:system/:hook",
         "GET /ledger/:system/:hook/:day",
         "GET /contract-map/:name",
+        "GET /api/cos/systems/:name/tree",
         "GET /tables",
         "GET /tables/:name",
         "GET /files/:system",

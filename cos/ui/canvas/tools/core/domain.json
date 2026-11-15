@@ -1,0 +1,17 @@
+{
+ "schema": "eravos.domain/1",
+ "id": "core",
+ "label": "Core",
+ "version": "1.0.0",
+ "icon": "◇",
+ "always": true,
+ "core": [
+  "field/field.js"
+ ],
+ "ports": [],
+ "modes": [],
+ "pages": [],
+ "content": [],
+ "starter": [],
+ "summary": "Parts every domain shares, loaded before any domain: the Field."
+}

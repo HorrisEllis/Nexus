@@ -45,7 +45,8 @@
     if (S.mounted.has(tab)) { const m = S.mounted.get(tab); m.api.refresh && m.api.refresh(); return; }
     const el = h('div', { class: 'on' }); $('sections').append(el); for (const [, m] of S.mounted) m.el.classList.remove('on');
     const entry = { el, api: {} }; S.mounted.set(tab, entry);
-    try { entry.api = await COS.mount(el, `sections/${tab}`, { name, get sys() { return S.sys; }, onState: (fn) => S.subs.state.add(fn), onLedger: (fn) => S.subs.ledger.add(fn), reload: load }); }
+    // SC18 (0.60.545): Data is the same browser as Files, opened on the system's data folders (his "data per system needs to be the data folders")
+    try { entry.api = await COS.mount(el, `sections/${tab === 'data' ? 'files' : tab}`, { name, ...(tab === 'data' ? { treeIn: 'data' } : {}), get sys() { return S.sys; }, onState: (fn) => S.subs.state.add(fn), onLedger: (fn) => S.subs.ledger.add(fn), reload: load }); }
     catch (e) { COS.say(el, { glyph: 'x', title: `The ${tab} tab could not load`, text: esc(e.message) }); }
   }
   COS.on('cos.system.state', (d) => { if (d.name === name) load(); });
