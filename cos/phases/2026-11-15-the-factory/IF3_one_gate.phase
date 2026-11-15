@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-15-the-factory-phasemap.spec::IF3_one_gate
+type: phase
+id: docs_2026-11-15-the-factory-phasemap.spec::IF3_one_gate
+context: pipeline phase IF3_one_gate of docs/2026-11-15-the-factory-phasemap.spec
+intent: null
+summary: IF3_one_gate (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1794748295003
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794748295003
+lastSeenAt: 1794748295003
+fingerprint: null
+payload:
+  id: IF3_one_gate
+  map: docs/2026-11-15-the-factory-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/pipeline/gate.eg
+    - idearium/api/index.js
+  depends_on:
+    - IF2_the_build_as_a_pipeline
+  blocks: []
+  spec: null
+  graph: 7d69890fc04006a1

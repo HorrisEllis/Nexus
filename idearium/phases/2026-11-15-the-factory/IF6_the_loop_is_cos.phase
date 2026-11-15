@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-15-the-factory-phasemap.spec::IF6_the_loop_is_cos
+type: phase
+id: docs_2026-11-15-the-factory-phasemap.spec::IF6_the_loop_is_cos
+context: pipeline phase IF6_the_loop_is_cos of docs/2026-11-15-the-factory-phasemap.spec
+intent: null
+summary: IF6_the_loop_is_cos (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1794748295014
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794748295014
+lastSeenAt: 1794748295014
+fingerprint: null
+payload:
+  id: IF6_the_loop_is_cos
+  map: docs/2026-11-15-the-factory-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/api/index.js
+  depends_on:
+    - IF2_the_build_as_a_pipeline
+  blocks: []
+  spec: null
+  graph: 2b40edbb93090dd9

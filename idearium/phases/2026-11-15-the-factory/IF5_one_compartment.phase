@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-15-the-factory-phasemap.spec::IF5_one_compartment
+type: phase
+id: docs_2026-11-15-the-factory-phasemap.spec::IF5_one_compartment
+context: pipeline phase IF5_one_compartment of docs/2026-11-15-the-factory-phasemap.spec
+intent: null
+summary: IF5_one_compartment (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1794748295010
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794748295010
+lastSeenAt: 1794748295010
+fingerprint: null
+payload:
+  id: IF5_one_compartment
+  map: docs/2026-11-15-the-factory-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/api/index.js
+    - cos/manager/supervisor.js
+  depends_on:
+    - IF0_the_census
+  blocks: []
+  spec: null
+  graph: 5a16ca19c475f22a

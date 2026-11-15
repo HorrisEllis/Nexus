@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-15-the-factory-phasemap.spec::IF8_the_substrate_under_it
+type: phase
+id: docs_2026-11-15-the-factory-phasemap.spec::IF8_the_substrate_under_it
+context: pipeline phase IF8_the_substrate_under_it of docs/2026-11-15-the-factory-phasemap.spec
+intent: null
+summary: IF8_the_substrate_under_it (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1794748295020
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794748295020
+lastSeenAt: 1794748295020
+fingerprint: null
+payload:
+  id: IF8_the_substrate_under_it
+  map: docs/2026-11-15-the-factory-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - docs/substrate.spec
+    - pillar/graph/graph.eg
+  depends_on:
+    - IF2_the_build_as_a_pipeline
+  blocks: []
+  spec: null
+  graph: 4645829dd3eb30fb

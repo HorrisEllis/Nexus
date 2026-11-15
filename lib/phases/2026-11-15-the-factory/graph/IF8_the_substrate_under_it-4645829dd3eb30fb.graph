@@ -1,0 +1,54 @@
+envelope: 1
+uuid: nexus-export-graph-phase:IF8_the_substrate_under_it:4645829dd3eb30fb
+type: graph
+id: phase:IF8_the_substrate_under_it:4645829dd3eb30fb
+context: dependency graph of phase IF8_the_substrate_under_it
+intent: null
+summary: 2 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1794748295020
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794748295020
+lastSeenAt: 1794748295020
+fingerprint: null
+payload:
+  for: IF8_the_substrate_under_it
+  kind: phase
+  repo: null
+  hash: 4645829dd3eb30fb
+  nodes:
+    - path: docs/substrate.spec
+      role: changes
+      exists: true
+      system: null
+    - path: pillar/graph/graph.eg
+      role: changes
+      exists: false
+      system: pillar
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-11-15-the-factory-phasemap.spec::IF2_the_build_as_a_pipeline
+    dependents: []
+    upstream:
+      - docs/2026-11-15-the-factory-phasemap.spec::IF0_the_census
+      - docs/2026-11-15-the-factory-phasemap.spec::IF1_idearium_asks_agents_through_the_pipeline
+      - docs/2026-11-15-the-factory-phasemap.spec::IF2_the_build_as_a_pipeline
+    downstream: []
+    blockedBy:
+      - docs/2026-11-15-the-factory-phasemap.spec::IF2_the_build_as_a_pipeline
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 3 · blocked by IF2_the_build_as_a_pipeline
+      - 'depends on (1): IF2_the_build_as_a_pipeline · all upstream 3'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-11-15-the-factory-phasemap.spec::IF2_the_build_as_a_pipeline
+        kind: declared

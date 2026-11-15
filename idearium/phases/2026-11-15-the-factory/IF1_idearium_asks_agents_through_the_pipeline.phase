@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-15-the-factory-phasemap.spec::IF1_idearium_asks_agents_through_the_pipeline
+type: phase
+id: docs_2026-11-15-the-factory-phasemap.spec::IF1_idearium_asks_agents_through_the_pipeline
+context: >-
+  pipeline phase IF1_idearium_asks_agents_through_the_pipeline of
+  docs/2026-11-15-the-factory-phasemap.spec
+intent: null
+summary: IF1_idearium_asks_agents_through_the_pipeline (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1794748294995
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794748294995
+lastSeenAt: 1794748294995
+fingerprint: null
+payload:
+  id: IF1_idearium_asks_agents_through_the_pipeline
+  map: docs/2026-11-15-the-factory-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/api/index.js
+    - idearium/spec-engine/chunk-dispatch.js
+    - idearium/lib/page-agents.js
+    - cos/manager/automation-door.js
+  depends_on:
+    - IF0_the_census
+  blocks: []
+  spec: null
+  graph: cb88c16aacd556be
