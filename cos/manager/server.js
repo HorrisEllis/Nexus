@@ -242,6 +242,51 @@ function createServer(sup, opts = {}) {
       // changed in each systems individual settings." Where each system lives, whether it can be moved, and what holds it if not (cos/sovereign/location.eg);
       // one system's answer adds its folder on this machine and its size on disk (files under it, node_modules included: that moves too)
       if (m === 'GET' && p === '/api/cos/locations') { const r = await pipeline.locations(); return send(res, r.ok ? 200 : (r.code || 500), { ...r, root, cosRoot: process.env.COS_APP_ROOT || null }); }
+      // SC18 (0.60.545) — James, 2026-11-15, of a system's cockpit: "data per system needs to be the data folders, or setup when creating a new system.
+      // also the files tab needs to be each systems entire compartment backend." Both tabs read the system's own folders through this route (the old
+      // door routes read only the shared data/ at the root). Read-only. ?in=backend: its whole folder (code, spec, compartment file, data).
+      // ?in=data: its data folders, each named: its own (<system>/data) and what is still at the root (data/<system>). ?path= a folder lists it;
+      // a file is read: a .jsonl table's newest rows (?rows=), other text up to 200 KB; a file whose name says it holds a secret is not read, said.
+      { const tm = /^\/api\/cos\/systems\/([^/]+)\/tree$/.exec(p);
+        if (tm && m === 'GET') { const fsx = require('fs'); const name = decodeURIComponent(tm[1]); const d = sup.declarations().find(x => x.name === name || x.system === name);
+          if (!d) return send(res, 404, { ok: false, error: `no system ${name}` });
+          const dir = (d.cwd && d.cwd !== '.' ? d.cwd : null) || (d.entry ? String(d.entry).split('/')[0] : name);
+          const sysDir = path.join(root, dir), own = path.join(sysDir, 'data'), atRoot = path.join(root, 'data', name);
+          const where = u.searchParams.get('in') === 'data' ? 'data' : 'backend';
+          const parts = String(u.searchParams.get('path') || '').split('/').filter(Boolean);
+          if (parts.some(x => x === '..' || x === '.' || /[\\:\0]/.test(x)) || parts.length > 24) return send(res, 400, { ok: false, error: 'not a path inside this system' });
+          const has = (f) => { try { return fsx.statSync(f).isDirectory(); } catch (_) { return false; } };
+          let base, rest = parts;
+          if (where === 'backend') base = sysDir;
+          else {
+            const roots = [{ id: 'own', label: `${dir}/data`, about: 'its own data folder', dir: own, exists: has(own) }, { id: 'root', label: `data/${name}`, about: 'still at the root (moves home with SW4)', dir: atRoot, exists: has(atRoot) }];
+            if (!parts.length) return send(res, 200, { ok: true, system: name, in: 'data', path: '', roots: roots.map(({ dir: _d, ...r }) => r), dirs: roots.filter(r => r.exists).map(r => r.id), files: [],
+              ...(roots.some(r => r.exists) ? {} : { none: `${name} has no data folder yet: ${dir}/data is made when it first writes, or when a new system is set up` }) });
+            const r0 = roots.find(r => r.id === parts[0]); if (!r0) return send(res, 404, { ok: false, error: `its data folders are "own" and "root", not "${parts[0]}"` });
+            base = r0.dir; rest = parts.slice(1);
+          }
+          const target = path.join(base, ...rest);
+          if (!path.resolve(target).startsWith(path.resolve(base))) return send(res, 400, { ok: false, error: 'the path leaves this system' });
+          let st; try { st = fsx.statSync(target); } catch (e) { return send(res, 404, { ok: false, error: `nothing at ${[dir, ...rest].join('/')}` }); }
+          if (st.isDirectory()) {
+            let ents = []; try { ents = fsx.readdirSync(target, { withFileTypes: true }); } catch (e) { return send(res, 500, { ok: false, error: e.message }); }
+            const dirs = ents.filter(e => e.isDirectory()).map(e => e.name).sort();
+            const files = ents.filter(e => e.isFile()).map(e => { let b = 0, t = 0; try { const x = fsx.statSync(path.join(target, e.name)); b = x.size; t = x.mtimeMs; } catch (_) {} return { name: e.name, bytes: b, mtime: t }; }).sort((a, b) => (a.name < b.name ? -1 : 1));
+            return send(res, 200, { ok: true, system: name, in: where, path: parts.join('/'), folder: target, dirs, files });
+          }
+          const fname = path.basename(target);
+          if (/(^\.env|secret|token|password|credential|\.pem$|\.key$|\.pfx$|vault)/i.test(fname)) return send(res, 200, { ok: true, system: name, in: where, path: parts.join('/'), file: { name: fname, bytes: st.size, mtime: st.mtimeMs }, withheld: 'its name says it holds a secret: COS does not show it' });
+          const want = Math.max(1, Math.min(500, Number(u.searchParams.get('rows')) || 60));
+          if (/\.(jsonl|ndjson)$/i.test(fname)) {
+            if (st.size > 64 * 1024 * 1024) return send(res, 200, { ok: true, system: name, in: where, path: parts.join('/'), file: { name: fname, bytes: st.size, mtime: st.mtimeMs }, withheld: 'over 64 MB: too large to read here' });
+            const lines = fsx.readFileSync(target, 'utf8').split('\n').filter(Boolean); const rows = [];
+            for (const l of lines.slice(-want)) { try { rows.push(JSON.parse(l)); } catch (_) { rows.push({ unreadable: l.slice(0, 200) }); } }
+            return send(res, 200, { ok: true, system: name, in: where, path: parts.join('/'), file: { name: fname, bytes: st.size, mtime: st.mtimeMs }, total: lines.length, rows });
+          }
+          const fd = fsx.openSync(target, 'r'); const buf = Buffer.alloc(Math.min(st.size, 200 * 1024)); fsx.readSync(fd, buf, 0, buf.length, 0); fsx.closeSync(fd);
+          if (buf.includes(0)) return send(res, 200, { ok: true, system: name, in: where, path: parts.join('/'), file: { name: fname, bytes: st.size, mtime: st.mtimeMs }, withheld: 'not text' });
+          return send(res, 200, { ok: true, system: name, in: where, path: parts.join('/'), file: { name: fname, bytes: st.size, mtime: st.mtimeMs }, text: buf.toString('utf8'), cut: st.size > buf.length });
+        } }
       { const lm = /^\/api\/cos\/systems\/([^/]+)\/location$/.exec(p);
         if (lm && m === 'GET') { const name = decodeURIComponent(lm[1]); const d = sup.declarations().find(x => x.name === name || x.system === name);
           if (!d) return send(res, 404, { ok: false, error: `no system ${name}` });

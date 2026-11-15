@@ -1,4 +1,10 @@
-/* cos/ui/cockpit/sections/files/section.css — the files tab, in its own shadow root. MG29, 0.60.337. */
-.crumbs{display:flex;gap:6px;font:500 12px/1 var(--mono)}.crumbs a{color:var(--ac-soft);cursor:pointer}.crumbs span{color:var(--nx-muted)}.body{padding:var(--s2) 0;max-height:calc(100vh - 340px);overflow:auto}
-.f{display:grid;grid-template-columns:22px 1fr 110px 120px;gap:var(--s3);align-items:center;padding:9px var(--s5);font-size:13px}.f.d{cursor:pointer}.f:hover{background:var(--ac-ghost)}.f svg{width:16px;height:16px;color:var(--nx-dim)}
-.f .s,.f .m{font:400 11.5px/1 var(--mono);color:var(--nx-muted);text-align:right}.note{padding:var(--s5);color:var(--nx-dim)}
+/* cos/ui/cockpit/sections/files/section.css — the files tab, in its own shadow root. MG29, 0.60.337. SC18: a reading pane beside the list. */
+.crumbs{display:flex;gap:6px;font:500 12px/1 var(--mono);flex-wrap:wrap}.crumbs a{color:var(--ac-soft);cursor:pointer}.crumbs span{color:var(--nx-muted)}
+.where{padding:8px var(--s5);font:400 11.5px/1.4 var(--mono);color:var(--nx-muted);border-bottom:1px solid var(--line-soft);word-break:break-all}
+.split{display:grid;grid-template-columns:minmax(300px,42%) 1fr;min-height:420px}.body{padding:var(--s2) 0;max-height:calc(100vh - 380px);overflow:auto;border-right:1px solid var(--line-soft)}
+.f{display:grid;grid-template-columns:22px 1fr 84px 96px;gap:var(--s3);align-items:center;padding:8px var(--s5);font-size:13px;cursor:pointer}.f:hover,.f.on{background:var(--ac-ghost)}.f svg{width:16px;height:16px;color:var(--nx-dim)}
+.f span:nth-child(2){overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.f .s,.f .m{font:400 11.5px/1 var(--mono);color:var(--nx-muted);text-align:right}.note{padding:var(--s5);color:var(--nx-dim)}
+.view{max-height:calc(100vh - 380px);overflow:auto}.view pre{margin:0;padding:var(--s4) var(--s5);font:12px/1.55 var(--mono);color:var(--nx-text);white-space:pre-wrap;word-break:break-word}
+.view .head{position:sticky;top:0;background:var(--glass-hi);padding:8px var(--s5);font:500 11.5px/1.4 var(--mono);color:var(--nx-muted);border-bottom:1px solid var(--line-soft)}
+.view table{width:100%;border-collapse:collapse;font:12px/1.5 var(--mono)}.view th{text-align:left;padding:8px 12px;color:var(--nx-muted);font-weight:500;border-bottom:1px solid var(--line-soft)}
+.view td{padding:7px 12px;border-bottom:1px solid color-mix(in srgb,var(--nx-edge) 50%,transparent);max-width:300px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
