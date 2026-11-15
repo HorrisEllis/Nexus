@@ -40,7 +40,10 @@ function matchOption(options, want) {
     if (hits.length === 1) return { ok: true, index: hits[0], option: opts[hits[0]], by, candidates: [], why: null };
     if (hits.length > 1) return { ok: false, index: null, option: null, by, candidates: hits.map(i => opts[i]), why: `"${w}" matches ${hits.length} options by ${by}` };
   }
-  return { ok: false, index: null, option: null, by: null, candidates: opts, why: `no option matches "${w}"` };
+  // 2026-11-14 TB4 — "12 days" against Fiverr's 1-7, 10, 14, 21… : said with the nearest offered, never picked for him
+  const n = _firstNumber(w); let near = null;
+  if (n !== null) opts.forEach(o => { const k = _firstNumber(o); if (k !== null && k >= n && (near === null || k < _firstNumber(near))) near = o; });
+  return { ok: false, index: null, option: null, by: null, candidates: opts, nearest: near, why: `no option matches "${w}"${near ? ` (nearest offered: "${near}")` : ''}` };
 }
 
 /** shows(shown, option) → the dropdown, read back after a choice, shows that option */

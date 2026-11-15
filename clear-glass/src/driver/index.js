@@ -799,7 +799,7 @@ class ClearDriver {
       // 0.60.275 — James: "it keeps freezing". What is on screen before opening is kept in a page-side WeakSet, not written onto every
       // element: an attribute on each of thousands of elements is a mutation storm the site's scripts and Clear Glass's own DOM observer both answer.
       window.__cgPre = new WeakSet();
-      document.querySelectorAll('body *').forEach(function(el){ window.__cgPre.add(el); });
+      document.querySelectorAll('body *').forEach(function(el){ if (vis(el)) window.__cgPre.add(el); });   // 2026-11-14 TB2: only what is SEEN before opening; a site that keeps its options hidden in the page (Fiverr's DELIVERY TIME) showed them as "no new options"
       return { n: window.__cgChooseN, native: !!native, shown: norm(trig.innerText || trig.textContent).slice(0, 200),
         options: native ? Array.prototype.map.call(native.options, function(o){ return o.textContent.trim(); }) : null };
     })(${JSON.stringify(selector || null)}, ${JSON.stringify(column || null)}, ${JSON.stringify(row || null)}, ${JSON.stringify(showsNow || null)}, ${JSON.stringify(reuse || null)})`;
