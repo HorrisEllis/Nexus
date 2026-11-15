@@ -840,3 +840,62 @@ spec:
 # Still his, not decided (do not build on a guess): whether .nex names a snapshot in Versionium or drops out; the TV shell (its own thing, or
 # gone); one source for registry, contract and events (the template lists three files); the template's "what every system uses is the kernel's"
 # against "lib is not a directory …"; where the .cos sits in the tree; network isolation; the qcow2 virtual disk's future.
+
+# ════════════════════════════════════════════════════════
+# ADDENDUM 2026-11-14 — the operating system he wants "at some point": dumb components, data that makes them dynamic, chunks shared and woken
+# when relevant (his direction, in his words; recorded, not built, no phase yet). Also in genesis.spec's proposed 1.6.0 block.
+# James, 2026-11-14: "this is how i want my operating system at somepoint"
+# 0. NEVER A MONOLITH. "It can't be conglomerate. Like, it cannot be one clump. It cannot be a fucking monolith. That's the whole fucking point.
+#    Clear lines of separation." · "an interdisciplinary OS" · "I'm learning as I go, so I'm fixing the architecture as I learn." What makes it
+#    faster: "Each component dynamically routed on … not just running the entire application, but running it in chunks" and "using similar
+#    components across the entire system … because the overlap".
+# 1. THE RULE. "components are static and dumb. the cie-eg and drawbridge makes them agnostic. config and node based memory structure and
+#    database tables makes it dynamic." · "behavior is the component, values are the configs." Extends 2026-11-03 §5 (dumb components): a
+#    component is stateless behavior (same input, same output, it remembers nothing); what changes lives in config, nodes and tables. The
+#    contract joins them: it declares the values a component takes, and the gate refuses what it does not. Different values → config;
+#    different logic → another component or a strategy the caller names.
+# 2. DATA IS GATED LIKE CODE. Where data drives behavior the data is the program: config and nodes carry contracts, are checked at the gate,
+#    and every change is ledgered. (The coder's addition, agreed by him: "yes, add it".)
+# 3. THE SUBSTRATE SEES THE RUNNING SYSTEM. "can we hook the node.exe instances into the service? i want emerge.exe to eventually do that. hook
+#    into the substrate" · "substrate -> process -> subprocess?" Running processes enter docs/substrate.spec's one graph as Blocks: system
+#    —runs→ process, process —spawned→ process, process —loaded→ module, module —requires→ module, each edge with evidence (read from the OS:
+#    executed). A module is code inside a process, not a subprocess. Today node.exe is matched by its command line; emerge.exe announces itself
+#    by its heartbeat (lib/pulse). Needs: the substrate's kinds gain `process`.
+# 4. CHUNKED, WOKEN WHEN RELEVANT. "you can chunk each systems processes. that would optimize performance. like each component a chunk that can
+#    be routed to when relevant so the system doesn't need to run the entire system as a whole. using the drawbridge as the event bus, hooking
+#    into cie-eg." The registry knows which chunk answers an interaction; the drawbridge's event gate holds the event while an asleep chunk
+#    wakes; the gap ledger records misses and slow wakes. COS's onDemand + idle reaper already do this per system; this is per component.
+#    Chunks cost (a process is ~30–50 MB and a cold start), so boundaries come from substrate evidence: heavy and rare → its own process;
+#    small or hot → a lazy-loaded module in a warm process.
+# 5. SHARED CHUNKS, ISOLATED CONFIG. "chunks would focus on the overlapping components, and share across the entire system" · "then can use a
+#    isolated config for using it differently per process". High fan-in components are chunked once: heavy or stateful → one service through
+#    the drawbridge; small and stateless → shared code. Each caller's config travels with the call (the handshake names its profile), namespaced
+#    so one caller's values never reach another. The higher the fan-in, the stricter the contract's versioning (blast radius).
+# 6. ONE COMPARTMENT, LAYERS, GATES BETWEEN THEM — AND THE WAY IDEARIUM BUILDS. "the compartments in idearium need to be synced with the cos ui
+#    compartments, should be the same compartment with a different lens" · "they need to be the same, but different layer of architecture" ·
+#    "then they just need a gate" · "gates between each layer. the drawbridge … each system has its modules, each module its components, each
+#    components its node, each component its primitives. im layering everything. then pipeline can be each layers components also." ·
+#    "what about reusing the gate? gate.eg if its identicle?" · "I want that to be the way idearium builds."
+#    - One identity per system: compartment.json's root id (nexus.<system>). Today each layer names its own (cos.nexus.<x>, nexus-self-<x>,
+#      repo.nexus.<x>, measured on all 12 systems 2026-11-14); each layer points at the root id instead: runtime (COS: process, memory, wall,
+#      health), build (Idearium: repo, phases, snapshots), data (nodes, index, ledger).
+#    - A gate between every layer, at every level: system → module → component → node → primitive. Each layer is also a pipeline of its own
+#      components, so a failure or a bottleneck is located at its layer and step.
+#    - One gate, reused: gate.eg is behavior; its strength is config per level (full handshake between systems and compartments: identity,
+#      permission, contract version · contract shape between modules and components · checked at compile time for nodes and primitives,
+#      lang/cie/check.eg). It reads the same contracts lang/cie/contract.eg parses. A check that is truly different is a named check the config
+#      switches on, never `if level == X` inside the gate.
+#    - Idearium builds through the gates: before a build snapshots or indexes, the build layer asks the runtime layer through the gate whether
+#      the compartment can carry it (memory against COS's baseline); a no holds the build with its reason. Found 2026-11-14: a whole-tree build
+#      appears to have taken Idearium down mid-build, and the pipeline then read "no build of CS12_the_mover_is_proven has been started here"
+#      (unconfirmed until his log shows the exit).
+#    - Gates were designed for separation and performance (his correction: "the gates are for performance, not security"); identity and
+#      permission checks make crossings costly for what does not belong as a side effect.
+# 7. THE SYSTEM WATCHES ITS OWN ARCHITECTURE. "nexus monitors its own architecture. Supposed to with the intelligence system. Imagine cos being able
+#    to do that. Patterns, gaps, friction, tension, deviation, etc." The intelligence system (intelligence/, BaselineMonitor: sigma, slope,
+#    friction, gap latch) reads the substrate and the gates' ledgers: patterns (what recurs), gaps (a crossing no contract covers, a miss at a
+#    gate), friction (slow or refused crossings), tension (layers that disagree: COS says down, Idearium says building), deviation (sigma from
+#    a measured baseline; deltas for gaps). COS already judges memory by sigma against this machine's baseline (supervisor.js memoryJudge);
+#    the same reading applied to every gate and layer is COS watching its own architecture. It reports to the mind (copilot); it does not
+#    become a third thinker.
+# Still open (his): which chunks first; whether shared services live in COS or in a system of their own; how far emerge.exe replaces node.exe.

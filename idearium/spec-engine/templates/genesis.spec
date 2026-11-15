@@ -12,6 +12,21 @@ version 1.5.0
 //   - axiom TRACED_TO_THE_ORIGIN (proposed): every file is reached from its system's server.js or fills a slot beside it, is owned by a spec module with an
 //     id and a type, and is built by a phase (RULE E). Today 44% of code files have neither a module nor a phase.
 //   - axiom PHASED_ONLY (proposed, his): nothing is built outside a phase (RULE F).
+//   2026-11-14 (proposed, his; mapped, not applied, no phase yet). James: "components are static and dumb. the cie-eg and drawbridge makes them
+//   agnostic. config and node based memory structure and database tables makes it dynamic." · "behavior is the component, values are the configs."
+//   - axiom BEHAVIOR_IS_THE_COMPONENT: a component is stateless behavior. Same input gives the same output, and it remembers nothing. CIE-EG and the drawbridge
+//     make it agnostic: it knows no caller and no host. What changes lives outside it, in config, node memory and tables. Different values → config;
+//     different logic → a different component, or a strategy the caller names. Never `if caller is X` inside a component.
+//   - axiom THE_CONTRACT_JOINS_THEM: the component's contract declares the values it accepts (names, types, ranges). A config the contract does
+//     not accept is refused at the gate, not discovered at runtime.
+//   - axiom DATA_IS_GATED_LIKE_CODE: where data drives behavior, the data is the program. Config and nodes carry contracts, are validated at the
+//     gate, and every change is ledgered (what changed, when, by whom), so a bad value is found like a bad line of code.
+//   - axiom SHARED_CHUNKS: components that overlap across systems (high fan-in in the substrate) are chunked once and shared, not copied per
+//     system. Heavy or stateful → one service, reached through the drawbridge. Small and stateless → shared as code. Each caller's config is
+//     isolated and namespaced. The higher the fan-in, the stricter the contract's versioning (blast radius).
+//   - axiom ACTIVATED_WHEN_RELEVANT: a chunk runs when an event routes to it, not because its system is up. The event gate holds the event while
+//     the chunk wakes. Chunk boundaries come from substrate evidence (process → subprocess → module edges, size, use), never a guess:
+//     heavy and rare → its own process; small or hot → a lazy-loaded module in a warm process.
 //   - the origin is server.js (his, corrected the same day: "system.js i meant server.js"): config → server.js → the registry →
 //     components → UI. Six systems have no server.js (idearium, clear-glass, cortex, architect, orchestrator, cos); the door phases give
 //     them one (docs/2026-10-31-system-doors-phasemap.spec DO1–DO5). [Superseded line, kept: "the boot core: genesis's lib/system.js is
