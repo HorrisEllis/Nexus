@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "eravos/domain.schema.json",
+  "title": "ERAVOS domain (tools/<domain>/domain.json)",
+  "description": "Everything a domain is lives in its folder. The shell reads only this manifest, the units/modes/needs it registers, and its packs.",
+  "type": "object",
+  "required": ["schema", "id", "label", "version", "core", "ports"],
+  "properties": {
+    "always": { "type": "boolean", "description": "loaded before any other domain, whatever is installed — shared parts every domain may use (tools/core: the Field). specs/eravos.bare-canvas.spec BC1" },
+    "schema": { "const": "eravos.domain/1" },
+    "id": { "type": "string" }, "label": { "type": "string" }, "version": { "type": "string" }, "icon": { "type": "string" },
+    "core": { "type": "array", "items": { "type": "string" }, "description": "core/ files in load order (engines, theory, shared UI kit) — shared by the domain's tools, never inside a tool" },
+    "ports": { "type": "array", "items": { "type": "string" }, "description": "port types it speaks: audio, modulation, event, asset, image, video, text, json, style, layout, trigger, number" },
+    "modes": { "type": "array", "items": { "type": "string" } },
+    "pages": { "type": "array", "items": { "type": "string" }, "description": "pages/<id>/ — off-canvas pages (browsers, learn)" },
+    "content": { "type": "array", "items": { "type": "string" }, "description": "content/<kind>/ — domain-wide data packs (genres, lessons, songs)" },
+    "summary": { "type": "string", "description": "one line shown on the catalog's domain card (specs/eravos.p38-catalog.spec)" },
+    "art": { "type": "string", "pattern": "^[a-z0-9_./-]+\\.svg$", "description": "a painting for the Start screen's domain card: an SVG file in the domain's folder (3.82)" },
+    "starter": { "type": "array", "items": { "type": "string" }, "description": "tool ids the catalog installs in one click when the domain is first picked" }
+  },
+  "additionalProperties": false
+}
