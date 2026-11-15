@@ -242,6 +242,7 @@ const SUITES = [
   'test-pipeline-waits-for-a-system.test.js',
   'test-idearium-build-rows-durable.test.js',
   'test-update-git-quiet.test.js',
+  'test-update-attach-repair.test.js',   // 2026-11-15 UPA1
   'test-pipeline-starts-its-system.test.js',   // 0.60.543 — a pipeline step starts the system it needs   // 0.60.541 — git hidden, never prompting; update errors in plain words   // 0.60.539 — Idearium's build rows on disk at once (a restart lost CS12's)   // 0.60.538 — waits for a system; step node files with their ledger; runs resume after a restart   // 0.60.534 SW5i slice a — the engine in cos/automation/, lib/ forwards
   'automation-v2.test.js',                // §0.39.265 — workflows v2: DOM steps, data, loops, triggers, runs, tools
   'automation-settings-ui.test.js',       // §0.39.265 — Settings → Automation against a real engine
