@@ -58,6 +58,14 @@ const portFree = (port) => new Promise((ok) => { const s = net.createServer(); s
 /** portsBusy(ports) → the ones already in use (so the message can say which port, not "it did not start") */
 async function portsBusy(ports) { const busy = []; for (const p of ports) if (p && !(await portFree(p))) busy.push(p); return busy; }
 
+/** whoRuns(port) → { pid, version } when a Nexus (COS's manager) answers there, else null — what start() attaches to instead of starting a copy */
+const whoRuns = (port, timeoutMs = 2000) => new Promise((ok) => {
+  const req = http.get({ host: '127.0.0.1', port, path: '/api/cos/health', timeout: timeoutMs }, (res) => {
+    let t = ''; res.on('data', (c) => { t += c; });
+    res.on('end', () => { try { const b = JSON.parse(t); ok(res.statusCode === 200 && b && b.service === 'cos-manager' ? { pid: b.pid || null, version: b.nexusVersion || b.version || null } : null); } catch (_) { ok(null); } });
+  });
+  req.on('error', () => ok(null)); req.on('timeout', () => { req.destroy(); ok(null); });
+});
 const probe = (port, timeoutMs = 1500) => new Promise((ok) => { const req = http.get({ host: '127.0.0.1', port, path: '/status', timeout: timeoutMs }, (res) => { res.resume(); ok(res.statusCode >= 200 && res.statusCode < 300); }); req.on('error', () => ok(false)); req.on('timeout', () => { req.destroy(); ok(false); }); });
 const alive = (pid) => {
   try { process.kill(pid, 0); } catch (e) { return e.code === 'EPERM'; }
@@ -84,6 +92,18 @@ async function start(root, project, version, opts = {}) {
   rmf(P.run);
   o.entry = entryOf(dir, o.entry);
   const pre = preflight(dir, { entry: o.entry, modulesDir: o.modulesDir === undefined ? defaultModulesDir() : o.modulesDir }); if (!pre.ok) return { ok: false, reason: 'preflight', error: pre.problems.join('; '), needs: pre.needs };
+  // 2026-11-17 — James, his COS screen ("Nexus did not start: ports 7799, 7820, 4800, 9000 already in use … is another copy still running?"):
+  // "it needs to just do that not have a button. or not make another copy period. like it should be a projection ontop of the service".
+  // When the ports are held by a Nexus that is already running (its COS manager answers on the status port), COS attaches to it: no second
+  // copy, no button. Only ports held by something that is not Nexus still stop the start, said.
+  const held = await portsBusy(o.ports);
+  if (held.length) {
+    const running = await whoRuns(o.statusPort);
+    if (running) {
+      fs.writeFileSync(P.run, JSON.stringify({ pid: running.pid, project, version: running.version || version, attached: true, statusPort: o.statusPort, supervisor: 'cos', startedAt: new Date().toISOString() }, null, 2));
+      return { ok: true, attached: true, pid: running.pid, version: running.version || version, supervisor: 'cos', healthyAfterMs: 0, note: `attached to the Nexus already running (pid ${running.pid || '?'}): no second copy` };
+    }
+  }
   const busy = await portsBusy(o.ports); if (busy.length) return { ok: false, reason: 'port-busy', error: `port${busy.length > 1 ? 's' : ''} ${busy.join(', ')} already in use by another program: ${project} cannot start until ${busy.length > 1 ? 'they are' : 'it is'} free (only one version runs at a time; is another copy still running?)`, busy };
   fs.mkdirSync(P.logs, { recursive: true }); pruneLogs(P.logs, o.keepLogs);
   const log = path.join(P.logs, `${version}-${new Date().toISOString().replace(/[:.]/g, '-')}.log`); const fd = fs.openSync(log, 'a');
@@ -131,4 +151,4 @@ async function status(root, project) {
 }
 function logs(root, project, { lines = 50 } = {}) { const r = readRun(root, project); let f = r && r.log; if (!f) { try { const d = paths(root, project).logs; const n = fs.readdirSync(d).filter(x => /\.log$/.test(x)).sort().pop(); f = n && path.join(d, n); } catch (_) {} } return f ? { file: f, text: tail(f, lines) } : { file: null, text: '' }; }
 
-module.exports = { MODULE_ID, DEFAULTS, ENTRIES, supervisorOf, defaultModulesDir, nodeBinary, preflight, portsBusy, start, stop, status, logs, readRun, killTree: _killTree };
+module.exports = { MODULE_ID, DEFAULTS, ENTRIES, supervisorOf, defaultModulesDir, nodeBinary, preflight, portsBusy, whoRuns, start, stop, status, logs, readRun, killTree: _killTree };

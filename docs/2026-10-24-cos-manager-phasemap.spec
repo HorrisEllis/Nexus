@@ -883,6 +883,10 @@ phases_addendum_2026_11_01_mg33:
     proof: "test-cos-app-link: a fixture folder linked, started with the system node and no ELECTRON_RUN_AS_NODE, up on /status, stopped; start on launch on and off"
 
   MG35b_cos_attaches_to_the_running_nexus:
+    expanded_2026_11_17: >-
+      James, 2026-11-17: "it needs to just do that not have a button. or not make another copy period. like it should be a projection ontop of the service" (COS said the ports were in use by another program). Nexus ran as the Windows
+      service, so COS had no run record and started a copy. Built 0.60.556 (COS 0.10.2): start() asks the status port who holds it (whoRuns,
+      /api/cos/health service cos-manager) and attaches. RT-10; test-cos-app-runtime 10/10.
     status: "BUILT 0.60.418 (COS 0.7.1) — test-cos-app-link 5/5 (CL-02 attaches, CL-05 silent → Restart; both fail on the old controller); on Windows unverified until his run"
     origin: >-
       Expanded from MG35 on 2026-11-06. James, 2026-11-06, with a screenshot of COS's window saying "Nexus did not start: nexus linked is

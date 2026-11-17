@@ -54,6 +54,20 @@ const opts = async (extra = {}) => { const port = await freePort(); return { sta
     install(root, '1.0.0', CH); const o = await opts(); assert.strictEqual((await RT.start(root, 'nexus', '1.0.0', o)).ok, true); const cpid = +fs.readFileSync(path.join(root, 'projects', 'nexus', 'data', 'child.pid'), 'utf8');
     const alive = (p) => { try { process.kill(p, 0); } catch (_) { return false; } try { return !/^\d+ \(.*\) Z/.test(fs.readFileSync(`/proc/${p}/stat`, 'utf8')); } catch (_) { return true; } }; assert.ok(alive(cpid)); await RT.stop(root, 'nexus'); await new Promise(r => setTimeout(r, 400)); assert.strictEqual(alive(cpid), false, 'the grandchild is gone too');
   });
+  // 2026-11-17 — James: "it needs to just do that not have a button. or not make another copy period. like it should be a projection ontop of the service"
+  await test('RT-10 a Nexus already running on the ports is attached to: no second copy, and status follows it', async () => {
+    const root = rootDir(); install(root, '1.0.0', GOOD); const o = await opts();
+    const kid = require('child_process').spawn(process.execPath, ['-e', 'setInterval(() => {}, 1000)'], { stdio: 'ignore' });
+    const http = require('http');
+    const srv = http.createServer((req, res) => { res.setHeader('content-type', 'application/json'); if (req.url === '/api/cos/health') return res.end(JSON.stringify({ ok: true, service: 'cos-manager', pid: kid.pid })); if (req.url === '/status') return res.end('{}'); res.statusCode = 404; res.end('{}'); });
+    await new Promise(ok => srv.listen(o.statusPort, '127.0.0.1', ok));
+    try {
+      const r = await RT.start(root, 'nexus', '1.0.0', o);
+      assert.strictEqual(r.ok, true, JSON.stringify(r)); assert.strictEqual(r.attached, true); assert.strictEqual(r.pid, kid.pid);
+      const st = await RT.status(root, 'nexus'); assert.strictEqual(st.running, true); assert.strictEqual(st.pid, kid.pid);
+      const again = await RT.start(root, 'nexus', '1.0.0', o); assert.strictEqual(again.reason, 'already-running', 'a second start is not a second copy');
+    } finally { srv.close(); try { kid.kill(); } catch (_) {} }
+  });
   await test('RT-09 old logs are pruned to the newest few, and stop on a project that is not running is a calm no-op', async () => {
     const root = rootDir(); install(root, '1.0.0', GOOD); const ld = path.join(root, 'projects', 'nexus', 'logs'); fs.mkdirSync(ld, { recursive: true }); for (let i = 0; i < 6; i++) fs.writeFileSync(path.join(ld, `0.0.${i}-old.log`), 'x');
     const o = await opts({ keepLogs: 3 }); await RT.start(root, 'nexus', '1.0.0', o); assert.ok(fs.readdirSync(ld).length <= 4); await RT.stop(root, 'nexus'); const s = await RT.stop(root, 'nexus'); assert.strictEqual(s.ok, true); assert.strictEqual(s.stopped, false);

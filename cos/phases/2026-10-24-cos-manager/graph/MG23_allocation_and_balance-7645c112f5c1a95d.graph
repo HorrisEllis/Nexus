@@ -7,11 +7,11 @@ intent: null
 summary: 3 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793577140010
+exported_at: 1794948922550
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793577140010
-lastSeenAt: 1793577140010
+firstSeenAt: 1794948922550
+lastSeenAt: 1794948922550
 fingerprint: null
 payload:
   for: MG23_allocation_and_balance
@@ -35,7 +35,7 @@ payload:
   crossings: []
   ready: true
   dag:
-    layer: 12
+    layer: 23
     deps:
       - docs/2026-10-24-cos-manager-phasemap.spec::MG4_resources_per_compartment
       - docs/2026-10-23-cos-spine-phasemap.spec::CS7_spawn_despawn_and_balance
@@ -58,10 +58,15 @@ payload:
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB11_cos_compartment_per_system
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB12_the_ui_handshake
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB13_the_tunnel
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB14_heartbeat_over_routes
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB15_toasts_declared
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB16_a_registry_for_each_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB2_the_registry_says_what_it_offers
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB3_the_drawbridge
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB4_one_bus_per_system
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB5_the_handshake_for_every_system
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB6_move_the_crossings
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB7_the_ui_floats_on_top
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB8_agents_have_it
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB9_every_repo_generates_its_registry
       - docs/2026-10-18-compartment-environment-phasemap.spec::CE0e_cos_answers_on_a_route
@@ -125,10 +130,10 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - layer 12 · blocked by CS7_spawn_despawn_and_balance, CS11_raid_in_the_exe
+      - layer 23 · blocked by CS7_spawn_despawn_and_balance, CS11_raid_in_the_exe
       - >-
         depends on (4): MG4_resources_per_compartment, CS7_spawn_despawn_and_balance,
-        CS11_raid_in_the_exe, MG15_the_supervisor_in_cos · all upstream 69
+        CS11_raid_in_the_exe, MG15_the_supervisor_in_cos · all upstream 74
       - >-
         needed by (2): MG27_state_and_resource_screens, F4_raid_routes_the_doors · finishing it
         unlocks MG27_state_and_resource_screens

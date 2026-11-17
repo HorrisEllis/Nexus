@@ -7,11 +7,11 @@ intent: null
 summary: 15 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1794354759271
+exported_at: 1794948922571
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794354759271
-lastSeenAt: 1794354759271
+firstSeenAt: 1794948922571
+lastSeenAt: 1794948922571
 fingerprint: null
 payload:
   for: MG33_cos_ui_has_a_way_in
@@ -125,6 +125,7 @@ payload:
     dependents:
       - docs/2026-10-24-cos-manager-phasemap.spec::MG34_the_cos_channel_always_has_a_way_in
       - docs/2026-11-01-orchestration-console-phasemap.spec::OC11_the_cos_app_runs_alone
+      - docs/2026-10-24-cos-manager-phasemap.spec::CBW1_the_tv_copilot_bar_wakes_copilot
     upstream:
       - docs/2026-10-24-cos-manager-phasemap.spec::MG0b_the_full_spec
       - docs/2026-10-24-cos-manager-phasemap.spec::MG15_the_supervisor_in_cos
@@ -135,6 +136,7 @@ payload:
       - docs/2026-10-24-cos-manager-phasemap.spec::MG_D15_the_handover_keeps_every_duty
       - docs/2026-10-24-cos-manager-phasemap.spec::MG_D4_cos_is_the_autopilot
     downstream:
+      - docs/2026-10-24-cos-manager-phasemap.spec::CBW1_the_tv_copilot_bar_wakes_copilot
       - docs/2026-10-24-cos-manager-phasemap.spec::MG34_the_cos_channel_always_has_a_way_in
       - docs/2026-10-24-cos-manager-phasemap.spec::MG35_the_exe_starts_nexus
       - docs/2026-10-24-cos-manager-phasemap.spec::MG35b_cos_attaches_to_the_running_nexus
@@ -143,23 +145,28 @@ payload:
       - docs/2026-11-01-orchestration-console-phasemap.spec::OC11_the_cos_app_runs_alone
       - docs/2026-11-01-tv-ui-cleanup-phasemap.spec::TV4_the_overview_idearium_and_cos
       - docs/2026-11-02-cos-enterprise-phasemap.spec::CE2b_updates_restart_cos
+      - docs/2026-11-02-cos-the-application-phasemap.spec::CA10_cos_updates_itself
       - docs/2026-11-02-cos-the-application-phasemap.spec::CA4_the_supervisor_as_a_windows_service
       - docs/2026-11-02-cos-the-application-phasemap.spec::CA5_cos_installs_nexus_from_github
       - docs/2026-11-02-cos-the-application-phasemap.spec::CA6_install_asks_where_and_npm_in_program_files
       - docs/2026-11-02-cos-the-application-phasemap.spec::CA7_each_compartment_its_own_location
+      - docs/2026-11-02-cos-the-application-phasemap.spec::CA8_first_time_setup
+      - docs/2026-11-02-cos-the-application-phasemap.spec::CA9_cos_own_service_host
     blockedBy: []
     unlocks:
       - docs/2026-10-24-cos-manager-phasemap.spec::MG34_the_cos_channel_always_has_a_way_in
       - docs/2026-11-01-orchestration-console-phasemap.spec::OC11_the_cos_app_runs_alone
+      - docs/2026-10-24-cos-manager-phasemap.spec::CBW1_the_tv_copilot_bar_wakes_copilot
     conflicts: []
     dangling: []
     lines:
       - layer 6
       - 'depends on (1): MG17_autopilot_hands_over · all upstream 8'
       - >-
-        needed by (2): MG34_the_cos_channel_always_has_a_way_in, OC11_the_cos_app_runs_alone · all
-        downstream 12 · finishing it unlocks MG34_the_cos_channel_always_has_a_way_in,
-        OC11_the_cos_app_runs_alone
+        needed by (3): MG34_the_cos_channel_always_has_a_way_in, OC11_the_cos_app_runs_alone,
+        CBW1_the_tv_copilot_bar_wakes_copilot · all downstream 16 · finishing it unlocks
+        MG34_the_cos_channel_always_has_a_way_in, OC11_the_cos_app_runs_alone,
+        CBW1_the_tv_copilot_bar_wakes_copilot
     edges:
       - from: docs/2026-10-24-cos-manager-phasemap.spec::MG17_autopilot_hands_over
         kind: declared

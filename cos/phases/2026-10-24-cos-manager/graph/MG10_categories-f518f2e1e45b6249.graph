@@ -7,11 +7,11 @@ intent: null
 summary: 24 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1794155255955
+exported_at: 1794948922511
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794155255955
-lastSeenAt: 1794155255955
+firstSeenAt: 1794948922511
+lastSeenAt: 1794948922511
 fingerprint: null
 payload:
   for: MG10_categories
@@ -194,7 +194,7 @@ payload:
       known: true
   ready: true
   dag:
-    layer: 9
+    layer: 20
     deps:
       - docs/2026-10-24-cos-manager-phasemap.spec::MG0b_the_full_spec
       - docs/2026-10-24-cos-manager-phasemap.spec::MG5_browsers_and_editors
@@ -213,10 +213,15 @@ payload:
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB11_cos_compartment_per_system
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB12_the_ui_handshake
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB13_the_tunnel
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB14_heartbeat_over_routes
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB15_toasts_declared
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB16_a_registry_for_each_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB2_the_registry_says_what_it_offers
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB3_the_drawbridge
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB4_one_bus_per_system
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB5_the_handshake_for_every_system
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB6_move_the_crossings
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB7_the_ui_floats_on_top
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB8_agents_have_it
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB9_every_repo_generates_its_registry
       - docs/2026-10-18-compartment-environment-phasemap.spec::CE0e_cos_answers_on_a_route
@@ -285,12 +290,12 @@ payload:
     dangling: []
     lines:
       - >-
-        layer 9 · blocked by MG0b_the_full_spec, MG5_browsers_and_editors,
+        layer 20 · blocked by MG0b_the_full_spec, MG5_browsers_and_editors,
         CS4_every_system_a_compartment, MG_D2_category_is_a_registry_record, CP7_settings
       - >-
         depends on (6): MG0b_the_full_spec, MG5_browsers_and_editors,
         MG6_settings_by_template_and_type, CS4_every_system_a_compartment,
-        MG_D2_category_is_a_registry_record, CP7_settings · all upstream 61
+        MG_D2_category_is_a_registry_record, CP7_settings · all upstream 66
       - 'needed by (1): MG11_category_manager_ui · all downstream 4'
       - >-
         same files as MG19_the_spec_bundle with no order between them:

@@ -7,11 +7,11 @@ intent: null
 summary: CBW1_the_tv_copilot_bar_wakes_copilot (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1794625354333
+exported_at: 1794948922584
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794625354333
-lastSeenAt: 1794625354333
+firstSeenAt: 1794948922584
+lastSeenAt: 1794948922584
 fingerprint: null
 payload:
   id: CBW1_the_tv_copilot_bar_wakes_copilot
@@ -27,4 +27,4 @@ payload:
   depends_on: []
   blocks: []
   spec: cos/spec/cos-manager.spec
-  graph: 8d35d27b1e349011
+  graph: a7c5e8c8c13736eb

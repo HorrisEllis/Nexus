@@ -1,0 +1,65 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CBW1_the_tv_copilot_bar_wakes_copilot:a7c5e8c8c13736eb
+type: graph
+id: phase:CBW1_the_tv_copilot_bar_wakes_copilot:a7c5e8c8c13736eb
+context: dependency graph of phase CBW1_the_tv_copilot_bar_wakes_copilot
+intent: null
+summary: 2 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1794948922584
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794948922584
+lastSeenAt: 1794948922584
+fingerprint: null
+payload:
+  for: CBW1_the_tv_copilot_bar_wakes_copilot
+  kind: phase
+  repo: null
+  hash: a7c5e8c8c13736eb
+  nodes:
+    - path: lib/ui/tv-shell/index.html
+      role: changes
+      exists: true
+      system: lib
+    - path: tests/modules/test-cos-ui-starts.test.js
+      role: changes
+      exists: true
+      system: null
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 8
+    deps:
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG34_the_cos_channel_always_has_a_way_in
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG33_cos_ui_has_a_way_in
+    dependents: []
+    upstream:
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG0b_the_full_spec
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG15_the_supervisor_in_cos
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG15a_every_system_declares_its_process
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG16_the_autopilot_door
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG17_autopilot_hands_over
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG33_cos_ui_has_a_way_in
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG34_the_cos_channel_always_has_a_way_in
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG_D0_order
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG_D15_the_handover_keeps_every_duty
+      - docs/2026-10-24-cos-manager-phasemap.spec::MG_D4_cos_is_the_autopilot
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 8
+      - >-
+        depends on (2): MG34_the_cos_channel_always_has_a_way_in, MG33_cos_ui_has_a_way_in · all
+        upstream 10
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-24-cos-manager-phasemap.spec::MG34_the_cos_channel_always_has_a_way_in
+        kind: inferred
+      - from: docs/2026-10-24-cos-manager-phasemap.spec::MG33_cos_ui_has_a_way_in
+        kind: inferred
