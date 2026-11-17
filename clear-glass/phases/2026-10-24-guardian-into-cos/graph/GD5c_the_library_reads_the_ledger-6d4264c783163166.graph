@@ -1,0 +1,249 @@
+envelope: 1
+uuid: nexus-export-graph-phase:GD5c_the_library_reads_the_ledger:6d4264c783163166
+type: graph
+id: phase:GD5c_the_library_reads_the_ledger:6d4264c783163166
+context: dependency graph of phase GD5c_the_library_reads_the_ledger
+intent: null
+summary: 29 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1794930121404
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794930121404
+lastSeenAt: 1794930121404
+fingerprint: null
+payload:
+  for: GD5c_the_library_reads_the_ledger
+  kind: phase
+  repo: null
+  hash: 6d4264c783163166
+  nodes:
+    - path: clear-glass/renderer/library/sections/responses.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/ipc/bridge.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: idearium/cli/route-commands.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: lib/agent-memory.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/repo-agent.js
+      role: changes
+      exists: true
+      system: lib
+    - path: clear-glass/src/main/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.pre-userscripts.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: copilot/analysis.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/lifeline.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: idearium/agent-suite/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/context-atlas.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/context-prereqs.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: ollama/lib/dispatch.js
+      role: used-by
+      exists: true
+      system: ollama
+    - path: tests/modules/test-agent-memory.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-cg-agent-doors.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-cg-gig-autofill.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: clear-glass/src/adblock/lists.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/autofill/matcher.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/core/bus.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/dom/archaeology.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/element-engine/index.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/ipc/handler-registry.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/net/bridge-sources.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/net/kill-switch.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/net/service.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/screen-qa/detector.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: lib/hat-forge.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/micro-http.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: clear-glass/src/ipc/bridge.js
+      to: lib/micro-http.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/ipc/handler-registry.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/core/bus.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/autofill/matcher.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/screen-qa/detector.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/dom/archaeology.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: lib/hat-forge.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/net/service.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/net/bridge-sources.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/net/kill-switch.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/adblock/lists.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/element-engine/index.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/ipc/bridge.js
+      kind: requires
+    - from: clear-glass/src/main/index.pre-userscripts.js
+      to: clear-glass/src/ipc/bridge.js
+      kind: requires
+    - from: tests/modules/test-cg-agent-doors.test.js
+      to: clear-glass/src/ipc/bridge.js
+      kind: requires
+    - from: tests/modules/test-cg-gig-autofill.test.js
+      to: clear-glass/src/ipc/bridge.js
+      kind: requires
+    - from: copilot/analysis.js
+      to: lib/agent-memory.js
+      kind: requires
+    - from: copilot/lifeline.js
+      to: lib/agent-memory.js
+      kind: requires
+    - from: idearium/agent-suite/index.js
+      to: lib/agent-memory.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/agent-memory.js
+      kind: requires
+    - from: lib/context-atlas.js
+      to: lib/agent-memory.js
+      kind: requires
+    - from: lib/context-prereqs.js
+      to: lib/agent-memory.js
+      kind: requires
+    - from: ollama/lib/dispatch.js
+      to: lib/agent-memory.js
+      kind: requires
+    - from: tests/modules/test-agent-memory.test.js
+      to: lib/agent-memory.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-10-24-guardian-into-cos-phasemap.spec::GD5a_one_write_the_job_and_its_response
+      - docs/2026-10-24-guardian-into-cos-phasemap.spec::GD5b_transcripts_are_guardians
+      - docs/2026-10-30-pipeline-consolidation-and-job-ledger-phasemap.spec::JL2_route_command_ui
+    dependents: []
+    upstream:
+      - docs/2026-10-24-guardian-into-cos-phasemap.spec::GD5a_one_write_the_job_and_its_response
+      - docs/2026-10-24-guardian-into-cos-phasemap.spec::GD5b_transcripts_are_guardians
+      - docs/2026-10-24-guardian-into-cos-phasemap.spec::GD_D3_the_response_store
+      - docs/2026-10-30-pipeline-consolidation-and-job-ledger-phasemap.spec::JL1_job_ledger_backend
+      - docs/2026-10-30-pipeline-consolidation-and-job-ledger-phasemap.spec::JL2_route_command_ui
+    downstream: []
+    blockedBy:
+      - docs/2026-10-24-guardian-into-cos-phasemap.spec::GD5a_one_write_the_job_and_its_response
+      - docs/2026-10-24-guardian-into-cos-phasemap.spec::GD5b_transcripts_are_guardians
+    unlocks: []
+    conflicts:
+      - with: docs/2026-10-24-guardian-into-cos-phasemap.spec::GD6_the_ways_in
+        files:
+          - lib/agent-memory.js
+    dangling: []
+    lines:
+      - layer 3 · blocked by GD5a_one_write_the_job_and_its_response, GD5b_transcripts_are_guardians
+      - >-
+        depends on (3): GD5a_one_write_the_job_and_its_response, GD5b_transcripts_are_guardians,
+        JL2_route_command_ui · all upstream 5
+      - 'needed by (0): —'
+      - 'same files as GD6_the_ways_in with no order between them: lib/agent-memory.js'
+    edges:
+      - from: docs/2026-10-24-guardian-into-cos-phasemap.spec::GD5a_one_write_the_job_and_its_response
+        kind: declared
+      - from: docs/2026-10-24-guardian-into-cos-phasemap.spec::GD5b_transcripts_are_guardians
+        kind: declared
+      - from: docs/2026-10-30-pipeline-consolidation-and-job-ledger-phasemap.spec::JL2_route_command_ui
+        kind: declared

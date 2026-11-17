@@ -60,7 +60,31 @@ decisions:
     axioms: "DB6, §5.2, §0.0 (the in-process registration only looks like it works)"
 
   GD_D3_the_response_store:
-    status: OPEN — decided by the axioms once GD5 is grounded; to him only if they do not settle it
+    status: "DECIDED 2026-11-17 by James and his axioms — \"Need one source of truth. .jobs with the relative .response node. Queue and ledger.\" · asked three readings, his answer: \"As long as systems stay decoupled.\""
+    chosen_2026_11_17: >-
+      One source of truth for an agent reply, and it is Guardian's: the .job (guardian/data/jobs/, the queue, lib/data-home.js) and its
+      .response node (guardian/data/nodes/response/, response-sink.js), each naming the other by a path relative to Guardian's data folder.
+      The job ledger (guardian/lib/job-ledger.js, GET /jobs/ledger, JL1) is the read over both. The Clear Glass compartment store
+      (artifact-chat-index.js) stops being written by Guardian; what Guardian put there is imported once (GD5d) and the store keeps only
+      Clear Glass's own captures. Axioms: §5.9/§5.15.1 (one owner per kind of data: agent jobs are Guardian's), §5.15.3 (one system's
+      outage breaks no other: today Guardian loads Clear Glass's code to write), §10.1/§10.3 (one write authority; two .response stores per
+      reply are competing truth layers), §2.2 (the storage device is the source of truth), §8.6 (reuse: the .job, the node, the ledger and
+      the downloads route all exist), §0.3 (the old store archived, not deleted).
+      Found the same day (the cause of his report, from his own log 2026-11-17 07:22): since 2026-11-01 COS starts Guardian as the SYSTEM
+      account, so defaultRoot() resolves %APPDATA% to C:\WINDOWS\system32\config\systemprofile\AppData\Roaming\CompartmentOS while the
+      Library reads his own %APPDATA%. Every reply since went to a folder he never sees. Guardian/data is repo-relative (data-home), so
+      this decision ends that split for replies; other COS compartments still resolve %APPDATA% per account (said, not fixed here:
+      cos/foundation/constants.js already honours COS_DATA_ROOT for the supervisor to pin).
+    readings_2026_11_17: >-
+      The three questions put to him, decided by "as long as systems stay decoupled" plus the axioms:
+      (1) "relative .response node": kept in nodes/response/ (reuse §8.6: node registry, job-ledger readNode, synthesize all read it
+          there), with relative references both ways (.job -> response, node -> job). The other reading (the .response beside its .job
+          in jobs/) is equally decoupled; TO CONFIRM, a path change only.
+      (2) chats no job ran: Guardian's chat transcripts (guardian/lib/chat-transcripts.js: Guardian reads them from the page and serves
+          /api/chats) become Guardian's own transcript nodes, not .job files (a chat nobody dispatched is not a job). Provider-tab file
+          downloads (clear-glass/src/providers/download-capture.js) are Clear Glass's, and stay in Clear Glass's store (§5.15.2).
+      (3) the downloads list: Guardian keeps posting its entry through Clear Glass's route POST /cli/downloads (his 2026-09-15 call, and
+          already decoupled); unchanged.
     problem: >-
       clear-glass/src/downloads/artifact-chat-index.js holds the .response files and their index. Guardian writes them (response-sink,
       code-artifact, chat-transcripts, cli); Clear Glass captures downloads into the same store and its Library shows it. One store, two
@@ -116,11 +140,63 @@ phases:
 
   GD5_the_response_store:
     layer: backend
-    status: OPEN
+    status: "OPEN — expanded 2026-11-17 into GD5a-GD5d (his \"one source of truth\"); GD5 is closed when all four are"
     depends_on: [GD_D3_the_response_store]
     files: [clear-glass/src/downloads/artifact-chat-index.js, guardian/lib/response-sink.js, guardian/lib/code-artifact.js, guardian/lib/chat-transcripts.js, guardian/cli.js]
     does: "the store gets one owner (GD_D3); the other system reaches it by route."
     proof: "guardian and clear-glass have no edge between them over the store"
+
+  GD5a_one_write_the_job_and_its_response:
+    layer: backend
+    status: OPEN
+    depends_on: [GD_D3_the_response_store, JL1_job_ledger_backend]
+    files: [guardian/lib/response-sink.js, guardian/lib/code-artifact.js, guardian/lib/jobs.js, guardian/lib/job-ledger.js, guardian/lib/ncp-handler.js, guardian/server.js, lib/node-schemas/schema.response]
+    does: >-
+      A completed job is written once, by Guardian, to its own data: the .response node carries what recordAgentResponse put in the
+      Clear Glass store (the code blocks with their syntax, ext, bytes, sha256 and code; the declared file; the prompt) beside the CE4
+      tags it already has, and the node names its job (job: jobs/<id>.job) while the .job names its node (response:
+      nodes/response/<id>.response), both relative to Guardian's data folder. recordAgentResponse stops requiring
+      clear-glass/src/downloads/artifact-chat-index.js; synthesize() step 6 asks Clear Glass's route for captures instead of loading its
+      code. The node is written before the job flips to complete (§9.2 ledger before state), so a restart between them leaves a
+      fulfilled-but-unflipped job the ledger names, never a complete job with no node. Persistence (his 2026-11-14): nothing in memory only.
+    proof: "a job through ncp-handler and one through POST /response/:jobId each leave exactly one .response (Guardian's), with codeBlocks and both relative references; guardian's census row has no edge to clear-glass/src/downloads; GET /jobs/ledger shows both fulfilled; run under a COS_DATA_ROOT pointed elsewhere, the reply lands in the same place (it no longer depends on the account)"
+
+  GD5b_transcripts_are_guardians:
+    layer: backend
+    status: OPEN
+    depends_on: [GD5a_one_write_the_job_and_its_response]
+    files: [guardian/lib/chat-transcripts.js, guardian/cli.js, guardian/server.js]
+    does: >-
+      Guardian's chat transcripts (one per chat, versioned, refusing unchanged reads: recordChat's rules, moved not rewritten) are
+      written as Guardian's own transcript nodes in its data folder, served by its existing /api/chats routes. guardian sync
+      (cli.js) writes there too. Clear Glass's provider-tab downloads stay Clear Glass's (download-capture.js, its own store).
+    proof: "a settled chat leaves one transcript node in guardian/data, a second unchanged read writes nothing, /api/chats returns it; no require of clear-glass/ from guardian/ is left (census)"
+
+  GD5c_the_library_reads_the_ledger:
+    layer: ui
+    status: OPEN
+    depends_on: [GD5a_one_write_the_job_and_its_response, GD5b_transcripts_are_guardians, JL2_route_command_ui]
+    files: [clear-glass/src/ipc/bridge.js, clear-glass/renderer/library/sections/responses.js, lib/agent-memory.js, lib/repo-agent.js, idearium/cli/route-commands.js]
+    does: >-
+      His order of delivery, the UI step JL2 named as not done: the Library's Responses page reads Guardian's job ledger and transcripts
+      through Guardian's routes (by agent, repo, run, kind, as now), and Clear Glass's own captures from its own store, side by side,
+      each labelled with its owner. A row opens its .response through GET /response/:jobId. lib/agent-memory.js and lib/repo-agent.js
+      (findLate/adoptLate) read replies through Guardian's route, not Clear Glass's files. Guardian down: the page says so and still
+      shows Clear Glass's own captures (§5.15.3). Tested in Clear Glass (glass.js), never Playwright.
+    proof: "in Clear Glass, a reply completed now is at the top of Responses within one refresh, filed under its agent; the page with Guardian stopped shows the captures and names Guardian as unreachable; the census shows no edge from lib/ or clear-glass/ into the store's files"
+
+  GD5d_bring_the_lost_days_home:
+    layer: backend
+    status: OPEN
+    depends_on: [GD5a_one_write_the_job_and_its_response, GD5b_transcripts_are_guardians]
+    files: [guardian/cli.js, guardian/server.js, guardian/lib/response-sink.js, guardian/lib/chat-transcripts.js]
+    does: >-
+      A one-time import, run by him (a Guardian command and route, never automatic): for each Clear Glass compartment store it is given
+      (his own %APPDATA% one and the SYSTEM account's, which needs admin), every item Guardian wrote there (a reply with a job_id, a
+      transcript) becomes Guardian's node when Guardian does not already hold it (matched by jobId, then content hash); a reply with no
+      .job gets its node and is named in the ledger as imported, not invented. Clear Glass's own captures are left where they are. The
+      old store is archived whole (§0.3), never deleted; the import writes a report (imported, already held, unreadable, left).
+    proof: "a dry run lists what it would import from each store; the real run is idempotent (a second run imports 0); c98bb7d3 from 2026-11-17 is in GET /jobs/ledger with its text; the report is kept"
 
   GD6_the_ways_in:
     layer: backend
