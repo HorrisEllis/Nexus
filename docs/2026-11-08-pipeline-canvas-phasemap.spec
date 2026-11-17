@@ -1354,3 +1354,14 @@ phases_addendum_2026_11_13_rca:
 # Open: Nexus's tools (tools/nexus/): the Step box (ERAVOS's eravos.agents.step, the id COS's box.eg already writes into a .erv) and a Pipeline
 # tool (COS's pipelines listed, one opened as boxes, run, each step's state live), shown to him first (PC4's prerequisite, his 2026-11-08).
 # The older template copy, cos/archetype/eravos-canvas, is left as it is.
+
+# ── ADDENDUM 2026-11-17 (0.60.559) — PC8: a busy Idearium no longer leaves Ollama off the ladder ──
+# James, 2026-11-15: "need the pipeline working. like this is priority." (his standing priority; the RQ0 build of 2026-11-17 failed and was diagnosed on his machine)
+# First error of build phrun-mwl8cat2-u6vu (21:55:35 UTC): the ladder left Ollama off, "ollama bridge unreachable: … GET /api/models timed out
+# after 4000ms". Ollama's server.log answered /api/tags in 8 ms at that second; Idearium had missed its pulses (no beat for 20 s from 21:54:45):
+# its own thread was busy and the expired 4 s timer ran before the reply. Everything after came from it: no plan, no test writer, a stall at
+# verify-first (10 min, no agent calls), the watchdog's retry stalled the same way, contract-incomplete, retries used up, landed misreading the
+# auto-retry note (fixed 2026-11-15 in his tree, not in main).
+# Built: idearium/api/index.js _ollamaModels asks a timed-out probe once more (15 s); a refusal is unreachable at once. Proof: test-log-fixes
+# LF-07 (fails on the old code). By the axioms: §1.2 (a skip says its true cause: a slow caller is not an absent Ollama), §8.6 (the probe kept,
+# asked again), deterministic first (the local coder is not dropped on a timing artefact).

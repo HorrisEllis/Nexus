@@ -105,6 +105,22 @@ const quiet = async (fn) => { const l = console.log, w = console.warn; console.l
     assert.strictEqual(RI.phaseSoleFile(repoUuid, 'SPEC.spec::SP5_title'), null, 'the build ended: nothing is assumed');
   });
 
+  await test('LF-07', '2026-11-17 — Ollama\'s models: a timed-out ask is asked once more, longer; a refusal is not (his RQ0 run: Ollama answered in 8 ms, Idearium\'s busy thread timed out at 4 s)', async () => {
+    assert.strictEqual(typeof api._ollamaModelsForTest, 'function', 'the probe is reachable for a test');
+    const NC = require(path.join(ROOT, 'lib/nexus-client.js')); const real = NC.get; const asked = [];
+    try {
+      NC.get = async (sys, p, o) => { asked.push(o && o.timeout); if (asked.length === 1) throw new Error('[nexus-client] ollama GET /api/models timed out after 4000ms'); return { ok: true, models: ['qwen2.5-coder:3b'], active: 'qwen2.5-coder:3b' }; };
+      const r = await api._ollamaModelsForTest();
+      assert.ok(r.ok && r.models[0] === 'qwen2.5-coder:3b', JSON.stringify(r));
+      assert.deepStrictEqual(asked, [4000, 15000], 'asked again with a longer limit');
+      asked.length = 0;
+      NC.get = async (sys, p, o) => { asked.push(o && o.timeout); throw new Error('[nexus-client] ollama unreachable at 127.0.0.1:3749 — connect ECONNREFUSED'); };
+      const r2 = await api._ollamaModelsForTest();
+      assert.ok(!r2.ok && /unreachable/.test(r2.error), JSON.stringify(r2));
+      assert.deepStrictEqual(asked, [4000], 'a refusal is not asked again');
+    } finally { NC.get = real; }
+  });
+
   await test('LF-06', 'L6 the sync reads memory before each system and leaves the rest for the next round', async () => {
     const NS = await import(pathToFileURL(path.join(ROOT, 'idearium/repo/nexus-self.js')).href);
     const src = fs.readFileSync(path.join(ROOT, 'idearium/repo/nexus-self.js'), 'utf8');

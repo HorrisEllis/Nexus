@@ -2924,6 +2924,7 @@ function _reconcileRuns({ bootAt = _BOOT_AT, now = Date.now() } = {}) {
 }
 export function _reconcileRunsForTest(opts) { return _reconcileRuns(opts); }
 export function _postPhaseFailureForTest(row, client) { return _postPhaseFailure(row, client); }   // §FMR2 0.60.146
+export function _ollamaModelsForTest() { return _ollamaModels(); }   // 2026-11-17 — a timeout is asked again (LF-07)
 export function _agentAskForTest(prompt, opts) { return _agentAsk(prompt, opts); }   // §CT1 — its test drives the real route walk
 export function _learnFromRejectionForTest(repo, n, reason, opts) { return _learnFromRejection(repo, n, reason, opts); }   // §0.60.105 RL2
 export function _verdictForTest(chunk, kind, ok, cls, why) { const by = _builtBy(chunk); _verdict(by, kind, ok, cls, why); return by; }   // §CT2
@@ -3250,9 +3251,17 @@ async function readBody(req) {
 // 0.39.253 — Ollama's installed models, through the ollama bridge (GET :3749/api/models → { ok, models, active }).
 // { ok:false, error } when the bridge or Ollama did not answer — never a guessed list: the bridge's own route answers
 // ok:false with models [] when Ollama is unreachable, and that is passed on as unreachable.
+// 2026-11-17 — his RQ0 run (phrun-mwl8cat2): "left off: ollama:"" (Ollama could not be reached — ollama bridge unreachable: … GET
+// /api/models timed out after 4000ms)". Ollama's own log answered /api/tags in 8 ms at that second; Idearium had missed its pulses (no beat
+// for 20 s from 21:54:45): its own thread was busy, so the 4 s timer fired before the reply could be read, and the build ran with no local
+// coder (no plan, no test writer). A timeout is asked once more, longer, before Ollama is called unreachable; a refusal is not.
+const OLLAMA_MODELS_RETRY_MS = 15000;
+async function _ollamaModelsOnce(timeout) { return _nexusClient.get('ollama', '/api/models', { timeout }); }
 async function _ollamaModels() {
   try {
-    const d = await _nexusClient.get('ollama', '/api/models', { timeout: 4000 });
+    let d;
+    try { d = await _ollamaModelsOnce(4000); }
+    catch (e) { if (!/timed out/i.test(String(e && e.message))) throw e; d = await _ollamaModelsOnce(OLLAMA_MODELS_RETRY_MS); }
     if (!d || d.ok === false || !Array.isArray(d.models)) return { ok: false, error: (d && d.error) || 'Ollama did not answer (the bridge reached it and got nothing)', models: [], active: d && d.active || null };
     return { ok: true, models: d.models, active: d.active || null, sizes: d.sizes || null, loaded: d.loaded || [] };
   } catch (e) { return { ok: false, error: `ollama bridge unreachable: ${e.message}`, models: [], active: null }; }
