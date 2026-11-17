@@ -96,6 +96,11 @@ decisions:
       pattern response-sink's downloads-pending already proves). The coder's reading of "turn into that" = into the .job/.response store
       and ledger, matching this decision's own 2026-10-24 leaning; the other reading (the Library store becomes the source) would put agent
       jobs in Clear Glass and is not taken. (1) is still to confirm; (3) stands.
+    corrected_2026_11_17_b: >-
+      James, 2026-11-17: "Sit besides. Maybe bundle in the compartment? Look at the pipeline in cos." · asked which compartment bundles them, his choice: "Guardian's, referenced".
+      Settles reading (1): the .response sits beside its .job, bundled in Guardian's compartment: one folder per job,
+      <guardian data>/jobs/<id>/<id>.job and <id>.response, each naming the other by its relative name. A pipeline that asked for the job (COS's
+      request bundle, PC8 slice c) holds only the reference and reads by Guardian's route. Supersedes (1)'s "kept in nodes/response/".
     problem: >-
       clear-glass/src/downloads/artifact-chat-index.js holds the .response files and their index. Guardian writes them (response-sink,
       code-artifact, chat-transcripts, cli); Clear Glass captures downloads into the same store and its Library shows it. One store, two
@@ -161,7 +166,7 @@ phases:
     layer: backend
     status: OPEN
     depends_on: [GD_D3_the_response_store, JL1_job_ledger_backend]
-    files: [guardian/lib/response-sink.js, guardian/lib/code-artifact.js, guardian/lib/jobs.js, guardian/lib/job-ledger.js, guardian/lib/ncp-handler.js, guardian/server.js, lib/node-schemas/schema.response]
+    files: [guardian/lib/response-sink.js, guardian/lib/code-artifact.js, guardian/lib/jobs.js, guardian/lib/job-ledger.js, guardian/lib/ncp-handler.js, guardian/server.js, lib/node-schemas/schema.response, guardian/lib/node-registry.js]
     does: >-
       A completed job is written once, by Guardian, to its own data: the .response node carries what recordAgentResponse put in the
       Clear Glass store (the code blocks with their syntax, ext, bytes, sha256 and code; the declared file; the prompt) beside the CE4
@@ -170,6 +175,12 @@ phases:
       clear-glass/src/downloads/artifact-chat-index.js; synthesize() step 6 asks Clear Glass's route for captures instead of loading its
       code. The node is written before the job flips to complete (§9.2 ledger before state), so a restart between them leaves a
       fulfilled-but-unflipped job the ledger names, never a complete job with no node. Persistence (his 2026-11-14): nothing in memory only.
+    expanded_2026_11_17_b: >-
+      His "Sit besides" (GD_D3 corrected_2026_11_17_b): the layout is a folder per job, jobs/<id>/<id>.job beside jobs/<id>/<id>.response.
+      What reads nodes/response/ today moves to it in the same phase: response-sink writeNode/readNode, job-ledger row(), synthesize(), and
+      Guardian's node registry (guardian/lib/node-registry.js, the response type's folder). A job's origin (POST /command's origin: the system,
+      request and step that asked) is kept on the .job. The existing nodes/response/*.response files are moved into their job folders by GD5d
+      (originals archived).
     proof: "a job through ncp-handler and one through POST /response/:jobId each leave exactly one .response (Guardian's), with codeBlocks and both relative references; guardian's census row has no edge to clear-glass/src/downloads; GET /jobs/ledger shows both fulfilled; run under a COS_DATA_ROOT pointed elsewhere, the reply lands in the same place (it no longer depends on the account)"
 
   GD5b_transcripts_are_guardians:

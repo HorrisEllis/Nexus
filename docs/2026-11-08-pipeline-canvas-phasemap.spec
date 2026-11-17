@@ -634,7 +634,7 @@ built_2026_11_09_plan:
     status: OPEN   # slice a BUILT 0.60.481 (a delta and a baseline per step; RAID's decisions as steps; the bar); slice b BUILT 0.60.484 (pause, continue, retry from a step)
     james: '"seeing, changing, managing, diagnosing, exporting, testing, agnostic." · "record each step in raids decision, dynamically building each step, as it goes. it all needs to be visable."'
     depends_on: [PC_D13_the_pipeline_works_first_then_cos_optimised, PC5_programmable_gate_types]
-    files: [lib/automation/pipeline.js, lib/automation/routes.js, lib/automation/engine.js, cos/manager/automation-door.js, cos/pipeline/runs.eg, cos/pipeline/cli.eg, cos/ui/automation/engine.js, cos/ui/automation/page.js, idearium/cli/route-commands.js, cos/pipeline/index.js, cos/manager/server.js, tests/modules/test-cos-pipeline.test.js, idearium/api/index.js, idearium/pipelines/idearium-build.pipeline, lib/nexus-client.js, lib/repo-agent.js, guardian/lib/ncp-handler.js, guardian/server.js, tests/modules/test-ncp-handler-sr3.js, tests/modules/test-pipelines.test.js, cos/automation/pipeline.js, cos/automation/engine.js, cos/automation/routes.js, guardian/lib/jobs.js]
+    files: [lib/automation/pipeline.js, lib/automation/routes.js, lib/automation/engine.js, cos/manager/automation-door.js, cos/pipeline/runs.eg, cos/pipeline/cli.eg, cos/ui/automation/engine.js, cos/ui/automation/page.js, idearium/cli/route-commands.js, cos/pipeline/index.js, cos/manager/server.js, tests/modules/test-cos-pipeline.test.js, idearium/api/index.js, idearium/pipelines/idearium-build.pipeline, lib/nexus-client.js, lib/repo-agent.js, guardian/lib/ncp-handler.js, guardian/server.js, tests/modules/test-ncp-handler-sr3.js, tests/modules/test-pipelines.test.js, cos/automation/pipeline.js, cos/automation/engine.js, cos/automation/routes.js, guardian/lib/jobs.js, cos/pipeline/runs.eg, cos/pipeline/cli.eg, cos/pipeline/test/runs.test.eg]
     requires: [node]
     prerequisites: ["the census of 2026-11-10 (below)"]
     census_2026_11_10: >-
@@ -695,6 +695,22 @@ built_2026_11_09_plan:
       it, §1.2. Relation: GD5a (docs/2026-10-24-guardian-into-cos-phasemap.spec) is where the .response is written; this slice only reads it
       and does not wait on GD5a (GET /response/:jobId already answers).
     proof_slice_c: "a run with an agent step leaves runs/<run>/run.ledger with its step, job and response lines in order; the step node names the jobId and Guardian's .job names the run and step; GET /api/cos/automation/pipeline-ledger and `cos pipeline-ledger` print the same lines; a job with Guardian stopped is a line marked unanswered; COS restarted mid-run, the ledger continues in the same file; tested in tests/modules (sandboxed), UI in Clear Glass, never Playwright"
+    corrected_2026_11_17: >-
+      James, 2026-11-17: "Sit besides. Maybe bundle in the compartment? Look at the pipeline in cos." · asked which compartment bundles them, his choice: "Guardian's, referenced".
+      Slice c as first written (above, kept §0.3) put the ledger in the Automation engine's runs folder, in JavaScript. COS's pipeline already
+      keeps the bundle for this: one folder per request (cos/pipeline/runs.eg: run.run, dag.dag, steps/<t>.step, nodes/<t>/out.<type>, gates/),
+      the engine's run attached to it and its events written in order. Decided by the axioms (§8.6 reuse, §17.13 Emerge for new code):
+        - the ledger is <request>/run.ledger, appended by runs.eg's on_event (Emerge), beside run.run and dag.dag; it moves to done/ with the
+          request and is kept (§0.3). The Automation engine's .process_step nodes are unchanged.
+        - the step file (steps/<t>.step) names its jobs: jobId, provider, RAID's decision, and Guardian's reference to the job's folder.
+        - his choice: the .job and its .response sit side by side in GUARDIAN's compartment (one folder per job, GD5a); COS's bundle holds
+          the reference, never a copy, and reads the content by Guardian's route (GET /response/:jobId, GET /jobs/ledger). One source of truth.
+        - the only JavaScript touched is the doors: cos/manager/automation-door.js stops dropping Guardian's jobId and passes it on with the
+          answer; cos/automation/engine.js carries it on the agent step's result; cos/pipeline/index.js hands it to runs.eg. Guardian's
+          POST /command keeps origin { system: 'cos', request, step } on the .job.
+      Route: GET /api/cos/pipeline/ledger?request=<id> (cos/manager/server.js, beside the request routes). Command: cos request-ledger
+      <request id> (beside cos request-show). UI last, his.
+    proof_slice_c_corrected: "a request with an agent step leaves <request>/run.ledger (step, job, response lines, in order) written by runs.eg; its step file names the jobId and Guardian's job folder; GET /api/cos/pipeline/ledger and `cos request-ledger` print the same lines; the request moved to done/ keeps its ledger; tests in cos/pipeline/test/runs.test.eg and tests/modules (sandboxed)"
     does: >-
       A pipeline is operable from COS, the way a person and an agent would want it: run, pause, resume and retry a step; test it dry, the steps
       planned and their gates checked with nothing changed; see each step's state live; diagnose a failed step (its gate, its input, its output,
