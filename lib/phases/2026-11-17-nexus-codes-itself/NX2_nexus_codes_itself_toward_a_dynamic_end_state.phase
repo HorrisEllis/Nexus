@@ -1,0 +1,37 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-17-nexus-codes-itself-phasemap.spec::NX2_nexus_codes_itself_toward_a_dynamic_end_state
+type: phase
+id: docs_2026-11-17-nexus-codes-itself-phasemap.spec::NX2_nexus_codes_itself_toward_a_dynamic_end_state
+context: >-
+  pipeline phase NX2_nexus_codes_itself_toward_a_dynamic_end_state of
+  docs/2026-11-17-nexus-codes-itself-phasemap.spec
+intent: null
+summary: NX2_nexus_codes_itself_toward_a_dynamic_end_state (integration) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1794939910291
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794939910291
+lastSeenAt: 1794939910291
+fingerprint: null
+payload:
+  id: NX2_nexus_codes_itself_toward_a_dynamic_end_state
+  map: docs/2026-11-17-nexus-codes-itself-phasemap.spec
+  repo: null
+  layer: integration
+  status: OPEN
+  files:
+    - docs/2026-11-17-nexus-codes-itself-phasemap.spec
+  depends_on:
+    - IF12_nexus_builds_itself_autonomously
+    - NX1_no_request_runs_without_its_map
+    - GD5a_one_write_the_job_and_its_response
+    - PC8_operate_a_pipeline
+    - PC17_the_model_fits_by_what_it_runs
+    - EQ4_the_emerge_guide_for_any_llm
+    - RQ8_the_gap_is_a_question
+    - PC3_the_build_request_step
+  blocks: []
+  spec: null
+  graph: bfb26cac40cdae7c

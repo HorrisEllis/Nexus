@@ -7,11 +7,11 @@ intent: null
 summary: 2 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1794748295020
+exported_at: 1794939959422
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794748295020
-lastSeenAt: 1794748295020
+firstSeenAt: 1794939959422
+lastSeenAt: 1794939959422
 fingerprint: null
 payload:
   for: IF8_the_substrate_under_it
@@ -36,6 +36,7 @@ payload:
       - docs/2026-11-15-the-factory-phasemap.spec::IF2_the_build_as_a_pipeline
     dependents: []
     upstream:
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC16_raid_routes_every_interaction
       - docs/2026-11-15-the-factory-phasemap.spec::IF0_the_census
       - docs/2026-11-15-the-factory-phasemap.spec::IF1_idearium_asks_agents_through_the_pipeline
       - docs/2026-11-15-the-factory-phasemap.spec::IF2_the_build_as_a_pipeline
@@ -47,7 +48,7 @@ payload:
     dangling: []
     lines:
       - layer 3 · blocked by IF2_the_build_as_a_pipeline
-      - 'depends on (1): IF2_the_build_as_a_pipeline · all upstream 3'
+      - 'depends on (1): IF2_the_build_as_a_pipeline · all upstream 4'
       - 'needed by (0): —'
     edges:
       - from: docs/2026-11-15-the-factory-phasemap.spec::IF2_the_build_as_a_pipeline

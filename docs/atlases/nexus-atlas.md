@@ -19,6 +19,83 @@ Under each system heading below, the page adds that system's live numbers from t
 
 ---
 
+## Read this first: what Nexus is for, the whole system, in his words
+
+*Written 2026-11-17 at his ask: "somewhere the entire system is explained. im tired of having to repeat myself." This section is the one
+place. Every other document details a part of it. When his words change it, it is updated here, with the date, and the old wording kept.*
+
+### The dream
+
+> "like i had a dream of using ai to speed up innovation and human advancement. nexus is that system. my framework is a piece. me and nexus are
+> meant to improve each other. improving my cognition improves nexus and vise versa. thats the dream." (James Brooks, 2026-11-17)
+
+Nexus is the system that turns that into practice. Two parts improve each other:
+
+- **His framework**, written down. The axioms (`docs/AXIOMS-v3.1.md`), the innovation toolkit (`docs/innovation-toolkit*.md`), and his
+  way of building: map first, bottom up, sovereign systems, gates, contracts. Each use of it is tracked in `docs/FRAMEWORK-THREADS.md`,
+  with the prediction written before the result.
+- **Nexus**, the system built from that framework. What it learns (patterns, failures, crystals, benchmarks) goes back to him, and what he
+  decides is recorded where the work lives and shapes the next run.
+
+### The goal now
+
+> "i need nexus coding asap. like basically dynamic end state. the pipeline is everything." · "nexus is built to replace you." (2026-11-17)
+
+Nexus builds Nexus, with its own pipeline and local models. A paid model is needed only when a failure's root cause is beyond a local one.
+The graph from today to that end state, tier by tier: `docs/2026-11-17-nexus-codes-itself-phasemap.spec` (NX1, NX2).
+
+### How a request moves through Nexus
+
+> "input into nexus goes to raid. creates a input node for the whats been reqeuested. then creates a dependancy graph of whats needed to
+> fullfill the request creating a contract as setting is as the end state of the compartment. the dag is conditions needed in order to
+> complete the request. basically no or i dont know isn't a anwser." · "each requests need a dag. the system needs to map before executing.
+> that way it doesn't drift." (2026-11-17)
+
+1. **Input → RAID.** Every input, from any surface (the CLI, cos.exe, Clear Glass, copilot), reaches RAID first. RAID lives in Cortex.
+   RAID keeps the input as a `.input` node before it decides anything.
+2. **A compartment and an open loop.** The request gets its own compartment: a work surface for the data, context and contracts it needs.
+   The loop stays open until the contract is met or the DAG is complete.
+3. **Map before executing.** RAID writes four things before any step runs, as files:
+   - the DAG of what is needed (the conditions);
+   - the contract (the end state it builds towards);
+   - the stopping conditions (each gate's `pass_when`);
+   - a test file that shapes what is expected.
+
+   A step that answers to no DAG node is refused, so the run cannot drift.
+4. **Nexus first, then outward.** Each thing the DAG needs is answered from Nexus first: the component store before anything is built,
+   then Cortex's memory and vector memory, the associative lattice, each system's nodes, registry and routes, chat logs and the atlases.
+   Then outward (an agent, the web). Then him, as a follow-up question. "No" and "I don't know" are not answers. A missing capability is
+   built by Idearium.
+5. **RAID decides and delivers.** RAID is the bridge. It picks who does each step and reaches them through the one door that knows each
+   agent's kind: Ollama first, Guardian's browser agents if needed (his, 2026-11-13). His preferences and fallbacks are RAID's settings
+   (`raid tunables`).
+6. **The pipeline runs it.** COS runs the request as a pipeline. Each step is an executable node file (`.pipeline`, `.framework`,
+   `.process_step`), editable in Nexus and on the canvas. The pipeline makes the request programmable, observable, diagnosable and
+   debuggable, and measures its bottlenecks. Emerge runs through it per word and per primitive, so a model of any size can do a step.
+7. **Gates, nodes, versions, books.**
+   - Gates hold context and persistence: what passed is kept, and a run resumes from its last passed gate.
+   - Nodes keep the data through restarts. Nothing lives only in memory until the contract is met.
+   - Versionium versions and snapshots each system, and the rewind engine restores a snapshot.
+   - The fill index records what filled each need: context, system, agent or him, with the timestamp.
+   - Failure modes, faults and gaps are written on the contract.
+   - Each system keeps its own data. Cortex keeps the books, for query.
+
+Stage by stage, with what is built and what is still a gap: `docs/2026-11-17-raid-request-lifecycle-phasemap.spec` (L0–L14,
+RL_D1–RL_D8). The pipeline itself, formally: `cos/spec/pipeline.spec` (PL-001..PL-012).
+
+### What holds it together
+
+- **Sovereign systems** (§5.9–§5.16). Each system owns its data, modules, commands and its own component registry, inside its own folder.
+  Systems reach each other only by routes and the CLI server, so any one can be swapped. COS manages each system's `server.js`.
+- **Emerge and CIE-EG**, his language. "emerge is built to code from structure, which is cie-eg … same archicture as each system, reducing
+  the friction since its compatable from the bottom up." New code is Emerge (§17.13).
+- **Structure carries the complexity.** The Intelligence system and the agent tools do the complex reasoning. Idearium's chunker cuts the
+  work into pieces one model can do. So the model doing the work can be small and local.
+- **Persistence, provenance, proof.** Every change and version goes to Versionium. Every decision is quoted and dated where the work lives.
+  Proof needs evidence that a stranger can run (`docs/PROOF-OF-COMPETENCY.md`).
+
+---
+
 ## What NEXUS is
 
 NEXUS is a personal AI operating system built as one Node.js monorepo. It does not call AI providers through API keys. It drives real provider chats in browser tabs (ChatGPT, Claude, Gemini, Perplexity, DeepSeek) and local models through Ollama, and it wraps that dispatch in everything an operating system would give a program: a registry of what exists, a memory of what happened, version control of every change, a diagnostic layer that watches every system, a sandboxed place to run code, and a design surface where new systems are specified before they are built.

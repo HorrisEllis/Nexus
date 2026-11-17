@@ -17,6 +17,14 @@ spec:
       progress and success or failure of the handoff and why." · "nexus is recursive, builds itself, using itself. the
       same architecture on every level." — 0.11.1: the template's tree and rules carry the handoff folders and modules/
       (cos/archetype/nexus-system lib/handoff.js, lib/modules.js, template/).
+    james_2026_11_17: >
+      "somewhere the entire system is explained. im tired of having to repeat myself. architecture doc or genesis. i need nexus coding
+      asap. like basically dynamic end state. the pipeline is everything." · "like i had a dream of using ai to speed up innovation and
+      human advancement. nexus is that system. my framework is a piece. me and nexus are meant to improve each other."
+    whole_system: >
+      docs/atlases/nexus-atlas.md, its first section ("Read this first"): the dream, the goal, how a request moves through Nexus, what holds
+      it together, in his words, the one place it is all explained (2026-11-17). The request, stage by stage:
+      docs/2026-11-17-raid-request-lifecycle-phasemap.spec. The road to Nexus coding itself: docs/2026-11-17-nexus-codes-itself-phasemap.spec.
     template:    idearium/spec-engine/templates/architecture-spec.template.yaml   # the tree, the registry and the rules — one home; this spec points at it, never copies it
     schemas:     idearium/spec-engine/templates/system/schemas/                    # schema.<type> for component, capability, command, event, route, hook, wire, bundle — a new system copies and owns them
     purpose: >
