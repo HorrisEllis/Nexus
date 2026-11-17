@@ -1,0 +1,38 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-17-nexus-codes-itself-phasemap.spec::NX1_no_request_runs_without_its_map
+type: phase
+id: docs_2026-11-17-nexus-codes-itself-phasemap.spec::NX1_no_request_runs_without_its_map
+context: >-
+  pipeline phase NX1_no_request_runs_without_its_map of
+  docs/2026-11-17-nexus-codes-itself-phasemap.spec
+intent: null
+summary: NX1_no_request_runs_without_its_map (integration) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1794939910288
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794939910288
+lastSeenAt: 1794939910288
+fingerprint: null
+payload:
+  id: NX1_no_request_runs_without_its_map
+  map: docs/2026-11-17-nexus-codes-itself-phasemap.spec
+  repo: null
+  layer: integration
+  status: OPEN
+  files:
+    - cos/pipeline/runs.eg
+    - cos/pipeline/index.js
+    - cortex/core/raid/input.js
+    - cortex/core/raid/contract-template.js
+    - cos/spec/pipeline.spec
+  depends_on:
+    - RD9_every_input_through_raid
+    - RQ13_the_work_surface_and_provenance
+    - RQ7_the_context_obligations
+    - RQ23_acceptance_conditions_that_cannot_be_moved
+    - PC16_raid_routes_every_interaction
+  blocks: []
+  spec: null
+  graph: cf70a87d069e9e87

@@ -6,14 +6,14 @@ context: >-
   pipeline phase RT1_eligibility_then_preference of
   docs/2026-10-13-gates-that-learn-and-priorities-phasemap.spec
 intent: null
-summary: RT1_eligibility_then_preference (?) — 5 file(s)
+summary: RT1_eligibility_then_preference (?) — 12 file(s)
 system: idearium
 tags: []
-exported_at: 1792787677395
+exported_at: 1794934951651
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677395
-lastSeenAt: 1792787677395
+firstSeenAt: 1794934951651
+lastSeenAt: 1794934951651
 fingerprint: null
 payload:
   id: RT1_eligibility_then_preference
@@ -22,6 +22,13 @@ payload:
   layer: null
   status: OPEN
   files:
+    - cortex/core/raid/officiator.js
+    - lib/ollama-port.js
+    - cortex/core/raid/tunables.js
+    - cortex/boot.js
+    - idearium/cli/route-commands.js
+    - tests/modules/test-officiator-local-first.test.js
+    - tests/modules/test-raid-officiator.js
     - lib/route-eligibility.js
     - lib/model-door.js
     - lib/pipeline-routing.js
@@ -30,4 +37,4 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: db32153ad00baf8c
+  graph: 26c415c8fddb7200

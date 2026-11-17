@@ -1,0 +1,166 @@
+envelope: 1
+uuid: nexus-export-graph-phase:NX2_nexus_codes_itself_toward_a_dynamic_end_state:bfb26cac40cdae7c
+type: graph
+id: phase:NX2_nexus_codes_itself_toward_a_dynamic_end_state:bfb26cac40cdae7c
+context: dependency graph of phase NX2_nexus_codes_itself_toward_a_dynamic_end_state
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1794939910291
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794939910291
+lastSeenAt: 1794939910291
+fingerprint: null
+payload:
+  for: NX2_nexus_codes_itself_toward_a_dynamic_end_state
+  kind: phase
+  repo: null
+  hash: bfb26cac40cdae7c
+  nodes:
+    - path: docs/2026-11-17-nexus-codes-itself-phasemap.spec
+      role: changes
+      exists: true
+      system: null
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 19
+    deps:
+      - docs/2026-11-15-the-factory-phasemap.spec::IF12_nexus_builds_itself_autonomously
+      - docs/2026-11-17-nexus-codes-itself-phasemap.spec::NX1_no_request_runs_without_its_map
+      - docs/2026-10-24-guardian-into-cos-phasemap.spec::GD5a_one_write_the_job_and_its_response
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC8_operate_a_pipeline
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC17_the_model_fits_by_what_it_runs
+      - docs/2026-11-06-emerge-is-the-replacement-phasemap.spec::EQ4_the_emerge_guide_for_any_llm
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ8_the_gap_is_a_question
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC3_the_build_request_step
+    dependents: []
+    upstream:
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ0_the_inventory_proved
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ10_anchors_and_the_diff_reconciled
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ13_the_work_surface_and_provenance
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ1_the_verifier_library
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ23_acceptance_conditions_that_cannot_be_moved
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ6_one_intent_map
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ7_the_context_obligations
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ8_the_gap_is_a_question
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ9_the_chunked_contract
+      - docs/2026-10-13-projects-raid-and-gates-phasemap.spec::RD0_raid_has_its_own_contract
+      - docs/2026-10-13-projects-raid-and-gates-phasemap.spec::RD9_every_input_through_raid
+      - docs/2026-10-24-guardian-into-cos-phasemap.spec::GD5a_one_write_the_job_and_its_response
+      - docs/2026-10-24-guardian-into-cos-phasemap.spec::GD_D3_the_response_store
+      - docs/2026-10-25-automation-engine-to-orchestrator-phasemap.spec::AE_D4_the_hub_structural
+      - docs/2026-10-28-first-principles-phasemap.spec::FP1_where_a_request_opens
+      - docs/2026-10-28-first-principles-phasemap.spec::FP2_which_option_is_meant
+      - docs/2026-10-28-first-principles-phasemap.spec::FP3_is_the_gate_open
+      - docs/2026-10-28-gated-flows-phasemap.spec::FG2_dropdown_choose
+      - docs/2026-10-28-gated-flows-phasemap.spec::FG_D1_gate_is_a_step_field
+      - docs/2026-10-28-gated-flows-phasemap.spec::FG_D2_choice_is_read_back
+      - docs/2026-10-28-gated-flows-phasemap.spec::GF1_every_field_found_by_its_section
+      - docs/2026-10-28-gated-flows-phasemap.spec::GF2_every_editor_page_known
+      - docs/2026-10-28-gated-flows-phasemap.spec::GF3_text_and_lists_filled_and_read_back
+      - docs/2026-10-28-gated-flows-phasemap.spec::GF4_friction_goes_to_his_site_keys
+      - docs/2026-10-28-gated-flows-phasemap.spec::GG1_every_part_gated
+      - docs/2026-10-28-gated-flows-phasemap.spec::GM1_the_fill_menu_model
+      - docs/2026-10-28-gated-flows-phasemap.spec::GM2_fill_only_what_is_ticked
+      - docs/2026-10-28-gated-flows-phasemap.spec::KB1_choose_waits_and_keys
+      - docs/2026-10-28-gated-flows-phasemap.spec::KB2_site_keys
+      - docs/2026-10-28-gated-flows-phasemap.spec::KB3_site_keys_ui
+      - docs/2026-10-28-gated-flows-phasemap.spec::KB4_gates_on_macro_steps
+      - docs/2026-10-28-gated-flows-phasemap.spec::UG1_one_gate_for_every_element
+      - docs/2026-10-29-pipelines-phasemap.spec::PA4_a_gate_after_every_step
+      - docs/2026-10-29-pipelines-phasemap.spec::PL1_pipeline_core
+      - docs/2026-10-29-pipelines-phasemap.spec::PL6_the_gate_step
+      - docs/2026-10-29-pipelines-phasemap.spec::PL_D1_a_task_is_one_engine_step
+      - docs/2026-10-29-pipelines-phasemap.spec::PL_D2_pipelines_live_in_the_engine_that_runs_them
+      - docs/2026-10-29-pipelines-phasemap.spec::PL_D4_a_gate_is_a_pipeline_block
+      - docs/2026-10-30-pipeline-consolidation-and-job-ledger-phasemap.spec::JL1_job_ledger_backend
+      - docs/2026-11-01-eravos-orchestration-tools-phasemap.spec::EO0_the_domain_and_its_door
+      - docs/2026-11-01-eravos-orchestration-tools-phasemap.spec::EO1_flow_tools
+      - docs/2026-11-01-eravos-orchestration-tools-phasemap.spec::EO2_cos_tools
+      - docs/2026-11-01-eravos-orchestration-tools-phasemap.spec::EO3_work_tools
+      - docs/2026-11-01-eravos-orchestration-tools-phasemap.spec::EO5_opened_from_cos
+      - docs/2026-11-01-eravos-orchestration-tools-phasemap.spec::EO_D0_one_door
+      - docs/2026-11-01-macro-blocks-phasemap.spec::MB1_the_gate_between
+      - docs/2026-11-01-macro-blocks-phasemap.spec::MB2_the_blocks_ui
+      - docs/2026-11-01-macro-blocks-phasemap.spec::MB3_one_shape_with_pipelines
+      - docs/2026-11-01-macro-blocks-phasemap.spec::MB_D0_blocks_and_gates
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC12_the_survey
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC1_task_nodes
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC4_deploy_to_any_system
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC8_the_console
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC_D0_one_console_in_cos
+      - docs/2026-11-01-procedures-phasemap.spec::PD1_procedure_nodes_and_commands
+      - docs/2026-11-01-procedures-phasemap.spec::PD_D0_a_procedure_is_a_node_file
+      - docs/2026-11-01-procedures-phasemap.spec::PD_D0_addendum_one_procedure_type
+      - docs/2026-11-06-emerge-is-the-replacement-phasemap.spec::EQ4_the_emerge_guide_for_any_llm
+      - docs/2026-11-06-emerge-is-the-replacement-phasemap.spec::EQ_D0_emerge_only
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC16_raid_routes_every_interaction
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC17_the_model_fits_by_what_it_runs
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC1_one_box_shape
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC3_the_build_request_step
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC4_the_box_kinds_on_the_canvas
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC5_programmable_gate_types
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC8_operate_a_pipeline
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D0_reuse_first
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D10_the_canvas_is_the_surface_tools_are_made
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D13_the_pipeline_works_first_then_cos_optimised
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D1_gates_as_compartments
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D3_when_a_step_becomes_a_build_request
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D4_language
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D5_emerge_writes_the_code
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D8_options_not_neat_boxes
+      - docs/2026-11-15-the-factory-phasemap.spec::IF0_the_census
+      - docs/2026-11-15-the-factory-phasemap.spec::IF10_the_map_of_nexus_on_the_canvas
+      - docs/2026-11-15-the-factory-phasemap.spec::IF11_agents_deployed_per_system_by_hat
+      - docs/2026-11-15-the-factory-phasemap.spec::IF12_nexus_builds_itself_autonomously
+      - docs/2026-11-15-the-factory-phasemap.spec::IF1_idearium_asks_agents_through_the_pipeline
+      - docs/2026-11-15-the-factory-phasemap.spec::IF2_the_build_as_a_pipeline
+      - docs/2026-11-15-the-factory-phasemap.spec::IF7_the_factory_builds_itself
+      - docs/2026-11-15-the-factory-phasemap.spec::IF9_everything_raid_does_through_the_pipeline
+      - docs/2026-11-17-nexus-codes-itself-phasemap.spec::NX1_no_request_runs_without_its_map
+    downstream: []
+    blockedBy:
+      - docs/2026-11-15-the-factory-phasemap.spec::IF12_nexus_builds_itself_autonomously
+      - docs/2026-11-17-nexus-codes-itself-phasemap.spec::NX1_no_request_runs_without_its_map
+      - docs/2026-10-24-guardian-into-cos-phasemap.spec::GD5a_one_write_the_job_and_its_response
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC8_operate_a_pipeline
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC17_the_model_fits_by_what_it_runs
+      - docs/2026-11-06-emerge-is-the-replacement-phasemap.spec::EQ4_the_emerge_guide_for_any_llm
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ8_the_gap_is_a_question
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC3_the_build_request_step
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - >-
+        layer 19 · blocked by IF12_nexus_builds_itself_autonomously,
+        NX1_no_request_runs_without_its_map, GD5a_one_write_the_job_and_its_response,
+        PC8_operate_a_pipeline, PC17_the_model_fits_by_what_it_runs,
+        EQ4_the_emerge_guide_for_any_llm, RQ8_the_gap_is_a_question, PC3_the_build_request_step
+      - >-
+        depends on (8): IF12_nexus_builds_itself_autonomously, NX1_no_request_runs_without_its_map,
+        GD5a_one_write_the_job_and_its_response, PC8_operate_a_pipeline,
+        PC17_the_model_fits_by_what_it_runs, EQ4_the_emerge_guide_for_any_llm,
+        RQ8_the_gap_is_a_question, PC3_the_build_request_step · all upstream 83
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-11-15-the-factory-phasemap.spec::IF12_nexus_builds_itself_autonomously
+        kind: declared
+      - from: docs/2026-11-17-nexus-codes-itself-phasemap.spec::NX1_no_request_runs_without_its_map
+        kind: declared
+      - from: docs/2026-10-24-guardian-into-cos-phasemap.spec::GD5a_one_write_the_job_and_its_response
+        kind: declared
+      - from: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC8_operate_a_pipeline
+        kind: declared
+      - from: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC17_the_model_fits_by_what_it_runs
+        kind: declared
+      - from: docs/2026-11-06-emerge-is-the-replacement-phasemap.spec::EQ4_the_emerge_guide_for_any_llm
+        kind: declared
+      - from: docs/2026-10-12-request-spine-phasemap.spec::RQ8_the_gap_is_a_question
+        kind: declared
+      - from: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC3_the_build_request_step
+        kind: declared

@@ -1181,6 +1181,13 @@ export const SPEC = [
       if (d.verified) console.log(`  ${d.verified.ok ? h.c.green('loads alone') : h.c.amber('does NOT load alone')}: ${d.verified.loaded}/${d.verified.of}${(d.verified.failed || []).map(f => `\n    ✗ ${f.path}: ${f.error}`).join('')}`);
     } },
   // 0.60.78 RT1 — what RAID's officiator holds back (the agents' wait, each staged drop's tries and why) and clearing it
+  // 2026-11-17 — James: "i wanted options for all this so i can configure it. like in raid." RAID's tunables, read and set by Cortex's door
+  { key: 'raid.tunables', repo: false, usage: 'raid tunables', about: 'RAID\'s options: every tunable, its value and default, and which were changed (who writes a contract from an artifact: officiatorAgents first, then RAID\'s ranking when officiatorFallback is raid)',
+    req: () => ({ system: 'cortex', method: 'GET', path: '/api/raid/tunables' }),
+    print: (d, a, h) => { for (const t of d.tunables || []) console.log(`  ${(t.changed ? h.c.bold : h.c.dim)(String(t.key).padEnd(22))} ${JSON.stringify(t.value)}${t.changed ? h.c.dim(`  (default ${JSON.stringify(t.default)})`) : ''}`); } },
+  { key: 'raid.tune', repo: false, usage: 'raid tune <key> <value as JSON>   e.g. raid tune officiatorAgents \'["ollama","chatgpt"]\' · raid tune officiatorFallback none', about: 'set one of RAID\'s options; checked against what it may hold, and the change is logged with its prior value',
+    req: (a) => { const [key, ...rest] = a.args || []; const raw = rest.join(' '); let value = raw; try { value = JSON.parse(raw); } catch (_) {} return { system: 'cortex', method: 'POST', path: '/api/raid/tunables', body: { key, value, by: 'person' } }; },
+    print: (d, a, h) => console.log(d.ok ? h.c.mint(`  ${d.key}: ${JSON.stringify(d.prior)} → ${JSON.stringify(d.value)}`) : h.c.amber(`  ${d.error}`)) },
   { key: 'raid.parked', repo: false, usage: 'raid parked', about: 'what the officiator holds back: the agents\' wait (no agent answered) and each staged drop\'s tries, why, and when it is tried next',
     req: () => ({ system: 'cortex', method: 'GET', path: '/api/raid/officiator' }),
     print: (d, a, h) => {

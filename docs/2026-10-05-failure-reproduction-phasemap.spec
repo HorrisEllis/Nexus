@@ -91,6 +91,13 @@ spec:
       proof: "a fixture macro reproduces its failure in a compartment; with the fix it passes; the macro is in the tests"
 
     FM4_the_report:
+      expanded_2026_11_17: >-
+        James, 2026-11-17: "also failure mode reports should be going in here. yes. it needs to fallback. i wanted options for all this so i can configure it. like in raid." — his COS screenshot: intelligence's Data tab, data folders / own / failures, "Empty.". Intelligence's failure-mode taxonomy
+        (intelligence/index.js _scanFailures: fault classes, examples, systems, components, precursors) lived only in its process's memory
+        and five lines in Cortex's event_log. Built (0.60.552): each scan writes one report per fault class into Intelligence's own data folder
+        (intelligence/data/failures/<faultClass>.json, a Windows-safe name, rewritten only when it changed) and one line to _scans.jsonl. The
+        coder's reading, to confirm: these are Intelligence's reports (its analysis); the failure-mode records stay Cortex's (it keeps the
+        books, docs/CLAUDE.md 2026-11-09: cortex/self-heal/failure-intake.js, failure-report.js). Proof: test-officiator-local-first OL-04.
       layer: ui
       status: OPEN
       james: '"thats how i want failure mode reports"'

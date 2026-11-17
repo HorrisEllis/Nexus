@@ -49,6 +49,17 @@ phases:
     proof: tests/modules/test-pipeline-root-causes.test.js RC-01, RC-02
 
   RC2_linear_node_scan:
+    expanded_2026_11_17_b: >-
+      James, 2026-11-17: "yes fix the boot stall too" (after "it needs to build in order, bottom up. i am drowning. help me get this working"). His log after 0.60.550: Idearium booted clean, its registry yielded for 3 minutes, then went silent 97 s (08:29:51 → 08:31:29)
+      and reported "5395 indexed, 8927 unchanged, 5383 removed". The scan's slices were not the cause: the live index never shrank. A removed
+      node stayed in it as a soft-deleted row, so every nexus-self sync (~5,400 chunk nodes replaced) left ~5,400 dead rows, and every scan
+      and flush (the whole table, re-read and rewritten) grew with them. Measured in a sandbox before the fix: 3,000 live nodes replaced 8
+      times → 24,000 rows, scan 0.5 → 7.2 s, longest block 8 → 73 ms. Fixed (0.60.551): lib/node-index.js removeNode moves the removed row
+      to an append-only archive beside the store (<store>/archive/<table>.deleted.jsonl) and out of the live table; compactDeleted moves the
+      dead rows earlier versions left, once, on the next scan (the registry line says how many). After: 3,000 rows every round, scan ~1.3 s,
+      longest block 6 ms. Nothing lost (§0.3): the archive keeps every row, the ledger keeps the history. A store with no folder (the shared
+      Cortex store) keeps the old soft-delete. Proof: NR-14; test-node-registry-system 14/14 and the suites that use the index.
+      Next, said: the per-type ledger table still grows with every change and is rewritten whole on each flush (1.3 MB per 3,000-node round).
     expanded_2026_11_17: >-
       James, 2026-11-17: "yes fix the boot stall too" (after "it needs to build in order, bottom up. i am drowning. help me get this working"). His log: Idearium silent 92 s at boot
       (07:20:45 → 07:22:00, "node registry: 0 indexed, 14309 unchanged"), the watchdog took it OFFLINE: scan() parsed and compared every node

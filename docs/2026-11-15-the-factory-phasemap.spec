@@ -50,7 +50,7 @@ phases:
     proof: "the counts in census_2026_11_15, each read from the tree"
   IF1_idearium_asks_agents_through_the_pipeline:
     status: OPEN
-    depends_on: [IF0_the_census]
+    depends_on: [IF0_the_census, PC16_raid_routes_every_interaction]   # PC16 added 2026-11-17 (docs/2026-11-17-nexus-codes-itself-phasemap.spec T5): the agents are asked through RAID, which delivers
     files: [idearium/api/index.js, idearium/spec-engine/chunk-dispatch.js, idearium/lib/page-agents.js, cos/manager/automation-door.js, cos/pipeline/pipelines]
     does: >-
       His first words: "i want idearium to use the pipeline for the agents". Every agent call Idearium makes (_agentAsk, the ladder's dispatch in

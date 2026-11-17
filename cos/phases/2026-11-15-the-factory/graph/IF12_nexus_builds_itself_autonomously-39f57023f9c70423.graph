@@ -7,11 +7,11 @@ intent: null
 summary: 0 node(s), 0 crossing(s) — not ready
 system: idearium
 tags: []
-exported_at: 1794748647192
+exported_at: 1794939959429
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794748647192
-lastSeenAt: 1794748647192
+firstSeenAt: 1794939959429
+lastSeenAt: 1794939959429
 fingerprint: null
 payload:
   for: IF12_nexus_builds_itself_autonomously
@@ -28,7 +28,8 @@ payload:
       - docs/2026-11-15-the-factory-phasemap.spec::IF7_the_factory_builds_itself
       - docs/2026-11-15-the-factory-phasemap.spec::IF9_everything_raid_does_through_the_pipeline
       - docs/2026-11-15-the-factory-phasemap.spec::IF11_agents_deployed_per_system_by_hat
-    dependents: []
+    dependents:
+      - docs/2026-11-17-nexus-codes-itself-phasemap.spec::NX2_nexus_codes_itself_toward_a_dynamic_end_state
     upstream:
       - docs/2026-10-28-first-principles-phasemap.spec::FP1_where_a_request_opens
       - docs/2026-10-28-first-principles-phasemap.spec::FP2_which_option_is_meant
@@ -71,6 +72,7 @@ payload:
       - docs/2026-11-01-procedures-phasemap.spec::PD1_procedure_nodes_and_commands
       - docs/2026-11-01-procedures-phasemap.spec::PD_D0_a_procedure_is_a_node_file
       - docs/2026-11-01-procedures-phasemap.spec::PD_D0_addendum_one_procedure_type
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC16_raid_routes_every_interaction
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC1_one_box_shape
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC4_the_box_kinds_on_the_canvas
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC5_programmable_gate_types
@@ -86,7 +88,8 @@ payload:
       - docs/2026-11-15-the-factory-phasemap.spec::IF2_the_build_as_a_pipeline
       - docs/2026-11-15-the-factory-phasemap.spec::IF7_the_factory_builds_itself
       - docs/2026-11-15-the-factory-phasemap.spec::IF9_everything_raid_does_through_the_pipeline
-    downstream: []
+    downstream:
+      - docs/2026-11-17-nexus-codes-itself-phasemap.spec::NX2_nexus_codes_itself_toward_a_dynamic_end_state
     blockedBy:
       - docs/2026-11-15-the-factory-phasemap.spec::IF7_the_factory_builds_itself
       - docs/2026-11-15-the-factory-phasemap.spec::IF9_everything_raid_does_through_the_pipeline
@@ -101,8 +104,8 @@ payload:
       - >-
         depends on (3): IF7_the_factory_builds_itself,
         IF9_everything_raid_does_through_the_pipeline, IF11_agents_deployed_per_system_by_hat · all
-        upstream 56
-      - 'needed by (0): —'
+        upstream 57
+      - 'needed by (1): NX2_nexus_codes_itself_toward_a_dynamic_end_state'
     edges:
       - from: docs/2026-11-15-the-factory-phasemap.spec::IF7_the_factory_builds_itself
         kind: declared

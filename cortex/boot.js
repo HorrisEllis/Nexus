@@ -1131,6 +1131,19 @@ const server = http.createServer(async (req, res) => {
     json(res, r.ok ? 200 : (r.code || 400), r); return;
   }
 
+  // 2026-11-17 — James: "i wanted options for all this so i can configure it. like in raid." RAID's tunables had no door: they could
+  // only be changed by editing Cortex's store. GET lists every one (value, default, changed); POST { key, value, by } sets one, checked
+  // against its kind, and Cortex logs raid.tunables.changed with the prior value (§0.3).
+  if (p === '/api/raid/tunables') {
+    const TU = require('./core/raid/tunables.js');
+    if (req.method !== 'POST') { json(res, 200, { ok: true, tunables: TU.all() }); return; }
+    let b = await readBody(req); if (typeof b === 'string') { try { b = JSON.parse(b || '{}'); } catch (_) { b = {}; } }
+    if (!b || !b.key) { json(res, 400, { ok: false, error: 'key is required: { key, value }' }); return; }
+    try { const prior = (TU.all().find(t => t.key === b.key) || {}).value; const value = TU.set(b.key, b.value, { source: b.by || 'route' }); json(res, 200, { ok: true, key: b.key, prior, value }); }
+    catch (e) { json(res, 400, { ok: false, error: e.message }); }
+    return;
+  }
+
   if (p === '/api/raid/decide') {
     const intent = url.searchParams.get('intent') || '';
     const cfrCtx = { sigmaFloor: _field.entropy, regime: _field.regime };

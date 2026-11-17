@@ -291,6 +291,9 @@ spec:
         (.axiom, .gate) with schemas so they can be added without editing code; the code constants are their seed.
       proof: "an agent lists RAID's queue and a contract's gates through nexus.command; a repo axiom added by command is enforced at the next gate"
     RD9_every_input_through_raid:
+      expanded_2026_11_17_lifecycle: >-
+        James, 2026-11-17, giving the request lifecycle whole ("input into nexus goes to raid … raid decides what to do with each request … WE need a huge document for all of this, a map keep it all logged and referencable.").
+        RD9 owns L0 (BUILT, slice a) and L3 (BUILT, slice b) of docs/2026-11-17-raid-request-lifecycle-phasemap.spec; the whole line from input to met contract is mapped there, stage by stage.
       layer: library
       systems: [cortex, idearium, cos]
       component: cortex.raid

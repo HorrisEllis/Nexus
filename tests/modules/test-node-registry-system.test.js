@@ -134,6 +134,33 @@ test('NR-13 RC2 2026-11-17: the boot scan yields (scanAsync gives scan()\'s resu
   a.stop(); fs.rmSync(r4, { recursive: true, force: true });
 });
 
+// RC2 2026-11-17 — the dead rows: a removed node leaves the live index for an append-only archive (nothing lost, §0.3); the dead rows
+// earlier versions left in the live table are moved there by the next scan. Measured before: 3,000 live nodes replaced 8 times → 24,000 rows.
+test('NR-14 RC2 2026-11-17: a removed node leaves the live index for the archive; old soft-deleted rows are moved there by the next scan; the history still says removed', async () => {
+  const NI = require('../../lib/node-index.js');
+  const r5 = fs.mkdtempSync(path.join(os.tmpdir(), 'nr-dead-'));
+  const dir = path.join(r5, 'eta', 'data', 'nodes', 'capability');
+  fs.mkdirSync(dir, { recursive: true });
+  const w = (id) => NX.exportToFile('capability', id, { ...sample.payload, id }, { system: 'eta', context: 'test', source: 'test' }, dir);
+  await quiet(async () => { for (let i = 0; i < 20; i++) w(`eta.c${i}`); });
+  const reg5 = NR.createNodeRegistry({ system: 'eta', root: r5, fresh: true });
+  await quiet(async () => reg5.scan());
+  // an old version's leftovers: soft-deleted rows sitting in the live table
+  for (let i = 0; i < 5; i++) reg5.store.upsert('nodes_capability', { id: `eta.old${i}`, type: 'capability', payload: {}, _deleted: true, deletedAt: 1 }, 'id');
+  for (let i = 0; i < 10; i++) fs.unlinkSync(path.join(dir, `eta.c${i}.capability`));
+  const r = await quiet(async () => reg5.scanAsync());
+  assert.strictEqual(r.removed, 10);
+  assert.strictEqual(r.archived, 5, 'the 5 old soft-deleted rows were moved to the archive');
+  const live = reg5.store.query('nodes_capability', () => true);
+  assert.strictEqual(live.length, 10, `only the 10 live nodes stay in the live index (got ${live.length})`);
+  assert.ok(live.every(x => !x._deleted));
+  const arch = fs.readFileSync(path.join(r5, 'eta', 'data', 'node-index', 'archive', 'nodes_capability.deleted.jsonl'), 'utf8').trim().split('\n').map(l => JSON.parse(l));
+  assert.strictEqual(arch.length, 15, 'the 10 removed and the 5 old rows are all in the archive, none lost');
+  assert.ok(arch.every(x => x._deleted && x.deletedAt));
+  assert.ok(reg5.history('capability', 'eta.c0').some(h => h.action === 'deleted'), 'the ledger still records the removal');
+  reg5.stop(); fs.rmSync(r5, { recursive: true, force: true });
+});
+
 test('NR-12 RC2 2026-11-15: a burst of node files folds the store once, not once per file (the event loop stays free), and every row is kept', async () => {
   const r3 = fs.mkdtempSync(path.join(os.tmpdir(), 'nr-burst-'));
   const dir = path.join(r3, 'beta', 'data', 'nodes', 'capability');

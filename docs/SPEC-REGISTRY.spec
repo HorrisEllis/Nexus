@@ -2089,3 +2089,14 @@ spec:
 # MOD-PL-WORKSHOP, MOD-PL-ORCHESTRATE, MOD-PL-LENSES, MOD-PL-SURFACE). James, 2026-11-14: "can we make a spec or some formal document for the
 # pipeline, im sick of trying to put it into words." · "right tabs yes, left tabs, absolutely not. the rest of those tabs can be in the cos ui
 # automation tab." Owner: COS. Compiles in kg-builder: 10 nodes, every one at full depth, invariants valid. Builds on cos/spec/pipeline-canvas.spec.
+
+# ADDENDUM 2026-11-17 — registered: docs/2026-11-17-raid-request-lifecycle-phasemap.spec (the request lifecycle, L0–L14; RL_D1–RL_D4).
+# James, 2026-11-17: "input into nexus goes to raid. creates a input node … WE need a huge document for all of this, a map keep it all logged
+# and referencable." One map from the words he types to the met contract: each stage with what exists, the phase that owns it (RD9, RQ7,
+# RQ8, RQ13, RQ21, PC3, PC16, FMR2, PC8), and the gap. It indexes; it does not re-map. RL_D1 (his): RAID is the bridge, decides and delivers.
+
+# ADDENDUM 2026-11-17 (b) — registered: docs/2026-11-17-nexus-codes-itself-phasemap.spec (NX_D1–NX_D3; NX1, NX2). James, 2026-11-17: "i need
+# nexus coding asap. like basically dynamic end state. the pipeline is everything. can you make a dependancy graph for getting nexus to build
+# towards the end state using the pipeline." The DAG from today to Nexus coding itself through its pipeline, tiers T0–T7 over the existing
+# phases (PF2/RC2 done → GD5a, PC8c → PC16 → RD9, RQ13, RQ7, RQ23, RQ8, NX1 → PC17, EQ4 → IF1..IF7, PC3 → IF9..IF12 → NX2). The whole system in
+# his words: docs/atlases/nexus-atlas.md, first section; architecture-spec meta.whole_system points there.

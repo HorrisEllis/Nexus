@@ -7,11 +7,11 @@ intent: null
 summary: 15 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1794748647188
+exported_at: 1794939959426
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794748647188
-lastSeenAt: 1794748647188
+firstSeenAt: 1794939959426
+lastSeenAt: 1794939959426
 fingerprint: null
 payload:
   for: IF10_the_map_of_nexus_on_the_canvas
@@ -170,6 +170,7 @@ payload:
       - docs/2026-11-01-procedures-phasemap.spec::PD1_procedure_nodes_and_commands
       - docs/2026-11-01-procedures-phasemap.spec::PD_D0_a_procedure_is_a_node_file
       - docs/2026-11-01-procedures-phasemap.spec::PD_D0_addendum_one_procedure_type
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC16_raid_routes_every_interaction
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC1_one_box_shape
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC4_the_box_kinds_on_the_canvas
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC5_programmable_gate_types
@@ -184,6 +185,7 @@ payload:
     downstream:
       - docs/2026-11-15-the-factory-phasemap.spec::IF11_agents_deployed_per_system_by_hat
       - docs/2026-11-15-the-factory-phasemap.spec::IF12_nexus_builds_itself_autonomously
+      - docs/2026-11-17-nexus-codes-itself-phasemap.spec::NX2_nexus_codes_itself_toward_a_dynamic_end_state
     blockedBy:
       - docs/2026-11-15-the-factory-phasemap.spec::IF2_the_build_as_a_pipeline
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC4_the_box_kinds_on_the_canvas
@@ -194,8 +196,8 @@ payload:
       - layer 16 · blocked by IF2_the_build_as_a_pipeline, PC4_the_box_kinds_on_the_canvas
       - >-
         depends on (2): IF2_the_build_as_a_pipeline, PC4_the_box_kinds_on_the_canvas · all upstream
-        52
-      - 'needed by (1): IF11_agents_deployed_per_system_by_hat · all downstream 2'
+        53
+      - 'needed by (1): IF11_agents_deployed_per_system_by_hat · all downstream 3'
     edges:
       - from: docs/2026-11-15-the-factory-phasemap.spec::IF2_the_build_as_a_pipeline
         kind: declared

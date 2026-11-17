@@ -1,0 +1,140 @@
+envelope: 1
+uuid: nexus-export-graph-phase:NX1_no_request_runs_without_its_map:cf70a87d069e9e87
+type: graph
+id: phase:NX1_no_request_runs_without_its_map:cf70a87d069e9e87
+context: dependency graph of phase NX1_no_request_runs_without_its_map
+intent: null
+summary: 11 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1794939910288
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794939910288
+lastSeenAt: 1794939910288
+fingerprint: null
+payload:
+  for: NX1_no_request_runs_without_its_map
+  kind: phase
+  repo: null
+  hash: cf70a87d069e9e87
+  nodes:
+    - path: cortex/core/raid/contract-template.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/input.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: cos/pipeline/index.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/pipeline/runs.eg
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/spec/pipeline.spec
+      role: changes
+      exists: true
+      system: cos
+    - path: cortex/boot.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cos/manager/server.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: tests/modules/test-raid-input.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/core/raid/contract-gates.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/envelope.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: lib/node-export.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: cortex/core/raid/input.js
+      to: cortex/core/raid/envelope.js
+      kind: requires
+    - from: cortex/core/raid/input.js
+      to: lib/node-export.js
+      kind: requires
+    - from: cortex/core/raid/contract-template.js
+      to: cortex/core/raid/contract-gates.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/pipeline/index.js
+      kind: requires
+    - from: cortex/boot.js
+      to: cortex/core/raid/input.js
+      kind: requires
+    - from: tests/modules/test-raid-input.test.js
+      to: cortex/core/raid/input.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 6
+    deps:
+      - docs/2026-10-13-projects-raid-and-gates-phasemap.spec::RD9_every_input_through_raid
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ13_the_work_surface_and_provenance
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ7_the_context_obligations
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ23_acceptance_conditions_that_cannot_be_moved
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC16_raid_routes_every_interaction
+    dependents:
+      - docs/2026-11-17-nexus-codes-itself-phasemap.spec::NX2_nexus_codes_itself_toward_a_dynamic_end_state
+    upstream:
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ0_the_inventory_proved
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ10_anchors_and_the_diff_reconciled
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ13_the_work_surface_and_provenance
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ1_the_verifier_library
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ23_acceptance_conditions_that_cannot_be_moved
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ6_one_intent_map
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ7_the_context_obligations
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ9_the_chunked_contract
+      - docs/2026-10-13-projects-raid-and-gates-phasemap.spec::RD0_raid_has_its_own_contract
+      - docs/2026-10-13-projects-raid-and-gates-phasemap.spec::RD9_every_input_through_raid
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC16_raid_routes_every_interaction
+    downstream:
+      - docs/2026-11-17-nexus-codes-itself-phasemap.spec::NX2_nexus_codes_itself_toward_a_dynamic_end_state
+    blockedBy:
+      - docs/2026-10-13-projects-raid-and-gates-phasemap.spec::RD9_every_input_through_raid
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ13_the_work_surface_and_provenance
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ7_the_context_obligations
+      - docs/2026-10-12-request-spine-phasemap.spec::RQ23_acceptance_conditions_that_cannot_be_moved
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC16_raid_routes_every_interaction
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - >-
+        layer 6 · blocked by RD9_every_input_through_raid, RQ13_the_work_surface_and_provenance,
+        RQ7_the_context_obligations, RQ23_acceptance_conditions_that_cannot_be_moved,
+        PC16_raid_routes_every_interaction
+      - >-
+        depends on (5): RD9_every_input_through_raid, RQ13_the_work_surface_and_provenance,
+        RQ7_the_context_obligations, RQ23_acceptance_conditions_that_cannot_be_moved,
+        PC16_raid_routes_every_interaction · all upstream 11
+      - 'needed by (1): NX2_nexus_codes_itself_toward_a_dynamic_end_state'
+    edges:
+      - from: docs/2026-10-13-projects-raid-and-gates-phasemap.spec::RD9_every_input_through_raid
+        kind: declared
+      - from: docs/2026-10-12-request-spine-phasemap.spec::RQ13_the_work_surface_and_provenance
+        kind: declared
+      - from: docs/2026-10-12-request-spine-phasemap.spec::RQ7_the_context_obligations
+        kind: declared
+      - from: docs/2026-10-12-request-spine-phasemap.spec::RQ23_acceptance_conditions_that_cannot_be_moved
+        kind: declared
+      - from: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC16_raid_routes_every_interaction
+        kind: declared

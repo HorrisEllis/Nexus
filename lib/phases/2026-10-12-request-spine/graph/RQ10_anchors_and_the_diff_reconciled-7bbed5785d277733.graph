@@ -7,11 +7,11 @@ intent: null
 summary: 25 node(s), 3 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792787677360
+exported_at: 1794938404466
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677360
-lastSeenAt: 1792787677360
+firstSeenAt: 1794938404466
+lastSeenAt: 1794938404466
 fingerprint: null
 payload:
   for: RQ10_anchors_and_the_diff_reconciled
@@ -229,6 +229,7 @@ payload:
       - docs/2026-10-12-request-spine-phasemap.spec::RQ19_what_nexus_can_take_over
       - docs/2026-10-12-request-spine-phasemap.spec::RQ20_the_budget_meter
       - docs/2026-10-12-request-spine-phasemap.spec::RQ24_the_gate_transaction
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC7_iterate_to_the_end_state
     blockedBy:
       - docs/2026-10-12-request-spine-phasemap.spec::RQ9_the_chunked_contract
     unlocks: []
@@ -242,7 +243,7 @@ payload:
       - 'depends on (1): RQ9_the_chunked_contract · all upstream 5'
       - >-
         needed by (3): RQ13_the_work_surface_and_provenance, RQ14_the_spine_end_to_end,
-        RQ24_the_gate_transaction · all downstream 8
+        RQ24_the_gate_transaction · all downstream 9
       - >-
         same files as RQ22_the_dependency_boundary_with_invariants_that_run with no order between
         them: lib/chunk-verify.js

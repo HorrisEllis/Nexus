@@ -1068,6 +1068,29 @@ function _buildComponentFailureMap(componentErrors) {
 // Feeds the self-heal engine with structured failure context.
 // ══════════════════════════════════════════════════════════════════════════════
 
+function _failuresDir() {
+  return process.env.INTELLIGENCE_FAILURES_DIR || require('../lib/data-home.js').home('intelligence', 'failures');
+}
+/** _writeFailureReports(index, at) → { written, unchanged } — one <faultClass>.json per class (Windows-safe name), _scans.jsonl appended */
+function _writeFailureReports(index, at = Date.now()) {
+  const fs = require('fs'), path = require('path');
+  const dir = _failuresDir(); fs.mkdirSync(dir, { recursive: true });
+  const safe = (k) => String(k).replace(/[<>:"/\\|?*\x00-\x1f]/g, '_').slice(0, 120) || 'unnamed';
+  let written = 0, unchanged = 0;
+  const classes = Object.values(index).sort((a, b) => b.count - a.count);
+  for (const fi of classes) {
+    const report = { faultClass: fi.faultClass, count: fi.count, lastSeen: fi.lastSeen, systems: fi.systems, components: fi.components,
+      gapTypes: fi.gapTypes, precursors: fi.precursors, examples: (fi.examples || []).slice(0, 10), by: 'intelligence.failure_scan' };
+    const file = path.join(dir, `${safe(fi.faultClass)}.json`), text = JSON.stringify(report, null, 2) + '\n';
+    let prior = null; try { prior = fs.readFileSync(file, 'utf8'); } catch (_) {}
+    if (prior === text) { unchanged++; continue; }
+    fs.writeFileSync(file, text); written++;
+  }
+  fs.appendFileSync(path.join(dir, '_scans.jsonl'), JSON.stringify({ at, faultClasses: classes.length, written, unchanged,
+    top: classes.slice(0, 5).map(f => ({ faultClass: f.faultClass, count: f.count, lastSeen: f.lastSeen })) }) + '\n');
+  return { written, unchanged };
+}
+
 async function _scanFailures() {
   try {
     const now = Date.now();
@@ -1197,6 +1220,12 @@ async function _scanFailures() {
     // same underlying data, grouped the other way (by component, not by
     // fault class), plus loom-registration status per component.
     _buildComponentFailureMap(componentErrors);
+
+    // 2026-11-17 — James, his COS screenshot of intelligence's Data tab (data folders / own / failures: "Empty."): "also failure mode
+    // reports should be going in here." The taxonomy lived only in this process's memory (and five lines in Cortex's event_log). Now each
+    // fault class is a report file in Intelligence's own data folder, rewritten only when it changed, and each scan adds one line to
+    // _scans.jsonl. The failure-mode records themselves stay Cortex's (it keeps the books: cortex/self-heal/failure-intake.js).
+    try { _writeFailureReports(_failureIndex, now); } catch (e) { console.warn(`[${MODULE_ID}] failure reports not written to data/failures: ${e.message}`); }
 
     // Write summary to event_log
     const topFaults = Object.entries(_failureIndex)
@@ -1666,6 +1695,7 @@ module.exports = {
   getMetaSummary: () => _metaSummary,
   getLoomMap: () => _loomMap,
   getComponentFailureMap: () => _componentFailureMap,
+  _writeFailureReports, // exported for direct testing — failure-mode reports into intelligence/data/failures (2026-11-17)
   _scanPatterns,     // exported for direct testing (intelligence.test.js pins this)
   _coOccurrenceLift, // exported for direct testing — the base-rate crystallisation gate (§2026-10-24)
   _scanMetaPatterns, // exported for direct testing

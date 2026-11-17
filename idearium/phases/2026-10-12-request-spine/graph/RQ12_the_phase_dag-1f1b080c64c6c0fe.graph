@@ -7,11 +7,11 @@ intent: null
 summary: 27 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792841755289
+exported_at: 1794938404477
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792841755289
-lastSeenAt: 1792841755289
+firstSeenAt: 1794938404477
+lastSeenAt: 1794938404477
 fingerprint: null
 payload:
   for: RQ12_the_phase_dag
@@ -235,6 +235,7 @@ payload:
       - docs/2026-10-12-request-spine-phasemap.spec::RQ19_what_nexus_can_take_over
       - docs/2026-10-12-request-spine-phasemap.spec::RQ20_the_budget_meter
       - docs/2026-10-12-request-spine-phasemap.spec::RQ27_the_reasoning_half_gets_its_home
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC7_iterate_to_the_end_state
     blockedBy:
       - docs/2026-10-12-request-spine-phasemap.spec::RQ9_the_chunked_contract
     unlocks: []
@@ -248,7 +249,7 @@ payload:
       - 'depends on (1): RQ9_the_chunked_contract · all upstream 5'
       - >-
         needed by (2): RQ14_the_spine_end_to_end, RQ27_the_reasoning_half_gets_its_home · all
-        downstream 7
+        downstream 8
       - >-
         same files as RQ25_progress_is_evidence_not_activity with no order between them:
         idearium/ui/js/plan-panel.js

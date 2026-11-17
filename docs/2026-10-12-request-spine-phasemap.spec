@@ -330,6 +330,9 @@ spec:
       ui: "the copilot pane says which intent it read and why (one line)"
 
     RQ7_the_context_obligations:
+      expanded_2026_11_17_lifecycle: >-
+        James, 2026-11-17, giving the request lifecycle whole ("input into nexus goes to raid … raid decides what to do with each request … WE need a huge document for all of this, a map keep it all logged and referencable.").
+        Revived by his word today (shelved 2026-11-07): this phase owns L2 (the DAG of what is needed) and L4 (Nexus first, then outward) of docs/2026-11-17-raid-request-lifecycle-phasemap.spec. The stage there says what exists and the gap.
       layer: library
       status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
       james: '"a checklist of context needed per dependancy. Incremental and one step at a time, to account for small llms."'
@@ -350,6 +353,9 @@ spec:
       ui: "the request's checklist in the work surface: each obligation, its status, its evidence"
 
     RQ8_the_gap_is_a_question:
+      expanded_2026_11_17_lifecycle: >-
+        James, 2026-11-17, giving the request lifecycle whole ("input into nexus goes to raid … raid decides what to do with each request … WE need a huge document for all of this, a map keep it all logged and referencable.").
+        Revived by his word today (shelved 2026-11-07): this phase owns L5 (no or I don't know is not an answer) and L7 (the follow-up question) of docs/2026-11-17-raid-request-lifecycle-phasemap.spec. The stage there says what exists and the gap.
       layer: library
       status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
       james: '"anything that it can’t find context to, is a gap that the agents needs to prompt the user for."'
@@ -429,6 +435,9 @@ spec:
       ui: "the Plan shows the DAG's phases and which chunks are ready, running, blocked"
 
     RQ13_the_work_surface_and_provenance:
+      expanded_2026_11_17_lifecycle: >-
+        James, 2026-11-17, giving the request lifecycle whole ("input into nexus goes to raid … raid decides what to do with each request … WE need a huge document for all of this, a map keep it all logged and referencable.").
+        Revived by his word today (shelved 2026-11-07): this phase owns L1 (the open loop and the compartment, the .input node inside) and L7 (the fill index) of docs/2026-11-17-raid-request-lifecycle-phasemap.spec. The stage there says what exists and the gap.
       layer: library
       status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
       james: '"Create a compartment for the uncomited changes, maybe in raid, to hold each file that has changed, and the contract, and relavent context"'
@@ -565,6 +574,9 @@ spec:
       ui: "the numbers on the request's card"
 
     RQ21_the_contract_file_is_its_record:
+      expanded_2026_11_17_lifecycle: >-
+        James, 2026-11-17, giving the request lifecycle whole ("input into nexus goes to raid … raid decides what to do with each request … WE need a huge document for all of this, a map keep it all logged and referencable.").
+        Revived by his word today (shelved 2026-11-07): this phase owns L3 (the contract is the end state of the compartment) of docs/2026-11-17-raid-request-lifecycle-phasemap.spec. The stage there says what exists and the gap.
       layer: library
       status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
       james: '"like these need to be real .contract files(literally .contract as the extension using the yaml files like the rest of the system uses for nodes.)" · "each gate, tags, updates the progress in idearium"'

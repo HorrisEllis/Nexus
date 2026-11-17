@@ -7,11 +7,11 @@ intent: null
 summary: 0 node(s), 0 crossing(s) — not ready
 system: idearium
 tags: []
-exported_at: 1794748647181
+exported_at: 1794939959420
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794748647181
-lastSeenAt: 1794748647181
+firstSeenAt: 1794939959420
+lastSeenAt: 1794939959420
 fingerprint: null
 payload:
   for: IF7_the_factory_builds_itself
@@ -30,11 +30,13 @@ payload:
     dependents:
       - docs/2026-11-15-the-factory-phasemap.spec::IF12_nexus_builds_itself_autonomously
     upstream:
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC16_raid_routes_every_interaction
       - docs/2026-11-15-the-factory-phasemap.spec::IF0_the_census
       - docs/2026-11-15-the-factory-phasemap.spec::IF1_idearium_asks_agents_through_the_pipeline
       - docs/2026-11-15-the-factory-phasemap.spec::IF2_the_build_as_a_pipeline
     downstream:
       - docs/2026-11-15-the-factory-phasemap.spec::IF12_nexus_builds_itself_autonomously
+      - docs/2026-11-17-nexus-codes-itself-phasemap.spec::NX2_nexus_codes_itself_toward_a_dynamic_end_state
     blockedBy:
       - docs/2026-11-15-the-factory-phasemap.spec::IF1_idearium_asks_agents_through_the_pipeline
       - docs/2026-11-15-the-factory-phasemap.spec::IF2_the_build_as_a_pipeline
@@ -50,8 +52,8 @@ payload:
         IF2_the_build_as_a_pipeline
       - >-
         depends on (2): IF1_idearium_asks_agents_through_the_pipeline, IF2_the_build_as_a_pipeline ·
-        all upstream 3
-      - 'needed by (1): IF12_nexus_builds_itself_autonomously'
+        all upstream 4
+      - 'needed by (1): IF12_nexus_builds_itself_autonomously · all downstream 2'
       - >-
         same files as IF9_everything_raid_does_through_the_pipeline with no order between them:
         cos/pipeline/pipelines

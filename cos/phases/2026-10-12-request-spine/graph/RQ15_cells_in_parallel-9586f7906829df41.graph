@@ -7,11 +7,11 @@ intent: null
 summary: 13 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792787677368
+exported_at: 1794938404493
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677368
-lastSeenAt: 1792787677368
+firstSeenAt: 1794938404493
+lastSeenAt: 1794938404493
 fingerprint: null
 payload:
   for: RQ15_cells_in_parallel
@@ -120,6 +120,7 @@ payload:
     dependents:
       - docs/2026-10-12-request-spine-phasemap.spec::RQ16_hypotheses_in_parallel
       - docs/2026-10-12-request-spine-phasemap.spec::RQ18_test_and_attack_intents
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC7_iterate_to_the_end_state
     upstream:
       - docs/2026-10-12-request-spine-phasemap.spec::RQ0_the_inventory_proved
       - docs/2026-10-12-request-spine-phasemap.spec::RQ10_anchors_and_the_diff_reconciled
@@ -139,6 +140,7 @@ payload:
     downstream:
       - docs/2026-10-12-request-spine-phasemap.spec::RQ16_hypotheses_in_parallel
       - docs/2026-10-12-request-spine-phasemap.spec::RQ18_test_and_attack_intents
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC7_iterate_to_the_end_state
     blockedBy:
       - docs/2026-10-12-request-spine-phasemap.spec::RQ14_the_spine_end_to_end
     unlocks:
@@ -149,8 +151,8 @@ payload:
       - layer 7 · blocked by RQ14_the_spine_end_to_end
       - 'depends on (1): RQ14_the_spine_end_to_end · all upstream 15'
       - >-
-        needed by (2): RQ16_hypotheses_in_parallel, RQ18_test_and_attack_intents · finishing it
-        unlocks RQ18_test_and_attack_intents
+        needed by (3): RQ16_hypotheses_in_parallel, RQ18_test_and_attack_intents,
+        PC7_iterate_to_the_end_state · finishing it unlocks RQ18_test_and_attack_intents
     edges:
       - from: docs/2026-10-12-request-spine-phasemap.spec::RQ14_the_spine_end_to_end
         kind: declared

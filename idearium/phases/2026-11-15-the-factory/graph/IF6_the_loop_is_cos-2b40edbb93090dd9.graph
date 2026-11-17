@@ -7,11 +7,11 @@ intent: null
 summary: 25 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1794748295014
+exported_at: 1794939959418
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794748295014
-lastSeenAt: 1794748295014
+firstSeenAt: 1794939959418
+lastSeenAt: 1794939959418
 fingerprint: null
 payload:
   for: IF6_the_loop_is_cos
@@ -206,6 +206,7 @@ payload:
       - docs/2026-11-15-the-factory-phasemap.spec::IF2_the_build_as_a_pipeline
     dependents: []
     upstream:
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC16_raid_routes_every_interaction
       - docs/2026-11-15-the-factory-phasemap.spec::IF0_the_census
       - docs/2026-11-15-the-factory-phasemap.spec::IF1_idearium_asks_agents_through_the_pipeline
       - docs/2026-11-15-the-factory-phasemap.spec::IF2_the_build_as_a_pipeline
@@ -223,7 +224,7 @@ payload:
     dangling: []
     lines:
       - layer 3 · blocked by IF2_the_build_as_a_pipeline
-      - 'depends on (1): IF2_the_build_as_a_pipeline · all upstream 3'
+      - 'depends on (1): IF2_the_build_as_a_pipeline · all upstream 4'
       - 'needed by (0): —'
       - 'same files as IF3_one_gate with no order between them: idearium/api/index.js'
       - 'same files as IF5_one_compartment with no order between them: idearium/api/index.js'

@@ -17,6 +17,14 @@ spec:
       progress and success or failure of the handoff and why." · "nexus is recursive, builds itself, using itself. the
       same architecture on every level." — 0.11.1: the template's tree and rules carry the handoff folders and modules/
       (cos/archetype/nexus-system lib/handoff.js, lib/modules.js, template/).
+    james_2026_11_17: >
+      "somewhere the entire system is explained. im tired of having to repeat myself. architecture doc or genesis. i need nexus coding
+      asap. like basically dynamic end state. the pipeline is everything." · "like i had a dream of using ai to speed up innovation and
+      human advancement. nexus is that system. my framework is a piece. me and nexus are meant to improve each other."
+    whole_system: >
+      docs/atlases/nexus-atlas.md, its first section ("Read this first"): the dream, the goal, how a request moves through Nexus, what holds
+      it together, in his words, the one place it is all explained (2026-11-17). The request, stage by stage:
+      docs/2026-11-17-raid-request-lifecycle-phasemap.spec. The road to Nexus coding itself: docs/2026-11-17-nexus-codes-itself-phasemap.spec.
     template:    idearium/spec-engine/templates/architecture-spec.template.yaml   # the tree, the registry and the rules — one home; this spec points at it, never copies it
     schemas:     idearium/spec-engine/templates/system/schemas/                    # schema.<type> for component, capability, command, event, route, hook, wire, bundle — a new system copies and owns them
     purpose: >
@@ -899,3 +907,18 @@ spec:
 #    the same reading applied to every gate and layer is COS watching its own architecture. It reports to the mind (copilot); it does not
 #    become a third thinker.
 # Still open (his): which chunks first; whether shared services live in COS or in a system of their own; how far emerge.exe replaces node.exe.
+
+# ── ADDENDUM 2026-11-17 — the request lifecycle (his) ───────────────────────────────────────────────────────────────────────────────────────
+# James, 2026-11-17: "input into nexus goes to raid. creates a input node … then creates a dependancy graph of whats needed to fullfill the
+# request creating a contract as setting is as the end state of the compartment. the dag is conditions needed in order to complete the
+# request. basically no or i dont know isn't a anwser. … query nexus first, check the component store before building anything … gates hold
+# context, and persistence, nodes to maintain data after restarts, cortex is the bookkeeper for all data architiving to query." · "wouldn't
+# raid be the bridge?"
+# How a request moves through the architecture, at this spec's level (the stages, L0–L14, are in docs/2026-11-17-raid-request-lifecycle-phasemap.spec):
+#   surface (CLI, cos.exe, Clear Glass, copilot) → RAID (Cortex) keeps the .input node → RAID opens a loop and a compartment (the work
+#   surface) → drafts the DAG of what is needed (its conditions) → sets the contract (v2) as the compartment's end state → each DAG node is
+#   answered from Nexus first (component store, Cortex memory, the lattice, each system's door), then outward, then him; a missing capability
+#   becomes an Idearium build; nothing ends as "no" or "unknown" → RAID decides and delivers each step (RAID is the bridge: one door knows each
+#   agent's kind) → gates hold context and persistence; nodes survive restarts; Versionium snapshots and the rewind engine restore → the
+#   fill index records what filled each need, from where, when → Cortex books every record for query.
+# Each system keeps its own data (his, 2026-11-17); RAID reaches every system by its route (§5.9, §5.16); Cortex is the bookkeeper (2026-11-09).

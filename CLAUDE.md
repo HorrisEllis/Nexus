@@ -51,6 +51,10 @@ Money matters now ("I need to be paid, at all."). The Fiverr autofill is built (
 - **Never commit `data/**`.** After touching `emerge/`, run `node scripts/emerge-lock.js --write`.
 - **Every change and every version goes to Versionium** (§17.12), through `lib/versionium-record.js` `record()`.
 
+## He does not do CLI (his, 2026-11-17)
+"no. i dont do cli. im not trying to remember all that. idearium already has the ui for this, which needs to migrate to cos automation pipeline and workflow canvas." Tell him what to do in the UI (the screen, the tab, the button), never a command to type. Commands are for agents and the coder.
+Where the UI for something lives in Idearium but belongs to COS, say so and point at the phase that moves it.
+
 ## His voice, and proof
 - Quote him verbatim and dated in versions, changelogs, map origins and decisions. Give the context and the options, and name the coder's part as
   the coder's. The ideas and the calls are his.

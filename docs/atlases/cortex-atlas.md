@@ -127,6 +127,37 @@ External:
 
 ---
 
+## RAID: the request lifecycle (2026-11-17)
+
+James, 2026-11-17: "input into nexus goes to raid. creates a input node for the whats been reqeuested. then creates a dependancy graph of
+whats needed to fullfill the request creating a contract as setting is as the end state of the compartment. … raid decides what to do with
+each request." · "wouldn't raid be the bridge?"
+
+The whole line is mapped in `docs/2026-11-17-raid-request-lifecycle-phasemap.spec`, stage by stage, each with what exists and the gap:
+
+| Stage | What | Status | Where it lives |
+|---|---|---|---|
+| L0 | the input becomes a `.input` node | built | `cortex/core/raid/input.js`, `POST /api/raid/input`, `raid input` |
+| L1 | the open loop and the request's compartment (the work surface) | partly | COS's request folder (`cos/pipeline/runs.eg`); no compartment per input yet |
+| L2 | the DAG of what is needed (its conditions) | partly | `cortex/core/raid/contract-template.js` dag nodes; not drafted from the input yet |
+| L3 | the contract is the end state | built | `contract-template.js`, contract v2, booked by `contract-v2-door.js` |
+| L4 | Nexus first, then outward (component store before building) | partly | `lib/context-sources.js`, `lib/component-store.js`, `lib/vector-memory.js`, the lattice, each system's registry |
+| L5 | "no or i dont know isn't a anwser" | partly | a required field nobody can fill is a gap put to him |
+| L6 | a missing capability is built by Idearium | partly | `idearium/pipelines/idearium-build.pipeline`, PC3 |
+| L7 | follow-up questions and the fill index (what filled each need, from where, when) | gap | — |
+| L8 | failure modes, faults, gaps on the contract | partly | `cortex/self-heal/failure-intake.js`, contract v2 gaps |
+| L9 | RAID decides and delivers (RAID is the bridge) | partly | decides: `index.js`, `router.js`; delivery still in each caller |
+| L10–L13 | gates hold context; nodes persist; Versionium and the rewind engine; Cortex keeps the books | in part | `contract-gates.js`, `cos/pipeline/gate.eg`, `lib/node-export.js`, `lib/versionium-record.js` |
+
+Map before executing (his, 2026-11-17: "each requests need a dag. the system needs to map before executing. that way it doesn't drift."):
+every request gets its DAG, its contract (the end state), its stopping conditions and a test file before any step runs, and runs as a
+pipeline: steps as executable node files (`.pipeline`, `.framework`), editable in Nexus, run by COS, observable, diagnosable, debuggable,
+bottlenecks measured; Emerge through it per word and primitive, so a model of any size can do a step. RL_D5–RL_D8 in the lifecycle map;
+PL-012 in `cos/spec/pipeline.spec`.
+
+Build order (his: bottom up): RAID delivers (PC16) → the compartment and open loop (RQ13) → the fill index (RQ13, RQ8) → Nexus-first
+query (RQ7) → the DAG drafted (RQ7) → missing capability built (PC3) → snapshots per gate and Cortex's books.
+
 ## Modules Not Yet Built
 
 Not determined — `cortex.spec`'s `gaps:`/`history:` sections not read this session.

@@ -9,11 +9,11 @@ intent: null
 summary: IF1_idearium_asks_agents_through_the_pipeline (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1794748294995
+exported_at: 1794939959407
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794748294995
-lastSeenAt: 1794748294995
+firstSeenAt: 1794939959407
+lastSeenAt: 1794939959407
 fingerprint: null
 payload:
   id: IF1_idearium_asks_agents_through_the_pipeline
@@ -28,6 +28,7 @@ payload:
     - cos/manager/automation-door.js
   depends_on:
     - IF0_the_census
+    - PC16_raid_routes_every_interaction
   blocks: []
   spec: null
-  graph: cb88c16aacd556be
+  graph: 0955781d7166f69a

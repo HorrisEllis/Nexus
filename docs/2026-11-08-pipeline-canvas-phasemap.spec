@@ -234,6 +234,9 @@ phases:
     proof: "a pipeline with a procedure step runs it and waits on its confirm; pipeline → procedure → the same pipeline is refused as a loop, said; depth 6 across kinds is refused"
 
   PC3_the_build_request_step:
+    expanded_2026_11_17_lifecycle: >-
+      James, 2026-11-17, giving the request lifecycle whole ("input into nexus goes to raid … raid decides what to do with each request … WE need a huge document for all of this, a map keep it all logged and referencable."): "if it doesn't have the capability is can use idearium to build the capability."
+      Owns L6 of docs/2026-11-17-raid-request-lifecycle-phasemap.spec: a capability no registry offers (the component store checked first, RL_D3) becomes a build request to Idearium, a DAG node the contract waits on.
     status: OPEN
     layer: integration
     depends_on: [PC1_one_box_shape, PC_D3_when_a_step_becomes_a_build_request, PC_D5_emerge_writes_the_code, PC_D10_the_canvas_is_the_surface_tools_are_made, AE_D4_the_hub_structural, OC8_the_console]
@@ -1122,6 +1125,19 @@ expanded_2026_11_13_hub:
       the proposal is the one place he answers. Slices: (a) RAID's two, (b) Idearium's verdict, (c) Guardian and the pipeline.
     proof: "a stand-in of each owner: its wait becomes one open proposal; take runs the owner's route and closes it; drop says why; the owner down is said, the proposal kept"
   PC16_raid_routes_every_interaction:
+    expanded_2026_11_17_ui: >-
+      James, 2026-11-17: "no. i dont do cli. im not trying to remember all that. idearium already has the ui for this, which needs to migrate to cos automation pipeline and workflow canvas." Who answers (ollama, copilot, a guardian agent, claude-code) and the Ollama model are set today per repo in
+      Idearium's Agent tab (idearium/ui/js/agent-options.js, POST /api/repos/:uuid/agent/settings, lib/repo-agent.js). With RAID the bridge,
+      they become RAID's preferences per intent (its tunables) and their screen moves to COS's Automation tab, beside the pipeline and on the
+      workflow canvas (cos/ui/automation/): set where the work runs, for every pipeline's agent steps. Idearium's Agent tab reads the same
+      settings by RAID's route until it is retired (§0.3, archived not deleted).
+    files_2026_11_17_ui: [cos/ui/automation/page.js, cos/ui/automation/engine.js, cos/ui/automation/canvas.js, idearium/ui/js/agent-options.js, lib/repo-agent.js]
+    expanded_2026_11_17_lifecycle: >-
+      James, 2026-11-17, giving the request lifecycle whole ("input into nexus goes to raid … raid decides what to do with each request … WE need a huge document for all of this, a map keep it all logged and referencable.").
+      And before it: "wouldn't raid be the bridge?" · "yes but look at the nodes." (RL_D1 of docs/2026-11-17-raid-request-lifecycle-phasemap.spec). RAID decides AND delivers: one door knows each
+      agent's kind (lib/agent-reach.js KIND: the local bridge for ollama/mistral, guardian's NCP for browser agents); his preferences and the fallback per intent
+      are RAID's tunables; callers stop choosing. The officiator's 0.60.552 switch and officiatorAgents move into RAID (replaced, not duplicated); copilot/lifeline.js
+      _tryOllama/_tryGuardian become RAID's delivery, not a caller's. First in the lifecycle's build order (L9).
     status: OPEN
     layer: integration
     james: '"Everything routes through RAID."'
