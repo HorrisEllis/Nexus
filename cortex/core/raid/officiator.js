@@ -78,6 +78,18 @@ const MAX_ATTEMPTS = parseInt(process.env.OFFICIATOR_MAX_ATTEMPTS || '4', 10);
 // teaches RAID (recordOutcome false); a success teaches it too. When no agent answers, no drop is charged: the officiator
 // waits (AGENT_BACKOFF_MS, doubling, capped), persisted beside the attempts. Parked drops get a daily try, and unpark() clears them.
 const MAX_AGENTS = parseInt(process.env.OFFICIATOR_MAX_AGENTS || '3', 10);
+// 2026-11-17 — the agents that are the local bridge (:3749), never a browser tab: through the kernel's one door to it, lib/ollama-port.js.
+// Sending them through guardian's NCP (as before) could never answer ("no real agent response (forAgent=ollama)"), so RAID fell to Claude.
+const LOCAL_AGENTS = new Set(['ollama', 'mistral']);
+async function _askLocal(prompt, agent, T) {
+  const port = require('../../../lib/ollama-port.js');
+  const model = (T && T('officiatorModel', '')) || undefined;
+  const r = await port.generate({ prompt, model, maxTokens: (T && T('officiatorMaxTokens', 1024)) || 1024, temperature: 0.1, caller: 'cortex.raid.officiator' });
+  // a failure is { ok: false } (silence, as guardian's NCP says it), never null: inside WARP a null reads as a refused reply (a content
+  // failure that teaches RAID), and a bridge that did not answer is the agent's silence, which teaches nothing (GT1)
+  if (r && r.ok && typeof r.text === 'string' && r.text.trim()) return { ok: true, text: r.text, provider: agent };
+  return { ok: false, text: null, provider: agent, error: (r && r.error) || 'the local bridge gave no text' };
+}
 const AGENT_BACKOFF_MS = parseInt(process.env.OFFICIATOR_AGENT_BACKOFF_MS || String(2 * 60 * 1000), 10);
 const PARKED_RETRY_MS = parseInt(process.env.OFFICIATOR_PARKED_RETRY_MS || String(24 * 3600 * 1000), 10);
 const AGENTS_KEY = '__agents';   // the attempts file's record of the agents' own wait (not a drop)
@@ -222,10 +234,19 @@ async function _synthesizeCore(prompt, opts = {}) {
   if (!opts.forAgent) { try { await require('./index.js').ready(); } catch (_) {} }   // §0.60.3 — health read in this process before RAID decides
   // §RT1 0.60.78 — RAID's ranked candidates, best first (an explicit forAgent: only that one)
   let candidates = [], cluster = null;
+  // 2026-11-17 — James: "yes. it needs to fallback. i wanted options for all this so i can configure it. like in raid." His list first
+  // (RAID's tunables officiatorAgents, default ['ollama']: local, no paid agent); then RAID's ranked candidates only when
+  // officiatorFallback is 'raid'. Before this, RAID ranked Claude first and every staged drop went to this paid session.
+  const T = (k, d) => { try { return require('./tunables.js').get(k); } catch (_) { return d; } };
+  const preferred = opts.forAgent ? [] : (T('officiatorAgents', []) || []).map(String).filter(Boolean);
   if (opts.forAgent) candidates = [opts.forAgent];
   else {
-    try { const d = require('./index.js').decideForContract({ intention: 'synthesize a contract from a staged artifact' }); cluster = d && d.cluster;
-      candidates = [...new Set([d && d.agent, ...((d && d.candidates) || []).map(c => c.name)].filter(Boolean))].slice(0, MAX_AGENTS); } catch (_) { candidates = []; }
+    let ranked = [];
+    if (T('officiatorFallback', 'raid') === 'raid') {
+      try { const d = require('./index.js').decideForContract({ intention: 'synthesize a contract from a staged artifact' }); cluster = d && d.cluster;
+        ranked = [...new Set([d && d.agent, ...((d && d.candidates) || []).map(c => c.name)].filter(Boolean))].slice(0, MAX_AGENTS); } catch (_) { ranked = []; }
+    }
+    candidates = [...new Set([...preferred, ...ranked])];
   }
   const forAgent = candidates[0] || null;
   if (!forAgent) return { ok: false, cls: 'agent', reason: 'RAID found no available agent to synthesize with' };
@@ -240,7 +261,8 @@ async function _synthesizeCore(prompt, opts = {}) {
   const learn = (agent, ok) => { if (opts.forAgent) return; try { require('./index.js').recordOutcome(agent, cluster, ok); } catch (_) { /* learning never stops synthesis */ } };
   const tried = [];
   for (const agent of candidates) {
-    const result = await require('../../../lib/warp-rung.js').wrap(() => dispatchToNcpAgent(prompt, { provider: agent }), { kind: 'officiator-synthesis', provider: agent, key: prompt, mode: 'cache', axioms: parses, fresh: !!opts.fresh });
+    // the local bridge through the ollama port, a browser agent through guardian's NCP; both inside WARP (lib/build-paths.js reads this call)
+    const result = await require('../../../lib/warp-rung.js').wrap(() => (LOCAL_AGENTS.has(agent) ? _askLocal(prompt, agent, T) : dispatchToNcpAgent(prompt, { provider: agent })), { kind: 'officiator-synthesis', provider: agent, key: prompt, mode: 'cache', axioms: parses, fresh: !!opts.fresh });
     const unparsed = (result && result.warp && result.warp.source === 'rejected') || (result && result.ok && !_parseSynthesizedContract(result.text));
     if (unparsed) {
       // it answered, and the answer is no contract: the capability class — RAID learns, the next agent is tried

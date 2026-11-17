@@ -73,6 +73,17 @@ phasemap:
         reads it.
       proof: "a planted failure of each class takes its own path; only capability and context failures change routing or budgets (extends test-contract-adapters)"
     RT1_eligibility_then_preference:
+      expanded_2026_11_17: >-
+        James, 2026-11-17: "also failure mode reports should be going in here. yes. it needs to fallback. i wanted options for all this so i can configure it. like in raid." (his screenshot of COS's intelligence Data tab, and his "yes" to routing the officiator's synthesis to local Ollama). Found in
+        his log the same day: the officiator (cortex/core/raid/officiator.js, the ranked walk RT1 gave it at 0.60.78) sent "Synthesize ONE
+        real build contract…" to the Claude tab, a paid session, because RAID ranked Claude first; and its 'ollama' went through guardian's
+        NCP, which has no Ollama tab, so Ollama could never answer. Built (0.60.552), backend → route → command, UI his:
+        RAID's tunables gain officiatorAgents (his list, asked first, default ['ollama']), officiatorFallback ('raid' = then RAID's ranked
+        candidates, 'none' = stop: no paid agent), officiatorModel, officiatorMaxTokens; a key added later reaches an existing table (seeded,
+        said); set() refuses a value that does not fit. Local agents (ollama, mistral) are asked through lib/ollama-port.js, inside WARP.
+        Cortex GET/POST /api/raid/tunables (RAID's tunables had no door before); commands `raid tunables`, `raid tune <key> <json>`.
+        Proof: test-officiator-local-first OL-01..03; test-raid-officiator 18/18, test-build-paths 6/6, raid-tunables 8/8.
+      files_2026_11_17: [cortex/core/raid/tunables.js, cortex/core/raid/officiator.js, cortex/boot.js, idearium/cli/route-commands.js, tests/modules/test-officiator-local-first.test.js, tests/modules/test-raid-officiator.js]
       status: "DONE 0.60.31 — lib/route-eligibility.js; the door checks tools, window and readiness over every candidate, then the learned order, then the hop cap; the record on every route (test-route-eligibility RE-01..08). Low-confidence split/ask (CK-236) not built"
       folds: [RQ6_one_intent_map]
       builds_on: "lib/model-door.js route · lib/pipeline-routing.js byTabs · lib/agent-capability-profile.js · contract-adapters doorRoute"

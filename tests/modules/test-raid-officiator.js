@@ -49,6 +49,10 @@ hatSeed.seedHats();
 const _raidInputIsolated1 = fs.mkdtempSync(path.join(os.tmpdir(), 'raid-input-officiator-'));
 process.env.RAID_INPUT_DIR = _raidInputIsolated1;
 process.on('exit', () => { try { fs.rmSync(_raidInputIsolated1, { recursive: true, force: true }); } catch (_) {} });
+// 2026-11-17 — these tests are about RAID's ranked walk, which is the officiator's behaviour when his own list (RAID's tunable
+// officiatorAgents) is empty; test-officiator-local-first covers his list. RAID's 'ollama' candidate is the local bridge now, asked
+// through lib/ollama-port.js, never through guardian's NCP: OFF-RT1b stubs that port.
+try { require(path.join(ROOT, 'cortex/core/raid/tunables.js')).set('officiatorAgents', [], { source: 'test-raid-officiator' }); } catch (_) {}
 const officiator = require(path.join(ROOT, 'cortex/core/raid/officiator.js'));
 const raid = require(path.join(ROOT, 'cortex/core/raid/contract-intake.js'));
 
@@ -312,6 +316,8 @@ await test('OFF-RT1b', 'RAID\'s ranked candidates are walked: silence skips to t
   const lifeWas = require.cache[lifePath].exports.dispatchToNcpAgent;
   const asked = [];
   require.cache[lifePath].exports.dispatchToNcpAgent = async (_p, o) => { asked.push(o.provider); return byProvider[o.provider]; };
+  const port = require(path.join(ROOT, 'lib/ollama-port.js'));
+  port.provide({ generate: async () => { asked.push('ollama'); throw new Error('the bridge did not answer'); } });   // the local bridge, silent
   try {
     const { dropId } = stageRealTestArtifact('console.log("walk");');
     const r = await fresh().officiate(intake.read(dropId));
@@ -319,6 +325,7 @@ await test('OFF-RT1b', 'RAID\'s ranked candidates are walked: silence skips to t
     assert.deepStrictEqual(asked, ['ollama', 'gemini', 'chatgpt'], 'best first, then the next');
     assert.deepStrictEqual(learned, ['gemini:false', 'chatgpt:true'], 'silence teaches nothing (GT1); a wrong answer and a success do');
   } finally {
+    port.provide(null);
     require.cache[lifePath].exports.dispatchToNcpAgent = lifeWas;
     if (real) require.cache[idxPath] = real; else delete require.cache[idxPath];
   }

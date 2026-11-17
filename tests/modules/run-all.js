@@ -547,6 +547,7 @@ const SUITES = [
   'test-system-tunnel.test.js',   // 0.60.128 DB13/DB14 — his lib/system-registry.js as the tunnel: routes, commands, toasts, heartbeat over routes
   'test-system-node-relations.test.js',   // 0.60.129 DB18 — a system's nodes in relation to it: meta.system, .wire per dependency
   'test-node-registry-system.test.js',   // 0.60.130 P33a — any system's node registry: its own database, all the history, the listener
+  'test-officiator-local-first.test.js', // 0.60.552 — the officiator asks his list first (local, through the ollama port), falls back per RAID's tunables; intelligence's failure-mode reports in its own data/failures
   'test-sovereign-systems.test.js',   // 0.60.133 IM1/IM5/IM6 — a system made sovereign: its own store, another reached through its route; the census
   'test-cos-compartment-template.test.js',   // 0.60.134 — the template for each system's COS compartment, held by loom
   'test-cos-app-self-update.test.js',   // 0.60.137 COS 0.1.2 — COS says when a newer COS is out

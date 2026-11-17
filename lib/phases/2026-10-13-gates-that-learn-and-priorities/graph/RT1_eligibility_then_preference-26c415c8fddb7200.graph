@@ -1,0 +1,278 @@
+envelope: 1
+uuid: nexus-export-graph-phase:RT1_eligibility_then_preference:26c415c8fddb7200
+type: graph
+id: phase:RT1_eligibility_then_preference:26c415c8fddb7200
+context: dependency graph of phase RT1_eligibility_then_preference
+intent: null
+summary: 36 node(s), 3 crossing(s)
+system: idearium
+tags: []
+exported_at: 1794934951651
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794934951651
+lastSeenAt: 1794934951651
+fingerprint: null
+payload:
+  for: RT1_eligibility_then_preference
+  kind: phase
+  repo: null
+  hash: 26c415c8fddb7200
+  nodes:
+    - path: cortex/boot.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/contract-adapters.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/officiator.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/tunables.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: idearium/cli/route-commands.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: lib/agent-capability-profile.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/model-door.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/ollama-port.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/pipeline-routing.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/route-eligibility.js
+      role: changes
+      exists: true
+      system: lib
+    - path: tests/modules/test-officiator-local-first.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: tests/modules/test-raid-officiator.js
+      role: changes
+      exists: true
+      system: null
+    - path: cortex/core/raid/index.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/snr-filter.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/cortex-service.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/server.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: diagnostic/tests/causality.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/agent-tools/tools/governance/raid-snr.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: loom/agent-suite/index.js
+      role: used-by
+      exists: true
+      system: loom
+    - path: ollama/server.js
+      role: used-by
+      exists: true
+      system: ollama
+    - path: orchestrator/orchestrator.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: tests/modules/cortex-sse-broadcast.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/raid-tunables.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: copilot/lifeline.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: cortex/config.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/contract-intake.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/index.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/hat-forge.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/intake.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-self/systems.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/prevention.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/version.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/warp-rung.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: cortex/core/raid/officiator.js
+      to: lib/intake.js
+      kind: requires
+    - from: cortex/core/raid/officiator.js
+      to: lib/hat-forge.js
+      kind: requires
+    - from: cortex/core/raid/officiator.js
+      to: cortex/core/raid/contract-intake.js
+      kind: requires
+    - from: cortex/core/raid/officiator.js
+      to: cortex/core/raid/index.js
+      kind: requires
+    - from: cortex/core/raid/officiator.js
+      to: copilot/lifeline.js
+      kind: requires
+    - from: cortex/core/raid/officiator.js
+      to: lib/warp-rung.js
+      kind: requires
+    - from: cortex/core/raid/officiator.js
+      to: lib/prevention.js
+      kind: requires
+    - from: lib/ollama-port.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: cortex/core/raid/tunables.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/data-home.js
+      kind: requires
+    - from: cortex/boot.js
+      to: cortex/config.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/version.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: cortex/core/raid/officiator.js
+      kind: requires
+    - from: loom/agent-suite/index.js
+      to: lib/ollama-port.js
+      kind: requires
+    - from: ollama/server.js
+      to: lib/ollama-port.js
+      kind: requires
+    - from: cortex/core/raid/index.js
+      to: cortex/core/raid/tunables.js
+      kind: requires
+    - from: cortex/core/raid/snr-filter.js
+      to: cortex/core/raid/tunables.js
+      kind: requires
+    - from: lib/agent-tools/tools/governance/raid-snr.js
+      to: cortex/core/raid/tunables.js
+      kind: requires
+    - from: tests/modules/raid-tunables.test.js
+      to: cortex/core/raid/tunables.js
+      kind: requires
+    - from: cortex/cortex-service.js
+      to: cortex/boot.js
+      kind: requires
+    - from: cortex/server.js
+      to: cortex/boot.js
+      kind: requires
+    - from: tests/modules/cortex-sse-broadcast.test.js
+      to: cortex/boot.js
+      kind: requires
+    - from: diagnostic/tests/causality.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+  crossings:
+    - from: cortex/core/raid/officiator.js
+      to: copilot/lifeline.js
+      fromSystem: cortex
+      toSystem: copilot
+      kind: system
+      known: true
+    - from: orchestrator/orchestrator.js
+      to: cortex/core/raid/officiator.js
+      fromSystem: orchestrator
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: lib/agent-tools/tools/governance/raid-snr.js
+      to: cortex/core/raid/tunables.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-13-gates-that-learn-and-priorities-phasemap.spec::GT1_gates_route_diagnose_retry
+    dependents: []
+    upstream:
+      - docs/2026-10-13-gates-that-learn-and-priorities-phasemap.spec::GT1_gates_route_diagnose_retry
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1
+      - 'depends on (1): GT1_gates_route_diagnose_retry'
+      - 'needed by (0): —'
+      - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
+    edges:
+      - from: docs/2026-10-13-gates-that-learn-and-priorities-phasemap.spec::GT1_gates_route_diagnose_retry
+        kind: inferred
