@@ -634,7 +634,7 @@ built_2026_11_09_plan:
     status: OPEN   # slice a BUILT 0.60.481 (a delta and a baseline per step; RAID's decisions as steps; the bar); slice b BUILT 0.60.484 (pause, continue, retry from a step)
     james: '"seeing, changing, managing, diagnosing, exporting, testing, agnostic." · "record each step in raids decision, dynamically building each step, as it goes. it all needs to be visable."'
     depends_on: [PC_D13_the_pipeline_works_first_then_cos_optimised, PC5_programmable_gate_types]
-    files: [lib/automation/pipeline.js, lib/automation/routes.js, lib/automation/engine.js, cos/manager/automation-door.js, cos/pipeline/runs.eg, cos/pipeline/cli.eg, cos/ui/automation/engine.js, cos/ui/automation/page.js, idearium/cli/route-commands.js, cos/pipeline/index.js, cos/manager/server.js, tests/modules/test-cos-pipeline.test.js, idearium/api/index.js, idearium/pipelines/idearium-build.pipeline, lib/nexus-client.js, lib/repo-agent.js, guardian/lib/ncp-handler.js, guardian/server.js, tests/modules/test-ncp-handler-sr3.js, tests/modules/test-pipelines.test.js]
+    files: [lib/automation/pipeline.js, lib/automation/routes.js, lib/automation/engine.js, cos/manager/automation-door.js, cos/pipeline/runs.eg, cos/pipeline/cli.eg, cos/ui/automation/engine.js, cos/ui/automation/page.js, idearium/cli/route-commands.js, cos/pipeline/index.js, cos/manager/server.js, tests/modules/test-cos-pipeline.test.js, idearium/api/index.js, idearium/pipelines/idearium-build.pipeline, lib/nexus-client.js, lib/repo-agent.js, guardian/lib/ncp-handler.js, guardian/server.js, tests/modules/test-ncp-handler-sr3.js, tests/modules/test-pipelines.test.js, cos/automation/pipeline.js, cos/automation/engine.js, cos/automation/routes.js, guardian/lib/jobs.js]
     requires: [node]
     prerequisites: ["the census of 2026-11-10 (below)"]
     census_2026_11_10: >-
@@ -670,6 +670,31 @@ built_2026_11_09_plan:
       outcome. Slice a: the tags written; GET /api/cos/automation/trail?file=<path> and `cos file-trail <path>`; then the canvas shows a file's
       trail from OUTPUTS. Reading to confirm: "moving through the backend" read as across every system the step calls (each through RAID), not
       only COS's engine.
+    expanded_2026_11_17: >-
+      James, 2026-11-17: "The pipeline needs a ledger also. Each step, job and response that came back. The ui is for me. Backend first always,
+      commands and api routes." Slice c, the pipeline ledger. Grounded the same day: each step is already a .process_step node with its own
+      event ledger (0.60.538), but an agent step keeps only the reply's text: cos/manager/automation-door.js _dispatchAgent gets Guardian's jobId
+      back from POST /command and askAgentFn drops it (it returns { text, decision }); the fire-and-forget enqueueFn drops it too. Nothing joins a
+      step to the Guardian .job it made or the .response that came back.
+      Backend (COS's, cos/automation/, the engine COS runs; lib/automation/ is its older copy, not touched):
+        - the run's ledger, one append-only file per run beside its step nodes (runs/<run>/run.ledger, one JSON line per event, written as it
+          happens, never only in memory — his 2026-11-14 rule): step (each state change, from the steps' own event ledgers), job (an agent step
+          dispatched: jobId, provider, RAID's decision), response (it came back: jobId, chars, contentHash, the .response node's reference, how
+          long it took), and the run's start and end. Two lines in one order, never rewritten.
+        - the step node names its jobs (jobs: [jobId]); the answer's text is NOT copied into the ledger: the .response node is the one source of
+          truth (GD_D3), the ledger names it.
+        - Guardian's job names where it came from: POST /command takes origin { system: 'cos', run, step }, kept on the .job (guardian/lib/jobs.js),
+          so the reference is both ways. Ids only: COS and Guardian stay decoupled (§5.9, §5.10), each reading the other by route.
+        - a job sent and never answered is a ledger line too (unanswered, with Guardian's queue state read by route), never a silent gap (§1.2).
+      API route (COS's manager): GET /api/cos/automation/pipeline-ledger?run=<id> | ?pipelineId=<id>&limit=n, each line with, for a job, its
+      state from Guardian's GET /jobs/ledger (by route, Guardian down said).
+      Command row: cos pipeline-ledger <run id | --pipeline <id>> (idearium/cli/route-commands.js), so every agent has it.
+      UI last, his: the Automation tab, each step with its job and the response that came back, opening the .response.
+      Axioms: §2.1/§2.2 persistence, §2.3 state observable, §3.4 raw → library → API → CLI → UI (his order), §5.9/§5.10 decoupled by route and
+      ids, §9.2 ledger before dispatch (the job line is written before the dispatch returns), §10.2 the ledger names the .response, never copies
+      it, §1.2. Relation: GD5a (docs/2026-10-24-guardian-into-cos-phasemap.spec) is where the .response is written; this slice only reads it
+      and does not wait on GD5a (GET /response/:jobId already answers).
+    proof_slice_c: "a run with an agent step leaves runs/<run>/run.ledger with its step, job and response lines in order; the step node names the jobId and Guardian's .job names the run and step; GET /api/cos/automation/pipeline-ledger and `cos pipeline-ledger` print the same lines; a job with Guardian stopped is a line marked unanswered; COS restarted mid-run, the ledger continues in the same file; tested in tests/modules (sandboxed), UI in Clear Glass, never Playwright"
     does: >-
       A pipeline is operable from COS, the way a person and an agent would want it: run, pause, resume and retry a step; test it dry, the steps
       planned and their gates checked with nothing changed; see each step's state live; diagnose a failed step (its gate, its input, its output,

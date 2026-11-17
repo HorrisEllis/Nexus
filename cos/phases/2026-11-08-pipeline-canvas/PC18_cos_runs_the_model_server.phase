@@ -7,11 +7,11 @@ intent: null
 summary: PC18_cos_runs_the_model_server (backend) — 7 file(s)
 system: idearium
 tags: []
-exported_at: 1794618104739
+exported_at: 1794930339888
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794618104739
-lastSeenAt: 1794618104739
+firstSeenAt: 1794930339888
+lastSeenAt: 1794930339888
 fingerprint: null
 payload:
   id: PC18_cos_runs_the_model_server
@@ -30,4 +30,4 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: f95ab67f47ba1623
+  graph: a20c46260cd9e261
