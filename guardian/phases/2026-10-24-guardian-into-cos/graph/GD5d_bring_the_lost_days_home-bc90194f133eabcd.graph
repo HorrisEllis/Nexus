@@ -1,0 +1,310 @@
+envelope: 1
+uuid: nexus-export-graph-phase:GD5d_bring_the_lost_days_home:bc90194f133eabcd
+type: graph
+id: phase:GD5d_bring_the_lost_days_home:bc90194f133eabcd
+context: dependency graph of phase GD5d_bring_the_lost_days_home
+intent: null
+summary: 30 node(s), 5 crossing(s)
+system: idearium
+tags: []
+exported_at: 1794930581011
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794930581011
+lastSeenAt: 1794930581011
+fingerprint: null
+payload:
+  for: GD5d_bring_the_lost_days_home
+  kind: phase
+  repo: null
+  hash: bc90194f133eabcd
+  nodes:
+    - path: clear-glass/src/downloads/artifact-chat-index.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/ipc/bridge.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: guardian/cli.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: guardian/lib/chat-transcripts.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: guardian/lib/response-sink.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: guardian/server.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: clear-glass/src/downloads/chat-ledger.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/providers/download-capture.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: guardian/dropzone.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: guardian/guardian-service.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: guardian/lib/code-artifact.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: guardian/lib/dispatcher.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: guardian/lib/job-ledger.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: guardian/lib/ncp-handler.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: lib/agent-memory.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/test-chat-per-agent.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-response-downloads.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-response-sink-passthrough.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cos/host/index.js
+      role: uses
+      exists: true
+      system: cos
+    - path: guardian/config.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/event-taxonomy.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: guardian/lib/ncp.js
+      role: uses
+      exists: true
+      system: guardian
+    - path: intelligence/cfr/ledger.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/gap/hunter.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/event-taxonomy-pattern.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/queue.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/seam/detector.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/seam/queue.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/seam/spec-parser.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: guardian/cli.js
+      to: cos/host/index.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/data-home.js
+      kind: requires
+    - from: guardian/server.js
+      to: guardian/config.js
+      kind: requires
+    - from: guardian/server.js
+      to: guardian/event-taxonomy.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/event-taxonomy-pattern.js
+      kind: requires
+    - from: guardian/server.js
+      to: guardian/lib/ncp.js
+      kind: requires
+    - from: guardian/server.js
+      to: intelligence/cfr/ledger.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/seam/detector.js
+      kind: requires
+    - from: guardian/server.js
+      to: intelligence/gap/hunter.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/seam/queue.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/seam/spec-parser.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/queue.js
+      kind: requires
+    - from: guardian/dropzone.js
+      to: guardian/server.js
+      kind: requires
+    - from: guardian/guardian-service.js
+      to: guardian/server.js
+      kind: requires
+    - from: guardian/lib/job-ledger.js
+      to: guardian/lib/response-sink.js
+      kind: requires
+    - from: guardian/lib/ncp-handler.js
+      to: guardian/lib/response-sink.js
+      kind: requires
+    - from: lib/agent-memory.js
+      to: guardian/lib/response-sink.js
+      kind: requires
+    - from: tests/modules/test-response-downloads.test.js
+      to: guardian/lib/response-sink.js
+      kind: requires
+    - from: tests/modules/test-response-sink-passthrough.test.js
+      to: guardian/lib/response-sink.js
+      kind: requires
+    - from: guardian/lib/dispatcher.js
+      to: guardian/lib/chat-transcripts.js
+      kind: requires
+    - from: tests/modules/test-chat-per-agent.test.js
+      to: guardian/lib/chat-transcripts.js
+      kind: requires
+    - from: clear-glass/src/downloads/chat-ledger.js
+      to: clear-glass/src/downloads/artifact-chat-index.js
+      kind: requires
+    - from: clear-glass/src/providers/download-capture.js
+      to: clear-glass/src/downloads/artifact-chat-index.js
+      kind: requires
+    - from: guardian/lib/code-artifact.js
+      to: clear-glass/src/downloads/artifact-chat-index.js
+      kind: requires
+  crossings:
+    - from: guardian/cli.js
+      to: cos/host/index.js
+      fromSystem: guardian
+      toSystem: cos
+      kind: system
+      known: true
+    - from: guardian/server.js
+      to: intelligence/cfr/ledger.js
+      fromSystem: guardian
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: guardian/server.js
+      to: intelligence/gap/hunter.js
+      fromSystem: guardian
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: lib/agent-memory.js
+      to: guardian/lib/response-sink.js
+      fromSystem: lib
+      toSystem: guardian
+      kind: upward
+      known: true
+    - from: guardian/lib/code-artifact.js
+      to: clear-glass/src/downloads/artifact-chat-index.js
+      fromSystem: guardian
+      toSystem: clear-glass
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-10-24-guardian-into-cos-phasemap.spec::GD5a_one_write_the_job_and_its_response
+      - docs/2026-10-24-guardian-into-cos-phasemap.spec::GD5b_transcripts_are_guardians
+    dependents: []
+    upstream:
+      - docs/2026-10-24-guardian-into-cos-phasemap.spec::GD5a_one_write_the_job_and_its_response
+      - docs/2026-10-24-guardian-into-cos-phasemap.spec::GD5b_transcripts_are_guardians
+      - docs/2026-10-24-guardian-into-cos-phasemap.spec::GD_D3_the_response_store
+      - docs/2026-10-30-pipeline-consolidation-and-job-ledger-phasemap.spec::JL1_job_ledger_backend
+    downstream: []
+    blockedBy:
+      - docs/2026-10-24-guardian-into-cos-phasemap.spec::GD5a_one_write_the_job_and_its_response
+      - docs/2026-10-24-guardian-into-cos-phasemap.spec::GD5b_transcripts_are_guardians
+    unlocks: []
+    conflicts:
+      - with: docs/2026-10-24-guardian-into-cos-phasemap.spec::GD2_primitives_to_the_kernel
+        files:
+          - guardian/server.js
+      - with: docs/2026-10-24-guardian-into-cos-phasemap.spec::GD3_intelligence_by_route
+        files:
+          - guardian/server.js
+      - with: docs/2026-10-24-guardian-into-cos-phasemap.spec::GD4_the_other_systems_by_route
+        files:
+          - guardian/cli.js
+          - guardian/server.js
+      - with: docs/2026-10-24-guardian-into-cos-phasemap.spec::GD5_the_response_store
+        files:
+          - clear-glass/src/downloads/artifact-chat-index.js
+          - guardian/lib/response-sink.js
+          - guardian/lib/chat-transcripts.js
+          - guardian/cli.js
+      - with: docs/2026-10-24-guardian-into-cos-phasemap.spec::GD5c_the_library_reads_the_ledger
+        files:
+          - clear-glass/src/ipc/bridge.js
+      - with: docs/2026-10-24-guardian-into-cos-phasemap.spec::GD7_the_bus_and_connect
+        files:
+          - guardian/server.js
+    dangling: []
+    lines:
+      - layer 3 · blocked by GD5a_one_write_the_job_and_its_response, GD5b_transcripts_are_guardians
+      - >-
+        depends on (2): GD5a_one_write_the_job_and_its_response, GD5b_transcripts_are_guardians ·
+        all upstream 4
+      - 'needed by (0): —'
+      - 'same files as GD2_primitives_to_the_kernel with no order between them: guardian/server.js'
+      - 'same files as GD3_intelligence_by_route with no order between them: guardian/server.js'
+      - >-
+        same files as GD4_the_other_systems_by_route with no order between them: guardian/cli.js,
+        guardian/server.js
+      - >-
+        same files as GD5_the_response_store with no order between them:
+        clear-glass/src/downloads/artifact-chat-index.js, guardian/lib/response-sink.js,
+        guardian/lib/chat-transcripts.js, guardian/cli.js
+      - >-
+        same files as GD5c_the_library_reads_the_ledger with no order between them:
+        clear-glass/src/ipc/bridge.js
+      - … and 1 more phases sharing its files without an order
+    edges:
+      - from: docs/2026-10-24-guardian-into-cos-phasemap.spec::GD5a_one_write_the_job_and_its_response
+        kind: declared
+      - from: docs/2026-10-24-guardian-into-cos-phasemap.spec::GD5b_transcripts_are_guardians
+        kind: declared

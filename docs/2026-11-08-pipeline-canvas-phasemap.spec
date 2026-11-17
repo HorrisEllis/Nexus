@@ -711,6 +711,13 @@ built_2026_11_09_plan:
       Route: GET /api/cos/pipeline/ledger?request=<id> (cos/manager/server.js, beside the request routes). Command: cos request-ledger
       <request id> (beside cos request-show). UI last, his.
     proof_slice_c_corrected: "a request with an agent step leaves <request>/run.ledger (step, job, response lines, in order) written by runs.eg; its step file names the jobId and Guardian's job folder; GET /api/cos/pipeline/ledger and `cos request-ledger` print the same lines; the request moved to done/ keeps its ledger; tests in cos/pipeline/test/runs.test.eg and tests/modules (sandboxed)"
+    corrected_2026_11_17_b: >-
+      James, 2026-11-17: "All systems keep their own data. look at Claude.md" (docs/CLAUDE.md, his 2026-11-09: "Data is stored in the relevant systems data folder. Cortex is the book keeper.")
+      Where each piece lives, by his rule: the request bundle and its run.ledger are COS's, in COS's own data folder (cos/data/manager/pipeline/
+      runs/, as runs.eg already writes); the .job and .response are Guardian's, in guardian/data/jobs/<id>/ (not a COS compartment: the word
+      "compartment" above was the coder's and is withdrawn). The ledger names Guardian's job by id; neither system writes the other's folder.
+      Cortex keeps the books: the request is already booked with Cortex as RAID's contract (runs.eg booked); whether each ledger line is also
+      booked with Cortex is to confirm.
     does: >-
       A pipeline is operable from COS, the way a person and an agent would want it: run, pause, resume and retry a step; test it dry, the steps
       planned and their gates checked with nothing changed; see each step's state live; diagnose a failed step (its gate, its input, its output,

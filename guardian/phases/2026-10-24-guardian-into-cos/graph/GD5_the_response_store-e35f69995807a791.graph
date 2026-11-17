@@ -7,11 +7,11 @@ intent: null
 summary: 29 node(s), 7 crossing(s)
 system: idearium
 tags: []
-exported_at: 1794930235800
+exported_at: 1794930580999
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794930235800
-lastSeenAt: 1794930235800
+firstSeenAt: 1794930580999
+lastSeenAt: 1794930580999
 fingerprint: null
 payload:
   for: GD5_the_response_store
@@ -282,6 +282,7 @@ payload:
           - guardian/cli.js
       - with: docs/2026-10-24-guardian-into-cos-phasemap.spec::GD5d_bring_the_lost_days_home
         files:
+          - clear-glass/src/downloads/artifact-chat-index.js
           - guardian/lib/response-sink.js
           - guardian/lib/chat-transcripts.js
           - guardian/cli.js
@@ -300,7 +301,8 @@ payload:
         guardian/cli.js
       - >-
         same files as GD5d_bring_the_lost_days_home with no order between them:
-        guardian/lib/response-sink.js, guardian/lib/chat-transcripts.js, guardian/cli.js
+        clear-glass/src/downloads/artifact-chat-index.js, guardian/lib/response-sink.js,
+        guardian/lib/chat-transcripts.js, guardian/cli.js
     edges:
       - from: docs/2026-10-24-guardian-into-cos-phasemap.spec::GD_D3_the_response_store
         kind: declared

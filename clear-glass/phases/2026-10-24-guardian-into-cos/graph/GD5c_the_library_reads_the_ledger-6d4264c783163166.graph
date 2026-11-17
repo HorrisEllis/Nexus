@@ -7,11 +7,11 @@ intent: null
 summary: 29 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1794930121404
+exported_at: 1794930581008
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794930121404
-lastSeenAt: 1794930121404
+firstSeenAt: 1794930581008
+lastSeenAt: 1794930581008
 fingerprint: null
 payload:
   for: GD5c_the_library_reads_the_ledger
@@ -229,6 +229,9 @@ payload:
       - docs/2026-10-24-guardian-into-cos-phasemap.spec::GD5b_transcripts_are_guardians
     unlocks: []
     conflicts:
+      - with: docs/2026-10-24-guardian-into-cos-phasemap.spec::GD5d_bring_the_lost_days_home
+        files:
+          - clear-glass/src/ipc/bridge.js
       - with: docs/2026-10-24-guardian-into-cos-phasemap.spec::GD6_the_ways_in
         files:
           - lib/agent-memory.js
@@ -239,6 +242,9 @@ payload:
         depends on (3): GD5a_one_write_the_job_and_its_response, GD5b_transcripts_are_guardians,
         JL2_route_command_ui · all upstream 5
       - 'needed by (0): —'
+      - >-
+        same files as GD5d_bring_the_lost_days_home with no order between them:
+        clear-glass/src/ipc/bridge.js
       - 'same files as GD6_the_ways_in with no order between them: lib/agent-memory.js'
     edges:
       - from: docs/2026-10-24-guardian-into-cos-phasemap.spec::GD5a_one_write_the_job_and_its_response
