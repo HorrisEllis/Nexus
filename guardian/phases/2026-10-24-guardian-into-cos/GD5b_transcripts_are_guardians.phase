@@ -4,14 +4,14 @@ type: phase
 id: docs_2026-10-24-guardian-into-cos-phasemap.spec::GD5b_transcripts_are_guardians
 context: pipeline phase GD5b_transcripts_are_guardians of docs/2026-10-24-guardian-into-cos-phasemap.spec
 intent: null
-summary: GD5b_transcripts_are_guardians (backend) — 3 file(s)
+summary: GD5b_transcripts_are_guardians (backend) — 7 file(s)
 system: idearium
 tags: []
-exported_at: 1794930121402
+exported_at: 1794930235804
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794930121402
-lastSeenAt: 1794930121402
+firstSeenAt: 1794930235804
+lastSeenAt: 1794930235804
 fingerprint: null
 payload:
   id: GD5b_transcripts_are_guardians
@@ -23,8 +23,12 @@ payload:
     - guardian/lib/chat-transcripts.js
     - guardian/cli.js
     - guardian/server.js
+    - guardian/lib/jobs.js
+    - clear-glass/src/providers/download-capture.js
+    - clear-glass/src/downloads/artifact-chat-index.js
+    - clear-glass/src/ipc/bridge.js
   depends_on:
     - GD5a_one_write_the_job_and_its_response
   blocks: []
   spec: null
-  graph: 7637b5c02a98dc53
+  graph: d2ca4b13ebeefde6

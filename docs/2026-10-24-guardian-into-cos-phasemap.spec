@@ -85,6 +85,17 @@ decisions:
           downloads (clear-glass/src/providers/download-capture.js) are Clear Glass's, and stay in Clear Glass's store (§5.15.2).
       (3) the downloads list: Guardian keeps posting its entry through Clear Glass's route POST /cli/downloads (his 2026-09-15 call, and
           already decoupled); unchanged.
+    corrected_2026_11_17: >-
+      James, 2026-11-17, on readings (2) and the GD5c/GD5d below as first written: "No the .responses in the library turn into that. The
+      full store and ledger." Superseding (2) (kept above, §0.3): the WHOLE Library store becomes the one source of truth, not only what
+      Guardian wrote there. Every item it holds (agent replies, chat transcripts, provider-tab downloads) becomes a .job with its .response
+      node in Guardian's store, and the Library's Responses page is that store and its ledger, nothing beside it. A capture no one dispatched
+      is a .job too (source: capture, fulfilled when its .response is written), so every row has the one shape his 2026-10-30 words ask for
+      ("each job has to have it's corrasponding .response node to be fullfilled from clearglass' end"). Clear Glass hands its captures to
+      Guardian's route and keeps no store of its own for them (§5.15.1; decoupled: by route, with an outbox while Guardian is down, the
+      pattern response-sink's downloads-pending already proves). The coder's reading of "turn into that" = into the .job/.response store
+      and ledger, matching this decision's own 2026-10-24 leaning; the other reading (the Library store becomes the source) would put agent
+      jobs in Clear Glass and is not taken. (1) is still to confirm; (3) stands.
     problem: >-
       clear-glass/src/downloads/artifact-chat-index.js holds the .response files and their index. Guardian writes them (response-sink,
       code-artifact, chat-transcripts, cli); Clear Glass captures downloads into the same store and its Library shows it. One store, two
@@ -165,18 +176,28 @@ phases:
     layer: backend
     status: OPEN
     depends_on: [GD5a_one_write_the_job_and_its_response]
-    files: [guardian/lib/chat-transcripts.js, guardian/cli.js, guardian/server.js]
+    files: [guardian/lib/chat-transcripts.js, guardian/cli.js, guardian/server.js, guardian/lib/jobs.js, clear-glass/src/providers/download-capture.js, clear-glass/src/downloads/artifact-chat-index.js, clear-glass/src/ipc/bridge.js]
+    expanded_2026_11_17: >-
+      His correction (GD_D3 corrected_2026_11_17): not transcripts only, every capture. A chat transcript and a provider-tab download each
+      become a .job (source: capture) with its .response node in Guardian's store, through a Guardian route (POST, idempotent by content
+      hash; transcript versions kept as the node's history). download-capture.js posts to that route instead of recordResponse; while
+      Guardian is unreachable it queues in Clear Glass's own outbox and replays in order (nothing lost, nothing blocked). The capture's file
+      bytes (≤10 MB, as today) travel with it. artifact-chat-index.js stops being a store: archived once GD5d has imported it (§0.3).
     does: >-
       Guardian's chat transcripts (one per chat, versioned, refusing unchanged reads: recordChat's rules, moved not rewritten) are
       written as Guardian's own transcript nodes in its data folder, served by its existing /api/chats routes. guardian sync
       (cli.js) writes there too. Clear Glass's provider-tab downloads stay Clear Glass's (download-capture.js, its own store).
-    proof: "a settled chat leaves one transcript node in guardian/data, a second unchanged read writes nothing, /api/chats returns it; no require of clear-glass/ from guardian/ is left (census)"
+    proof: "a settled chat leaves one transcript node in guardian/data, a second unchanged read writes nothing, /api/chats returns it; no require of clear-glass/ from guardian/ is left (census); a provider-tab download becomes a capture .job with its .response; with Guardian stopped it waits in Clear Glass's outbox and lands on restart, once"
 
   GD5c_the_library_reads_the_ledger:
     layer: ui
     status: OPEN
     depends_on: [GD5a_one_write_the_job_and_its_response, GD5b_transcripts_are_guardians, JL2_route_command_ui]
     files: [clear-glass/src/ipc/bridge.js, clear-glass/renderer/library/sections/responses.js, lib/agent-memory.js, lib/repo-agent.js, idearium/cli/route-commands.js]
+    expanded_2026_11_17: >-
+      His correction: the Responses page IS the full store and ledger, not Guardian's ledger beside a Clear Glass list. One list: every
+      .job (agent jobs and captures), its queue state and its .response, filterable by agent, repo, run, kind and source. Guardian down: the
+      page says Guardian is unreachable and shows what is waiting in Clear Glass's outbox, named as not yet in the store.
     does: >-
       His order of delivery, the UI step JL2 named as not done: the Library's Responses page reads Guardian's job ledger and transcripts
       through Guardian's routes (by agent, repo, run, kind, as now), and Clear Glass's own captures from its own store, side by side,
@@ -196,6 +217,11 @@ phases:
       transcript) becomes Guardian's node when Guardian does not already hold it (matched by jobId, then content hash); a reply with no
       .job gets its node and is named in the ledger as imported, not invented. Clear Glass's own captures are left where they are. The
       old store is archived whole (§0.3), never deleted; the import writes a report (imported, already held, unreadable, left).
+    expanded_2026_11_17: >-
+      His correction: the FULL store is imported, not only what Guardian wrote. Every item in each old store (his and SYSTEM's) becomes a
+      .job with its .response: a reply joins its existing .job by jobId when there is one; everything else (transcripts with every version,
+      provider-tab downloads with their copied bytes, items with no job) becomes a capture .job. Unreadable files are imported as named,
+      unreadable records with their bytes kept. After the import the old stores are archived whole.
     proof: "a dry run lists what it would import from each store; the real run is idempotent (a second run imports 0); c98bb7d3 from 2026-11-17 is in GET /jobs/ledger with its text; the report is kept"
 
   GD6_the_ways_in:
