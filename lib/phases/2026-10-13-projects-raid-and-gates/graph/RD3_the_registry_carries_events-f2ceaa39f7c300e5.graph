@@ -7,11 +7,11 @@ intent: null
 summary: 19 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792787677448
+exported_at: 1794938407701
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677448
-lastSeenAt: 1792787677448
+firstSeenAt: 1794938407701
+lastSeenAt: 1794938407701
 fingerprint: null
 payload:
   for: RD3_the_registry_carries_events
@@ -163,12 +163,18 @@ payload:
     blockedBy:
       - docs/2026-10-13-projects-raid-and-gates-phasemap.spec::RD0_raid_has_its_own_contract
     unlocks: []
-    conflicts: []
+    conflicts:
+      - with: docs/2026-10-13-projects-raid-and-gates-phasemap.spec::RD9_every_input_through_raid
+        files:
+          - cortex/core/raid/router.js
     dangling: []
     lines:
       - layer 1 · blocked by RD0_raid_has_its_own_contract
       - 'depends on (1): RD0_raid_has_its_own_contract'
       - 'needed by (0): —'
+      - >-
+        same files as RD9_every_input_through_raid with no order between them:
+        cortex/core/raid/router.js
     edges:
       - from: docs/2026-10-13-projects-raid-and-gates-phasemap.spec::RD0_raid_has_its_own_contract
         kind: declared

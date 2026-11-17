@@ -7,11 +7,11 @@ intent: null
 summary: 14 node(s), 3 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792787677361
+exported_at: 1794938404471
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677361
-lastSeenAt: 1792787677361
+firstSeenAt: 1794938404471
+lastSeenAt: 1794938404471
 fingerprint: null
 payload:
   for: RQ11_spec_and_registry_reconciled
@@ -145,6 +145,7 @@ payload:
       - docs/2026-10-12-request-spine-phasemap.spec::RQ18_test_and_attack_intents
       - docs/2026-10-12-request-spine-phasemap.spec::RQ19_what_nexus_can_take_over
       - docs/2026-10-12-request-spine-phasemap.spec::RQ20_the_budget_meter
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC7_iterate_to_the_end_state
     blockedBy:
       - docs/2026-10-12-request-spine-phasemap.spec::RQ9_the_chunked_contract
     unlocks: []
@@ -153,7 +154,7 @@ payload:
     lines:
       - layer 4 · blocked by RQ9_the_chunked_contract
       - 'depends on (1): RQ9_the_chunked_contract · all upstream 5'
-      - 'needed by (1): RQ14_the_spine_end_to_end · all downstream 6'
+      - 'needed by (1): RQ14_the_spine_end_to_end · all downstream 7'
     edges:
       - from: docs/2026-10-12-request-spine-phasemap.spec::RQ9_the_chunked_contract
         kind: declared

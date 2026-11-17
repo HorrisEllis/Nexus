@@ -2089,3 +2089,8 @@ spec:
 # MOD-PL-WORKSHOP, MOD-PL-ORCHESTRATE, MOD-PL-LENSES, MOD-PL-SURFACE). James, 2026-11-14: "can we make a spec or some formal document for the
 # pipeline, im sick of trying to put it into words." · "right tabs yes, left tabs, absolutely not. the rest of those tabs can be in the cos ui
 # automation tab." Owner: COS. Compiles in kg-builder: 10 nodes, every one at full depth, invariants valid. Builds on cos/spec/pipeline-canvas.spec.
+
+# ADDENDUM 2026-11-17 — registered: docs/2026-11-17-raid-request-lifecycle-phasemap.spec (the request lifecycle, L0–L14; RL_D1–RL_D4).
+# James, 2026-11-17: "input into nexus goes to raid. creates a input node … WE need a huge document for all of this, a map keep it all logged
+# and referencable." One map from the words he types to the met contract: each stage with what exists, the phase that owns it (RD9, RQ7,
+# RQ8, RQ13, RQ21, PC3, PC16, FMR2, PC8), and the gap. It indexes; it does not re-map. RL_D1 (his): RAID is the bridge, decides and delivers.

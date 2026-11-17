@@ -7,11 +7,11 @@ intent: null
 summary: 2 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792787677366
+exported_at: 1794938404485
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677366
-lastSeenAt: 1792787677366
+firstSeenAt: 1794938404485
+lastSeenAt: 1794938404485
 fingerprint: null
 payload:
   for: RQ14_the_spine_end_to_end
@@ -64,6 +64,7 @@ payload:
       - docs/2026-10-12-request-spine-phasemap.spec::RQ18_test_and_attack_intents
       - docs/2026-10-12-request-spine-phasemap.spec::RQ19_what_nexus_can_take_over
       - docs/2026-10-12-request-spine-phasemap.spec::RQ20_the_budget_meter
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC7_iterate_to_the_end_state
     blockedBy:
       - docs/2026-10-12-request-spine-phasemap.spec::RQ5_the_small_model_baseline
       - docs/2026-10-12-request-spine-phasemap.spec::RQ8_the_gap_is_a_question
@@ -88,7 +89,7 @@ payload:
         RQ13_the_work_surface_and_provenance · all upstream 14
       - >-
         needed by (3): RQ15_cells_in_parallel, RQ19_what_nexus_can_take_over, RQ20_the_budget_meter
-        · all downstream 5 · finishing it unlocks RQ15_cells_in_parallel,
+        · all downstream 6 · finishing it unlocks RQ15_cells_in_parallel,
         RQ19_what_nexus_can_take_over, RQ20_the_budget_meter
     edges:
       - from: docs/2026-10-12-request-spine-phasemap.spec::RQ5_the_small_model_baseline

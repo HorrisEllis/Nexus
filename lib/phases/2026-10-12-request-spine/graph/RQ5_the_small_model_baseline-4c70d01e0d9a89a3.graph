@@ -7,11 +7,11 @@ intent: null
 summary: 1 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792787677350
+exported_at: 1794938404444
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677350
-lastSeenAt: 1792787677350
+firstSeenAt: 1794938404444
+lastSeenAt: 1794938404444
 fingerprint: null
 payload:
   for: RQ5_the_small_model_baseline
@@ -45,6 +45,7 @@ payload:
       - docs/2026-10-12-request-spine-phasemap.spec::RQ18_test_and_attack_intents
       - docs/2026-10-12-request-spine-phasemap.spec::RQ19_what_nexus_can_take_over
       - docs/2026-10-12-request-spine-phasemap.spec::RQ20_the_budget_meter
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC7_iterate_to_the_end_state
     blockedBy:
       - docs/2026-10-12-request-spine-phasemap.spec::RQ4_escalate_on_the_checks_and_keep_the_lesson
     unlocks: []
@@ -53,7 +54,7 @@ payload:
     lines:
       - layer 5 · blocked by RQ4_escalate_on_the_checks_and_keep_the_lesson
       - 'depends on (1): RQ4_escalate_on_the_checks_and_keep_the_lesson · all upstream 5'
-      - 'needed by (1): RQ14_the_spine_end_to_end · all downstream 6'
+      - 'needed by (1): RQ14_the_spine_end_to_end · all downstream 7'
     edges:
       - from: docs/2026-10-12-request-spine-phasemap.spec::RQ4_escalate_on_the_checks_and_keep_the_lesson
         kind: declared

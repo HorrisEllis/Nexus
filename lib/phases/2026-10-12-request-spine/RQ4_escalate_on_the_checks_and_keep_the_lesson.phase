@@ -9,11 +9,11 @@ intent: null
 summary: RQ4_escalate_on_the_checks_and_keep_the_lesson (?) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1792841755267
+exported_at: 1794938404440
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792841755267
-lastSeenAt: 1792841755267
+firstSeenAt: 1794938404440
+lastSeenAt: 1794938404440
 fingerprint: null
 payload:
   id: RQ4_escalate_on_the_checks_and_keep_the_lesson
@@ -30,4 +30,4 @@ payload:
     - RQ3_repair_with_the_checks_own_words
   blocks: []
   spec: null
-  graph: 99acf77ecafe2982
+  graph: 71b0b73aee0aeb38
