@@ -66,7 +66,7 @@ The graph from today to that end state, tier by tier: `docs/2026-11-17-nexus-cod
    then Cortex's memory and vector memory, the associative lattice, each system's nodes, registry and routes, chat logs and the atlases.
    Then outward (an agent, the web). Then him, as a follow-up question. "No" and "I don't know" are not answers. A missing capability is
    built by Idearium.
-5. **RAID decides and delivers.** RAID is the bridge. It picks who does each step and reaches them through the one door that knows each
+5. **RAID decides and delivers.** RAID is the bridge. Copilot is a hat any agent can wear (his, 2026-11-17: "copilot is meant to be a hat that any agent casn wear"), not the router. It picks who does each step and reaches them through the one door that knows each
    agent's kind: Ollama first, Guardian's browser agents if needed (his, 2026-11-13). His preferences and fallbacks are RAID's settings
    (`raid tunables`).
 6. **The pipeline runs it.** COS runs the request as a pipeline. Each step is an executable node file (`.pipeline`, `.framework`,
