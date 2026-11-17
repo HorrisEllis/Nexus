@@ -89,6 +89,8 @@ RL_D1–RL_D8). The pipeline itself, formally: `cos/spec/pipeline.spec` (PL-001.
   Systems reach each other only by routes and the CLI server, so any one can be swapped. COS manages each system's `server.js`.
 - **Emerge and CIE-EG**, his language. "emerge is built to code from structure, which is cie-eg … same archicture as each system, reducing
   the friction since its compatable from the bottom up." New code is Emerge (§17.13).
+- **Nexus makes agents more capable** (his, 2026-11-17: "nexus is built to make agents more capabable by offloading onto nexus"). What an agent would
+  have to hold (the map, the context, the steps, the checks) is held by Nexus, so the agent only does one small step.
 - **Structure carries the complexity.** The Intelligence system and the agent tools do the complex reasoning. Idearium's chunker cuts the
   work into pieces one model can do. So the model doing the work can be small and local.
 - **Persistence, provenance, proof.** Every change and version goes to Versionium. Every decision is quoted and dated where the work lives.
