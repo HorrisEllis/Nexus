@@ -45,7 +45,8 @@
         ],
         "about": "copilot's wall, declared by copilot (CP1a, 2026-11-01): COS's supervisor starts it behind this; equal to the census's boundaryFor('copilot'); audit: 21 way(s) out still open, so the wall says what it would refuse (DO_D9); enforce when the audit is empty"
       },
-      "onDemand": true,
+      "onDemand": false,
+      "onDemandWhy": "2026-11-17, James: \"its wasting my tokens.\" Copilot is the door every model call goes through (lib/model-door.js, /api/route, /api/prompt). Idle-stopped as on-demand, nothing woke it (Idearium calls 127.0.0.1:3750 directly, not through COS), so the route to Ollama was gone and the build ladder climbed to the paid browser agents. Always on.",
       "maxOldSpaceMB": 384
     }
   },
