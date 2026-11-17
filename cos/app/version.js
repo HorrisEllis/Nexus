@@ -43,4 +43,6 @@
 // "it needs to just do that not have a button. or not make another copy period. like it should be a projection ontop of the service". Nexus ran as
 // the Windows service (NexusCOS, 0.5.0), so COS had no run record and tried a second copy. COS now asks the status port who holds it: when it is
 // Nexus (COS's manager answers /api/cos/health), COS attaches to it and shows it; only ports held by something else still stop the start.
-module.exports = { version: '0.10.2' };
+// 0.10.3 (Nexus 0.60.557): James, 2026-11-17: "the ui keeps crashing and kicking me out of the pipeline tab. i want that to stop, also keeps refreshing the overview of the systems." · "cos ui needs to stop refreshing and kicking me off the page when it reloads. pissing me off." The window re-checked the cockpit every 2 s with a 1.5 s wait; one slow
+// answer (96% memory) flipped it to the starting page and the next reloaded the cockpit's home. Now ~10 s of misses before it leaves, and back on his page.
+module.exports = { version: '0.10.3' };

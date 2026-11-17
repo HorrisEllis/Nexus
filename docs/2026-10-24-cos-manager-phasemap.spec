@@ -883,6 +883,10 @@ phases_addendum_2026_11_01_mg33:
     proof: "test-cos-app-link: a fixture folder linked, started with the system node and no ELECTRON_RUN_AS_NODE, up on /status, stopped; start on launch on and off"
 
   MG35b_cos_attaches_to_the_running_nexus:
+    expanded_2026_11_17_b: >-
+      James, 2026-11-17: "the ui keeps crashing and kicking me out of the pipeline tab. i want that to stop, also keeps refreshing the overview of the systems." · "cos ui needs to stop refreshing and kicking me off the page when it reloads. pissing me off." Built 0.60.557 (COS 0.10.3): the window leaves the cockpit only after ~10 s of misses and returns to the
+      page he was on. Asked the same message, not yet built: CPU of a service-run Nexus in the header; an open button per system (its ui/, its
+      compartment settings); the UI floating above the systems through each one's drawbridge (its interaction contract).
     expanded_2026_11_17: >-
       James, 2026-11-17: "it needs to just do that not have a button. or not make another copy period. like it should be a projection ontop of the service" (COS said the ports were in use by another program). Nexus ran as the Windows
       service, so COS had no run record and started a copy. Built 0.60.556 (COS 0.10.2): start() asks the status port who holds it (whoRuns,
