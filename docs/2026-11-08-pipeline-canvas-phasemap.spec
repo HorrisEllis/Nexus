@@ -1131,6 +1131,13 @@ expanded_2026_11_13_hub:
       they become RAID's preferences per intent (its tunables) and their screen moves to COS's Automation tab, beside the pipeline and on the
       workflow canvas (cos/ui/automation/): set where the work runs, for every pipeline's agent steps. Idearium's Agent tab reads the same
       settings by RAID's route until it is retired (§0.3, archived not deleted).
+    expanded_2026_11_17_routing: >-
+      James, 2026-11-17: "look at idearium, it has all of this. also in clearglass the element engine." Read: Idearium already has the full
+      routing and fallback options in one screen, Settings → Routing & fallback (idearium/ui/settings.html renderRouting, GET /api/routing,
+      POST /api/config routing.*): which agent plans and which codes each chunk, the fallback chain, the breakers, the accounts per provider
+      in order, the Ollama models, the learned ladder, Emerge first. That screen and its routing.* keys are what PC16 moves to RAID and COS
+      Automation, whole (reuse, §8.6); RAID's officiator tunables of 0.60.552 (officiatorAgents, officiatorFallback) fold into the same keys
+      rather than standing beside them (§10.3, one truth). The per-repo Agent tab stays the override for one repo.
     files_2026_11_17_ui: [cos/ui/automation/page.js, cos/ui/automation/engine.js, cos/ui/automation/canvas.js, idearium/ui/js/agent-options.js, lib/repo-agent.js]
     expanded_2026_11_17_lifecycle: >-
       James, 2026-11-17, giving the request lifecycle whole ("input into nexus goes to raid … raid decides what to do with each request … WE need a huge document for all of this, a map keep it all logged and referencable.").
