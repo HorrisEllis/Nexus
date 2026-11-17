@@ -288,3 +288,15 @@ spec:
 # cut off by a restart resumes from its last finished step when COS boots (resumeInterrupted). Open: a run paused before the restart (it stays
 # paused; Continue after a restart is not yet proven); Idearium's own build is still driven in its process (its build resumes on Idearium's boot:
 # the next phase); the run's .dag and .contract as node files beside its steps.
+
+# ADDENDUM 2026-11-17 — PL-012: a request is mapped before it runs; the pipeline is how every request runs (his)
+# James, 2026-11-17: "each requests need a dag. the system needs to map before executing. that way it doesn't drift. it knows what it building towards. it has stopping conditions for the end state. a test flle to shape expectations. like i want this all editable and programmable in nexus using the pipeline. like .frameworks or .pipelines. as executable instructions for each step. to make it more deterministic and repeatable. make it persistent, reduce the amount of effort it takes from the llms and agents, makes nexus aware if its processes. idearium does a lot of this already and its meant to be in cos instead."
+# · then: "yes and the pipeline makes this programmable, observable, diagnosable, debuggable, and bottlenecks. emerge can use the pipeline per word, primative, to make an size llm capable. visual coding and debugging. like please write this somewhere."
+# PL-012 (beside PL-001..PL-011): no request runs before its map exists as files: its DAG (each node a step or a context obligation, each
+# gate with pass_when: its stopping conditions), its contract (the end state it builds towards), and its test file (what is expected; fixed
+# once the run starts). A step that answers to no DAG node is refused (drift). The steps are executable instructions in node files
+# (.pipeline, .framework, .process_step; .dag and .contract beside them), editable in Nexus and run by COS: deterministic, repeatable,
+# persistent, and Nexus can read its own processes. The pipeline is what makes a request programmable, observable, diagnosable, debuggable
+# and its bottlenecks measured; Emerge runs through it per word and per primitive so a model of any size can do a step, with visual coding and
+# debugging on the canvas. Idearium's map-before-build machinery moves here (IF_D1, docs/2026-11-15-the-factory-phasemap.spec).
+# Where the request starts and ends, stage by stage: docs/2026-11-17-raid-request-lifecycle-phasemap.spec (RL_D5–RL_D8).

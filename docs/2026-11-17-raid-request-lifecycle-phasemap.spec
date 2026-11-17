@@ -173,6 +173,41 @@ decisions:
     status: "DECIDED (his 2026-11-09, restated 2026-11-17) — 'cortex is the bookkeeper for all data architiving to query.'"
     chosen: "each system keeps its own data (his 2026-11-17 'All systems keep their own data'); Cortex books every record of the lifecycle by its route, for query"
 
+  # ── ADDENDUM 2026-11-17 (b) — map before executing; the pipeline is how it runs (his) ─────────────────────────────────────────────────────
+  # James, 2026-11-17: "each requests need a dag. the system needs to map before executing. that way it doesn't drift. it knows what it building towards. it has stopping conditions for the end state. a test flle to shape expectations. like i want this all editable and programmable in nexus using the pipeline. like .frameworks or .pipelines. as executable instructions for each step. to make it more deterministic and repeatable. make it persistent, reduce the amount of effort it takes from the llms and agents, makes nexus aware if its processes. idearium does a lot of this already and its meant to be in cos instead."
+  # · then: "yes and the pipeline makes this programmable, observable, diagnosable, debuggable, and bottlenecks. emerge can use the pipeline per word, primative, to make an size llm capable. visual coding and debugging. like please write this somewhere."
+  RL_D5_every_request_has_its_dag_before_it_runs:
+    status: "DECIDED 2026-11-17 by James"
+    chosen: >-
+      No request runs before it is mapped. Every request gets its DAG first (L2), and with it three things written as files before any step
+      runs: what it builds towards (the contract's end state, L3), its stopping conditions (the DAG's gates, each with pass_when: the run
+      stops when they all pass, or a gate holds it), and a test file that shapes what is expected (the acceptance the end state is checked
+      against; it cannot be moved once the run starts: RQ23_acceptance_conditions_that_cannot_be_moved). So a run cannot drift: every
+      step answers to a node it was mapped for. Axioms: §3.3 map before build (now for every request, not only for code), §2.1 persistence.
+  RL_D6_the_pipeline_programs_it:
+    status: "DECIDED 2026-11-17 by James"
+    chosen: >-
+      All of it is editable and programmable in Nexus through the pipeline: a request's steps are executable instructions, kept as node
+      files (.pipeline, .framework, each step a .process_step; the .dag and .contract beside them), edited on the canvas or as text, run by
+      COS. Deterministic and repeatable (the same file runs the same way), persistent (his 2026-11-14 rule), and Nexus aware of its own
+      processes (every run, step and gate is a file it can read). The agents and LLMs do less: the structure carries what they would
+      otherwise have to hold. The formal pipeline is cos/spec/pipeline.spec (lifecycle 1–9, PL-001..PL-011; PL-012 added today); frameworks
+      as steps are PC2_procedures_and_frameworks_as_steps.
+  RL_D7_idearium_s_mapping_belongs_to_cos:
+    status: "DECIDED 2026-11-17 by James (the same as IF_D1, 2026-11-15)"
+    chosen: >-
+      "idearium does a lot of this already and its meant to be in cos instead." Idearium's map-before-build machinery (phases, the DAG and
+      its graph, the census, the build loop, the chunker) runs through COS's pipeline, as IF_D1 decided (docs/2026-11-15-the-factory-phasemap.spec:
+      "the pipeline is the factory, and the factory builds Nexus, itself included"). This lifecycle's L2 (the DAG drafted) reuses it, moved,
+      not rebuilt.
+  RL_D8_programmable_observable_diagnosable:
+    status: "DECIDED 2026-11-17 by James"
+    chosen: >-
+      Because each request is a pipeline, it is programmable (its file), observable (every step and gate live on the canvas), diagnosable and
+      debuggable (each step's input, output, gate verdict and error kept: PC8), and its bottlenecks measured (each step's delta against its
+      baseline: PC8 slice a, cos/pipeline/baseline.eg). Emerge uses the pipeline per word, per primitive: a step small enough that a model of
+      any size can do it (the chunker, PC8 2026-11-14; PC17), with visual coding and debugging on the canvas (PC4).
+
 open_his:
   - "the request becomes …: the sentence ends there. What does the request become (a pipeline run, a contract, a project in Idearium)?"
   - "'and use the gates' stands alone in his message: which gates, where (the reading in L10 is the coder's: the contract's DAG gates and COS's gate types)."

@@ -149,6 +149,12 @@ The whole line is mapped in `docs/2026-11-17-raid-request-lifecycle-phasemap.spe
 | L9 | RAID decides and delivers (RAID is the bridge) | partly | decides: `index.js`, `router.js`; delivery still in each caller |
 | L10–L13 | gates hold context; nodes persist; Versionium and the rewind engine; Cortex keeps the books | in part | `contract-gates.js`, `cos/pipeline/gate.eg`, `lib/node-export.js`, `lib/versionium-record.js` |
 
+Map before executing (his, 2026-11-17: "each requests need a dag. the system needs to map before executing. that way it doesn't drift."):
+every request gets its DAG, its contract (the end state), its stopping conditions and a test file before any step runs, and runs as a
+pipeline: steps as executable node files (`.pipeline`, `.framework`), editable in Nexus, run by COS, observable, diagnosable, debuggable,
+bottlenecks measured; Emerge through it per word and primitive, so a model of any size can do a step. RL_D5–RL_D8 in the lifecycle map;
+PL-012 in `cos/spec/pipeline.spec`.
+
 Build order (his: bottom up): RAID delivers (PC16) → the compartment and open loop (RQ13) → the fill index (RQ13, RQ8) → Nexus-first
 query (RQ7) → the DAG drafted (RQ7) → missing capability built (PC3) → snapshots per gate and Cortex's books.
 
