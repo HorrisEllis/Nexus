@@ -7,11 +7,11 @@ intent: null
 summary: 17 node(s), 3 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792877325045
+exported_at: 1794930121411
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792877325045
-lastSeenAt: 1792877325045
+firstSeenAt: 1794930121411
+lastSeenAt: 1794930121411
 fingerprint: null
 payload:
   for: GD7_the_bus_and_connect
@@ -175,6 +175,15 @@ payload:
       - with: docs/2026-10-24-guardian-into-cos-phasemap.spec::GD4_the_other_systems_by_route
         files:
           - guardian/server.js
+      - with: docs/2026-10-24-guardian-into-cos-phasemap.spec::GD5a_one_write_the_job_and_its_response
+        files:
+          - guardian/server.js
+      - with: docs/2026-10-24-guardian-into-cos-phasemap.spec::GD5b_transcripts_are_guardians
+        files:
+          - guardian/server.js
+      - with: docs/2026-10-24-guardian-into-cos-phasemap.spec::GD5d_bring_the_lost_days_home
+        files:
+          - guardian/server.js
     dangling: []
     lines:
       - layer 3 · blocked by GD6_the_ways_in
@@ -183,6 +192,11 @@ payload:
       - 'same files as GD2_primitives_to_the_kernel with no order between them: guardian/server.js'
       - 'same files as GD3_intelligence_by_route with no order between them: guardian/server.js'
       - 'same files as GD4_the_other_systems_by_route with no order between them: guardian/server.js'
+      - >-
+        same files as GD5a_one_write_the_job_and_its_response with no order between them:
+        guardian/server.js
+      - 'same files as GD5b_transcripts_are_guardians with no order between them: guardian/server.js'
+      - … and 1 more phases sharing its files without an order
     edges:
       - from: docs/2026-10-24-guardian-into-cos-phasemap.spec::GD6_the_ways_in
         kind: declared

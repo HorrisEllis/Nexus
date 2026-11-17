@@ -9,11 +9,11 @@ intent: null
 summary: RCA1_cos_assistant_navigates_with_him (?) — 1 file(s)
 system: idearium
 tags: []
-exported_at: 1794621875319
+exported_at: 1794930339895
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794621875319
-lastSeenAt: 1794621875319
+firstSeenAt: 1794930339895
+lastSeenAt: 1794930339895
 fingerprint: null
 payload:
   id: RCA1_cos_assistant_navigates_with_him
@@ -23,7 +23,8 @@ payload:
   status: '"OPEN — mapped 2026-11-13; his readings first (do not guess)"'
   files:
     - cos/spec/remote-control.spec
-  depends_on: []
+  depends_on:
+    - PC10_our_own_remote_control
   blocks: []
   spec: cos/spec/remote-control.spec
   graph: 49eda5c54c78ad89

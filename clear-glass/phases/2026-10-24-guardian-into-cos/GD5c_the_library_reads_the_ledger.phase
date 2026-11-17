@@ -1,0 +1,36 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-guardian-into-cos-phasemap.spec::GD5c_the_library_reads_the_ledger
+type: phase
+id: docs_2026-10-24-guardian-into-cos-phasemap.spec::GD5c_the_library_reads_the_ledger
+context: >-
+  pipeline phase GD5c_the_library_reads_the_ledger of
+  docs/2026-10-24-guardian-into-cos-phasemap.spec
+intent: null
+summary: GD5c_the_library_reads_the_ledger (ui) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1794930121404
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794930121404
+lastSeenAt: 1794930121404
+fingerprint: null
+payload:
+  id: GD5c_the_library_reads_the_ledger
+  map: docs/2026-10-24-guardian-into-cos-phasemap.spec
+  repo: null
+  layer: ui
+  status: OPEN
+  files:
+    - clear-glass/src/ipc/bridge.js
+    - clear-glass/renderer/library/sections/responses.js
+    - lib/agent-memory.js
+    - lib/repo-agent.js
+    - idearium/cli/route-commands.js
+  depends_on:
+    - GD5a_one_write_the_job_and_its_response
+    - GD5b_transcripts_are_guardians
+    - JL2_route_command_ui
+  blocks: []
+  spec: null
+  graph: 6d4264c783163166

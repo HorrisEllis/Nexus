@@ -1,0 +1,37 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-guardian-into-cos-phasemap.spec::GD5a_one_write_the_job_and_its_response
+type: phase
+id: docs_2026-10-24-guardian-into-cos-phasemap.spec::GD5a_one_write_the_job_and_its_response
+context: >-
+  pipeline phase GD5a_one_write_the_job_and_its_response of
+  docs/2026-10-24-guardian-into-cos-phasemap.spec
+intent: null
+summary: GD5a_one_write_the_job_and_its_response (backend) — 7 file(s)
+system: idearium
+tags: []
+exported_at: 1794930504997
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794930504997
+lastSeenAt: 1794930504997
+fingerprint: null
+payload:
+  id: GD5a_one_write_the_job_and_its_response
+  map: docs/2026-10-24-guardian-into-cos-phasemap.spec
+  repo: null
+  layer: backend
+  status: OPEN
+  files:
+    - guardian/lib/response-sink.js
+    - guardian/lib/code-artifact.js
+    - guardian/lib/jobs.js
+    - guardian/lib/job-ledger.js
+    - guardian/lib/ncp-handler.js
+    - guardian/server.js
+    - guardian/lib/node-registry.js
+  depends_on:
+    - GD_D3_the_response_store
+    - JL1_job_ledger_backend
+  blocks: []
+  spec: null
+  graph: 55ddefce3f38b236

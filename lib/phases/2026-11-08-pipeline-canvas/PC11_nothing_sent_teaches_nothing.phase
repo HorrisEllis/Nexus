@@ -7,11 +7,11 @@ intent: null
 summary: PC11_nothing_sent_teaches_nothing (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1794610657563
+exported_at: 1794930339856
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794610657563
-lastSeenAt: 1794610657563
+firstSeenAt: 1794930339856
+lastSeenAt: 1794930339856
 fingerprint: null
 payload:
   id: PC11_nothing_sent_teaches_nothing
@@ -26,4 +26,4 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 897d6aaeba4ffe63
+  graph: 55ffd5d708e65c59

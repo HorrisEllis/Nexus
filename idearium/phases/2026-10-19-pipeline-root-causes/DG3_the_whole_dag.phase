@@ -7,11 +7,11 @@ intent: null
 summary: DG3_the_whole_dag (?) — 3 file(s)
 system: idearium
 tags: []
-exported_at: 1792877163590
+exported_at: 1794931847641
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792877163590
-lastSeenAt: 1792877163590
+firstSeenAt: 1794931847641
+lastSeenAt: 1794931847641
 fingerprint: null
 payload:
   id: DG3_the_whole_dag
@@ -26,4 +26,4 @@ payload:
   depends_on: []
   blocks: []
   spec: null
-  graph: 86b86f060fef6b92
+  graph: b3c91ded631a4319

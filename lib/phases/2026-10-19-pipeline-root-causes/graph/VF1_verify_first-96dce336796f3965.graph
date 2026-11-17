@@ -7,11 +7,11 @@ intent: null
 summary: 28 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792877163573
+exported_at: 1794931847615
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792877163573
-lastSeenAt: 1792877163573
+firstSeenAt: 1794931847615
+lastSeenAt: 1794931847615
 fingerprint: null
 payload:
   for: VF1_verify_first
@@ -217,6 +217,7 @@ payload:
     deps:
       - docs/2026-10-19-pipeline-root-causes-phasemap.spec::RC4_agent_file_names_guarded
     dependents:
+      - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB1_emerge_writes_the_brick
       - docs/2026-10-19-pipeline-root-causes-phasemap.spec::VF2_one_response_bundle
       - docs/2026-10-19-pipeline-root-causes-phasemap.spec::VF3_mutation_check
       - docs/2026-10-19-pipeline-root-causes-phasemap.spec::VF5_verdict_cache
@@ -226,6 +227,8 @@ payload:
     upstream:
       - docs/2026-10-19-pipeline-root-causes-phasemap.spec::RC4_agent_file_names_guarded
     downstream:
+      - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB1_emerge_writes_the_brick
+      - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB2_ollama_writes_emerge_for_the_pipeline
       - docs/2026-10-19-pipeline-root-causes-phasemap.spec::CB1_coder_brief
       - docs/2026-10-19-pipeline-root-causes-phasemap.spec::ID1_ideas_wired_through
       - docs/2026-10-19-pipeline-root-causes-phasemap.spec::UI3_ideas_and_notes_as_one
@@ -235,6 +238,7 @@ payload:
       - docs/2026-10-19-pipeline-root-causes-phasemap.spec::VF5_verdict_cache
     blockedBy: []
     unlocks:
+      - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB1_emerge_writes_the_brick
       - docs/2026-10-19-pipeline-root-causes-phasemap.spec::VF2_one_response_bundle
       - docs/2026-10-19-pipeline-root-causes-phasemap.spec::VF3_mutation_check
       - docs/2026-10-19-pipeline-root-causes-phasemap.spec::VF5_verdict_cache
@@ -247,10 +251,11 @@ payload:
       - layer 1
       - 'depends on (1): RC4_agent_file_names_guarded'
       - >-
-        needed by (6): VF2_one_response_bundle, VF3_mutation_check, VF5_verdict_cache,
-        UI3_ideas_and_notes_as_one, CB1_coder_brief, ID1_ideas_wired_through · all downstream 7 ·
-        finishing it unlocks VF2_one_response_bundle, VF3_mutation_check, VF5_verdict_cache,
-        UI3_ideas_and_notes_as_one, CB1_coder_brief, ID1_ideas_wired_through
+        needed by (7): EMB1_emerge_writes_the_brick, VF2_one_response_bundle, VF3_mutation_check,
+        VF5_verdict_cache, UI3_ideas_and_notes_as_one, CB1_coder_brief, ID1_ideas_wired_through ·
+        all downstream 9 · finishing it unlocks EMB1_emerge_writes_the_brick,
+        VF2_one_response_bundle, VF3_mutation_check, VF5_verdict_cache, UI3_ideas_and_notes_as_one,
+        CB1_coder_brief, ID1_ideas_wired_through
     edges:
       - from: docs/2026-10-19-pipeline-root-causes-phasemap.spec::RC4_agent_file_names_guarded
         kind: declared

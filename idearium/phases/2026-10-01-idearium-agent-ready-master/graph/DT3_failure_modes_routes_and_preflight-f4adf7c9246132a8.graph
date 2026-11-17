@@ -7,11 +7,11 @@ intent: null
 summary: 27 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792822476679
+exported_at: 1794931305859
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792822476679
-lastSeenAt: 1792822476679
+firstSeenAt: 1794931305859
+lastSeenAt: 1794931305859
 fingerprint: null
 payload:
   for: DT3_failure_modes_routes_and_preflight
@@ -219,7 +219,10 @@ payload:
       - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::DT2_failure_mode_field
       - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::M0_map
     downstream:
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::BK1_blocked_is_actionable
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::BK2_phase_build_writes_code
       - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::CP1_copilot_drives_idearium_and_talks_to_its_agents
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::CT1_cut_replies_are_finished
       - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::CX1_context_cascade
       - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::SW1_spec_workshop
       - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::UM1_nexus_understands_james
@@ -239,12 +242,6 @@ payload:
       - with: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::HC1_hat_agent_to_cos_build
         files:
           - idearium/api/index.js
-      - with: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::BK1_blocked_is_actionable
-        files:
-          - idearium/api/index.js
-      - with: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::BK2_phase_build_writes_code
-        files:
-          - idearium/api/index.js
       - with: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::FT1_file_tools_merge_patch_drop
         files:
           - idearium/api/index.js
@@ -253,7 +250,7 @@ payload:
       - layer 3 · ready
       - 'depends on (1): DT2_failure_mode_field · all upstream 3'
       - >-
-        needed by (1): CX1_context_cascade · all downstream 4 · finishing it unlocks
+        needed by (1): CX1_context_cascade · all downstream 7 · finishing it unlocks
         CX1_context_cascade
       - >-
         same files as PF6_boot_sync_yields_to_the_person with no order between them:
@@ -263,8 +260,9 @@ payload:
         idearium/api/index.js
       - 'same files as CI1_compounding_iterate with no order between them: idearium/api/index.js'
       - 'same files as HC1_hat_agent_to_cos_build with no order between them: idearium/api/index.js'
-      - 'same files as BK1_blocked_is_actionable with no order between them: idearium/api/index.js'
-      - … and 2 more phases sharing its files without an order
+      - >-
+        same files as FT1_file_tools_merge_patch_drop with no order between them:
+        idearium/api/index.js
     edges:
       - from: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::DT2_failure_mode_field
         kind: declared

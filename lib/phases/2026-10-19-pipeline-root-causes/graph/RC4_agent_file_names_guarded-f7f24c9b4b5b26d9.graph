@@ -7,11 +7,11 @@ intent: null
 summary: 25 node(s), 3 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792787677923
+exported_at: 1794931847612
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677923
-lastSeenAt: 1792787677923
+firstSeenAt: 1794931847612
+lastSeenAt: 1794931847612
 fingerprint: null
 payload:
   for: RC4_agent_file_names_guarded
@@ -217,6 +217,8 @@ payload:
       - docs/2026-10-19-pipeline-root-causes-phasemap.spec::VF1_verify_first
     upstream: []
     downstream:
+      - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB1_emerge_writes_the_brick
+      - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB2_ollama_writes_emerge_for_the_pipeline
       - docs/2026-10-19-pipeline-root-causes-phasemap.spec::CB1_coder_brief
       - docs/2026-10-19-pipeline-root-causes-phasemap.spec::ID1_ideas_wired_through
       - docs/2026-10-19-pipeline-root-causes-phasemap.spec::RC5_find_where_the_label_enters
@@ -236,6 +238,6 @@ payload:
       - layer 0
       - 'depends on (0): —'
       - >-
-        needed by (2): RC5_find_where_the_label_enters, VF1_verify_first · all downstream 9 ·
+        needed by (2): RC5_find_where_the_label_enters, VF1_verify_first · all downstream 11 ·
         finishing it unlocks RC5_find_where_the_label_enters, VF1_verify_first
     edges: []

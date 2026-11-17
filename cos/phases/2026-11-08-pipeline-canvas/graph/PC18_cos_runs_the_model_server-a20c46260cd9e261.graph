@@ -1,0 +1,111 @@
+envelope: 1
+uuid: nexus-export-graph-phase:PC18_cos_runs_the_model_server:a20c46260cd9e261
+type: graph
+id: phase:PC18_cos_runs_the_model_server:a20c46260cd9e261
+context: dependency graph of phase PC18_cos_runs_the_model_server
+intent: null
+summary: 5 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1794930339888
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794930339888
+lastSeenAt: 1794930339888
+fingerprint: null
+payload:
+  for: PC18_cos_runs_the_model_server
+  kind: phase
+  repo: null
+  hash: a20c46260cd9e261
+  nodes:
+    - path: cos/manager/inference-door.js
+      role: changes
+      exists: false
+      system: cos
+    - path: cos/remote-desktop/desktop-driver.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/spec/remote-control.spec
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/manager/server.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/remote-desktop/input-injector.js
+      role: uses
+      exists: true
+      system: cos
+  edges:
+    - from: cos/remote-desktop/desktop-driver.js
+      to: cos/remote-desktop/input-injector.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/remote-desktop/desktop-driver.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC9_the_desktop_driver
+    dependents: []
+    upstream:
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC9_the_desktop_driver
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D14_a_desktop_driver_for_agents
+    downstream: []
+    blockedBy:
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC9_the_desktop_driver
+    unlocks: []
+    conflicts:
+      - with: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC3_the_build_request_step
+        files:
+          - idearium/cli/route-commands.js
+      - with: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC5_programmable_gate_types
+        files:
+          - idearium/cli/route-commands.js
+      - with: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC7_iterate_to_the_end_state
+        files:
+          - idearium/cli/route-commands.js
+      - with: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC8_operate_a_pipeline
+        files:
+          - idearium/cli/route-commands.js
+      - with: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC10_our_own_remote_control
+        files:
+          - idearium/cli/route-commands.js
+      - with: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC15_every_intervention_a_cos_proposal
+        files:
+          - cos/manager/proposals.js
+          - idearium/cli/route-commands.js
+      - with: docs/2026-11-08-pipeline-canvas-phasemap.spec::RCA1_cos_assistant_navigates_with_him
+        files:
+          - cos/spec/remote-control.spec
+    dangling:
+      - PC_D16_ollama_first_guardian_if_needed
+    lines:
+      - layer 2 · blocked by PC9_the_desktop_driver
+      - 'depends on (1): PC9_the_desktop_driver · all upstream 2'
+      - 'needed by (0): —'
+      - 'DANGLING depends_on: PC_D16_ollama_first_guardian_if_needed'
+      - >-
+        same files as PC3_the_build_request_step with no order between them:
+        idearium/cli/route-commands.js
+      - >-
+        same files as PC5_programmable_gate_types with no order between them:
+        idearium/cli/route-commands.js
+      - >-
+        same files as PC7_iterate_to_the_end_state with no order between them:
+        idearium/cli/route-commands.js
+      - >-
+        same files as PC8_operate_a_pipeline with no order between them:
+        idearium/cli/route-commands.js
+      - >-
+        same files as PC10_our_own_remote_control with no order between them:
+        idearium/cli/route-commands.js
+      - … and 2 more phases sharing its files without an order
+    edges:
+      - from: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC9_the_desktop_driver
+        kind: inferred

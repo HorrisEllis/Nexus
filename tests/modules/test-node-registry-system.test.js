@@ -112,6 +112,28 @@ test('NR-11 startForSystem: skipped in a test process (the real tree is not touc
   assert.ok(/\[alpha\] node registry: .* listening on \d+ type folder/.test(lines[0]) && /no bus/.test(lines[0]), lines[0]);
 });
 
+// RC2 2026-11-17 — James: "yes fix the boot stall too". His log: Idearium silent 92 s at boot while scan() read 14,309 node files in one
+// synchronous loop. scanAsync is the same scan in time slices: the same result, and the event loop gets its turn between slices.
+test('NR-13 RC2 2026-11-17: the boot scan yields (scanAsync gives scan()\'s result and the loop runs while it indexes); startForSystem uses it', async () => {
+  const r4 = fs.mkdtempSync(path.join(os.tmpdir(), 'nr-boot-'));
+  const dir = path.join(r4, 'gamma', 'data', 'nodes', 'capability');
+  fs.mkdirSync(dir, { recursive: true });
+  const N = 800;
+  await quiet(async () => { for (let i = 0; i < N; i++) NX.exportToFile('capability', `gamma.c${i}`, { ...sample.payload, id: `gamma.c${i}` }, { system: 'gamma', context: 'test', source: 'test' }, dir); });
+  const a = NR.createNodeRegistry({ system: 'gamma', root: r4, fresh: true });
+  let turns = 0; const tick = setInterval(() => turns++, 1);
+  const ra = await quiet(async () => a.scanAsync({ sliceMs: 5 }));
+  clearInterval(tick);
+  assert.strictEqual(ra.indexed, N, JSON.stringify(ra.types));
+  assert.ok(turns > 0, 'timers ran while the scan indexed');
+  const rb = await quiet(async () => a.scan());   // the straight-through driver, over the same files: all unchanged now
+  assert.strictEqual(rb.unchanged, N);
+  const ra2 = await quiet(async () => a.scanAsync());
+  assert.strictEqual(ra2.unchanged, N, 'the sliced scan agrees with the straight one');
+  assert.ok(/await handle\.registry\.startAsync\(\)/.test(fs.readFileSync(path.join(REPO, 'lib/node-registry.js'), 'utf8')), 'startForSystem runs the yielding scan');
+  a.stop(); fs.rmSync(r4, { recursive: true, force: true });
+});
+
 test('NR-12 RC2 2026-11-15: a burst of node files folds the store once, not once per file (the event loop stays free), and every row is kept', async () => {
   const r3 = fs.mkdtempSync(path.join(os.tmpdir(), 'nr-burst-'));
   const dir = path.join(r3, 'beta', 'data', 'nodes', 'capability');

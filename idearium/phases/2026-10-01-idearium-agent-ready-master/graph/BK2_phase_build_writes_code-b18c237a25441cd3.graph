@@ -7,11 +7,11 @@ intent: null
 summary: 27 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792822476718
+exported_at: 1794931305923
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792822476718
-lastSeenAt: 1792822476718
+firstSeenAt: 1794931305923
+lastSeenAt: 1794931305923
 fingerprint: null
 payload:
   for: BK2_phase_build_writes_code
@@ -209,7 +209,7 @@ payload:
       known: true
   ready: true
   dag:
-    layer: 7
+    layer: 12
     deps:
       - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::BK1_blocked_is_actionable
       - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::CI1_compounding_iterate
@@ -218,10 +218,22 @@ payload:
       - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::AG1_coding_agent_provider
       - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::BK1_blocked_is_actionable
       - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::CI1_compounding_iterate
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::CP1_copilot_drives_idearium_and_talks_to_its_agents
       - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::CT1_cut_replies_are_finished
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::CX1_context_cascade
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::DI1_chunking_for_data_ingestion
       - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::DT1_persistence_census
       - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::DT2_failure_mode_field
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::DT3_failure_modes_routes_and_preflight
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::FT1_file_tools_merge_patch_drop
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::GL1_gate_verify_fix_loop
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::IL1_spec_library_as_ideas
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::IL2_library_spec_into_the_pipeline
       - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::M0_map
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::PV1_verify
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::PV2_repair_feedback
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::PV3_prove_loop
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::PV4_cli_and_ui
     downstream: []
     blockedBy:
       - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::BK1_blocked_is_actionable
@@ -234,25 +246,16 @@ payload:
       - with: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::PF8_settings_console_one_cheap_read
         files:
           - idearium/api/index.js
-      - with: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::DT3_failure_modes_routes_and_preflight
-        files:
-          - idearium/api/index.js
       - with: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::HC1_hat_agent_to_cos_build
-        files:
-          - idearium/api/index.js
-      - with: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::CP1_copilot_drives_idearium_and_talks_to_its_agents
         files:
           - idearium/api/index.js
       - with: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::UI7_phasemaps_out_of_files_and_tree_ops
         files:
           - idearium/repo/phases.js
-      - with: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::FT1_file_tools_merge_patch_drop
-        files:
-          - idearium/api/index.js
     dangling: []
     lines:
-      - layer 7 · blocked by BK1_blocked_is_actionable, CI1_compounding_iterate
-      - 'depends on (2): BK1_blocked_is_actionable, CI1_compounding_iterate · all upstream 7'
+      - layer 12 · blocked by BK1_blocked_is_actionable, CI1_compounding_iterate
+      - 'depends on (2): BK1_blocked_is_actionable, CI1_compounding_iterate · all upstream 19'
       - 'needed by (0): —'
       - >-
         same files as PF6_boot_sync_yields_to_the_person with no order between them:
@@ -260,14 +263,10 @@ payload:
       - >-
         same files as PF8_settings_console_one_cheap_read with no order between them:
         idearium/api/index.js
-      - >-
-        same files as DT3_failure_modes_routes_and_preflight with no order between them:
-        idearium/api/index.js
       - 'same files as HC1_hat_agent_to_cos_build with no order between them: idearium/api/index.js'
       - >-
-        same files as CP1_copilot_drives_idearium_and_talks_to_its_agents with no order between
-        them: idearium/api/index.js
-      - … and 2 more phases sharing its files without an order
+        same files as UI7_phasemaps_out_of_files_and_tree_ops with no order between them:
+        idearium/repo/phases.js
     edges:
       - from: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::BK1_blocked_is_actionable
         kind: declared

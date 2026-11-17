@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-24-guardian-into-cos-phasemap.spec::GD5d_bring_the_lost_days_home
+type: phase
+id: docs_2026-10-24-guardian-into-cos-phasemap.spec::GD5d_bring_the_lost_days_home
+context: pipeline phase GD5d_bring_the_lost_days_home of docs/2026-10-24-guardian-into-cos-phasemap.spec
+intent: null
+summary: GD5d_bring_the_lost_days_home (backend) — 6 file(s)
+system: idearium
+tags: []
+exported_at: 1794930581011
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794930581011
+lastSeenAt: 1794930581011
+fingerprint: null
+payload:
+  id: GD5d_bring_the_lost_days_home
+  map: docs/2026-10-24-guardian-into-cos-phasemap.spec
+  repo: null
+  layer: backend
+  status: OPEN
+  files:
+    - guardian/cli.js
+    - guardian/server.js
+    - guardian/lib/response-sink.js
+    - guardian/lib/chat-transcripts.js
+    - clear-glass/src/downloads/artifact-chat-index.js
+    - clear-glass/src/ipc/bridge.js
+  depends_on:
+    - GD5a_one_write_the_job_and_its_response
+    - GD5b_transcripts_are_guardians
+  blocks: []
+  spec: null
+  graph: bc90194f133eabcd

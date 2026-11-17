@@ -7,11 +7,11 @@ intent: null
 summary: 32 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1794618104707
+exported_at: 1794930339853
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794618104707
-lastSeenAt: 1794618104707
+firstSeenAt: 1794930339853
+lastSeenAt: 1794930339853
 fingerprint: null
 payload:
   for: PC10_our_own_remote_control
@@ -226,14 +226,17 @@ payload:
     layer: 2
     deps:
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC9_the_desktop_driver
-    dependents: []
+    dependents:
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::RCA1_cos_assistant_navigates_with_him
     upstream:
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC9_the_desktop_driver
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D14_a_desktop_driver_for_agents
-    downstream: []
+    downstream:
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::RCA1_cos_assistant_navigates_with_him
     blockedBy:
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC9_the_desktop_driver
-    unlocks: []
+    unlocks:
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::RCA1_cos_assistant_navigates_with_him
     conflicts:
       - with: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC2_procedures_and_frameworks_as_steps
         files:
@@ -275,7 +278,9 @@ payload:
     lines:
       - layer 2 · blocked by PC9_the_desktop_driver
       - 'depends on (1): PC9_the_desktop_driver · all upstream 2'
-      - 'needed by (0): —'
+      - >-
+        needed by (1): RCA1_cos_assistant_navigates_with_him · finishing it unlocks
+        RCA1_cos_assistant_navigates_with_him
       - >-
         same files as PC2_procedures_and_frameworks_as_steps with no order between them:
         cos/manager/server.js

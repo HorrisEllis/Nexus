@@ -7,11 +7,11 @@ intent: null
 summary: 1 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1794621875319
+exported_at: 1794930339895
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794621875319
-lastSeenAt: 1794621875319
+firstSeenAt: 1794930339895
+lastSeenAt: 1794930339895
 fingerprint: null
 payload:
   for: RCA1_cos_assistant_navigates_with_him
@@ -27,19 +27,30 @@ payload:
   crossings: []
   ready: true
   dag:
-    layer: 0
-    deps: []
+    layer: 3
+    deps:
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC10_our_own_remote_control
     dependents: []
-    upstream: []
+    upstream:
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC10_our_own_remote_control
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC9_the_desktop_driver
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D14_a_desktop_driver_for_agents
     downstream: []
-    blockedBy: []
+    blockedBy:
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC10_our_own_remote_control
     unlocks: []
-    conflicts: []
-    dangling:
-      - PC10_our_own_remote_control
+    conflicts:
+      - with: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC18_cos_runs_the_model_server
+        files:
+          - cos/spec/remote-control.spec
+    dangling: []
     lines:
-      - layer 0 · ready
-      - 'depends on (0): —'
+      - layer 3 · blocked by PC10_our_own_remote_control
+      - 'depends on (1): PC10_our_own_remote_control · all upstream 3'
       - 'needed by (0): —'
-      - 'DANGLING depends_on: PC10_our_own_remote_control'
-    edges: []
+      - >-
+        same files as PC18_cos_runs_the_model_server with no order between them:
+        cos/spec/remote-control.spec
+    edges:
+      - from: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC10_our_own_remote_control
+        kind: declared

@@ -7,11 +7,11 @@ intent: null
 summary: 28 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792877325041
+exported_at: 1794930121392
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792877325041
-lastSeenAt: 1792877325041
+firstSeenAt: 1794930121392
+lastSeenAt: 1794930121392
 fingerprint: null
 payload:
   for: GD3_intelligence_by_route
@@ -237,6 +237,15 @@ payload:
         files:
           - guardian/lib/dispatcher.js
           - guardian/server.js
+      - with: docs/2026-10-24-guardian-into-cos-phasemap.spec::GD5a_one_write_the_job_and_its_response
+        files:
+          - guardian/server.js
+      - with: docs/2026-10-24-guardian-into-cos-phasemap.spec::GD5b_transcripts_are_guardians
+        files:
+          - guardian/server.js
+      - with: docs/2026-10-24-guardian-into-cos-phasemap.spec::GD5d_bring_the_lost_days_home
+        files:
+          - guardian/server.js
       - with: docs/2026-10-24-guardian-into-cos-phasemap.spec::GD7_the_bus_and_connect
         files:
           - guardian/server.js
@@ -250,6 +259,11 @@ payload:
       - >-
         same files as GD4_the_other_systems_by_route with no order between them:
         guardian/lib/dispatcher.js, guardian/server.js
+      - >-
+        same files as GD5a_one_write_the_job_and_its_response with no order between them:
+        guardian/server.js
+      - 'same files as GD5b_transcripts_are_guardians with no order between them: guardian/server.js'
+      - 'same files as GD5d_bring_the_lost_days_home with no order between them: guardian/server.js'
       - 'same files as GD7_the_bus_and_connect with no order between them: guardian/server.js'
     edges:
       - from: docs/2026-10-24-guardian-into-cos-phasemap.spec::GD_D2_stateful_capabilities_by_route

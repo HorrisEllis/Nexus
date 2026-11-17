@@ -7,11 +7,11 @@ intent: null
 summary: 34 node(s), 9 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792877325040
+exported_at: 1794930121390
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792877325040
-lastSeenAt: 1792877325040
+firstSeenAt: 1794930121390
+lastSeenAt: 1794930121390
 fingerprint: null
 payload:
   for: GD2_primitives_to_the_kernel
@@ -301,6 +301,16 @@ payload:
       - with: docs/2026-10-24-guardian-into-cos-phasemap.spec::GD4_the_other_systems_by_route
         files:
           - guardian/server.js
+      - with: docs/2026-10-24-guardian-into-cos-phasemap.spec::GD5a_one_write_the_job_and_its_response
+        files:
+          - guardian/lib/ncp-handler.js
+          - guardian/server.js
+      - with: docs/2026-10-24-guardian-into-cos-phasemap.spec::GD5b_transcripts_are_guardians
+        files:
+          - guardian/server.js
+      - with: docs/2026-10-24-guardian-into-cos-phasemap.spec::GD5d_bring_the_lost_days_home
+        files:
+          - guardian/server.js
       - with: docs/2026-10-24-guardian-into-cos-phasemap.spec::GD7_the_bus_and_connect
         files:
           - guardian/server.js
@@ -310,6 +320,11 @@ payload:
       - 'depends on (1): GD_D1_pure_primitives_to_the_kernel'
       - 'needed by (1): GD3_intelligence_by_route · finishing it unlocks GD3_intelligence_by_route'
       - 'same files as GD4_the_other_systems_by_route with no order between them: guardian/server.js'
+      - >-
+        same files as GD5a_one_write_the_job_and_its_response with no order between them:
+        guardian/lib/ncp-handler.js, guardian/server.js
+      - 'same files as GD5b_transcripts_are_guardians with no order between them: guardian/server.js'
+      - 'same files as GD5d_bring_the_lost_days_home with no order between them: guardian/server.js'
       - 'same files as GD7_the_bus_and_connect with no order between them: guardian/server.js'
     edges:
       - from: docs/2026-10-24-guardian-into-cos-phasemap.spec::GD_D1_pure_primitives_to_the_kernel

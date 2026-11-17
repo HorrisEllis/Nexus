@@ -7,18 +7,20 @@ intent: null
 summary: GD5_the_response_store (backend) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1792877325043
+exported_at: 1794930121397
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792877325043
-lastSeenAt: 1792877325043
+firstSeenAt: 1794930121397
+lastSeenAt: 1794930121397
 fingerprint: null
 payload:
   id: GD5_the_response_store
   map: docs/2026-10-24-guardian-into-cos-phasemap.spec
   repo: null
   layer: backend
-  status: OPEN
+  status: >-
+    "OPEN — expanded 2026-11-17 into GD5a-GD5d (his \"one source of truth\"); GD5 is closed when all
+    four are"
   files:
     - clear-glass/src/downloads/artifact-chat-index.js
     - guardian/lib/response-sink.js
@@ -29,4 +31,4 @@ payload:
     - GD_D3_the_response_store
   blocks: []
   spec: null
-  graph: 1ae471fa014daaa2
+  graph: e35f69995807a791

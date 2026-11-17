@@ -116,6 +116,14 @@ spec:
         ingestFilesAsSpecAsync — the same ingest split into begin · per-file · finish, yielding every 50 files; the sync
         one is the same three steps without the yields (one code path). On the default export the API uses.
       proof: NI-001 (same chunks as the sync ingest; on the default export)
+      expanded_2026_11_17: >-
+        James, 2026-11-17: "it needs to build in order, bottom up. i am drowning. help me get this working". His log of the same morning: a nexus-self re-ingest of nexus/core (5,396 files; the file set changed, so PF5's in-place
+        update stood aside) yielded while it read the files, then _ingestFinish wrote all 5,396 .chunk nodes in one synchronous loop
+        (07:57:17→07:57:31). Idearium missed its heartbeats and the watchdog took it OFFLINE mid-sync. Every pipeline step calls Idearium, so
+        this is the floor the build stands on. Fixed (0.60.549): the async paths (ingestFilesAsSpecAsync, updateIngestedSpecAsync) leave the
+        node pass to idearium/lib/chunk-nodes.js writeChunkNodesAsync, the same writes yielding every 50; the sync paths are unchanged.
+      files_2026_11_17: [idearium/lib/chunk-nodes.js, tests/modules/test-nexus-self-incremental.test.js]
+      proof_2026_11_17: "NI-007: 600 files ingested async and every node written by the yielding writer with timers running between batches (fails on the old code: no yielding writer); test-nexus-self-incremental 7/7"
     PF3_snapshot_names_changed_files:
       layer: library
       status: DONE (0.39.288)

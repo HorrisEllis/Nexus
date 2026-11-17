@@ -4,14 +4,14 @@ type: phase
 id: docs_2026-11-08-pipeline-canvas-phasemap.spec::PC8_operate_a_pipeline
 context: pipeline phase PC8_operate_a_pipeline of docs/2026-11-08-pipeline-canvas-phasemap.spec
 intent: null
-summary: PC8_operate_a_pipeline (?) — 17 file(s)
+summary: PC8_operate_a_pipeline (?) — 24 file(s)
 system: idearium
 tags: []
-exported_at: 1794390345002
+exported_at: 1794930503461
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794390345002
-lastSeenAt: 1794390345002
+firstSeenAt: 1794930503461
+lastSeenAt: 1794930503461
 fingerprint: null
 payload:
   id: PC8_operate_a_pipeline
@@ -39,9 +39,16 @@ payload:
     - lib/repo-agent.js
     - guardian/lib/ncp-handler.js
     - guardian/server.js
+    - tests/modules/test-ncp-handler-sr3.js
+    - tests/modules/test-pipelines.test.js
+    - cos/automation/pipeline.js
+    - cos/automation/engine.js
+    - cos/automation/routes.js
+    - guardian/lib/jobs.js
+    - cos/pipeline/test/runs.test.eg
   depends_on:
     - PC_D13_the_pipeline_works_first_then_cos_optimised
     - PC5_programmable_gate_types
   blocks: []
   spec: null
-  graph: ffd7c1c0e301fb4e
+  graph: a2c7f31c3bfcce4a

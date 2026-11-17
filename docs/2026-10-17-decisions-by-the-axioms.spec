@@ -220,3 +220,17 @@ spec:
   #         TRUTH_OVER_COHERENCE: "the same theme as the setting" is what Settings shows.
   # His call, not decided here: the kill rung default reading (kill_tabs) is a reading, to confirm.
 
+# ═══ ADDENDUM 2026-11-17 (0.60.548) — one source of truth for a reply, each system's own data, the pipeline ledger (his words, his axioms) ═══
+  #   D32 = GD_D3 one source of truth for an agent reply: Guardian's .job with its .response beside it, guardian/data/jobs/<id>/; the job
+  #         ledger reads both. His: "Need one source of truth. .jobs with the relative .response node. Queue and ledger." · "Sit besides." ·
+  #         "Guardian's, referenced". §5.15.1, §10.1, §10.3, §8.6.
+  #   D33 = each system keeps its own data: Clear Glass's captures stay Clear Glass's (.job beside .response in clear-glass/data/), the Library
+  #         store moved off the COS compartment root (the cause of the claude replies missing since 2026-11-01: COS starts Guardian as SYSTEM).
+  #         His: "All systems keep their own data. look at Claude.md". §5.9, §5.15.2, docs/CLAUDE.md 2026-11-09.
+  #   D34 = PC8 slice c the pipeline ledger: <request>/run.ledger in COS's request bundle (cos/data/manager), written by runs.eg (Emerge), each
+  #         step naming its Guardian job by id, the .response referenced, never copied. His: "The pipeline needs a ledger also. Each step, job
+  #         and response that came back." §8.6, §17.13, §10.2, §9.2.
+  #   D35 = every ledger line also booked with Cortex, after its owner writes it, through an outbox when Cortex is down. His: "yes". §2.1,
+  #         §1.2, §5.15.3.
+  # His call, still his: none open from this set. The reading of "turn into that" (the Library store takes the .job/.response shape in its
+  # own folder) is recorded in GD_D3 corrected_2026_11_17_c.
