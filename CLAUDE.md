@@ -51,6 +51,12 @@ Money matters now ("I need to be paid, at all."). The Fiverr autofill is built (
 - **Never commit `data/**`.** After touching `emerge/`, run `node scripts/emerge-lock.js --write`.
 - **Every change and every version goes to Versionium** (§17.12), through `lib/versionium-record.js` `record()`.
 
+## Always use what Nexus has (his, 2026-11-17; first said 2026-10-17)
+"always use was nexus has." · earlier: "always make effective use of what you already have." Before building, proposing or answering: find
+what Nexus already has (its screens, its settings, its tools, its stores, its components: Idearium's Settings and code tools, Clear Glass's
+engines, COS's pipeline, RAID, the node stores) and use or move it. A new screen, setting, door or tool is made only when nothing existing
+can do it, and the reply says what was checked. The agents follow the same order (L4 of docs/2026-11-17-raid-request-lifecycle-phasemap.spec).
+
 ## He does not do CLI (his, 2026-11-17)
 "no. i dont do cli. im not trying to remember all that. idearium already has the ui for this, which needs to migrate to cos automation pipeline and workflow canvas." Tell him what to do in the UI (the screen, the tab, the button), never a command to type. Commands are for agents and the coder.
 Where the UI for something lives in Idearium but belongs to COS, say so and point at the phase that moves it.
