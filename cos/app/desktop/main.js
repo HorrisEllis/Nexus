@@ -49,12 +49,21 @@ const show = () => { if (!win || win.isDestroyed()) createWindow(); if (win.isMi
 // MG37 — started at logon with --hidden: straight to the tray (his startHidden, on by default)
 function hiddenStart() { return process.argv.includes('--hidden') && !!(ctl && ctl.settings().settings.startHidden); }
 // MG36 — what the window shows, re-checked every 2 s: the cockpit when it answers, else the starting page saying why
+const DOWN_TICKS = 5; let downs = 0, lastCockpitUrl = null;   // 2026-11-17: ~10 s of misses before leaving the cockpit; the page he was on, kept
 async function retarget() {
   if (!win || win.isDestroyed()) return;
   const st = await ctl.state().catch(() => null); const name = (ctl.settings().settings.startOnLaunch) || 'nexus';
   const p = st && st.projects.find(x => x.project === name);
   const t = W.windowTarget({ cockpitUp: await W.cockpitUp(), linked: p && p.linked, started: p && p.run ? p.run.running : lastStart.started, error: lastStart.error, installing: installState.step, installError: installState.error });
-  if (!target || target.kind !== t.kind) { if (t.kind === 'cockpit') win.loadURL(t.url); else win.loadFile(path.join(__dirname, 'starting.html')); }
+  // 2026-11-17 — James: "the ui keeps crashing and kicking me out of the pipeline tab. i want that to stop" · "cos ui needs to stop refreshing and
+  // kicking me off the page when it reloads." One slow answer (1.5 s, his machine at 96% memory) flipped the window to the starting page, and the
+  // next answer reloaded the cockpit's home: his tab gone. Now the window leaves the cockpit only after DOWN_TICKS checks in a row miss (~10 s),
+  // and when the cockpit answers again it opens the page he was on (its URL, hash included), not the home.
+  if (t.kind === 'cockpit') downs = 0; else if (target && target.kind === 'cockpit' && ++downs < DOWN_TICKS) return;
+  if (!target || target.kind !== t.kind) {
+    if (t.kind === 'cockpit') win.loadURL(lastCockpitUrl && W.allowedUrl(lastCockpitUrl) ? lastCockpitUrl : t.url);
+    else { try { const u = win.webContents.getURL(); if (/^http:\/\/127\.0\.0\.1:/.test(u)) lastCockpitUrl = u; } catch (_) {} win.loadFile(path.join(__dirname, 'starting.html')); }
+  }
   target = t; if (t.kind === 'starting') win.webContents.send('cos:starting', t);
 }
 // MG36 — the old page, kept: Versions & manual update (link a folder, import a zip, switch, roll back)

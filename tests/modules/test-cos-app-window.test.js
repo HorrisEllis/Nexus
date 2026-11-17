@@ -91,7 +91,7 @@ async function test(id, d, fn) { try { await fn(); console.log(`  ✓ ${id} ${d}
   await test('CW-05', 'main.js: cockpit window with the starting bridge only; Versions & manual update; the tray switches; --hidden; logon at launch', () => {
     const m = fs.readFileSync(path.join(ROOT, 'cos/app/desktop/main.js'), 'utf8');
     assert.ok(/preload: path\.join\(__dirname, 'starting-preload\.js'\)/.test(m) && /show: !hiddenStart\(\)/.test(m));
-    assert.ok(/if \(t\.kind === 'cockpit'\) win\.loadURL\(t\.url\); else win\.loadFile\(path\.join\(__dirname, 'starting\.html'\)\)/.test(m));
+    assert.ok(/if \(t\.kind === 'cockpit'\) win\.loadURL\(lastCockpitUrl && W\.allowedUrl\(lastCockpitUrl\) \? lastCockpitUrl : t\.url\)/.test(m) && /win\.loadFile\(path\.join\(__dirname, 'starting\.html'\)\)/.test(m), 'the cockpit, back on the page he was on; else the starting page'); assert.ok(/\+\+downs < DOWN_TICKS\) return/.test(m), '2026-11-17: one slow answer does not leave the cockpit');
     assert.ok(/function openVersions\(\)[\s\S]{0,400}preload: path\.join\(__dirname, 'preload\.js'\)[\s\S]{0,200}ui', 'index\.html'/.test(m), 'the old page, with its full bridge, in its own window');
     assert.ok(/Versions & manual update/.test(m) && /Start COS with Windows/.test(m) && /Start in the tray/.test(m) && /Admin rights at startup/.test(m));
     assert.ok(/applyLogon\(\)\.catch/.test(m) && /process\.argv\.includes\('--hidden'\)/.test(m));
