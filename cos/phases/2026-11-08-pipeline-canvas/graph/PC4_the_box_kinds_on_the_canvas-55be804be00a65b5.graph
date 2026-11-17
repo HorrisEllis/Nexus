@@ -7,11 +7,11 @@ intent: null
 summary: 36 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1794930503439
+exported_at: 1794940341557
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794930503439
-lastSeenAt: 1794930503439
+firstSeenAt: 1794940341557
+lastSeenAt: 1794940341557
 fingerprint: null
 payload:
   for: PC4_the_box_kinds_on_the_canvas
@@ -312,6 +312,7 @@ payload:
       - docs/2026-11-15-the-factory-phasemap.spec::IF10_the_map_of_nexus_on_the_canvas
       - docs/2026-11-15-the-factory-phasemap.spec::IF11_agents_deployed_per_system_by_hat
       - docs/2026-11-15-the-factory-phasemap.spec::IF12_nexus_builds_itself_autonomously
+      - docs/2026-11-17-nexus-codes-itself-phasemap.spec::NX2_nexus_codes_itself_toward_a_dynamic_end_state
     blockedBy:
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC5_programmable_gate_types
       - docs/2026-11-01-eravos-orchestration-tools-phasemap.spec::EO3_work_tools
@@ -365,7 +366,7 @@ payload:
         MB3_one_shape_with_pipelines · all upstream 48
       - >-
         needed by (2): IF10_the_map_of_nexus_on_the_canvas, PC2_procedures_and_frameworks_as_steps ·
-        all downstream 5
+        all downstream 6
       - 'same files as PC3_the_build_request_step with no order between them: cos/manager/server.js'
       - >-
         same files as PC8_operate_a_pipeline with no order between them: cos/pipeline/runs.eg,

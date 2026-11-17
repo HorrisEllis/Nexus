@@ -48,6 +48,11 @@ decisions:
       Two routing doors: the build asks copilot's model door (lib/model-door.js via POST /api/route), and RAID decides elsewhere
       (decideForContract). His PC_D15 ("Everything routes through RAID") makes one of them the friction: PC16 (T2) makes RAID the bridge and
       the model door its delivery, not a second decider. Until then the first run goes through the ladder as it is.
+    corrected_2026_11_17: >-
+      James, 2026-11-17: "no. i dont do cli. im not trying to remember all that. idearium already has the ui for this, which needs to migrate to cos automation pipeline and workflow canvas." The first run is done in the UI, not the CLI (the commands above are kept for agents, §0.3): Idearium, the nexus
+      repo, Agent tab, agent options: "who answers" = ollama and "ollama model"; then COS, Automation, the Idearium build pipeline, ▶ Run (it
+      asks for the phase in the page: "▶ Run with these"). The agent options move to COS's Automation (pipeline and workflow canvas): PC16
+      expanded the same day.
     model_his: "the model is his (PC_D16): his log shows huihui_ai/qwen2.5-coder-abliterate:3b in use; a 3B model is likely too small to write a phase; the factory map's note names deepseek-coder-v2:16b (a mixture of experts, 2.4B active, ~8.9 GB) as the best fit for his RAM."
 
 # ── The graph, bottom up (each tier needs the one below it) ─────────────────────────────────────────────────────────────────────────────

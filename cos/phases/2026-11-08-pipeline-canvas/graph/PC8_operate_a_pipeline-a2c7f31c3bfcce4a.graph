@@ -7,11 +7,11 @@ intent: null
 summary: 48 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1794930503461
+exported_at: 1794940341575
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794930503461
-lastSeenAt: 1794930503461
+firstSeenAt: 1794940341575
+lastSeenAt: 1794940341575
 fingerprint: null
 payload:
   for: PC8_operate_a_pipeline
@@ -306,6 +306,7 @@ payload:
     dependents:
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC12_every_pipeline_in_cos
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC13_his_request_built_by_the_pipeline
+      - docs/2026-11-17-nexus-codes-itself-phasemap.spec::NX2_nexus_codes_itself_toward_a_dynamic_end_state
     upstream:
       - docs/2026-10-28-first-principles-phasemap.spec::FP1_where_a_request_opens
       - docs/2026-10-28-first-principles-phasemap.spec::FP2_which_option_is_meant
@@ -352,6 +353,7 @@ payload:
     downstream:
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC12_every_pipeline_in_cos
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC13_his_request_built_by_the_pipeline
+      - docs/2026-11-17-nexus-codes-itself-phasemap.spec::NX2_nexus_codes_itself_toward_a_dynamic_end_state
     blockedBy:
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC5_programmable_gate_types
     unlocks:
@@ -420,8 +422,9 @@ payload:
         depends on (2): PC_D13_the_pipeline_works_first_then_cos_optimised,
         PC5_programmable_gate_types · all upstream 42
       - >-
-        needed by (2): PC12_every_pipeline_in_cos, PC13_his_request_built_by_the_pipeline ·
-        finishing it unlocks PC12_every_pipeline_in_cos
+        needed by (3): PC12_every_pipeline_in_cos, PC13_his_request_built_by_the_pipeline,
+        NX2_nexus_codes_itself_toward_a_dynamic_end_state · finishing it unlocks
+        PC12_every_pipeline_in_cos
       - >-
         same files as PC2_procedures_and_frameworks_as_steps with no order between them:
         lib/automation/engine.js, idearium/api/index.js, cos/manager/automation-door.js,

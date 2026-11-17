@@ -7,11 +7,11 @@ intent: null
 summary: 16 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1794618104735
+exported_at: 1794940341609
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794618104735
-lastSeenAt: 1794618104735
+firstSeenAt: 1794940341609
+lastSeenAt: 1794940341609
 fingerprint: null
 payload:
   for: PC17_the_model_fits_by_what_it_runs
@@ -140,9 +140,11 @@ payload:
   dag:
     layer: 0
     deps: []
-    dependents: []
+    dependents:
+      - docs/2026-11-17-nexus-codes-itself-phasemap.spec::NX2_nexus_codes_itself_toward_a_dynamic_end_state
     upstream: []
-    downstream: []
+    downstream:
+      - docs/2026-11-17-nexus-codes-itself-phasemap.spec::NX2_nexus_codes_itself_toward_a_dynamic_end_state
     blockedBy: []
     unlocks: []
     conflicts: []
@@ -151,6 +153,6 @@ payload:
     lines:
       - layer 0 · ready
       - 'depends on (0): —'
-      - 'needed by (0): —'
+      - 'needed by (1): NX2_nexus_codes_itself_toward_a_dynamic_end_state'
       - 'DANGLING depends_on: PC_D16_ollama_first_guardian_if_needed'
     edges: []
