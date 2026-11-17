@@ -37,6 +37,19 @@ decisions:
       decides (his words, his calls) is recorded where the work lives and feeds the next run. Both directions are measured where they can be
       (docs/FRAMEWORK-THREADS.md, docs/BENCHMARKS.md, docs/PROOF-OF-COMPETENCY.md), with failures kept.
 
+  NX_D4_the_first_run_is_a_setting_not_code:
+    status: "DECIDED 2026-11-17 by his axioms (§8.6 reuse; his PC_D16 Ollama first) — after his 'need nexus building itself using ollama preferably. it needs to align with the architecture so it doesn't induce friction. pipeline is everything. i need nexus building itself.'"
+    chosen: >-
+      Nexus can build itself through its pipeline today: idearium/pipelines/idearium-build.pipeline runs a phase end to end, and the build's
+      agent ladder (lib/repo-agent.js) already has an Ollama backend with a per-repo model. The nexus repo's agent defaults to ChatGPT
+      (defaultProvider()); set it to Ollama (`repo agent nexus --provider ollama --model <model>`), then `cos request idearium-build`. No new
+      code is needed for the first run; its failures are the next phases (root causes only, from the run's own files).
+    friction_found: >-
+      Two routing doors: the build asks copilot's model door (lib/model-door.js via POST /api/route), and RAID decides elsewhere
+      (decideForContract). His PC_D15 ("Everything routes through RAID") makes one of them the friction: PC16 (T2) makes RAID the bridge and
+      the model door its delivery, not a second decider. Until then the first run goes through the ladder as it is.
+    model_his: "the model is his (PC_D16): his log shows huihui_ai/qwen2.5-coder-abliterate:3b in use; a 3B model is likely too small to write a phase; the factory map's note names deepseek-coder-v2:16b (a mixture of experts, 2.4B active, ~8.9 GB) as the best fit for his RAM."
+
 # ── The graph, bottom up (each tier needs the one below it) ─────────────────────────────────────────────────────────────────────────────
 # T0  the floor — DONE today
 #       PF2_yielding_ingest (0.60.549) · RC2_linear_node_scan (0.60.550, 0.60.551): Idearium stays up while it indexes
