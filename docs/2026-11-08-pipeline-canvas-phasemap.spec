@@ -634,6 +634,22 @@ built_2026_11_09_plan:
     # the pipeline's, not Idearium's loop beside it); a contract met becomes a .macro of its steps, replayable to rebuild or reconstruct what it
     # built (the snapshots of "every step snapshotted, any run replayed", cos/spec/pipeline-canvas.spec).
   PC8_operate_a_pipeline:
+    expanded_2026_11_17_stuck: >-
+      James, 2026-11-17: "like ollama needs to use the contract as a map. like each step can  be broken down into smaller steps, like the bricks in
+      idearium. each word, building from the last in emerge. like ollama needs to figure it out when it gets stuck, not just get stuck". After
+      "when a step is ambiguous or uncertain, run my framework on it" was named as not wired. The stuck ladder, one gate strategy, in order;
+      each rung is something Nexus already has, wired into the gate (decided by his words and §8.6):
+        1. the contract is the map: the agent is handed its DAG node, its pass_when and what the steps before it gave, never the whole task;
+        2. retry with the gate's own words (RQ3's repair: the check's message back to the agent; routing.retries_per_rung);
+        3. decompose: a step that fails becomes smaller steps under it, as Idearium's bricks and chunker do (spec-compiler/chunk, chunk-dispatch);
+           in Emerge, word by word, each word building on the last (CIE-EG), each checked as it lands;
+        4. ambiguity or uncertainty: run his framework on the step (a .framework step, PC2; docs/innovation-toolkit.framework; IP11's one
+           primitive for risk, ambiguity and uncertainty) and take its answer as the step's new context;
+        5. diagnose: the diagnostic and the intelligence system read the failure (its report in the system's failures/, FMR2) and name the cause;
+        6. escalate: the next rung of routing.escalation (a bigger model, then an agent), by RAID;
+        7. ask him: only what Nexus could not find or build (RQ8), as a question in the run, the run held, never dropped.
+      Every rung is a line in the run's ledger (PC8 slice c), so Nexus learns which rung unsticks which kind of step (the learned order, RAID).
+      Not "stuck": a step ends passed, decomposed, answered, escalated or asked.
     status: OPEN   # slice a BUILT 0.60.481 (a delta and a baseline per step; RAID's decisions as steps; the bar); slice b BUILT 0.60.484 (pause, continue, retry from a step)
     james: '"seeing, changing, managing, diagnosing, exporting, testing, agnostic." · "record each step in raids decision, dynamically building each step, as it goes. it all needs to be visable."'
     depends_on: [PC_D13_the_pipeline_works_first_then_cos_optimised, PC5_programmable_gate_types]
