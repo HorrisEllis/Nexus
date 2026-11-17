@@ -43,13 +43,53 @@ const core = require('./config-core.cjs');
 
 const { TABLE, ROW_UUID, CONFIG_FILE, SCHEMA, ALIASES } = core;
 
+// ── PC16 slice a (2026-11-17) — routing.* is RAID's ─────────────────────────────────────────────────────────────────────────────────────
+// James, 2026-11-17: "i need ideariums settings to work better. this is meant to be in raid. all of the routing." RAID (Cortex,
+// cortex/core/raid/routing.js) owns the routing policy. Idearium keeps the last copy it read on disk (the mirror, its own data folder) and
+// lays it over its three layers for routing.* only: a fourth, top layer, 'raid'. A write here goes to RAID through the outbox (Cortex down:
+// kept, delivered on replay) and into the mirror at once, so what was set is what is read. Every reader of routing.* is unchanged.
+function _mirrorFile() {
+  if (process.env.IDEARIUM_RAID_ROUTING_MIRROR) return process.env.IDEARIUM_RAID_ROUTING_MIRROR;
+  try { return require('../../lib/data-home.js').home('idearium', 'raid', 'routing.mirror.json'); } catch (_) { return null; }
+}
+let _mirror = { mtime: -2, doc: { policy: {} } };
+function _raidDoc() {
+  const f = _mirrorFile(); if (!f) return { policy: {} };
+  try { const st = fs.statSync(f); if (st.mtimeMs !== _mirror.mtime) _mirror = { mtime: st.mtimeMs, doc: JSON.parse(fs.readFileSync(f, 'utf8')) || { policy: {} } }; }
+  catch (_) { _mirror = { mtime: -1, doc: { policy: {} } }; }
+  return _mirror.doc && _mirror.doc.policy ? _mirror.doc : { policy: {} };
+}
+/** writeRaidMirror({ policy, at, by }) — the copy of RAID's routing Idearium reads from (the sync and every write keep it current) */
+export function writeRaidMirror(doc) {
+  const f = _mirrorFile(); if (!f) return false;
+  const path = require('path');
+  fs.mkdirSync(path.dirname(f), { recursive: true });
+  fs.writeFileSync(f + '.tmp', JSON.stringify({ policy: (doc && doc.policy) || {}, at: (doc && doc.at) || null, by: (doc && doc.by) || null, readAt: Date.now() }, null, 2) + '\n');
+  fs.renameSync(f + '.tmp', f);
+  _mirror = { mtime: -2, doc: { policy: {} } };
+  return true;
+}
+let _pushRaid = (body) => { try { return Promise.resolve(require('../../lib/nexus-client.js').postDurable('cortex', '/api/raid/routing', body)).catch(() => null); } catch (_) { return Promise.resolve(null); } };
+/** setRaidRoutingPusher(fn) — how a routing change reaches RAID (tests hand in their own) */
+export function setRaidRoutingPusher(fn) { const prev = _pushRaid; if (typeof fn === 'function') _pushRaid = fn; return prev; }
+/** routingWithoutRaid() — Idearium's own routing values (defaults, file, runtime), what it hands RAID once when RAID has none */
+export function routingWithoutRaid() { const rows = loadTable(TABLE); const row = rows.find((r) => r.uuid === ROW_UUID); return (core.resolveValues(core.foldAliases(row && row.values)) || {}).routing || {}; }
+function _overlayRaid(values) {
+  const pol = _raidDoc().policy || {}, sch = SCHEMA.routing || {};
+  for (const [k, v] of Object.entries(pol)) {
+    if (!sch[k] || !core.isLeaf(sch[k])) continue;                       // not a key Idearium knows: left to its owner
+    try { const c = core.validate(`routing.${k}`, v, 'user'); values.routing = values.routing || {}; values.routing[k] = c; } catch (_) { /* out of bounds here: the lower layers stand, said by describe() */ }
+  }
+  return values;
+}
+
 function _load() {
   const rows = loadTable(TABLE);
   const row  = rows.find((r) => r.uuid === ROW_UUID);
   const persisted = core.foldAliases(row && row.values);
   return {
     uuid: ROW_UUID,
-    values: core.resolveValues(persisted),
+    values: _overlayRaid(core.resolveValues(persisted)),
     _persisted: persisted,
     updatedAt: (row && row.updatedAt) || null,
     updatedBy: (row && row.updatedBy) || null,
@@ -99,6 +139,11 @@ export function setConfig(keyPath, value, { actor = 'user' } = {}) {
   state.updatedBy = actor;
   _save(state);
 
+  // PC16 slice a — routing.* goes to RAID, its owner, and into the mirror now (what was set is what is read)
+  if (parts[0] === 'routing' && parts.length === 2) {
+    const d = _raidDoc(); writeRaidMirror({ ...d, policy: { ...(d.policy || {}), [parts[1]]: coerced } });
+    _pushRaid({ key: parts[1], value: coerced, by: `idearium:${actor}` });
+  }
   // a secret's value is never logged or put in the event — only that it was set
   const shown = def && def.secret ? '(secret — set, not shown)' : coerced;
   console.log(`[idearium/config] ${real} -> ${def && def.secret ? shown : JSON.stringify(coerced)} (actor: ${actor})`);
@@ -115,6 +160,10 @@ export function resetConfig(keyPath, { actor = 'user' } = {}) {
   const { parts, def, real } = core.resolve(keyPath);
   if (actor !== 'user' && !def.copilot_writable) {
     throw new Error(`idearium/lib/config: '${keyPath}' is not copilot_writable — human reset required`);
+  }
+  if (parts[0] === 'routing' && parts.length === 2) {   // PC16 slice a — RAID's value goes too, so the default or the file shows through
+    const d = _raidDoc(); const pol = { ...(d.policy || {}) }; delete pol[parts[1]]; writeRaidMirror({ ...d, policy: pol });
+    _pushRaid({ key: parts[1], unset: true, by: `idearium:${actor}` });
   }
   const state = _load();
   core.deleteAt(state._persisted, parts);
@@ -137,6 +186,7 @@ export function describe() {
   const state = _load();
   const file  = core.fileLayer();
   const defs  = core.defaults();
+  const raid  = _raidDoc().policy || {};
   const keys  = [];
   (function walk(schema, prefix) {
     for (const [k, v] of Object.entries(schema)) {
@@ -148,7 +198,7 @@ export function describe() {
         keys.push({
           key: keyPath,
           value: core.getAt(state.values, parts),
-          source: inRuntime ? 'runtime' : inFile ? 'file' : 'default',
+          source: (parts[0] === 'routing' && parts.length === 2 && raid[parts[1]] !== undefined) ? 'raid' : inRuntime ? 'runtime' : inFile ? 'file' : 'default',
           default: core.getAt(defs, parts),
           type: v.type,
           min: v.min == null ? null : v.min,

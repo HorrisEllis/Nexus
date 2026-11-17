@@ -3259,6 +3259,27 @@ async function _ollamaModels() {
 }
 
 // §0.39.286 RG2 — the routing.* config as a lib/pipeline-routing policy (defaults when the config cannot be read)
+// PC16 slice a (2026-11-17) — James: "this is meant to be in raid. all of the routing." RAID owns routing.*: Idearium reads RAID's policy
+// (Cortex GET /api/raid/routing) into its mirror at boot and every minute; when RAID has none yet, Idearium hands it its current values
+// once (POST /api/raid/routing/import), so nothing he set is lost. Cortex down: the mirror on disk stands, and routing goes on.
+async function _raidRoutingSync() {
+  const C = await import('../lib/config.js');
+  try {
+    let d = await _nexusClient.get('cortex', '/api/raid/routing', { timeout: 4000 });
+    if (d && d.ok && d.policy && !Object.keys(d.policy).length) {
+      d = await _nexusClient.post('cortex', '/api/raid/routing/import', { policy: C.routingWithoutRaid(), by: 'idearium (first sync)' }, { timeout: 4000 });
+      console.log(`[idearium/routing] RAID had no routing yet: Idearium's ${Object.keys((d && d.policy) || {}).length} setting(s) handed to it`);
+    }
+    if (d && d.ok && d.policy) C.writeRaidMirror(d);
+    return { ok: true };
+  } catch (e) { return { ok: false, error: e.message }; }
+}
+let _inTest = false; try { _inTest = _require('../../lib/test-sandbox.js').isTestProcess(); } catch (_) {}
+if (!_inTest) {   // a test process never reaches a real Cortex (lib/test-sandbox.js)
+  setTimeout(() => { _raidRoutingSync().catch(() => {}); }, 8000).unref?.();
+  setInterval(() => { _raidRoutingSync().catch(() => {}); }, 60000).unref?.();
+}
+
 function _routingPolicy(overrides = {}) {
   const PR = _require('../../lib/pipeline-routing.js');
   let cfg = {};
