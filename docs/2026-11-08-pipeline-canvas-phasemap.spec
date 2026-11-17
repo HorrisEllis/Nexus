@@ -1125,6 +1125,18 @@ expanded_2026_11_13_hub:
       the proposal is the one place he answers. Slices: (a) RAID's two, (b) Idearium's verdict, (c) Guardian and the pipeline.
     proof: "a stand-in of each owner: its wait becomes one open proposal; take runs the owner's route and closes it; drop says why; the owner down is said, the proposal kept"
   PC16_raid_routes_every_interaction:
+    expanded_2026_11_17_copilot_is_a_hat: >-
+      James, 2026-11-17, asked whether RAID should be in charge of routing and intent routing, after copilot (idle-stopped) took the route to
+      Ollama down with it: "copilot is meant to be a hat that any agent casn wear". Corrects the coder's "copilot goes back to being an agent"
+      (said the same turn, kept §0.3). Today copilot is a whole system (copilot/server.js :3750): it routes (lib/model-door.js /api/route),
+      delivers (its Ollama backend, /api/prompt), runs the tool loop and holds the chat. His model splits it by owner:
+        - the persona: a .hat in the hat forge (lib/hat-forge.js; lib/hat-seed.js seeds six today, no copilot), worn by whichever agent RAID
+          picks (a local Ollama model or a browser agent), like the_officiator;
+        - intent and route: RAID's (PC_D15, RL_D1), the model door's policy, breakers and learned order moved into it, not rebuilt;
+        - delivery: RAID's one door (the Ollama bridge through lib/ollama-port.js, guardian's NCP for browser agents);
+        - the chat surfaces (the TV shell's copilot button, the floating menu): an input to RAID with the copilot hat asked for.
+      So no single system's outage takes the route down (§5.15.3), and "copilot" works with any agent. Where the tool loop (the agent runtime
+      a hatted agent runs in) lives is his to say: the coder's reading is RAID's delivery, run in the request's compartment (to confirm).
     expanded_2026_11_17_ui: >-
       James, 2026-11-17: "no. i dont do cli. im not trying to remember all that. idearium already has the ui for this, which needs to migrate to cos automation pipeline and workflow canvas." Who answers (ollama, copilot, a guardian agent, claude-code) and the Ollama model are set today per repo in
       Idearium's Agent tab (idearium/ui/js/agent-options.js, POST /api/repos/:uuid/agent/settings, lib/repo-agent.js). With RAID the bridge,

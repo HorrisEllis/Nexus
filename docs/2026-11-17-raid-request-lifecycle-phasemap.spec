@@ -163,6 +163,9 @@ decisions:
       RL_D1 restates them; it adds no new decision. 0.60.552 built the Ollama-first order in the officiator alone, not in RAID: that is the gap.
     phase: PC16_raid_routes_every_interaction (expanded today)
     found: "the DAG checker reads PC16's depends_on (PC_D15, PC_D16) as dangling: they sit under a 'decisions_2026_11_13:' key it does not parse. Said, not changed here."
+  RL_D1b_copilot_is_a_hat:
+    status: "DECIDED 2026-11-17 by James — 'copilot is meant to be a hat that any agent casn wear'"
+    chosen: "copilot is a persona (.hat) any agent RAID picks can wear, not a system that routes or delivers; its routing and delivery are RAID's (PC16 expanded_2026_11_17_copilot_is_a_hat)"
   RL_D2_no_is_not_an_answer:
     status: "DECIDED 2026-11-17 by James — 'basically no or i dont know isn't a anwser.'"
     chosen: "every DAG node ends answered (with its source), built (Idearium), or asked (a follow-up question to him); never 'no', never 'unknown'"

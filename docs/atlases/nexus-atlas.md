@@ -66,7 +66,7 @@ The graph from today to that end state, tier by tier: `docs/2026-11-17-nexus-cod
    then Cortex's memory and vector memory, the associative lattice, each system's nodes, registry and routes, chat logs and the atlases.
    Then outward (an agent, the web). Then him, as a follow-up question. "No" and "I don't know" are not answers. A missing capability is
    built by Idearium.
-5. **RAID decides and delivers.** RAID is the bridge. It picks who does each step and reaches them through the one door that knows each
+5. **RAID decides and delivers.** RAID is the bridge. Copilot is a hat any agent can wear (his, 2026-11-17: "copilot is meant to be a hat that any agent casn wear"), not the router. It picks who does each step and reaches them through the one door that knows each
    agent's kind: Ollama first, Guardian's browser agents if needed (his, 2026-11-13). His preferences and fallbacks are RAID's settings
    (`raid tunables`).
 6. **The pipeline runs it.** COS runs the request as a pipeline. Each step is an executable node file (`.pipeline`, `.framework`,
@@ -89,6 +89,8 @@ RL_D1–RL_D8). The pipeline itself, formally: `cos/spec/pipeline.spec` (PL-001.
   Systems reach each other only by routes and the CLI server, so any one can be swapped. COS manages each system's `server.js`.
 - **Emerge and CIE-EG**, his language. "emerge is built to code from structure, which is cie-eg … same archicture as each system, reducing
   the friction since its compatable from the bottom up." New code is Emerge (§17.13).
+- **Nexus makes agents more capable** (his, 2026-11-17: "nexus is built to make agents more capabable by offloading onto nexus"). What an agent would
+  have to hold (the map, the context, the steps, the checks) is held by Nexus, so the agent only does one small step.
 - **Structure carries the complexity.** The Intelligence system and the agent tools do the complex reasoning. Idearium's chunker cuts the
   work into pieces one model can do. So the model doing the work can be small and local.
 - **Persistence, provenance, proof.** Every change and version goes to Versionium. Every decision is quoted and dated where the work lives.
