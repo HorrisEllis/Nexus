@@ -1546,8 +1546,12 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
         if (ru && ru.r) { r = ru.r; reused = { jobId: ru.jobId, provider: ru.provider || null, waitedMs: ru.waitedMs || 0 }; }
       } catch (e) { console.warn(`[idearium] gate reuse ${gateKey}: ${e.message} — asked again`); }
     }
+    // 2026-11-15 — James: "Ask inline, and open cards". A request for ONE file: a lone block without a path is that file, so no "which
+    // file does it belong in?" follow-up job is sent (its one-line answer had become the job's reply on Claude's and Gemini's pages)
+    const _releaseAsking = (() => { try { return files.length === 1 ? _require('../../lib/repo-inject.js').expectAsking(target.uuid, files[0]) : () => {}; } catch (_) { return () => {}; } })();
     if (!r) try { const rd = await _agentDir(target.uuid); r = await WR.wrap(() => RA.dispatch({ repo: target, repoDir: rd, message: msg, ...dp, layer: getRepoLayer(), session, maxToolErrors: policy.maxToolErrors || 0, phase: `${map}::${phase}`, ...(brickKey ? { brick: brickKey } : { gate: gateKey }), ...((typeof bare === 'function' ? bare(rg) : bare) ? { noContext: true } : {}) }), { kind: 'phase-build', provider: dp.provider || dp.model || dp.agent || dp.backend || null, key: `${target.uuid}\n${msg}`, mode: 'gate' }); }
-    catch (e) { if (shadow) SH.drop(shadow); throw e; }
+    catch (e) { _releaseAsking(); if (shadow) SH.drop(shadow); throw e; }
+    _releaseAsking();
     const inj = r && r.injects ? { injected: (r.injects.injects || []).map(i => i.path || i.file).filter(Boolean).slice(0, 50), refused: (r.injects.refused || []).length, unresolved: (r.injects.unresolved || []).length } : null;
     // §0.39.282 N21 — a reply blocked at its gate is 'blocked', never 'replied'; N22 — one missing a planned file is 'incomplete'
     let state = r && r.ok ? (r.injects && r.injects.blocked ? 'blocked' : 'replied') : 'failed';
@@ -1793,14 +1797,24 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
           } catch (_) { existingTest = null; }
         }
         if (existingTest != null) got = { code: existingTest, v: { verdict: 'existing', why: `${testPath} is already on disk` }, already: true, existing: true };
+        // 2026-11-15 — his CS12 runs: "the test writer (gemini) did not answer: guardian call failed: connect ECONNREFUSED 127.0.0.1:7820" ended
+        // the build. A writer that does not answer hands the test to the next agent on the build's route that is not the one that codes
+        // (rungs[0]), PE6 kept; last of all (James: "okay but we have ollama.") the model that codes, said on the row as not independent;
+        // TF.validate still keeps a test only if it fails on today's tree.
+        let writer = planner, wp = pdp;
+        const tfAlts = (rungs || []).slice(1).map(rg => ({ id: rg.provider || rg.base, dp: paramsOf(rg) })).filter(x => x.id && x.id !== planner);
+        if (rungs && rungs[0]) { const c0 = { id: rungs[0].provider || rungs[0].base, dp: paramsOf(rungs[0]), notIndependent: true }; if (c0.id && c0.id !== planner && !tfAlts.some(x => x.id === c0.id)) tfAlts.push(c0); }
+        // 2026-11-15 — the test writer asks for one file: its lone block is that file, no "which file?" follow-up job (its one-line answer
+        // had become the reply on Claude's page)
+        const _relTF = (() => { try { return _require('../../lib/repo-inject.js').expectAsking(target.uuid, testPath); } catch (_) { return () => {}; } })();
         for (let n = 1; n <= 2 && !got; n++) {
           const msg = TF.brief({ plan, phaseKey: phase, does: ctx.does, proof: ctx.proof, testPath, repoName: target.name, feedback: fb });
-          tfRow('writing', { provider: planner, attempt: n, promptChars: msg.length, tokensIn: _tokEst(msg) });
+          tfRow('writing', { provider: writer, attempt: n, promptChars: msg.length, tokensIn: _tokEst(msg) });
           // §0.60.157 — inside WARP like every build path (James, 2026-10-15: "make sure all builds use warp"); TF2 (0.60.141, the
           // coder's) called the agent outside it, and BP-01 caught it. A retry (n > 1) is asked fresh, as the plan's is.
-          let r; try { const rd = await _agentDir(target.uuid); r = await WR.wrap(() => RA.dispatch({ repo: target, repoDir: rd, message: msg, ...pdp, layer: getRepoLayer(), session: `${runId}-tf${n}`, maxToolErrors: policy.maxToolErrors || 0 }), { kind: 'phase-test-first', provider: planner || null, key: `${target.uuid}\n${msg}`, mode: 'cache', fresh: n > 1 }); }
+          let r; try { const rd = await _agentDir(target.uuid); r = await WR.wrap(() => RA.dispatch({ repo: target, repoDir: rd, message: msg, ...wp, layer: getRepoLayer(), session: `${runId}-tf${n}`, maxToolErrors: policy.maxToolErrors || 0 }), { kind: 'phase-test-first', provider: writer || null, key: `${target.uuid}\n${msg}`, mode: 'cache', fresh: n > 1 }); }
           catch (e) { r = { ok: false, error: e.message }; }
-          if (!r || !r.ok) { lastWhy = `the test writer (${planner}) did not answer: ${String((r && r.error) || 'no reply').slice(0, 200)}`; tfRow('no-answer', { provider: planner, attempt: n, error: lastWhy }); break; }
+          if (!r || !r.ok) { lastWhy = `the test writer (${writer}) did not answer: ${String((r && r.error) || 'no reply').slice(0, 200)}`; tfRow('no-answer', { provider: writer, attempt: n, error: lastWhy }); if (tfAlts.length) { const nx = tfAlts.shift(); tfRow('fallback', { provider: nx.id, notIndependent: !!nx.notIndependent, note: `${writer} did not answer; ${nx.id} writes the test${nx.notIndependent ? ' (the model that codes: not independent, PE6; kept only if it fails on today\'s tree)' : ''}` }); writer = nx.id; wp = nx.dp; n--; continue; } break; }
           const code = TF.extract(r.text);
           if (!code) { fb = lastWhy = 'the reply had no code block'; tfRow('invalid', { provider: planner, attempt: n, note: fb }); continue; }
           const v = await TF.validate({ root: _diskDir, plan, testPath, code });
@@ -1808,6 +1822,7 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
           if (d === 'accept' || d === 'accept-already') got = { code, v, already: d === 'accept-already' };
           else { fb = lastWhy = `${v.verdict}: ${v.why}`; tfRow('invalid', { provider: planner, attempt: n, note: lastWhy, tail: v.tail || null }); }
         }
+        _relTF();
         if (got) {
           const sh = TF.shape(plan, { testPath, code: got.code, verdict: got.v.why });
           plan = sh.plan;
@@ -9905,8 +9920,11 @@ async function handle(req, res, route, query, body) {
       const until = Date.now() + Math.max(1000, Math.min(270000, parseInt(query.waitMs, 10) || 240000));
       let f = null;
       for (;;) {
-        const mine = (FD.summary(_phaseRows(repo.uuid)).flights || []).filter(x => x.phase === phase).sort((a, b) => (b.startedAt || 0) - (a.startedAt || 0));
-        f = mine[0] || null;
+        // 2026-11-15 — his run: "Build the phase" DONE, then "no build of CS12… has been started here". A phase of a Nexus map can be built
+        // in its owner system's repo, so the parent looks in its systems' repos too. And only a BUILD counts (lib/flight-data.js latestBuild):
+        // Idearium's own auto-retry note about the phase ("auto-retry-held") had been read as the newest build, on 2026-11-15 and in his RQ0 run.
+        const uuids = [repo.uuid, ...((repo.nexusSelf && repo.nexusSelf.role !== 'system') ? getRepoLayer().list({}).filter(r => r.nexusSelf && r.nexusSelf.role === 'system').map(r => r.uuid) : [])];
+        f = FD.latestBuild(uuids.flatMap(u => FD.summary(_phaseRows(u)).flights || []), phase);
         if (!f) return err(res, 404, `no build of ${phase} has been started here`);
         if (f.landed || f.ended || Date.now() >= until) break;
         await new Promise(r => setTimeout(r, 2000));

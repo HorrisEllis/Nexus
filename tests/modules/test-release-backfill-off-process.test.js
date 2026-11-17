@@ -45,5 +45,23 @@ async function test(id, desc, fn) { try { await fn(); console.log(`  ✓ ${id} $
     assert.ok(!/commits: b\.recent \? 'recent' : \(b\.commits === false \? null : 'all'\)/.test(src), 'the in-process all-history default is gone');
   });
 
+  await test('RB-03', '2026-11-15 — in Versionium\'s own process git never fetches a partial clone\'s blobs; the backfill child may (his run: git under Versionium, 0 % CPU, /health silent)', async () => {
+    const cp = require('child_process'); const real = cp.execFileSync; const calls = [];
+    const fresh = () => { for (const f of ['versionium/lib/nexus-releases.js', 'versionium/lib/release-notes.js']) delete require.cache[require.resolve(path.join(ROOT, f))]; return require(path.join(ROOT, 'versionium/lib/nexus-releases.js')); };
+    cp.execFileSync = (cmd, args, opts) => { calls.push({ cmd, args, env: (opts && opts.env) || null }); return ''; };
+    const was = process.env.VERSIONIUM_GIT_LAZY;
+    try {
+      delete process.env.VERSIONIUM_GIT_LAZY;
+      fresh().read({ root: ROOT });
+      const git = calls.filter(c => c.cmd === 'git');
+      assert.ok(git.length >= 1, 'read() asks git');
+      assert.ok(git.every(c => c.env && c.env.GIT_NO_LAZY_FETCH === '1'), JSON.stringify(git.map(c => c.args.slice(0, 2))));
+      calls.length = 0; process.env.VERSIONIUM_GIT_LAZY = '1';
+      fresh().read({ root: ROOT });
+      assert.ok(calls.filter(c => c.cmd === 'git').every(c => !c.env || c.env.GIT_NO_LAZY_FETCH !== '1'), 'the worker may fetch');
+      assert.match(fs.readFileSync(path.join(ROOT, 'versionium/lib/release-backfill-worker.js'), 'utf8'), /process\.env\.VERSIONIUM_GIT_LAZY = '1'/);
+    } finally { cp.execFileSync = real; if (was == null) delete process.env.VERSIONIUM_GIT_LAZY; else process.env.VERSIONIUM_GIT_LAZY = was; fresh(); }
+  });
+
   console.log(`\n  ${passed} passed, ${failed} failed\n`); process.exitCode = failed ? 1 : 0;
 })();

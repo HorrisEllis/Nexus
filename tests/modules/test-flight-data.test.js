@@ -158,6 +158,20 @@ const IM1 = [
     assert.ok((Array.isArray(reg) ? reg : reg.COMPONENTS || []).some(c => c.route && c.route.path === '/api/intelligence/cfr/delta'), 'declared in its registry');
   });
 
+  await test('FD-10', "2026-11-15 — the newest BUILD of a phase is a phrun-… run, never Idearium's auto-retry note (his run: landed said 'ended auto-retry-held' while the build planned)", async () => {
+    assert.strictEqual(typeof FD.latestBuild, 'function', 'latestBuild is exported');
+    const flights = [
+      { runId: 'phrun-mwi7jzg3-enlx', phase: 'CS12_the_mover_is_proven', startedAt: 1000, ended: false, state: 'planning' },
+      { runId: 'auto-mwi7l6j4', phase: 'CS12_the_mover_is_proven', startedAt: 2000, ended: true, state: 'auto-retry-held' },
+      { runId: 'phrun-older', phase: 'CS12_the_mover_is_proven', startedAt: 500, ended: true },
+      { runId: 'phrun-other', phase: 'OTHER', startedAt: 3000 },
+    ];
+    assert.strictEqual(FD.latestBuild(flights, 'CS12_the_mover_is_proven').runId, 'phrun-mwi7jzg3-enlx');
+    assert.strictEqual(FD.latestBuild([flights[1]], 'CS12_the_mover_is_proven'), null, 'a note alone is no build');
+    const src = fs.readFileSync(path.join(ROOT, 'idearium/api/index.js'), 'utf8');
+    assert.match(src, /f = FD\.latestBuild\(uuids\.flatMap/, 'the landed route uses it');
+  });
+
   await test('FD-09', 'lib/flight-data.js crosses no system boundary, and the census adds nothing past the baseline', async () => {
     const B = require(path.join(ROOT, 'lib/system-boundary.js'));
     const s = B.scan({ root: ROOT });

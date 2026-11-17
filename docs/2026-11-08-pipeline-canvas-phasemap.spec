@@ -1365,3 +1365,17 @@ phases_addendum_2026_11_13_rca:
 # Built: idearium/api/index.js _ollamaModels asks a timed-out probe once more (15 s); a refusal is unreachable at once. Proof: test-log-fixes
 # LF-07 (fails on the old code). By the axioms: §1.2 (a skip says its true cause: a slow caller is not an absent Ollama), §8.6 (the probe kept,
 # asked again), deterministic first (the local coder is not dropped on a timing artefact).
+
+# ── ADDENDUM 2026-11-17 (0.60.560) — PC8: the 2026-11-15 fixes, kept (they were lost once) ──
+# James, 2026-11-17: "finish it. need nexus building itself"
+# The record of 2026-11-15 (runs 16982fd6, 4a2f6d25, 26d77925, 87c80e17, a23053bf, 41297178, a14609e8 of the Idearium build pipeline, phase
+# CS12), written that day as addenda in his tree and lost with them when the branch moved, restated: Versionium hung on a partial clone's
+# lazy blob fetch (git log -p in execFileSync, three times); the snapshot failed on a woken Versionium's timeout; landed 404'd (system repo)
+# and later read Idearium's auto-retry note as the build; the agents' code was lost to Nexus's own "which file?" follow-up, whose one-line
+# answer replaced the reply; the test writer stopped at the first agent that did not answer; ChatGPT's token was dead at OpenAI (his
+# sign-in), DeepSeek signed out, Gemini's page unresponsive, Claude at its usage limit once.
+# Built in 0.60.560 (the code of that day, carried from his tree, the index.js parts re-made on main): lib/flight-data.js latestBuild and the
+# landed route (FD-10); versionium nexus-releases/release-notes GIT_NO_LAZY_FETCH, the worker may fetch (RB-03); idearium/repo/snapshot.js
+# retries "timed out" (SO-01b); lib/repo-inject.js expectAsking with every one-file dispatch and the test writer (LF-05b); lib/phase-plan.js
+# brief inline; guardian/userscript-claude.js reply from the conversation; the test writer's hand-over, Ollama last (not independent).
+# Lesson, said: a fix on his machine is not kept until it is committed; these were lost once and cost his RQ0 run.

@@ -21,6 +21,8 @@
 const fs = require('fs');
 const path = require('path');
 const { execFileSync } = require('child_process');
+// 2026-11-15 — as nexus-releases.js: in Versionium's own process git never fetches a partial clone's blobs (its thread froze on it)
+const _gitEnv = () => (process.env.VERSIONIUM_GIT_LAZY === '1' ? process.env : { ...process.env, GIT_NO_LAZY_FETCH: '1' });
 
 const MODULE_ID = 'nexus.lib.release-notes';
 const VERSION = '1.0.0';
@@ -31,7 +33,7 @@ const _systemOf = (p) => { const top = String(p).split('/')[0]; return /\./.test
 const _cmpV = (a, b) => { const x = a.split('.').map(Number), y = b.split('.').map(Number); for (let i = 0; i < 3; i++) if (x[i] !== y[i]) return x[i] - y[i]; return 0; };
 
 function _log(root, args) {
-  const out = execFileSync('git', ['log', '--no-merges', `--format=${SEP}%H %cI %s`, '--numstat', ...args], { cwd: root, encoding: 'utf8', maxBuffer: 256 * 1024 * 1024, stdio: ['ignore', 'pipe', 'ignore'] });
+  const out = execFileSync('git', ['log', '--no-merges', `--format=${SEP}%H %cI %s`, '--numstat', ...args], { cwd: root, env: _gitEnv(), encoding: 'utf8', maxBuffer: 256 * 1024 * 1024, stdio: ['ignore', 'pipe', 'ignore'] });
   const commits = [];
   for (const block of out.split(SEP).slice(1)) {
     const [head, ...rest] = block.split('\n');
@@ -43,7 +45,7 @@ function _log(root, args) {
 }
 
 function _revs(root, args) {
-  return execFileSync('git', ['rev-list', '--no-merges', ...args], { cwd: root, encoding: 'utf8', maxBuffer: 64 * 1024 * 1024, stdio: ['ignore', 'pipe', 'ignore'] }).split('\n').filter(Boolean);
+  return execFileSync('git', ['rev-list', '--no-merges', ...args], { cwd: root, env: _gitEnv(), encoding: 'utf8', maxBuffer: 64 * 1024 * 1024, stdio: ['ignore', 'pipe', 'ignore'] }).split('\n').filter(Boolean);
 }
 /** commitsOf(releases) — each commit to the first release (by its commit's date) that contains it. The diffs are read in
  *  one git log; each release only lists ids (rev-list), so the whole history takes about a second, not one diff per release. */

@@ -121,6 +121,21 @@ const quiet = async (fn) => { const l = console.log, w = console.warn; console.l
     } finally { NC.get = real; }
   });
 
+  await test('LF-05b', '2026-11-15 — the phase expects two files, the request asks for one: its lone block goes there, nobody is asked (his CS12 run)', async () => {
+    const CODE = "'use strict';\nfunction title(s) { return String(s).trim(); }\nmodule.exports = { title };\n";
+    let asked = 0; const resolve = async () => { asked++; return 'lib/title.js'; };
+    const release = RI.expectPhase(repoUuid, { phase: 'SPEC.spec::SP5_title', files: ['lib/title.js', 'tests/modules/test-title.test.js'] });
+    try {
+      assert.strictEqual(RI.phaseSoleFile(repoUuid, 'SPEC.spec::SP5_title'), null, 'two files and no request: not assumed');
+      const releaseAsk = RI.expectAsking(repoUuid, 'lib/title.js');
+      const out = await quiet(() => RI.fromReply({ layer, repo: layer.get(repoUuid), hat: { name: 'claude' }, text: '```js\n' + CODE + '```\n', resolve, exchange: { ts: Date.now(), phase: 'SPEC.spec::SP5_title' } }));
+      releaseAsk();
+      assert.strictEqual(asked, 0, 'no "which file?" follow-up job');
+      assert.strictEqual(out.injects[0].path, 'lib/title.js', JSON.stringify(out).slice(0, 300));
+      assert.strictEqual(RI.phaseSoleFile(repoUuid, 'SPEC.spec::SP5_title'), null, 'the request ended: back to two files');
+    } finally { release(); }
+  });
+
   await test('LF-06', 'L6 the sync reads memory before each system and leaves the rest for the next round', async () => {
     const NS = await import(pathToFileURL(path.join(ROOT, 'idearium/repo/nexus-self.js')).href);
     const src = fs.readFileSync(path.join(ROOT, 'idearium/repo/nexus-self.js'), 'utf8');

@@ -27,6 +27,13 @@ async function main() {
     assert.strictEqual(r, 'planned'); assert.deepStrictEqual(retries, [1, 2]);
   });
 
+  await test('SO-01b', '2026-11-15 — Versionium woken mid-boot: a timed-out call is tried again (his run: "files/limits timed out after 8000ms")', async () => {
+    let n = 0;
+    const r = await snap._againWhileDown('limits', async () => { if (++n < 2) throw new Error('[nexus-client] versionium GET /api/versionium/files/limits timed out after 8000ms'); return 'limits'; },
+      { waits: [1, 1], sleep: async () => {} });
+    assert.strictEqual(r, 'limits'); assert.strictEqual(n, 2);
+  });
+
   await test('SO-02', 'SD0 — still down after the waits: the refusal says how long it waited and what to start', async () => {
     await assert.rejects(snap._againWhileDown('stage', async () => { throw new Error('versionium unreachable — connect ECONNREFUSED'); }, { waits: [1000, 2000], sleep: async () => {} }),
       (e) => /tried 3 times over 3 s/.test(e.message) && /node versionium\/server\.js/.test(e.message));

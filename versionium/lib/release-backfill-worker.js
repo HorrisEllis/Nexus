@@ -5,6 +5,7 @@
  * history) and sends the list back; the parent records it. Why a child: 0.60.278 ran this in Versionium's own process and, on
  * James's machine with 486 releases, Versionium answered nothing for 1113 s after boot (his run log, 2026-10-29).
  */
+process.env.VERSIONIUM_GIT_LAZY = '1';   // 2026-11-15 — this child may fetch a partial clone's history; Versionium's own thread may not
 const NR = require('./nexus-releases.js');
 const root = process.argv[2] || undefined;
 try {

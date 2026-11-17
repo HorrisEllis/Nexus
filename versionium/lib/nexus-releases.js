@@ -23,6 +23,12 @@
 const fs = require('fs');
 const path = require('path');
 const { execFileSync } = require('child_process');
+// 2026-11-15 — his run (James: "need the pipeline working. like this is priority."): Versionium answered nothing, /health included, while
+// its child git ran for minutes (seen: git.exe under Versionium's pid, Versionium at 0 % CPU). His checkout is a partial clone
+// ([blob:none]): `git log -p -- lib/version.js` fetched every old blob from GitHub one by one, inside execFileSync, on Versionium's
+// own thread, for the boot's releases sync; every build's snapshot timed out behind it. In this process git never fetches lazily:
+// what is not local reads as not pinned (said by read()'s why). The backfill worker (a child, VERSIONIUM_GIT_LAZY=1) may fetch.
+const _gitEnv = () => (process.env.VERSIONIUM_GIT_LAZY === '1' ? process.env : { ...process.env, GIT_NO_LAZY_FETCH: '1' });
 
 const MODULE_ID = 'versionium.lib.nexus-releases';
 const REPOSITORY = 'nexus';
@@ -53,7 +59,7 @@ function _gitCommits(root) {
   // other session's (now 0.60.69) — the number alone pinned the wrong commit.
   const at = new Map(), byBody = new Map();
   let log = '';
-  try { log = execFileSync('git', ['log', '--diff-merges=first-parent', '--format=@@C %H %cI', '-p', '--unified=0', '--', 'lib/version.js'], { cwd: root, encoding: 'utf8', maxBuffer: 256 * 1024 * 1024, stdio: ['ignore', 'pipe', 'ignore'] }); } catch (_) { return { at, byBody, shallow: null }; }   // 0.60.111: byBody was missing here, so a copy with no .git (a GitHub zip) failed with "reading 'get'"
+  try { log = execFileSync('git', ['log', '--diff-merges=first-parent', '--format=@@C %H %cI', '-p', '--unified=0', '--', 'lib/version.js'], { cwd: root, env: _gitEnv(), encoding: 'utf8', maxBuffer: 256 * 1024 * 1024, stdio: ['ignore', 'pipe', 'ignore'] }); } catch (_) { return { at, byBody, shallow: null, unread: true }; }   // 0.60.111: byBody was missing here, so a copy with no .git (a GitHub zip) failed with "reading 'get'"
   let cur = null;
   for (const line of log.split('\n')) {
     if (line.startsWith('@@C ')) { const [, sha, date] = line.split(' '); cur = { sha, date }; continue; }
@@ -64,7 +70,7 @@ function _gitCommits(root) {
     const l = lineOf(line.slice(1)); if (l && l.body) byBody.set(_bodyKey(l.version, l.body), cur);
   }
   let shallow = null;
-  try { shallow = execFileSync('git', ['rev-parse', '--is-shallow-repository'], { cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim() === 'true'; } catch (_) {}
+  try { shallow = execFileSync('git', ['rev-parse', '--is-shallow-repository'], { cwd: root, env: _gitEnv(), encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim() === 'true'; } catch (_) {}
   return { at, byBody, shallow };
 }
 
@@ -80,7 +86,7 @@ function _changelog(root, file) {
 function read({ root = ROOT } = {}) {
   const RV = require('../../lib/release-version.js');
   const lines = _lines(root);
-  const { at, byBody, shallow } = _gitCommits(root);
+  const { at, byBody, shallow, unread } = _gitCommits(root);
   return released({ root }).map(version => {
     const l = lines.get(version) || { body: '', proof: null };
     const exact = l.body ? byBody.get(_bodyKey(version, l.body)) : null;
@@ -92,7 +98,7 @@ function read({ root = ROOT } = {}) {
       repository: REPOSITORY, version, title: c.title, quote: quoteOf(l.body) || c.quote, notes: l.body || null, proof: l.proof,
       changelog: has ? cl : null, changelogPath: has ? cf.rel : null,
       gitCommit: g ? g.sha : null, at: g ? Date.parse(g.date) || null : null, pinnedBy: g ? (exact ? 'line' : 'version') : null,
-      why: g ? null : shallow ? 'this clone is shallow; its history does not reach this release' : 'no commit in lib/version.js history sets it',
+      why: g ? null : unread ? 'lib/version.js history could not be read here (on a partial clone it is not fetched in this process; the backfill worker reads it)' : shallow ? 'this clone is shallow; its history does not reach this release' : 'no commit in lib/version.js history sets it',
       by: 'nexus.lib.nexus-releases',
     };
   });

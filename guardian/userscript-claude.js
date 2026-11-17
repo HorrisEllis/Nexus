@@ -806,7 +806,34 @@ function startWatch(jobId, prompt, retryCount = 0) {
   _watchTimer = setTimeout(checkStable, 1500);
 }
 
+// 2026-11-15 — James: "Ask inline, and open cards". claude.ai shows a long code block as a collapsed card with its file name, so the
+// page's text held only "Claude responded: lib/architecture-apply.js … just now" while the reply itself (the page's own conversation
+// data, read on his tab) was the whole file in one ```js block; the build asked again, "the reply had no code block". When the page's
+// text carries no code block, the reply is read from the conversation the page loaded: the current branch's last assistant message,
+// only if it was written after this job started. Anything that fails leaves the page's text as it was.
+const _FENCE = '`' + '`' + '`';
+let _orgUuid = null;
+async function _replyFromConversation(text, startedAt) {
+  try {
+    if (text && text.includes(_FENCE)) return text;
+    const conv = (location.pathname.match(/\/chat\/([0-9a-f-]{36})/) || [])[1];
+    if (!conv) return text;
+    if (!_orgUuid) { const o = await (await fetch('/api/organizations', { credentials: 'include' })).json(); _orgUuid = (o && o[0] && o[0].uuid) || null; }
+    if (!_orgUuid) return text;
+    const r = await fetch(`/api/organizations/${_orgUuid}/chat_conversations/${conv}?tree=False&rendering_mode=messages&render_all_tools=true`, { credentials: 'include' });
+    if (!r.ok) return text;
+    const j = await r.json();
+    const mine = (j.chat_messages || []).filter(m => m.sender === 'assistant' && Date.parse(m.created_at || 0) >= startedAt - 5000).pop();
+    if (!mine) return text;
+    const full = (mine.content || []).filter(c => c.type === 'text').map(c => c.text || '').join('\n').trim();
+    if (!full.includes(_FENCE)) return text;
+    _log('ok', 'Reply read from the conversation', `${(text || '').length} → ${full.length} ch (the page showed a card)`);
+    return full;
+  } catch (_) { return text; }
+}
+
 async function _onJobComplete(jobId, text, ms, prompt, retryCount) {
+  text = await _replyFromConversation(text, Date.now() - (ms || 0));
   // §BUILT 2026-08-31, James live, phase 2 — real tool-call interception,
   // BEFORE the existing completion flow below, and ONLY for jobs that
   // actually had tools (checked via _toolCallCounts.has, set only in

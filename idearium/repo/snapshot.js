@@ -373,7 +373,9 @@ export function isRepoSnapshotState(state) {
 // and verified by hash), so they are tried again while versionium comes back — waits 2·4·8·16·30 s (~1 min) — and the
 // refusal, if it still comes, says how long it waited. The commit and the record are not repeated (a lost reply could
 // double them). VERSIONIUM_RETRY_MS=0 turns the waiting off.
-const _DROPPED = /unreachable|ECONNRESET|ECONNREFUSED|socket hang up|EPIPE|ETIMEDOUT/i;
+// 2026-11-15 — his run (James: "need the pipeline working. like this is priority."): COS stops Versionium idle after 600 s; a build woke it
+// and its first call ("files/limits timed out after 8000ms", nexus-client's words) refused the build at once. A timeout is a dropped call too.
+const _DROPPED = /unreachable|ECONNRESET|ECONNREFUSED|socket hang up|EPIPE|ETIMEDOUT|timed out/i;
 export async function _againWhileDown(what, fn, { waits = null, sleep = (ms) => new Promise(r => setTimeout(r, ms)), onRetry = null } = {}) {
   const off = process.env.VERSIONIUM_RETRY_MS === '0';
   const plan = waits || (off ? [] : [2000, 4000, 8000, 16000, 30000]);
