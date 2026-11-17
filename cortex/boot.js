@@ -1134,6 +1134,21 @@ const server = http.createServer(async (req, res) => {
   // 2026-11-17 — James: "i wanted options for all this so i can configure it. like in raid." RAID's tunables had no door: they could
   // only be changed by editing Cortex's store. GET lists every one (value, default, changed); POST { key, value, by } sets one, checked
   // against its kind, and Cortex logs raid.tunables.changed with the prior value (§0.3).
+  // PC16 slice a (2026-11-17) — James: "this is meant to be in raid. all of the routing." RAID owns the routing policy (routing.*):
+  // GET it; POST { key, value | unset, by } changes one key; POST /import { policy, by, force } takes the first owner's values once.
+  if (p === '/api/raid/routing' || p === '/api/raid/routing/import') {
+    const RR = require('./core/raid/routing.js');
+    if (req.method !== 'POST') { json(res, 200, { ok: true, ...RR.get() }); return; }
+    let b = await readBody(req); if (typeof b === 'string') { try { b = JSON.parse(b || '{}'); } catch (_) { b = {}; } }
+    b = b || {};
+    try {
+      if (p === '/api/raid/routing/import') { json(res, 200, { ok: true, ...RR.importPolicy(b.policy, { by: b.by || 'route', force: !!b.force }), ...RR.get() }); return; }
+      if (!b.key) { json(res, 400, { ok: false, error: 'key is required: { key, value } or { key, unset: true }' }); return; }
+      json(res, 200, { ok: true, ...(b.unset ? RR.unset(b.key, { by: b.by || 'route' }) : RR.set(b.key, b.value, { by: b.by || 'route' })) });
+    } catch (e) { json(res, 400, { ok: false, error: e.message }); }
+    return;
+  }
+
   if (p === '/api/raid/tunables') {
     const TU = require('./core/raid/tunables.js');
     if (req.method !== 'POST') { json(res, 200, { ok: true, tunables: TU.all() }); return; }

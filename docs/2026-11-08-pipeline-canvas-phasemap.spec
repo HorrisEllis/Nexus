@@ -1125,6 +1125,16 @@ expanded_2026_11_13_hub:
       the proposal is the one place he answers. Slices: (a) RAID's two, (b) Idearium's verdict, (c) Guardian and the pipeline.
     proof: "a stand-in of each owner: its wait becomes one open proposal; take runs the owner's route and closes it; drop says why; the owner down is said, the proposal kept"
   PC16_raid_routes_every_interaction:
+    slice_a_built_2026_11_17: >-
+      James, 2026-11-17: "i need ideariums settings to work better. this is meant to be in raid. all of the routing. so much of idearium is meant to be in the automation engine and raid." · "yes build it, then merge and push. then what gets this all moving. i need this working today." BUILT 0.60.555, slice a, RAID owns routing.*: cortex/core/raid/routing.js (the policy in Cortex's own data, cortex/data/raid/routing.json,
+      every change a line in routing.ledger.jsonl); Cortex GET/POST /api/raid/routing and POST /api/raid/routing/import; Idearium's config
+      (idearium/lib/config.js) lays RAID's copy (its mirror, idearium/data/raid/routing.mirror.json) over its three layers for routing.* as a
+      fourth, 'raid', and sends every routing write to RAID through the outbox; Idearium hands RAID its current values once when RAID has none,
+      then reads RAID's every minute. Idearium's Settings → Routing & fallback screen works as before, now on RAID's values. Cortex down: the
+      mirror stands. Proof: test-raid-routing RR-01..04; test-pipeline-routing 20/20, test-settings-console 5/5, idearium-agent-routing 10/10,
+      test-mcof-config-gate 14/14 (test-model-door MD-04 and test-config-governance 7 fail before and after, said). Not in slice a, said: the
+      learned outcomes still kept by copilot's door; copilot's door still reads the policy its caller hands it (now RAID's); the 0.60.552
+      officiator options not yet folded into routing.*; the screen not yet in COS (slice b).
     expanded_2026_11_17_copilot_is_a_hat: >-
       James, 2026-11-17, asked whether RAID should be in charge of routing and intent routing, after copilot (idle-stopped) took the route to
       Ollama down with it: "copilot is meant to be a hat that any agent casn wear". Corrects the coder's "copilot goes back to being an agent"
