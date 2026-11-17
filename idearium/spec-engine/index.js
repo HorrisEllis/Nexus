@@ -1877,7 +1877,9 @@ export async function ingestFilesAsSpecAsync({ name, files = [], author = 'inges
     _ingestFileInto(manifest, specDir, files[i], i);
     if ((i + 1) % yieldEvery === 0) await new Promise(r => setImmediate(r));
   }
-  return _ingestFinish(manifest, { repoUuid, now0 });
+  const out = _ingestFinish(manifest, { repoUuid, now0, nodes: 'later' });
+  await chunkNodes.writeChunkNodesAsync(manifest, { repoUuid, yieldEvery });
+  return out;
 }
 
 function _cleanRealPath(p) {
@@ -1918,7 +1920,8 @@ export async function updateIngestedSpecAsync({ specUuid, files = [], repoUuid =
     if (changed.length % yieldEvery === 0) await new Promise(r => setImmediate(r));
   }
   if (!changed.length) return { manifest, changed: 0, inPlace: true };
-  _ingestFinish(manifest, { repoUuid, now0, onlyChunks: changed });
+  _ingestFinish(manifest, { repoUuid, now0, onlyChunks: changed, nodes: 'later' });
+  await chunkNodes.writeChunkNodesAsync(manifest, { chunks: changed, repoUuid, yieldEvery });
   return { manifest, changed: changed.length, inPlace: true };
 }
 
@@ -2044,7 +2047,9 @@ function _ingestFileInto(manifest, specDir, f, i, { preserveWhitespace = false, 
   chunk.jobId = null; chunk.dispatchDir = null;
 }
 
-function _ingestFinish(manifest, { repoUuid = null, now0 = Date.now(), onlyChunks = null, label = 'ingested' } = {}) {
+// §PF2 2026-11-17 — nodes: 'sync' writes the chunk nodes here (the sync paths); 'later' leaves them to the async caller, which writes them
+// yielding (chunk-nodes writeChunkNodesAsync), so a 5,000-file re-ingest no longer stops Idearium's heartbeat.
+function _ingestFinish(manifest, { repoUuid = null, now0 = Date.now(), onlyChunks = null, label = 'ingested', nodes = 'sync' } = {}) {
   manifest.doneChunks   = manifest.chunks.filter(c => c.status === CHUNK_STATES.COMPLETE).length;
   manifest.failedChunks = manifest.chunks.filter(c => c.status === CHUNK_STATES.FAILED || c.status === CHUNK_STATES.ESCALATED).length;
   manifest.progress     = _progressOf(manifest);
@@ -2061,8 +2066,10 @@ function _ingestFinish(manifest, { repoUuid = null, now0 = Date.now(), onlyChunk
 
   // §CHUNK-NODE — one pass at the end, after the save it records (never before:
   // a node claiming a completion that never persisted would be a lie).
-  if (onlyChunks) { for (const c of onlyChunks) if (c.status !== 'removed') chunkNodes.writeChunkNode(c, manifest.uuid, { specName: manifest.name, force: true, repoUuid }); }
-  else chunkNodes.writeManifestChunkNodes(manifest, { repoUuid });
+  if (nodes === 'sync') {
+    if (onlyChunks) { for (const c of onlyChunks) if (c.status !== 'removed') chunkNodes.writeChunkNode(c, manifest.uuid, { specName: manifest.name, force: true, repoUuid }); }
+    else chunkNodes.writeManifestChunkNodes(manifest, { repoUuid });
+  }
   console.log(onlyChunks
     ? `[${MODULE_ID}] ✓ updated ${onlyChunks.length} of ${manifest.totalChunks} chunk(s) of "${manifest.name}" in place in ${Date.now() - now0}ms`
     : `[${MODULE_ID}] ✓ ${label} ${manifest.doneChunks}/${manifest.totalChunks} ${label === 'ingested' ? 'file(s)' : 'block(s)'} into "${manifest.name}" in ${Date.now() - now0}ms`);

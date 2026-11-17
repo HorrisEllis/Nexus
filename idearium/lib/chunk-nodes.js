@@ -226,6 +226,28 @@ export function writeManifestChunkNodes(manifest, { force = false, repoUuid = nu
 }
 
 /**
+ * writeChunkNodesAsync(manifest, { chunks, repoUuid, yieldEvery }) -> Promise<{ written, failed }>
+ * §PF2 expanded 2026-11-17 — James: "it needs to build in order, bottom up. i am drowning. help me get this working".
+ * His log (07:57:17→07:57:31): writeManifestChunkNodes wrote 5,396 nodes in one synchronous loop, Idearium missed
+ * its heartbeats and the watchdog took it OFFLINE mid-sync. The same writes, the same files, yielding to the event
+ * loop every `yieldEvery` nodes, for the async ingest paths. `chunks` defaults to the whole manifest.
+ */
+export async function writeChunkNodesAsync(manifest, { chunks = null, repoUuid = null, yieldEvery = 50 } = {}) {
+  if (!manifest || !Array.isArray(manifest.chunks)) return { written: 0, failed: 0 };
+  const list = chunks || manifest.chunks;
+  if (!chunks && !_cfg().chunking.write_chunk_nodes) return { written: 0, failed: 0 };
+  let written = 0, failed = 0, n = 0;
+  for (const chunk of list) {
+    if (chunk.status === 'removed') continue;
+    const p = writeChunkNode(chunk, manifest.uuid, { specName: manifest.name, force: true, repoUuid });
+    if (p) written++; else failed++;
+    if (++n % yieldEvery === 0) await new Promise(r => setImmediate(r));
+  }
+  if (written && !chunks) console.log(`[${MODULE_ID}] wrote ${written} .chunk node(s) for spec ${String(manifest.uuid).slice(0, 8)}${failed ? ` (${failed} failed)` : ''}`);
+  return { written, failed };
+}
+
+/**
  * removeChunkNode(chunkUuid) — drops the node file for a chunk that was
  * genuinely removed. §7.4 nothing discarded applies to the chunk's own
  * .md artifact (which removeChunk() deliberately leaves on disk); the

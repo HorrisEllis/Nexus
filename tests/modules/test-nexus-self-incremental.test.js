@@ -11,6 +11,7 @@
 //   NI-003  a file added: the whole re-ingest runs (new spec uuid), the old one purged
 //   NI-004  the snapshot names which files' content changed (the sync log prints them)
 //   NI-006  the snapshot yields and pauses (0.60.487): the blocking one's hash; a pause keeps what was hashed
+//   NI-007  a large async ingest writes every chunk node and yields while it does (PF2, 2026-11-17)
 //   NI-005  saveSpec writes manifest.meta.json; a cold reader takes it while the stamp matches, never after
 //           manifest.json was written some other way
 require('../../lib/test-sandbox.js').ensure();
@@ -122,6 +123,26 @@ async function main() {
     const r = JSON.parse(cold());
     assert.strictEqual(r.tag, null);
     assert.match(r.name, /edited by hand/);
+  });
+
+  // §PF2 2026-11-17 — James: "it needs to build in order, bottom up. i am drowning. help me get this working". His log: a 5,396-file
+  // re-ingest wrote every .chunk node in one synchronous loop (07:57:17→07:57:31) and the watchdog took Idearium OFFLINE.
+  await test('NI-007', 'a large async ingest writes every chunk node and gives the event loop its turns while it does', async () => {
+    const cn = await import('../../idearium/lib/chunk-nodes.js');
+    const N = 600;
+    const files = Array.from({ length: N }, (_, i) => ({ path: `big/f${i}.js`, content: `module.exports = ${i};\n` }));
+    let turns = 0; const tick = setInterval(() => turns++, 1);
+    const m = await se.ingestFilesAsSpecAsync({ name: 'ni-big', files, yieldEvery: 50 });
+    clearInterval(tick);
+    assert.strictEqual(m.doneChunks, N);
+    assert.ok(turns > 0, 'timers ran during the ingest and its node pass');
+    // the yielding writer alone: every node written, and the loop runs between its batches
+    let between = 0; const t2 = setInterval(() => between++, 1);
+    const r = await cn.writeChunkNodesAsync(m, { chunks: m.chunks, yieldEvery: 50 });
+    clearInterval(t2);
+    assert.strictEqual(r.written + r.failed, N);
+    assert.strictEqual(r.failed, 0, 'no node write failed');
+    assert.ok(between > 0, 'timers ran while the nodes were written');
   });
 
   await test('NI-006', 'the yielding snapshot is the blocking one, gives the loop its turns, and a pause keeps what was hashed', async () => {

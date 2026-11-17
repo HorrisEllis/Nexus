@@ -7,11 +7,11 @@ intent: null
 summary: 27 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792822476754
+exported_at: 1794931305980
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792822476754
-lastSeenAt: 1792822476754
+firstSeenAt: 1794931305980
+lastSeenAt: 1794931305980
 fingerprint: null
 payload:
   for: IL1_spec_library_as_ideas
@@ -224,7 +224,10 @@ payload:
       - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::FT1_file_tools_merge_patch_drop
       - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::M0_map
     downstream:
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::BK1_blocked_is_actionable
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::BK2_phase_build_writes_code
       - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::CP1_copilot_drives_idearium_and_talks_to_its_agents
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::CT1_cut_replies_are_finished
       - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::IL2_library_spec_into_the_pipeline
       - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::SW1_spec_workshop
     blockedBy:
@@ -240,7 +243,7 @@ payload:
         depends on (2): FT1_file_tools_merge_patch_drop, DI1_chunking_for_data_ingestion · all
         upstream 6
       - >-
-        needed by (2): IL2_library_spec_into_the_pipeline, SW1_spec_workshop · all downstream 3 ·
+        needed by (2): IL2_library_spec_into_the_pipeline, SW1_spec_workshop · all downstream 6 ·
         finishing it unlocks IL2_library_spec_into_the_pipeline
     edges:
       - from: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::FT1_file_tools_merge_patch_drop
