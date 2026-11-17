@@ -1141,6 +1141,13 @@ expanded_2026_11_13_hub:
       the proposal is the one place he answers. Slices: (a) RAID's two, (b) Idearium's verdict, (c) Guardian and the pipeline.
     proof: "a stand-in of each owner: its wait becomes one open proposal; take runs the owner's route and closes it; drop says why; the owner down is said, the proposal kept"
   PC16_raid_routes_every_interaction:
+    expanded_2026_11_17_per_compartment: >-
+      James, 2026-11-17, with his screenshot of Idearium's settings console listing every repo/compartment with its agent chips (nexus, ollama):
+      "all of those settings should be in each compartments settings not in the global settings". A compartment's own agent and routing
+      settings (who answers, its Ollama model, its route overrides, today Idearium's per-repo Agent tab and the console's repo list) belong on
+      that compartment's own page in COS (the system's Configuration tab, cos/manager/system-config.js, beside Start at boot, Start on demand,
+      Boot phase), each written to RAID per compartment; the global screen keeps only what is truly global (RAID's default policy). Slice b
+      moves them there whole (migrate, not link: NX_D5).
     slice_a_built_2026_11_17: >-
       James, 2026-11-17: "i need ideariums settings to work better. this is meant to be in raid. all of the routing. so much of idearium is meant to be in the automation engine and raid." · "yes build it, then merge and push. then what gets this all moving. i need this working today." BUILT 0.60.555, slice a, RAID owns routing.*: cortex/core/raid/routing.js (the policy in Cortex's own data, cortex/data/raid/routing.json,
       every change a line in routing.ledger.jsonl); Cortex GET/POST /api/raid/routing and POST /api/raid/routing/import; Idearium's config
