@@ -1334,7 +1334,34 @@ export function purgeSpec(specUuid) {
   try {
     mirrorRows += jaaDB.delete(MANIFEST_TABLE, r => r.uuid === specUuid) || 0;
     mirrorRows += jaaDB.delete(CHUNK_TABLE, r => r.specUuid === specUuid) || 0;
-    for (const k of [..._mirrorSig.keys()]) if (k === MANIFEST_TABLE + specUuid || chunkUuids.some(u => k === CHUNK_TABLE + u)) _mirrorSig.delete(k);
+    _dropMirrorSigs(specUuid, chunkUuids);
+  } catch (e) { console.warn(`[${MODULE_ID}] §1.2 cortex mirror purge failed for ${specUuid} (non-fatal): ${e.message}`); }
+  return { purged: true, chunkNodes: chunkNodesRemoved, mirrorRows };
+}
+// PF2 2026-11-17 — one set lookup per key; it was chunkUuids.some() per key: ~29 million comparisons for a 5,400-chunk spec
+function _dropMirrorSigs(specUuid, chunkUuids) {
+  const keys = new Set([MANIFEST_TABLE + specUuid, ...chunkUuids.map(u => CHUNK_TABLE + u)]);
+  for (const k of [..._mirrorSig.keys()]) if (keys.has(k)) _mirrorSig.delete(k);
+}
+
+/**
+ * purgeSpecAsync(specUuid) — PF2 2026-11-17. James, 2026-11-17: "get the pipeline working, then it will be able to do all of this itself instead of you in theory." The same purge as purgeSpec, never holding the
+ * loop: the folder is removed by fs.promises.rm (off the event loop), the old chunk nodes in yielding batches, the mirror keys by set lookup.
+ */
+export async function purgeSpecAsync(specUuid) {
+  if (!specUuid || !/^[\w-]+$/.test(specUuid)) throw new Error(`invalid spec uuid: ${specUuid}`);
+  const specDir = path.join(SPECS_ROOT, specUuid);
+  if (!fs.existsSync(specDir)) return { purged: false, reason: 'not on disk' };
+  let chunkUuids = [];
+  try { chunkUuids = (loadSpecMeta(specUuid).chunks || []).map(c => c.uuid); } catch (_) { /* unreadable manifest — the directory still goes */ }
+  _metaCache.delete(specUuid); _summaryCache.delete(specUuid);
+  await fs.promises.rm(specDir, { recursive: true, force: true });
+  const chunkNodesRemoved = await chunkNodes.removeChunkNodesAsync(chunkUuids);
+  let mirrorRows = 0;
+  try {
+    mirrorRows += jaaDB.delete(MANIFEST_TABLE, r => r.uuid === specUuid) || 0;
+    mirrorRows += jaaDB.delete(CHUNK_TABLE, r => r.specUuid === specUuid) || 0;
+    _dropMirrorSigs(specUuid, chunkUuids);
   } catch (e) { console.warn(`[${MODULE_ID}] §1.2 cortex mirror purge failed for ${specUuid} (non-fatal): ${e.message}`); }
   return { purged: true, chunkNodes: chunkNodesRemoved, mirrorRows };
 }
@@ -1633,7 +1660,7 @@ export default {
   createSpec, createFileTreeSpec, loadSpec, loadSpecMeta, saveSpec, listSpecs,
   nextPendingChunk, markChunkBuilding, completeChunk, failChunk, setChunkAgent, recordDispatchJob, recordChunkRoute, setWarpPrimitives,
   recoverOrphanedChunks,
-  buildChunkPrompt, archiveSpec, expandSpec, deleteSpec, restoreSpec, purgeSpec,   // purgeSpec: 0.39.266 (D2)
+  buildChunkPrompt, archiveSpec, expandSpec, deleteSpec, restoreSpec, purgeSpec, purgeSpecAsync,   // purgeSpec: 0.39.266 (D2); purgeSpecAsync: PF2 2026-11-17
   setAuthorWords,   // 0.39.305 SB2
   computeRootHash, findByRootHash, ingestFilesAsSpec, addChunk, planChunk, removeChunk,
   ingestFilesAsSpecAsync, updateIngestedSpecAsync,

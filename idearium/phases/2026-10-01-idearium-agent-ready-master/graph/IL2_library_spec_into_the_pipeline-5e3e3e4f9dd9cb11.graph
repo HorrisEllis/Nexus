@@ -7,11 +7,11 @@ intent: null
 summary: 29 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1794931305983
+exported_at: 1794941672188
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794931305983
-lastSeenAt: 1794931305983
+firstSeenAt: 1794941672188
+lastSeenAt: 1794941672188
 fingerprint: null
 payload:
   for: IL2_library_spec_into_the_pipeline
@@ -225,10 +225,7 @@ payload:
       - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::IL1_spec_library_as_ideas
       - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::M0_map
     downstream:
-      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::BK1_blocked_is_actionable
-      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::BK2_phase_build_writes_code
       - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::CP1_copilot_drives_idearium_and_talks_to_its_agents
-      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::CT1_cut_replies_are_finished
     blockedBy: []
     unlocks: []
     conflicts: []
@@ -236,7 +233,7 @@ payload:
     lines:
       - layer 6
       - 'depends on (1): IL1_spec_library_as_ideas · all upstream 7'
-      - 'needed by (1): CP1_copilot_drives_idearium_and_talks_to_its_agents · all downstream 4'
+      - 'needed by (1): CP1_copilot_drives_idearium_and_talks_to_its_agents'
     edges:
       - from: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::IL1_spec_library_as_ideas
         kind: declared

@@ -7,11 +7,11 @@ intent: null
 summary: 23 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1794931305882
+exported_at: 1794941672080
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794931305882
-lastSeenAt: 1794931305882
+firstSeenAt: 1794941672080
+lastSeenAt: 1794941672080
 fingerprint: null
 payload:
   for: AG1_coding_agent_provider
@@ -198,13 +198,16 @@ payload:
       - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::CT1_cut_replies_are_finished
     blockedBy:
       - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::CI1_compounding_iterate
-    unlocks: []
+    unlocks:
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::CT1_cut_replies_are_finished
     conflicts: []
     dangling: []
     lines:
       - layer 4 · blocked by CI1_compounding_iterate
       - 'depends on (2): DT2_failure_mode_field, CI1_compounding_iterate · all upstream 4'
-      - 'needed by (1): CT1_cut_replies_are_finished · all downstream 3'
+      - >-
+        needed by (1): CT1_cut_replies_are_finished · all downstream 3 · finishing it unlocks
+        CT1_cut_replies_are_finished
     edges:
       - from: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::DT2_failure_mode_field
         kind: declared

@@ -7,11 +7,11 @@ intent: null
 summary: 23 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1794931305946
+exported_at: 1794941672152
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794931305946
-lastSeenAt: 1794931305946
+firstSeenAt: 1794941672152
+lastSeenAt: 1794941672152
 fingerprint: null
 payload:
   for: DI1_chunking_for_data_ingestion
@@ -187,10 +187,7 @@ payload:
       - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::DT1_persistence_census
       - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::M0_map
     downstream:
-      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::BK1_blocked_is_actionable
-      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::BK2_phase_build_writes_code
       - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::CP1_copilot_drives_idearium_and_talks_to_its_agents
-      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::CT1_cut_replies_are_finished
       - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::IL1_spec_library_as_ideas
       - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::IL2_library_spec_into_the_pipeline
       - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::SW1_spec_workshop
@@ -217,7 +214,7 @@ payload:
     lines:
       - layer 2 · blocked by DT1_persistence_census
       - 'depends on (1): DT1_persistence_census · all upstream 2'
-      - 'needed by (1): IL1_spec_library_as_ideas · all downstream 7'
+      - 'needed by (1): IL1_spec_library_as_ideas · all downstream 4'
       - >-
         same files as PF7_pipeline_scoped_to_changes with no order between them:
         idearium/repo/import-pipeline.js

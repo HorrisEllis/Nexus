@@ -295,6 +295,29 @@ export function removeChunkNodes(chunkUuids) {
   return n;
 }
 
+/**
+ * removeChunkNodesAsync(chunkUuids, { yieldEvery }) -> Promise<count> — PF2 2026-11-17. James, 2026-11-17: "get the pipeline working, then it will be able to do all of this itself instead of you in theory."
+ * The same removal as removeChunkNodes, yielding every `yieldEvery` unlinks: a re-ingest's purge of the old 5,400 nodes held Idearium
+ * silent (measured: purgeSpecsOf 1.8–2.9 s in one block here, 26–34 s on his machine).
+ */
+export async function removeChunkNodesAsync(chunkUuids, { yieldEvery = 100 } = {}) {
+  const want = new Set((chunkUuids || []).filter(Boolean));
+  if (!want.size) return 0;
+  let n = 0, k = 0;
+  try {
+    const dir = _nodesDir(_cfg());
+    if (!fs.existsSync(dir)) return 0;
+    for (const f of await fs.promises.readdir(dir)) {
+      if (!f.endsWith('.chunk')) continue;
+      const id = f.slice(0, -'.chunk'.length).split('.').pop();
+      if (!want.has(id)) continue;
+      try { fs.unlinkSync(path.join(dir, f)); n++; } catch (_) {}
+      if (++k % yieldEvery === 0) await new Promise(r => setImmediate(r));
+    }
+  } catch (e) { console.warn(`[${MODULE_ID}] §1.2 bulk chunk node removal failed (non-fatal): ${e.message}`); }
+  return n;
+}
+
 /** listChunkNodes({ tags }) -> every real .chunk node, optionally tag-filtered. */
 export function listChunkNodes({ tags } = {}) {
   try {

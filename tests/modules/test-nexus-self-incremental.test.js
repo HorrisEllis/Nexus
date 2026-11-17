@@ -11,6 +11,7 @@
 //   NI-003  a file added: the whole re-ingest runs (new spec uuid), the old one purged
 //   NI-004  the snapshot names which files' content changed (the sync log prints them)
 //   NI-006  the snapshot yields and pauses (0.60.487): the blocking one's hash; a pause keeps what was hashed
+//   NI-008  the yielding purge removes what the blocking one does (PF2, 2026-11-17)
 //   NI-007  a large async ingest writes every chunk node and yields while it does (PF2, 2026-11-17)
 //   NI-005  saveSpec writes manifest.meta.json; a cold reader takes it while the stamp matches, never after
 //           manifest.json was written some other way
@@ -143,6 +144,27 @@ async function main() {
     assert.strictEqual(r.written + r.failed, N);
     assert.strictEqual(r.failed, 0, 'no node write failed');
     assert.ok(between > 0, 'timers ran while the nodes were written');
+  });
+
+  // PF2 2026-11-17 — James: "get the pipeline working, then it will be able to do all of this itself instead of you in theory." Measured on a
+  // 5,400-file core: purgeSpecsOf held the loop 1.8–2.9 s in one block here (26–34 s silences on his machine); the yielding purge removes the same.
+  await test('NI-008', 'the yielding purge removes the spec folder and its chunk nodes, as the blocking one does', async () => {
+    const cn = await import('../../idearium/lib/chunk-nodes.js');
+    const files = Array.from({ length: 120 }, (_, i) => ({ path: `p/f${i}.js`, content: `x=${i}\n` }));
+    const a = await se.ingestFilesAsSpecAsync({ name: 'ni-purge-a', files });
+    const b = await se.ingestFilesAsSpecAsync({ name: 'ni-purge-b', files });
+    cn.writeManifestChunkNodes(a, { force: true }); cn.writeManifestChunkNodes(b, { force: true });
+    const nodesOf = (m) => { const ids = new Set(m.chunks.map(c => c.uuid)); return cn.listChunkNodes().filter(n => ids.has(n.payload && (n.payload.uuid || n.payload.chunkUuid)) || m.chunks.some(c => String(n.id || '').endsWith(c.uuid))).length; };
+    const before = nodesOf(b);
+    const ra = se.purgeSpec(a.uuid);
+    let turns = 0; const tick = setInterval(() => turns++, 1);
+    const rb = await se.purgeSpecAsync(b.uuid);
+    clearInterval(tick);
+    assert.ok(ra.purged && rb.purged);
+    assert.strictEqual(rb.chunkNodes, ra.chunkNodes, 'the same nodes removed either way');
+    assert.ok(before === 0 || nodesOf(b) === 0, 'no node of the purged spec is left');
+    assert.strictEqual(typeof se.default.purgeSpecAsync, 'function', 'on the default export the API uses');
+    assert.strictEqual((await se.purgeSpecAsync(b.uuid)).purged, false, 'a second purge finds nothing');
   });
 
   await test('NI-006', 'the yielding snapshot is the blocking one, gives the loop its turns, and a pause keeps what was hashed', async () => {
