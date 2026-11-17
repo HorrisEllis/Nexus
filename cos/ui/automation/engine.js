@@ -90,12 +90,33 @@
   }
   // 2026-11-12 — James: "the pipeline says no phase selected". What a run needs is asked in the page: a phase is chosen from the phases that can
   // be built now (Idearium's queue, through COS), anything else is typed.
+  // the phase list, read from Idearium's API through COS (/api/cos/pipeline/ready); kept while the page is open, asked for when the page opens
+  let _ready = null, _readyAt = 0;
+  async function readyPhases(force = false) {
+    if (!force && _ready && Date.now() - _readyAt < 5 * 60 * 1000) return _ready;
+    const r = await api('GET', '/api/cos/pipeline/ready?limit=50'); _ready = r.phases || []; _readyAt = Date.now(); return _ready;
+  }
+  try { setTimeout(() => { readyPhases().catch(() => {}); }, 500); } catch (_) {}
+  function phasePicker() {
+    const sel = el('select', { 'data-need': 'phase' }, [el('option', { value: '', text: 'reading the phases from Idearium…' })]);
+    const filter = el('input', { type: 'text', placeholder: 'filter the phases', class: 'ae-filter' });
+    const note = el('span', { class: 'ae-note', text: '' });
+    let all = [];
+    const fill = () => { const q = String(filter.value || '').toLowerCase(); const list = all.filter(ph => !q || (ph.id + ' ' + (ph.map || '') + ' ' + (ph.does || '')).toLowerCase().includes(q));
+      sel.replaceChildren(...(list.length ? list.map(ph => el('option', { value: ph.id, title: ph.does || '', text: ph.id + (ph.map ? '  (' + String(ph.map).split('/').pop().replace(/-phasemap\.spec$/, '') + ')' : '') })) : [el('option', { value: '', text: all.length ? 'no phase matches the filter' : 'no phase can be built now' })])); };
+    filter.addEventListener('input', fill);
+    const load = (force) => { note.textContent = ''; readyPhases(force).then(list => { all = list; fill(); note.textContent = list.length + ' phase(s) can be built now'; })
+      .catch(e => { sel.replaceChildren(el('option', { value: '', text: 'Idearium did not answer yet' })); note.replaceChildren(document.createTextNode('Idearium is slow to answer (' + e.message + ') '), el('button', { class: 'btn', text: 'Try again', onclick: (ev) => { ev.preventDefault(); load(true); } })); }); };
+    load(false);
+    return el('label', { class: 'ae-need' }, [el('span', { text: 'phase' }), filter, sel, note]);
+  }
   async function askNeeds(id, needs, vars, { optional = false } = {}) {
     if (window.PipelineCanvas && window.PipelineCanvas._state.root) window.PipelineCanvas._state.root.classList.remove('open');   // 0.60.536: the form shows on the page, not under the canvas
-    let ready = []; if (needs.includes('phase')) { try { ready = (await api('GET', '/api/cos/pipeline/ready?limit=30')).phases || []; } catch (e) { say('bad', 'The phases that can be built could not be read: ' + e.message); } }
-    const rows = needs.map(n => el('label', { class: 'ae-need' }, [el('span', { text: n }),
-      n === 'phase' && ready.length ? el('select', { 'data-need': n }, ready.map(ph => el('option', { value: ph.id, text: ph.id + (ph.map ? '  (' + String(ph.map).split('/').pop() + ')' : '') })))
-        : el('input', { 'data-need': n, type: 'text', placeholder: n === 'phase' ? 'a phase id, e.g. PC8_operate_a_pipeline' : n })]));
+    // 2026-11-17 — James: "the ui for pipeline is garbage. i have no way to select the phases. like manually typing that in is trash. idearium
+    // api? thats kind of the point." The phase is always chosen from a list, never typed: the form shows at once, the list fills from Idearium's
+    // own API (the phases that can be built now) when it answers, a filter narrows it, and a slow Idearium (its census is 17 s cold on his
+    // machine, COS waits 20) is said in the form with Try again, never a text box.
+    const rows = needs.map(n => n === 'phase' ? phasePicker() : el('label', { class: 'ae-need' }, [el('span', { text: n }), el('input', { 'data-need': n, type: 'text', placeholder: n })]));
     const form = el('div', { class: 'ae-needs', id: 'ae-needs' }, [el('p', { text: optional ? 'This pipeline starts from ' + needs.join(', ') + ' (yours to give; the same as typing `request <your words>` in the Console):' : 'This run needs ' + needs.join(', ') + ' (part of a step\'s address):' }), ...rows,
       el('div', { class: 'ae-btns' }, [el('button', { class: 'btn primary', 'data-act': 'needs-run', text: '▶ Run with these', onclick: () => { const v = { ...vars };
         for (const f of form.querySelectorAll('[data-need]')) { const a = String(f.value || '').trim(); if (!a && !optional) return say('bad', `Not run: ${f.dataset.need} was not given`); v[f.dataset.need] = a; } form.remove(); runIt(id, v); } }),
