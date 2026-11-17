@@ -55,6 +55,27 @@ decisions:
       expanded the same day.
     model_his: "the model is his (PC_D16): his log shows huihui_ai/qwen2.5-coder-abliterate:3b in use; a 3B model is likely too small to write a phase; the factory map's note names deepseek-coder-v2:16b (a mixture of experts, 2.4B active, ~8.9 GB) as the best fit for his RAM."
 
+  NX_D5_his_list_2026_11_17_evening:
+    status: "HIS, 2026-11-17 — recorded in his order; each to be built as a phase when its turn comes (most already have one)"
+    james: >-
+      "like a lot needs to migrate not link. i hate that. the pipeline ui needs more, but its fine. i have like no control. i should be able to
+      have copilot fix it. like i dont want to keep using you on firefox to fix nexus. like everything should route through raid. like in cos
+      ui i want all the raid settings. I need more control and less dependancy on you or the agents. like if i can change it i want to be able
+      to in the settings. thats what emerge is for, coding in my own language. lets get the pipeline working enough to starting doing this work
+      in nexus then work on emerge. like i was thinking raid could be a hat also that binds copilots responsablilties to raid. so it can think
+      for it. nexus  is meant to learn. lets get idearium building using emerge. the pipeline api to manage the pipeline. what do you think?
+      do anything you can to get this working so i can have it building itself today. fix, change or edit later. gates should have retry logic,
+      run diagnostic, and intelligence system and escalate stategies i feel like."
+    list:
+      - "migrate, not link: what moves from Idearium to COS and RAID moves whole (its code, its data, its screen), never a pointer left behind (IF_D1, PC16)"
+      - "every RAID setting in COS's UI, changeable by him there (PC16 slice b: the Routing & fallback screen, the officiator options, the tunables)"
+      - "copilot can fix Nexus: copilot is a hat (RL_D1b) worn by a local agent with the agent tools, through the pipeline, so a fix is a request, not a Claude session"
+      - "RAID as a hat too, binding copilot's responsibilities to RAID, so RAID thinks for it and Nexus learns (his idea; the reading of 'binds' to confirm)"
+      - "gates: retry, run the diagnostic, ask the intelligence system, escalate by strategy (routing.retries_per_rung, escalation, escalate_on exist; the diagnostic and intelligence steps are not yet a gate's)"
+      - "the pipeline API manages the pipeline (PC8: run, pause, continue, retry, the ledger)"
+      - "Idearium building with Emerge, then Emerge finished by the pipeline (his order: pipeline working enough first, then Emerge)"
+    coder_view: "agreed in order; the first is a pipeline that finishes one phase on his machine with deepseek-coder-v2:16b; each item above then becomes a phase the pipeline builds"
+
 # ── The graph, bottom up (each tier needs the one below it) ─────────────────────────────────────────────────────────────────────────────
 # T0  the floor — DONE today
 #       PF2_yielding_ingest (0.60.549) · RC2_linear_node_scan (0.60.550, 0.60.551): Idearium stays up while it indexes
