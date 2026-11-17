@@ -7,11 +7,11 @@ intent: null
 summary: 15 node(s), 3 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792877163361
+exported_at: 1794940805984
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792877163361
-lastSeenAt: 1792877163361
+firstSeenAt: 1794940805984
+lastSeenAt: 1794940805984
 fingerprint: null
 payload:
   for: FMR6_run_it_in_cos
@@ -140,10 +140,11 @@ payload:
       known: true
   ready: true
   dag:
-    layer: 5
+    layer: 7
     deps:
       - docs/2026-10-17-failure-mode-report-phasemap.spec::FMR5_replay_routes
       - docs/2026-10-10-snapshot-compartments-phasemap.spec::SN0_one_branch
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP5_states_rewind_versions
     dependents:
       - docs/2026-10-17-failure-mode-report-phasemap.spec::FMR7_a_fix_proven_by_its_macro
       - docs/2026-10-17-failure-mode-report-phasemap.spec::FMR11_import_into_any_test_env
@@ -155,6 +156,19 @@ payload:
       - docs/2026-10-17-failure-mode-report-phasemap.spec::FMR3_the_report
       - docs/2026-10-17-failure-mode-report-phasemap.spec::FMR4_the_macro_bundle
       - docs/2026-10-17-failure-mode-report-phasemap.spec::FMR5_replay_routes
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM0_the_heartbeat
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM1_ollama_through_its_bridge
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM2_loom_owns_its_tables
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM3_readers_through_its_routes
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM4_the_seal_and_into_its_compartment
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM6_cos_runs_loom_in_its_compartment
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM_D1_ollama_through_its_bridge
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM_D2_loom_owns_its_tables
+      - docs/2026-10-24-loom-into-cos-phasemap.spec::LM_D4_cos_manages_loom_s_compartment
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP0_the_full_spec
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP1_the_machine_and_its_door
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP5_states_rewind_versions
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP_D0_a_compartment_is_all_of_it
     downstream:
       - docs/2026-10-17-failure-mode-report-phasemap.spec::FMR10_it_compounds
       - docs/2026-10-17-failure-mode-report-phasemap.spec::FMR11_import_into_any_test_env
@@ -162,15 +176,17 @@ payload:
       - docs/2026-10-18-gate-memory-phasemap.spec::GM6_crystallized_from_what_was_approved
     blockedBy:
       - docs/2026-10-17-failure-mode-report-phasemap.spec::FMR5_replay_routes
-      - docs/2026-10-10-snapshot-compartments-phasemap.spec::SN0_one_branch
+      - docs/2026-11-01-the-compartment-phasemap.spec::CP5_states_rewind_versions
     unlocks:
       - docs/2026-10-17-failure-mode-report-phasemap.spec::FMR7_a_fix_proven_by_its_macro
       - docs/2026-10-17-failure-mode-report-phasemap.spec::FMR11_import_into_any_test_env
     conflicts: []
     dangling: []
     lines:
-      - layer 5 · blocked by FMR5_replay_routes, SN0_one_branch
-      - 'depends on (2): FMR5_replay_routes, SN0_one_branch · all upstream 7'
+      - layer 7 · blocked by FMR5_replay_routes, CP5_states_rewind_versions
+      - >-
+        depends on (3): FMR5_replay_routes, SN0_one_branch, CP5_states_rewind_versions · all
+        upstream 20
       - >-
         needed by (2): FMR7_a_fix_proven_by_its_macro, FMR11_import_into_any_test_env · all
         downstream 4 · finishing it unlocks FMR7_a_fix_proven_by_its_macro,
@@ -179,4 +195,6 @@ payload:
       - from: docs/2026-10-17-failure-mode-report-phasemap.spec::FMR5_replay_routes
         kind: declared
       - from: docs/2026-10-10-snapshot-compartments-phasemap.spec::SN0_one_branch
+        kind: declared
+      - from: docs/2026-11-01-the-compartment-phasemap.spec::CP5_states_rewind_versions
         kind: declared
