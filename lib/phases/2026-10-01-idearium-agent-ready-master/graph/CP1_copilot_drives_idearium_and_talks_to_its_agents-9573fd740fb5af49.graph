@@ -7,11 +7,11 @@ intent: null
 summary: 30 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792787676432
+exported_at: 1794931305897
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787676432
-lastSeenAt: 1792787676432
+firstSeenAt: 1794931305897
+lastSeenAt: 1794931305897
 fingerprint: null
 payload:
   for: CP1_copilot_drives_idearium_and_talks_to_its_agents
@@ -232,7 +232,8 @@ payload:
       - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::IL2_library_spec_into_the_pipeline
       - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::PV4_cli_and_ui
       - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::CX1_context_cascade
-    dependents: []
+    dependents:
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::CT1_cut_replies_are_finished
     upstream:
       - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::CI1_compounding_iterate
       - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::CX1_context_cascade
@@ -249,10 +250,14 @@ payload:
       - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::PV2_repair_feedback
       - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::PV3_prove_loop
       - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::PV4_cli_and_ui
-    downstream: []
+    downstream:
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::BK1_blocked_is_actionable
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::BK2_phase_build_writes_code
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::CT1_cut_replies_are_finished
     blockedBy:
       - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::CX1_context_cascade
-    unlocks: []
+    unlocks:
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::CT1_cut_replies_are_finished
     conflicts:
       - with: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::PF6_boot_sync_yields_to_the_person
         files:
@@ -263,19 +268,15 @@ payload:
       - with: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::HC1_hat_agent_to_cos_build
         files:
           - idearium/api/index.js
-      - with: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::BK1_blocked_is_actionable
-        files:
-          - idearium/api/index.js
-      - with: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::BK2_phase_build_writes_code
-        files:
-          - idearium/api/index.js
     dangling: []
     lines:
       - layer 9 · blocked by CX1_context_cascade
       - >-
         depends on (3): IL2_library_spec_into_the_pipeline, PV4_cli_and_ui, CX1_context_cascade ·
         all upstream 15
-      - 'needed by (0): —'
+      - >-
+        needed by (1): CT1_cut_replies_are_finished · all downstream 3 · finishing it unlocks
+        CT1_cut_replies_are_finished
       - >-
         same files as PF6_boot_sync_yields_to_the_person with no order between them:
         idearium/api/index.js
@@ -283,8 +284,6 @@ payload:
         same files as PF8_settings_console_one_cheap_read with no order between them:
         idearium/api/index.js
       - 'same files as HC1_hat_agent_to_cos_build with no order between them: idearium/api/index.js'
-      - 'same files as BK1_blocked_is_actionable with no order between them: idearium/api/index.js'
-      - 'same files as BK2_phase_build_writes_code with no order between them: idearium/api/index.js'
     edges:
       - from: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::IL2_library_spec_into_the_pipeline
         kind: declared

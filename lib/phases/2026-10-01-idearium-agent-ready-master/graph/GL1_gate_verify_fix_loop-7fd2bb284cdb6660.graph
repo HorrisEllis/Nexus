@@ -7,11 +7,11 @@ intent: null
 summary: 28 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792841754352
+exported_at: 1794931305957
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792841754352
-lastSeenAt: 1792841754352
+firstSeenAt: 1794931305957
+lastSeenAt: 1794931305957
 fingerprint: null
 payload:
   for: GL1_gate_verify_fix_loop
@@ -228,7 +228,10 @@ payload:
       - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::DT2_failure_mode_field
       - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::M0_map
     downstream:
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::BK1_blocked_is_actionable
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::BK2_phase_build_writes_code
       - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::CP1_copilot_drives_idearium_and_talks_to_its_agents
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::CT1_cut_replies_are_finished
       - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::PV1_verify
       - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::PV2_repair_feedback
       - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::PV3_prove_loop
@@ -242,7 +245,7 @@ payload:
     lines:
       - layer 4 · blocked by CI1_compounding_iterate
       - 'depends on (2): DT2_failure_mode_field, CI1_compounding_iterate · all upstream 4'
-      - 'needed by (1): PV1_verify · all downstream 5 · finishing it unlocks PV1_verify'
+      - 'needed by (1): PV1_verify · all downstream 8 · finishing it unlocks PV1_verify'
     edges:
       - from: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::DT2_failure_mode_field
         kind: declared

@@ -7,11 +7,11 @@ intent: null
 summary: 27 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792822476761
+exported_at: 1794931305988
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792822476761
-lastSeenAt: 1792822476761
+firstSeenAt: 1794931305988
+lastSeenAt: 1794931305988
 fingerprint: null
 payload:
   for: FT1_file_tools_merge_patch_drop
@@ -220,7 +220,10 @@ payload:
       - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::DT2_failure_mode_field
       - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::M0_map
     downstream:
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::BK1_blocked_is_actionable
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::BK2_phase_build_writes_code
       - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::CP1_copilot_drives_idearium_and_talks_to_its_agents
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::CT1_cut_replies_are_finished
       - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::IL1_spec_library_as_ideas
       - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::IL2_library_spec_into_the_pipeline
       - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::SW1_spec_workshop
@@ -249,13 +252,6 @@ payload:
       - with: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::UI3_settings_tab_retheme_collapse
         files:
           - idearium/ui/js/app.js
-      - with: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::BK1_blocked_is_actionable
-        files:
-          - idearium/ui/js/app.js
-          - idearium/api/index.js
-      - with: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::BK2_phase_build_writes_code
-        files:
-          - idearium/api/index.js
       - with: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::UI6_idea_and_phases_one_tab
         files:
           - idearium/ui/js/app.js
@@ -281,7 +277,7 @@ payload:
     lines:
       - layer 4 · blocked by CI1_compounding_iterate
       - 'depends on (1): CI1_compounding_iterate · all upstream 4'
-      - 'needed by (1): IL1_spec_library_as_ideas · all downstream 4'
+      - 'needed by (1): IL1_spec_library_as_ideas · all downstream 7'
       - >-
         same files as PF6_boot_sync_yields_to_the_person with no order between them:
         idearium/api/index.js
@@ -295,7 +291,7 @@ payload:
       - >-
         same files as UI1_history_and_save_in_manage with no order between them:
         idearium/ui/js/app.js
-      - … and 11 more phases sharing its files without an order
+      - … and 9 more phases sharing its files without an order
     edges:
       - from: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::CI1_compounding_iterate
         kind: declared

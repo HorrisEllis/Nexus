@@ -7,11 +7,11 @@ intent: null
 summary: 25 node(s), 3 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792787676482
+exported_at: 1794931305944
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787676482
-lastSeenAt: 1792787676482
+firstSeenAt: 1794931305944
+lastSeenAt: 1794931305944
 fingerprint: null
 payload:
   for: CX1_context_cascade
@@ -220,7 +220,10 @@ payload:
       - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::DT3_failure_modes_routes_and_preflight
       - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::M0_map
     downstream:
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::BK1_blocked_is_actionable
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::BK2_phase_build_writes_code
       - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::CP1_copilot_drives_idearium_and_talks_to_its_agents
+      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::CT1_cut_replies_are_finished
       - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::SW1_spec_workshop
       - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::UM1_nexus_understands_james
     blockedBy:
@@ -234,7 +237,7 @@ payload:
       - 'depends on (1): DT3_failure_modes_routes_and_preflight · all upstream 4'
       - >-
         needed by (3): CP1_copilot_drives_idearium_and_talks_to_its_agents,
-        UM1_nexus_understands_james, SW1_spec_workshop · finishing it unlocks
+        UM1_nexus_understands_james, SW1_spec_workshop · all downstream 6 · finishing it unlocks
         CP1_copilot_drives_idearium_and_talks_to_its_agents
     edges:
       - from: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::DT3_failure_modes_routes_and_preflight
