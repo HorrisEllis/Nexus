@@ -176,6 +176,20 @@ spec:
       depends_on: [FMR0_causality_measured]
       also: "failure-mode-forensics.js uses intelligence/rfr2/causality traceToRoot when relational-field returns no conditions, and its stale 'kernel absent' note is corrected by addendum (§0.3)."
     FMR2_every_failure_reaches_the_record:
+      expanded_2026_11_17: >-
+        James, 2026-11-17, told that intelligence's failure reports now go into its own failures folder: "every system is meant to do that". And the same day: "All systems keep their own data." Every system writes its own failure reports into its own data folder
+        first, <system>/data/failures/, then books each with Cortex through POST /api/failure-modes (Cortex keeps the books; the record stays
+        Cortex's, one writer, as built). Today only intelligence does (0.60.552, its taxonomy). Placement, decided by his axioms (§5.9 each
+        system its own data, §5.15.2 placement is ownership, §8.6 reuse, §5.6 structural self-similarity): the system skeleton every system is
+        built from (cos/archetype/nexus-system/) gains data/failures/ and lib/failures.js beside its lib/ledger.js and lib/heartbeat.js:
+        report({ faultClass, where, what, error, anchor }) writes <system>/data/failures/<faultClass>.json (occurrences counted, the newest
+        examples kept, a Windows-safe name, rewritten only when it changed) and appends _failures.jsonl, then posts it to Cortex through the
+        system's outbox (Cortex down: kept, booked on replay). Each existing system adopts it where it already catches its own failures (a
+        failed handoff into failed/, a failed job, a gate FAILED, an uncaught error from lib/error-log.js). Intelligence's 0.60.552 writer
+        becomes the same module (replaced, not duplicated). COS's Data tab shows each system's failures/ (data folders, own) with no change.
+        Order: backend (the skeleton module, then each system), route (GET /api/<system>/failures on each system's door), command, UI (COS's
+        system page, a Failures view). A good first phase for the pipeline to build itself: small, mapped, the same shape in every system.
+      files_2026_11_17: [cos/archetype/nexus-system/lib/failures.js, cos/archetype/nexus-system/skeleton.json, intelligence/index.js, guardian/server.js, idearium/api/index.js, cortex/boot.js, cos/manager/server.js, versionium/server.js, ollama/server.js, copilot/server.js, diagnostic/nexus-diagnostic.js, orchestrator/orchestrator.js, clear-glass/src/main/index.js, loom/server.js, architect/service.js]
       status: "PARTLY BUILT 0.60.146 — cortex/self-heal/failure-intake.js (the one insert; the ladder writes through it), POST /api/failure-modes (the existing GET kept), lib/failure-post.js; a failed COS run and an unlanded phase run (with its flight) post by route. test-failure-modes FM-01..07. OPEN: a FAILED contract gate, lib/error-log.js, Clear Glass error capture"
       owned_by: NEW
       depends_on: []

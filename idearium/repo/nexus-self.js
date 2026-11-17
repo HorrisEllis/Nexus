@@ -178,7 +178,9 @@ async function _syncSystem(rl, se, { system, snap, compartment = null, parentRep
       if (rs.error) return { system, status: 'failed', repoUuid, error: rs.error };
       // §0.39.266 (D2) — one spec per nexus repo: the version just replaced is purged. Its history is not
       // lost: every version is a snapshot in the immutable store and a versionium commit.
-      if (typeof rl.purgeSpecsOf === 'function') rl.purgeSpecsOf(repoUuid);
+      // PF2 2026-11-17 — the yielding purge when the layer has it (measured: the sync purge held the loop 1.8–2.9 s here, 26–34 s on his machine)
+      if (typeof rl.purgeSpecsOfAsync === 'function') await rl.purgeSpecsOfAsync(repoUuid);
+      else if (typeof rl.purgeSpecsOf === 'function') rl.purgeSpecsOf(repoUuid);
     }
   }
   step('spec');

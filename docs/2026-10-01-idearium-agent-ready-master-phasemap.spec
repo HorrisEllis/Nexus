@@ -123,6 +123,14 @@ spec:
         this is the floor the build stands on. Fixed (0.60.549): the async paths (ingestFilesAsSpecAsync, updateIngestedSpecAsync) leave the
         node pass to idearium/lib/chunk-nodes.js writeChunkNodesAsync, the same writes yielding every 50; the sync paths are unchanged.
       files_2026_11_17: [idearium/lib/chunk-nodes.js, tests/modules/test-nexus-self-incremental.test.js]
+      expanded_2026_11_17_b: >-
+        James, 2026-11-17: "look at raid axioms. and the docs axioms 3.1 doc. get it done. i cant keep spending tokens. get the pipeline working, then it will be able to do all of this itself instead of you in theory.". His log at 10:43–10:44: Idearium offline twice (34 s, 26 s) during a nexus-self sync while his first pipeline build ran; every
+        build step calls Idearium. Measured on a 5,400-file core in a sandbox, step by step: the one block left was purgeSpecsOf (1.8–2.9 s in
+        one block; replaceSpec 34 ms, sources 30 ms, materialize 40 ms): a synchronous rm of the old spec's folder, a synchronous removal of its
+        5,400 chunk nodes, and a quadratic mirror-key loop (chunkUuids.some per key, ~29 million comparisons). Fixed (0.60.553): purgeSpecAsync
+        (the folder by fs.promises.rm, the nodes by removeChunkNodesAsync yielding, the keys by a set), the repo layer's purgeSpecsOfAsync,
+        nexus-self awaits it; the sync purge keeps its behaviour with the set lookup. After: purge 0 ms on the loop, the sync's longest block
+        2,449 → 521 ms. Proof: NI-008; test-nexus-self-incremental 8/8, test-nexus-specs-and-ideas-cleanup 8/8.
       proof_2026_11_17: "NI-007: 600 files ingested async and every node written by the yielding writer with timers running between batches (fails on the old code: no yielding writer); test-nexus-self-incremental 7/7"
     PF3_snapshot_names_changed_files:
       layer: library

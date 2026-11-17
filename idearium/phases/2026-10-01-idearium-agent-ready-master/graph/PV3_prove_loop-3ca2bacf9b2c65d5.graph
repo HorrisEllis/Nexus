@@ -7,11 +7,11 @@ intent: null
 summary: 25 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1794931305967
+exported_at: 1794941672175
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794931305967
-lastSeenAt: 1794931305967
+firstSeenAt: 1794941672175
+lastSeenAt: 1794941672175
 fingerprint: null
 payload:
   for: PV3_prove_loop
@@ -215,10 +215,7 @@ payload:
       - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::PV1_verify
       - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::PV2_repair_feedback
     downstream:
-      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::BK1_blocked_is_actionable
-      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::BK2_phase_build_writes_code
       - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::CP1_copilot_drives_idearium_and_talks_to_its_agents
-      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::CT1_cut_replies_are_finished
       - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::PV4_cli_and_ui
     blockedBy: []
     unlocks:
@@ -228,7 +225,7 @@ payload:
     lines:
       - layer 7
       - 'depends on (1): PV2_repair_feedback · all upstream 7'
-      - 'needed by (1): PV4_cli_and_ui · all downstream 5 · finishing it unlocks PV4_cli_and_ui'
+      - 'needed by (1): PV4_cli_and_ui · all downstream 2 · finishing it unlocks PV4_cli_and_ui'
     edges:
       - from: docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::PV2_repair_feedback
         kind: declared

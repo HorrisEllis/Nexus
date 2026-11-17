@@ -78,7 +78,7 @@ The graph from today to that end state, tier by tier: `docs/2026-11-17-nexus-cod
    - Versionium versions and snapshots each system, and the rewind engine restores a snapshot.
    - The fill index records what filled each need: context, system, agent or him, with the timestamp.
    - Failure modes, faults and gaps are written on the contract.
-   - Each system keeps its own data. Cortex keeps the books, for query.
+   - Each system keeps its own data, its own failure reports included (`<system>/data/failures/`, his 2026-11-17: "every system is meant to do that"). Cortex keeps the books, for query.
 
 Stage by stage, with what is built and what is still a gap: `docs/2026-11-17-raid-request-lifecycle-phasemap.spec` (L0–L14,
 RL_D1–RL_D8). The pipeline itself, formally: `cos/spec/pipeline.spec` (PL-001..PL-012).

@@ -6,14 +6,14 @@ context: >-
   pipeline phase FMR2_every_failure_reaches_the_record of
   docs/2026-10-17-failure-mode-report-phasemap.spec
 intent: null
-summary: FMR2_every_failure_reaches_the_record (?) — 8 file(s)
+summary: FMR2_every_failure_reaches_the_record (?) — 25 file(s)
 system: idearium
 tags: []
-exported_at: 1792841755788
+exported_at: 1794940825657
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792841755788
-lastSeenAt: 1792841755788
+firstSeenAt: 1794940825657
+lastSeenAt: 1794940825657
 fingerprint: null
 payload:
   id: FMR2_every_failure_reaches_the_record
@@ -22,15 +22,32 @@ payload:
   layer: null
   status: OPEN
   files:
-    - cortex/self-heal/failure-intake.js
-    - lib/failure-post.js
+    - lib/failures.js
+    - lib/ledger.js
+    - lib/heartbeat.js
     - lib/error-log.js
+    - cos/archetype/nexus-system/lib/failures.js
+    - cos/archetype/nexus-system/skeleton.json
+    - intelligence/index.js
+    - guardian/server.js
+    - idearium/api/index.js
+    - cortex/boot.js
+    - cos/manager/server.js
+    - versionium/server.js
+    - ollama/server.js
+    - copilot/server.js
+    - diagnostic/nexus-diagnostic.js
+    - orchestrator/orchestrator.js
+    - clear-glass/src/main/index.js
+    - loom/server.js
+    - architect/service.js
+    - cortex/self-heal/failure-intake.js
+    - cos/archetype/nexus-system.js
+    - lib/failure-post.js
     - lib/cos-run.js
-    - lib/flight-data.js
     - lib/cos-debug-report.js
-    - cortex/core/raid/contract-gates.js
-    - clear-glass/src/diagnostic/error-capture.js
+    - lib/flight-data.js
   depends_on: []
   blocks: []
   spec: null
-  graph: 9ea6b89bd6db29e1
+  graph: 7d41f816361f0fd2

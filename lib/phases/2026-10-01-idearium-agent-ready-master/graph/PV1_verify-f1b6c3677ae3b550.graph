@@ -7,11 +7,11 @@ intent: null
 summary: 28 node(s), 5 crossing(s)
 system: idearium
 tags: []
-exported_at: 1794931305960
+exported_at: 1794941672168
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794931305960
-lastSeenAt: 1794931305960
+firstSeenAt: 1794941672168
+lastSeenAt: 1794941672168
 fingerprint: null
 payload:
   for: PV1_verify
@@ -246,10 +246,7 @@ payload:
       - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::GL1_gate_verify_fix_loop
       - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::M0_map
     downstream:
-      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::BK1_blocked_is_actionable
-      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::BK2_phase_build_writes_code
       - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::CP1_copilot_drives_idearium_and_talks_to_its_agents
-      - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::CT1_cut_replies_are_finished
       - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::PV2_repair_feedback
       - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::PV3_prove_loop
       - docs/2026-10-01-idearium-agent-ready-master-phasemap.spec::PV4_cli_and_ui
@@ -262,7 +259,7 @@ payload:
       - layer 5
       - 'depends on (1): GL1_gate_verify_fix_loop · all upstream 5'
       - >-
-        needed by (1): PV2_repair_feedback · all downstream 7 · finishing it unlocks
+        needed by (1): PV2_repair_feedback · all downstream 4 · finishing it unlocks
         PV2_repair_feedback
       - no depends_on line in its map — the standard is to write one ([] when it depends on nothing)
     edges:

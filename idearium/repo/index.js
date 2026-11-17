@@ -894,6 +894,25 @@ export class RepoLayer {
     return out;
   }
 
+  /** purgeSpecsOfAsync(repoUuid, opts) — PF2 2026-11-17: purgeSpecsOf through the engine's purgeSpecAsync, so a nexus-self re-ingest's purge yields */
+  async purgeSpecsOfAsync(repoUuid, { includeCurrent = false } = {}) {
+    if (!this.se || typeof this.se.purgeSpecAsync !== 'function') return this.purgeSpecsOf(repoUuid, { includeCurrent });
+    const r = this.repos.repos.find(x => x.uuid === repoUuid);
+    if (!r) return [];
+    const ids = [...new Set([...(r.specHistory || []).filter(h => h && !h.purged).map(h => h.specUuid), ...(includeCurrent ? [r.specUuid] : []), r.promotedFromSpec].filter(Boolean))];
+    const out = [];
+    for (const id of ids) {
+      if (id === r.specUuid && !includeCurrent) continue;
+      if (this.specInUse(id, repoUuid)) continue;
+      try { const p = await this.se.purgeSpecAsync(id); if (p.purged) out.push(id); } catch (e) { console.warn(`[idearium/repo] purge of spec ${id} failed (non-fatal): ${e.message}`); }
+    }
+    if (out.length) {
+      r.specHistory = (r.specHistory || []).map(h => (h && out.includes(h.specUuid) ? { ...h, purged: true } : h));
+      this._save();
+    }
+    return out;
+  }
+
   /**
    * dropRepoIdeasNamed(names) -> count — §0.39.266. Removes every "Repo: <name>" idea that repo ingest made for one
    * of these repo names, linked or orphaned (re-registering a repo minted a new one each time and left the old).
