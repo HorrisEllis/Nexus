@@ -718,6 +718,10 @@ built_2026_11_09_plan:
       "compartment" above was the coder's and is withdrawn). The ledger names Guardian's job by id; neither system writes the other's folder.
       Cortex keeps the books: the request is already booked with Cortex as RAID's contract (runs.eg booked); whether each ledger line is also
       booked with Cortex is to confirm.
+    decided_2026_11_17_d: >-
+      James, 2026-11-17, asked whether each ledger line (step, job, response) is also booked with Cortex: "yes. we need to have this logged somewhere. look at the changelogs in versionium."
+      Every run.ledger line is also booked with Cortex by its route after it is written in cos/data/manager (Cortex down: kept in COS's outbox,
+      booked on replay, said). Released as 0.60.548.
     does: >-
       A pipeline is operable from COS, the way a person and an agent would want it: run, pause, resume and retry a step; test it dry, the steps
       planned and their gates checked with nothing changed; see each step's state live; diagnose a failed step (its gate, its input, its output,

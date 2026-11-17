@@ -115,6 +115,13 @@ decisions:
         - Each system keeps its own; the Library reads Guardian's jobs by Guardian's route and Clear Glass's own from Clear Glass. Cortex keeps
           the books: what each ledger books with Cortex is said where it is built (the reading that every request and job is also booked with
           Cortex by route is to confirm, as in the 2026-11-09 addendum).
+    decided_2026_11_17_d: >-
+      James, 2026-11-17, asked whether each ledger line (step, job, response) is also booked with Cortex: "yes. we need to have this logged somewhere. look at the changelogs in versionium."
+      Each system keeps its own data and its own ledger, and every ledger line is ALSO booked with Cortex by Cortex's route (Cortex keeps the
+      books): Guardian's job ledger (a job made, its state, its .response written), Clear Glass's capture ledger, COS's run.ledger. Booking is
+      never on the path: a line is written to its owner's folder first; Cortex down, it waits in the owner's outbox and is booked on replay
+      (the postDurable pattern lib/nexus-client.js already proves), said, never dropped (§1.2, §2.1, §5.15.3). Released as 0.60.548
+      (versionium/changelogs/CHANGELOG-0.60.548.md).
     problem: >-
       clear-glass/src/downloads/artifact-chat-index.js holds the .response files and their index. Guardian writes them (response-sink,
       code-artifact, chat-transcripts, cli); Clear Glass captures downloads into the same store and its Library shows it. One store, two
