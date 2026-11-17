@@ -7,11 +7,11 @@ intent: null
 summary: MG36_the_cockpit_is_the_window (?) — 6 file(s)
 system: idearium
 tags: []
-exported_at: 1793860899440
+exported_at: 1794948922580
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793860899440
-lastSeenAt: 1793860899440
+firstSeenAt: 1794948922580
+lastSeenAt: 1794948922580
 fingerprint: null
 payload:
   id: MG36_the_cockpit_is_the_window
@@ -34,4 +34,4 @@ payload:
   blocks:
     - MOD-COSA-COCKPIT-WINDOW
   spec: cos/spec/cos-manager.spec
-  graph: 5a6df6deb17d78e3
+  graph: f0ed43abbeea9383

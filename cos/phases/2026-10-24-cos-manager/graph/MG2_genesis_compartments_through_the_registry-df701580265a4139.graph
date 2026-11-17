@@ -7,11 +7,11 @@ intent: null
 summary: 25 node(s), 8 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793577139951
+exported_at: 1794948922489
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793577139951
-lastSeenAt: 1793577139951
+firstSeenAt: 1794948922489
+lastSeenAt: 1794948922489
 fingerprint: null
 payload:
   for: MG2_genesis_compartments_through_the_registry
@@ -237,7 +237,7 @@ payload:
       known: true
   ready: true
   dag:
-    layer: 9
+    layer: 20
     deps:
       - docs/2026-10-24-cos-manager-phasemap.spec::MG1_loom_on_its_registry_spine
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB20_sealed_archetype
@@ -249,12 +249,18 @@ payload:
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB11_cos_compartment_per_system
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB12_the_ui_handshake
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB13_the_tunnel
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB14_heartbeat_over_routes
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB15_toasts_declared
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB16_a_registry_for_each_system
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB19_genesis_sandboxed_fork
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB20_sealed_archetype
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB21_one_registry_schema_every_level
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB2_the_registry_says_what_it_offers
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB3_the_drawbridge
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB4_one_bus_per_system
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB5_the_handshake_for_every_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB6_move_the_crossings
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB7_the_ui_floats_on_top
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB8_agents_have_it
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB9_every_repo_generates_its_registry
       - docs/2026-10-18-compartment-environment-phasemap.spec::CE0e_cos_answers_on_a_route
@@ -278,6 +284,15 @@ payload:
       - docs/2026-10-24-loom-into-cos-phasemap.spec::LM_D1_ollama_through_its_bridge
       - docs/2026-10-24-loom-into-cos-phasemap.spec::LM_D2_loom_owns_its_tables
       - docs/2026-10-24-loom-into-cos-phasemap.spec::LM_D4_cos_manages_loom_s_compartment
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::CS12_the_mover_is_proven
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::SV0_the_census_tells_the_truth
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::SV1_every_table_has_one_owner
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::SV2_core_files_go_home
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::SV3_components_and_architect
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::SV4_ollama_versionium_diagnostic
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::SV5_clear_glass_guardian_orchestrator
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::SV6_loom_idearium_copilot
+      - docs/2026-10-24-sovereign-systems-phasemap.spec::SV7_intelligence_cos_cortex
       - docs/2026-11-01-the-compartment-phasemap.spec::CP0_the_full_spec
       - docs/2026-11-01-the-compartment-phasemap.spec::CP1_the_machine_and_its_door
       - docs/2026-11-01-the-compartment-phasemap.spec::CP_D0_a_compartment_is_all_of_it
@@ -289,10 +304,10 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - layer 9 · blocked by MG1_loom_on_its_registry_spine, DB20_sealed_archetype
+      - layer 20 · blocked by MG1_loom_on_its_registry_spine, DB20_sealed_archetype
       - >-
         depends on (3): MG1_loom_on_its_registry_spine, DB20_sealed_archetype, DB13_the_tunnel · all
-        upstream 37
+        upstream 52
       - 'needed by (0): —'
     edges:
       - from: docs/2026-10-24-cos-manager-phasemap.spec::MG1_loom_on_its_registry_spine

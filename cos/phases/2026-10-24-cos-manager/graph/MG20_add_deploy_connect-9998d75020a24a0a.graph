@@ -7,11 +7,11 @@ intent: null
 summary: 16 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1794155255998
+exported_at: 1794948922541
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794155255998
-lastSeenAt: 1794155255998
+firstSeenAt: 1794948922541
+lastSeenAt: 1794948922541
 fingerprint: null
 payload:
   for: MG20_add_deploy_connect
@@ -123,7 +123,7 @@ payload:
   crossings: []
   ready: true
   dag:
-    layer: 10
+    layer: 21
     deps:
       - docs/2026-10-24-cos-manager-phasemap.spec::MG19_the_spec_bundle
       - docs/2026-10-24-cos-manager-phasemap.spec::MG15_the_supervisor_in_cos
@@ -144,10 +144,15 @@ payload:
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB11_cos_compartment_per_system
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB12_the_ui_handshake
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB13_the_tunnel
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB14_heartbeat_over_routes
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB15_toasts_declared
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB16_a_registry_for_each_system
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB2_the_registry_says_what_it_offers
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB3_the_drawbridge
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB4_one_bus_per_system
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB5_the_handshake_for_every_system
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB6_move_the_crossings
+      - docs/2026-10-17-system-drawbridge-phasemap.spec::DB7_the_ui_floats_on_top
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB8_agents_have_it
       - docs/2026-10-17-system-drawbridge-phasemap.spec::DB9_every_repo_generates_its_registry
       - docs/2026-10-18-compartment-environment-phasemap.spec::CE0e_cos_answers_on_a_route
@@ -221,10 +226,10 @@ payload:
           - cos/manager/contract.json
     dangling: []
     lines:
-      - layer 10 · blocked by MG19_the_spec_bundle, MG8_the_factory
+      - layer 21 · blocked by MG19_the_spec_bundle, MG8_the_factory
       - >-
         depends on (4): MG19_the_spec_bundle, MG15_the_supervisor_in_cos, MG8_the_factory,
-        CS9_every_project_a_compartment · all upstream 70
+        CS9_every_project_a_compartment · all upstream 75
       - >-
         needed by (2): MG21_the_add_screen, BC5_open_loops_imported · finishing it unlocks
         MG21_the_add_screen

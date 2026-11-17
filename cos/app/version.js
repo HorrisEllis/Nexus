@@ -39,4 +39,8 @@
 // do i reinstall? this needs to be automatic." The fix in lib/nexus-update.js lives in his Nexus folder, which only that broken updater could update.
 // COS's exe is what reaches him: when it opens it tells git, once, to trust exactly his linked folder for every user (git config --system
 // safe.directory; elevated, or one UAC prompt remembered), so the service's check works and the automatic update brings the new code (git-trust.js).
-module.exports = { version: '0.10.1' };
+// 0.10.2 (Nexus 0.60.556): James, 2026-11-17, with COS saying "Nexus did not start: ports 7799, 7820, 4800, 9000 already in use by another program":
+// "it needs to just do that not have a button. or not make another copy period. like it should be a projection ontop of the service". Nexus ran as
+// the Windows service (NexusCOS, 0.5.0), so COS had no run record and tried a second copy. COS now asks the status port who holds it: when it is
+// Nexus (COS's manager answers /api/cos/health), COS attaches to it and shows it; only ports held by something else still stop the start.
+module.exports = { version: '0.10.2' };
