@@ -49,6 +49,14 @@ phases:
     proof: tests/modules/test-pipeline-root-causes.test.js RC-01, RC-02
 
   RC2_linear_node_scan:
+    expanded_2026_11_17: >-
+      James, 2026-11-17: "yes fix the boot stall too" (after "it needs to build in order, bottom up. i am drowning. help me get this working"). His log: Idearium silent 92 s at boot
+      (07:20:45 → 07:22:00, "node registry: 0 indexed, 14309 unchanged"), the watchdog took it OFFLINE: scan() parsed and compared every node
+      file in one synchronous loop before the listener started. Fixed (0.60.550): one scan, two drivers (PF2's pattern): scan() straight
+      through, scanAsync() in 25 ms slices with the event loop's turn between them; startForSystem (every system's boot: idearium, cortex,
+      guardian, orchestrator, versionium, ollama, intelligence, clear-glass, loom) runs startAsync, and a stop during the scan leaves no
+      listener behind. Proof: NR-13 (same result as scan(), timers run while it indexes), test-node-registry-system 13/13,
+      test-pipeline-root-causes 19/19, test-history-nodes 5/5.
     layer: foundation
     status: BUILT 2026-10-19 (0.60.170)
     depends_on: []
