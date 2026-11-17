@@ -103,7 +103,7 @@
     const note = el('span', { class: 'ae-note', text: '' });
     let all = [];
     const fill = () => { const q = String(filter.value || '').toLowerCase(); const list = all.filter(ph => !q || (ph.id + ' ' + (ph.map || '') + ' ' + (ph.does || '')).toLowerCase().includes(q));
-      sel.replaceChildren(...(list.length ? list.map(ph => el('option', { value: ph.id, title: ph.does || '', text: ph.id + (ph.map ? '  (' + String(ph.map).split('/').pop().replace(/-phasemap\.spec$/, '') + ')' : '') })) : [el('option', { value: '', text: all.length ? 'no phase matches the filter' : 'no phase can be built now' })])); };
+      sel.replaceChildren(...(list.length ? list.map(ph => el('option', { value: ph.id, 'data-map': ph.map || '', title: ph.does || '', text: ph.id + (ph.map ? '  (' + String(ph.map).split('/').pop().replace(/-phasemap\.spec$/, '') + ')' : '') })) : [el('option', { value: '', text: all.length ? 'no phase matches the filter' : 'no phase can be built now' })])); };
     filter.addEventListener('input', fill);
     const load = (force) => { note.textContent = ''; readyPhases(force).then(list => { all = list; fill(); note.textContent = list.length + ' phase(s) can be built now'; })
       .catch(e => { sel.replaceChildren(el('option', { value: '', text: 'Idearium did not answer yet' })); note.replaceChildren(document.createTextNode('Idearium is slow to answer (' + e.message + ') '), el('button', { class: 'btn', text: 'Try again', onclick: (ev) => { ev.preventDefault(); load(true); } })); }); };
@@ -116,10 +116,14 @@
     // api? thats kind of the point." The phase is always chosen from a list, never typed: the form shows at once, the list fills from Idearium's
     // own API (the phases that can be built now) when it answers, a filter narrows it, and a slow Idearium (its census is 17 s cold on his
     // machine, COS waits 20) is said in the form with Try again, never a text box.
-    const rows = needs.map(n => n === 'phase' ? phasePicker() : el('label', { class: 'ae-need' }, [el('span', { text: n }), el('input', { 'data-need': n, type: 'text', placeholder: n })]));
+    // 2026-11-17 — his N1 run: "no phase N1 in this repo's DAG": N1 is in two phasemaps. The phase chosen carries its map (never typed).
+    const rows = needs.filter(n => !(n === 'map' && needs.includes('phase'))).map(n => n === 'phase' ? phasePicker() : el('label', { class: 'ae-need' }, [el('span', { text: n }), el('input', { 'data-need': n, type: 'text', placeholder: n })]));
     const form = el('div', { class: 'ae-needs', id: 'ae-needs' }, [el('p', { text: optional ? 'This pipeline starts from ' + needs.join(', ') + ' (yours to give; the same as typing `request <your words>` in the Console):' : 'This run needs ' + needs.join(', ') + ' (part of a step\'s address):' }), ...rows,
       el('div', { class: 'ae-btns' }, [el('button', { class: 'btn primary', 'data-act': 'needs-run', text: '▶ Run with these', onclick: () => { const v = { ...vars };
-        for (const f of form.querySelectorAll('[data-need]')) { const a = String(f.value || '').trim(); if (!a && !optional) return say('bad', `Not run: ${f.dataset.need} was not given`); v[f.dataset.need] = a; } form.remove(); runIt(id, v); } }),
+        for (const f of form.querySelectorAll('[data-need]')) { const a = String(f.value || '').trim(); if (!a && !optional) return say('bad', `Not run: ${f.dataset.need} was not given`); v[f.dataset.need] = a; }
+        const ps = form.querySelector('select[data-need="phase"]'); const po = ps && ps.selectedOptions && ps.selectedOptions[0];
+        if (po && po.dataset && po.dataset.map) v.map = po.dataset.map;   // 2026-11-17 — the phasemap of the phase chosen
+        form.remove(); runIt(id, v); } }),
       el('button', { class: 'btn', text: 'Cancel', onclick: () => form.remove() })])]);
     const old = $('ae-needs'); if (old) old.remove(); $('ae-p-body').prepend(form); say(optional ? 'ok' : 'bad', (optional ? 'Give ' : 'Choose ') + needs.join(', ') + ' to run it.');
   }

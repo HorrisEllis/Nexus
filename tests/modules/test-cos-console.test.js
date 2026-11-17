@@ -167,6 +167,13 @@ const SERVER = (envVar, def) => `const http=require('http');const PORT=parseInt(
     // the page: an empty value a pipeline declares (its words) is asked for before the run
     const page = fs.readFileSync(path.join(ROOT, 'cos/ui/automation/engine.js'), 'utf8');
     assert.match(page, /p0\.vars\[k\] === '' && !\(k in vars\)/); assert.match(page, /askNeeds\(id, empty, vars, \{ optional: true \}\)/);
+    // 2026-11-17 — his N1 run ("no phase N1 in this repo's DAG": N1 is in two phasemaps): the phase chosen carries its map, never typed
+    assert.match(page, /'data-map': ph\.map \|\| ''/, 'each phase in the list carries its map');
+    assert.match(page, /needs\.filter\(n => !\(n === 'map' && needs\.includes\('phase'\)\)\)/, 'no box to type the map');
+    assert.match(page, /if \(po && po\.dataset && po\.dataset\.map\) v\.map = po\.dataset\.map;/, 'the run sends the chosen phase\'s map');
+    const bp = fs.readFileSync(path.join(ROOT, 'idearium/pipelines/idearium-build.pipeline'), 'utf8');
+    for (const step of ['dag?phase={{vars.phase}}&map={{vars.map}}', 'graph?phase={{vars.phase}}&map={{vars.map}}', '"phase":"{{vars.phase}}","map":"{{vars.map}}"', 'landed?phase={{vars.phase}}&map={{vars.map}}'])
+      assert.ok(bp.includes(step), `the build pipeline passes the map: ${step}`);
   });
 
   await test('CC-06', 'add a system: written and declared live; again refused; an agent\'s add held', async () => {

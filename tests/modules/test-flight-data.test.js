@@ -168,6 +168,10 @@ const IM1 = [
     ];
     assert.strictEqual(FD.latestBuild(flights, 'CS12_the_mover_is_proven').runId, 'phrun-mwi7jzg3-enlx');
     assert.strictEqual(FD.latestBuild([flights[1]], 'CS12_the_mover_is_proven'), null, 'a note alone is no build');
+    // 2026-11-17 — his N1 run: N1 is in two phasemaps; a named map picks its own build
+    const two = [{ runId: 'phrun-a', phase: 'N1', map: 'docs/a-phasemap.spec', startedAt: 2000 }, { runId: 'phrun-b', phase: 'N1', map: 'docs/b-phasemap.spec', startedAt: 1000 }];
+    assert.strictEqual(FD.latestBuild(two, 'N1', 'docs/b-phasemap.spec').runId, 'phrun-b');
+    assert.strictEqual(FD.latestBuild(two, 'N1').runId, 'phrun-a', 'no map: the newest, as before');
     const src = fs.readFileSync(path.join(ROOT, 'idearium/api/index.js'), 'utf8');
     assert.match(src, /f = FD\.latestBuild\(uuids\.flatMap/, 'the landed route uses it');
   });

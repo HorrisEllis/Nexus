@@ -1379,3 +1379,11 @@ phases_addendum_2026_11_13_rca:
 # retries "timed out" (SO-01b); lib/repo-inject.js expectAsking with every one-file dispatch and the test writer (LF-05b); lib/phase-plan.js
 # brief inline; guardian/userscript-claude.js reply from the conversation; the test writer's hand-over, Ollama last (not independent).
 # Lesson, said: a fix on his machine is not kept until it is committed; these were lost once and cost his RQ0 run.
+
+# ── ADDENDUM 2026-11-17 (0.60.561) — PC8: the phase chosen carries its phasemap ──
+# James, 2026-11-17: "finish it. need nexus building itself"
+# His N1 run (11ac8139): dag timed out at 30 s on a cold Idearium; warm, "no phase N1 in this repo's DAG": N1 is in two phasemaps and the
+# run form (0.60.558) sent the bare id. Every route already took a map; nothing passed one. Built: the form's options carry their map and
+# Run sends vars.map (no box to type it); the build pipeline passes map to dag, graph, build, landed, evidence; landed's latestBuild filters
+# on it; ready, map, dag, graph wait 120 s. Proof: test-cos-console CC-12, test-flight-data FD-10. By the axioms: §1.2 (an ambiguous id is
+# said, never guessed: the route refused, and now it is told which), §8.6 (the routes' own map parameter used, nothing new beside it).

@@ -31,6 +31,7 @@ payload:
   vars:
     repo: nexus   # 2026-11-10: Nexus's own repo (Idearium reads "nexus" as it); another repo's uuid builds that repo
     phase: ''
+    map: ''   # 2026-11-17: the phasemap of the phase, from the run form's list; a phase id can be in two maps (N1 is)
     files: ''
     does: ''
     why: ''
@@ -45,6 +46,7 @@ payload:
         config:
           url: nexus://idearium/api/phases/next
           method: GET
+          timeoutMs: 120000   # 2026-11-17: a cold Idearium's census takes ~17 s and more under memory pressure; 30 s timed out (run 473c61df)
       gate: &ref_0
         contains: '"ok":true'
     - id: covered
@@ -67,6 +69,7 @@ payload:
         config:
           url: nexus://idearium/api/repos/{{vars.repo}}/phases/map
           method: GET
+          timeoutMs: 120000
       gate: *ref_0
     - id: dag
       label: Its DAG is whole
@@ -75,8 +78,9 @@ payload:
       step:
         type: api
         config:
-          url: nexus://idearium/api/repos/{{vars.repo}}/phases/dag?phase={{vars.phase}}
+          url: nexus://idearium/api/repos/{{vars.repo}}/phases/dag?phase={{vars.phase}}&map={{vars.map}}
           method: GET
+          timeoutMs: 120000   # 2026-11-17: timed out at 30 s on a cold Idearium (run 11ac8139)
       gate: *ref_0
     - id: graph
       label: 'Its graph: files, crossings'
@@ -85,8 +89,9 @@ payload:
       step:
         type: api
         config:
-          url: nexus://idearium/api/repos/{{vars.repo}}/phases/graph?phase={{vars.phase}}
+          url: nexus://idearium/api/repos/{{vars.repo}}/phases/graph?phase={{vars.phase}}&map={{vars.map}}
           method: GET
+          timeoutMs: 120000
       gate: *ref_0
     - id: build
       label: Build the phase
@@ -97,7 +102,7 @@ payload:
         config:
           url: nexus://idearium/api/repos/{{vars.repo}}/phases/build
           method: POST
-          body: '{"phase":"{{vars.phase}}"}'
+          body: '{"phase":"{{vars.phase}}","map":"{{vars.map}}"}'
           timeoutMs: 240000   # 0.60.494: the snapshot before a build took over 30 s once (run 78d4cc5a); the step gave up while Idearium was still starting it
       gate: *ref_0
     # 0.60.493 — James, 2026-11-11: "continue. get it working". The build step is met when the build has started; this one waits for it to end
@@ -111,7 +116,7 @@ payload:
       step:
         type: api
         config:
-          url: nexus://idearium/api/repos/{{vars.repo}}/phases/landed?phase={{vars.phase}}&waitMs=240000
+          url: nexus://idearium/api/repos/{{vars.repo}}/phases/landed?phase={{vars.phase}}&map={{vars.map}}&waitMs=240000
           method: GET
           timeoutMs: 280000
       gate: *ref_0
@@ -128,7 +133,7 @@ payload:
         config:
           url: nexus://idearium/api/repos/{{vars.repo}}/phases/evidence
           method: POST
-          body: '{"phase":"{{vars.phase}}","apply":true}'
+          body: '{"phase":"{{vars.phase}}","map":"{{vars.map}}","apply":true}'
           timeoutMs: 180000
       gate: *ref_0
     - id: ledger

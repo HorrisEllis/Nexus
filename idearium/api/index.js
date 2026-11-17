@@ -9924,7 +9924,7 @@ async function handle(req, res, route, query, body) {
         // in its owner system's repo, so the parent looks in its systems' repos too. And only a BUILD counts (lib/flight-data.js latestBuild):
         // Idearium's own auto-retry note about the phase ("auto-retry-held") had been read as the newest build, on 2026-11-15 and in his RQ0 run.
         const uuids = [repo.uuid, ...((repo.nexusSelf && repo.nexusSelf.role !== 'system') ? getRepoLayer().list({}).filter(r => r.nexusSelf && r.nexusSelf.role === 'system').map(r => r.uuid) : [])];
-        f = FD.latestBuild(uuids.flatMap(u => FD.summary(_phaseRows(u)).flights || []), phase);
+        f = FD.latestBuild(uuids.flatMap(u => FD.summary(_phaseRows(u)).flights || []), phase, query.map ? String(query.map) : null);
         if (!f) return err(res, 404, `no build of ${phase} has been started here`);
         if (f.landed || f.ended || Date.now() >= until) break;
         await new Promise(r => setTimeout(r, 2000));
