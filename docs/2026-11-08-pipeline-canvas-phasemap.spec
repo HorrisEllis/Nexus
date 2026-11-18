@@ -1387,3 +1387,18 @@ phases_addendum_2026_11_13_rca:
 # Run sends vars.map (no box to type it); the build pipeline passes map to dag, graph, build, landed, evidence; landed's latestBuild filters
 # on it; ready, map, dag, graph wait 120 s. Proof: test-cos-console CC-12, test-flight-data FD-10. By the axioms: §1.2 (an ambiguous id is
 # said, never guessed: the route refused, and now it is told which), §8.6 (the routes' own map parameter used, nothing new beside it).
+
+# ── 2026-11-17 — his: the pipeline stays agnostic; outputs live on the work surface; Idearium's compartments loaded per tab (asked, recorded) ──
+# James, 2026-11-17, with a screenshot of COS's canvas (Idearium build pipeline: "The build landed" running 12 min, Outputs "null", Ledger
+# attempts 1–4): "the pipeline staying agnostic right? the work surface needs to be used for the outputs, like how idearium streams the dom
+# mutator. also should we seperate the compartments in idearium, like all of the systems compartements into their own seperate ones, that way
+# we only need to load what we need? each tab loads what it needs?" · "remember i need you feedback. also record to the proof of compenency doc
+# when applicable."
+# - Agnostic (checked against the engine, the coder's answer): COS's engine knows step types (api at a nexus:// address, pipeline, notify,
+#   procedure) and gates; the build is Idearium's, reached only by its routes. Nothing of Idearium is in lib/automation/pipeline.js.
+# - Outputs: today a step's Outputs pane shows its result only when the step ends ("null" for 12 min while the build runs); the build's own
+#   rows (planning, test-first, each rung) exist in Idearium's flight record. His ask, as the coder reads it (to confirm): a running step streams
+#   what it is doing into the canvas's Outputs (the work surface), live, as Idearium's work surface streams the DOM mutator. PC8's "debuggable"
+#   view (2026-11-13 addendum) is where it belongs. Not built.
+# - Compartments per tab: recorded as his question; the coder's view given in the session (0.60.54x already loads Idearium's repos only when
+#   opened; memory is the binding limit). Not decided, not built.

@@ -341,7 +341,7 @@ function createChatTranscripts({ bus, jobs, ncp, complete, rootFn, index, log = 
     for (const row of rows || []) {
       if (row.generating) continue;
       const chat = await C.chat(row.chatKey);
-      if (!chat || chat.generating || !Array.isArray(chat.turns)) continue;
+      if (!chat || chat.generating || chat.settled === false || !Array.isArray(chat.turns)) continue;   // 2026-11-15: settled = 5 s with no DOM change (his)
       const m = matchJobs(chat.turns, [job])[0];
       if (m && m.reply) return { text: m.reply, chatUrl: chat.url || row.url || null, chatKey: row.chatKey, source: 'chat-ledger' };
     }

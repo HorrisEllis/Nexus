@@ -132,3 +132,35 @@ not_verified:
 #     drafts as a node the gig ledger owns; the Void dials as a setting), localStorage kept only for view preferences.
 #   proof: "forge a hat and change a repo agent's model: both files exist and match; delete the JAA rows, boot, and they come back
 #     from the files; clear the browser's storage and the gig draft and dials survive"
+
+# ── ADDENDUM 2026-11-17 — IH3 expanded: Claude is the last resort on every ladder; its accounts fall back in order ──
+# James, 2026-11-17: "needs to not be using claude unless absolutely necassary, then fallback to alternative accounts." · "no. pipeline working.
+# nothing less. ollama building it."
+# Read first: the ladder (lib/pipeline-routing.js) already starts with Ollama (smallest model first), then the chain (gemini, chatgpt, claude,
+# deepseek); the learned order (lib/agent-record.js orderLadder) can move an agent up; the planner and the test writer take the first agent
+# that is not Ollama. Guardian's account chain (account-routing.js, 0.60.25: "use routing each time tokens run out") moves to the next account
+# when a tab reports its usage limit — but Claude's chain on his machine was EMPTY (two accounts, no order): no fallback could happen.
+# Built: routing.last_resort (default ["claude"]) and PRt.lastResort(rungs, policy) — those agents go last, after the learned order and the
+# preferred coder; applied before the planner is chosen, after the learned order, and in the chunk and brick orders (idearium/api/index.js).
+# A person's pick (agent/provider) is never reordered; an agent alone on the ladder stays. Proof: test-pipeline-routing PR-30 (fails on the
+# old code: "no lastResort"); the suite's ESM-path crash after it is the same on the old code.
+# Set on his machine (Guardian POST /api/accounts/chain, by person, his words as the why): claude → "Claude — Account 2" (his default), then
+# "Default — claude".
+# Also found the same day (Guardian, recorded in R1's map): Claude's page renamed its turns ([data-testid="user-message"|"assistant-message"]),
+# so its transcript was empty and no .response was ever filed; fixed in guardian/userscript-claude.js _nexusGetFullChat, proved live
+# (claude:746b7b33 v1 · 3 messages filed seconds after the tab reloaded).
+# Live, run 74f98418 (N1, after Idearium's restart): the build's route read "ollama:…3b > gemini > claude" (chatgpt and deepseek left off by
+# readiness, signed out); Gemini planned. Claude's own jobs now end from their .response (one 12,004-character reply, source .response).
+# Then the test went to Claude: Gemini's two jobs failed "the tab still shows the previous answer after 180s". Cause, read on his tab: a promo
+# callout ("Hand off your to-dos …") had opened an Angular overlay whose backdrop covered the page, prompt box included (elementFromPoint at the
+# box's centre = .cdk-overlay-backdrop-showing). Closed by a click on the backdrop (Escape did not); guardian/userscript-gemini.js now closes a
+# backdrop that covers the prompt box before typing (_clearBackdrop, said in the log). His 2026-11-15 "gemini had a element in the way", again.
+# And the test writer's fallback now puts the last-resort agents after the model that codes (Ollama writes the test before Claude does,
+# independence given up, said on the row); applies at Idearium's next restart.
+# Slip, said: the coder reloaded Gemini's tab before reading the check that it had one live job; Guardian holds such a job for its transcript.
+# Then, the same night (run 74f98418 landed clean in 2 agent calls, 12 min; Ollama's brick passed): James, "okay, it built js, not emerge
+# though...." · "ollama can use the agent tools, systems tools? right? like the intelligence system? what if each step was a new chat in
+# ollama? to reset the tokens?" · "thats progress though right?" — the coder's answers, read from the code: Emerge-first (routing.emerge_first,
+# EMB1) applies only to a NEW planned file; N1's file already existed in JS (4 Nov), so the build checked it and returned it unchanged (0 lines
+# differ): no Emerge attempt. Ollama runs tool loops for Copilot (the bridge's tool-loop jobs) but a build rung is "bare" (one file, no tools);
+# each Ollama call is already a fresh request with no chat history. Open, his: port existing JS phases to .eg through the pipeline, or only new.

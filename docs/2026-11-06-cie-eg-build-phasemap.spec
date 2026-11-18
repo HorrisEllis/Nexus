@@ -597,3 +597,39 @@ James, 2026-11-13, told process control was next: "Next."
 - CIE13's proof line met but for watching a folder and a timer. Its prerequisite, Pillar's Process, Clock and File contracts, is not
   written yet: said, and the next small piece, so each builtin conforms to a contract and is not only compared with the interpreter.
 - What this opens: COS's manager in Emerge needs these and a socket (CIE10).
+
+# ── PINNED 2026-11-17 (his) — the pipeline as a development tree: every retry, approach and word a branch until the gate passes ──
+# James, 2026-11-17, with a screenshot of COS's pipeline canvas (the Idearium build pipeline, three "New step" boxes wired beside the build):
+# "we can also use the steps with emerges what ifs and versioniums branching or versioning for branches on the pipeline. could be a timeline
+# as well as a pipeline. like a family tree, development tree." · "just an idea. thats massive, like the screenshot. also fallback routing,
+# branching, alternate stratagies, like each retry could be a branch, each new approach, new word, or attempt, could branch until it passes
+# the gate." · then: "pin in it for emerge. need to get it done before anything. raid decision tree the braches. imagine how much this would
+# make explicit."
+# Pinned, not mapped into phases yet, and NOT built (his: Emerge done before anything). What his words name, kept as his:
+#   - a pipeline that is also a timeline: each step's attempts kept as branches (a family / development tree), not overwritten;
+#   - Emerge's what-ifs and Versionium's branching/versioning as the branch store;
+#   - fallback routing and alternate strategies as branches; each retry, new approach, new word or attempt branches until the gate passes;
+#   - RAID's decision tree as the branches (what RAID chose, made explicit and walkable).
+# What exists that it would stand on (read 2026-11-15, for whoever maps it): COS's engine keeps a delta and baseline per step and pause /
+# continue / retry-from-a-step (PC8 slices a, b); the build's ladder rows per rung and attempt (Idearium flight, lib/flight-data.js);
+# Versionium's commits and branches; the canvas (cos/ui/canvas, PC4). Readings to settle with him when it is mapped, not before.
+
+# ── 2026-11-17 — Emerge's grammar in his words: the list drawn for him to edit (CIE8, the front end; mapped, nothing enforced yet) ──
+# James, 2026-11-17: "we need to solidify the foundation. like i want to create the grammer myself. make sure it doesn't deviate. this is
+# very semantically dense. which should save tokens. also i want to use my own grammer. my systems thinking vobulary. can you make me a list,
+# so i can edit and chage any i need." · asked which grammar (Emerge's language, Nexus's vocabulary, or both): "emerge is meant to make coding
+# easy for me by using my grammer."
+# Drawn: emerge/emerge/lang/his-grammar.yaml — 69 entries in 7 groups (structure, state_and_rules, signals, flow, memory_and_proof, values,
+# operators): every word of the lexer's 44 KEYWORDS (lang/lexer.js = lang/native/front.eg) and the grammar's in-place words (kind, out,
+# each, pressure, proof, the constraint types, …) from lang/emerge-lang.spec, each with what it does, an example, and `yours:` for his word.
+# Open, his (asked when the list comes back, not decided by the coder): the lexer reading this file as its only words (refusing any other,
+# with the nearest of his suggested); the old words kept as aliases while .eg code moves, or refused at once; the rules on his words.
+# .yaml is an existing extension; the file is Emerge's (it lives in Emerge's folder, §5.9).
+# Then, the same day, asked whether Emerge should take only his words or keep the old ones as aliases: "aliases maybe. they were supposed to
+# be a schema for using different grammer. like make it universal or programmable. this is not what i want to focus on."
+# His reading, kept: the grammar is a SCHEMA — Emerge reads whichever grammar file it is given (his, or another), so the language is
+# universal / programmable; his-grammar.yaml is one such grammar. Aliases "maybe". PARKED by him: not the focus; nothing built.
+# And on the pinned development tree (above), the same day: "oh my god. the pipeline could be for so much more. the branching, versions.
+# problem decomposition like using it for analysis, cross domain synthesis, like finding overlap, like it could represent so much on the
+# canvas/" — added to the pin: the pipeline (and its branches) as a tool for problem decomposition, analysis and cross-domain synthesis
+# (finding overlap), all of it shown on the canvas. Still pinned for after Emerge; conceptual (FRAMEWORK-THREADS: no evidence yet).

@@ -633,7 +633,24 @@ async function scanArtifacts(jobId, responseEl) {
 }
 
 // ── Inject + submit ────────────────────────────────────────────────────────────
+// 2026-11-17 — James (2026-11-15): "gemini had a element in the way." Found again on his tab: a promo callout ("Hand off your to-dos …")
+// opened an Angular overlay whose backdrop (.cdk-overlay-backdrop-showing) covered the whole page, prompt box included; two jobs failed
+// "the tab still shows the previous answer after 180s". A backdrop over the prompt box is closed the way a person closes it, with a click on
+// the backdrop (Angular's own dismissal; it never accepts anything), before typing. Said in the log.
+function _clearBackdrop() {
+  try {
+    const bd = document.querySelector('.cdk-overlay-backdrop-showing');
+    if (!bd) return false;
+    const inp = _getInput(); const r = inp && inp.getBoundingClientRect();
+    const top = r ? document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2) : bd;
+    if (r && top && (top === inp || inp.contains(top))) return false;   // it does not cover the prompt box: left alone
+    bd.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
+    _log('warn', 'Closed an overlay over the prompt box', String((document.querySelector('.cdk-overlay-pane') || {}).innerText || '').slice(0, 60));
+    return true;
+  } catch (_) { return false; }
+}
 function injectText(text, opts = {}) {
+  _clearBackdrop();
   // §NEXUS-WAKE 2026-08-18 — one-line hook (HOOKUP.md §3): if the outgoing
   // turn earned the agent hint (per-provider hintMode), append it here, right
   // before injection, same as every other provider script.

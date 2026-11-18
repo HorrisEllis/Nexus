@@ -25,6 +25,9 @@ const SCHEMA = {
       description: 'With a job in a tab, how long with no activity at all (no chunk, no progress) before guardian acts: a typed prompt waits for the chat transcript, an untyped one is sent again.' },
     empty_reply_grace_ms: { type: 'number', default: 120000,  min: 1,     max: 3600000,  unit: 'ms', env: 'GUARDIAN_EMPTY_REPLY_GRACE_MS',
       description: 'How long guardian waits for the chat transcript to carry a reply when a tab reported an empty one, or a typed job went quiet.' },
+    // 2026-11-15 — James: "use clearglasses download manager for .response nodes" (and "Always"): a job's reply is its chat's settled .response
+    response_wait_ms:     { type: 'number', default: 90000,   min: 0,     max: 3600000,  unit: 'ms', env: 'GUARDIAN_RESPONSE_WAIT_MS',
+      description: 'How long a job whose tab says it is done waits for its chat\'s settled .response (no DOM change for 5 s, not generating) to be its reply; after it, the page\'s text is taken and the job says so. 0: the page\'s text at once (the old way).' },
     resume_grace_ms:      { type: 'number', default: 60000,   min: 1,     max: 600000,   unit: 'ms', env: 'GUARDIAN_RESUME_GRACE_MS',
       description: 'How long a tab that is reloading into a job\'s own chat may be disconnected without the job being treated as lost.' },
     max_response_chars:   { type: 'number', default: 5000000, min: 10000, max: 100000000, unit: 'chars', env: 'GUARDIAN_MAX_RESPONSE_CHARS',

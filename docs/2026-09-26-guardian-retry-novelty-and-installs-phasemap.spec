@@ -127,3 +127,40 @@ James, 2026-10-21: "look in clearglass download manager"
   outside the tests failed and contract ledgers said "chat-ledger (not read)". Both readers now use the one client on the IPC port, 7702.
 - **Proof:** tests/modules/test-stream-fallback SF-01..04, against Clear Glass's real chat-ledger.js on the bridge's route paths. The
   neighbouring tests are unchanged, and the boundary ratchet shows no new crossing.
+
+## ADDENDUM 2026-11-15 — R1 expanded: a job's reply comes from its chat's settled .response, always; the ledger settles on DOM quiet
+
+James, 2026-11-15: "use clearglasses download manager for .response nodes. the ledger also have it wait until the dom mutation stops."
+Asked to choose between (a) every job ends only from its chat's settled .response, the three-reads check retired as the deciding source,
+and (b) the .response only when the page cannot be read: **"Always (Recommended)"** (the coder's recommendation, chosen by him).
+- **What exists (read first, §8.6).** Each provider userscript pushes GUARDIAN_TRANSCRIPT after 5 s with no change in <main>
+  (_TX_SETTLE_MS = 5000, _TX_MAX_WAIT_MS = 60000); guardian/lib/chat-transcripts.js record() files it as a .response version
+  (clear-glass/src/downloads/artifact-chat-index.js recordChat) and _completeFromTranscript completes a matched job only when settled
+  and not generating. But the userscript's own watch (three equal reads, ~1 s) sends GUARDIAN_COMPLETE first, so the .response almost
+  never decided a job. And the live ledger (userscript-chat-stream.js → chat-ledger.js) called a turn settled when the stop button went
+  (settled: generating === false), not when the DOM went quiet.
+- **Built (in place):**
+  - guardian/userscript-chat-stream.js: settled = no DOM mutation for 5 s (the transcript's own 5 s) AND not generating; a quiet timer,
+    re-armed on every mutation, sends a state-only line when it fires.
+  - guardian/lib/ncp-handler.js: a GUARDIAN_COMPLETE that is not from the settled transcript does not complete the job; the job waits
+    "for its .response" with the page's text kept. The settled transcript (record → _completeFromTranscript) completes it from the
+    .response's reply, source 'response'. The coder's bound, said as a reading: if no settled .response comes within 90 s, the job
+    completes with the page's text and says so on the job (§1.2: nothing hangs silently).
+- By the axioms: §8.6 (the transcript push, the .response store and the transcript completer existed), §1.2 (the wait and its bound are
+  said on the job), TRUTH_OVER_COHERENCE (a reply read mid-stream is not an answer: RC5).
+- **Proof (tests):** test-chat-ledger-stream CS-08 (fails on the old code: "the DOM changed 200 ms ago: not settled yet"); test-chat-transcripts
+  TX-32 (fails on the old code: "held, the page text kept"); TX-27/TX-30 follow the 'response' label; test-ncp-handler-sr3 and
+  test-back-and-forth run with jobs.response_wait_ms = 0 (they test sequencing, not the source). Neighbours unchanged: stream-fallback 4/4,
+  sr3 10/10, back-and-forth 18/18, job-correlation 117/3 and chat-transcripts 3 failures as before (TX-19, TX-29, TX-20; CS-07 = the Clear
+  Glass driver host exiting). Also: answerFirst's settled sources count as .response; the stream says 'stream'; ledgerReplyFor skips an
+  unsettled ledger; 'awaiting_response' is in flight in job-retry, ask.js, dispatcher.js; Guardian option jobs.response_wait_ms (90 s).
+- **Live (Guardian restarted through COS 20:10 UTC, the CS12 build's jobs cut and retried):** the first job after it (claude) was HELD and
+  then completed from the page after 90 s: "no settled .response carried the reply within 90s" (responseSource 'page (no settled .response
+  in time)'). The hold and its bound work; the settled transcript did not match the job in time. NOT yet traced: whether Claude's tab
+  (userscript reloaded? it was not: Clear Glass re-injects only on reload, so its old transcript push runs) pushed a settled transcript,
+  and whether matchJobs found the job's prompt in it. Next: read Guardian's log for chat-transcripts lines after 20:10, reload the agent tabs.
+- **2026-11-17 — why Claude never filed a .response:** Claude's page renamed its turns ([data-testid="user-message"] / "assistant-message");
+  _nexusGetFullChat's four selectors matched none, so the chat read empty, no GUARDIAN_TRANSCRIPT was pushed, no .response was filed, and every
+  Claude job waited the full 90 s (his log: 4 of 4; Gemini 4 of 4 from its .response). Fixed in guardian/userscript-claude.js (the new
+  selectors first, the old kept; nested matches read once; the "Claude responded:" label dropped). Proof: on his tab the reader gives 7 turns in
+  order with roles; after the reload Guardian filed claude:746b7b33 v1 · 3 messages. James, 2026-11-17: "sure" (to fixing it).

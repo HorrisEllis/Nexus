@@ -191,7 +191,7 @@ function createNCPMessageHandler(deps) {
                 const j = jobs.get(jobId);
                 if (!j || j.status !== 'responding' || j.streamFull !== full) return;
                 console.log(`[guardian] ${jobId}: completed from the live stream — the page stopped generating and its reply (${String(full).length} chars) held for ${Math.round(ms / 1000)} s`);
-                completeWith(j, String(full), msg.chatUrl || j.chatUrl || null, 'transcript');
+                completeWith(j, String(full), msg.chatUrl || j.chatUrl || null, 'stream');
               }, ms);
               if (t.unref) t.unref();
               settle.set(jobId, t);
@@ -231,7 +231,7 @@ function createNCPMessageHandler(deps) {
           // tab showed "job completed but carried no response text". Now: withhold it, keep the job open,
           // and let the transcript (guardian/lib/chat-transcripts.js) complete it with the real text.
           // Bounded — if no transcript carries a reply within EMPTY_REPLY_GRACE_MS the job fails loudly.
-          if (!String(finalText).trim() && msg.source !== 'transcript' && job
+          if (!String(finalText).trim() && msg.source !== 'transcript' && msg.source !== 'response' && job
               && job.status !== 'complete' && job.status !== 'error' && job.status !== 'failed'
               && !findActiveSeamCompartment(jobId)) {
             const graceMs = require('../options.js').get('jobs.empty_reply_grace_ms');   // §OP1
@@ -246,6 +246,31 @@ function createNCPMessageHandler(deps) {
               console.warn(`[guardian] job ${String(jobId).slice(0, 8)} — ${err}`);
               bus.emit('guardian.job.error', { jobId, provider, agentId: j.agentId || null, error: err, gate: 'empty_reply' });
             }, graceMs);
+            if (t && t.unref) t.unref();
+            break;
+          }
+
+          // 2026-11-15 — James: "use clearglasses download manager for .response nodes. the ledger also have it wait until the dom mutation
+          // stops." · asked when, "Always". A tab saying it is done (the userscript's three equal reads, the stream, the ledger) does not end
+          // the job: its reply is the chat's settled .response (no DOM change for 5 s, not generating: the transcript push, recorded by
+          // guardian/lib/chat-transcripts.js, which completes the job with source 'response'). The page's text is kept; if no settled
+          // .response carries the reply within jobs.response_wait_ms (the coder's 90 s), the page's text is taken and the job says so.
+          const _waitMs = (() => { try { return require('../options.js').get('jobs.response_wait_ms'); } catch (_) { return 0; } })();
+          // 'transcript' has only ever meant the settled transcript (the stream now says 'stream'): it is a .response too
+          if (_waitMs > 0 && String(finalText).trim() && !['response', 'transcript', 'page-after-wait'].includes(msg.source) && job
+              && !['complete', 'error', 'failed', 'cancelled'].includes(job.status) && !findActiveSeamCompartment(jobId)) {
+            if (job.status === 'awaiting_response') { updateJob(jobId, { pageText: finalText, pageSource: msg.source || 'page' }); break; }   // a later page read: the newest kept
+            updateJob(jobId, { status: 'awaiting_response', pageText: finalText, pageSource: msg.source || 'page', pageDoneAt: Date.now(), ...(chatUrl ? { chatUrl } : {}) });
+            console.log(`[guardian] job ${String(jobId).slice(0, 8)} — the ${provider || '?'} tab says it is done (${finalText.length} chars, ${msg.source || 'page'}); waiting up to ${Math.round(_waitMs / 1000)}s for the chat's settled .response`);
+            bus.emit('guardian.job.progress', { jobId, provider, stage: 'awaiting-response', how: `waiting for the chat's settled .response (up to ${Math.round(_waitMs / 1000)}s)`, chatUrl: chatUrl || null, ts: Date.now() });
+            const t = setTimeout(() => {
+              const j = jobs.get(jobId);
+              if (!j || j.status !== 'awaiting_response') return;
+              const why = `no settled .response carried the reply within ${Math.round(_waitMs / 1000)}s: the page's text (${j.pageSource || 'page'}) was taken`;
+              console.warn(`[guardian] job ${String(jobId).slice(0, 8)} — ${why}`);
+              updateJob(jobId, { responseNote: why });
+              _handleNCPMessage({ type: 'GUARDIAN_COMPLETE', jobId, provider: provider || j.provider, text: j.pageText, chatUrl: j.chatUrl || undefined, source: 'page-after-wait' });
+            }, _waitMs);
             if (t && t.unref) t.unref();
             break;
           }
@@ -269,6 +294,9 @@ function createNCPMessageHandler(deps) {
             job.responseTruncated = finalText.length > _MAX;
             if (job.responseTruncated) console.warn(`[guardian] ${jobId}: response of ${finalText.length} chars truncated to ${_MAX} (guardian option jobs.max_response_chars)`);
             job.status = 'complete';
+            // 2026-11-15 — where the reply came from, on the job: '.response' (the chat's settled .response, his "Always"), or the page's
+            // own read and why it was taken
+            job.responseSource = (msg.source === 'response' || msg.source === 'transcript') ? '.response' : msg.source === 'page-after-wait' ? 'page (no settled .response in time)' : (msg.source || 'page');
             // §WIRED 2026-08-14 — the tool-call half of P4. See
             // _extractToolCallsFromDOM's header note: this is the one real
             // producer for job.tool_calls, which /command/tools's
@@ -707,7 +735,7 @@ function createNCPMessageHandler(deps) {
         const _js = _noReplyEl ? jobs.get(jobId) : null;
         if (_js && _js.status !== 'complete' && _js.streamFull && String(_js.streamFull).trim() && _js.streamGenerating !== true && typeof completeWith === 'function') {
           console.log(`[guardian] ${jobId}: the tab could not find the reply element, and the live stream already carried the reply (${String(_js.streamFull).length} chars) — completed from it`);
-          completeWith(_js, String(_js.streamFull), _js.streamChatUrl || _js.chatUrl || null, 'transcript');
+          completeWith(_js, String(_js.streamFull), _js.streamChatUrl || _js.chatUrl || null, 'stream');
           break;
         }
         if (_noReplyEl && typeof answerFromLedger === 'function' && typeof completeWith === 'function' && jobs.get(jobId)) {

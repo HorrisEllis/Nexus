@@ -1,6 +1,9 @@
 'use strict';
 // §SANDBOX 2026-09-25 — this test starts real NEXUS processes; they inherit a throwaway data root from here (lib/test-sandbox.js).
 require('../../lib/test-sandbox.js').ensure();
+// 2026-11-15 — these tests check what a completion does (artifacts, logs, the stream's settle), not where its reply came from: they run with
+// the .response wait off (jobs.response_wait_ms = 0, the old way). The wait itself is NCP-030 below.
+process.env.GUARDIAN_RESPONSE_WAIT_MS = '0';
 /**
  * tests/modules/test-ncp-handler-sr3.js — guardian/lib/ncp-handler.js's
  * real GUARDIAN_COMPLETE path, with focused coverage of the new SR3

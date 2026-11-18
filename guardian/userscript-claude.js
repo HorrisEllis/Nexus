@@ -2226,14 +2226,19 @@ function _nexusGetMessages() {
 // the durable chat index, where "complete" is the actual point. Same
 // selectors, no truncation.
 function _nexusGetFullChat() {
+  // 2026-11-17 — Claude's page now marks turns [data-testid="user-message"] and [data-testid="assistant-message"]; the four selectors
+  // below matched nothing, so this read an empty chat: no transcript was pushed, no .response was filed, and every Claude job waited the
+  // full 90 s (his "Always", Guardian's jobs.response_wait_ms). The old selectors stay for a page that still uses them.
   const all = [...document.querySelectorAll(
+    '[data-testid="user-message"], [data-testid="assistant-message"], ' +
     '[data-testid="human-turn-content"], [data-testid="assistant-turn-content"], .font-claude-message, .human-turn'
-  )];
+  )].filter((el, i, a) => !a.some((o, j) => j !== i && o.contains(el)));   // a turn matched twice (outer and inner) is read once, as the outer
   const messages = [];
   for (const el of all) {
-    const text = _replyText(el);
+    // the assistant turn opens with Claude's screen-reader label "Claude responded:"; it is not part of the reply
+    const text = _replyText(el).replace(/^Claude responded:\s*/, '');
     if (!text) continue;
-    const isHuman = el.matches('[data-testid="human-turn-content"], .human-turn, [class*="HumanMessage"]');
+    const isHuman = el.matches('[data-testid="user-message"], [data-testid="human-turn-content"], .human-turn, [class*="HumanMessage"]');
     // §0.39.278 — the turn's thinking ("Thought process", opened by userscript-chat-stream.js) kept apart from the reply
     const CS = typeof window !== 'undefined' && window.NexusChatStream;
     const split = CS ? CS.withThinking(el.closest('[data-test-render-count]') || el, text, isHuman) : { text };

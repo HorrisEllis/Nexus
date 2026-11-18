@@ -8,7 +8,7 @@ const { createAccountSwitch } = require('../src/providers/account-switch.js');
 
 const AUTH = (site) => ({ name: '__Secure-next-auth.session-token', value: 'tok', domain: `.${site}`, path: '/', secure: true });
 
-function rig({ accounts = ['A'], dispatch = 'A', saved = {}, tabCookies = [] } = {}) {
+function rig({ accounts = ['A'], dispatch = 'A', saved = {}, tabCookies = [], url = 'https://chatgpt.com/' } = {}) {
   const jar = tabCookies.slice();
   const ses = {
     cookies: { get: async () => jar.slice(), set: async (c) => { jar.push(c); } },
@@ -17,6 +17,7 @@ function rig({ accounts = ['A'], dispatch = 'A', saved = {}, tabCookies = [] } =
   const rows = new Map();                       // provider_tab_account table
   const store = { saved: { ...saved } };        // accountId -> [cookies]
   const calls = { restore: [], capture: [], reload: 0 };
+  const page = { url };
   const vault = {
     _jaa: () => ({ get: (t, k) => rows.get(k.id) || null, upsert: (t, r) => rows.set(r.id, r), delete: (t, k) => rows.delete(k.id), flushAll() {} }),
     accounts: () => Object.entries(store.saved).filter(([, c]) => c.length).map(([accountId, c]) => ({ accountId, count: c.length, sites: ['chatgpt.com'], updatedAt: 1 })),
@@ -28,7 +29,9 @@ function rig({ accounts = ['A'], dispatch = 'A', saved = {}, tabCookies = [] } =
       return { restored: c.length, total: c.length, failed: [] };
     },
     capture: async ({ accountId }) => { calls.capture.push(accountId); store.saved[accountId] = jar.slice(); return { count: jar.length, sites: ['chatgpt.com'] }; },
-    snapshot: async () => {},
+    snapshot: async () => { calls.snapshot = (calls.snapshot || 0) + 1; },
+    _loadAccountCookies: async (p, a) => (store.saved[a] || []).slice(),
+    deleteAccountCookies: (p, a) => { delete store.saved[a]; },
   };
   const state = { dispatch };
   const options = {
@@ -39,13 +42,13 @@ function rig({ accounts = ['A'], dispatch = 'A', saved = {}, tabCookies = [] } =
     },
     recordSession() {}, listAccounts: () => accounts.map(id => ({ id, label: id, agentKeys: ['chatgpt'] })),
   };
-  const win = { isDestroyed: () => false, webContents: { once: (e, f) => setImmediate(f), reload: () => { calls.reload++; } }, loadURL: async () => { calls.reload++; } };
+  const win = { isDestroyed: () => false, webContents: { once: (e, f) => setImmediate(f), reload: () => { calls.reload++; }, getURL: () => page.url }, loadURL: async () => { calls.reload++; } };
   const sw = createAccountSwitch({
     providerHost: { windows: new Map([['chatgpt', win]]), agentTabs: new Map() }, vault, options,
     getProvider: () => ({ url: 'https://chatgpt.com', hosts: ['chatgpt.com', 'chat.openai.com'] }),
     sessionFor: () => ses, reloadWaitMs: 500,
   });
-  return { sw, jar, store, calls, state };
+  return { sw, jar, store, calls, state, page };
 }
 
 (async () => {
@@ -108,5 +111,24 @@ function rig({ accounts = ['A'], dispatch = 'A', saved = {}, tabCookies = [] } =
   const B = R('src/ipc/bridge.js');
   assert.ok(/'accounts:setDefault'[\s\S]{0,200}tabSync\('sync'/.test(B) && /portal:capture'[\s\S]{0,200}tabSync\('sync'/.test(B) && /portal:signOut'[\s\S]{0,200}tabSync\('signedOut'/.test(B), 'star, save session and sign out follow through to the tab');
 
-  console.log('provider-account-sync: ok (9 checks)');
+  // 10. 2026-11-15 — James: "im sick of the login loop in chatgpt". The tab runs as A, its sign-in is in progress (no session cookie
+  // yet, the page passes through /auth/login): the saved copy (a dead token) is NOT put back over it, before any of those loads
+  t = rig({ saved: { A: [AUTH('chatgpt.com')] } });
+  await t.sw.sync('chatgpt', { reload: false });                 // first load: A's saved sign-in, as case 1
+  t.jar.length = 0; t.page.url = 'https://chatgpt.com/auth/login?next=%2F'; t.calls.restore.length = 0;
+  r = await t.sw.sync('chatgpt', { reload: false });
+  assert.ok(r.ok && r.action === 'unchanged' && r.signedOut, JSON.stringify(r));
+  assert.strictEqual(t.calls.restore.length, 0, 'nothing saved is restored over the account own session');
+
+  // 11. the site's word over the cookie's: a session token on a tab sitting on the sign-in page is signed out, so settled() does not
+  // save the dead token back as A's; it removes A's saved copy (kept as a snapshot)
+  t = rig({ saved: { A: [AUTH('chatgpt.com')] } });
+  await t.sw.sync('chatgpt', { reload: false });
+  t.page.url = 'https://chatgpt.com/auth/login?next=%2F';
+  r = await t.sw.settled('chatgpt');
+  assert.strictEqual(r.action, 'signed-out', JSON.stringify(r));
+  assert.ok(!t.calls.capture.includes('A'), 'the dead token is not saved back');
+  assert.ok(!t.store.saved.A && t.calls.snapshot === 1, 'A saved copy removed, kept as a snapshot first');
+
+  console.log('provider-account-sync: ok (11 checks)');
 })().catch(e => { console.error(e); process.exit(1); });

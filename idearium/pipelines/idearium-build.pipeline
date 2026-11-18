@@ -108,11 +108,16 @@ payload:
     # 0.60.493 — James, 2026-11-11: "continue. get it working". The build step is met when the build has started; this one waits for it to end
     # and is met only when it landed. One ask waits up to 4 minutes (fetch gives up on a silent request at 5); a build still going is asked
     # again, 5 more times (about 24 minutes in all).
+    # 2026-11-17 — his run ef902337 (N1): the build was still escalating (Claude answering) when the 6th ask came back "still building N1
+    # (escalating); ask again", and the run failed with the build alive. His rule (2026-11-14): "persistence is non negiatiable until the
+    # contract has been fullfilled". COS caps retries at 5 (cos/automation/pipeline.js), so a build still going after them HOLDS the run
+    # (onFail: hold, 0.60.496) with Idearium's own reason ("still building … ask again"), instead of failing it; Continue asks again.
     - id: landed
       label: The build landed
       depends_on:
         - build
       retries: 5
+      onFail: hold
       step:
         type: api
         config:

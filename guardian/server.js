@@ -731,7 +731,10 @@ const _ladder = require('./lib/dispatch-ladder').createLadder({
 let _jobRetryRef = null;
 const _erosTypist = require('./lib/eros-typist.js').createErosTypist({ selectorsFor: (p) => { try { const m = require('./lib/selector-map').mapFor(_agentRegistry, p); return m ? m.selectors : null; } catch (_) { return null; } } });
 function _completeJobWith(job, text, chatUrl, source) {
-  return _handleNCPMessage({ type: 'GUARDIAN_COMPLETE', jobId: job.id, provider: job.provider, text, chatUrl: chatUrl || undefined, source: source === 'transcript' ? 'transcript' : 'answer-first' });
+  // 2026-11-15 (his "Always"): what a settled record holds is a .response — the job's own text, its .response node, a settled transcript
+  // (job-retry answerFirst) — and ends the job; the live stream and the ledger say what they are, and wait for the .response like a page read
+  const SETTLED = new Set(['transcript', 'response', 'response-node', 'job']);
+  return _handleNCPMessage({ type: 'GUARDIAN_COMPLETE', jobId: job.id, provider: job.provider, text, chatUrl: chatUrl || undefined, source: SETTLED.has(source) ? 'response' : (source || 'answer-first') });
 }
 const _completeFromMesh = (job, lr) => _handleNCPMessage({ type: 'GUARDIAN_COMPLETE', jobId: job.id, provider: job.provider,
   text: lr.text, chatUrl: lr.chatUrl, account: lr.accountId, agentId: lr.agentId });
@@ -782,7 +785,7 @@ bus.on('guardian.ncp.transcript', (d) => { const p = (d && d.data) || d || {}; _
 // GET /status/:jobId, said in ask.js's failures, emitted as guardian.job.gate for the Agent tab's feed.
 require('./lib/gate-trail.js').attach({ bus, jobs });
 const _chatTranscripts = require('./lib/chat-transcripts.js').createChatTranscripts({ bus, jobs, ncp,
-  complete: (job, text, chatUrl) => _handleNCPMessage({ type: 'GUARDIAN_COMPLETE', jobId: job.id, provider: job.provider, text, chatUrl, source: 'transcript' }) });
+  complete: (job, text, chatUrl) => _handleNCPMessage({ type: 'GUARDIAN_COMPLETE', jobId: job.id, provider: job.provider, text, chatUrl, source: 'response' }) });   // 2026-11-15 — 'response': the chat's settled .response (no DOM change for 5 s, not generating), the one source that ends a job (his "Always")
 _chatTranscripts.attach();
 _chatTranscriptsRef = _chatTranscripts;
 

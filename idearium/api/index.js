@@ -1440,6 +1440,7 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
   const chunking = PRt.shouldChunk(policy, { rungs, files: expectFiles, backend: paramsOfBackend(backend, rungs) });
   // §0.60.0 PC1 — James: "an intent for the reasoning, to map and plan, then ollama codes in chunks". A reasoning agent
   // plans the phase (mapped to the spec and the component registry, conditions from the intent), Ollama writes each file.
+  if (rungs.length && !agent && !provider) rungs = PRt.lastResort(rungs, policy).rungs;   // 2026-11-17 — claude last before the planner is chosen (his)
   let planning = PRt.planMode(policy, { rungs, backend: paramsOfBackend(backend, rungs) });
   // 0.60.28 PF1 — the planner that is ready (or none: then the plan is written without a model, PF2)
   if (plannerSwap && planning.plan) planning = { ...planning, planner: plannerSwap.use, why: `${planning.why} — ${plannerSwap.why}`, ...(plannerSwap.use ? {} : { noModel: true }) };
@@ -1454,6 +1455,9 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
       if (o.changed) { rungs = o.rungs; ladderFrom = `learned from past builds (${o.bucket} request) — ${ladderFrom}`; }
     } catch (e) { route = { learned: false, error: e.message }; }
   }
+  // 2026-11-17 — James: "needs to not be using claude unless absolutely necassary" · routing.last_resort (default claude) goes last, after
+  // the learned order; the planner and the test writer read this order too. A person's pick (agent/provider) is never reordered.
+  if (rungs.length && !agent && !provider) { const lr = PRt.lastResort(rungs, policy); if (lr.moved.length) { rungs = lr.rungs; ladderFrom = `${ladderFrom} — last resort: ${lr.moved.join(', ')}`; } }
   // the run starts here, its route on it: the ladder's order and, per agent, why it sits where it does
   appendRow('idearium_phase_runs', { uuid: `${runId}-started`, ...base, state: 'building', snapshot: commitId, statusNote, promptChars: message.length,
     context: _contextOf(rungs[0] && rungs[0].base),
@@ -1804,6 +1808,10 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
         let writer = planner, wp = pdp;
         const tfAlts = (rungs || []).slice(1).map(rg => ({ id: rg.provider || rg.base, dp: paramsOf(rg) })).filter(x => x.id && x.id !== planner);
         if (rungs && rungs[0]) { const c0 = { id: rungs[0].provider || rungs[0].base, dp: paramsOf(rungs[0]), notIndependent: true }; if (c0.id && c0.id !== planner && !tfAlts.some(x => x.id === c0.id)) tfAlts.push(c0); }
+        // 2026-11-17 — his: "needs to not be using claude unless absolutely necassary" · "ollama building it": the last-resort agents
+        // (routing.last_resort) write the test only after the model that codes has tried (independence given up before Claude is used)
+        { const _lr = ((policy && policy.lastResort) || []).map(String); const _base = (x) => String(x.id || '').split(':')[0];
+          const _keep = tfAlts.filter(x => !_lr.includes(_base(x))), _last = tfAlts.filter(x => _lr.includes(_base(x))); tfAlts.length = 0; tfAlts.push(..._keep, ..._last); }
         // 2026-11-15 — the test writer asks for one file: its lone block is that file, no "which file?" follow-up job (its one-line answer
         // had become the reply on Claude's page)
         const _relTF = (() => { try { return _require('../../lib/repo-inject.js').expectAsking(target.uuid, testPath); } catch (_) { return () => {}; } })();
@@ -1850,6 +1858,7 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
     // agents as its fallback
     const co = PL.orderCoders(PRt.coderRungs(rungs), allRuns);
     rungs = PRt.preferFirst(co.rungs, policy);   // §0.60.171 CB2 — James: "prioritize gemini" (routing.prefer_coder / prefer_over)
+    rungs = PRt.lastResort(rungs, policy).rungs;   // 2026-11-17 — his: claude only when every other rung failed (routing.last_resort)
     if (co.changed) appendRow('idearium_phase_runs', { uuid: `${runId}-coders`, ...base, state: 'routed', snapshot: commitId, coderOrder: rungs.map(x => x.provider), error: null, note: co.why, ts: Date.now() });
     const generated = plan.conditions.length ? { conditions: plan.conditions, source: `${plan.conditions.length} condition${plan.conditions.length === 1 ? '' : 's'} generated from the intent by ${plan.derived ? 'Nexus, without a model (the phase\'s proof and files)' : planner} (the phase's plan)` } : null;
     if (policy.contractBuild) return runContract(plan, generated);
@@ -2053,7 +2062,7 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
       // the contract's own persisted feedback (written when this brick last failed) seeds the retry carry: it survives a restart
       const box = gate.parent ? null : _carryFor(f);
       if (box && !box.why && feedback) box.why = String(feedback).slice(0, 1200);
-      if (!agent && !provider) order = PRt.preferFirst(order, policy);   // §0.60.171 CB2 — gemini first (a person's pick is never reordered)
+      if (!agent && !provider) order = PRt.lastResort(PRt.preferFirst(order, policy), policy).rungs;   // §0.60.171 CB2 — gemini first; 2026-11-17 claude last (a person's pick is never reordered)
       // EMB1 0.60.421 — James, 2026-11-06: "emerge, we need to get it coding" · "also the retry engine for emerge". A NEW planned JS file is
       // tried in Emerge first (idearium/lib/emerge-rung.cjs): the first rung's agent writes Emerge, Emerge's compiler checks it (through its
       // command line), what failed goes into the next try, it is built to JavaScript and its expectation test judges it. Passing: its files

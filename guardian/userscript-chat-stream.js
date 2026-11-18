@@ -36,9 +36,14 @@
    * create({ provider, read, generating, post, agentId, schedule, clear }) — the pure core (no DOM): diff + ack.
    * read() -> { chatId, url, messages:[{ role, text, thinking? }] }; post(body) -> Promise<{ ok, resync? } | null>
    */
-  function create({ provider, read, generating = () => null, post, agentId = null, schedule = setTimeout, clear = clearTimeout } = {}) {
+  // 2026-11-15 — James: "the ledger also have it wait until the dom mutation stops". A line is settled only when the page has had no DOM
+  // change for SETTLE_MS (the transcript push's own 5 s, _TX_SETTLE_MS in each provider script) AND is not generating; before, a turn was
+  // "settled" the moment the stop button went, while the reply could still be rendering.
+  const SETTLE_MS = 5000;
+  function create({ provider, read, generating = () => null, post, agentId = null, schedule = setTimeout, clear = clearTimeout, settleMs = SETTLE_MS, now = () => Date.now() } = {}) {
     let acked = null;             // { chatId, turns:[{ role, text, thinking }] } as Clear Glass holds it
     let timer = null, inFlight = false, again = false, fails = 0, seq = 0;
+    let quietTimer = null, lastMutation = now();
     const stats = { sent: 0, skipped: 0, failed: 0, resyncs: 0 };
 
     function _ops(chat) {
@@ -67,10 +72,11 @@
       if (!chat || !chat.chatId || chat.chatId === 'home' || !Array.isArray(chat.messages)) return;
       let gen = null; try { gen = generating(); gen = gen == null ? null : !!gen; } catch (_) {}
       const ops = _ops(chat);
-      const stateChanged = acked && acked.chatId === chat.chatId && gen !== acked.generating;
+      const settled = gen === false && now() - lastMutation >= settleMs;
+      const stateChanged = acked && acked.chatId === chat.chatId && (gen !== acked.generating || settled !== acked.settled);
       if (!ops.length && !stateChanged) { stats.skipped++; return; }
-      const snapshot = { chatId: chat.chatId, generating: gen, turns: chat.messages.map(m => ({ role: m.role, text: String(m.text || ''), thinking: String(m.thinking || '') })) };
-      const body = { provider, chatId: chat.chatId, url: chat.url || null, agentId, seq: ++seq, generating: gen, settled: gen === false, turns: ops };
+      const snapshot = { chatId: chat.chatId, generating: gen, settled, turns: chat.messages.map(m => ({ role: m.role, text: String(m.text || ''), thinking: String(m.thinking || '') })) };
+      const body = { provider, chatId: chat.chatId, url: chat.url || null, agentId, seq: ++seq, generating: gen, settled, turns: ops };
       inFlight = true;
       let r = null;
       try { r = await post(body); } catch (_) { r = null; }
@@ -87,12 +93,19 @@
         const wait = RETRY_MS[Math.min(fails++, RETRY_MS.length - 1)];
         if (!timer) timer = schedule(flush, wait);
       }
-      if (again) { again = false; kick(0); }
+      if (again) { again = false; resend(); }
     }
 
-    /** kick() — a mutation happened: flush once the burst has had COALESCE_MS (the first mutation starts the clock). */
-    function kick(ms = COALESCE_MS) { if (!timer) timer = schedule(flush, ms); }
-    function stop() { if (timer) clear(timer); timer = null; }
+    function resend() { if (!timer) timer = schedule(flush, 0); }
+    /** kick() — a mutation happened: flush once the burst has had COALESCE_MS (the first mutation starts the clock), and (re)start the
+     *  quiet clock: when SETTLE_MS pass with no mutation, one more flush says settled (if the page is not generating). */
+    function kick(ms = COALESCE_MS) {
+      lastMutation = now();
+      if (quietTimer) clear(quietTimer);
+      quietTimer = schedule(() => { quietTimer = null; resend(); }, settleMs);
+      if (!timer) timer = schedule(flush, ms);
+    }
+    function stop() { if (timer) clear(timer); timer = null; if (quietTimer) clear(quietTimer); quietTimer = null; }
     return { kick, flush, stop, stats, get acked() { return acked; }, _ops };
   }
 

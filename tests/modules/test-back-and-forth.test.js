@@ -1,4 +1,7 @@
 'use strict';
+// 2026-11-15 — these check the provider, the slot and the turn sequence a completion drives, not where its reply came from: they run with the
+// .response wait off (jobs.response_wait_ms = 0, the old way). The wait itself is test-chat-transcripts TX-32.
+process.env.GUARDIAN_RESPONSE_WAIT_MS = '0';
 // tests/modules/test-back-and-forth.test.js — 0.39.259.
 // James, live on 0.39.258: "not great at jobs that persist. only works once. like conversations need back and
 // forth, also persistent chaturl". His log, three turns into one repo agent's ChatGPT chat:

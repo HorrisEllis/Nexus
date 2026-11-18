@@ -37,6 +37,8 @@ const T_TAB = 'provider_tab_account';
 // signed-OUT page also sets is not a sign-in); the login portal, the hub and this module all use it.
 const { isAuthCookie } = require('../cookies/session-hub');
 const _siteOf = (host) => String(host || '').replace(/^\./, '').split('.').slice(-2).join('.');
+// a provider's own sign-in page (the same paths the login portal reads: src/accounts/login-portal.js LOGIN_PATH_RE), e.g. chatgpt.com/auth/login
+const SIGN_IN_PATH_RE = /\/(login|signin|sign_in|sign-in|auth|authenticate|ServiceLogin)(\/|$|\?)/i;
 
 function createAccountSwitch({ providerHost, vault, options, getProvider = () => null, sessionFor, hold = () => () => {}, log = () => {}, now = Date.now, reloadWaitMs = 20000, onCaptured = null } = {}) {
   if (!providerHost || !vault || !options || typeof sessionFor !== 'function') throw new Error('account-switch needs providerHost, vault, options and sessionFor');
@@ -128,11 +130,16 @@ function createAccountSwitch({ providerHost, vault, options, getProvider = () =>
     // the tab's own sign-in: auth-looking cookies on the provider's own site(s), read from the tab's session
     let sites = [];
     try { const d = getProvider(provider); sites = [d.url, ...(d.hosts || []).map(h => `https://${h}`)].map(u => { try { return _siteOf(new URL(u).hostname); } catch (_) { return null; } }).filter(Boolean); } catch (_) {}
+    // 2026-11-15 — the site's word over the cookie's: every window of the provider on its own sign-in page means signed out, whatever
+    // cookies it holds (ChatGPT kept a dead session token while chatgpt.com sent the tab to /auth/login, and settled() saved it back).
+    let onSignInPage = false;
+    try { const urls = _windows(provider).map(w => { try { return w.webContents.getURL(); } catch (_) { return ''; } }).filter(Boolean); const SG = (() => { try { return require('../element-engine/signin.js'); } catch (_) { return null; } })();   // EE5: the Element Engine decides, and can be switched off
+      onSignInPage = urls.length > 0 && urls.every(u => SG ? SG.isSigninUrl(provider, u) : SIGN_IN_PATH_RE.test((() => { try { return new URL(u).pathname; } catch (_) { return ''; } })())); } catch (_) {}
     try {
       const all = await sessionFor(provider).cookies.get({});
       const mine = sites.length ? all.filter(c => sites.includes(_siteOf(c.domain))) : all;
-      return { cookies: all.length, auth: mine.filter(isAuthCookie).length };
-    } catch (_) { return { cookies: 0, auth: 0 }; }
+      return { cookies: all.length, auth: onSignInPage ? 0 : mine.filter(isAuthCookie).length, onSignInPage };
+    } catch (_) { return { cookies: 0, auth: 0, onSignInPage }; }
   }
 
   /**
@@ -171,7 +178,12 @@ function createAccountSwitch({ providerHost, vault, options, getProvider = () =>
       }
       return { ok: true, provider, action: 'skipped', accountId, why: `no saved sign-in for “${accountId}” on ${provider} yet, and the tab is not signed in — sign in once in Accounts & sign-in` };
     }
-    if (was === accountId && tab.auth > 0) return { ok: true, provider, action: 'unchanged', accountId };
+    // 2026-11-15 — James: "im sick of the login loop in chatgpt" · "also a single source of truth". This ran before every load of the
+    // provider tab, and a sign-in in progress is "not signed in" on every page it passes through, so the saved copy (a dead token) was put
+    // back over it, replace:true, and the page landed on "Log in" again. The tab already runs as this account: its live session IS the
+    // account's sign-in, signed in or not. The saved copy is only for switching to a different account.
+    if (was === accountId) return tab.auth > 0 ? { ok: true, provider, action: 'unchanged', accountId }
+      : { ok: true, provider, action: 'unchanged', accountId, signedOut: true, why: `the ${provider} tab runs as “${accountId}” and is signed out${tab.onSignInPage ? ' (the site shows its sign-in page)' : ''} — sign in once in the tab; nothing saved is put back over it` };
     const ses = sessionFor(provider);
     if (was && was !== accountId && tab.auth > 0) { try { await vault.capture({ agentId: provider, accountId: was, ses }); } catch (_) {} }
     const rs = await vault.restore({ agentId: provider, accountId, ses, replace: true });
@@ -277,6 +289,8 @@ function createAccountSwitch({ providerHost, vault, options, getProvider = () =>
     }
     const had = _saved(provider, acct);
     if (had && had.count) {
+      // 2026-11-15 — kept as a vault snapshot first (REVERSIBILITY): a signed-out session now includes a dead token the site refused
+      try { const old = await vault._loadAccountCookies(provider, acct); if (old.length) await vault.snapshot(provider, { cookies: { get: async () => old } }, `“${acct}” saved sign-in, removed: the ${provider} session is signed out${tab.onSignInPage ? ' (its sign-in page)' : ''}`); } catch (_) {}
       vault.deleteAccountCookies(provider, acct);
       try { options.recordSession && options.recordSession(acct, provider, { capturedAt: null, cookieCount: 0, authCookies: 0 }); } catch (_) {}
       log(`[account-switch] ${provider} — signed out in the session; “${acct}”'s saved sign-in removed with it`);

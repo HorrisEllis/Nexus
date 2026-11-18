@@ -211,3 +211,30 @@ phases:
       encrypts through it instead of fs.writeFileSync -- a real, independent fix, not blocked on the rest of this map.
     proof: "a rewind snapshot file on disk holds no readable token or cookie value; restoring a tab from it still works"
 order: "AC0 → AC6 (built) → AC1 → AC2, AC3, AC9 side by side → AC7, AC8 → AC5; AC4 with SW5."
+
+# ── ADDENDUM 2026-11-15 — AC2 expanded: the live session is the one truth; the login loop in ChatGPT ──
+# James, 2026-11-15: "the cookies supposed to be one source of truth for all of clearglass" · "can you have guardian and the agents use the
+# primary accounts and cookies. also a single source of truth. im sick of the login loop in chatgpt"
+# Read on his machine (Clear Glass :7702 /providers/chatgpt/account and CDP :9333, cookie names, expiry and hashes only, never values):
+#   - persist:ncp-chatgpt and the default session hold the identical session token (same hash): the hub mirrors, one jar per provider holds.
+#   - chatgpt.com sends that token to /auth/login: dead at OpenAI. "ChatGPT 1" is current and dispatch (the primary: its only account).
+#   - the loop, in clear-glass/src/providers/account-switch.js: providerHost.beforeLoad runs sync() before EVERY load of the provider tab;
+#     with the tab "not signed in" (auth 0, as every page of a sign-in in progress is) it restores the account's saved copy, replace:true,
+#     over the sign-in being made, and the page lands on "Log in" again. And settled() counts a present cookie as signed in, so the dead
+#     token is saved back as "ChatGPT 1" (seen: saved 18:54 while the tab sat on /auth/login).
+# Built, by his rule (one source of truth) and the axioms (§8.6 one source; REVERSIBILITY a snapshot before anything is cleared; §1.2 said):
+#   - sync(): when the tab already runs as the dispatch account, its live session IS that account's sign-in: never restored over, signed in
+#     or not; a signed-out one says "sign in once in the tab". The saved copy is used only to switch to a different account.
+#   - _tabAuth(): a provider window on its own sign-in page is signed out, whatever cookies it holds (the site's word over the cookie's).
+#     So settled() stops saving a dead token; it snapshots the account's saved copy and removes it, as it already does on a sign-out.
+# Guardian and the agents: they already dispatch as resolveAccountForDispatch's account (explicit, else the default, else the earliest
+# linked); for chatgpt that is "ChatGPT 1". Unchanged. AC2 (storage through COS's vault) and AC3 (one list of accounts) stay open.
+
+# ── 2026-11-17 — his: Clear Glass works like a normal browser: one cookie jar, a different one only for a different profile ──
+# James, 2026-11-17: "im saying it should switch accounts in clearglass. like cookies, accounts, logins, stop being seperate, and work like a
+# normal browser. it should not have different cookies unless its a different profile." · "this is meant to be a system to replace claude."
+# What is there today (read 2026-11-15/17): a jar per provider (persist:ncp-<provider>) mirrored live into the default session for that
+# provider's sites; account windows in their own jars (persist:agent-acct-<id>); a vault that swaps an account's cookies into the provider jar.
+# His model, as the coder reads it (to confirm when mapped): ONE jar for every tab and agent (like Chrome's one profile); a second jar only for
+# a second profile; switching account = switching profile, not swapping cookies inside one jar. Fits AC_D1 (one place: COS's vault) and AC2/AC3.
+# Not built. Recorded with today's live picture: ChatGPT and DeepSeek signed out, so the build's ladder left them off.

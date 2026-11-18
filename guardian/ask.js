@@ -65,7 +65,7 @@ function _extractText(job) {
 /** §HP16 — did the tab confirm typing this job's prompt? (the same reading as guardian/lib/dispatcher.js _typed) */
 function _typed(j) {
   if (!j) return false;
-  if (j.confirmedAt || j.lastChunk || ['delivered_confirmed', 'responding', 'awaiting_transcript', 'complete', 'done'].includes(j.status)) return true;
+  if (j.confirmedAt || j.lastChunk || ['delivered_confirmed', 'responding', 'awaiting_transcript', 'awaiting_response', 'complete', 'done'].includes(j.status)) return true;
   return Array.isArray(j.gates) && j.gates.some(e => (e.gate === 'submit' || e.gate === 'reply') && e.state === 'passed' && !e.implied);
 }
 /** §HP16 — cancel a job nobody waits for (deps.cancelJob, guardian/lib/dispatcher.js cancel); absent → left as before */

@@ -20,6 +20,16 @@ function check(n, c, d = '') { if (c) { pass++; console.log(`  ✓ ${n}`); } els
   try {
     const PR = require(path.join(ROOT, 'lib/pipeline-routing.js'));
     PR.breaker.reset();
+    // 2026-11-17 — James: "needs to not be using claude unless absolutely necassary". routing.last_resort (default claude) goes last after
+    // the preferred coder; alone it stays; an empty list changes nothing.
+    {
+      const r = (p) => ({ provider: p, base: p.split(':')[0] }), L = [r('ollama:q3b'), r('claude'), r('gemini'), r('chatgpt'), r('deepseek')];
+      const pol = PR.policyFrom({});
+      const order = typeof PR.lastResort === 'function' ? PR.lastResort(PR.preferFirst(L, pol), pol).rungs.map(x => x.provider).join(' > ') : 'no lastResort';
+      check('PR-30 claude is the last resort: after ollama, the preferred coder and every other agent; alone it stays; off restores the order',
+        order === 'ollama:q3b > gemini > chatgpt > deepseek > claude' && JSON.stringify(pol.lastResort) === '["claude"]'
+        && PR.lastResort([r('claude')], pol).rungs.length === 1 && PR.lastResort(L, { ...pol, lastResort: [] }).rungs[1].provider === 'claude', order);
+    }
     const pol = PR.policyFrom({ mode: 'chain', chain: 'ollama,gemini,chatgpt,claude', max_hops: 3 });
     const blk = { id: 'api', agent: 'claude', fallback: ['deepseek'] };
     const r1 = PR.plan({ preferAgent: 'chatgpt', block: blk, policy: pol });

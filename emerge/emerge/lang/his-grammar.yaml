@@ -1,0 +1,104 @@
+# emerge/emerge/lang/his-grammar.yaml — Emerge's grammar in James's words. HIS to edit.
+#
+# James, 2026-11-17: "we need to solidify the foundation. like i want to create the grammer myself. make sure it doesn't deviate.
+# this is very semantically dense. which should save tokens. also i want to use my own grammer. my systems thinking vobulary. can you make
+# me a list, so i can edit and chage any i need." · asked which grammar: "emerge is meant to make coding easy for me by using my grammer."
+#
+# HOW TO EDIT: under each word, write your word in `yours:` (leave it "" to keep Emerge's word). Change `does:` if the meaning is not what
+# you mean. Add a line under `notes:` for anything else. Nothing reads this file yet: it is the list, drawn by the coder on 2026-11-17 from
+# emerge/emerge/lang/lexer.js KEYWORDS (44 words, the same set as lang/native/front.eg) and lang/emerge-lang.spec (grammar, semantics).
+#
+# HIS, 2026-11-17: "aliases maybe. they were supposed to be a schema for using different grammer. like make it universal or programmable.
+# this is not what i want to focus on." So: a grammar is a schema Emerge reads (this file is one); PARKED, not the focus.
+# NOT DECIDED (his, when he picks it up; the coder's readings, to confirm):
+#   - enforcement: the lexer (lexer.js and native/front.eg) reads THIS file for its keywords, so the words here are the only words;
+#     a word not in it is refused with the nearest of yours suggested ("make sure it doesn't deviate").
+#   - the old word: kept as an alias while existing .eg code moves to yours (§0.3, nothing lost), or refused at once.
+#   - rules on your words: unique, one token each (no spaces), not one of the built-in function names (len, slice, …).
+#
+# word: Emerge's word today · does: what it does · e.g.: a line of Emerge · yours: your word ("" keeps Emerge's)
+
+structure:   # what a program is made of
+  - { word: use,         does: "bring in another .eg file under a name",                          e.g.: 'use "../cie/contract.eg" as CT', yours: "" }
+  - { word: as,          does: "the name a used file goes by",                                    e.g.: 'use "x.eg" as X',                yours: "" }
+  - { word: fn,          does: "a function; inside a compartment, a lens: reads state, never changes it", e.g.: 'fn total(a, b) = a + b', yours: "" }
+  - { word: compartment, does: "a bounded container with identity: its own state, constraints, handlers and lenses", e.g.: 'compartment Counter { state { count: 0 } }', yours: "" }
+  - { word: component,   does: "a compartment with identity and ports (id, namespace, version; in and out hooks)", e.g.: 'component Sensor { id = "sensor" … }', yours: "" }
+  - { word: template,    does: "a component with parameters: spawn makes live instances of it at run time", e.g.: 'template Worker(n) { … }', yours: "" }
+  - { word: kind,        does: "a schema for a primitive: what any component claiming it must have", e.g.: 'kind Store { require get, put }', yours: "", note: "a word in the grammar, not in the lexer's keyword list" }
+  - { word: axiom,       does: "a law that must always hold; a bool, never coerced",               e.g.: 'axiom no_negative { Counter.state.count >= 0 }', yours: "" }
+  - { word: test,        does: "a named test block",                                               e.g.: 'test "adds" { expect total(1, 2) == 3 }', yours: "" }
+
+state_and_rules:   # what a compartment holds, and what it may not become
+  - { word: state,      does: "the compartment's declared state; read-only outside its own handlers", e.g.: 'state { count: 0 }', yours: "" }
+  - { word: constraint, does: "a rule every proposed state change is checked against; its type says what a violation does", e.g.: 'constraint positive hard { state.count >= 0 }', yours: "" }
+  - { word: invariant,  does: "something that is true of the state at all times",                  e.g.: 'invariant bounded { state.count < 100 }', yours: "" }
+  - { word: hard,          does: "constraint type: a violation is refused, state unchanged, 'rejected' emitted", e.g.: 'constraint c hard { … }', yours: "" }
+  - { word: soft,          does: "constraint type: permitted at a cost (default 1), added to spent()",       e.g.: 'constraint c soft cost 2 { … }', yours: "" }
+  - { word: probabilistic, does: "constraint type: permitted at a cost, like soft",                          e.g.: 'constraint c probabilistic { … }', yours: "" }
+  - { word: temporal,      does: "constraint type: refuses a violation (about time)",                        e.g.: 'constraint c temporal { … }', yours: "" }
+  - { word: causal,        does: "constraint type: refuses a violation (about cause)",                       e.g.: 'constraint c causal { … }', yours: "" }
+  - { word: relational,    does: "constraint type: refuses a violation (about relations)",                   e.g.: 'constraint c relational { … }', yours: "" }
+  - { word: cost,          does: "what a soft or probabilistic violation costs",                             e.g.: 'constraint c soft cost 2 { … }', yours: "" }
+  - { word: boundary,      does: "a component's boundary rule",                                              e.g.: 'boundary inbound { … }', yours: "" }
+  - { word: intent,        does: "what a compartment or component is for, in words",                         e.g.: 'intent = "counts readings"', yours: "" }
+  - { word: id,            does: "a component's identity (with namespace and version)",                      e.g.: 'id = "sensor"', yours: "" }
+  - { word: is,            does: "a component claims a kind",                                                e.g.: 'component C is Store { … }', yours: "" }
+  - { word: require,       does: "what a kind demands of whoever claims it",                                 e.g.: 'require get, put', yours: "" }
+
+signals:   # how things talk to each other
+  - { word: on,       does: "a handler: runs on a signal against a working copy of state, proposed when it ends", e.g.: 'on "tick" (ev) { state.count += 1 }', yours: "" }
+  - { word: emit,     does: "send a signal out (held until the change is accepted)",               e.g.: 'emit "counted" { count: state.count }', yours: "" }
+  - { word: send,     does: "feed a component's in-hook directly",                                  e.g.: 'send Alarm.configure { limit: 25 }', yours: "" }
+  - { word: wire,     does: "connect a signal or out-hook to an in-hook",                           e.g.: 'wire "reading" -> Sensor.reading', yours: "" }
+  - { word: spawn,    does: "make a live instance of a template",                                   e.g.: 'let w = spawn Worker(3)', yours: "" }
+  - { word: despawn,  does: "end a live instance",                                                  e.g.: 'despawn w', yours: "" }
+  - { word: in,       does: "an in-hook (a port that receives); also: for x in list",               e.g.: 'in reading(r) { … }', yours: "" }
+  - { word: out,      does: "an out-hook (a port that sends)",                                      e.g.: 'out alert', yours: "" }
+  - { word: with,     does: "the value carried by emit, send or record",                            e.g.: 'emit "x" with payload', yours: "" }
+
+flow:   # doing things in order
+  - { word: let,    does: "a name that never changes",                       e.g.: 'let n = 3', yours: "" }
+  - { word: var,    does: "a name that can change",                          e.g.: 'var n = 3', yours: "" }
+  - { word: if,     does: "do this only when true",                          e.g.: 'if n > 2 { … }', yours: "" }
+  - { word: else,   does: "otherwise",                                       e.g.: '} else { … }', yours: "" }
+  - { word: while,  does: "repeat while true",                               e.g.: 'while n > 0 { n -= 1 }', yours: "" }
+  - { word: for,    does: "for each item of a list or map",                  e.g.: 'for x in xs { … }', yours: "" }
+  - { word: each,   does: "optional word after for",                         e.g.: 'for each x in xs { … }', yours: "" }
+  - { word: break,  does: "leave the loop",                                  e.g.: 'break', yours: "" }
+  - { word: skip,   does: "go to the next turn of the loop",                 e.g.: 'skip', yours: "" }
+  - { word: return, does: "give back a value and leave the function",        e.g.: 'return n', yours: "" }
+  - { word: try,    does: "try this; on failure run the else block",         e.g.: 'try { … } else err { … }', yours: "" }
+
+memory_and_proof:   # what is kept, what is missing, what is proven, what could be
+  - { word: record,   does: "write an entry to the ledger",                                         e.g.: 'record "seen" with { n: 3 }', yours: "" }
+  - { word: gap,      does: "say what is missing, with its pressure (how much it matters)",        e.g.: 'gap "no owner" pressure 0.8', yours: "" }
+  - { word: pressure, does: "how much a gap matters",                                               e.g.: 'gap "x" pressure 0.8', yours: "" }
+  - { word: promote,  does: "raise something to trusted, only with a proof that is true",          e.g.: 'promote "loom" with proof tests_pass("loom")', yours: "" }
+  - { word: proof,    does: "the evidence a promote must carry",                                    e.g.: 'promote x with proof y', yours: "" }
+  - { word: expect,   does: "this must be true here, or the run stops",                             e.g.: 'expect n == 3', yours: "" }
+  - { word: whatif,   does: "run a block as a what-if: everything it changes is undone after",      e.g.: 'let r = whatif { … }', yours: "" }
+
+values:   # truth and comparing
+  - { word: "true",      does: "yes",                               e.g.: 'let ok = true', yours: "" }
+  - { word: "false",     does: "no",                                e.g.: 'let ok = false', yours: "" }
+  - { word: "null",      does: "nothing / not known",               e.g.: 'let owner = null', yours: "" }
+  - { word: and,         does: "both",                              e.g.: 'a and b', yours: "" }
+  - { word: or,          does: "either",                            e.g.: 'a or b', yours: "" }
+  - { word: not,         does: "the opposite",                      e.g.: 'not done', yours: "" }
+  - { word: contains,    does: "has this inside it",                e.g.: 'text contains "gate"', yours: "" }
+  - { word: starts_with, does: "begins with",                       e.g.: 'path starts_with "lib/"', yours: "" }
+  - { word: ends_with,   does: "ends with",                         e.g.: 'path ends_with ".eg"', yours: "" }
+  - { word: matches,     does: "fits a pattern",                    e.g.: 'id matches "^CS[0-9]+"', yours: "" }
+
+operators:   # symbols (change one only if you want a word or another symbol instead)
+  - { word: "|>", does: "pipe: a |> f(b) is f(a, b)",                 e.g.: 'xs |> sort', yours: "" }
+  - { word: "??", does: "this, or that if this is null",               e.g.: 'owner ?? "nobody"', yours: "" }
+  - { word: "->", does: "wire direction: from -> to",                  e.g.: 'wire "a" -> B.in', yours: "" }
+  - { word: "..", does: "a range",                                     e.g.: 'for i in 0..10 { … }', yours: "" }
+  - { word: "**", does: "power",                                       e.g.: '2 ** 8', yours: "" }
+  - { word: "== !=", does: "equal / not equal (deep, every value)",   e.g.: 'a == b', yours: "" }
+  - { word: "+= -= *= /=", does: "change a var by",                   e.g.: 'n += 1', yours: "" }
+
+notes:
+  - ""

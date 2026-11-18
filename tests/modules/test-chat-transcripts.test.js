@@ -375,13 +375,36 @@ test('TX-30', 'end to end: the transcript completes the job through the REAL han
   const tabMsgs = [];
   const tx = createChatTranscripts({ bus, jobs, rootFn: () => tmp(), log: quiet,
     ncp: { pushTab: (p, t, m) => { tabMsgs.push(m.type); return true; } },
-    complete: (j, text, chatUrl) => handler({ type: 'GUARDIAN_COMPLETE', jobId: j.id, provider: j.provider, text, chatUrl, source: 'transcript' }) });
+    complete: (j, text, chatUrl) => handler({ type: 'GUARDIAN_COMPLETE', jobId: j.id, provider: j.provider, text, chatUrl, source: 'response' }) });   // as server.js (2026-11-15)
   const since = Date.now() - 1000;
   tx.record({ provider: 'chatgpt', tabId: 'tab-7', chat: liveChat() });
   assert.deepStrictEqual([job.status, job.responseText, tabMsgs], ['complete', 'Hello — ready to work on the ERAVOS v3-17 catalog.', ['GUARDIAN_JOB_DONE']]);
   assert.ok(completes.some(c => c.jobId === job.id), 'guardian.job.complete not emitted');
   const late = require(path.join(ROOT, 'lib/repo-agent.js')).findLate({ repo: { uuid: 'nexus-id-repo-af2180cf' }, since, jobId: job.id, root: IDX.defaultRoot() });
   assert.deepStrictEqual([late.found, late.jobId, late.text], [true, job.id, 'Hello — ready to work on the ERAVOS v3-17 catalog.'], JSON.stringify(late));
+});
+
+// 2026-11-15 — James: "use clearglasses download manager for .response nodes. the ledger also have it wait until the dom mutation stops." ·
+// "Always". A tab saying it is done holds the job; the settled transcript (.response) ends it, with the .response's text and its source.
+test('TX-32', 'a tab saying done does not end the job: it waits for its settled .response, which ends it with the .response text and source', () => {
+  const jobs = new Map(), bus = sisoBus();
+  const handler = createNCPMessageHandler({
+    nc: null, ncp: { updateClient() {}, push() {}, handleHeartbeat() {} }, bus,
+    jaa: { insert() {}, query: () => [] }, jobs,
+    updateJob: (id, patch) => { const j = jobs.get(id); if (j) Object.assign(j, patch); return j; },
+    cockpitBroadcast() {}, physQueue: { logConversation() {} }, baseline: { observe() {} }, evLedger: null,
+    activeQueues: new Map(), extractCodeBlocks: () => [], extractToolCallsFromDOM: () => [], findActiveSeamCompartment: () => null,
+  });
+  const job = { id: 'd1d1d1d1-0000-4000-8000-000000000032', provider: 'chatgpt', command: 'ask', prompt: PROMPT, status: 'delivered', ts: Date.now() - 20000 };
+  jobs.set(job.id, job);
+  // the page's three-reads watch: a cut read of the reply (as a card or a mid-render page gives)
+  handler({ type: 'GUARDIAN_COMPLETE', jobId: job.id, provider: 'chatgpt', text: 'Hello — ready', chatUrl: 'https://chatgpt.com/c/x' });
+  assert.deepStrictEqual([job.status, job.pageText, job.responseText], ['awaiting_response', 'Hello — ready', undefined], 'held, the page text kept');
+  // the settled transcript (no DOM change for 5 s, not generating): what the download manager files as the .response
+  const tx = createChatTranscripts({ bus, jobs, rootFn: () => tmp(), log: quiet, ncp: { pushTab: () => true },
+    complete: (j, text, chatUrl) => handler({ type: 'GUARDIAN_COMPLETE', jobId: j.id, provider: j.provider, text, chatUrl, source: 'response' }) });
+  tx.record({ provider: 'chatgpt', tabId: 'tab-32', chat: liveChat() });
+  assert.deepStrictEqual([job.status, job.responseText, job.responseSource], ['complete', 'Hello — ready to work on the ERAVOS v3-17 catalog.', '.response']);
 });
 
 // 0.39.263 — the probe drives Clear Glass's own engine (clear-glass/src/driver/glass.js), not Playwright

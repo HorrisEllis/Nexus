@@ -446,3 +446,22 @@ phases_addendum_2026_11_14_ch:
 # leaves refused); the Files and Data tabs as one browser with a reading pane; the old Data tab archived. Proof: Clear Glass's driver on a real
 # COS. Open, his same message: updates automatic or a prompt, with reinstall, verify and location settings; a data folder made when a new
 # system is set up.
+
+# ── ADDENDUM 2026-11-15 — SC5 expanded: a model setting is picked from what the system reports, and applied now ──
+# James, 2026-11-15: "can you add ollama settings in cos ui? in the system settings? copilot agent." · "why the bridge? update the model. have
+# it fallback to guardian." · offered "keep the 3b and save it" or "pull a bigger model": "Keep the 3b, save it" · "pull it if you need one;"
+# Read first: the 3b is already saved, by him: COS's config for ollama-bridge holds env OLLAMA_DEFAULT_MODEL =
+# huihui_ai/qwen2.5-coder-abliterate:3b (from: his), given to the bridge at every start; Copilot (copilot/lifeline.js) asks the bridge with
+# no model, so it uses that one, and falls back to Guardian when Ollama fails, times out or is under 0.75 confidence (already built).
+# The bridge's PUT /api/model changes the model in memory only (a restart forgets it): a second truth. No pull is needed (one model,
+# the saved one); none was made.
+# Built (cos/ui/cockpit/sections/config/section.js, in place): on the Environment tab, a setting named …_MODEL is a picker of the models the
+# system itself reports (its own GET /api/models, asked only when it answers one: not tied to Ollama by name); saving keeps it where it was
+# (COS's config: the one truth, used at every start), then applies it at once through the system's own PUT /api/model, and says which.
+# By the axioms: §8.6 (the saved env, the bridge's routes and the Config tab existed; nothing beside them), §5.10 (the bridge is reached
+# only through its routes), §1.2 (a model the system does not have is shown as not installed; a failed apply is said).
+# Proof, in his running Clear Glass (CDP :9333; his normal tab, put back on http://127.0.0.1:9000/ after): COS › ollama-bridge ›
+# Configuration › Environment shows env.OLLAMA_DEFAULT_MODEL as a SELECT, one option "huihui_ai/qwen2.5-coder-abliterate:3b · running",
+# selected; the bridge's PUT /api/model with it answered ok. No change was saved (the one model is already his). Not proved: a save that
+# changes the model (only one is installed). Found: the Clear Glass driver (clear-glass/src/driver/glass.js) launches its host, which then
+# exits 0 the moment it opens a page, on his machine (also PL-06's "Clear Glass host exited"); not looked into.

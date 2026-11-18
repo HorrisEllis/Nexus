@@ -186,7 +186,7 @@ function createDispatcher(deps) {
   function _typed(job) {
     const j = (typeof getJob === 'function' && getJob(job.id)) || job;
     if (!j) return false;
-    if (j.confirmedAt || j.lastChunk || ['delivered_confirmed', 'responding', 'awaiting_transcript'].includes(j.status)) return true;
+    if (j.confirmedAt || j.lastChunk || ['delivered_confirmed', 'responding', 'awaiting_transcript', 'awaiting_response'].includes(j.status)) return true;
     return Array.isArray(j.gates) && j.gates.some(e => (e.gate === 'submit' || e.gate === 'reply') && e.state === 'passed' && !e.implied);
   }
 

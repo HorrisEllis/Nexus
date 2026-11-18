@@ -166,6 +166,29 @@ async function t(id, name, fn) {
     assert.ok(r.ok && r.written === 0 && r.appended === true && r.generating === false, JSON.stringify(r));
   });
 
+  // 2026-11-15 — James: "the ledger also have it wait until the dom mutation stops". Settled only after SETTLE_MS with no mutation AND not
+  // generating; the quiet timer sends that one state-only line itself.
+  await t('CS-08', 'settled waits for 5 s with no DOM change: the stop button going is not enough; the quiet timer sends the settled line', async () => {
+    let clock = 1000; const timers = []; const sent = [];
+    const pg = { chatId: 'q1', url: 'https://claude.ai/chat/q1', messages: [{ role: 'user', text: 'q' }, { role: 'assistant', text: 'A' }], gen: true };
+    const c = CS.create({ provider: 'claude', read: () => pg, generating: () => pg.gen, post: async (b) => { sent.push(b); return { ok: true }; },
+      schedule: (fn, ms) => { timers.push({ fn, at: clock + ms }); return timers.length; }, clear: (id) => { if (timers[id - 1]) timers[id - 1].fn = null; },
+      now: () => clock, settleMs: 5000 });
+    const run = async (to) => { clock = to; for (const tm of timers) if (tm.fn && tm.at <= clock) { const f = tm.fn; tm.fn = null; await f(); } };
+    c.kick(); await run(1200);                                    // a mutation: the reply streams
+    assert.strictEqual(sent[sent.length - 1].settled, false, 'generating: not settled');
+    pg.gen = false; pg.messages[1].text = 'AB'; c.kick(); await run(1400);   // the stop button goes, with the last text
+    assert.strictEqual(sent[sent.length - 1].generating, false);
+    assert.strictEqual(sent[sent.length - 1].settled, false, 'the DOM changed 200 ms ago: not settled yet');
+    clock = 3000; pg.messages[1].text = 'ABC'; c.kick(); await run(3200);      // still rendering after the stop button went
+    assert.strictEqual(sent[sent.length - 1].settled, false);
+    const n = sent.length; await run(7999);
+    assert.strictEqual(sent.length, n, 'nothing before 5 s of quiet');
+    await run(8001);                                              // 5 s after the last mutation (3000 → 8000): the quiet timer fires
+    assert.strictEqual(sent.length, n + 1, 'one state-only line');
+    assert.ok(sent[n].settled === true && sent[n].generating === false && sent[n].turns.length === 0, JSON.stringify(sent[n]));
+  });
+
   await t('CS-07', 'the prelude in a real page (Clear Glass\'s engine): progress kept mid-reply, thinking opened and kept apart, the model picker never clicked', () => {
     const { spawnSync } = require('child_process');
     const probe = spawnSync(process.execPath, [path.join(ROOT, 'tests/probe/chat-stream-chromium.js')], { encoding: 'utf8', timeout: 180000 });

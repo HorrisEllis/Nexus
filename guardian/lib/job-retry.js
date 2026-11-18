@@ -51,7 +51,7 @@ const RETRYABLE = [
   { kind: 'no-reply', re: /no reply|reply never (started|appeared)|did not start (a |the )?repl|NO_REPLY|watch timed out/i },
   { kind: 'provider-error', re: /something went wrong|network error|an error occurred|conversation not found|hmm\.\.\.|failed to fetch/i },
 ];
-const IN_FLIGHT = new Set(['pending', 'queued', 'pinging', 'dispatched', 'delivered', 'retry_wait', 'awaiting_transcript']);
+const IN_FLIGHT = new Set(['pending', 'queued', 'pinging', 'dispatched', 'delivered', 'retry_wait', 'awaiting_transcript', 'awaiting_response']);
 const DELAYS = { default: [4000, 12000, 30000], 'tab-busy': [15000, 30000, 60000] };
 
 // §HP11 0.55.1 (docs/2026-10-09-hardening-pass-phasemap.spec) — James: "look at the .response in clearglass." "no reply
