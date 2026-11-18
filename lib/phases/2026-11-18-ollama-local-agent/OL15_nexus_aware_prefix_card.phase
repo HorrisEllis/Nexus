@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-18-ollama-local-agent-phasemap.spec::OL15_nexus_aware_prefix_card
+type: phase
+id: docs_2026-11-18-ollama-local-agent-phasemap.spec::OL15_nexus_aware_prefix_card
+context: pipeline phase OL15_nexus_aware_prefix_card of docs/2026-11-18-ollama-local-agent-phasemap.spec
+intent: null
+summary: OL15_nexus_aware_prefix_card (library) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1795005764032
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795005764032
+lastSeenAt: 1795005764032
+fingerprint: null
+payload:
+  id: OL15_nexus_aware_prefix_card
+  map: docs/2026-11-18-ollama-local-agent-phasemap.spec
+  repo: null
+  layer: library
+  status: OPEN
+  files:
+    - lib/coder-brief.js
+    - ollama/cards/nexus.card.md
+    - tests/modules/test-plan-code-run-attention.test.js
+  depends_on:
+    - OL5a_one_load_per_model_per_request
+  blocks: []
+  spec: null
+  graph: 202e0976c348b3ef

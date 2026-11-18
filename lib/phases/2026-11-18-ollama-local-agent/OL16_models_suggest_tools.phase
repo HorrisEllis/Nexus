@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-18-ollama-local-agent-phasemap.spec::OL16_models_suggest_tools
+type: phase
+id: docs_2026-11-18-ollama-local-agent-phasemap.spec::OL16_models_suggest_tools
+context: pipeline phase OL16_models_suggest_tools of docs/2026-11-18-ollama-local-agent-phasemap.spec
+intent: null
+summary: OL16_models_suggest_tools (library) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1795005764035
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795005764035
+lastSeenAt: 1795005764035
+fingerprint: null
+payload:
+  id: OL16_models_suggest_tools
+  map: docs/2026-11-18-ollama-local-agent-phasemap.spec
+  repo: null
+  layer: library
+  status: OPEN
+  files:
+    - lib/coder-brief.js
+    - idearium/api/index.js
+    - tests/modules/test-plan-code-run-attention.test.js
+  depends_on:
+    - OL15_nexus_aware_prefix_card
+  blocks: []
+  spec: null
+  graph: 2168938aa9558999

@@ -444,6 +444,47 @@ phases:
       The results file for each model with the trial counts, the wall time per passed unit and the failed runs and what each taught; the prediction recorded
       in docs/FRAMEWORK-THREADS.md before the run.
 
+  OL5a_one_load_per_model_per_request:
+    layer: library
+    status: OPEN
+    depends_on: []
+    axioms: [§2.1, §8.6, §1.2, §14.4]
+    expands: [OL5_lanes_and_queue, IF20_gaps_filled_like_a_torrent]
+    files: [lib/pipeline-routing.js, idearium/api/index.js, tests/modules/test-plan-code-run-attention.test.js]
+    js_door: [JavaScript changed in place (his, 2026-11-18: "then we can use js for now unless we are coding emerge")]
+    does: >-
+      His "no 30b for all of its steps per pipeline or request. then unload. like chunks for a torrent file." A planned build's files are pieces: the
+      planner (an Ollama model) plans and writes the test first, then is unloaded (keep_alive 0). The coders go in passes, not per file: every pending
+      file is tried on the first coder rung; what is still pending goes to the next rung in one pass, that model loaded once for all of them; an Ollama
+      rung is unloaded when its pass ends. A file a later one needs and that is still pending is said in the later one's brief. routing.batch_by_model
+      (on | off; on by default) keeps the old per-file climb one setting away.
+    proof: >-
+      Unit: passes(rungs) groups the ladder; a file that fails on rung 1 is retried only in rung 2's pass; the planner and each Ollama rung are unloaded
+      once. On his machine: a build whose first coder fails one file loads the 30B once, not once per file (Ollama's server log).
+  OL15_nexus_aware_prefix_card:
+    layer: library
+    status: OPEN
+    depends_on: [OL5a_one_load_per_model_per_request]
+    axioms: [§8.6, §1.3, §5.12]
+    files: [lib/coder-brief.js, ollama/cards/nexus.card.md, tests/modules/test-plan-code-run-attention.test.js]
+    does: >-
+      His "ollama aware of nexus". A fixed card, first and identical on every Ollama call (so Ollama's prompt cache reuses it): what Nexus is, the
+      step's contract (intent, test, conditions), the tools Nexus answers with, and, when the language is Emerge, the syntax card (300 tokens or fewer;
+      docs/CLAUDE.md is never sent). The card is a file he edits, not code.
+    proof: "two calls in one build start with the same bytes; the card file changed changes the next call; Ollama's log shows the prompt cached"
+  OL16_models_suggest_tools:
+    layer: library
+    status: OPEN
+    depends_on: [OL15_nexus_aware_prefix_card]
+    axioms: [§5.9, §14.2, §0.3]
+    expands: [PC15_every_intervention_a_cos_proposal]
+    files: [lib/coder-brief.js, idearium/api/index.js, tests/modules/test-plan-code-run-attention.test.js]
+    does: >-
+      His "ollama or agents can suggest tools needed to expand capability, like askign the llm for feedback." After a chunk is landed or held, the model
+      that did it is asked one question: what tool would have made this easier? The answer is kept as a proposal (an agent's act is a proposal, PC15)
+      with the chunk, the model and the verdict, for him to accept or reject; repeated suggestions are counted (three is an invariant, his rule).
+    proof: "after a build, its proposals are listed with their chunks; the same suggestion from three chunks is counted 3; nothing is built from one unasked"
+
 order_of_work:
   # his, 2026-11-08: automation with COS as the engine, then Emerge done, then WARP 2. This map serves the first two; it does not reorder them.
   # §3.4: backend, then route, then command row, then UI.

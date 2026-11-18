@@ -1,0 +1,80 @@
+envelope: 1
+uuid: nexus-export-graph-phase:OL15_nexus_aware_prefix_card:202e0976c348b3ef
+type: graph
+id: phase:OL15_nexus_aware_prefix_card:202e0976c348b3ef
+context: dependency graph of phase OL15_nexus_aware_prefix_card
+intent: null
+summary: 6 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1795005764032
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795005764032
+lastSeenAt: 1795005764032
+fingerprint: null
+payload:
+  for: OL15_nexus_aware_prefix_card
+  kind: phase
+  repo: null
+  hash: 202e0976c348b3ef
+  nodes:
+    - path: lib/coder-brief.js
+      role: changes
+      exists: true
+      system: lib
+    - path: ollama/cards/nexus.card.md
+      role: changes
+      exists: false
+      system: ollama
+    - path: tests/modules/test-plan-code-run-attention.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/test-sandbox.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/verify-first.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/coder-brief.js
+      to: lib/verify-first.js
+      kind: requires
+    - from: tests/modules/test-plan-code-run-attention.test.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/coder-brief.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL5a_one_load_per_model_per_request
+    dependents:
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL16_models_suggest_tools
+    upstream:
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL5a_one_load_per_model_per_request
+    downstream:
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL16_models_suggest_tools
+    blockedBy:
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL5a_one_load_per_model_per_request
+    unlocks:
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL16_models_suggest_tools
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · blocked by OL5a_one_load_per_model_per_request
+      - 'depends on (1): OL5a_one_load_per_model_per_request'
+      - 'needed by (1): OL16_models_suggest_tools · finishing it unlocks OL16_models_suggest_tools'
+    edges:
+      - from: docs/2026-11-18-ollama-local-agent-phasemap.spec::OL5a_one_load_per_model_per_request
+        kind: declared

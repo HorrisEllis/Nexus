@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-18-ollama-local-agent-phasemap.spec::OL5a_one_load_per_model_per_request
+type: phase
+id: docs_2026-11-18-ollama-local-agent-phasemap.spec::OL5a_one_load_per_model_per_request
+context: >-
+  pipeline phase OL5a_one_load_per_model_per_request of
+  docs/2026-11-18-ollama-local-agent-phasemap.spec
+intent: null
+summary: OL5a_one_load_per_model_per_request (library) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1795005764029
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795005764029
+lastSeenAt: 1795005764029
+fingerprint: null
+payload:
+  id: OL5a_one_load_per_model_per_request
+  map: docs/2026-11-18-ollama-local-agent-phasemap.spec
+  repo: null
+  layer: library
+  status: OPEN
+  files:
+    - lib/pipeline-routing.js
+    - idearium/api/index.js
+    - tests/modules/test-plan-code-run-attention.test.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 8a484174fc08e457
