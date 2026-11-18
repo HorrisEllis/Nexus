@@ -1426,3 +1426,20 @@ phases_addendum_2026_11_13_rca:
 # times → resume after a wait (30 s, then 60, then 120), said; anything else → stalled, held for him, said. Each decision a console line and an event
 # (pipeline.request.retried | pipeline.request.stalled). Event-driven: no poll. A run that hangs without ending is not covered here (IF3 slice e).
 # files: [cos/pipeline/stall.eg, cos/pipeline/cli.eg, cos/pipeline/index.js, cos/pipeline/test/stall.test.eg]. depends_on: [PC8]. Built next.
+
+## ADDENDUM 2026-11-18 (later) — the pipeline tab becomes a flight map on the canvas; COS or Idearium (his, with the coder's recommendation)
+# James, 2026-11-18: "need this working. okay, system states saved as a node file, crash reverts them back to the most recent one. good? need to
+# upgrade the pipeline ui in cos ui, and the canvas. can you keep making sure the canvas for the pipeline are tools compatable with eravos. can you
+# continue pipeline ui and canvas, i hate the pipline tab. like it shouldn't be a list, it should be visual in the canvas with each system in the
+# canvas also showing from where to where, like a flight map. like each pipeline, in realtime, to what system, where, and recent ones fade over a
+# span over a couple of days. can edit, change, manipulate and diagnose. then could use the flight recorder for each pipeline. migrate ideariums
+# pipeline tools into cos, or integrate cos and idearium. having a hard time deciding."
+# (a) "system states saved as a node file, crash reverts them back to the most recent one": MG15 slice a's running table is a .node file per state
+#     change (the most recent kept as current, the last ones kept), and a crash of COS's manager comes back to the most recent one (adopted, or started).
+# (b) PC_flight (to write as a phase, after MG15): the Pipelines tab replaced by the canvas: each system a node placed on it, each pipeline run an arc
+#     from the system it starts in to the systems its steps call (nexus://<system>), live as the steps run, fading over two days; a run opens its
+#     flight recorder (the engine's saved runs, step by step: input, output, gate, time); edit, change, re-run and diagnose from the arc. Its tools
+#     stay ERAVOS-compatible (the .pipeline and .erv shapes, PC's ERAVOS round-trip).
+# (c) COS or Idearium, the coder's recommendation, his to decide: COS owns pipelines (the engine, the runs, the canvas, the flight recorder; it
+#     already is the engine, PC and IF2 say so); Idearium becomes a client that asks COS to run its builds, and its pipeline tools move into COS one
+#     at a time while each keeps working (the strangler pattern IF2 names). Integrating both as peers would keep two places that run pipelines.
