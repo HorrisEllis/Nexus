@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-18-ollama-local-agent-phasemap.spec::OL4a_raid_decides_fit_and_says_it
+type: phase
+id: docs_2026-11-18-ollama-local-agent-phasemap.spec::OL4a_raid_decides_fit_and_says_it
+context: >-
+  pipeline phase OL4a_raid_decides_fit_and_says_it of
+  docs/2026-11-18-ollama-local-agent-phasemap.spec
+intent: null
+summary: OL4a_raid_decides_fit_and_says_it (library) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1795015277594
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795015277594
+lastSeenAt: 1795015277594
+fingerprint: null
+payload:
+  id: OL4a_raid_decides_fit_and_says_it
+  map: docs/2026-11-18-ollama-local-agent-phasemap.spec
+  repo: null
+  layer: library
+  status: OPEN
+  files:
+    - lib/resource-monitor.js
+    - lib/pipeline-routing.js
+    - cortex/boot.js
+    - idearium/api/index.js
+    - tests/modules/test-plan-code-run-attention.test.js
+  depends_on:
+    - OL5a_one_load_per_model_per_request
+  blocks: []
+  spec: null
+  graph: 14fe19ba8a683ea2

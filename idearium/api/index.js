@@ -1420,7 +1420,13 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
         try {
           const om = await _ollamaModels();
           const RM = _require('../../lib/resource-monitor.js'); const smp = RM.sample();
-          const fits = (model) => RM.fitsModel({ model, bytes: om.sizes ? om.sizes[model] : null, loaded: om.loaded || [], sample: smp });
+          // OL4a 2026-11-18 — James: "i feel like everything needs to go through raid." RAID decides each local model's fit (and says it); the
+          // strict rule here is used only when RAID does not answer, and that is said on the run.
+          const _local = rungs.filter(r => r && r.base === 'ollama').map(r => { const m = r.model || PRt.modelOf(r.provider); return { provider: r.provider, model: m, bytes: om.sizes ? om.sizes[m] : null }; });
+          let _raidFit = null;
+          try { const a = await _nexusClient.post('cortex', '/api/raid/route/fit', { models: _local, loaded: om.loaded || [], for: `${(base && base.phase) || 'a build'} (${runId})` }, { timeout: 10000 }); if (a && a.ok && Array.isArray(a.decisions)) _raidFit = new Map(a.decisions.map(d => [d.model, d])); } catch (_) {}
+          if (!_raidFit && _local.length) appendRow('idearium_phase_runs', { uuid: `${runId}-fit-local`, ...base, state: 'routed', snapshot: commitId, error: null, note: 'RAID did not answer the fit question: the strict rule here decided (1.2x the model must be free)', ts: Date.now() });
+          const fits = (model) => (_raidFit && _raidFit.has(model)) ? { fits: _raidFit.get(model).fits, why: `${_raidFit.get(model).why} (RAID)` } : RM.fitsModel({ model, bytes: om.sizes ? om.sizes[model] : null, loaded: om.loaded || [], sample: smp });
           const bf = PRt.byFit(rungs, { fits });
           if (bf.skipped.length) {
             rungs = bf.rungs;

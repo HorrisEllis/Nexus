@@ -7,11 +7,11 @@ intent: null
 summary: 27 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1795005764035
+exported_at: 1795015277580
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1795005764035
-lastSeenAt: 1795005764035
+firstSeenAt: 1795015277580
+lastSeenAt: 1795015277580
 fingerprint: null
 payload:
   for: OL16_models_suggest_tools
@@ -220,12 +220,19 @@ payload:
     blockedBy:
       - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL15_nexus_aware_prefix_card
     unlocks: []
-    conflicts: []
+    conflicts:
+      - with: docs/2026-11-18-ollama-local-agent-phasemap.spec::OL4a_raid_decides_fit_and_says_it
+        files:
+          - idearium/api/index.js
+          - tests/modules/test-plan-code-run-attention.test.js
     dangling: []
     lines:
       - layer 2 · blocked by OL15_nexus_aware_prefix_card
       - 'depends on (1): OL15_nexus_aware_prefix_card · all upstream 2'
       - 'needed by (0): —'
+      - >-
+        same files as OL4a_raid_decides_fit_and_says_it with no order between them:
+        idearium/api/index.js, tests/modules/test-plan-code-run-attention.test.js
     edges:
       - from: docs/2026-11-18-ollama-local-agent-phasemap.spec::OL15_nexus_aware_prefix_card
         kind: declared

@@ -86,6 +86,15 @@ const src = (p) => fs.readFileSync(path.join(ROOT, p), 'utf8');
     check('OL5a-3 the build runs passes, retries only what is pending, unloads after each pass and the planner before coding',
       /for \(const ps of PRt\.passes\(rungs\)\)/.test(API5a) && /_tryFile\(i, \[ps\.rung\]\)/.test(API5a) && /if \(ps\.unload\) await _unload/.test(API5a) && /pdp\.model !== _firstCoder\) await _unload\(pdp\.model/.test(API5a) && /'\/api\/models\/unload'/.test(API5a));
     check('OL5a-4 the Ollama system serves POST /api/models/unload (keep_alive 0)', /pathname === '\/api\/models\/unload'/.test(src('ollama/routes/models.js')) && /unloadNow/.test(src('ollama/lib/idle-unload.js')));
+    // OL4a 2026-11-18 — James: "i feel like everything needs to go through raid."
+    const RMa = require(path.join(ROOT, 'lib/resource-monitor.js'));
+    const smpA = { system: { totalMem: 16 * 2 ** 30, freeMem: 7.5 * 2 ** 30 } };
+    check('OL4a-1 fit rule resident admits 8.9 GB on 16 GB and refuses 18.6 GB; strict refuses both',
+      RMa.fitsModel({ model: 'd', bytes: 8.9e9, sample: smpA, rule: 'resident' }).fits === true && RMa.fitsModel({ model: 'q', bytes: 18.6e9, sample: smpA, rule: 'resident' }).fits === false
+      && RMa.fitsModel({ model: 'd', bytes: 8.9e9, sample: smpA }).fits === false);
+    check('OL4a-2 RAID decides and says it; Idearium asks RAID and says when it could not',
+      /'\/api\/raid\/route\/fit'/.test(src('cortex/boot.js')) && /\[raid\] route: /.test(src('cortex/boot.js')) && /bus\.emit\('raid\.route\.fit'/.test(src('cortex/boot.js'))
+      && /'\/api\/raid\/route\/fit'/.test(src('idearium/api/index.js')) && /RAID did not answer the fit question/.test(src('idearium/api/index.js')));
     check('PC-17 the coder ladder puts Ollama first', PR.coderRungs(rungs).map(r => r.provider).join() === 'ollama:qwen2.5-coder:3b,claude,chatgpt');
     const cfg = require(path.join(ROOT, 'idearium/lib/config-core.cjs'));
     const cfgText = src('idearium/lib/config-core.cjs');

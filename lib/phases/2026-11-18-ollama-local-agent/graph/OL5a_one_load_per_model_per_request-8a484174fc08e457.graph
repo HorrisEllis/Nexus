@@ -7,11 +7,11 @@ intent: null
 summary: 27 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1795005764029
+exported_at: 1795015277574
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1795005764029
-lastSeenAt: 1795005764029
+firstSeenAt: 1795015277574
+lastSeenAt: 1795015277574
 fingerprint: null
 payload:
   for: OL5a_one_load_per_model_per_request
@@ -213,19 +213,29 @@ payload:
     deps: []
     dependents:
       - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL15_nexus_aware_prefix_card
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL5b_one_line_for_every_ollama_call
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL4a_raid_decides_fit_and_says_it
     upstream: []
     downstream:
       - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL15_nexus_aware_prefix_card
       - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL16_models_suggest_tools
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL20_metrics_against_the_ledger
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL4a_raid_decides_fit_and_says_it
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL5b_one_line_for_every_ollama_call
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL5c_his_clients_through_the_line
     blockedBy: []
     unlocks:
       - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL15_nexus_aware_prefix_card
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL5b_one_line_for_every_ollama_call
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL4a_raid_decides_fit_and_says_it
     conflicts: []
     dangling: []
     lines:
       - layer 0 · ready
       - 'depends on (0): —'
       - >-
-        needed by (1): OL15_nexus_aware_prefix_card · all downstream 2 · finishing it unlocks
-        OL15_nexus_aware_prefix_card
+        needed by (3): OL15_nexus_aware_prefix_card, OL5b_one_line_for_every_ollama_call,
+        OL4a_raid_decides_fit_and_says_it · all downstream 6 · finishing it unlocks
+        OL15_nexus_aware_prefix_card, OL5b_one_line_for_every_ollama_call,
+        OL4a_raid_decides_fit_and_says_it
     edges: []

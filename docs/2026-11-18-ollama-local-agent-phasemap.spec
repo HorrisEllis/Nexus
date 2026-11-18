@@ -526,6 +526,24 @@ phases:
       memory, wall time per landed chunk), and a baseline per model that grows run by run; what moves the deltas most is named, not guessed.
     proof: "over a day of runs: per model, its baseline and its outliers, each outlier beside the event it followed"
 
+  OL4a_raid_decides_fit_and_says_it:
+    layer: library
+    status: OPEN
+    depends_on: [OL5a_one_load_per_model_per_request]
+    axioms: [§1.2, §5.9, §5.10, §16.2, §12.3]
+    expands: [OL4_fit_and_context, PC16_raid_routes_every_interaction, MF1_model_fit_routing]
+    files: [lib/resource-monitor.js, lib/pipeline-routing.js, cortex/boot.js, idearium/api/index.js, tests/modules/test-plan-code-run-attention.test.js]
+    js_door: [JavaScript changed in place (his, 2026-11-18: "then we can use js for now unless we are coding emerge")]
+    does: >-
+      His "i feel like everything needs to go through raid." and "supposed to be more events for this exact purpose", after NM1's run records were
+      read: "won't fit memory: ollama:deepseek-coder-v2:16b" — Idearium dropped both local models by its own copy of the fit rule (1.2x the model
+      must be free: 10.7 GB for DeepSeek, ~7-8 GB free with Nexus up), said only in a data row, so the build went to Gemini and Claude alone.
+      RAID decides: POST /api/raid/route/fit { models: [{ provider, model, bytes }], loaded } → each admitted or skipped with its numbers, by RAID's
+      routing.fit_rule: strict (the old 1.2x free) or resident (the model fits in RAM at all, <= 75% of it: it loads, slower while others page out;
+      DeepSeek 8.9 GB admitted on 16 GB, the 30B's 18.6 GB not). Each decision is printed in RAID's console and emitted as raid.route.fit. Idearium
+      asks RAID; when RAID does not answer it uses the strict rule and says so.
+    proof: "fitsModel resident admits 8.9 GB on 16 GB and refuses 18.6 GB; RAID's route answers with the numbers and prints the decision; NM1 run again reaches DeepSeek"
+
 order_of_work:
   # his, 2026-11-08: automation with COS as the engine, then Emerge done, then WARP 2. This map serves the first two; it does not reorder them.
   # §3.4: backend, then route, then command row, then UI.
@@ -640,3 +658,7 @@ addendum_pending: >-
 # listens; CP6a expands: COS's usage per system already sampled becomes a baseline with sigmas); the resource manager reads the line's events to
 # decide a model's room before a swap (CP6f expands); the same on a tiny Linux (OS3 in docs/2026-10-05-cos-machines-phasemap.spec expands).
 # His order, after: the build test working first (NM1).
+
+## ADDENDUM 2026-11-18 (later) — the ladder's fit goes through RAID, said aloud (his)
+# James, 2026-11-18: "supposed to be more events for this exact purpose" · "96% sure. i feel like everything needs to go through raid."
+# Mapped: OL4a_raid_decides_fit_and_says_it.

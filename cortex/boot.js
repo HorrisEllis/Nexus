@@ -1149,6 +1149,29 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
+  // OL4a 2026-11-18 — James: "i feel like everything needs to go through raid." · "supposed to be more events for this exact purpose". RAID decides
+  // whether each local model may run now (routing.fit_rule: strict | resident) and says every decision aloud: its console and raid.route.fit.
+  if (p === '/api/raid/route/fit' && req.method === 'POST') {
+    let b = await readBody(req); if (typeof b === 'string') { try { b = JSON.parse(b || '{}'); } catch (_) { b = {}; } }
+    b = b || {};
+    try {
+      const RM = require('../lib/resource-monitor.js');
+      const pol = require('./core/raid/routing.js').get().policy || {};
+      const rule = String(pol.fit_rule || pol.fitRule || 'strict').toLowerCase() === 'resident' ? 'resident' : 'strict';
+      const smp = RM.sample();
+      const decisions = (Array.isArray(b.models) ? b.models : []).map((m) => {
+        const r = RM.fitsModel({ model: m.model, bytes: m.bytes, loaded: b.loaded || [], sample: smp, rule });
+        return { provider: m.provider || m.model, model: m.model, fits: !!r.fits, why: r.why, needBytes: r.needBytes, availableBytes: r.availableBytes };
+      });
+      for (const d of decisions) {
+        console.log(`[raid] route: ${d.provider} ${d.fits ? 'admitted' : 'skipped'} (fit_rule ${rule}) — ${d.why}${b.for ? ` · for ${b.for}` : ''}`);
+        try { bus.emit('raid.route.fit', { ...d, rule, for: b.for || null }, { source: 'raid' }); } catch (e) { console.warn(`[raid] bus.emit(raid.route.fit) failed: ${e.message}`); }
+      }
+      json(res, 200, { ok: true, rule, decisions });
+    } catch (e) { json(res, 500, { ok: false, error: e.message }); }
+    return;
+  }
+
   if (p === '/api/raid/tunables') {
     const TU = require('./core/raid/tunables.js');
     if (req.method !== 'POST') { json(res, 200, { ok: true, tunables: TU.all() }); return; }
