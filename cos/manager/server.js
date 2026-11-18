@@ -473,6 +473,17 @@ if (require.main === module) {
   const root = arg('root') ? path.resolve(arg('root')) : path.resolve(__dirname, '..', '..');
   const only = arg('only') ? arg('only').split(',').map(s => s.trim()).filter(Boolean) : null;
   const sup = createSupervisor({ root });
+  // MG20 (2026-11-18) — James: "im getting sick of nexus being so unstalbe". Found: the Windows service killed this manager 8 times today for not
+  // answering /api/cos/health (its event loop blocked 50 s+, measured 15:10), taking the systems it started with it (Idearium's builds lost).
+  // The block's cause is not found by reading, so the manager says it: every synchronous child process over 2 s is a ledger line with its
+  // command and time, and any stall of the event loop over 5 s is one too. Measured, never guessed.
+  (() => { const cp = require('child_process'); const SLOW = 2000;
+    for (const fn of ['execSync', 'execFileSync', 'spawnSync']) { const orig = cp[fn];
+      cp[fn] = function (...a) { const t0 = Date.now(); try { return orig.apply(this, a); } finally { const ms = Date.now() - t0;
+        if (ms > SLOW) { const what = (Array.isArray(a[1]) ? [a[0], ...a[1]] : [a[0]]).join(' ').slice(0, 200); try { sup.record && sup.record('slow-sync', null, `${fn} took ${Math.round(ms / 100) / 10} s, blocking COS: ${what}`); } catch (_) {} console.log(`[cos] slow-sync ${ms} ms: ${fn} ${what}`); } } }; }
+    let last = Date.now(); const lag = setInterval(() => { const now = Date.now(), d = now - last - 1000; last = now;
+      if (d > 5000) { try { sup.record && sup.record('stall', null, `COS's event loop was blocked ${Math.round(d / 100) / 10} s (ended ${new Date(now).toISOString()})`); } catch (_) {} console.log(`[cos] stall ${d} ms`); } }, 1000);
+    if (lag.unref) lag.unref(); })();
   let srvRef = null, uiRef = null, duties = null;
   // CE2b — COS restarts itself, after his yes: answer first, stop its systems, then come back — autopilot starts it again (exit 75), else relaunch.js
   const restartCos = ({ by = 'person' } = {}) => {

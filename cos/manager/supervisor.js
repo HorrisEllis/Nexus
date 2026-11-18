@@ -473,7 +473,8 @@ function createSupervisor({ root, declarations = null, policy = {}, ledgerFile =
 
   const api = { watchDesktop, boot, note, logs, pause, resume, on: (ev, fn) => bus.on(ev, fn), off: (ev, fn) => bus.off(ev, fn), declarations: () => decls.map(d => ({ ...d })), list: () => [...S.values()].map(view), get: (n) => view(must(n)), start, stop, restart, touch, resetCircuit, ledger,
     policy: () => JSON.parse(JSON.stringify(P)), setPolicy: (patch, { by = 'person' } = {}) => { Object.assign(P, patch || {}); write('policy', null, `policy changed: ${JSON.stringify(patch)}`, { by }); return JSON.parse(JSON.stringify(P)); },
-    shutdown, handOver, outlive: OUT, DEFAULTS, ledgerFile: LEDGER, beat, memoryObserve, memoryBaseline, memoryJudge, lastBoot: null, setHooks: (h) => { Object.assign(hooks, h || {}); },
+    shutdown, handOver, record: (kind, system, why, extra) => write(kind, system, why, extra),   // MG20: the manager says what blocks it
+    outlive: OUT, DEFAULTS, ledgerFile: LEDGER, beat, memoryObserve, memoryBaseline, memoryJudge, lastBoot: null, setHooks: (h) => { Object.assign(hooks, h || {}); },
     // SC4 — a system added while COS runs (its declaration just written by add-system.js): declared live, never started by this
     declare: (d) => { if (!d || !d.name) throw Object.assign(new Error('a declaration needs a name'), { code: 400 }); if (S.has(d.name)) throw Object.assign(new Error(`"${d.name}" is already declared`), { code: 409 });
       decls.push(d); add(d); write('declared', d.name, `added while COS runs: ${d.cmd || 'node'} ${(d.args || []).join(' ')}`, { by: d.addedBy || 'person' }); return view(S.get(d.name)); },

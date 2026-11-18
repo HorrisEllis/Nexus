@@ -996,3 +996,8 @@ phases_addendum_2026_11_14_cbw:
 # James, 2026-11-18: "Rerun NM1 now" · "im getting sick of nexus being so unstalbe"
 # MG15c, busy is not dead: the NM1 rerun was lost to 0.60.579 itself. COS booted at 12:43 while Idearium was mid-build (heap snapshot); its health did not answer in 30 s and the new rule stopped it as dead. Now a live pid that does not answer is adopted as degraded and its health waited for; it is never stopped for a slow answer (at boot from running.node, or by its port). test-cos-outlive 8/8 (MG15-8 new).
 # The coder's fault: 0.60.579's stop-on-no-answer killed the build it meant to unblock (Cortex: cos.adopt-refused-busy, coder.killed-busy-system).
+
+# ── ADDENDUM 2026-11-18 (0.60.582) — MG20: COS says what blocks it ──
+# James, 2026-11-18: "im getting sick of nexus being so unstalbe"
+# MG20, COS says what blocks it: the Windows service killed COS's manager 8 times today for not answering its health (event loop blocked 50 s, measured at 15:10), and each kill took the systems it had started (Idearium's NM1 builds at 14:38 and 14:59). The cause was not found by reading, so the manager now records it: every synchronous child process (execSync, execFileSync, spawnSync) over 2 s is a ledger line "slow-sync" with its command and time, and any event-loop stall over 5 s is a ledger line "stall". test-cos-outlive 8/8.
+# Open (mapped): systems the manager starts escape its process tree, so the service's kill cannot take a build with it.
