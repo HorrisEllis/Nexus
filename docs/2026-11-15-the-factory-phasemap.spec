@@ -485,3 +485,12 @@ handoff_2026_11_18: >-
 # Built already: a pipeline step can be a framework (cos/pipeline/framework.eg; PC slice b, 0.60.470) or a sub-pipeline (step type pipeline).
 # Open: (a) his method written as the first .framework, each step a node he can edit; (b) any step of any pipeline may name a method (a framework
 # or pipeline node); (c) frameworks made and edited on the canvas by him, and Copilot programmed the same way.
+
+# ── ADDENDUM 2026-11-18 (later) — every failure and every decision through RAID; each gate (his) ──
+# James, 2026-11-18: "anytime something fails or needs a decision, should use raid. each gate?"
+# What is there (read): COS books each pipeline request as a RAID contract and RAID's verdict says met or not (cos/pipeline/index.js book);
+# Idearium's build gates are RAID contract gates (cortex/core/raid/contract-gates.js); RAID decides a local model's fit (0.60.574, OL4a).
+# What is not: a gate's own outcome (closed or gap → retry, escalate, split, hold) is decided by its gate type alone (gate.eg's on:), RAID never asked.
+# The coder's reading, to build next as IF3 slice e: a gate that closes or finds a gap asks RAID what now (POST /api/raid/route/next with the gate's
+# why, its history and the run), RAID answers from its policy (retry on the same rung, escalate, split, hold for him) and says the decision aloud;
+# the gate type's own on: stays the answer when RAID does not answer, said.
