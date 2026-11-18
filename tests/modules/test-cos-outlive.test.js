@@ -41,6 +41,15 @@ const alive = (pid) => { try { process.kill(pid, 0); return true; } catch (e) { 
   b.stop('ticker', { by: 'test' });
   check('MG15-6 an adopted system is stopped by its pid', await until(() => !alive(pid), 8000) && await until(() => b.get('ticker').state === 'stopped', 4000), b.get('ticker').state);
 
+  // MG15b (0.60.579): a system missing from running.node whose port is held by a live process is adopted, never a second copy started
+  const held = require('child_process').spawn(process.execPath, ['-e', "const s=require('http').createServer((q,r)=>r.end('{}')).listen(0,'127.0.0.1',()=>console.log(s.address().port))"]);
+  const port = await new Promise((r) => held.stdout.once('data', (b) => r(Number(String(b).trim()))));
+  let spawned = 0; const d2 = fs.mkdtempSync(path.join(os.tmpdir(), 'cos-port-'));
+  const c = createSupervisor({ root: d2, declarations: [{ name: 'holder', cmd: process.execPath, args: ['-e', 'setTimeout(()=>{},1e6)'], healthUrl: `http://127.0.0.1:${port}/health`, onDemand: true }],
+    ledgerFile: path.join(d2, 'ledger.jsonl'), policy: { outlive: true }, log: () => {}, spawnFn: (...x) => { spawned++; return require('child_process').spawn(...x); } });
+  c.start('holder', { by: 'test' });
+  check('MG15-7 a port already held is adopted, not started again', process.platform !== 'win32' || (await until(() => c.get('holder').state === 'up', 6000) && c.get('holder').pid === held.pid && spawned === 0), JSON.stringify({ spawned, st: c.get('holder').state, pid: c.get('holder').pid, held: held.pid }));
+  c.shutdown({ by: 'test' }); held.kill(); try { fs.rmSync(d2, { recursive: true, force: true }); } catch (_) {}
   b.shutdown({ by: 'test' });
   try { fs.rmSync(dir, { recursive: true, force: true }); } catch (_) {}
   console.log(`${pass} passed, ${fail} failed`);

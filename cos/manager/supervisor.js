@@ -190,6 +190,13 @@ function createSupervisor({ root, declarations = null, policy = {}, ledgerFile =
       const old = fs.readdirSync(STATE).filter(f => /^running-\d+\.node$/.test(f)).sort(); for (const f of old.slice(0, Math.max(0, old.length - 5))) { try { fs.unlinkSync(path.join(STATE, f)); } catch (_) {} }
     } catch (e) { log(`the running state could not be kept: ${e.message}`); }
   }
+  // MG15b: the pid listening on a local port (Windows: netstat; elsewhere not read, so nothing is adopted by port)
+  function _holderOf(port) {
+    if (process.platform !== 'win32') return null;
+    try { const r = require('child_process').spawnSync('netstat', ['-ano', '-p', 'TCP'], { windowsHide: true, encoding: 'utf8', timeout: 5000 });
+      for (const l of String(r.stdout || '').split(/\r?\n/)) { const m = /^\s*TCP\s+\S+:(\d+)\s+\S+\s+LISTENING\s+(\d+)/.exec(l); if (m && Number(m[1]) === port) return Number(m[2]); } } catch (_) {}
+    return null;
+  }
   // an adopted process: started by an earlier manager, still alive; stopped by its pid; its end seen by the kill or the reaper's minute
   function _adopted(name, pid) {
     const pr = { pid, adopted: true, on() {}, kill(sig) {
@@ -281,6 +288,20 @@ function createSupervisor({ root, declarations = null, policy = {}, ledgerFile =
     if (serviceMode() && isWindowed(d, c)) {
       if (s.state !== 'desktop') write('refused', name, 'has a window: under the Windows service it starts in your session (the COS window starts it), not here', { by });
       s.state = 'desktop'; return false;
+    }
+    // MG15b (2026-11-18) — found running it: a system left alive by an earlier manager but missing from running.node held its port, so every new
+    // start died on "port already in use" until the circuit opened (Idearium 4800, Guardian 7820, Orchestrator 9000). The holder is adopted
+    // instead of a doomed second copy; its health decides up, and a holder whose health does not answer is stopped so a fresh one can start.
+    const port = d.healthUrl ? Number((/:(\d+)/.exec(d.healthUrl) || [])[1]) || null : null;
+    const holder = OUT && port ? _holderOf(port) : null;
+    if (holder && holder !== process.pid && _alive(holder)) {
+      const pr = _adopted(name, holder); s.proc = pr; s.pid = holder; s.state = 'starting'; s.startedAt = Date.now(); s.by = by;
+      write('adopted', name, `port ${port} already held by pid ${holder}: adopted, not started again (its health decides up)`, { by, pid: holder });
+      for (const kind of ['out', 'err']) { const f = path.join(LOGS, `${name}.${kind}.log`); let end = 0; try { end = fs.statSync(f).size; } catch (_) {} _tail(s, name, kind, f, end); }
+      _saveState();
+      (async () => { const until = Date.now() + 30000; while (s.proc === pr && Date.now() < until) { if (await checkHealth(d.healthUrl)) { if (s.state === 'starting') s.state = 'up'; return; } await new Promise(r => setTimeout(r, 500)); }
+        if (s.proc === pr) { write('adopt-refused', name, `pid ${holder} holds port ${port} but its health did not answer in 30 s: stopped, so a fresh one can start`, { by }); pr.kill(); } })();
+      return true;
     }
     if (!write('spawn', name, `${c.via ? `in compartment ${d.compartment || d.name}, behind its wall (${(d.boundary.mode || 'enforce')}${c.via === 'NODE_OPTIONS' ? ', through NODE_OPTIONS' : ''}): ` : ''}${c.cmd} ${c.args.join(' ')}`, { by })) return false;
     let proc; let fds = null;

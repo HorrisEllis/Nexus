@@ -981,3 +981,9 @@ phases_addendum_2026_11_14_cbw:
 # adoption at boot, COS's restart handing over. Next (his, recorded): "What about instead of ports, we use: nexus://guardian nexus://idearium For each
 # system. Then they wouldn't need ports They would be distinguishable" — each system on a named pipe (\\.\pipe\nexus-<name>), addressed only as
 # nexus://<name>; COS's manager the one HTTP door for the pages (a browser cannot open a pipe). Not mapped as a phase yet.
+
+# ── ADDENDUM 2026-11-18 (0.60.579) — MG15b: a port already held is adopted, not started again ──
+# James, 2026-11-18: "get the pipeline built and upgraded. log all of the progress and notes."
+# MG15b, a port already held is adopted: found running it, Idearium (4800), Guardian (7820) and Orchestrator (9000) were alive and answering but missing from running.node, so every start died on "port already in use" until the circuit opened and the pipeline could not reach Idearium. Before a spawn COS now reads who listens on the system's port (netstat); a live holder is adopted (its health decides up; one that does not answer in 30 s is stopped so a fresh one starts). test-cos-outlive 7/7 (MG15-7 new).
+# Why it happened (coder's reading): those three were started before running.node existed or by a manager that did not keep them; after
+# COS's restart nothing knew their pids. Adopting by port covers any such leftover, not only the ones the node file names.
