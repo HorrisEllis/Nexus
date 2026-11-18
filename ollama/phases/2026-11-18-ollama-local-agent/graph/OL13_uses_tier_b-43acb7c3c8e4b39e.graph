@@ -1,0 +1,89 @@
+envelope: 1
+uuid: nexus-export-graph-phase:OL13_uses_tier_b:43acb7c3c8e4b39e
+type: graph
+id: phase:OL13_uses_tier_b:43acb7c3c8e4b39e
+context: dependency graph of phase OL13_uses_tier_b
+intent: null
+summary: 6 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1795001277261
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795001277261
+lastSeenAt: 1795001277261
+fingerprint: null
+payload:
+  for: OL13_uses_tier_b
+  kind: phase
+  repo: null
+  hash: 43acb7c3c8e4b39e
+  nodes:
+    - path: ollama/test/uses-b.test.eg
+      role: changes
+      exists: false
+      system: ollama
+    - path: ollama/uses/idle-drain.eg
+      role: changes
+      exists: false
+      system: ollama
+    - path: ollama/uses/js-to-emerge.eg
+      role: changes
+      exists: false
+      system: ollama
+    - path: ollama/uses/replay-regress.eg
+      role: changes
+      exists: false
+      system: ollama
+    - path: ollama/uses/test-author.eg
+      role: changes
+      exists: false
+      system: ollama
+    - path: ollama/uses/vote.eg
+      role: changes
+      exists: false
+      system: ollama
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 5
+    deps:
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL8_gate_rewind_file_tier
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL10_training_ledger
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL12_uses_tier_a
+    dependents: []
+    upstream:
+      - docs/2026-10-19-solid-build-foundation-phasemap.spec::MF1_model_fit_routing
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL10_training_ledger
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL12_uses_tier_a
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL1_settings_schema_and_store
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL2_settings_routes_and_commands
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL3_apply_path
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL4_fit_and_context
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL5_lanes_and_queue
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL6_load_score
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL7_rule_budgets_and_chunk_stops
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL8_gate_rewind_file_tier
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL9_event_stream
+    downstream: []
+    blockedBy:
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL8_gate_rewind_file_tier
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL10_training_ledger
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL12_uses_tier_a
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 5 · blocked by OL8_gate_rewind_file_tier, OL10_training_ledger, OL12_uses_tier_a
+      - >-
+        depends on (3): OL8_gate_rewind_file_tier, OL10_training_ledger, OL12_uses_tier_a · all
+        upstream 12
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-11-18-ollama-local-agent-phasemap.spec::OL8_gate_rewind_file_tier
+        kind: declared
+      - from: docs/2026-11-18-ollama-local-agent-phasemap.spec::OL10_training_ledger
+        kind: declared
+      - from: docs/2026-11-18-ollama-local-agent-phasemap.spec::OL12_uses_tier_a
+        kind: declared

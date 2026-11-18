@@ -1,0 +1,189 @@
+envelope: 1
+uuid: nexus-export-graph-phase:OL1_settings_schema_and_store:f72a26d86d0e7536
+type: graph
+id: phase:OL1_settings_schema_and_store:f72a26d86d0e7536
+context: dependency graph of phase OL1_settings_schema_and_store
+intent: null
+summary: 17 node(s), 3 crossing(s)
+system: idearium
+tags: []
+exported_at: 1795001277204
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795001277204
+lastSeenAt: 1795001277204
+fingerprint: null
+payload:
+  for: OL1_settings_schema_and_store
+  kind: phase
+  repo: null
+  hash: f72a26d86d0e7536
+  nodes:
+    - path: ollama/config.js
+      role: changes
+      exists: true
+      system: ollama
+    - path: ollama/settings/catalog.eg
+      role: changes
+      exists: false
+      system: ollama
+    - path: ollama/settings/setting.eg
+      role: changes
+      exists: false
+      system: ollama
+    - path: ollama/test/setting.test.eg
+      role: changes
+      exists: false
+      system: ollama
+    - path: idearium/agent-suite/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/cli/nexus-repl.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/vector-memory.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: ollama/lib/dispatch.js
+      role: used-by
+      exists: true
+      system: ollama
+    - path: ollama/lib/model-inventory.js
+      role: used-by
+      exists: true
+      system: ollama
+    - path: ollama/lib/ollama-client.js
+      role: used-by
+      exists: true
+      system: ollama
+    - path: ollama/lib/state.js
+      role: used-by
+      exists: true
+      system: ollama
+    - path: ollama/ollama-runtime.js
+      role: used-by
+      exists: true
+      system: ollama
+    - path: ollama/routes/jobs.js
+      role: used-by
+      exists: true
+      system: ollama
+    - path: ollama/routes/models.js
+      role: used-by
+      exists: true
+      system: ollama
+    - path: ollama/routes/stream.js
+      role: used-by
+      exists: true
+      system: ollama
+    - path: ollama/routes/system.js
+      role: used-by
+      exists: true
+      system: ollama
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: ollama/config.js
+      to: lib/data-home.js
+      kind: requires
+    - from: idearium/agent-suite/index.js
+      to: ollama/config.js
+      kind: requires
+    - from: lib/cli/nexus-repl.js
+      to: ollama/config.js
+      kind: requires
+    - from: lib/vector-memory.js
+      to: ollama/config.js
+      kind: requires
+    - from: ollama/lib/dispatch.js
+      to: ollama/config.js
+      kind: requires
+    - from: ollama/lib/model-inventory.js
+      to: ollama/config.js
+      kind: requires
+    - from: ollama/lib/ollama-client.js
+      to: ollama/config.js
+      kind: requires
+    - from: ollama/lib/state.js
+      to: ollama/config.js
+      kind: requires
+    - from: ollama/ollama-runtime.js
+      to: ollama/config.js
+      kind: requires
+    - from: ollama/routes/jobs.js
+      to: ollama/config.js
+      kind: requires
+    - from: ollama/routes/models.js
+      to: ollama/config.js
+      kind: requires
+    - from: ollama/routes/stream.js
+      to: ollama/config.js
+      kind: requires
+    - from: ollama/routes/system.js
+      to: ollama/config.js
+      kind: requires
+  crossings:
+    - from: idearium/agent-suite/index.js
+      to: ollama/config.js
+      fromSystem: idearium
+      toSystem: ollama
+      kind: system
+      known: true
+    - from: lib/cli/nexus-repl.js
+      to: ollama/config.js
+      fromSystem: lib
+      toSystem: ollama
+      kind: upward
+      known: true
+    - from: lib/vector-memory.js
+      to: ollama/config.js
+      fromSystem: lib
+      toSystem: ollama
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL2_settings_routes_and_commands
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL3_apply_path
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL4_fit_and_context
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL6_load_score
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL9_event_stream
+    upstream: []
+    downstream:
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL10_training_ledger
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL11_cos_ollama_tab
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL12_uses_tier_a
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL13_uses_tier_b
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL14_benchmark_sweep
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL2_settings_routes_and_commands
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL3_apply_path
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL4_fit_and_context
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL5_lanes_and_queue
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL6_load_score
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL7_rule_budgets_and_chunk_stops
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL8_gate_rewind_file_tier
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL9_event_stream
+    blockedBy: []
+    unlocks:
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL2_settings_routes_and_commands
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL4_fit_and_context
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL6_load_score
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL9_event_stream
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0 · ready
+      - 'depends on (0): —'
+      - >-
+        needed by (5): OL2_settings_routes_and_commands, OL3_apply_path, OL4_fit_and_context,
+        OL6_load_score, OL9_event_stream · all downstream 13 · finishing it unlocks
+        OL2_settings_routes_and_commands, OL4_fit_and_context, OL6_load_score, OL9_event_stream
+    edges: []

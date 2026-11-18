@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-18-ollama-local-agent-phasemap.spec::OL4_fit_and_context
+type: phase
+id: docs_2026-11-18-ollama-local-agent-phasemap.spec::OL4_fit_and_context
+context: pipeline phase OL4_fit_and_context of docs/2026-11-18-ollama-local-agent-phasemap.spec
+intent: null
+summary: OL4_fit_and_context (library) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1795001277227
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795001277227
+lastSeenAt: 1795001277227
+fingerprint: null
+payload:
+  id: OL4_fit_and_context
+  map: docs/2026-11-18-ollama-local-agent-phasemap.spec
+  repo: null
+  layer: library
+  status: OPEN
+  files:
+    - ollama/fit/fit.eg
+    - ollama/fit/kv.eg
+    - ollama/test/fit.test.eg
+    - lib/resource-monitor.js
+  depends_on:
+    - MF1_model_fit_routing
+    - OL1_settings_schema_and_store
+  blocks: []
+  spec: null
+  graph: 843f2f63327bff51

@@ -1,0 +1,76 @@
+envelope: 1
+uuid: nexus-export-graph-phase:OL11_cos_ollama_tab:630082c2961c8869
+type: graph
+id: phase:OL11_cos_ollama_tab:630082c2961c8869
+context: dependency graph of phase OL11_cos_ollama_tab
+intent: null
+summary: 4 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1795001277255
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795001277255
+lastSeenAt: 1795001277255
+fingerprint: null
+payload:
+  for: OL11_cos_ollama_tab
+  kind: phase
+  repo: null
+  hash: 630082c2961c8869
+  nodes:
+    - path: cos/ui/ollama/index.html
+      role: changes
+      exists: false
+      system: cos
+    - path: cos/ui/ollama/ollama.css
+      role: changes
+      exists: false
+      system: cos
+    - path: cos/ui/ollama/ollama.js
+      role: changes
+      exists: false
+      system: cos
+    - path: cos/ui/ollama/test/ollama.glass.test.eg
+      role: changes
+      exists: false
+      system: cos
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 4
+    deps:
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL2_settings_routes_and_commands
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL5_lanes_and_queue
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL9_event_stream
+    dependents: []
+    upstream:
+      - docs/2026-10-19-solid-build-foundation-phasemap.spec::MF1_model_fit_routing
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL1_settings_schema_and_store
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL2_settings_routes_and_commands
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL3_apply_path
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL4_fit_and_context
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL5_lanes_and_queue
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL9_event_stream
+    downstream: []
+    blockedBy:
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL2_settings_routes_and_commands
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL5_lanes_and_queue
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL9_event_stream
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 4 · blocked by OL2_settings_routes_and_commands, OL5_lanes_and_queue, OL9_event_stream
+      - >-
+        depends on (3): OL2_settings_routes_and_commands, OL5_lanes_and_queue, OL9_event_stream ·
+        all upstream 7
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-11-18-ollama-local-agent-phasemap.spec::OL2_settings_routes_and_commands
+        kind: declared
+      - from: docs/2026-11-18-ollama-local-agent-phasemap.spec::OL5_lanes_and_queue
+        kind: declared
+      - from: docs/2026-11-18-ollama-local-agent-phasemap.spec::OL9_event_stream
+        kind: declared

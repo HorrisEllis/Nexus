@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-18-ollama-local-agent-phasemap.spec::OL10_training_ledger
+type: phase
+id: docs_2026-11-18-ollama-local-agent-phasemap.spec::OL10_training_ledger
+context: pipeline phase OL10_training_ledger of docs/2026-11-18-ollama-local-agent-phasemap.spec
+intent: null
+summary: OL10_training_ledger (library) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1795001277251
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795001277251
+lastSeenAt: 1795001277251
+fingerprint: null
+payload:
+  id: OL10_training_ledger
+  map: docs/2026-11-18-ollama-local-agent-phasemap.spec
+  repo: null
+  layer: library
+  status: OPEN
+  files:
+    - ollama/training/ledger.eg
+    - ollama/training/export.eg
+    - ollama/test/training.test.eg
+  depends_on:
+    - OL8_gate_rewind_file_tier
+    - OL9_event_stream
+  blocks: []
+  spec: null
+  graph: 3f10ec0ba958c3ca

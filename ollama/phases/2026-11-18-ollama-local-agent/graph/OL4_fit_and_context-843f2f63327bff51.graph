@@ -1,0 +1,144 @@
+envelope: 1
+uuid: nexus-export-graph-phase:OL4_fit_and_context:843f2f63327bff51
+type: graph
+id: phase:OL4_fit_and_context:843f2f63327bff51
+context: dependency graph of phase OL4_fit_and_context
+intent: null
+summary: 14 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1795001277227
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795001277227
+lastSeenAt: 1795001277227
+fingerprint: null
+payload:
+  for: OL4_fit_and_context
+  kind: phase
+  repo: null
+  hash: 843f2f63327bff51
+  nodes:
+    - path: lib/resource-monitor.js
+      role: changes
+      exists: true
+      system: lib
+    - path: ollama/fit/fit.eg
+      role: changes
+      exists: false
+      system: ollama
+    - path: ollama/fit/kv.eg
+      role: changes
+      exists: false
+      system: ollama
+    - path: ollama/test/fit.test.eg
+      role: changes
+      exists: false
+      system: ollama
+    - path: copilot/adversarial.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: cos/manager/duties.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/cli/route-commands.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/gap-field.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/nexus/autopilot.retired-0.60.330.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/prevention.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: orchestrator/orchestrator.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: tests/modules/test-model-fit-ladder.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: lib/prevention.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/resource-monitor.js
+      to: lib/prevention.js
+      kind: requires
+    - from: copilot/adversarial.js
+      to: lib/resource-monitor.js
+      kind: requires
+    - from: cos/manager/duties.js
+      to: lib/resource-monitor.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/resource-monitor.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: lib/resource-monitor.js
+      kind: requires
+    - from: lib/gap-field.js
+      to: lib/resource-monitor.js
+      kind: requires
+    - from: lib/nexus/autopilot.retired-0.60.330.js
+      to: lib/resource-monitor.js
+      kind: requires
+    - from: lib/prevention.js
+      to: lib/resource-monitor.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: lib/resource-monitor.js
+      kind: requires
+    - from: tests/modules/test-model-fit-ladder.test.js
+      to: lib/resource-monitor.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-19-solid-build-foundation-phasemap.spec::MF1_model_fit_routing
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL1_settings_schema_and_store
+    dependents:
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL5_lanes_and_queue
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL7_rule_budgets_and_chunk_stops
+    upstream:
+      - docs/2026-10-19-solid-build-foundation-phasemap.spec::MF1_model_fit_routing
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL1_settings_schema_and_store
+    downstream:
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL10_training_ledger
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL11_cos_ollama_tab
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL12_uses_tier_a
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL13_uses_tier_b
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL14_benchmark_sweep
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL5_lanes_and_queue
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL7_rule_budgets_and_chunk_stops
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL8_gate_rewind_file_tier
+    blockedBy:
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL1_settings_schema_and_store
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · blocked by OL1_settings_schema_and_store
+      - 'depends on (2): MF1_model_fit_routing, OL1_settings_schema_and_store'
+      - 'needed by (2): OL5_lanes_and_queue, OL7_rule_budgets_and_chunk_stops · all downstream 8'
+    edges:
+      - from: docs/2026-10-19-solid-build-foundation-phasemap.spec::MF1_model_fit_routing
+        kind: declared
+      - from: docs/2026-11-18-ollama-local-agent-phasemap.spec::OL1_settings_schema_and_store
+        kind: declared

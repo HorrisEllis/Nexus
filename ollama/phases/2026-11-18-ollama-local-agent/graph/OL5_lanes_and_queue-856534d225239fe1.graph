@@ -1,0 +1,85 @@
+envelope: 1
+uuid: nexus-export-graph-phase:OL5_lanes_and_queue:856534d225239fe1
+type: graph
+id: phase:OL5_lanes_and_queue:856534d225239fe1
+context: dependency graph of phase OL5_lanes_and_queue
+intent: null
+summary: 6 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1795001277230
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795001277230
+lastSeenAt: 1795001277230
+fingerprint: null
+payload:
+  for: OL5_lanes_and_queue
+  kind: phase
+  repo: null
+  hash: 856534d225239fe1
+  nodes:
+    - path: ollama/backend/backend.eg
+      role: changes
+      exists: false
+      system: ollama
+    - path: ollama/backend/llama-cpp.eg
+      role: changes
+      exists: false
+      system: ollama
+    - path: ollama/backend/ollama.eg
+      role: changes
+      exists: false
+      system: ollama
+    - path: ollama/lanes/lanes.eg
+      role: changes
+      exists: false
+      system: ollama
+    - path: ollama/lanes/queue.eg
+      role: changes
+      exists: false
+      system: ollama
+    - path: ollama/test/lanes.test.eg
+      role: changes
+      exists: false
+      system: ollama
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL3_apply_path
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL4_fit_and_context
+    dependents:
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL11_cos_ollama_tab
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL12_uses_tier_a
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL14_benchmark_sweep
+    upstream:
+      - docs/2026-10-19-solid-build-foundation-phasemap.spec::MF1_model_fit_routing
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL1_settings_schema_and_store
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL2_settings_routes_and_commands
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL3_apply_path
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL4_fit_and_context
+    downstream:
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL11_cos_ollama_tab
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL12_uses_tier_a
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL13_uses_tier_b
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL14_benchmark_sweep
+    blockedBy:
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL3_apply_path
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL4_fit_and_context
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 3 · blocked by OL3_apply_path, OL4_fit_and_context
+      - 'depends on (2): OL3_apply_path, OL4_fit_and_context · all upstream 5'
+      - >-
+        needed by (3): OL11_cos_ollama_tab, OL12_uses_tier_a, OL14_benchmark_sweep · all downstream
+        4
+    edges:
+      - from: docs/2026-11-18-ollama-local-agent-phasemap.spec::OL3_apply_path
+        kind: declared
+      - from: docs/2026-11-18-ollama-local-agent-phasemap.spec::OL4_fit_and_context
+        kind: declared

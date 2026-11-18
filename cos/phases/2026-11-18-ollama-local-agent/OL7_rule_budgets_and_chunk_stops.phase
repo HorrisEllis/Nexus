@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-18-ollama-local-agent-phasemap.spec::OL7_rule_budgets_and_chunk_stops
+type: phase
+id: docs_2026-11-18-ollama-local-agent-phasemap.spec::OL7_rule_budgets_and_chunk_stops
+context: >-
+  pipeline phase OL7_rule_budgets_and_chunk_stops of
+  docs/2026-11-18-ollama-local-agent-phasemap.spec
+intent: null
+summary: OL7_rule_budgets_and_chunk_stops (library) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1795001277238
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795001277238
+lastSeenAt: 1795001277238
+fingerprint: null
+payload:
+  id: OL7_rule_budgets_and_chunk_stops
+  map: docs/2026-11-18-ollama-local-agent-phasemap.spec
+  repo: null
+  layer: library
+  status: OPEN
+  files:
+    - cos/pipeline/budget.eg
+    - cos/pipeline/chunk-plan.eg
+    - cos/pipeline/test/budget.test.eg
+    - cortex/core/raid/contract-adapters.js
+    - cortex/core/raid/contract-gates.js
+  depends_on:
+    - OL4_fit_and_context
+    - OL6_load_score
+  blocks: []
+  spec: null
+  graph: 37397d44a1fb9273

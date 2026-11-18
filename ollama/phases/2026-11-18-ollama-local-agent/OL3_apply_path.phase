@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-18-ollama-local-agent-phasemap.spec::OL3_apply_path
+type: phase
+id: docs_2026-11-18-ollama-local-agent-phasemap.spec::OL3_apply_path
+context: pipeline phase OL3_apply_path of docs/2026-11-18-ollama-local-agent-phasemap.spec
+intent: null
+summary: OL3_apply_path (foundation) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1795001277221
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795001277221
+lastSeenAt: 1795001277221
+fingerprint: null
+payload:
+  id: OL3_apply_path
+  map: docs/2026-11-18-ollama-local-agent-phasemap.spec
+  repo: null
+  layer: foundation
+  status: OPEN
+  files:
+    - ollama/apply/apply.eg
+    - ollama/apply/env-profile.eg
+    - ollama/test/apply.test.eg
+  depends_on:
+    - OL1_settings_schema_and_store
+    - OL2_settings_routes_and_commands
+  blocks: []
+  spec: null
+  graph: 48b8d7408f98f9c1

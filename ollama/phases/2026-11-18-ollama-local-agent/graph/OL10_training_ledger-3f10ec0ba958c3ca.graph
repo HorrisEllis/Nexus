@@ -1,0 +1,68 @@
+envelope: 1
+uuid: nexus-export-graph-phase:OL10_training_ledger:3f10ec0ba958c3ca
+type: graph
+id: phase:OL10_training_ledger:3f10ec0ba958c3ca
+context: dependency graph of phase OL10_training_ledger
+intent: null
+summary: 3 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1795001277251
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795001277251
+lastSeenAt: 1795001277251
+fingerprint: null
+payload:
+  for: OL10_training_ledger
+  kind: phase
+  repo: null
+  hash: 3f10ec0ba958c3ca
+  nodes:
+    - path: ollama/test/training.test.eg
+      role: changes
+      exists: false
+      system: ollama
+    - path: ollama/training/export.eg
+      role: changes
+      exists: false
+      system: ollama
+    - path: ollama/training/ledger.eg
+      role: changes
+      exists: false
+      system: ollama
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 4
+    deps:
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL8_gate_rewind_file_tier
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL9_event_stream
+    dependents:
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL13_uses_tier_b
+    upstream:
+      - docs/2026-10-19-solid-build-foundation-phasemap.spec::MF1_model_fit_routing
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL1_settings_schema_and_store
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL4_fit_and_context
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL6_load_score
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL7_rule_budgets_and_chunk_stops
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL8_gate_rewind_file_tier
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL9_event_stream
+    downstream:
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL13_uses_tier_b
+    blockedBy:
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL8_gate_rewind_file_tier
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL9_event_stream
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 4 · blocked by OL8_gate_rewind_file_tier, OL9_event_stream
+      - 'depends on (2): OL8_gate_rewind_file_tier, OL9_event_stream · all upstream 7'
+      - 'needed by (1): OL13_uses_tier_b'
+    edges:
+      - from: docs/2026-11-18-ollama-local-agent-phasemap.spec::OL8_gate_rewind_file_tier
+        kind: declared
+      - from: docs/2026-11-18-ollama-local-agent-phasemap.spec::OL9_event_stream
+        kind: declared

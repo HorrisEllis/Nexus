@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-18-ollama-local-agent-phasemap.spec::OL5_lanes_and_queue
+type: phase
+id: docs_2026-11-18-ollama-local-agent-phasemap.spec::OL5_lanes_and_queue
+context: pipeline phase OL5_lanes_and_queue of docs/2026-11-18-ollama-local-agent-phasemap.spec
+intent: null
+summary: OL5_lanes_and_queue (library) — 6 file(s)
+system: idearium
+tags: []
+exported_at: 1795001277230
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795001277230
+lastSeenAt: 1795001277230
+fingerprint: null
+payload:
+  id: OL5_lanes_and_queue
+  map: docs/2026-11-18-ollama-local-agent-phasemap.spec
+  repo: null
+  layer: library
+  status: OPEN
+  files:
+    - ollama/lanes/lanes.eg
+    - ollama/lanes/queue.eg
+    - ollama/backend/backend.eg
+    - ollama/backend/llama-cpp.eg
+    - ollama/backend/ollama.eg
+    - ollama/test/lanes.test.eg
+  depends_on:
+    - OL3_apply_path
+    - OL4_fit_and_context
+  blocks: []
+  spec: null
+  graph: 856534d225239fe1

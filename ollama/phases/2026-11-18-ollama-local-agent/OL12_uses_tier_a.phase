@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-18-ollama-local-agent-phasemap.spec::OL12_uses_tier_a
+type: phase
+id: docs_2026-11-18-ollama-local-agent-phasemap.spec::OL12_uses_tier_a
+context: pipeline phase OL12_uses_tier_a of docs/2026-11-18-ollama-local-agent-phasemap.spec
+intent: null
+summary: OL12_uses_tier_a (library) — 6 file(s)
+system: idearium
+tags: []
+exported_at: 1795001277258
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795001277258
+lastSeenAt: 1795001277258
+fingerprint: null
+payload:
+  id: OL12_uses_tier_a
+  map: docs/2026-11-18-ollama-local-agent-phasemap.spec
+  repo: null
+  layer: library
+  status: OPEN
+  files:
+    - ollama/uses/triage.eg
+    - ollama/uses/narrate.eg
+    - ollama/uses/hostile-review.eg
+    - ollama/uses/covers.eg
+    - ollama/uses/quote-check.eg
+    - ollama/test/uses-a.test.eg
+  depends_on:
+    - OL5_lanes_and_queue
+    - OL9_event_stream
+  blocks: []
+  spec: null
+  graph: 4ef56dc8640751f9

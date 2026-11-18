@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-18-ollama-local-agent-phasemap.spec::OL11_cos_ollama_tab
+type: phase
+id: docs_2026-11-18-ollama-local-agent-phasemap.spec::OL11_cos_ollama_tab
+context: pipeline phase OL11_cos_ollama_tab of docs/2026-11-18-ollama-local-agent-phasemap.spec
+intent: null
+summary: OL11_cos_ollama_tab (interface) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1795001277255
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795001277255
+lastSeenAt: 1795001277255
+fingerprint: null
+payload:
+  id: OL11_cos_ollama_tab
+  map: docs/2026-11-18-ollama-local-agent-phasemap.spec
+  repo: null
+  layer: interface
+  status: OPEN
+  files:
+    - cos/ui/ollama/index.html
+    - cos/ui/ollama/ollama.css
+    - cos/ui/ollama/ollama.js
+    - cos/ui/ollama/test/ollama.glass.test.eg
+  depends_on:
+    - OL2_settings_routes_and_commands
+    - OL5_lanes_and_queue
+    - OL9_event_stream
+  blocks: []
+  spec: null
+  graph: 630082c2961c8869

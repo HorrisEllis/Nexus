@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-18-ollama-local-agent-phasemap.spec::OL1_settings_schema_and_store
+type: phase
+id: docs_2026-11-18-ollama-local-agent-phasemap.spec::OL1_settings_schema_and_store
+context: pipeline phase OL1_settings_schema_and_store of docs/2026-11-18-ollama-local-agent-phasemap.spec
+intent: null
+summary: OL1_settings_schema_and_store (foundation) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1795001277205
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795001277205
+lastSeenAt: 1795001277205
+fingerprint: null
+payload:
+  id: OL1_settings_schema_and_store
+  map: docs/2026-11-18-ollama-local-agent-phasemap.spec
+  repo: null
+  layer: foundation
+  status: OPEN
+  files:
+    - ollama/settings/setting.eg
+    - ollama/settings/catalog.eg
+    - ollama/test/setting.test.eg
+    - ollama/config.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: f72a26d86d0e7536

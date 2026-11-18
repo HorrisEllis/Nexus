@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-18-ollama-local-agent-phasemap.spec::OL8_gate_rewind_file_tier
+type: phase
+id: docs_2026-11-18-ollama-local-agent-phasemap.spec::OL8_gate_rewind_file_tier
+context: pipeline phase OL8_gate_rewind_file_tier of docs/2026-11-18-ollama-local-agent-phasemap.spec
+intent: null
+summary: OL8_gate_rewind_file_tier (library) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1795001277241
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795001277241
+lastSeenAt: 1795001277241
+fingerprint: null
+payload:
+  id: OL8_gate_rewind_file_tier
+  map: docs/2026-11-18-ollama-local-agent-phasemap.spec
+  repo: null
+  layer: library
+  status: OPEN
+  files:
+    - cos/pipeline/rewind.eg
+    - cos/pipeline/escalate.eg
+    - cos/pipeline/test/rewind.test.eg
+    - cos/pipeline/gate.eg
+  depends_on:
+    - OL7_rule_budgets_and_chunk_stops
+    - OL9_event_stream
+  blocks: []
+  spec: null
+  graph: 9bb10084d2ac901b

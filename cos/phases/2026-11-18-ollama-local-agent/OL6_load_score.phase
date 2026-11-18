@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-18-ollama-local-agent-phasemap.spec::OL6_load_score
+type: phase
+id: docs_2026-11-18-ollama-local-agent-phasemap.spec::OL6_load_score
+context: pipeline phase OL6_load_score of docs/2026-11-18-ollama-local-agent-phasemap.spec
+intent: null
+summary: OL6_load_score (library) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1795001277234
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795001277234
+lastSeenAt: 1795001277234
+fingerprint: null
+payload:
+  id: OL6_load_score
+  map: docs/2026-11-18-ollama-local-agent-phasemap.spec
+  repo: null
+  layer: library
+  status: OPEN
+  files:
+    - cos/pipeline/score.eg
+    - cos/pipeline/test/score.test.eg
+  depends_on:
+    - OL1_settings_schema_and_store
+  blocks: []
+  spec: null
+  graph: 5ea181ba4531bf16

@@ -1,0 +1,58 @@
+envelope: 1
+uuid: nexus-export-graph-phase:OL6_load_score:5ea181ba4531bf16
+type: graph
+id: phase:OL6_load_score:5ea181ba4531bf16
+context: dependency graph of phase OL6_load_score
+intent: null
+summary: 2 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1795001277234
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795001277234
+lastSeenAt: 1795001277234
+fingerprint: null
+payload:
+  for: OL6_load_score
+  kind: phase
+  repo: null
+  hash: 5ea181ba4531bf16
+  nodes:
+    - path: cos/pipeline/score.eg
+      role: changes
+      exists: false
+      system: cos
+    - path: cos/pipeline/test/score.test.eg
+      role: changes
+      exists: false
+      system: cos
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL1_settings_schema_and_store
+    dependents:
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL7_rule_budgets_and_chunk_stops
+    upstream:
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL1_settings_schema_and_store
+    downstream:
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL10_training_ledger
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL13_uses_tier_b
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL14_benchmark_sweep
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL7_rule_budgets_and_chunk_stops
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL8_gate_rewind_file_tier
+    blockedBy:
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL1_settings_schema_and_store
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · blocked by OL1_settings_schema_and_store
+      - 'depends on (1): OL1_settings_schema_and_store'
+      - 'needed by (1): OL7_rule_budgets_and_chunk_stops · all downstream 5'
+    edges:
+      - from: docs/2026-11-18-ollama-local-agent-phasemap.spec::OL1_settings_schema_and_store
+        kind: declared

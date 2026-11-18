@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-18-ollama-local-agent-phasemap.spec::OL9_event_stream
+type: phase
+id: docs_2026-11-18-ollama-local-agent-phasemap.spec::OL9_event_stream
+context: pipeline phase OL9_event_stream of docs/2026-11-18-ollama-local-agent-phasemap.spec
+intent: null
+summary: OL9_event_stream (library) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1795001277246
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795001277246
+lastSeenAt: 1795001277246
+fingerprint: null
+payload:
+  id: OL9_event_stream
+  map: docs/2026-11-18-ollama-local-agent-phasemap.spec
+  repo: null
+  layer: library
+  status: OPEN
+  files:
+    - ollama/events/stream.eg
+    - ollama/events/ring.eg
+    - ollama/events/telemetry.eg
+    - ollama/test/events.test.eg
+  depends_on:
+    - OL1_settings_schema_and_store
+  blocks: []
+  spec: null
+  graph: 9e3e011c8d255803

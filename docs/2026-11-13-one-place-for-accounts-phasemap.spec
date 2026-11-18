@@ -238,3 +238,23 @@ order: "AC0 → AC6 (built) → AC1 → AC2, AC3, AC9 side by side → AC7, AC8 
 # His model, as the coder reads it (to confirm when mapped): ONE jar for every tab and agent (like Chrome's one profile); a second jar only for
 # a second profile; switching account = switching profile, not swapping cookies inside one jar. Fits AC_D1 (one place: COS's vault) and AC2/AC3.
 # Not built. Recorded with today's live picture: ChatGPT and DeepSeek signed out, so the build's ladder left them off.
+
+# ── ADDENDUM 2026-11-18 — his: profiles the source of truth; bookmarks route chats; hats per page and per site (recorded only; after Ollama and gates) ──
+# James, 2026-11-18: "what if we use clearglass to use agent chats as a cli interface. like a iframe or api? Like the way idearium has a hat per repo.
+# cos ui has one per page in cos iu? that way copilot is aware of the page it's on. like hats could become location based models. like i want to be
+# able to set urls for chats. like claude code. what if we interconnect bookmarks that hook into the account for the website and the urls for chats.
+# we could bookmarks as a chat routing system. like bookmarks have a bookmark id or uuid that the system can use to id the bookmark which hooks into
+# an account or profile id. account or cookie id or login id in clearglass. like need one source of truth for all cookies, logins, accounts, etc per
+# profile also like firefox. the profiles are the source of truth. multiprofile setup is already in clearglass. each profile has a id, each account
+# or login has an id. how ever firefox profiles work but with ids or uuids for the backend for nexus and guardian to route to for intent and
+# fallback. the ui shouldn't use a different profile. profiles can be compartments, which can link to hats, which can also have per site models to
+# make the agents aware per site. this should drastically improve the agents. then the ui needs consolidating. bookmarks and login detection need
+# updating. accounts can be used across profiles. need bookmark folders and manager like firefoxs'" · "first ollama, intelligent gates that compound."
+# The coder's reading, to confirm before any phase is written (do not guess):
+#   - a profile (its uuid) is the one source of truth for its cookies, logins and accounts; an account (its uuid) can be used by several profiles;
+#   - a bookmark (its uuid, in folders, a manager like Firefox's) names a URL, the account and profile it opens with, and can be a chat route:
+#     Guardian and Nexus route an intent to a bookmark, with fallbacks;
+#   - an agent chat in Clear Glass reachable as a command line (iframe or API: which is his to say);
+#   - a hat per COS page and per site ("location based models"), so Copilot knows where it is; a profile can be a compartment linked to hats;
+#   - the UI uses the same profile as the agents; UI consolidation, bookmark and login detection updated after.
+# Order (his): after Ollama and intelligent gates that compound.

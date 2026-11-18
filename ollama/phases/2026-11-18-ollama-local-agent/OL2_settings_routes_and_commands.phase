@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-18-ollama-local-agent-phasemap.spec::OL2_settings_routes_and_commands
+type: phase
+id: docs_2026-11-18-ollama-local-agent-phasemap.spec::OL2_settings_routes_and_commands
+context: >-
+  pipeline phase OL2_settings_routes_and_commands of
+  docs/2026-11-18-ollama-local-agent-phasemap.spec
+intent: null
+summary: OL2_settings_routes_and_commands (foundation) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1795001277216
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795001277216
+lastSeenAt: 1795001277216
+fingerprint: null
+payload:
+  id: OL2_settings_routes_and_commands
+  map: docs/2026-11-18-ollama-local-agent-phasemap.spec
+  repo: null
+  layer: foundation
+  status: OPEN
+  files:
+    - ollama/routes/settings.eg
+    - ollama/test/settings-routes.test.eg
+  depends_on:
+    - OL1_settings_schema_and_store
+  blocks: []
+  spec: null
+  graph: 4ca8d68247c9071f

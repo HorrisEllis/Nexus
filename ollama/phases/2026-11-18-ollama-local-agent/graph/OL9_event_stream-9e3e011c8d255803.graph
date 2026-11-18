@@ -1,0 +1,71 @@
+envelope: 1
+uuid: nexus-export-graph-phase:OL9_event_stream:9e3e011c8d255803
+type: graph
+id: phase:OL9_event_stream:9e3e011c8d255803
+context: dependency graph of phase OL9_event_stream
+intent: null
+summary: 4 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1795001277246
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795001277246
+lastSeenAt: 1795001277246
+fingerprint: null
+payload:
+  for: OL9_event_stream
+  kind: phase
+  repo: null
+  hash: 9e3e011c8d255803
+  nodes:
+    - path: ollama/events/ring.eg
+      role: changes
+      exists: false
+      system: ollama
+    - path: ollama/events/stream.eg
+      role: changes
+      exists: false
+      system: ollama
+    - path: ollama/events/telemetry.eg
+      role: changes
+      exists: false
+      system: ollama
+    - path: ollama/test/events.test.eg
+      role: changes
+      exists: false
+      system: ollama
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL1_settings_schema_and_store
+    dependents:
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL8_gate_rewind_file_tier
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL10_training_ledger
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL11_cos_ollama_tab
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL12_uses_tier_a
+    upstream:
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL1_settings_schema_and_store
+    downstream:
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL10_training_ledger
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL11_cos_ollama_tab
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL12_uses_tier_a
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL13_uses_tier_b
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL8_gate_rewind_file_tier
+    blockedBy:
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL1_settings_schema_and_store
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · blocked by OL1_settings_schema_and_store
+      - 'depends on (1): OL1_settings_schema_and_store'
+      - >-
+        needed by (4): OL8_gate_rewind_file_tier, OL10_training_ledger, OL11_cos_ollama_tab,
+        OL12_uses_tier_a · all downstream 5
+    edges:
+      - from: docs/2026-11-18-ollama-local-agent-phasemap.spec::OL1_settings_schema_and_store
+        kind: declared

@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-18-ollama-local-agent-phasemap.spec::OL14_benchmark_sweep
+type: phase
+id: docs_2026-11-18-ollama-local-agent-phasemap.spec::OL14_benchmark_sweep
+context: pipeline phase OL14_benchmark_sweep of docs/2026-11-18-ollama-local-agent-phasemap.spec
+intent: null
+summary: OL14_benchmark_sweep (foundation) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1795001277265
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795001277265
+lastSeenAt: 1795001277265
+fingerprint: null
+payload:
+  id: OL14_benchmark_sweep
+  map: docs/2026-11-18-ollama-local-agent-phasemap.spec
+  repo: null
+  layer: foundation
+  status: OPEN
+  files:
+    - emerge/bench/chunks.js
+    - docs/BENCHMARKS.md
+  depends_on:
+    - OL5_lanes_and_queue
+    - OL7_rule_budgets_and_chunk_stops
+  blocks: []
+  spec: null
+  graph: 64db6f1577748f01
