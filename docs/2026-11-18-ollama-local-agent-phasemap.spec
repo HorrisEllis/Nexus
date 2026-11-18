@@ -571,3 +571,10 @@ addendum_pending: >-
 # and states what it does, without seeing the plan; the gate compares the two statements, and the difference is the gap with its tension, held for
 # the next pass or for him. Describing code is easier than writing it, so the 16b is good enough for that side; it would not be good enough to be the
 # only judge. Proposed as a phase (OL17_verify_from_both_sides) once he confirms.
+
+## ADDENDUM 2026-11-18 (later) — the 3b between words in Emerge (his question; the coder's reading, to confirm)
+# James, 2026-11-18: "what about using it for the traversal between words in emerge to map the boundaries of each word in relation to the next?"
+# The coder's reading: the boundaries themselves are exact already (Emerge's lexer and parser know every token and what may follow it), so a model
+# there would only add error. The 3b fits the fuzzy edge beside them: (a) eg say, his English word to the Emerge construct it means, checked by the
+# parser; (b) the next word chosen only from what the grammar allows at that point (the parser gives the set, the 3b ranks it: constrained, so it
+# cannot write invalid Emerge; GAP_4); (c) each word-to-next step kept as a row for the base model he wants to train on Emerge (OL10).
