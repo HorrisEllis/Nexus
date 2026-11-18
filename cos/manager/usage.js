@@ -11,7 +11,24 @@
  * Get-Process (resident memory and CPU seconds), then tasklist (resident memory only). The reader that answered is named on each reading.
  */
 const os = require('os');
+const fs = require('fs');
+const path = require('path');
 const { spawnSync, execFile } = require('child_process');
+
+// 2026-11-18 (IF3 slice a) — James: "Yes, gates first". His C: drive reached 0 GB: every command failed, COS restarted under it, and nothing
+// in COS said so. The disk is read with the memory: the drive the temp folder is on (where every system writes its scratch) and the drive
+// this Nexus runs from. statfs is one call, no process; a drive it cannot read is said, never 0.
+function _disk(where) {
+  try {
+    const s = fs.statfsSync(where);
+    const free = Number(s.bavail) * Number(s.bsize), total = Number(s.blocks) * Number(s.bsize);
+    return { path: path.parse(path.resolve(where)).root, freeMB: Math.round(free / 1048576), totalMB: Math.round(total / 1048576), freePct: total ? Math.round(free / total * 1000) / 10 : null };
+  } catch (e) { return { path: String(where), notRead: e.code || e.message }; }
+}
+function disks() {
+  const temp = _disk(os.tmpdir()), here = _disk(path.join(__dirname, '..', '..'));
+  return { temp, nexus: here, lowestFreeMB: [temp.freeMB, here.freeMB].filter(n => typeof n === 'number').reduce((a, b) => Math.min(a, b), Infinity) };
+}
 
 const PS = (pids) => ['-NoProfile', '-NonInteractive', '-Command', `Get-Process -Id ${pids.join(',')} -ErrorAction SilentlyContinue | ForEach-Object { '{0},{1},{2}' -f $_.Id,$_.WorkingSet64,$_.CPU }`];
 const READERS = process.platform === 'win32' ? [
@@ -64,10 +81,10 @@ function shape(systems, policy, { out, why, reader }) {
   }
   const free = os.freemem(), total = os.totalmem();
   return { at: Date.now(), reader, host: { cpus: os.cpus().length, load1: Math.round(os.loadavg()[0] * 100) / 100, freeMemPct: Math.round(free / total * 1000) / 10,
-    freeMB: Math.round(free / 1048576), totalMB: Math.round(total / 1048576), haltPct: policy.memoryHaltPct ?? null, criticalHaltPct: policy.criticalHaltPct ?? null }, systems: per };
+    freeMB: Math.round(free / 1048576), totalMB: Math.round(total / 1048576), haltPct: policy.memoryHaltPct ?? null, criticalHaltPct: policy.criticalHaltPct ?? null, disk: disks() }, systems: per };
 }
 
 function read(systems, policy = {}) { return shape(systems, policy, perPid(systems.filter(s => s.pid).map(s => s.pid))); }
 async function readAsync(systems, policy = {}) { return shape(systems, policy, await perPidAsync(systems.filter(s => s.pid).map(s => s.pid))); }
 
-module.exports = { read, readAsync, perPid, perPidAsync, READERS: READERS.map(r => r.name) };
+module.exports = { read, readAsync, perPid, perPidAsync, disks, READERS: READERS.map(r => r.name) };

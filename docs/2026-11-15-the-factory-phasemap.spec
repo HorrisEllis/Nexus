@@ -388,3 +388,29 @@ order: >-
 # First to build (his "smarter gates probably"; the coder's recommendation, said as the coder's): IF3 smarter gates, fed by what Nexus already
 # knows, before any new system work: the failure-mode record (Cortex), the diagnostic and intelligence systems, read by the gate, so the
 # model is asked less. Copilot's and the agents' tools after.
+
+# ── ADDENDUM 2026-11-18 — IF3 expanded: smarter gates, slice a (mapped before code) ──
+# James, 2026-11-18, asked what comes first: "Yes, gates first" (after "smarter gates probably, that should help reduce load to the llm").
+# IF3_one_gate expanded_2026_11_18:
+#   slice_a_the_gate_asks_before_the_model:
+#     does: >-
+#       A step that would ask a model is preceded by a gate that asks Nexus first, so no build starts into a machine that cannot carry it.
+#       (1) COS's usage reading gains the disk: free space of the system drive (where the temp folder is) and of the Nexus folder's drive
+#       (cos/manager/usage.js, host.disk; node's statfs, no process). (2) gate.eg gains a check kind, number: a value read by its path from an
+#       ask's answer or the step's output, held to atLeast / atMost; a value that is not there is said. (3) a shipped gate type, ready
+#       (cos/pipeline/types/ready.gatetype): asks COS for its usage and holds the run with the reason when free memory or free disk is under
+#       the step's minimum (with: minFreeMemPct, minDiskMB); the same reason twice is a gap. (4) idearium-build.pipeline: a step "room" before
+#       build, gated by ready.
+#     why: >-
+#       Read from his runs of 2026-11-17/18, not guessed: C: at 0 GB stopped every command and COS restarted under it; DeepSeek loaded left
+#       3-5% RAM and COS refused ollama-bridge; RQ0 ran with no local coder; each of these spent agent calls before failing. A gate that asks
+#       first holds the run with the reason instead.
+#     files: [cos/manager/usage.js, cos/pipeline/gate.eg, cos/pipeline/types/ready.gatetype, cos/pipeline/test/gate.test.eg,
+#             idearium/pipelines/idearium-build.pipeline]
+#     depends_on: [PC5_programmable_gate_types]
+#     proof: "gate.test.eg: number holds and fails by path, on an answer and on the output, and says a missing value; the ready type holds on low disk and opens with room; a build run on his machine shows the room step's verdict"
+#     axioms: §8.6 (gate.eg's asks and checks reused; one check kind added, not a new system), §1.2 (a hold says its reason), §5.10 (COS's
+#       own route, no new crossing), §17.13 (the decision in Emerge; the disk reading is COS's existing JavaScript, changed in place).
+#   slice_b_the_gate_injects_only_the_slice: OPEN (mapped 2026-11-18 above: intent, test, conditions, the previous chunk, one .inject)
+#   slice_c_decompose_before_climbing: OPEN (T11; PC8 expanded_2026_11_14)
+#   slice_d_the_gate_reads_the_failure_record: OPEN (Cortex /api/failure-modes for the step's class before it is asked again)

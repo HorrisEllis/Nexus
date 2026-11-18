@@ -75,10 +75,50 @@ test "a type is checked before it decides: unknown kinds, actions, asks are refu
 }
 
 test "every shipped .gate file is a valid type" {
-  for f in ["check", "test", "verify", "context", "emerge", "options", "node"] {
+  for f in ["check", "test", "verify", "context", "emerge", "options", "node", "ready"] {
     send gate.GateRunner.validate { type: parse_json(read_file("cos/pipeline/types/" + f + ".gatetype")) }
     expect last.ok, f + ": " + str(last.why)
   }
+}
+
+test "number: a value by its path, from an answer or the output, held to atLeast / atMost; a missing value is said (IF3 slice a)" {
+  // James, 2026-11-18: "Yes, gates first" — the gate asks Nexus (disk, memory) before a model is asked
+  let NUM = { id: "num", asks: [{ id: "usage", owner: "cos", route: "GET /api/cos/usage" }],
+    checks: [{ kind: "number", ask: "usage", path: "usage.host.disk.lowestFreeMB", atLeast: "\{\{with.minDiskMB\}\}" }], on: {} }
+  let body = fn(mb) = json({ ok: true, usage: { host: { freeMemPct: 21.5, disk: { lowestFreeMB: mb } } } })
+  expect decide(NUM, { minDiskMB: "2048" }, "", {}, { usage: { status: 200, body: body(3146157) } }).value.outcome == "open"
+  let low = decide(NUM, { minDiskMB: "2048" }, "", {}, { usage: { status: 200, body: body(0) } }).value
+  expect low.outcome == "closed" and low.why == "asked \"usage\": usage.host.disk.lowestFreeMB is 0, under 2048", low.why
+  let none = decide(NUM, { minDiskMB: "2048" }, "", {}, { usage: { status: 200, body: json({ ok: true }) } }).value
+  expect none.outcome == "closed" and find_text(none.why, "no number at usage.host.disk.lowestFreeMB") >= 0, none.why
+  let down = decide(NUM, { minDiskMB: "2048" }, "", {}, { usage: { error: "ECONNREFUSED" } }).value
+  expect down.outcome == "closed" and find_text(down.why, "ECONNREFUSED") >= 0, down.why
+  // from the step's own output, with atMost
+  let OUT = { id: "out", checks: [{ kind: "number", path: "load", atMost: 0.8 }], on: {} }
+  expect decide(OUT, {}, { load: 0.5 }, {}, {}).value.outcome == "open"
+  expect decide(OUT, {}, "\{\"load\": 0.95\}", {}, {}).value.why == "the output: load is 0.95, over 0.8"
+  // a number check names its path and a bound
+  send gate.GateRunner.validate { type: { id: "bad", checks: [{ kind: "number" }], on: {} } }
+  expect not last.ok and any(last.value.problems, fn(p) = find_text(p, "names the value's path") >= 0) and any(last.value.problems, fn(p) = find_text(p, "atLeast or atMost") >= 0), json(last.value)
+}
+
+test "ready: short of disk the run holds with the reason, with room it opens; twice for one reason is a gap (IF3 slice a)" {
+  let READY = parse_json(read_file("cos/pipeline/types/ready.gatetype"))
+  let w = { minDiskMB: "2048", minFreeMemPct: "8" }
+  let ans = fn(mb, pct) = { usage: { status: 200, body: json({ ok: true, usage: { host: { freeMemPct: pct, disk: { lowestFreeMB: mb } } } }) } }
+  let ok = decide(READY, w, "", {}, ans(3146157, 21.5)).value
+  expect ok.outcome == "open", ok.why
+  let full = decide(READY, w, "", {}, ans(0, 21.5)).value
+  expect full.outcome == "closed" and full.actions == [{ do: "hold" }] and find_text(full.why, "lowestFreeMB is 0, under 2048") >= 0, json(full)
+  let mem = decide(READY, w, "", {}, ans(3146157, 4.3)).value
+  expect mem.outcome == "closed" and find_text(mem.why, "freeMemPct is 4.3, under 8") >= 0, mem.why
+  let again = decide(READY, w, "", full.context, ans(0, 21.5)).value
+  expect again.outcome == "gap", again.outcome
+  // an older COS reports no disk: the disk check is optional, memory still decides
+  let old = { usage: { status: 200, body: json({ ok: true, usage: { host: { freeMemPct: 21.5 } } }) } }
+  expect decide(READY, w, "", {}, old).value.outcome == "open"
+  let oldLow = { usage: { status: 200, body: json({ ok: true, usage: { host: { freeMemPct: 3.1 } } }) } }
+  expect decide(READY, w, "", {}, oldLow).value.outcome == "closed"
 }
 
 test "node: the data a step gave is a node of its type with the fields its schema requires; an undefined type is a gap" {

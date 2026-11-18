@@ -1,0 +1,12 @@
+{
+  "id": "ready",
+  "about": "asks COS before a model is asked: is there disk and memory to carry the step (with: minDiskMB, minFreeMemPct)? Short of either, the run holds with the reason and is asked again when he continues; no agent call is spent. The disk is optional until COS's manager reports it (0.60.565 and after: usage.host.disk). IF3 slice a, 2026-11-18 (James: \"Yes, gates first\").",
+  "madeBy": "shipped",
+  "asks": [{ "id": "usage", "owner": "cos", "route": "GET /api/cos/usage" }],
+  "checks": [
+    { "kind": "number", "ask": "usage", "path": "usage.host.disk.lowestFreeMB", "atLeast": "{{with.minDiskMB}}", "optional": true },
+    { "kind": "number", "ask": "usage", "path": "usage.host.freeMemPct", "atLeast": "{{with.minFreeMemPct}}" }
+  ],
+  "gapAfter": 2,
+  "on": { "open": [{ "do": "note" }], "closed": [{ "do": "hold" }], "gap": [{ "do": "hold" }] }
+}

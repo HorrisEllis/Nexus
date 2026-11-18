@@ -93,10 +93,28 @@ payload:
           method: GET
           timeoutMs: 120000
       gate: *ref_0
+    # 2026-11-18 (IF3 slice a) — James: "Yes, gates first". Before a build asks any model, the ready gate asks COS for its disk and memory:
+    # short of either (his C: at 0 GB; DeepSeek leaving 3-5% RAM), the run holds here with the reason, no agent call spent; Continue asks again.
+    - id: room
+      label: Room to build (disk and memory)
+      depends_on:
+        - graph
+      onFail: hold
+      step:
+        type: api
+        config:
+          url: nexus://idearium/health
+          method: GET
+          timeoutMs: 60000
+      gate:
+        type: ready
+        with:
+          minDiskMB: '2048'
+          minFreeMemPct: '8'
     - id: build
       label: Build the phase
       depends_on:
-        - graph
+        - room
       step:
         type: api
         config:

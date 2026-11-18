@@ -8,7 +8,7 @@
 // gap names a missing capability at once. Pure: COS's door (cos/pipeline/gates.js) makes the calls and keeps the context; this decides.
 // Reached only through its in hooks (CIE-EG §5.2); every answer leaves by the one out hook, answer.
 
-let CHECKS = ["holds", "answer", "changed", "node", "always"]
+let CHECKS = ["holds", "answer", "changed", "node", "always", "number"]
 let ACTIONS = ["note", "route", "retry", "stop", "skip", "hold", "branch", "notify"]
 let OUTCOMES = ["open", "closed", "gap"]
 
@@ -76,6 +76,60 @@ fn node_why(c: map, raw: any, schemas: map): any {
   return null
 }
 
+// number (IF3 slice a, 2026-11-18 — James: "Yes, gates first"): a value read by its path (a.b.c) from an ask's answer (ask: id) or from the
+// step's output, held to atLeast / atMost. The gate asks Nexus before a model is asked: free disk, free memory. A value that is not there is
+// said, never taken as 0.
+fn as_number(x: any): any {
+  if x == null { return null }
+  let t = type_of(x)
+  if t == "string" {
+    let s = trim(x)
+    if len(s) == 0 or find_text("-0123456789", slice(s, 0, 1)) < 0 { return null }
+    let p = parse_json(s)
+    let pt = type_of(p)
+    if pt == "int" or pt == "num" { return p }
+    return null
+  }
+  if t == "int" or t == "num" { return x }
+  return null
+}
+fn as_data(s: any): any {
+  if type_of(s) != "string" { return s }
+  let t = trim(s)
+  if len(t) > 0 and (head_is(t, "\{") or head_is(t, "[")) { return parse_json(t) }
+  return null
+}
+fn at_path(v: any, p: string): any {
+  var cur = v
+  for k in split(p, ".") {
+    if type_of(cur) != "map" or not has(cur, k) { return null }
+    cur = cur[k]
+  }
+  return cur
+}
+fn number_why(c: map, raw: any, answers: map): any {
+  let where = get(c, "path", "")
+  var src = raw
+  var from = "the output"
+  if get(c, "ask", null) != null {
+    let id = c.ask
+    from = "asked \"" + id + "\""
+    if not has(answers, id) { return from + ": not asked" }
+    let a = answers[id]
+    if get(a, "error", null) != null { return from + ": " + str(a.error) }
+    if a.status >= 400 { return from + ": its owner answered " + str(a.status) }
+    src = get(a, "body", "")
+  }
+  let v = as_number(at_path(as_data(src), where))
+  if v == null and get(c, "optional", false) { return null }   // not reported yet (an older owner): no check, said by the type's about
+  if v == null { return from + ": no number at " + where }
+  let lo = as_number(get(c, "atLeast", null))
+  let hi = as_number(get(c, "atMost", null))
+  if lo != null and v < lo { return from + ": " + where + " is " + str(v) + ", under " + str(lo) }
+  if hi != null and v > hi { return from + ": " + where + " is " + str(v) + ", over " + str(hi) }
+  return null
+}
+
 fn check_why(c: map, out: string, ctx: map, answers: map): any {
   if c.kind == "holds" { return holds_why(c, out) }
   if c.kind == "answer" { return answer_why(c, answers) }
@@ -103,7 +157,7 @@ fn decide(q: map): map {
   var saw = []
   for c in get(ty, "checks", []) {
     var r = null
-    if c.kind == "node" { r = node_why(c, raw, schemas) } else { r = check_why(c, out, ctx, answers) }
+    if c.kind == "node" { r = node_why(c, raw, schemas) } else if c.kind == "number" { r = number_why(c, raw, answers) } else { r = check_why(c, out, ctx, answers) }
     if r == null { saw = push(saw, c.kind + ": holds") } else {
       saw = push(saw, c.kind + ": " + r)
       if why == null {
@@ -161,6 +215,11 @@ fn problems(ty: map): list {
     for c in ty.checks {
       if index_of(CHECKS, get(c, "kind", "")) < 0 { ps = push(ps, "check kind \"" + str(get(c, "kind", "")) + "\" is not one of " + join(CHECKS, ", ")) }
       if get(c, "kind", "") == "answer" and not any(get(ty, "asks", []), fn(a) = a.id == get(c, "ask", "")) { ps = push(ps, "check answer names ask \"" + str(get(c, "ask", "")) + "\", which the type does not ask") }
+      if get(c, "kind", "") == "number" {
+        if type_of(get(c, "path", null)) != "string" or len(c.path) == 0 { ps = push(ps, "check number names the value's path (a.b.c)") }
+        if get(c, "ask", null) != null and not any(get(ty, "asks", []), fn(a) = a.id == c.ask) { ps = push(ps, "check number names ask \"" + str(c.ask) + "\", which the type does not ask") }
+        if get(c, "atLeast", null) == null and get(c, "atMost", null) == null { ps = push(ps, "check number holds the value to atLeast or atMost") }
+      }
     }
   }
   for a in get(ty, "asks", []) {

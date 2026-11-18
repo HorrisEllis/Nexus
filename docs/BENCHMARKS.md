@@ -750,3 +750,17 @@ then they are written by hand.
 - **Failed runs before the pass:** 1. The held run's reason was the pattern that did not match, not RAID's words. The gate learned `reasonAt`
   (lib/automation/pipeline.js, changed in place). That was a method gap, not a language one.
 - **Gaps found:** none in Emerge. Characters are compared one by one to make a task id (there is no regular expression replace).
+
+## 2026-11-18 — the gate asks Nexus before a model is asked, in Emerge (IF3 slice a, 0.60.565)
+- **Measured:** his framework. The end state was written before the code (the factory map's IF3 slice a): a build on a machine without room
+  holds with the reason, before any agent call.
+- **His words:** "Yes, gates first" · "smarter gates probably, that should help reduce load to the llm."
+- **Method:** Emerge `test` blocks against fixtures of COS's usage answer, then COS's live usage read on his machine.
+- **Code:** `cos/pipeline/gate.eg` (+61 lines), `cos/pipeline/types/ready.gatetype`, `cos/pipeline/test/gate.test.eg` (+2 tests);
+  JavaScript changed in place: `cos/manager/usage.js` (the disk). Run on C: at 0 GB free (the tests ran; the shell's output capture failed
+  once).
+- **Result:** eg test 10/10.
+- **Failed runs before the pass:** 1. `"{"` in a string literal: Emerge read it as an interpolation and said "unterminated string" at the
+  line; written `"\{"` as gate.eg does elsewhere. Also found while writing: a JavaScript number is `num` to `type_of`, not `float`.
+- **Gaps found:** the error for a lone `{` in a string names the wrong cause ("unterminated string", not "an interpolation that is not
+  closed"); `parse_json` raises on text that is not JSON, so the gate guards it by its first character.
