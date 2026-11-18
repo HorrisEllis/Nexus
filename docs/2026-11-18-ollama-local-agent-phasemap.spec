@@ -630,3 +630,13 @@ addendum_pending: >-
 # James, 2026-11-18: "i was using ollama in the background." · "okay. do it." · "also what about saving performance metrics to a node file to
 # understand how to optimize performance in relation to events in the ledger and the deltas between"
 # Mapped: OL5b (one line, same model next, an age cap; a .metric node per turn), OL5c (Ollama's API on the bridge, for his clients), OL20 (deltas).
+
+## ADDENDUM 2026-11-18 (later) — OL5c built; sigmas and heartbeat in the line; the resource manager and every system next (his)
+# James, 2026-11-18: "yes but also the resource manager. and sigmas. imagine this in a tiny linxus distto" · "also each systems server.js?" ·
+# "heartbeat not polling" · "also make sure it doesn't become a performance issue" · "or should we get this test working"
+# Built (0.60.570): OL5c (/ollama/* on the Ollama system, model calls through the line); in OL5b, a sigma per turn against its model's baseline
+# (Welford, swaps excluded, resumed from the newest metrics file's tail), each turn an ollama.turn event (heartbeat, not polling), the metric append
+# asynchronous. Open, mapped onto the phases that own them: every system's server.js beats its own metrics and sigmas to COS (PR6 expands: COS
+# listens; CP6a expands: COS's usage per system already sampled becomes a baseline with sigmas); the resource manager reads the line's events to
+# decide a model's room before a swap (CP6f expands); the same on a tiny Linux (OS3 in docs/2026-10-05-cos-machines-phasemap.spec expands).
+# His order, after: the build test working first (NM1).

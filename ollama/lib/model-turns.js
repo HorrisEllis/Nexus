@@ -28,19 +28,36 @@ function pick(waiters, lastModel, now, maxWaitMs) {
   return oldest;
 }
 
+// 2026-11-18 — James: "also make sure it doesn't become a performance issue". One asynchronous append per turn (a turn is a model call of
+// seconds); the folder made once; a write that fails is dropped, never retried in the call's path.
 function metricWriter(dir) {
+  let made = false;
   return (node) => {
     try {
-      fs.mkdirSync(dir, { recursive: true });
-      fs.appendFileSync(path.join(dir, `turns-${new Date(node.payload.at).toISOString().slice(0, 10)}.jsonl`), JSON.stringify(node) + '\n');
+      if (!made) { fs.mkdirSync(dir, { recursive: true }); made = true; }
+      fs.appendFile(path.join(dir, `turns-${new Date(node.payload.at).toISOString().slice(0, 10)}.jsonl`), JSON.stringify(node) + '\n', () => {});
     } catch (_) { /* a metric not written never stops a call */ }
   };
 }
 
-function createTurns({ maxWaitMs = 10 * 60000, write = () => {}, now = () => Date.now(), freeMem = () => Math.round(os.freemem() / 1048576) } = {}) {
+// sigmas (his: "and sigmas"): a running baseline per model of how long a turn runs (Welford: constant time and memory per turn). A turn's sigma is
+// how many standard deviations it ran from its model's baseline; under 3 turns there is no baseline yet, said as null, never 0.
+function baselines() {
+  const by = new Map();
+  return {
+    add(model, x) { const b = by.get(model) || { n: 0, mean: 0, m2: 0 }; b.n++; const d = x - b.mean; b.mean += d / b.n; b.m2 += d * (x - b.mean); by.set(model, b); },
+    sigma(model, x) { const b = by.get(model); if (!b || b.n < 3) return null; const sd = Math.sqrt(b.m2 / (b.n - 1)); return sd > 0 ? Math.round(((x - b.mean) / sd) * 100) / 100 : 0; },
+    of(model) { const b = by.get(model); return b ? { n: b.n, meanMs: Math.round(b.mean), sdMs: b.n > 1 ? Math.round(Math.sqrt(b.m2 / (b.n - 1))) : null } : null; },
+    all() { const o = {}; for (const k of by.keys()) o[k] = this.of(k); return o; },
+  };
+}
+
+function createTurns({ maxWaitMs = 10 * 60000, write = () => {}, emit = () => {}, seed = [], now = () => Date.now(), freeMem = () => Math.round(os.freemem() / 1048576) } = {}) {
   const waiters = [];
   let busy = false, lastModel = null, seq = 0;
   const recent = [];
+  const base = baselines();
+  for (const p of seed) if (p && p.ok && typeof p.runMs === 'number' && p.model) base.add(p.model, p.runMs);
 
   function next() {
     if (busy || !waiters.length) return;
@@ -57,11 +74,16 @@ function createTurns({ maxWaitMs = 10 * 60000, write = () => {}, now = () => Dat
         const started = now(), memBefore = freeMem(), swap = lastModel !== null && lastModel !== w.model;
         let ok = true, error = null, out;
         try { out = await fn(); } catch (e) { ok = false; error = e && e.message ? e.message : String(e); out = e; }
-        const ended = now();
+        const ended = now(), runMs = ended - started;
+        // a swap's load time is not the model's speed: only a turn that kept its model counts toward its baseline
+        const sigma = ok && !swap ? base.sigma(w.model, runMs) : null;
+        if (ok && !swap) base.add(w.model, runMs);
         const node = { envelope: 1, type: 'metric', id: `turn-${started}-${++seq}`,
-          payload: { at: started, model: w.model, caller: w.meta.caller || null, door: w.meta.door || null, waitMs: started - w.since, runMs: ended - started,
-            swap, firstTurn: lastModel === null, freeMemMBBefore: memBefore, freeMemMBAfter: freeMem(), waitingAfter: waiters.length, ok, error } };
+          payload: { at: started, model: w.model, caller: w.meta.caller || null, door: w.meta.door || null, waitMs: started - w.since, runMs,
+            swap, firstTurn: lastModel === null, freeMemMBBefore: memBefore, freeMemMBAfter: freeMem(), waitingAfter: waiters.length, ok, error,
+            sigma, baseline: base.of(w.model) } };
         write(node);
+        try { emit(node.payload); } catch (_) {}   // his "heartbeat not polling": each turn is an event; nobody needs to ask /api/queue
         recent.unshift(node.payload); if (recent.length > 20) recent.pop();
         lastModel = w.model;
         busy = false;
@@ -74,7 +96,7 @@ function createTurns({ maxWaitMs = 10 * 60000, write = () => {}, now = () => Dat
   }
 
   function status() {
-    return { busy, lastModel, waiting: waiters.map((w) => ({ model: w.model, caller: w.meta.caller || null, door: w.meta.door || null, waitedMs: now() - w.since })), recent };
+    return { busy, lastModel, waiting: waiters.map((w) => ({ model: w.model, caller: w.meta.caller || null, door: w.meta.door || null, waitedMs: now() - w.since })), recent, baselines: base.all() };
   }
 
   return { run, status };
@@ -86,8 +108,20 @@ function shared() {
   if (_shared) return _shared;
   let dir = null; try { dir = path.join(require('../config.js').DATA_DIR, 'metrics'); } catch (_) {}
   const max = parseInt(process.env.OLLAMA_TURN_MAX_WAIT_MS || '', 10);
-  _shared = createTurns({ maxWaitMs: Number.isFinite(max) && max > 0 ? max : 10 * 60000, write: dir ? metricWriter(dir) : () => {} });
+  let emit = () => {}; try { const { broadcast } = require('./state.js'); emit = (p) => broadcast('ollama.turn', p); } catch (_) {}
+  _shared = createTurns({ maxWaitMs: Number.isFinite(max) && max > 0 ? max : 10 * 60000, write: dir ? metricWriter(dir) : () => {}, emit, seed: dir ? seedFrom(dir) : [] });
   return _shared;
 }
 
-module.exports = { pick, createTurns, metricWriter, shared };
+// the baselines resume from disk (persistence): the last 64 KB of the newest metrics file, read once at start, never a scan
+function seedFrom(dir, bytes = 65536) {
+  try {
+    const files = fs.readdirSync(dir).filter((f) => /^turns-\d{4}-\d{2}-\d{2}\.jsonl$/.test(f)).sort();
+    if (!files.length) return [];
+    const f = path.join(dir, files[files.length - 1]); const size = fs.statSync(f).size; const fd = fs.openSync(f, 'r');
+    const buf = Buffer.alloc(Math.min(bytes, size)); fs.readSync(fd, buf, 0, buf.length, size - buf.length); fs.closeSync(fd);
+    return buf.toString('utf8').split('\n').slice(buf.length < size ? 1 : 0).map((l) => { try { return JSON.parse(l).payload; } catch (_) { return null; } }).filter(Boolean);
+  } catch (_) { return []; }
+}
+
+module.exports = { pick, createTurns, metricWriter, baselines, seedFrom, shared };

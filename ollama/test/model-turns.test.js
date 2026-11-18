@@ -30,6 +30,26 @@ const check = (name, ok, why) => { if (ok) { pass++; console.log('  ✓', name);
   const after = await t2.run('a', {}, async () => 'ok');
   check('OL5b-7 a failure is recorded and the line goes on', err && err.message === 'boom' && after === 'ok' && nodes[nodes.length - 2].payload.ok === false && nodes[nodes.length - 2].payload.error === 'boom');
 
+  // sigmas (his: "and sigmas"), heartbeat not polling, the baseline resumed from disk
+  let c2 = 0; const ev = []; const n2 = [];
+  const t3 = T.createTurns({ now: () => c2, emit: (p) => ev.push(p), write: (n) => n2.push(n), seed: [{ model: 'a', ok: true, runMs: 100 }, { model: 'a', ok: true, runMs: 110 }] });
+  for (const ms of [90, 100, 400]) await t3.run('a', {}, async () => { c2 += ms; });
+  const sig = n2.map((n) => n.payload.sigma);
+  check('OL5b-9 a turn says how many sigmas it ran from its model\'s baseline (null until 3 turns); the baseline resumes from the seed',
+    sig[0] === null && typeof sig[1] === 'number' && sig[2] > 2 && n2[2].payload.baseline.n === 5, JSON.stringify(sig));
+  check('OL5b-10 each turn is an event (heartbeat, not polling)', ev.length === 3 && ev[2].sigma === sig[2]);
+  let c3 = 0; const n3 = []; const t4 = T.createTurns({ now: () => c3, write: (n) => n3.push(n), seed: [{ model: 'a', ok: true, runMs: 100 }, { model: 'a', ok: true, runMs: 100 }, { model: 'a', ok: true, runMs: 100 }] });
+  await t4.run('b', {}, async () => { c3 += 50; }); await t4.run('a', {}, async () => { c3 += 9000; });
+  check('OL5b-11 a turn that swapped models is not counted in its baseline (load time is not speed)', n3[1].payload.swap === true && n3[1].payload.sigma === null && n3[1].payload.baseline.n === 3);
+  const os2 = require('os'); const fs2 = require('fs'); const d = fs2.mkdtempSync(path.join(os2.tmpdir(), 'turns-'));
+  fs2.writeFileSync(path.join(d, 'turns-2026-11-18.jsonl'), [1, 2].map((i) => JSON.stringify({ payload: { model: 'a', ok: true, runMs: i } })).join('\n') + '\n');
+  check('OL5b-12 seedFrom reads the newest file\'s tail', T.seedFrom(d).length === 2);
+  fs2.rmSync(d, { recursive: true, force: true });
+
+  // OL5c: Ollama's own API through the line, and every door uses it
+  const C = require(path.join(__dirname, '..', 'routes', 'ollama-compat.js'));
+  check('OL5c-1 /ollama/* is served: model calls wait their turn, the rest pass through', C.PREFIX === '/ollama' && /shared\(\)\.run\(model \|\| 'unknown'/.test(require('fs').readFileSync(path.join(__dirname, '..', 'routes', 'ollama-compat.js'), 'utf8')) && /routes\/ollama-compat\.js/.test(require('fs').readFileSync(path.join(__dirname, '..', 'server.js'), 'utf8')));
+
   // the doors use the line
   const fs = require('fs'); const src = (f) => fs.readFileSync(path.join(__dirname, '..', f), 'utf8');
   check('OL5b-8 the jobs and /api/generate wait their turn; /api/queue says the line', /model-turns\.js'\)\.shared\(\)\.run\(model/.test(src('lib/dispatch.js')) && /model-turns\.js'\)\.shared\(\)\.run\(_model/.test(src('routes/generate.js')) && /line: require\('\.\.\/lib\/model-turns\.js'\)/.test(src('routes/queue.js')));

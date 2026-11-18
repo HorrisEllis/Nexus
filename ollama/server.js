@@ -42,6 +42,7 @@ require('../lib/ollama-port.js').provide({ generate: (o) => require('./lib/ollam
 
 // Route modules, tried in order. Each exports handle(req,res,ctx) -> boolean.
 const routes = [
+  require('./routes/ollama-compat.js'),   // OL5c 2026-11-18 — /ollama/*: Ollama's own API for his clients, model calls through the one line
   require('./routes/system.js'),
   require('./routes/uploads.js'),
   require('./routes/stream.js'),
