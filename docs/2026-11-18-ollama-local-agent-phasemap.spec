@@ -578,3 +578,9 @@ addendum_pending: >-
 # there would only add error. The 3b fits the fuzzy edge beside them: (a) eg say, his English word to the Emerge construct it means, checked by the
 # parser; (b) the next word chosen only from what the grammar allows at that point (the parser gives the set, the 3b ranks it: constrained, so it
 # cannot write invalid Emerge; GAP_4); (c) each word-to-next step kept as a row for the base model he wants to train on Emerge (OL10).
+
+## ADDENDUM 2026-11-18 (later) — Emerge and the tokenizer: both (his)
+# James, 2026-11-18: "what if emerge uses the tokenizer" · (both readings) "both would make that close to an llm." · "am i making my own llm to an extent"
+# Decided (his): (A) Emerge's words fitted to the models' tokenizers: count each construct's tokens per model (prompt_eval_count), rename the
+# costly ones; (B) the grammar enforced at the token level: the parser gives the legal next tokens, every other token blocked (llama.cpp grammar,
+# GAP_4, OL_D5 a). Phases to write: OL18_emerge_fits_the_tokenizer (A, measurable now), OL19_grammar_constrained_emerge (B, after GAP_4 is read).
