@@ -9,11 +9,11 @@ intent: null
 summary: OL7_rule_budgets_and_chunk_stops (library) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1795001277238
+exported_at: 1795005763998
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1795001277238
-lastSeenAt: 1795001277238
+firstSeenAt: 1795005763998
+lastSeenAt: 1795005763998
 fingerprint: null
 payload:
   id: OL7_rule_budgets_and_chunk_stops
@@ -32,4 +32,4 @@ payload:
     - OL6_load_score
   blocks: []
   spec: null
-  graph: 37397d44a1fb9273
+  graph: 5a8baff11c0a878d

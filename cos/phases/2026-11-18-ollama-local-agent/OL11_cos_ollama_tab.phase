@@ -7,11 +7,11 @@ intent: null
 summary: OL11_cos_ollama_tab (interface) — 4 file(s)
 system: idearium
 tags: []
-exported_at: 1795001277255
+exported_at: 1795005764014
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1795001277255
-lastSeenAt: 1795001277255
+firstSeenAt: 1795005764014
+lastSeenAt: 1795005764014
 fingerprint: null
 payload:
   id: OL11_cos_ollama_tab
@@ -30,4 +30,4 @@ payload:
     - OL9_event_stream
   blocks: []
   spec: null
-  graph: 630082c2961c8869
+  graph: 7a57b01dd0718126

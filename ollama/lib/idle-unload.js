@@ -61,4 +61,4 @@ function startIdleUnload({ state, config, intervalMs = 30000 }) {
   return u;
 }
 
-module.exports = { VERSION, createIdleUnload, startIdleUnload };
+module.exports = { VERSION, createIdleUnload, startIdleUnload, unloadNow: (host, model) => _post(host, { model, keep_alive: 0 }) };

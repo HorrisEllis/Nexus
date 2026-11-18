@@ -1,0 +1,63 @@
+envelope: 1
+uuid: nexus-export-graph-phase:OL14_benchmark_sweep:ebbc1b4275aa43cf
+type: graph
+id: phase:OL14_benchmark_sweep:ebbc1b4275aa43cf
+context: dependency graph of phase OL14_benchmark_sweep
+intent: null
+summary: 2 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1795005764026
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795005764026
+lastSeenAt: 1795005764026
+fingerprint: null
+payload:
+  for: OL14_benchmark_sweep
+  kind: phase
+  repo: null
+  hash: ebbc1b4275aa43cf
+  nodes:
+    - path: docs/BENCHMARKS.md
+      role: changes
+      exists: true
+      system: null
+    - path: emerge/bench/chunks.js
+      role: changes
+      exists: true
+      system: emerge
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 4
+    deps:
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL5_lanes_and_queue
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL7_rule_budgets_and_chunk_stops
+    dependents: []
+    upstream:
+      - docs/2026-10-19-solid-build-foundation-phasemap.spec::MF1_model_fit_routing
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL1_settings_schema_and_store
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL2_settings_routes_and_commands
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL3_apply_path
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL4_fit_and_context
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL5_lanes_and_queue
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL6_load_score
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL7_rule_budgets_and_chunk_stops
+    downstream: []
+    blockedBy:
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL5_lanes_and_queue
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL7_rule_budgets_and_chunk_stops
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 4 · blocked by OL5_lanes_and_queue, OL7_rule_budgets_and_chunk_stops
+      - 'depends on (2): OL5_lanes_and_queue, OL7_rule_budgets_and_chunk_stops · all upstream 8'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-11-18-ollama-local-agent-phasemap.spec::OL5_lanes_and_queue
+        kind: declared
+      - from: docs/2026-11-18-ollama-local-agent-phasemap.spec::OL7_rule_budgets_and_chunk_stops
+        kind: declared

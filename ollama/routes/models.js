@@ -67,6 +67,17 @@ async function handle(req, res, { method, pathname }) {
     return true;
   }
 
+  // 2026-11-18 (OL5a) — James: "no 30b for all of its steps per pipeline or request. then unload." A build tells Ollama a model's
+  // work is done; Ollama frees its memory now (keep_alive 0) instead of holding it for OLLAMA_KEEP_ALIVE.
+  if (method === 'POST' && pathname === '/api/models/unload') {
+    const body = await readBody(req);
+    const model = String((body && body.model) || '').trim();
+    if (!model) { json(res, 400, { ok: false, error: 'POST /api/models/unload requires {"model": "<tag>"}' }); return true; }
+    const r = await require('../lib/idle-unload.js').unloadNow(OLLAMA_HOST, model);
+    json(res, r.ok ? 200 : 502, { ok: !!r.ok, model, why: r.ok ? 'unloaded (keep_alive 0)' : 'Ollama did not accept the unload' });
+    return true;
+  }
+
   return false;
 }
 
@@ -74,4 +85,5 @@ module.exports = { handle };
 module.exports.commands = [
   { method: 'GET', path: '/api/models' },
   { method: 'PUT', path: '/api/model', description: 'validated against ollama\'s real /api/tags before accepting' },
+  { method: 'POST', path: '/api/models/unload', description: 'free a model\'s memory now (keep_alive 0); a build calls it when that model\'s chunks are done (OL5a)' },
 ];

@@ -1863,8 +1863,17 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
     if (co.changed) appendRow('idearium_phase_runs', { uuid: `${runId}-coders`, ...base, state: 'routed', snapshot: commitId, coderOrder: rungs.map(x => x.provider), error: null, note: co.why, ts: Date.now() });
     const generated = plan.conditions.length ? { conditions: plan.conditions, source: `${plan.conditions.length} condition${plan.conditions.length === 1 ? '' : 's'} generated from the intent by ${plan.derived ? 'Nexus, without a model (the phase\'s proof and files)' : planner} (the phase's plan)` } : null;
     if (policy.contractBuild) return runContract(plan, generated);
+    // 2026-11-18 OL5a — James: "no 30b for all of its steps per pipeline or request. then unload. like chunks for a torrent file." The planner
+    // (an Ollama model) has planned and written the test; its memory is freed before the coders load, unless the first coder is the same model.
+    const _unload = async (model, why) => {
+      let ok = false, err = null;
+      try { const r = await _nexusClient.post('ollama', '/api/models/unload', { model }, { timeout: 15000 }); ok = !!(r && r.ok); err = r && r.why; } catch (e) { err = e.message; }
+      appendRow('idearium_phase_runs', { uuid: `${runId}-unload-${String(model).replace(/[^\w.-]/g, '_')}-${Date.now()}`, ...base, state: 'unloaded', snapshot: commitId, model, ok, error: ok ? null : `unload of ${model} not confirmed: ${err}`, note: why, ts: Date.now() });
+    };
+    const _firstCoder = rungs[0] && rungs[0].base === 'ollama' ? (rungs[0].model || PRt.modelOf(rungs[0].provider)) : null;
+    if (pdp && pdp.backend === 'ollama' && pdp.model && pdp.model !== _firstCoder) await _unload(pdp.model, 'the planner\'s steps are done (plan and test); its memory goes to the coders');
     const done = []; let last = null;
-    for (let i = 0; i < plan.order.length; i++) {
+    const _tryFile = async (i, passRungs) => {
       const file = plan.order[i];
       const ck = { chunk: i + 1, chunks: plan.order.length, file, planned: true };
       const cb = PP.chunkBrief({ plan, path: file, done, repoName: target.name, phaseKey: phase });
@@ -1881,18 +1890,39 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
         let ex = []; try { ex = PP.exportsOf(fs.readFileSync(path.join(_root, file), 'utf8')); } catch (_) {}
         done.push({ path: file, exports: ex, verified: true });
         last = last || { state: 'replied', r: null, dp: {}, verified: true };
-        continue;
+        return true;
       }
       let _existing = null; if (vf.verdict !== 'missing') { try { _existing = fs.readFileSync(path.join(_root, file), 'utf8'); } catch (_) {} }
       const _msg = CB.compose({ base: cb.message + _require('../../lib/test-first.js').note(plan), plan, file, root: _root, existing: _existing, vf: vf.verdict === 'missing' ? null : vf, testPath: _tp });
-      last = await PRt.climb({ rungs, policy, attempt: makeAttempt({ msg: _msg, files: [file], ck, verify: (code) => PP.checkChunk(code, plan, file), bare: true }), onOutcome: makeOnOutcome(ck) });
-      if (last.state !== 'replied') {
+      last = await PRt.climb({ rungs: passRungs, policy, attempt: makeAttempt({ msg: _msg, files: [file], ck, verify: (code) => PP.checkChunk(code, plan, file), bare: true }), onOutcome: makeOnOutcome(ck) });
+      if (last.state !== 'replied') return false;
+      done.push({ path: file, exports: PP.exportsOf(_landedCode(last.r, file)) });
+      return true;
+    };
+    const _stop = (i) => {
+      const file = plan.order[i];
+      const ck = { chunk: i + 1, chunks: plan.order.length, file, planned: true };
+      {
         appendRow('idearium_phase_runs', { uuid: `${runId}-c${ck.chunk}-stopped`, ...base, ...ck, state: 'failed', chunkStopped: true, snapshot: commitId,
           error: `planned file ${ck.chunk} of ${ck.chunks} (${file}) did not land — the run stops here; ${done.length ? `${done.map(d => d.path).join(', ')} came back` : 'nothing came back'}`, ts: Date.now() });
         getIdeaOS().emit('idearium.repo.phase.run', { ...base, ...ck, state: 'failed', snapshot: commitId });
         return { ...last, stopped: true };
       }
-      done.push({ path: file, exports: PP.exportsOf(_landedCode(last.r, file)) });
+    };
+    if (!policy.batchByModel) {
+      // the per-file climb (routing.batch_by_model: off): each file climbs the whole ladder before the next
+      for (let i = 0; i < plan.order.length; i++) { if (!(await _tryFile(i, rungs))) return _stop(i); }
+    } else {
+      // OL5a: one pass per rung, every pending file in plan order; a model loaded once for its pass, unloaded after
+      let pending = plan.order.map((_, i) => i);
+      for (const ps of PRt.passes(rungs)) {
+        if (!pending.length) break;
+        const still = [];
+        for (const i of pending) { if (!(await _tryFile(i, [ps.rung]))) still.push(i); }
+        pending = still;
+        if (ps.unload) await _unload(ps.unload, `${ps.rung.provider}'s pass is done (${plan.order.length - pending.length} of ${plan.order.length} files landed)`);
+      }
+      if (pending.length) return _stop(pending[0]);
     }
     if (!last) last = { state: 'replied', r: null, dp: {}, verified: true };
     return { ...last, dp: last.dp || {}, chunked: true, generated: plan.conditions.length ? { conditions: plan.conditions, source: `${plan.conditions.length} condition${plan.conditions.length === 1 ? '' : 's'} generated from the intent by ${plan.derived ? 'Nexus, without a model' : planner} (the phase's plan)` } : null };

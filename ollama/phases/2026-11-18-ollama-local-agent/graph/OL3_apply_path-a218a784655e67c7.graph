@@ -1,0 +1,67 @@
+envelope: 1
+uuid: nexus-export-graph-phase:OL3_apply_path:a218a784655e67c7
+type: graph
+id: phase:OL3_apply_path:a218a784655e67c7
+context: dependency graph of phase OL3_apply_path
+intent: null
+summary: 3 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1795005763980
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795005763980
+lastSeenAt: 1795005763980
+fingerprint: null
+payload:
+  for: OL3_apply_path
+  kind: phase
+  repo: null
+  hash: a218a784655e67c7
+  nodes:
+    - path: ollama/apply/apply.eg
+      role: changes
+      exists: false
+      system: ollama
+    - path: ollama/apply/env-profile.eg
+      role: changes
+      exists: false
+      system: ollama
+    - path: ollama/test/apply.test.eg
+      role: changes
+      exists: false
+      system: ollama
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL1_settings_schema_and_store
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL2_settings_routes_and_commands
+    dependents:
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL5_lanes_and_queue
+    upstream:
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL1_settings_schema_and_store
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL2_settings_routes_and_commands
+    downstream:
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL11_cos_ollama_tab
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL12_uses_tier_a
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL13_uses_tier_b
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL14_benchmark_sweep
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL5_lanes_and_queue
+    blockedBy:
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL1_settings_schema_and_store
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL2_settings_routes_and_commands
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2 · blocked by OL1_settings_schema_and_store, OL2_settings_routes_and_commands
+      - 'depends on (2): OL1_settings_schema_and_store, OL2_settings_routes_and_commands'
+      - 'needed by (1): OL5_lanes_and_queue · all downstream 5'
+    edges:
+      - from: docs/2026-11-18-ollama-local-agent-phasemap.spec::OL1_settings_schema_and_store
+        kind: declared
+      - from: docs/2026-11-18-ollama-local-agent-phasemap.spec::OL2_settings_routes_and_commands
+        kind: declared

@@ -1,0 +1,144 @@
+envelope: 1
+uuid: nexus-export-graph-phase:OL7_rule_budgets_and_chunk_stops:5a8baff11c0a878d
+type: graph
+id: phase:OL7_rule_budgets_and_chunk_stops:5a8baff11c0a878d
+context: dependency graph of phase OL7_rule_budgets_and_chunk_stops
+intent: null
+summary: 12 node(s), 3 crossing(s)
+system: idearium
+tags: []
+exported_at: 1795005763998
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795005763998
+lastSeenAt: 1795005763998
+fingerprint: null
+payload:
+  for: OL7_rule_budgets_and_chunk_stops
+  kind: phase
+  repo: null
+  hash: 5a8baff11c0a878d
+  nodes:
+    - path: cortex/core/raid/contract-adapters.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/contract-gates.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: cos/pipeline/budget.eg
+      role: changes
+      exists: false
+      system: cos
+    - path: cos/pipeline/chunk-plan.eg
+      role: changes
+      exists: false
+      system: cos
+    - path: cos/pipeline/test/budget.test.eg
+      role: changes
+      exists: false
+      system: cos
+    - path: cortex/core/raid/contract-intake.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/contract-template.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/contract-v2-door.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/cli/route-commands.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/checks/ck-247-decomposition.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/test-raid-input.test.js
+      role: used-by
+      exists: true
+      system: null
+  edges:
+    - from: cortex/core/raid/contract-intake.js
+      to: cortex/core/raid/contract-adapters.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: cortex/core/raid/contract-adapters.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-adapters.js
+      kind: requires
+    - from: cortex/core/raid/contract-template.js
+      to: cortex/core/raid/contract-gates.js
+      kind: requires
+    - from: cortex/core/raid/contract-v2-door.js
+      to: cortex/core/raid/contract-gates.js
+      kind: requires
+    - from: lib/checks/ck-247-decomposition.js
+      to: cortex/core/raid/contract-gates.js
+      kind: requires
+    - from: tests/modules/test-raid-input.test.js
+      to: cortex/core/raid/contract-gates.js
+      kind: requires
+  crossings:
+    - from: idearium/api/index.js
+      to: cortex/core/raid/contract-adapters.js
+      fromSystem: idearium
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-adapters.js
+      fromSystem: idearium
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: lib/checks/ck-247-decomposition.js
+      to: cortex/core/raid/contract-gates.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL4_fit_and_context
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL6_load_score
+    dependents:
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL8_gate_rewind_file_tier
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL14_benchmark_sweep
+    upstream:
+      - docs/2026-10-19-solid-build-foundation-phasemap.spec::MF1_model_fit_routing
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL1_settings_schema_and_store
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL4_fit_and_context
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL6_load_score
+    downstream:
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL10_training_ledger
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL13_uses_tier_b
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL14_benchmark_sweep
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL8_gate_rewind_file_tier
+    blockedBy:
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL4_fit_and_context
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL6_load_score
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2 · blocked by OL4_fit_and_context, OL6_load_score
+      - 'depends on (2): OL4_fit_and_context, OL6_load_score · all upstream 4'
+      - 'needed by (2): OL8_gate_rewind_file_tier, OL14_benchmark_sweep · all downstream 4'
+    edges:
+      - from: docs/2026-11-18-ollama-local-agent-phasemap.spec::OL4_fit_and_context
+        kind: declared
+      - from: docs/2026-11-18-ollama-local-agent-phasemap.spec::OL6_load_score
+        kind: declared

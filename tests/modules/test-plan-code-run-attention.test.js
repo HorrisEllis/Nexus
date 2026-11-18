@@ -77,6 +77,15 @@ const src = (p) => fs.readFileSync(path.join(ROOT, p), 'utf8');
     const big = 'ollama:huihui_ai/qwen3-coder-abliterated:30b';
     check('PC-16b a named Ollama model plans', PR.planMode(PR.policyFrom({ planner: big }), { rungs }).planner === big && !PR.planMode(PR.policyFrom({ planner: 'ollama' }), { rungs: [rungs[1]] }).plan);
     check('PC-16c the build calls a named Ollama planner on its model', /model: String\(planner\)\.slice\('ollama:'\.length\)/.test(src('idearium/api/index.js')));
+    // 2026-11-18 OL5a — James: "no 30b for all of its steps per pipeline or request. then unload. like chunks for a torrent file."
+    const ps = PR.passes([{ provider: 'ollama:deepseek-coder-v2:16b', base: 'ollama', model: 'deepseek-coder-v2:16b' }, { provider: 'ollama:q30', base: 'ollama', model: 'q30' }, { provider: 'gemini', base: 'gemini' }]);
+    check('OL5a-1 one pass per rung; each Ollama model unloaded after its pass; batch on by default, off by setting',
+      ps.length === 3 && ps[0].unload === 'deepseek-coder-v2:16b' && ps[1].unload === 'q30' && ps[2].unload === null && PR.policyFrom({}).batchByModel === true && PR.policyFrom({ batch_by_model: 'off' }).batchByModel === false);
+    check('OL5a-2 the same model twice in a row is not unloaded between', PR.passes([{ provider: 'ollama:a', base: 'ollama', model: 'a' }, { provider: 'ollama:a', base: 'ollama', model: 'a' }])[0].unload === null);
+    const API5a = src('idearium/api/index.js');
+    check('OL5a-3 the build runs passes, retries only what is pending, unloads after each pass and the planner before coding',
+      /for \(const ps of PRt\.passes\(rungs\)\)/.test(API5a) && /_tryFile\(i, \[ps\.rung\]\)/.test(API5a) && /if \(ps\.unload\) await _unload/.test(API5a) && /pdp\.model !== _firstCoder\) await _unload\(pdp\.model/.test(API5a) && /'\/api\/models\/unload'/.test(API5a));
+    check('OL5a-4 the Ollama system serves POST /api/models/unload (keep_alive 0)', /pathname === '\/api\/models\/unload'/.test(src('ollama/routes/models.js')) && /unloadNow/.test(src('ollama/lib/idle-unload.js')));
     check('PC-17 the coder ladder puts Ollama first', PR.coderRungs(rungs).map(r => r.provider).join() === 'ollama:qwen2.5-coder:3b,claude,chatgpt');
     const cfg = require(path.join(ROOT, 'idearium/lib/config-core.cjs'));
     const cfgText = src('idearium/lib/config-core.cjs');

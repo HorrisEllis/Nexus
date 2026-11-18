@@ -1,0 +1,60 @@
+envelope: 1
+uuid: nexus-export-graph-phase:OL2_settings_routes_and_commands:6c258baa9b62b09e
+type: graph
+id: phase:OL2_settings_routes_and_commands:6c258baa9b62b09e
+context: dependency graph of phase OL2_settings_routes_and_commands
+intent: null
+summary: 2 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1795005763975
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795005763975
+lastSeenAt: 1795005763975
+fingerprint: null
+payload:
+  for: OL2_settings_routes_and_commands
+  kind: phase
+  repo: null
+  hash: 6c258baa9b62b09e
+  nodes:
+    - path: ollama/routes/settings.eg
+      role: changes
+      exists: false
+      system: ollama
+    - path: ollama/test/settings-routes.test.eg
+      role: changes
+      exists: false
+      system: ollama
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL1_settings_schema_and_store
+    dependents:
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL3_apply_path
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL11_cos_ollama_tab
+    upstream:
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL1_settings_schema_and_store
+    downstream:
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL11_cos_ollama_tab
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL12_uses_tier_a
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL13_uses_tier_b
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL14_benchmark_sweep
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL3_apply_path
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL5_lanes_and_queue
+    blockedBy:
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL1_settings_schema_and_store
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · blocked by OL1_settings_schema_and_store
+      - 'depends on (1): OL1_settings_schema_and_store'
+      - 'needed by (2): OL3_apply_path, OL11_cos_ollama_tab · all downstream 6'
+    edges:
+      - from: docs/2026-11-18-ollama-local-agent-phasemap.spec::OL1_settings_schema_and_store
+        kind: declared
