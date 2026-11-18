@@ -60,6 +60,32 @@ const alive = (pid) => { try { process.kill(pid, 0); return true; } catch (e) { 
   await until(() => m.ledger({ limit: 20 }).some((e) => e.kind === 'adopted-busy'), 6000); await wait(1500);
   check('MG15-8 a holder that does not answer is kept as degraded, not stopped', process.platform !== 'win32' || (alive(mute.pid) && m.get('busy').pid === mute.pid && m.get('busy').state === 'degraded'), JSON.stringify({ st: m.get('busy').state, alive: alive(mute.pid) }));
   m.shutdown({ by: 'test' }); mute.kill(); try { fs.rmSync(d3, { recursive: true, force: true }); } catch (_) {}
+  // MG21 (0.60.584): a system COS starts is outside the manager's process tree, so the service's tree-kill of the manager does not take it;
+  // and when an escaped system ends, COS sees it within seconds and starts it again
+  if (process.platform === 'win32') {
+    const d4 = fs.mkdtempSync(path.join(os.tmpdir(), 'cos-escape-'));
+    const tick = path.join(d4, 'ticker.js'); fs.writeFileSync(tick, "setInterval(() => console.log('tick'), 200);\n");
+    const host = path.join(d4, 'host.js');
+    fs.writeFileSync(host, `const { createSupervisor } = require(${JSON.stringify(path.join(ROOT, 'cos', 'manager', 'supervisor.js'))});
+const s = createSupervisor({ root: ${JSON.stringify(d4)}, declarations: [{ name: 't', system: 't', cmd: process.execPath, args: [${JSON.stringify(tick)}], cwd: ${JSON.stringify(d4)} }],
+  ledgerFile: ${JSON.stringify(path.join(d4, 'manager', 'ledger.jsonl'))}, policy: { outlive: true }, log: () => {} });
+s.boot().then(() => { console.log('PID ' + s.get('t').pid); setInterval(() => {}, 1e6); });\n`);
+    const h = require('child_process').spawn(process.execPath, [host], { stdio: ['ignore', 'pipe', 'inherit'] });
+    const sysPid = await new Promise((r) => { let b = ''; h.stdout.on('data', (c) => { b += c; const m = /PID (\d+)/.exec(b); if (m) r(Number(m[1])); }); setTimeout(() => r(null), 15000); });
+    require('child_process').spawnSync('taskkill', ['/PID', String(h.pid), '/T', '/F'], { windowsHide: true });   // what the service does
+    await wait(1500);
+    check('MG15-9 MG21: the manager\'s tree killed (as the service does), the system it started lives on', !!sysPid && alive(sysPid) && !alive(h.pid), JSON.stringify({ sysPid, sys: sysPid && alive(sysPid), host: alive(h.pid) }));
+    try { require('child_process').spawnSync('taskkill', ['/PID', String(sysPid), '/T', '/F'], { windowsHide: true }); } catch (_) {}
+
+    const e = createSupervisor({ root: d4, declarations: [{ name: 't', system: 't', cmd: process.execPath, args: [tick], cwd: d4 }], ledgerFile: path.join(d4, 'm2', 'ledger.jsonl'), policy: { outlive: true }, log: () => {} });
+    await e.boot(); const p1 = e.get('t').pid;
+    require('child_process').spawnSync('taskkill', ['/PID', String(p1), '/F'], { windowsHide: true });
+    const back = await until(() => e.get('t').pid && e.get('t').pid !== p1 && alive(e.get('t').pid), 12000);
+    check('MG15-10 MG21: an escaped system that ends is seen within seconds and started again', back && e.ledger({ limit: 50 }).some((x) => x.kind === 'crash' && x.system === 't'), JSON.stringify({ p1, now: e.get('t').pid, st: e.get('t').state }));
+    e.shutdown({ by: 'test' }); await wait(500);
+    check('MG15-11 MG21: a shutdown (the service\'s Stop) still ends an escaped system', !alive(e.get('t').pid || p1), e.get('t').state);
+    try { fs.rmSync(d4, { recursive: true, force: true }); } catch (_) {}
+  }
   b.shutdown({ by: 'test' });
   try { fs.rmSync(dir, { recursive: true, force: true }); } catch (_) {}
   console.log(`${pass} passed, ${fail} failed`);

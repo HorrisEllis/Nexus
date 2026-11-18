@@ -207,11 +207,33 @@ function createSupervisor({ root, declarations = null, policy = {}, ledgerFile =
     return null;
   }
   // an adopted process: started by an earlier manager, still alive; stopped by its pid; its end seen by the kill or the reaper's minute
+  // 0.60.584: the pid may be filled in later (an escaped spawn, MG21); its end is watched every 2 s by a signal-0 check (no process started);
+  // taskkill runs async so a slow Windows never blocks COS (MG20).
   function _adopted(name, pid) {
     const pr = { pid, adopted: true, on() {}, kill(sig) {
-      try { if (process.platform === 'win32') require('child_process').spawnSync('taskkill', ['/PID', String(pid), '/T', '/F'], { windowsHide: true, timeout: 15000 }); else process.kill(pid, sig || 'SIGTERM'); } catch (_) {}
-      const t = setTimeout(() => { if (!_alive(pid)) onExit(name, pr, null, sig || 'SIGTERM'); }, 1500); if (t.unref) t.unref(); return true; } };
+      const done = () => { const t = setTimeout(() => { if (!_alive(pr.pid)) onExit(name, pr, null, sig || 'SIGTERM'); }, 1500); if (t.unref) t.unref(); };
+      if (!pr.pid) { done(); return true; }
+      if (process.platform === 'win32') require('child_process').execFile('taskkill', ['/PID', String(pr.pid), '/T', '/F'], { windowsHide: true, timeout: 15000 }, done);
+      else { try { process.kill(pr.pid, sig || 'SIGTERM'); } catch (_) {} done(); }
+      return true; } };
+    const watch = setInterval(() => { const s = S.get(name); if (!s || s.proc !== pr) return clearInterval(watch); if (pr.pid && !_alive(pr.pid)) { clearInterval(watch); onExit(name, pr, null, null); } }, 2000);
+    if (watch.unref) watch.unref();
     return pr;
+  }
+  // MG21 (0.60.584) — James, 2026-11-18: "Both" (stop the freezes, and the systems COS starts survive a kill of its manager). Found: the Windows
+  // service kills the manager's process tree when its health does not answer; every system this manager had started died with it (Idearium's
+  // NM1 builds at 14:38 and 14:59), while systems adopted from an earlier manager lived on (their parent was gone). On Windows a system is
+  // therefore started through a launcher that starts it detached and exits at once: the system's parent is gone, it is outside the tree, and
+  // COS holds it as it holds an adopted one (its pid, its log files, its end seen in 2 s). Elsewhere, and in tests with their own spawn, as before.
+  const ESCAPE_JS = "const o=JSON.parse(process.env.COS_ESCAPE);const fs=require('fs');const out=fs.openSync(o.out,'a'),err=fs.openSync(o.err,'a');" +
+    "const c=require('child_process').spawn(o.cmd,o.args,{cwd:o.cwd,env:process.env,stdio:['ignore',out,err],detached:true,shell:o.shell,windowsHide:true});" +
+    "c.on('error',(e)=>{process.stderr.write(String(e.message));process.exit(1);});if(c.pid){process.stdout.write(String(c.pid));c.unref();process.exit(0);}";
+  function _escape(name, c, env, fds) {
+    // the launcher runs to its end here (about 0.1-0.3 s, only when a system starts), so the system's pid is known at once, as with a direct spawn
+    const L = require('child_process').spawnSync(process.execPath, ['-e', ESCAPE_JS], { env: { ...env, COS_ESCAPE: JSON.stringify({ cmd: c.cmd, args: c.args, cwd: c.cwd, shell: c.shell || false, out: fds.out.f, err: fds.err.f }) }, encoding: 'utf8', timeout: 20000, windowsHide: true });
+    const pid = parseInt(L.stdout, 10);
+    if (!pid) throw new Error(`the launcher did not start it: ${(L.error && L.error.message) || String(L.stderr || '').trim() || 'exit ' + L.status}`);
+    const pr = _adopted(name, pid); pr.escaped = true; return pr;
   }
   async function _adopt(by) {
     if (!OUT) return [];
@@ -316,7 +338,8 @@ function createSupervisor({ root, declarations = null, policy = {}, ledgerFile =
     if (!write('spawn', name, `${c.via ? `in compartment ${d.compartment || d.name}, behind its wall (${(d.boundary.mode || 'enforce')}${c.via === 'NODE_OPTIONS' ? ', through NODE_OPTIONS' : ''}): ` : ''}${c.cmd} ${c.args.join(' ')}`, { by })) return false;
     let proc; let fds = null;
     if (OUT && !isWindowed(d, c)) { try { fds = _openLogs(name); } catch (e) { log(`[${name}] its log files could not be opened (${e.message}): piped to this manager`); fds = null; } }   // MG15
-    try { proc = spawnFn(c.cmd, c.args, { cwd: c.cwd, env: { ...process.env, ...(d.env || {}), ...(c.env || {}) }, stdio: fds ? ['ignore', fds.out.fd, fds.err.fd] : ['ignore', 'pipe', 'pipe'], detached: !!fds, shell: c.shell, windowsHide: !isWindowed(d, c) }); }   /* SC16 (0.60.400): no console window per system; a windowed one (Clear Glass) shows its own */
+    const escape = fds && process.platform === 'win32' && spawnFn === spawn && P.escape !== false;   // MG21
+    try { proc = escape ? _escape(name, c, { ...process.env, ...(d.env || {}), ...(c.env || {}) }, fds) : spawnFn(c.cmd, c.args, { cwd: c.cwd, env: { ...process.env, ...(d.env || {}), ...(c.env || {}) }, stdio: fds ? ['ignore', fds.out.fd, fds.err.fd] : ['ignore', 'pipe', 'pipe'], detached: !!fds, shell: c.shell, windowsHide: !isWindowed(d, c) }); }   /* SC16 (0.60.400): no console window per system; a windowed one (Clear Glass) shows its own */
     catch (err) { if (fds) { try { fs.closeSync(fds.out.fd); fs.closeSync(fds.err.fd); } catch (_) {} } onExit(name, proc, null, null, `spawn threw: ${err.message}`); return false; }
     if (fds) { try { fs.closeSync(fds.out.fd); fs.closeSync(fds.err.fd); } catch (_) {} }   // the child holds its own
     s.proc = proc; s.pid = proc.pid || null; s.state = 'starting'; s.startedAt = Date.now(); s.by = by; s.sawAddrInUse = false;
@@ -464,7 +487,11 @@ function createSupervisor({ root, declarations = null, policy = {}, ledgerFile =
     let lines = []; try { lines = fs.readFileSync(LEDGER, 'utf8').split('\n').filter(Boolean).map(l => JSON.parse(l)); } catch (_) {}
     return (system ? lines.filter(e => e.system === system) : lines).slice(-limit);
   }
-  function shutdown({ by = 'person' } = {}) { clearInterval(reaper); clearInterval(desktopWatch); for (const [n, s] of S) if (running(s)) stop(n, { by }); write('stop', null, 'supervisor shutdown', { by }); }
+  function shutdown({ by = 'person' } = {}) { clearInterval(reaper); clearInterval(desktopWatch);
+    // MG21: an adopted or escaped system is outside this process's tree, so a shutdown (the service's Stop) ends it here and waits for it:
+    // the manager may exit right after, and an async kill would leave it running
+    for (const s of S.values()) if (running(s) && s.proc && s.proc.adopted && s.proc.pid && process.platform === 'win32') { try { require('child_process').spawnSync('taskkill', ['/PID', String(s.proc.pid), '/T', '/F'], { windowsHide: true, timeout: 15000 }); } catch (_) {} }
+    for (const [n, s] of S) if (running(s)) stop(n, { by }); write('stop', null, 'supervisor shutdown', { by }); }
 
   // MG17: a line the supervisor did not act on but must keep (the handover, naming the version that made it)
   function note(kind, why, { by = 'person', system = null } = {}) { if (!/^[a-z][a-z-]{1,30}$/.test(String(kind))) throw new Error(`a note's kind is a word: ${kind}`); return write(kind, system, why, { by }); }
