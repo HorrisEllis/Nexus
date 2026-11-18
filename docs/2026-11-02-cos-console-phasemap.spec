@@ -465,3 +465,43 @@ phases_addendum_2026_11_14_ch:
 # selected; the bridge's PUT /api/model with it answered ok. No change was saved (the one model is already his). Not proved: a save that
 # changes the model (only one is installed). Found: the Clear Glass driver (clear-glass/src/driver/glass.js) launches its host, which then
 # exits 0 the moment it opens a page, on his machine (also PL-06's "Clear Glass host exited"); not looked into.
+
+# ── ADDENDUM 2026-11-18 — storage: the drives in COS, every location a setting, controlled access to both drives (mapped before code) ──
+# James, 2026-11-18, after his C: drive reached 0 GB and was found (by reading, not by COS) to hold Epic Games 78 GB, COS's compartments 17.5 GB,
+# Ollama's models 10 GB, the test VM's images 6.8 GB and an Android SDK 4.1 GB: "I deleted some. I really want nexus to be able to do that. cos ui.
+# have access to both drives, give controlled access to the system and files." · "cos is supposed to be able to let me change it in the settings
+# of cos ui but its absent." (the test VM's folder) · "D is a nas drive." · "D:\COS is the application location"
+# Done by hand the same day (said, so the page can do it next time): the SDK moved, not deleted, to D:\Backups\android-sdk\Sdk; C: 0 → 85.5 GB.
+# Read first (§8.6): COS's usage reports each drive's free space (0.60.565 usage.host.disk); the test VM's folder is already a setting in code
+# (cos/testenv/host.js: COS_TESTENV_HOME, else %LOCALAPPDATA%\nexus\cos-testenv), with no screen; Ollama keeps its own (OLLAMA_MODELS).
+  SC19_storage_the_drives_and_what_fills_them:
+    status: OPEN
+    depends_on: [SC7_the_updates_section]
+    files: [cos/manager/usage.js, cos/manager/storage.js, cos/manager/server.js, cos/ui/cockpit/sections/storage, idearium/cli/route-commands.js]
+    does: >-
+      A Storage page in COS: each drive (free, total, NAS or local), and what fills it by owner: each system's data folder, the compartments,
+      the test VM's images, Ollama's models, the caches; measured by COS, said when a folder cannot be read. From there he can move a folder to
+      another drive (move, never delete; the old path kept until the move is verified) or clear a cache, each act asked of him and recorded
+      (Versionium, §17.12). The same as a route and a command row, so an agent can propose a move that he approves (PC15: an agent's act is a
+      proposal). D: is a NAS: a move there is said to be slower to read; images a VM boots from stay on a local drive unless he says.
+    proof: "on his machine: the page lists C: and D: with what fills them; a folder moved by the page is found at the new place and gone from the old"
+  SC20_every_location_a_setting:
+    status: OPEN
+    depends_on: [SC19_storage_the_drives_and_what_fills_them]
+    files: [cos/ui/cockpit/sections/config, cos/manager/server.js, cos/testenv/host.js, cos/runtime]
+    does: >-
+      The places Nexus keeps big things are settings in COS's Configuration, each with its owner and what moving it means: the test VM's folder
+      (COS_TESTENV_HOME, set by COS for the systems it starts), the compartments' folder, and Ollama's models folder (Ollama's own OLLAMA_MODELS:
+      COS says where it is and offers the move, Ollama restarted by him). A setting changed moves nothing silently: it offers the move (SC11).
+    proof: "the test VM's folder set in COS, the testenv run from the new place"
+  SC21_controlled_access_to_both_drives:
+    status: OPEN
+    depends_on: [SC19_storage_the_drives_and_what_fills_them]
+    files: [cos/manager/server.js, cos/security, cos/manager/contract.json]
+    does: >-
+      Nexus reaches his files on both drives only through COS: roots he grants (a folder, read or read-write), each grant a setting he can take
+      back, every read and write by a system or an agent recorded; outside a grant, refused with the reason (§5.9, sovereignty; the agent's
+      reach is his to give). Readings to confirm with him: which roots by default (none, or his Nexus and projects folders), and whether an
+      agent's write needs his yes each time or once per grant.
+    proof: "a grant made in COS; a read inside it answers, a read outside it is refused with the reason; the record shows both"
+# Order (his, standing): the pipeline, Emerge and Ollama building, smarter gates first. These three wait behind IF3 unless he says otherwise.
