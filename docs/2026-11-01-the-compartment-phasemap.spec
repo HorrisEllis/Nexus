@@ -510,3 +510,13 @@ phases_addendum_cp3a:
 # lib/prevention.js PREVENT_FREE 0.30 → 0.25 (the monitor's way back to ok after pressure: 20% + clearMarginPct 5%); NEXUS_PREVENT_FREE
 # overrides. Seen: his 16 GB machine at 26.5-30% free for two hours after one critical moment, the RAID worker and Idearium's snapshot
 # waiting throughout. Not judged against the machine's baseline as the floors are (0.60.501): a later step if 25% is still wrong for him.
+
+# ── ADDENDUM 2026-11-18 — CP6a expanded: CPU utilisation read (mapped before code) ──
+# James, 2026-11-18: "i feel all we can do besides linxus to optimize, later not now, optimizing ollama, each system, getting them decoupled, also the
+# cpu utilization doesn't work, can you hook that in now that its a service,"
+# Found (read, not assumed): COS's usage reported cpuPct null for every system (the PowerShell reader gives CPU seconds, not a percent) and load1 0 for
+# the host (os.loadavg is always 0 on Windows).
+# CP6a slice: cos/manager/usage.js computes each system's cpuPct from its CPU seconds between two readings (delta seconds / elapsed / cores), and the
+# host's cpuPct from os.cpus() times between two readings; the first reading says null (no interval yet), never 0. No new process, no poll added:
+# the sampler COS already runs gives the interval. files: [cos/manager/usage.js, tests/modules/test-cos-usage-cpu.test.js]. depends_on: [CP6a].
+# Later, his order ("later not now"): Linux (OS3), Ollama, each system optimised and decoupled (PR6, CP6).

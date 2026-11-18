@@ -72,15 +72,34 @@ function perPidAsync(pids) {
   return tryOne(0);
 }
 
+// 2026-11-18 (CP6a) — James: "the cpu utilization doesn't work, can you hook that in now that its a service". The readers give CPU seconds, not a
+// percent, and os.loadavg is always 0 on Windows: both percents are computed from two readings (the sampler COS already runs gives the interval).
+// The first reading has no interval: null, said, never 0.
+const _cpuPrev = { at: 0, perPid: new Map(), host: null };
+function _hostTimes() { let idle = 0, all = 0; for (const c of os.cpus()) { const t = c.times; idle += t.idle; all += t.user + t.nice + t.sys + t.idle + t.irq; } return { idle, all }; }
+function _cpu(out) {
+  const now = Date.now(), cores = os.cpus().length || 1, dt = (now - _cpuPrev.at) / 1000;
+  const pct = {};
+  for (const [pid, r] of Object.entries(out)) {
+    const was = _cpuPrev.perPid.get(pid);
+    if (typeof r.cpuSec === 'number' && was != null && dt > 0.5 && r.cpuSec >= was) pct[pid] = Math.round((r.cpuSec - was) / dt / cores * 1000) / 10;
+  }
+  const h = _hostTimes(), p = _cpuPrev.host;
+  const hostPct = p && h.all > p.all ? Math.round((1 - (h.idle - p.idle) / (h.all - p.all)) * 1000) / 10 : null;
+  _cpuPrev.at = now; _cpuPrev.host = h; _cpuPrev.perPid = new Map(Object.entries(out).filter(([, r]) => typeof r.cpuSec === 'number').map(([pid, r]) => [pid, r.cpuSec]));
+  return { pct, hostPct };
+}
+
 function shape(systems, policy, { out, why, reader }) {
   const per = {};
+  const cpu = _cpu(out);
   for (const s of systems) {
     if (!s.pid) per[s.name] = { notRead: 'not running' };
-    else if (out[s.pid]) per[s.name] = { ...out[s.pid], reader };
+    else if (out[s.pid]) per[s.name] = { ...out[s.pid], ...(out[s.pid].cpuPct == null && cpu.pct[s.pid] != null ? { cpuPct: cpu.pct[s.pid] } : {}), reader };
     else per[s.name] = { notRead: why || `the OS did not report pid ${s.pid} (${reader})` };
   }
   const free = os.freemem(), total = os.totalmem();
-  return { at: Date.now(), reader, host: { cpus: os.cpus().length, load1: Math.round(os.loadavg()[0] * 100) / 100, freeMemPct: Math.round(free / total * 1000) / 10,
+  return { at: Date.now(), reader, host: { cpus: os.cpus().length, cpuPct: cpu.hostPct, load1: Math.round(os.loadavg()[0] * 100) / 100, freeMemPct: Math.round(free / total * 1000) / 10,
     freeMB: Math.round(free / 1048576), totalMB: Math.round(total / 1048576), haltPct: policy.memoryHaltPct ?? null, criticalHaltPct: policy.criticalHaltPct ?? null, disk: disks() }, systems: per };
 }
 
