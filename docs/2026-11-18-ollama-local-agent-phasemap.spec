@@ -561,3 +561,13 @@ addendum_pending: >-
 # (num_thread 8, num_batch, num_ctx from free memory, think off); (3) Ollama aware of Nexus: a fixed prefix card (what Nexus is, its tools, the step's
 # contract), identical on every call so the prefix is cached; (4) after a chunk, the model is asked one question, "what tool would have made this
 # easier?", kept as a proposal (PC15: an agent's act is a proposal) for him, so capability grows from the models' own feedback.
+
+## ADDENDUM 2026-11-18 (later) — verification from both sides (his question; the coder's reading, to confirm)
+# James, 2026-11-18: "You're adding that routing to raid right?Is the 16b good enough for checking and verifying each file. Cross domain
+# verification, conterfactial or bidirectional causal chaining. Starting from two sides and find the tension or gap in between."
+# Done: routing.batch_by_model set in RAID (on); planner the 30B again (his "30b for all of its steps").
+# The coder's reading: the deterministic checks decide first (eg check, the test, verify-first, the plan's exports); a model never decides a pass
+# (OL_D9). From the spec side, the 30B writes the test and the conditions (already its step). From the code side, DeepSeek 16b reads the landed file
+# and states what it does, without seeing the plan; the gate compares the two statements, and the difference is the gap with its tension, held for
+# the next pass or for him. Describing code is easier than writing it, so the 16b is good enough for that side; it would not be good enough to be the
+# only judge. Proposed as a phase (OL17_verify_from_both_sides) once he confirms.
