@@ -16,7 +16,8 @@
   async function now(target) { try { return (await COS.call('GET', `/api/cos/systems/${encodeURIComponent(target)}`)).system; } catch (_) { return null; } }
   async function take(p) {
     const cur = await now(p.target);
-    const changed = cur && (cur.state !== p.seen.state || cur.pid !== p.seen.pid) ? `<br><br><b>It has changed since ${esc(p.by)} asked:</b> it was ${esc(COS.stateLabel(p.seen.state))}, it is ${esc(COS.stateLabel(cur.state))} now.` : '';
+    // 2026-11-18: a proposal about COS itself (restart-cos) saw no system: p.seen is null, and the page broke reading it ("Cannot read properties of null")
+    const changed = cur && p.seen && (cur.state !== p.seen.state || cur.pid !== p.seen.pid) ? `<br><br><b>It has changed since ${esc(p.by)} asked:</b> it was ${esc(COS.stateLabel(p.seen.state))}, it is ${esc(COS.stateLabel(cur.state))} now.` : '';
     if (!await COS.confirm({ title: `${p.verb} ${p.target}?`, body: `${esc(p.by)} proposed it: “${esc(p.why)}”${changed}<br><br>Taken, it runs now as <b>your</b> act.`, act: `Take and ${p.verb}`, danger: p.verb === 'stop' })) return;
     try { const r = await COS.call('POST', `/api/cos/proposals/${encodeURIComponent(p.id)}/take`, { by: 'person' });
       COS.notice(r.proposal.status === 'failed' ? 'err' : 'ok', r.proposal.status === 'failed' ? `Taken, and it failed: ${r.proposal.error}` : `Taken: ${p.verb} ${p.target}.`); load(); }
@@ -40,7 +41,7 @@
       h('div', {},
         h('h3', { html: `<span class="verb">${esc(p.verb)}</span> ${esc(p.target)}` }),
         h('p', { class: 'reason' }, `“${p.why}”`),
-        h('div', { class: 'meta' }, h('span', {}, p.by), h('span', {}, `asked ${COS.ago(p.at)}`), h('span', {}, `saw it ${COS.stateLabel(p.seen.state)}`),
+        h('div', { class: 'meta' }, h('span', {}, p.by), h('span', {}, `asked ${COS.ago(p.at)}`), h('span', {}, p.seen ? `saw it ${COS.stateLabel(p.seen.state)}` : `about ${p.target}`),
           p.status !== 'held' ? h('span', { class: `status ${p.status}` }, `${p.status} by ${p.closedBy} ${COS.ago(p.closedAt)}`) : null),
         p.error ? h('div', { class: 'changed' }, p.error) : null),
       p.status === 'held' ? h('div', { class: 'acts' },
