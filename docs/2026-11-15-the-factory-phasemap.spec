@@ -414,3 +414,9 @@ order: >-
 #   slice_b_the_gate_injects_only_the_slice: OPEN (mapped 2026-11-18 above: intent, test, conditions, the previous chunk, one .inject)
 #   slice_c_decompose_before_climbing: OPEN (T11; PC8 expanded_2026_11_14)
 #   slice_d_the_gate_reads_the_failure_record: OPEN (Cortex /api/failure-modes for the step's class before it is asked again)
+
+# ── ADDENDUM 2026-11-18 (later) — the seed of the lineage tree (his) ──
+# James, 2026-11-18: "also ven the idea being logged becomes a seed for the entire lineage tree. like in idearium or from an input"
+# Decided (his): the tree begins earlier than the contract. The idea as it is logged (an Idearium idea, or any input: his words in the Console,
+# a request, a note) is the seed; the request to RAID, the contract and the .spec grow from it; every decision and direction after is a
+# versioned branch (IF10, IF18; thread T13). Reading 2 (one RAID compartment per gate, or per contract) is still open.

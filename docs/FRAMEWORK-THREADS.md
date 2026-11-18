@@ -493,3 +493,6 @@ by the focus.
   runs cut on 2026-11-17/18 (NM1 cut twice by COS restarts and started over; RQ0's watchdog retries started over "smaller steps").
 - **Bias named:** the coder predicts, builds and judges it; a pass is post-hoc until a run he starts reproduces it.
 - **Evidence:** open.
+
+- **Expanded, 2026-11-18 (his):** "also ven the idea being logged becomes a seed for the entire lineage tree. like in idearium or from an input". The root moves back one step: the logged idea (Idearium, or any
+  input) is the seed of the tree; the RAID request, the contract and the .spec are its first branches. The prediction above is unchanged.
