@@ -507,3 +507,16 @@ addendum_pending: >-
 # (2) start at boot per system, off for Guardian and Clear Glass's UI unless he enables it, with Open in COS, in Clear Glass's settings and the tray
 # menu (SC12_start_at_boot_each_system expands); (3) an autonomous mapping loop: the open gaps and loops ranked by tension (OL6), the 30B maps the
 # highest first, nonlinearly, each map a pipeline run he can stop (IF12 expands).
+
+## ADDENDUM 2026-11-18 (later) — each model loads once per request, its chunks like a torrent's; Ollama aware of Nexus; models suggest tools (his)
+# James, 2026-11-18: "no 30b for all of its steps per pipeline or request. then unload. like chunks for a torrent file. it knows which chunks to
+# build, gaps to fill. each model knows its tasks. optrmize ollama i meant. litterally any little helps, nexus and ollama should work together.
+# ollama aware of nexus, ollama or agents can suggest tools needed to expand capability, like askign the llm for feedback."
+# Decided (his), superseding "16b maps, 30B when needed" for scheduling: a request's chunks are a manifest (a torrent's pieces): each chunk names the
+# model that takes it (the 30B: mapping, planning, tests, the hard chunks; DeepSeek 16b: coding; the 3b: routing). The 30B is loaded once, does all
+# of its chunks in that request, then is unloaded (keep_alive 0); then the next model does its chunks. Gaps are the pieces still missing.
+# Expands: OL5 (batched by model, one load per model per request; the persisted queue), OL3 (keep_alive per call), IF20 (gaps filled like a torrent).
+# Open, his "any little helps": (1) the manifest and the per-model batch; (2) the Ollama-side tuning in OL's settings_catalog applied per call
+# (num_thread 8, num_batch, num_ctx from free memory, think off); (3) Ollama aware of Nexus: a fixed prefix card (what Nexus is, its tools, the step's
+# contract), identical on every call so the prefix is cached; (4) after a chunk, the model is asked one question, "what tool would have made this
+# easier?", kept as a proposal (PC15: an agent's act is a proposal) for him, so capability grows from the models' own feedback.
