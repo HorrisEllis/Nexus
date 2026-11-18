@@ -30,7 +30,10 @@ function numbers() {
     try { const r = fn() || {}; held.push({ name, items: Number(r.items) || 0, ...(r.approxMB != null ? { approxMB: r.approxMB } : {}) }); }
     catch (e) { held.push({ name, items: 0, error: e.message }); }
   }
-  return { at: Date.now(), rssMB: MB(m.rss), heapUsedMB: MB(m.heapUsed), heapTotalMB: MB(m.heapTotal), externalMB: MB(m.external), spaces, holders: held };
+  // 2026-11-18 — James: "Yes, add peak". Node keeps the highest resident memory since the process started (maxRSS, KB): the start's spike is
+  // seen without a poll. It is all memory, not the heap alone, so it is said as resident.
+  let peakRssMB = null; try { peakRssMB = Math.round(process.resourceUsage().maxRSS / 1024 * 10) / 10; } catch (_) {}
+  return { at: Date.now(), startedAt: Date.now() - Math.round(process.uptime() * 1000), rssMB: MB(m.rss), peakRssMB, heapUsedMB: MB(m.heapUsed), heapTotalMB: MB(m.heapTotal), externalMB: MB(m.external), spaces, holders: held };
 }
 
 function capMB() {

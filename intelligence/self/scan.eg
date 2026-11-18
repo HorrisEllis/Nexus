@@ -43,9 +43,25 @@ fn judge(q: map): map {
     else if now.heapUsedMB >= cap * NEAR { verdict = "near-cap"; why = "heap " + str(now.heapUsedMB) + " MB is " + str(pct) + "% of its cap of " + str(cap) + " MB (a gap: raise the cap or find what grows)" }
     else { why = "heap " + str(now.heapUsedMB) + " MB is " + str(pct) + "% of its cap of " + str(cap) + " MB" }
   }
-  return { at: now.at, verdict: verdict, why: why, capMB: cap, capUsePct: pct, rssMB: now.rssMB, heapUsedMB: now.heapUsedMB,
+  // the peak since start (his "Yes, add peak"): resident memory, so it is compared with the cap as a sign, said as such, never as the heap
+  let peak = now.peakRssMB ?? null
+  var peakSays = null
+  if peak != null {
+    peakSays = "peak resident memory since start: " + str(peak) + " MB (now " + str(now.rssMB) + " MB)"
+    if cap != null and cap > 0 and peak >= cap * NEAR and verdict == "ok" { verdict = "spiked"; why = why + "; but " + peakSays + ", near or past the heap cap: a spike at some point since start (a gap: find what spikes)" }
+    else { why = why + "; " + peakSays }
+  }
+  return { at: now.at, verdict: verdict, why: why, capMB: cap, capUsePct: pct, rssMB: now.rssMB, peakRssMB: peak, heapUsedMB: now.heapUsedMB,
     heaviestSpaces: top(now.spaces ?? [], "usedMB", 3), heaviestHolders: top(now.holders ?? [], "items", 5), grew: grew(now, q.prev ?? null),
     gap: verdict != "ok" }
+}
+
+test "the peak since start: a spike near the cap is said even when now is low" {
+  let n = { at: 1, rssMB: 160, peakRssMB: 700, heapUsedMB: 80, spaces: [], holders: [] }
+  let j = judge({ now: n, capMB: 768 })
+  expect j.verdict == "spiked" and j.gap and j.peakRssMB == 700 and find_text(j.why, "peak resident memory since start: 700 MB") >= 0, json(j)
+  let calm = judge({ now: { at: 1, rssMB: 160, peakRssMB: 200, heapUsedMB: 80, spaces: [], holders: [] }, capMB: 768 })
+  expect calm.verdict == "ok" and find_text(calm.why, "peak resident memory since start: 200 MB") >= 0, calm.why
 }
 
 let a = args()

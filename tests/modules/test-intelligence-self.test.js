@@ -13,6 +13,7 @@ const check = (n, ok, why) => { if (ok) { pass++; console.log('  ✓', n); } els
   D.register('test holder', () => ({ items: 42 }));
   const n = D.numbers();
   check('IP13-1 the door reads the heap, its spaces and the registered holders', n.heapUsedMB > 0 && n.spaces.length > 0 && n.holders.some((h) => h.name === 'test holder' && h.items === 42), JSON.stringify(n).slice(0, 200));
+  check('IP13-1b the peak resident memory since start is read (his "Yes, add peak")', typeof n.peakRssMB === 'number' && n.peakRssMB >= n.rssMB * 0.5 && n.startedAt <= n.at, JSON.stringify({ peak: n.peakRssMB, rss: n.rssMB }));
   const a = await D.scan({ dataDir });
   check('IP13-2 Emerge judges the scan (verdict, why, heaviest spaces)', a.ok && ['ok', 'near-cap', 'over'].includes(a.verdict) && typeof a.why === 'string' && a.heaviestSpaces.length > 0, JSON.stringify(a).slice(0, 300));
   D.register('test holder', () => ({ items: 50 }));
