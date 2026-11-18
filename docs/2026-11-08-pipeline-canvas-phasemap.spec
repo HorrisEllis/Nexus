@@ -1462,3 +1462,14 @@ phases_addendum_2026_11_13_rca:
 # plus the lineage view and a shared timeline. COS's controls (start, stop, restart, pause, diagnose, logs) are buttons, through COS's own routes.
 # Order: real data first (COS systems and pulses, each system's registry, declared wires), then provenance, controls, Versionium replay, RAID
 # decision playback, lineage.
+
+## ADDENDUM 2026-11-18 (later) — the canvases are separate, never one clump; and an idea logged: the associative lattice (his)
+# His words, 2026-11-18, on the first live-data preview (three planes stacked in one picture): "Where are the other layers? I said distinct.
+# Seperate. No monoliths. No clumping things." · "Never build without a preview."
+# Decision (his): each canvas is its own canvas, with its own layout fit to what it shows, its own pan and zoom; they connect only by the shared id
+# (a selection in one lights the same id in the others). No canvas draws another's content. A build follows only a preview he has approved.
+# Idea logged (his, not yet mapped to a phase): "Like a constellation of interconnected nodes in a 3d axis. That I can navigate around. Associative
+# lattice. Like neurons running synapsid through them as data or live events, passes through."
+# Coder's reading, for him to correct: a fourth, navigable 3D view — nodes are the same ids (systems, components, runs, agent calls), edges their
+# associations, and live events travel the edges as pulses. Open questions for him: what places a node in 3D (lineage depth, system, time, or
+# learned association), and whether it replaces the lineage view or sits beside it.
