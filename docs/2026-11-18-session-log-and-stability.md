@@ -118,3 +118,26 @@ the compartment map (CP6a), the intelligence map (IP13).
 - Showed him previews that added surface rather than removing it, three times.
 - Said "Loom is the structural authority", which contradicts AXIOMS §5.16.
 - A push to main was attempted without his say; the permission check refused it (the commits stay on the worktree branch).
+
+---
+
+## 6. Later, 15:00 — the biggest cause found: the Windows service kills COS's manager, and Idearium dies with it
+
+Evidence (`data/cos-service/service-host.log`, times UTC; local = UTC−8): the service host `cos-svc` asks
+`http://127.0.0.1:7799/api/cos/health` every 30 s and kills the manager after 3 misses. **It did so 8 times today**: 11:12, 11:24, 11:36, 12:43,
+13:45, 13:56, 14:38, 14:59 local ("the process ended (exit 1) … stopped for not answering its health URL").
+- The kill takes the manager's process tree. Systems the current manager started (Idearium, after each crash or boot) die with it; systems
+  adopted from an earlier manager are outside the tree and survive. **This is why Idearium, and only Idearium, kept losing builds**: at 14:38
+  and 14:59 the DeepSeek build of NM1 died with it each time.
+- The health handler does nothing slow (`server.js:161`), so the manager's event loop is blocked for over a minute at those moments. The cause of
+  the block is **not found yet**. Ruled out: memory (the manager uses 73 MB, so not GC); a single ledger read (34,836 lines parse in 112 ms).
+  Candidates: synchronous child processes (`usage.js` PowerShell/tasklist with an 8 s limit, `duties.js` wmic 5 s, `supervisor.js` netstat 5 s,
+  taskkill with no limit) under heavy paging (free memory 5.6 of 15.9 GB, Memory Compression at 938 MB). A probe is timing the health route every 3 s
+  to catch the next stall with its time.
+- Coder's reading of the fix, not built: (a) a system the manager starts is detached from its tree (its own process group) so the service's
+  kill cannot take it; (b) the blocking calls become asynchronous; (c) whether the service should kill on 3 misses at all is his call.
+
+## 7. Why DeepSeek made 0 calls in the 15:00 build
+
+Ollama's line holds heavy work until 25% of memory is free; it stood at 24.3% and held it 149 times since 12:53. DeepSeek (10.5 GB) never
+loaded. At that time the machine's largest users were Firefox (about 3.5 GB over 6 processes), Memory Compression 938 MB, this Claude 667 MB.
