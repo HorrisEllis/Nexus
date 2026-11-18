@@ -148,6 +148,137 @@ phases:
     files: [cos/pipeline/pipelines]
     does: "the factory takes the open phases of every map, the ready ones first, each with the tool for its job, deployed agents by hat doing the work, step by step, on its own; what holds is a gap said where it stopped"
     proof: "a day of the factory on his machine: phases built, each with its run and proof, the holds listed"
+  # ── EXPANDED 2026-11-18 (his) — Ollama writes the code; Nexus does the planning and the review, deterministically ──
+  # James, 2026-11-18: "this needs to use deepseek before guardian. this needs to use ollama. could have it use the console to run tests? like
+  # if it executes. the pipeline could have a visual debugger." · "pipeline and emerge, once nexus can use the pipeline to code, js is fine if it
+  # cant use emerge. but ollama should be enforced. all of nexus is made to improve small llm capability, and outsource complexity and memory to
+  # nexus. its cybernetics, for me and for the agents. its like a second brain with me the mind or copilot the mind." · asked (a local DeepSeek
+  # in Ollama before Guardian; Ollama writes all code, agents only plan and review; Ollama enforcement before Clear Glass's accounts): "yes.
+  # though nexus should be able to do a lot of the heavy lifting for planning review. the intelligence system, cos test envirement, all the agent
+  # tools, emerge to make nexus code with a language it can understand and makes it architecturally consistent, using cie-eg, idearium has so much
+  # of this. outside of idearium. schemas, specs, templates, nodes, contracts, component store, and everything else, to make coding more
+  # deterministic. like all of this needs to be mapped. nexus makes systems using deterministic code and resuable primitives. its how i've
+  # learned to navigate the world."
+  # census_2026_11_18 (read from the tree, what each phase below stands on; §8.6):
+  #   plan     lib/phase-plan.js (493: the plan's files, exports, signatures, steps; parsePlan checks it) · idearium/spec-engine/phase-specs.cjs
+  #            and its 18 templates (.phase, .graph per phase) · lib/component-store.js (347: decomposed components, deps resolved) ·
+  #            lib/code-intel (cards, decls, search) · lib/context-atlas.js (specs, notes, nodes) · lib/phase-graph.js, phase-dag.js,
+  #            phase-map-auto.js (the files a phase changes, who uses them) · 206 schema files in 11 systems' schemas/ · emerge's
+  #            cie-eg.spec (1,735 lines) and lang/cie (10)
+  #   code     the ladder (lib/pipeline-routing.js: ollama 3b > ollama deepseek-coder-v2:16b > agents, Claude last) · Emerge-first for a new
+  #            file (routing.emerge_first, EMB1) · lib/extract-code.js · lib/semantic-variant.js
+  #   review   lib/verify-first.js (an existing file checked before it is rewritten) · lib/test-first.js (a test before the code) ·
+  #            checkChunk (exports per plan) · node --check · emerge/emerge/lang/checker.js (575) · lib/phase-close.js + lib/test-map.js (done by
+  #            evidence) · cortex/core/raid/contract-gates.js + contract-adapters.js (bricks, gates, retries) · intelligence's sigma/delta/cfr
+  #            (deviation and gaps) · lib/agent-record.js (what each agent has done, per kind of file)
+  #   run      cos/testenv (detect, environment, run-target: what a repo needs to be tested, any repo) · cos/playground · COS's console
+  #   tools    lib/agent-tools (122 files: every agent's tools) · idearium/cli/route-commands.js (2,092: the one command table)
+  #   memory   lib/node-export.js (605, the node envelope), lib/node-registry.js, Versionium, Cortex's ledgers
+  # Already existing phases these stand on (phase-ledger covers, 2026-11-18): GW24 (the gate holds, the agent gets a projection), PC1-PC3 of
+  # the pieces map, SL2 (done by evidence), DBG4, IN7, AD2, HL10. Each phase below expands them in the build's own path; none rewrites them.
+  IF13_ollama_writes_the_code:
+    status: OPEN
+    depends_on: [IH3_routers_read_the_chain]
+    james: '"ollama should be enforced" · "this needs to use deepseek before guardian" (2026-11-18), and "yes" to: only Ollama writes files'
+    files: [lib/pipeline-routing.js, idearium/api/index.js, idearium/pipelines/idearium-build.pipeline]
+    does: >-
+      Only the Ollama rungs (3b, then deepseek-coder-v2:16b) write a file. Browser agents (through Guardian) are planners and reviewers, never
+      coders: they may propose a plan, a test or a review, not a file. A step Ollama cannot pass is decomposed (smaller step, one file, one
+      export: T11), then retried on Ollama; still failing, the run holds for him with the gap said. A routing setting, his to turn off.
+    proof: "a phase built end to end where every written file's provider is ollama:*; a failing step shows decomposition, then a hold — never a browser agent's file"
+  IF14_nexus_plans_deterministically:
+    status: OPEN
+    depends_on: [IF13_ollama_writes_the_code, IN7_every_phase_and_spec_on_the_spine]
+    james: '"nexus should be able to do a lot of the heavy lifting for planning" (2026-11-18)'
+    files: [lib/phase-plan.js, idearium/spec-engine/phase-specs.cjs, lib/component-store.js, lib/code-intel/index.js, lib/context-atlas.js, lib/phase-map-auto.js]
+    does: >-
+      The plan is drawn by Nexus first, from what it already holds: the phase's spec module (exports, signatures, behavioural contracts), its
+      .phase and .graph, the component store, code-intel's cards, the schemas and templates. A model is asked only for what that cannot fill,
+      and its answer is checked by parsePlan. Each brief to Ollama is one file, its exact exports and imports, and the existing code it touches.
+    proof: "for a phase with a spec module, the plan comes back with no model call; for one without, the model's share is counted (calls and tokens per phase, AG1)"
+  IF15_nexus_reviews_deterministically:
+    status: OPEN
+    depends_on: [IF13_ollama_writes_the_code, SL2_done_by_evidence, GW24_the_gate_holds_the_agent_gets_a_projection]
+    james: '"nexus should be able to do a lot of the heavy lifting for planning review" (2026-11-18); his rule of 2026-10-13: "A reasoning agent only plans, and reviews or repairs only after a cheap check has failed."'
+    files: [lib/verify-first.js, lib/test-first.js, lib/phase-close.js, lib/test-map.js, cortex/core/raid/contract-gates.js, emerge/emerge/lang/checker.js]
+    does: >-
+      Every file Ollama writes passes Nexus's checks in order, cheapest first: syntax (node --check, Emerge's checker for .eg), the plan's
+      exports (checkChunk), verify-first against the existing file, the phase's own test (test-first, test-map linked), the contract's gate,
+      the intelligence system's deviation (sigma) and gap (delta) readings. A browser agent reviews only when a check failed and the failure
+      is not mechanical; its review is a note, never a file.
+    proof: "a run's rows show each check per file with its verdict; agent reviews counted and each tied to a failed check"
+  IF16_tests_run_in_the_test_environment:
+    status: OPEN
+    depends_on: [IF15_nexus_reviews_deterministically]
+    james: '"could have it use the console to run tests? like if it executes." (2026-11-18)'
+    files: [cos/testenv/run-target.js, cos/testenv/detect.js, cos/automation/steps.js, idearium/pipelines/idearium-build.pipeline]
+    does: >-
+      A pipeline step runs the phase's tests where COS runs things (cos/testenv: detect what the repo needs, run the target), the output
+      streamed to the step and kept; the step's gate is the tests passing. It is the evidence step's source, not a second opinion beside it.
+    proof: "a build run with a test step whose output is the test file's own lines, passing and failing as the code does"
+  IF17_emerge_first_js_when_it_cannot:
+    status: OPEN
+    depends_on: [IF13_ollama_writes_the_code]
+    james: '"js is fine if it cant use emerge" (2026-11-18); "emerge to make nexus code with a language it can understand and makes it architecturally consistent, using cie-eg"'
+    files: [lib/pipeline-routing.js, idearium/api/index.js, emerge/emerge/lang/checker.js]
+    does: >-
+      A new file is tried in Emerge first (CIE-EG, compiler-checked: EMB1), by Ollama; when Emerge cannot express it (a gap said, a phase for
+      the gap), the same step writes JavaScript. An existing JavaScript file stays JavaScript unless a phase moves it. Every run says which.
+    proof: "a run's rows name the language of each file and, for each JS file of a new phase, the Emerge gap that sent it to JS"
+  IF18_the_visual_debugger:
+    status: OPEN
+    depends_on: [IF16_tests_run_in_the_test_environment, IF10_the_map_of_nexus_on_the_canvas, PC8_operate_a_pipeline]
+    james: '"the pipeline could have a visual debugger." (2026-11-18) · "the work surface needs to be used for the outputs, like how idearium streams the dom mutator" (2026-11-17)'
+    files: [cos/ui/automation/engine.js, cos/ui/canvas]
+    does: >-
+      On the canvas, a running step shows what it is doing live (its output streamed into Outputs, the work surface), each check of IF15 with
+      its verdict, the tests' output of IF16, and its attempts as branches (the pinned development tree, after Emerge). A step can be
+      paused, stepped and retried from there.
+    proof: "a live run watched on the canvas: each step's output appears while it runs; a failed check opens on its own line"
+  # ── WRITTEN 2026-11-18 (his readings confirmed) — rate every primitive; skip and hold as gaps; fill them like a torrent ──
+  # James, 2026-11-18, to the readings (step = one primitive; stubs held as gaps with tension; load × (1 − confidence) first; confidence as the
+  # weakest link and as the product, both): "Yeah. We need a structural metric for rating primitives. Yes but we can skip steps and mark them as
+  # gaps rated with tension. And have system focus on them after like pieces of a torrent, filling piece by piece." · asked weakest link,
+  # product, or both: both, shown apart (the coder's recommendation, his yes).
+  IF19_a_structural_rating_for_every_primitive:
+    status: OPEN
+    depends_on: [IF15_nexus_reviews_deterministically]
+    james: '"We need a structural metric for rating primitives." (2026-11-18)'
+    files: [pillar/contracts/contracts.eg, pillar/spec/pillar.spec, lib/component-store.js, lib/phase-graph.js, lib/agent-record.js]
+    does: >-
+      Every primitive (one function with its contract) carries a rating Nexus computes, never a model: load (how many primitives and
+      components rest on it: fan-in from the component store and the phase graphs), verification (none · compiles · its own test passes ·
+      tests reaching it pass · attacked and held), confidence two ways shown apart — the weakest link (no higher than its least-verified
+      load-bearing dependency) and the compounded product along its chain — and tension = load × (1 − confidence). Kept on the primitive's
+      contract in Pillar (Emerge), read by the build, the canvas and the intelligence system. The metrics per system and per agent come from
+      the same records (agent-record's outcomes, the run rows).
+    proof: "a fixture graph of primitives gives each its load, verification, both confidences and tension, by hand-checkable numbers; the heaviest least-verified one ranks first"
+  IF20_gaps_filled_like_a_torrent:
+    status: OPEN
+    depends_on: [IF19_a_structural_rating_for_every_primitive, IF13_ollama_writes_the_code]
+    james: '"we can skip steps and mark them as gaps rated with tension. And have system focus on them after like pieces of a torrent, filling piece by piece." (2026-11-18)'
+    files: [idearium/api/index.js, cortex/core/raid/contract-gates.js, idearium/pipelines/idearium-build.pipeline]
+    does: >-
+      A step that cannot pass now (Ollama failed after its decomposition, no test yet, a dependency missing) is not forced and not faked: it
+      is skipped and recorded as a gap — Emerge's gap with its pressure = the primitive's tension (IF19) — and the run goes on with the
+      steps that can pass. A stub may stand in for it, marked as the gap, never counted as landed (GQ1's placeholder, 2026-11-18). Afterwards
+      Nexus fills the open gaps piece by piece, highest tension first (the torrent's rarest piece first), each its own small run; a phase is
+      done when its last gap closes. The open gaps and their tension are what the canvas and the intelligence system show as open loops.
+    proof: "a phase with one primitive Ollama cannot pass: the run ends with the rest landed and one gap at its tension; a later fill run closes it; the phase closes only then"
+  IF21_attack_the_most_load_bearing_first:
+    status: OPEN
+    depends_on: [IF19_a_structural_rating_for_every_primitive]
+    james: '"Like attacking the most load bearing pillar first." · "We can use bidirectional causal chaining and cross domain verification as ways to test also." (2026-11-18)'
+    files: [copilot/adversarial.js, lib/meta/adversary-suite.js, intelligence/cfr/graph.js]
+    does: >-
+      The adversarial system attacks code, not only Copilot's reasoning: its attacks go to the primitive with the highest tension first
+      (IF19). Attacks: known-bad inputs for the contract, bidirectional causal chaining (the code from the spec and the spec from the code
+      must agree: his IF-05), cross-domain verification (the same contract met in another domain's terms). A primitive that holds rises in
+      verification; one that breaks opens a gap (IF20). The intelligence system reads the results as sigma (deviation) and delta (gap).
+    proof: "the heaviest primitive is attacked first; a planted contract break is caught and opens a gap with its tension"
+order_2026_11_18_his: >-
+  His, 2026-11-18: Ollama enforcement first (before Clear Glass's one cookie jar, AC2). So: IF13 → IF15 → IF14 → IF16 → IF17 → IF18.
+  Then the same night: IF19 (the rating) before IF20 (the torrent) and IF21 (the attack), both standing on it.
 order_2026_11_15_his: >-
   His order of 2026-11-15: "pipeline needs to run fully. then anything we can use the pipeline for … like i want a visual map …" So: first the
   pipeline runs fully, end to end (idearium-build and his-request, the real routes, agents on the Ollama ladder); then IF1 and IF9 (everything
@@ -156,3 +287,37 @@ order_2026_11_15_his: >-
 order: >-
   IF0 → IF1 (agents through the pipeline: his first words, the smallest seam, and every later stage reuses it) → IF2 (the build, stage by
   stage) → IF3 and IF4 beside each other → IF6 → IF5 → IF7 from the first stage that can be built by the factory; IF8 with GR1.
+# ── 2026-11-18 — first Ollama-only run (IF13 slice a, a setting): what it proved, and the two gaps it found for IF15 ──
+# routing.escalation set to [ollama 3b, ollama deepseek-coder-v2:16b] (his "what ever gets nexus coding … without guardian preferably").
+# Run 40b9a698, GQ1_quality_stream: ready → graph met; build "landed clean", 0 agent calls, 131 s. The contract: "written in Emerge, checked
+# by its compiler and passed its expectation on try 1", agent emerge:ollama:…3b, "landed 13 file(s)" (components/nexus-core.lib.quality-stream:
+# quality-stream.eg 8 lines, its JS wrapper 4). No Guardian, no browser agent: Ollama wrote Emerge, Emerge's compiler checked it.
+# But the code is a PLACEHOLDER ("// Placeholder for quality check logic" · "return true; // Example: always true"), nothing of GQ1's
+# does (one gate per check kind onto a SISO stream, check.result with provenance). Why it passed: with no planner (no browser agent on the
+# ladder) test-first never ran, so GQ1's proof test (tests/gq1-quality-stream.test.js) was never written, and a generic expectation passed
+# a stub. Evidence then timed out (Idearium busy) and the run held: GQ1 is NOT closed. Gaps, both IF15's (Nexus reviews):
+#   (1) test-first runs without a planner: Ollama (deepseek 16b) writes the phase's proof test before the code;
+#   (2) placeholder refusal: a brick whose code says placeholder / TODO / "always true" / an empty body is refused, cheapest check first.
+# Recorded as orchestration and route proved for Ollama + Emerge with no Guardian; implementation NOT proved (his review of 2026-11-18).
+# ── 2026-11-18 — his: the smallest irreducible step; stubs as open loops with tension; the most load-bearing primitive attacked first ──
+# James, 2026-11-18 (after GQ1 landed a placeholder): "Should we migrate the component store to pillar? I want each step decomposed. Each file
+# is its own step maybe? Or each primitive? The smallest irreducible size per step. Maybe stubs at first, which remain gaps/open loops causing
+# tension. We have the adversarial system, confidence score. I feel we need metrics and statistics for performance, for the each of the
+# systems, each agent, etc. make the most load bearing pillar create more tension? Like attacking the most load bearing pillar first. Using
+# the most load bearing primitives from the dependencies as the highest level of confidence by the least verified load bearing primitive like
+# a slope and look at the intelligence system and compounding. We can use bidirectional causal chaining and cross domain verification as ways
+# to test also."
+# Read the same night: pillar/pillar.eg is "the one kernel of primitives: each primitive's contract, defined once" (his EAS_D8: "it's supposed
+# to be the component registry"); lib/component-store.js resolves components' dependencies but records no confidence; copilot/adversarial.js
+# attacks Copilot's reasoning, not code; nothing ranks a component by how much rests on it. Emerge already has `gap … pressure …`.
+# The coder's readings, to confirm before any phase is written (§0.0 do not guess):
+#   - step = one primitive (one function and its contract and test), the irreducible unit; a file is a composition step over primitives.
+#   - a stub is allowed but never "landed": it is a gap (Emerge's gap, pressure = how much rests on it) that stays open and raises tension
+#     until its test passes — today's GQ1 placeholder, counted as done, is exactly what this forbids.
+#   - load = fan-in from the dependency graph (component store + phase-graph's "who uses it"); work and adversarial attack go to
+#     load × (1 − confidence), the heaviest, least-proven primitive first.
+#   - confidence of a composite ≤ its least-verified load-bearing dependency (the slope); compounding = the product along a chain (the
+#     intelligence system's sigma/delta and CFR coherence as inputs). Which of min and product is his to choose (or both, said).
+#   - tests also from bidirectional causal chaining (spec → code and code → spec agree; his IF-05) and cross-domain verification.
+#   - the component store's primitives move into Pillar's contracts (his "one kernel"); system components stay in each system's own
+#     registry (§5.16). Pillar is Emerge: after Emerge is done (his order), or as the first Emerge-native piece.

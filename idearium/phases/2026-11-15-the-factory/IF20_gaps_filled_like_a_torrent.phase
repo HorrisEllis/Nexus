@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-15-the-factory-phasemap.spec::IF20_gaps_filled_like_a_torrent
+type: phase
+id: docs_2026-11-15-the-factory-phasemap.spec::IF20_gaps_filled_like_a_torrent
+context: pipeline phase IF20_gaps_filled_like_a_torrent of docs/2026-11-15-the-factory-phasemap.spec
+intent: null
+summary: IF20_gaps_filled_like_a_torrent (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1794982977337
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794982977337
+lastSeenAt: 1794982977337
+fingerprint: null
+payload:
+  id: IF20_gaps_filled_like_a_torrent
+  map: docs/2026-11-15-the-factory-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/api/index.js
+    - cortex/core/raid/contract-gates.js
+  depends_on:
+    - IF19_a_structural_rating_for_every_primitive
+    - IF13_ollama_writes_the_code
+  blocks: []
+  spec: null
+  graph: 85a27ff68266c929

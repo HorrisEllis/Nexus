@@ -1,0 +1,160 @@
+envelope: 1
+uuid: nexus-export-graph-phase:IF16_tests_run_in_the_test_environment:e34048ae6da56af7
+type: graph
+id: phase:IF16_tests_run_in_the_test_environment:e34048ae6da56af7
+context: dependency graph of phase IF16_tests_run_in_the_test_environment
+intent: null
+summary: 13 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1794982977330
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794982977330
+lastSeenAt: 1794982977330
+fingerprint: null
+payload:
+  for: IF16_tests_run_in_the_test_environment
+  kind: phase
+  repo: null
+  hash: e34048ae6da56af7
+  nodes:
+    - path: cos/automation/steps.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/testenv/detect.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/testenv/run-target.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/automation/engine.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/automation/pipeline.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/automation/routes.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/testenv/environment.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/testenv/index.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: lib/automation/steps.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/cos-run.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/test-cos-run-target.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cos/automation/cron.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/testenv/index.js
+      role: uses
+      exists: true
+      system: cos
+  edges:
+    - from: cos/testenv/run-target.js
+      to: cos/testenv/index.js
+      kind: requires
+    - from: cos/automation/steps.js
+      to: cos/automation/cron.js
+      kind: requires
+    - from: cos/testenv/index.js
+      to: cos/testenv/run-target.js
+      kind: requires
+    - from: tests/modules/test-cos-run-target.test.js
+      to: cos/testenv/run-target.js
+      kind: requires
+    - from: cos/testenv/environment.js
+      to: cos/testenv/detect.js
+      kind: requires
+    - from: lib/cos-run.js
+      to: cos/testenv/detect.js
+      kind: requires
+    - from: cos/automation/engine.js
+      to: cos/automation/steps.js
+      kind: requires
+    - from: cos/automation/pipeline.js
+      to: cos/automation/steps.js
+      kind: requires
+    - from: cos/automation/routes.js
+      to: cos/automation/steps.js
+      kind: requires
+    - from: lib/automation/steps.js
+      to: cos/automation/steps.js
+      kind: requires
+  crossings:
+    - from: lib/cos-run.js
+      to: cos/testenv/detect.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+    - from: lib/automation/steps.js
+      to: cos/automation/steps.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: false
+  ready: true
+  dag:
+    layer: 5
+    deps:
+      - docs/2026-11-15-the-factory-phasemap.spec::IF15_nexus_reviews_deterministically
+    dependents:
+      - docs/2026-11-15-the-factory-phasemap.spec::IF18_the_visual_debugger
+    upstream:
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW1_the_baton
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW24_the_gate_holds_the_agent_gets_a_projection
+      - docs/2026-10-16-intent-hat-agent-chain-phasemap.spec::IH0a_one_vocabulary
+      - docs/2026-10-16-intent-hat-agent-chain-phasemap.spec::IH1_intent_nodes_point_at_hats
+      - docs/2026-10-16-intent-hat-agent-chain-phasemap.spec::IH3_routers_read_the_chain
+      - docs/2026-10-23-self-building-loop-phasemap.spec::SL0_what_can_be_built_now
+      - docs/2026-10-23-self-building-loop-phasemap.spec::SL2_done_by_evidence
+      - docs/2026-11-15-the-factory-phasemap.spec::IF13_ollama_writes_the_code
+      - docs/2026-11-15-the-factory-phasemap.spec::IF15_nexus_reviews_deterministically
+    downstream:
+      - docs/2026-11-15-the-factory-phasemap.spec::IF18_the_visual_debugger
+    blockedBy:
+      - docs/2026-11-15-the-factory-phasemap.spec::IF15_nexus_reviews_deterministically
+    unlocks: []
+    conflicts:
+      - with: docs/2026-11-15-the-factory-phasemap.spec::IF12_nexus_builds_itself_autonomously
+        files:
+          - cos/testenv/run-target.js
+      - with: docs/2026-11-15-the-factory-phasemap.spec::IF20_gaps_filled_like_a_torrent
+        files:
+          - idearium/pipelines/idearium-build.pipeline
+    dangling: []
+    lines:
+      - layer 5 · blocked by IF15_nexus_reviews_deterministically
+      - 'depends on (1): IF15_nexus_reviews_deterministically · all upstream 9'
+      - 'needed by (1): IF18_the_visual_debugger'
+      - >-
+        same files as IF12_nexus_builds_itself_autonomously with no order between them:
+        cos/testenv/run-target.js
+      - >-
+        same files as IF20_gaps_filled_like_a_torrent with no order between them:
+        idearium/pipelines/idearium-build.pipeline
+    edges:
+      - from: docs/2026-11-15-the-factory-phasemap.spec::IF15_nexus_reviews_deterministically
+        kind: declared

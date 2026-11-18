@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-15-the-factory-phasemap.spec::IF17_emerge_first_js_when_it_cannot
+type: phase
+id: docs_2026-11-15-the-factory-phasemap.spec::IF17_emerge_first_js_when_it_cannot
+context: pipeline phase IF17_emerge_first_js_when_it_cannot of docs/2026-11-15-the-factory-phasemap.spec
+intent: null
+summary: IF17_emerge_first_js_when_it_cannot (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1794970578482
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794970578482
+lastSeenAt: 1794970578482
+fingerprint: null
+payload:
+  id: IF17_emerge_first_js_when_it_cannot
+  map: docs/2026-11-15-the-factory-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/pipeline-routing.js
+    - idearium/api/index.js
+    - emerge/emerge/lang/checker.js
+  depends_on:
+    - IF13_ollama_writes_the_code
+  blocks: []
+  spec: null
+  graph: cb3ccb7eabbc9045

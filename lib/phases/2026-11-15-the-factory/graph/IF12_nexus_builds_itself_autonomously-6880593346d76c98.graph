@@ -1,0 +1,446 @@
+envelope: 1
+uuid: nexus-export-graph-phase:IF12_nexus_builds_itself_autonomously:6880593346d76c98
+type: graph
+id: phase:IF12_nexus_builds_itself_autonomously:6880593346d76c98
+context: dependency graph of phase IF12_nexus_builds_itself_autonomously
+intent: null
+summary: 49 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1794982977320
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794982977320
+lastSeenAt: 1794982977320
+fingerprint: null
+payload:
+  for: IF12_nexus_builds_itself_autonomously
+  kind: phase
+  repo: null
+  hash: 6880593346d76c98
+  nodes:
+    - path: components/nexus-core.lib.semantic-variant/1.0.0/semantic-variant.js
+      role: changes
+      exists: true
+      system: components
+    - path: cortex/core/raid/contract-adapters.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/contract-gates.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: cos/testenv/run-target.js
+      role: changes
+      exists: true
+      system: cos
+    - path: emerge/emerge/lang/checker.js
+      role: changes
+      exists: true
+      system: emerge
+    - path: guardian/lib/node-registry.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: idearium/cli/route-commands.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/spec-engine/phase-specs.cjs
+      role: changes
+      exists: true
+      system: idearium
+    - path: lib/agent-record.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/query/context-atlas.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/component-store.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/context-atlas.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/extract-code.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/node-export.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/node-registry.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/phase-close.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/phase-dag.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/phase-graph.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/phase-map-auto.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/phase-plan.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/pipeline-routing.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/semantic-variant.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/test-first.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/test-map.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/verify-first.js
+      role: changes
+      exists: true
+      system: lib
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/phases.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/atlas-generate.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/build-context.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/capability-spec.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/context-sources.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/project-decompose.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/project-registry.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/registry-harness.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/work-funnel.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/test-build-context.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-expectation-tests.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: clear-glass/src/downloads/artifact-chat-index.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: idearium/spec-engine/spec-compiler/lib/compiler.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: lib/agent-memory.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/agent-providers.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-self/systems.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/phase-files.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/pipeline-nodes.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/repo-context.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/system-boundary.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/test-sandbox.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/vector-memory.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: idearium/spec-engine/phase-specs.cjs
+      to: idearium/spec-engine/spec-compiler/lib/compiler.js
+      kind: requires
+    - from: idearium/spec-engine/phase-specs.cjs
+      to: lib/phase-files.js
+      kind: requires
+    - from: idearium/spec-engine/phase-specs.cjs
+      to: lib/pipeline-nodes.js
+      kind: requires
+    - from: idearium/spec-engine/phase-specs.cjs
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: lib/component-store.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: lib/context-atlas.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: lib/context-atlas.js
+      to: lib/repo-context.js
+      kind: requires
+    - from: lib/context-atlas.js
+      to: lib/agent-memory.js
+      kind: requires
+    - from: lib/context-atlas.js
+      to: lib/vector-memory.js
+      kind: requires
+    - from: lib/context-atlas.js
+      to: clear-glass/src/downloads/artifact-chat-index.js
+      kind: requires
+    - from: lib/phase-graph.js
+      to: lib/system-boundary.js
+      kind: requires
+    - from: lib/pipeline-routing.js
+      to: lib/agent-providers.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/phase-plan.js
+      kind: requires
+    - from: idearium/repo/phases.js
+      to: lib/phase-plan.js
+      kind: requires
+    - from: lib/capability-spec.js
+      to: lib/phase-plan.js
+      kind: requires
+    - from: lib/work-funnel.js
+      to: lib/phase-plan.js
+      kind: requires
+    - from: tests/modules/test-expectation-tests.test.js
+      to: lib/phase-plan.js
+      kind: requires
+    - from: lib/atlas-generate.js
+      to: lib/component-store.js
+      kind: requires
+    - from: lib/build-context.js
+      to: lib/component-store.js
+      kind: requires
+    - from: lib/context-sources.js
+      to: lib/component-store.js
+      kind: requires
+    - from: lib/project-decompose.js
+      to: lib/component-store.js
+      kind: requires
+    - from: lib/project-registry.js
+      to: lib/component-store.js
+      kind: requires
+    - from: lib/registry-harness.js
+      to: lib/component-store.js
+      kind: requires
+    - from: tests/modules/test-build-context.test.js
+      to: lib/component-store.js
+      kind: requires
+  crossings:
+    - from: lib/context-atlas.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+    - from: lib/context-atlas.js
+      to: clear-glass/src/downloads/artifact-chat-index.js
+      fromSystem: lib
+      toSystem: clear-glass
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 18
+    deps:
+      - docs/2026-11-15-the-factory-phasemap.spec::IF7_the_factory_builds_itself
+      - docs/2026-11-15-the-factory-phasemap.spec::IF9_everything_raid_does_through_the_pipeline
+      - docs/2026-11-15-the-factory-phasemap.spec::IF11_agents_deployed_per_system_by_hat
+    dependents:
+      - docs/2026-11-17-nexus-codes-itself-phasemap.spec::NX2_nexus_codes_itself_toward_a_dynamic_end_state
+    upstream:
+      - docs/2026-10-28-first-principles-phasemap.spec::FP1_where_a_request_opens
+      - docs/2026-10-28-first-principles-phasemap.spec::FP2_which_option_is_meant
+      - docs/2026-10-28-first-principles-phasemap.spec::FP3_is_the_gate_open
+      - docs/2026-10-28-gated-flows-phasemap.spec::FG2_dropdown_choose
+      - docs/2026-10-28-gated-flows-phasemap.spec::FG_D1_gate_is_a_step_field
+      - docs/2026-10-28-gated-flows-phasemap.spec::FG_D2_choice_is_read_back
+      - docs/2026-10-28-gated-flows-phasemap.spec::GF1_every_field_found_by_its_section
+      - docs/2026-10-28-gated-flows-phasemap.spec::GF2_every_editor_page_known
+      - docs/2026-10-28-gated-flows-phasemap.spec::GF3_text_and_lists_filled_and_read_back
+      - docs/2026-10-28-gated-flows-phasemap.spec::GF4_friction_goes_to_his_site_keys
+      - docs/2026-10-28-gated-flows-phasemap.spec::GG1_every_part_gated
+      - docs/2026-10-28-gated-flows-phasemap.spec::GM1_the_fill_menu_model
+      - docs/2026-10-28-gated-flows-phasemap.spec::GM2_fill_only_what_is_ticked
+      - docs/2026-10-28-gated-flows-phasemap.spec::KB1_choose_waits_and_keys
+      - docs/2026-10-28-gated-flows-phasemap.spec::KB2_site_keys
+      - docs/2026-10-28-gated-flows-phasemap.spec::KB3_site_keys_ui
+      - docs/2026-10-28-gated-flows-phasemap.spec::KB4_gates_on_macro_steps
+      - docs/2026-10-28-gated-flows-phasemap.spec::UG1_one_gate_for_every_element
+      - docs/2026-10-29-pipelines-phasemap.spec::PA4_a_gate_after_every_step
+      - docs/2026-10-29-pipelines-phasemap.spec::PL1_pipeline_core
+      - docs/2026-10-29-pipelines-phasemap.spec::PL6_the_gate_step
+      - docs/2026-10-29-pipelines-phasemap.spec::PL_D1_a_task_is_one_engine_step
+      - docs/2026-10-29-pipelines-phasemap.spec::PL_D2_pipelines_live_in_the_engine_that_runs_them
+      - docs/2026-10-29-pipelines-phasemap.spec::PL_D4_a_gate_is_a_pipeline_block
+      - docs/2026-11-01-eravos-orchestration-tools-phasemap.spec::EO0_the_domain_and_its_door
+      - docs/2026-11-01-eravos-orchestration-tools-phasemap.spec::EO1_flow_tools
+      - docs/2026-11-01-eravos-orchestration-tools-phasemap.spec::EO2_cos_tools
+      - docs/2026-11-01-eravos-orchestration-tools-phasemap.spec::EO3_work_tools
+      - docs/2026-11-01-eravos-orchestration-tools-phasemap.spec::EO5_opened_from_cos
+      - docs/2026-11-01-eravos-orchestration-tools-phasemap.spec::EO_D0_one_door
+      - docs/2026-11-01-macro-blocks-phasemap.spec::MB1_the_gate_between
+      - docs/2026-11-01-macro-blocks-phasemap.spec::MB2_the_blocks_ui
+      - docs/2026-11-01-macro-blocks-phasemap.spec::MB3_one_shape_with_pipelines
+      - docs/2026-11-01-macro-blocks-phasemap.spec::MB_D0_blocks_and_gates
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC12_the_survey
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC1_task_nodes
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC4_deploy_to_any_system
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC_D0_one_console_in_cos
+      - docs/2026-11-01-procedures-phasemap.spec::PD1_procedure_nodes_and_commands
+      - docs/2026-11-01-procedures-phasemap.spec::PD_D0_a_procedure_is_a_node_file
+      - docs/2026-11-01-procedures-phasemap.spec::PD_D0_addendum_one_procedure_type
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC16_raid_routes_every_interaction
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC1_one_box_shape
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC4_the_box_kinds_on_the_canvas
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC5_programmable_gate_types
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D0_reuse_first
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D10_the_canvas_is_the_surface_tools_are_made
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D1_gates_as_compartments
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D4_language
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D8_options_not_neat_boxes
+      - docs/2026-11-15-the-factory-phasemap.spec::IF0_the_census
+      - docs/2026-11-15-the-factory-phasemap.spec::IF10_the_map_of_nexus_on_the_canvas
+      - docs/2026-11-15-the-factory-phasemap.spec::IF11_agents_deployed_per_system_by_hat
+      - docs/2026-11-15-the-factory-phasemap.spec::IF1_idearium_asks_agents_through_the_pipeline
+      - docs/2026-11-15-the-factory-phasemap.spec::IF2_the_build_as_a_pipeline
+      - docs/2026-11-15-the-factory-phasemap.spec::IF7_the_factory_builds_itself
+      - docs/2026-11-15-the-factory-phasemap.spec::IF9_everything_raid_does_through_the_pipeline
+    downstream:
+      - docs/2026-11-17-nexus-codes-itself-phasemap.spec::NX2_nexus_codes_itself_toward_a_dynamic_end_state
+    blockedBy:
+      - docs/2026-11-15-the-factory-phasemap.spec::IF7_the_factory_builds_itself
+      - docs/2026-11-15-the-factory-phasemap.spec::IF9_everything_raid_does_through_the_pipeline
+      - docs/2026-11-15-the-factory-phasemap.spec::IF11_agents_deployed_per_system_by_hat
+    unlocks: []
+    conflicts:
+      - with: docs/2026-11-15-the-factory-phasemap.spec::IF13_ollama_writes_the_code
+        files:
+          - lib/pipeline-routing.js
+      - with: docs/2026-11-15-the-factory-phasemap.spec::IF14_nexus_plans_deterministically
+        files:
+          - lib/phase-plan.js
+          - idearium/spec-engine/phase-specs.cjs
+          - lib/component-store.js
+          - lib/context-atlas.js
+          - lib/phase-map-auto.js
+      - with: docs/2026-11-15-the-factory-phasemap.spec::IF15_nexus_reviews_deterministically
+        files:
+          - lib/verify-first.js
+          - lib/test-first.js
+          - emerge/emerge/lang/checker.js
+          - lib/phase-close.js
+          - lib/test-map.js
+          - cortex/core/raid/contract-gates.js
+      - with: docs/2026-11-15-the-factory-phasemap.spec::IF16_tests_run_in_the_test_environment
+        files:
+          - cos/testenv/run-target.js
+      - with: docs/2026-11-15-the-factory-phasemap.spec::IF17_emerge_first_js_when_it_cannot
+        files:
+          - lib/pipeline-routing.js
+          - emerge/emerge/lang/checker.js
+      - with: docs/2026-11-15-the-factory-phasemap.spec::IF19_a_structural_rating_for_every_primitive
+        files:
+          - lib/component-store.js
+          - lib/phase-graph.js
+          - lib/agent-record.js
+      - with: docs/2026-11-15-the-factory-phasemap.spec::IF20_gaps_filled_like_a_torrent
+        files:
+          - cortex/core/raid/contract-gates.js
+    dangling: []
+    lines:
+      - >-
+        layer 18 · blocked by IF7_the_factory_builds_itself,
+        IF9_everything_raid_does_through_the_pipeline, IF11_agents_deployed_per_system_by_hat
+      - >-
+        depends on (3): IF7_the_factory_builds_itself,
+        IF9_everything_raid_does_through_the_pipeline, IF11_agents_deployed_per_system_by_hat · all
+        upstream 57
+      - 'needed by (1): NX2_nexus_codes_itself_toward_a_dynamic_end_state'
+      - >-
+        same files as IF13_ollama_writes_the_code with no order between them:
+        lib/pipeline-routing.js
+      - >-
+        same files as IF14_nexus_plans_deterministically with no order between them:
+        lib/phase-plan.js, idearium/spec-engine/phase-specs.cjs, lib/component-store.js,
+        lib/context-atlas.js, lib/phase-map-auto.js
+      - >-
+        same files as IF15_nexus_reviews_deterministically with no order between them:
+        lib/verify-first.js, lib/test-first.js, emerge/emerge/lang/checker.js, lib/phase-close.js,
+        lib/test-map.js, cortex/core/raid/contract-gates.js
+      - >-
+        same files as IF16_tests_run_in_the_test_environment with no order between them:
+        cos/testenv/run-target.js
+      - >-
+        same files as IF17_emerge_first_js_when_it_cannot with no order between them:
+        lib/pipeline-routing.js, emerge/emerge/lang/checker.js
+      - … and 2 more phases sharing its files without an order
+    edges:
+      - from: docs/2026-11-15-the-factory-phasemap.spec::IF7_the_factory_builds_itself
+        kind: declared
+      - from: docs/2026-11-15-the-factory-phasemap.spec::IF9_everything_raid_does_through_the_pipeline
+        kind: declared
+      - from: docs/2026-11-15-the-factory-phasemap.spec::IF11_agents_deployed_per_system_by_hat
+        kind: declared

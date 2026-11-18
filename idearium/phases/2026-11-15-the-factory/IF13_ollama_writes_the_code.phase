@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-15-the-factory-phasemap.spec::IF13_ollama_writes_the_code
+type: phase
+id: docs_2026-11-15-the-factory-phasemap.spec::IF13_ollama_writes_the_code
+context: pipeline phase IF13_ollama_writes_the_code of docs/2026-11-15-the-factory-phasemap.spec
+intent: null
+summary: IF13_ollama_writes_the_code (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1794970578474
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794970578474
+lastSeenAt: 1794970578474
+fingerprint: null
+payload:
+  id: IF13_ollama_writes_the_code
+  map: docs/2026-11-15-the-factory-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/pipeline-routing.js
+    - idearium/api/index.js
+  depends_on:
+    - IH3_routers_read_the_chain
+  blocks: []
+  spec: null
+  graph: 7b0ead80d129645a

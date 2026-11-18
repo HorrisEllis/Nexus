@@ -1,0 +1,254 @@
+envelope: 1
+uuid: nexus-export-graph-phase:IF15_nexus_reviews_deterministically:7b20430fca243bbf
+type: graph
+id: phase:IF15_nexus_reviews_deterministically:7b20430fca243bbf
+context: dependency graph of phase IF15_nexus_reviews_deterministically
+intent: null
+summary: 24 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1794982977328
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794982977328
+lastSeenAt: 1794982977328
+fingerprint: null
+payload:
+  for: IF15_nexus_reviews_deterministically
+  kind: phase
+  repo: null
+  hash: 7b20430fca243bbf
+  nodes:
+    - path: cortex/core/raid/contract-gates.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: emerge/emerge/lang/checker.js
+      role: changes
+      exists: true
+      system: emerge
+    - path: lib/phase-close.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/test-first.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/test-map.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/verify-first.js
+      role: changes
+      exists: true
+      system: lib
+    - path: cortex/core/raid/contract-adapters.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/contract-intake.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/contract-template.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/contract-v2-door.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/cli/route-commands.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/checks/ck-247-decomposition.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/coder-brief.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/proposal-evidence.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/test-proposal-evidence.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-raid-input.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-tf-already-done.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: emerge/emerge/lang/build-loader.js
+      role: uses
+      exists: true
+      system: emerge
+    - path: emerge/emerge/lang/components.js
+      role: uses
+      exists: true
+      system: emerge
+    - path: emerge/emerge/lang/runtime.js
+      role: uses
+      exists: true
+      system: emerge
+    - path: lib/phase-plan.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/proposal-evidence.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/test-sandbox.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/verify-first.js
+      to: lib/phase-plan.js
+      kind: requires
+    - from: lib/test-first.js
+      to: lib/proposal-evidence.js
+      kind: requires
+    - from: lib/phase-close.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: emerge/emerge/lang/checker.js
+      to: emerge/emerge/lang/runtime.js
+      kind: requires
+    - from: emerge/emerge/lang/checker.js
+      to: emerge/emerge/lang/build-loader.js
+      kind: requires
+    - from: emerge/emerge/lang/checker.js
+      to: emerge/emerge/lang/components.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/verify-first.js
+      kind: requires
+    - from: lib/coder-brief.js
+      to: lib/verify-first.js
+      kind: requires
+    - from: tests/modules/test-tf-already-done.test.js
+      to: lib/test-first.js
+      kind: requires
+    - from: lib/proposal-evidence.js
+      to: lib/test-map.js
+      kind: requires
+    - from: tests/modules/test-proposal-evidence.test.js
+      to: lib/test-map.js
+      kind: requires
+    - from: cortex/core/raid/contract-adapters.js
+      to: cortex/core/raid/contract-gates.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: cortex/core/raid/contract-gates.js
+      kind: requires
+    - from: cortex/core/raid/contract-template.js
+      to: cortex/core/raid/contract-gates.js
+      kind: requires
+    - from: cortex/core/raid/contract-v2-door.js
+      to: cortex/core/raid/contract-gates.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-gates.js
+      kind: requires
+    - from: lib/checks/ck-247-decomposition.js
+      to: cortex/core/raid/contract-gates.js
+      kind: requires
+    - from: tests/modules/test-raid-input.test.js
+      to: cortex/core/raid/contract-gates.js
+      kind: requires
+  crossings:
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-gates.js
+      fromSystem: idearium
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: lib/checks/ck-247-decomposition.js
+      to: cortex/core/raid/contract-gates.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 4
+    deps:
+      - docs/2026-11-15-the-factory-phasemap.spec::IF13_ollama_writes_the_code
+      - docs/2026-10-23-self-building-loop-phasemap.spec::SL2_done_by_evidence
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW24_the_gate_holds_the_agent_gets_a_projection
+    dependents:
+      - docs/2026-11-15-the-factory-phasemap.spec::IF16_tests_run_in_the_test_environment
+      - docs/2026-11-15-the-factory-phasemap.spec::IF19_a_structural_rating_for_every_primitive
+    upstream:
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW1_the_baton
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW24_the_gate_holds_the_agent_gets_a_projection
+      - docs/2026-10-16-intent-hat-agent-chain-phasemap.spec::IH0a_one_vocabulary
+      - docs/2026-10-16-intent-hat-agent-chain-phasemap.spec::IH1_intent_nodes_point_at_hats
+      - docs/2026-10-16-intent-hat-agent-chain-phasemap.spec::IH3_routers_read_the_chain
+      - docs/2026-10-23-self-building-loop-phasemap.spec::SL0_what_can_be_built_now
+      - docs/2026-10-23-self-building-loop-phasemap.spec::SL2_done_by_evidence
+      - docs/2026-11-15-the-factory-phasemap.spec::IF13_ollama_writes_the_code
+    downstream:
+      - docs/2026-11-15-the-factory-phasemap.spec::IF16_tests_run_in_the_test_environment
+      - docs/2026-11-15-the-factory-phasemap.spec::IF18_the_visual_debugger
+      - docs/2026-11-15-the-factory-phasemap.spec::IF19_a_structural_rating_for_every_primitive
+      - docs/2026-11-15-the-factory-phasemap.spec::IF20_gaps_filled_like_a_torrent
+      - docs/2026-11-15-the-factory-phasemap.spec::IF21_attack_the_most_load_bearing_first
+    blockedBy:
+      - docs/2026-11-15-the-factory-phasemap.spec::IF13_ollama_writes_the_code
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW24_the_gate_holds_the_agent_gets_a_projection
+    unlocks:
+      - docs/2026-11-15-the-factory-phasemap.spec::IF16_tests_run_in_the_test_environment
+      - docs/2026-11-15-the-factory-phasemap.spec::IF19_a_structural_rating_for_every_primitive
+    conflicts:
+      - with: docs/2026-11-15-the-factory-phasemap.spec::IF12_nexus_builds_itself_autonomously
+        files:
+          - lib/verify-first.js
+          - lib/test-first.js
+          - emerge/emerge/lang/checker.js
+          - lib/phase-close.js
+          - lib/test-map.js
+          - cortex/core/raid/contract-gates.js
+      - with: docs/2026-11-15-the-factory-phasemap.spec::IF17_emerge_first_js_when_it_cannot
+        files:
+          - emerge/emerge/lang/checker.js
+    dangling: []
+    lines:
+      - >-
+        layer 4 · blocked by IF13_ollama_writes_the_code,
+        GW24_the_gate_holds_the_agent_gets_a_projection
+      - >-
+        depends on (3): IF13_ollama_writes_the_code, SL2_done_by_evidence,
+        GW24_the_gate_holds_the_agent_gets_a_projection · all upstream 8
+      - >-
+        needed by (2): IF16_tests_run_in_the_test_environment,
+        IF19_a_structural_rating_for_every_primitive · all downstream 5 · finishing it unlocks
+        IF16_tests_run_in_the_test_environment, IF19_a_structural_rating_for_every_primitive
+      - >-
+        same files as IF12_nexus_builds_itself_autonomously with no order between them:
+        lib/verify-first.js, lib/test-first.js, emerge/emerge/lang/checker.js, lib/phase-close.js,
+        lib/test-map.js, cortex/core/raid/contract-gates.js
+      - >-
+        same files as IF17_emerge_first_js_when_it_cannot with no order between them:
+        emerge/emerge/lang/checker.js
+    edges:
+      - from: docs/2026-11-15-the-factory-phasemap.spec::IF13_ollama_writes_the_code
+        kind: declared
+      - from: docs/2026-10-23-self-building-loop-phasemap.spec::SL2_done_by_evidence
+        kind: declared
+      - from: docs/2026-10-15-gate-held-work-phasemap.spec::GW24_the_gate_holds_the_agent_gets_a_projection
+        kind: declared

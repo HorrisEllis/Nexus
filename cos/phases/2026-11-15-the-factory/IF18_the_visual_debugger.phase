@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-15-the-factory-phasemap.spec::IF18_the_visual_debugger
+type: phase
+id: docs_2026-11-15-the-factory-phasemap.spec::IF18_the_visual_debugger
+context: pipeline phase IF18_the_visual_debugger of docs/2026-11-15-the-factory-phasemap.spec
+intent: null
+summary: IF18_the_visual_debugger (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1794970578484
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794970578484
+lastSeenAt: 1794970578484
+fingerprint: null
+payload:
+  id: IF18_the_visual_debugger
+  map: docs/2026-11-15-the-factory-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/ui/automation/engine.js
+  depends_on:
+    - IF16_tests_run_in_the_test_environment
+    - IF10_the_map_of_nexus_on_the_canvas
+    - PC8_operate_a_pipeline
+  blocks: []
+  spec: null
+  graph: 291668f8f4c1e4fd

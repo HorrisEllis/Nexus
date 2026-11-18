@@ -190,6 +190,42 @@ spec:
         (they change with the repo; a base image that held them would be rebuilt on every commit).
       proof: "a fixture repo with package.json and go.mod gets node and go ticked, each naming its file; after setup, npm ci and go mod download have run in its compartment; an unticked language is not installed"
 
+    # ── EXPANDED 2026-11-18 (his) — Nexus on its own OS: Debian minimal now, then his architecture's own pillars, one at a time ──
+    # James, 2026-11-18: "Would this run better, on like a tiny os? Like to use nexus ontop of?" · "And I'm talking like a skeleton of a os.
+    # Like Debian" · "Yes also once emerge is done. Then that can be the beginning of our os. Then we can replace the pillars slowly. I want a
+    # fully built from my architecture os"
+    # The coder's view given the same night (not a decision): yes later, not now. His PC: 16 GB RAM (5.7 free at the time), GTX 1650 4 GB;
+    # Windows idles at 3-4 GB, Debian minimal at 0.2-0.3; COS's compartments could be real cgroups/namespaces instead of audit walls.
+    # Cost: Clear Glass's agent tabs need a display (a bare window manager, or Xvfb with his sign-ins made once on a screen); COS's
+    # Windows-only parts (exe, installer, service, elevated start, paths) to port. A VM on the same 16 GB makes it worse: dual boot or a
+    # second machine. His order: after Emerge is done.
+    OS3_nexus_on_debian_minimal:
+      layer: platform
+      systems: [cos]
+      status: OPEN
+      depends_on: [OS1_compartments_as_operating_systems, CIE11_retire_the_interpreter]
+      files: [cos/testenv/setup-vm.sh, cos/testenv/provision.js, cos/manager/supervisor.js, cos/app/settings.js]
+      james: '"Yes also once emerge is done. Then that can be the beginning of our os." (2026-11-18)'
+      does: >-
+        Nexus's headless core (COS's manager, Ollama, Idearium, Cortex, Versionium, Guardian) runs on a Debian minimal host (no desktop), COS
+        as a systemd service, each system's compartment a real cgroup and namespace (memory and CPU limits that hold, the wall in enforce).
+        Clear Glass under a bare window manager on the same host, or on his Windows machine over the network (one system reached only by
+        its routes, §5.10). Measured against Windows on the same machine: free memory, how often deepseek-coder-v2:16b fits, build wall time.
+      proof: "the same phase built on Windows and on the Debian host, its run and the numbers side by side; a system over its memory limit is held by the kernel, said"
+    OS4_the_pillars_replaced_by_his_architecture:
+      layer: platform
+      systems: [cos, emerge]
+      status: OPEN
+      depends_on: [OS3_nexus_on_debian_minimal]
+      james: '"Then we can replace the pillars slowly. I want a fully built from my architecture os" (2026-11-18)'
+      files: [emerge/emerge/spec/cie-eg.spec]
+      does: >-
+        One pillar of the base OS at a time (the coder's list, to confirm with him: process supervision, the filesystem's versioning,
+        networking, the window layer, the package manager) replaced by his architecture's own, written in Emerge on Pillar primitives
+        (§17.13), each behind the same contract the Debian piece met, so either can run and the change is reversible. Mapped only; each
+        pillar is its own phase when reached.
+      proof: "a pillar replaced, the OS boots and runs Nexus on it, the Debian piece still swappable back in"
+
 # ## ADDENDUM 2026-10-07 (0.39.371) — VM1 built in part, from docs/2026-10-07-compartment-control-and-activity-phasemap.spec
 # James: "I want to use snapshots, pause, rewind, etc. like full VMware style. Not actual VMware."
 # Built: cos/workspace/vm-control.js — pause / resume (QMP stop / cont), live checkpoints (HMP savevm: disk + memory +

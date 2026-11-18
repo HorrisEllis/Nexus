@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-15-the-factory-phasemap.spec::IF19_a_structural_rating_for_every_primitive
+type: phase
+id: docs_2026-11-15-the-factory-phasemap.spec::IF19_a_structural_rating_for_every_primitive
+context: >-
+  pipeline phase IF19_a_structural_rating_for_every_primitive of
+  docs/2026-11-15-the-factory-phasemap.spec
+intent: null
+summary: IF19_a_structural_rating_for_every_primitive (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1794982977335
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794982977335
+lastSeenAt: 1794982977335
+fingerprint: null
+payload:
+  id: IF19_a_structural_rating_for_every_primitive
+  map: docs/2026-11-15-the-factory-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - pillar/contracts/contracts.eg
+    - pillar/spec/pillar.spec
+    - lib/component-store.js
+    - lib/phase-graph.js
+    - lib/agent-record.js
+  depends_on:
+    - IF15_nexus_reviews_deterministically
+  blocks: []
+  spec: null
+  graph: 51f96adf49cb2212

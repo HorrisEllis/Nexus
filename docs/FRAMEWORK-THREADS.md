@@ -461,3 +461,19 @@ by the focus.
   end-state test with Ollama doing every file step; failed if steps of one file still fail on Ollama after two retries.
 - **Bias named:** the same coder that predicts this will build and judge it, so a pass is post-hoc evidence until a run he starts reproduces it.
 - **Evidence:** open.
+
+## T12 — "attacking the most load bearing pillar first": tension on the weakest load-bearing primitive, registered 2026-11-18
+
+- **His words:** 2026-11-18, "The smallest irreducible size per step. Maybe stubs at first, which remain gaps/open loops causing tension." ·
+  "make the most load bearing pillar create more tension? Like attacking the most load bearing pillar first. Using the most load bearing
+  primitives from the dependencies as the highest level of confidence by the least verified load bearing primitive like a slope" · "We can
+  use bidirectional causal chaining and cross domain verification as ways to test also."
+- **What the coder did with it:** **conceptual.** Recorded with readings to confirm in docs/2026-11-15-the-factory-phasemap.spec (the
+  2026-11-18 addendum after IF18). Triggered by evidence: run 40b9a698 (GQ1) landed an 8-line placeholder as "landed clean" — a stub
+  counted as done, the case his framework would hold open as a gap with tension.
+- **Prediction, written before any run:** ordering a phase's primitives by load × (1 − confidence), each a step with its own test, stubs
+  held as gaps, raises the share of Ollama-built primitives that pass their own test on the first or second try, and no stub is ever
+  counted as landed. Measured by: per run, primitives attempted, passed by Ollama, held as gaps, and agent calls, against the same counts for
+  the file-per-step runs of 2026-11-15/18 (N1: 2 calls, no new code; GQ1: 0 calls, a placeholder).
+- **Bias named:** the coder predicts, builds and judges it; a pass is post-hoc until a run he starts reproduces it.
+- **Evidence:** open.

@@ -7,11 +7,11 @@ intent: null
 summary: 1 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1794939959398
+exported_at: 1794970578420
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794939959398
-lastSeenAt: 1794939959398
+firstSeenAt: 1794970578420
+lastSeenAt: 1794970578420
 fingerprint: null
 payload:
   for: IF0_the_census
@@ -37,6 +37,7 @@ payload:
       - docs/2026-11-15-the-factory-phasemap.spec::IF10_the_map_of_nexus_on_the_canvas
       - docs/2026-11-15-the-factory-phasemap.spec::IF11_agents_deployed_per_system_by_hat
       - docs/2026-11-15-the-factory-phasemap.spec::IF12_nexus_builds_itself_autonomously
+      - docs/2026-11-15-the-factory-phasemap.spec::IF18_the_visual_debugger
       - docs/2026-11-15-the-factory-phasemap.spec::IF1_idearium_asks_agents_through_the_pipeline
       - docs/2026-11-15-the-factory-phasemap.spec::IF2_the_build_as_a_pipeline
       - docs/2026-11-15-the-factory-phasemap.spec::IF3_one_gate
@@ -57,5 +58,5 @@ payload:
       - 'depends on (0): —'
       - >-
         needed by (2): IF1_idearium_asks_agents_through_the_pipeline, IF5_one_compartment · all
-        downstream 13 · finishing it unlocks IF5_one_compartment
+        downstream 14 · finishing it unlocks IF5_one_compartment
     edges: []

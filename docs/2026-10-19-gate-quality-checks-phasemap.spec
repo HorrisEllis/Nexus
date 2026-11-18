@@ -47,7 +47,9 @@ phases:
 
   GQ1_quality_stream:
     layer: foundation
-    status: OPEN
+    # roadmap edit 2026-11-18: OPEN -> IN PROGRESS 2026-11-18.
+    status_previous: "OPEN"
+    status: "IN PROGRESS 2026-11-18."
     depends_on: []
     axioms: [§3.1, §1.1, §1.3, §0.3]
     blocks: ["quality_stream"]

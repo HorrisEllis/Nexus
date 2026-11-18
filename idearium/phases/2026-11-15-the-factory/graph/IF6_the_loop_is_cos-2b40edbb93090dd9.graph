@@ -7,11 +7,11 @@ intent: null
 summary: 25 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1794939959418
+exported_at: 1794982977302
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794939959418
-lastSeenAt: 1794939959418
+firstSeenAt: 1794982977302
+lastSeenAt: 1794982977302
 fingerprint: null
 payload:
   for: IF6_the_loop_is_cos
@@ -221,6 +221,15 @@ payload:
       - with: docs/2026-11-15-the-factory-phasemap.spec::IF5_one_compartment
         files:
           - idearium/api/index.js
+      - with: docs/2026-11-15-the-factory-phasemap.spec::IF13_ollama_writes_the_code
+        files:
+          - idearium/api/index.js
+      - with: docs/2026-11-15-the-factory-phasemap.spec::IF17_emerge_first_js_when_it_cannot
+        files:
+          - idearium/api/index.js
+      - with: docs/2026-11-15-the-factory-phasemap.spec::IF20_gaps_filled_like_a_torrent
+        files:
+          - idearium/api/index.js
     dangling: []
     lines:
       - layer 3 · blocked by IF2_the_build_as_a_pipeline
@@ -228,6 +237,13 @@ payload:
       - 'needed by (0): —'
       - 'same files as IF3_one_gate with no order between them: idearium/api/index.js'
       - 'same files as IF5_one_compartment with no order between them: idearium/api/index.js'
+      - 'same files as IF13_ollama_writes_the_code with no order between them: idearium/api/index.js'
+      - >-
+        same files as IF17_emerge_first_js_when_it_cannot with no order between them:
+        idearium/api/index.js
+      - >-
+        same files as IF20_gaps_filled_like_a_torrent with no order between them:
+        idearium/api/index.js
     edges:
       - from: docs/2026-11-15-the-factory-phasemap.spec::IF2_the_build_as_a_pipeline
         kind: declared

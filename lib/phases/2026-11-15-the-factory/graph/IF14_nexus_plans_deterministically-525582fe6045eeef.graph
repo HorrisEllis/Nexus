@@ -1,0 +1,265 @@
+envelope: 1
+uuid: nexus-export-graph-phase:IF14_nexus_plans_deterministically:525582fe6045eeef
+type: graph
+id: phase:IF14_nexus_plans_deterministically:525582fe6045eeef
+context: dependency graph of phase IF14_nexus_plans_deterministically
+intent: null
+summary: 30 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1794982977325
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794982977325
+lastSeenAt: 1794982977325
+fingerprint: null
+payload:
+  for: IF14_nexus_plans_deterministically
+  kind: phase
+  repo: null
+  hash: 525582fe6045eeef
+  nodes:
+    - path: idearium/spec-engine/phase-specs.cjs
+      role: changes
+      exists: true
+      system: idearium
+    - path: lib/code-intel/index.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/component-store.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/context-atlas.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/phase-map-auto.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/phase-plan.js
+      role: changes
+      exists: true
+      system: lib
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/repo/phases.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/atlas-generate.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/build-context.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/capability-spec.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/context-sources.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/project-decompose.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/project-registry.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/registry-harness.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/verify-first.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/work-funnel.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/test-expectation-tests.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: idearium/spec-engine/spec-compiler/lib/compiler.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: lib/code-intel/cards.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/code-intel/chunker.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/code-intel/search.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/code-intel/text.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-self/systems.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/node-export.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/phase-dag.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/phase-files.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/phase-graph.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/pipeline-nodes.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/test-sandbox.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: idearium/spec-engine/phase-specs.cjs
+      to: idearium/spec-engine/spec-compiler/lib/compiler.js
+      kind: requires
+    - from: idearium/spec-engine/phase-specs.cjs
+      to: lib/phase-dag.js
+      kind: requires
+    - from: idearium/spec-engine/phase-specs.cjs
+      to: lib/phase-files.js
+      kind: requires
+    - from: idearium/spec-engine/phase-specs.cjs
+      to: lib/phase-graph.js
+      kind: requires
+    - from: idearium/spec-engine/phase-specs.cjs
+      to: lib/pipeline-nodes.js
+      kind: requires
+    - from: idearium/spec-engine/phase-specs.cjs
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: idearium/spec-engine/phase-specs.cjs
+      to: lib/node-export.js
+      kind: requires
+    - from: lib/component-store.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: lib/code-intel/index.js
+      to: lib/code-intel/chunker.js
+      kind: requires
+    - from: lib/code-intel/index.js
+      to: lib/code-intel/cards.js
+      kind: requires
+    - from: lib/code-intel/index.js
+      to: lib/code-intel/search.js
+      kind: requires
+    - from: lib/code-intel/index.js
+      to: lib/code-intel/text.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/phase-plan.js
+      kind: requires
+    - from: idearium/repo/phases.js
+      to: lib/phase-plan.js
+      kind: requires
+    - from: lib/capability-spec.js
+      to: lib/phase-plan.js
+      kind: requires
+    - from: lib/verify-first.js
+      to: lib/phase-plan.js
+      kind: requires
+    - from: lib/work-funnel.js
+      to: lib/phase-plan.js
+      kind: requires
+    - from: tests/modules/test-expectation-tests.test.js
+      to: lib/phase-plan.js
+      kind: requires
+    - from: lib/atlas-generate.js
+      to: lib/component-store.js
+      kind: requires
+    - from: lib/build-context.js
+      to: lib/component-store.js
+      kind: requires
+    - from: lib/context-sources.js
+      to: lib/component-store.js
+      kind: requires
+    - from: lib/project-decompose.js
+      to: lib/component-store.js
+      kind: requires
+    - from: lib/project-registry.js
+      to: lib/component-store.js
+      kind: requires
+    - from: lib/registry-harness.js
+      to: lib/component-store.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 4
+    deps:
+      - docs/2026-11-15-the-factory-phasemap.spec::IF13_ollama_writes_the_code
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN7_every_phase_and_spec_on_the_spine
+    dependents: []
+    upstream:
+      - docs/2026-10-16-intent-hat-agent-chain-phasemap.spec::IH0a_one_vocabulary
+      - docs/2026-10-16-intent-hat-agent-chain-phasemap.spec::IH1_intent_nodes_point_at_hats
+      - docs/2026-10-16-intent-hat-agent-chain-phasemap.spec::IH3_routers_read_the_chain
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN0_baseline
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN3_registry_is_the_spine
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN7_every_phase_and_spec_on_the_spine
+      - docs/2026-11-15-the-factory-phasemap.spec::IF13_ollama_writes_the_code
+    downstream: []
+    blockedBy:
+      - docs/2026-11-15-the-factory-phasemap.spec::IF13_ollama_writes_the_code
+      - docs/2026-10-19-infrastructure-spine-phasemap.spec::IN7_every_phase_and_spec_on_the_spine
+    unlocks: []
+    conflicts:
+      - with: docs/2026-11-15-the-factory-phasemap.spec::IF12_nexus_builds_itself_autonomously
+        files:
+          - lib/phase-plan.js
+          - idearium/spec-engine/phase-specs.cjs
+          - lib/component-store.js
+          - lib/context-atlas.js
+          - lib/phase-map-auto.js
+      - with: docs/2026-11-15-the-factory-phasemap.spec::IF19_a_structural_rating_for_every_primitive
+        files:
+          - lib/component-store.js
+    dangling: []
+    lines:
+      - layer 4 · blocked by IF13_ollama_writes_the_code, IN7_every_phase_and_spec_on_the_spine
+      - >-
+        depends on (2): IF13_ollama_writes_the_code, IN7_every_phase_and_spec_on_the_spine · all
+        upstream 7
+      - 'needed by (0): —'
+      - >-
+        same files as IF12_nexus_builds_itself_autonomously with no order between them:
+        lib/phase-plan.js, idearium/spec-engine/phase-specs.cjs, lib/component-store.js,
+        lib/context-atlas.js, lib/phase-map-auto.js
+      - >-
+        same files as IF19_a_structural_rating_for_every_primitive with no order between them:
+        lib/component-store.js
+    edges:
+      - from: docs/2026-11-15-the-factory-phasemap.spec::IF13_ollama_writes_the_code
+        kind: declared
+      - from: docs/2026-10-19-infrastructure-spine-phasemap.spec::IN7_every_phase_and_spec_on_the_spine
+        kind: declared

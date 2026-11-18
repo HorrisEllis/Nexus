@@ -7,11 +7,11 @@ intent: null
 summary: 26 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1794748295010
+exported_at: 1794982977299
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794748295010
-lastSeenAt: 1794748295010
+firstSeenAt: 1794982977299
+lastSeenAt: 1794982977299
 fingerprint: null
 payload:
   for: IF5_one_compartment
@@ -227,6 +227,15 @@ payload:
       - with: docs/2026-11-15-the-factory-phasemap.spec::IF6_the_loop_is_cos
         files:
           - idearium/api/index.js
+      - with: docs/2026-11-15-the-factory-phasemap.spec::IF13_ollama_writes_the_code
+        files:
+          - idearium/api/index.js
+      - with: docs/2026-11-15-the-factory-phasemap.spec::IF17_emerge_first_js_when_it_cannot
+        files:
+          - idearium/api/index.js
+      - with: docs/2026-11-15-the-factory-phasemap.spec::IF20_gaps_filled_like_a_torrent
+        files:
+          - idearium/api/index.js
     dangling: []
     lines:
       - layer 1 · ready
@@ -238,6 +247,8 @@ payload:
       - 'same files as IF2_the_build_as_a_pipeline with no order between them: idearium/api/index.js'
       - 'same files as IF3_one_gate with no order between them: idearium/api/index.js'
       - 'same files as IF6_the_loop_is_cos with no order between them: idearium/api/index.js'
+      - 'same files as IF13_ollama_writes_the_code with no order between them: idearium/api/index.js'
+      - … and 2 more phases sharing its files without an order
     edges:
       - from: docs/2026-11-15-the-factory-phasemap.spec::IF0_the_census
         kind: declared

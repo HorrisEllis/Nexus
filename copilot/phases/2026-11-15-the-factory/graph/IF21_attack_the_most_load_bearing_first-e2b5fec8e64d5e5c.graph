@@ -1,0 +1,209 @@
+envelope: 1
+uuid: nexus-export-graph-phase:IF21_attack_the_most_load_bearing_first:e2b5fec8e64d5e5c
+type: graph
+id: phase:IF21_attack_the_most_load_bearing_first:e2b5fec8e64d5e5c
+context: dependency graph of phase IF21_attack_the_most_load_bearing_first
+intent: null
+summary: 21 node(s), 3 crossing(s)
+system: idearium
+tags: []
+exported_at: 1794982977339
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794982977339
+lastSeenAt: 1794982977339
+fingerprint: null
+payload:
+  for: IF21_attack_the_most_load_bearing_first
+  kind: phase
+  repo: null
+  hash: e2b5fec8e64d5e5c
+  nodes:
+    - path: copilot/adversarial.js
+      role: changes
+      exists: true
+      system: copilot
+    - path: intelligence/cfr/graph.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: lib/meta/adversary-suite.js
+      role: changes
+      exists: true
+      system: lib
+    - path: copilot/lib/activity-recall.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: cortex/core/raid/contract-intake.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/memory/causal-lookup.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: intelligence/alk/index.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: intelligence/causal/compound.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: lib/agent-tools/tools/faculty/faculty-tools.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/compartment-engine.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/meta/index.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/adversary-suite.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/copilot-adversarial-consolidation.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-agent-hat-agnostic.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: copilot/analysis.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: copilot/intuition.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: intelligence/adversarial.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/lean-mode.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-client.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/resource-monitor.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: copilot/adversarial.js
+      to: copilot/intuition.js
+      kind: requires
+    - from: copilot/adversarial.js
+      to: copilot/analysis.js
+      kind: requires
+    - from: copilot/adversarial.js
+      to: intelligence/adversarial.js
+      kind: requires
+    - from: copilot/adversarial.js
+      to: lib/nexus-client.js
+      kind: requires
+    - from: copilot/adversarial.js
+      to: lib/resource-monitor.js
+      kind: requires
+    - from: copilot/adversarial.js
+      to: lib/lean-mode.js
+      kind: requires
+    - from: copilot/lib/activity-recall.js
+      to: copilot/adversarial.js
+      kind: requires
+    - from: copilot/server.js
+      to: copilot/adversarial.js
+      kind: requires
+    - from: lib/agent-tools/tools/faculty/faculty-tools.js
+      to: copilot/adversarial.js
+      kind: requires
+    - from: tests/modules/copilot-adversarial-consolidation.test.js
+      to: copilot/adversarial.js
+      kind: requires
+    - from: tests/modules/test-agent-hat-agnostic.test.js
+      to: copilot/adversarial.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: lib/meta/adversary-suite.js
+      kind: requires
+    - from: lib/compartment-engine.js
+      to: lib/meta/adversary-suite.js
+      kind: requires
+    - from: lib/meta/index.js
+      to: lib/meta/adversary-suite.js
+      kind: requires
+    - from: tests/modules/adversary-suite.test.js
+      to: lib/meta/adversary-suite.js
+      kind: requires
+    - from: cortex/memory/causal-lookup.js
+      to: intelligence/cfr/graph.js
+      kind: requires
+    - from: intelligence/alk/index.js
+      to: intelligence/cfr/graph.js
+      kind: requires
+    - from: intelligence/causal/compound.js
+      to: intelligence/cfr/graph.js
+      kind: requires
+  crossings:
+    - from: copilot/adversarial.js
+      to: intelligence/adversarial.js
+      fromSystem: copilot
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: lib/agent-tools/tools/faculty/faculty-tools.js
+      to: copilot/adversarial.js
+      fromSystem: lib
+      toSystem: copilot
+      kind: upward
+      known: true
+    - from: cortex/memory/causal-lookup.js
+      to: intelligence/cfr/graph.js
+      fromSystem: cortex
+      toSystem: intelligence
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 6
+    deps:
+      - docs/2026-11-15-the-factory-phasemap.spec::IF19_a_structural_rating_for_every_primitive
+    dependents: []
+    upstream:
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW1_the_baton
+      - docs/2026-10-15-gate-held-work-phasemap.spec::GW24_the_gate_holds_the_agent_gets_a_projection
+      - docs/2026-10-16-intent-hat-agent-chain-phasemap.spec::IH0a_one_vocabulary
+      - docs/2026-10-16-intent-hat-agent-chain-phasemap.spec::IH1_intent_nodes_point_at_hats
+      - docs/2026-10-16-intent-hat-agent-chain-phasemap.spec::IH3_routers_read_the_chain
+      - docs/2026-10-23-self-building-loop-phasemap.spec::SL0_what_can_be_built_now
+      - docs/2026-10-23-self-building-loop-phasemap.spec::SL2_done_by_evidence
+      - docs/2026-11-15-the-factory-phasemap.spec::IF13_ollama_writes_the_code
+      - docs/2026-11-15-the-factory-phasemap.spec::IF15_nexus_reviews_deterministically
+      - docs/2026-11-15-the-factory-phasemap.spec::IF19_a_structural_rating_for_every_primitive
+    downstream: []
+    blockedBy:
+      - docs/2026-11-15-the-factory-phasemap.spec::IF19_a_structural_rating_for_every_primitive
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 6 · blocked by IF19_a_structural_rating_for_every_primitive
+      - 'depends on (1): IF19_a_structural_rating_for_every_primitive · all upstream 10'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-11-15-the-factory-phasemap.spec::IF19_a_structural_rating_for_every_primitive
+        kind: declared

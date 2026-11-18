@@ -1,0 +1,55 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-15-the-factory-phasemap.spec::IF12_nexus_builds_itself_autonomously
+type: phase
+id: docs_2026-11-15-the-factory-phasemap.spec::IF12_nexus_builds_itself_autonomously
+context: pipeline phase IF12_nexus_builds_itself_autonomously of docs/2026-11-15-the-factory-phasemap.spec
+intent: null
+summary: IF12_nexus_builds_itself_autonomously (?) — 26 file(s)
+system: idearium
+tags: []
+exported_at: 1794970578472
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794970578472
+lastSeenAt: 1794970578472
+fingerprint: null
+payload:
+  id: IF12_nexus_builds_itself_autonomously
+  map: docs/2026-11-15-the-factory-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/pipeline/pipelines
+    - lib/phase-plan.js
+    - idearium/spec-engine/phase-specs.cjs
+    - lib/component-store.js
+    - lib/context-atlas.js
+    - lib/phase-graph.js
+    - lib/pipeline-routing.js
+    - lib/extract-code.js
+    - lib/semantic-variant.js
+    - lib/verify-first.js
+    - lib/test-first.js
+    - emerge/emerge/lang/checker.js
+    - lib/phase-close.js
+    - lib/test-map.js
+    - cortex/core/raid/contract-gates.js
+    - lib/agent-record.js
+    - idearium/cli/route-commands.js
+    - lib/node-export.js
+    - lib/node-registry.js
+    - lib/agent-tools/tools/query/context-atlas.js
+    - lib/phase-dag.js
+    - lib/phase-map-auto.js
+    - components/nexus-core.lib.semantic-variant/1.0.0/semantic-variant.js
+    - cortex/core/raid/contract-adapters.js
+    - cos/testenv/run-target.js
+    - guardian/lib/node-registry.js
+  depends_on:
+    - IF7_the_factory_builds_itself
+    - IF9_everything_raid_does_through_the_pipeline
+    - IF11_agents_deployed_per_system_by_hat
+  blocks: []
+  spec: null
+  graph: 6880593346d76c98

@@ -7,11 +7,11 @@ intent: null
 summary: 15 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1794939959426
+exported_at: 1794970578467
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794939959426
-lastSeenAt: 1794939959426
+firstSeenAt: 1794970578467
+lastSeenAt: 1794970578467
 fingerprint: null
 payload:
   for: IF10_the_map_of_nexus_on_the_canvas
@@ -128,6 +128,7 @@ payload:
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC4_the_box_kinds_on_the_canvas
     dependents:
       - docs/2026-11-15-the-factory-phasemap.spec::IF11_agents_deployed_per_system_by_hat
+      - docs/2026-11-15-the-factory-phasemap.spec::IF18_the_visual_debugger
     upstream:
       - docs/2026-10-28-first-principles-phasemap.spec::FP1_where_a_request_opens
       - docs/2026-10-28-first-principles-phasemap.spec::FP2_which_option_is_meant
@@ -185,6 +186,7 @@ payload:
     downstream:
       - docs/2026-11-15-the-factory-phasemap.spec::IF11_agents_deployed_per_system_by_hat
       - docs/2026-11-15-the-factory-phasemap.spec::IF12_nexus_builds_itself_autonomously
+      - docs/2026-11-15-the-factory-phasemap.spec::IF18_the_visual_debugger
       - docs/2026-11-17-nexus-codes-itself-phasemap.spec::NX2_nexus_codes_itself_toward_a_dynamic_end_state
     blockedBy:
       - docs/2026-11-15-the-factory-phasemap.spec::IF2_the_build_as_a_pipeline
@@ -197,7 +199,9 @@ payload:
       - >-
         depends on (2): IF2_the_build_as_a_pipeline, PC4_the_box_kinds_on_the_canvas · all upstream
         53
-      - 'needed by (1): IF11_agents_deployed_per_system_by_hat · all downstream 3'
+      - >-
+        needed by (2): IF11_agents_deployed_per_system_by_hat, IF18_the_visual_debugger · all
+        downstream 4
     edges:
       - from: docs/2026-11-15-the-factory-phasemap.spec::IF2_the_build_as_a_pipeline
         kind: declared

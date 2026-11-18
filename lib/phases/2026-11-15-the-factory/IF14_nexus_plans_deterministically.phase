@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-15-the-factory-phasemap.spec::IF14_nexus_plans_deterministically
+type: phase
+id: docs_2026-11-15-the-factory-phasemap.spec::IF14_nexus_plans_deterministically
+context: pipeline phase IF14_nexus_plans_deterministically of docs/2026-11-15-the-factory-phasemap.spec
+intent: null
+summary: IF14_nexus_plans_deterministically (?) — 6 file(s)
+system: idearium
+tags: []
+exported_at: 1794970578476
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794970578476
+lastSeenAt: 1794970578476
+fingerprint: null
+payload:
+  id: IF14_nexus_plans_deterministically
+  map: docs/2026-11-15-the-factory-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/phase-plan.js
+    - idearium/spec-engine/phase-specs.cjs
+    - lib/component-store.js
+    - lib/code-intel/index.js
+    - lib/context-atlas.js
+    - lib/phase-map-auto.js
+  depends_on:
+    - IF13_ollama_writes_the_code
+    - IN7_every_phase_and_spec_on_the_spine
+  blocks: []
+  spec: null
+  graph: 525582fe6045eeef

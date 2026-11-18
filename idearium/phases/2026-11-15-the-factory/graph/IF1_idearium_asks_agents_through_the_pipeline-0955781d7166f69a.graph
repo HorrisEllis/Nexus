@@ -7,11 +7,11 @@ intent: null
 summary: 28 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1794939959407
+exported_at: 1794982977281
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794939959407
-lastSeenAt: 1794939959407
+firstSeenAt: 1794982977281
+lastSeenAt: 1794982977281
 fingerprint: null
 payload:
   for: IF1_idearium_asks_agents_through_the_pipeline
@@ -229,6 +229,7 @@ payload:
       - docs/2026-11-15-the-factory-phasemap.spec::IF10_the_map_of_nexus_on_the_canvas
       - docs/2026-11-15-the-factory-phasemap.spec::IF11_agents_deployed_per_system_by_hat
       - docs/2026-11-15-the-factory-phasemap.spec::IF12_nexus_builds_itself_autonomously
+      - docs/2026-11-15-the-factory-phasemap.spec::IF18_the_visual_debugger
       - docs/2026-11-15-the-factory-phasemap.spec::IF2_the_build_as_a_pipeline
       - docs/2026-11-15-the-factory-phasemap.spec::IF3_one_gate
       - docs/2026-11-15-the-factory-phasemap.spec::IF4_rewind_in_the_compartment
@@ -246,6 +247,15 @@ payload:
       - with: docs/2026-11-15-the-factory-phasemap.spec::IF5_one_compartment
         files:
           - idearium/api/index.js
+      - with: docs/2026-11-15-the-factory-phasemap.spec::IF13_ollama_writes_the_code
+        files:
+          - idearium/api/index.js
+      - with: docs/2026-11-15-the-factory-phasemap.spec::IF17_emerge_first_js_when_it_cannot
+        files:
+          - idearium/api/index.js
+      - with: docs/2026-11-15-the-factory-phasemap.spec::IF20_gaps_filled_like_a_torrent
+        files:
+          - idearium/api/index.js
     dangling: []
     lines:
       - layer 1 · blocked by PC16_raid_routes_every_interaction
@@ -253,9 +263,16 @@ payload:
       - >-
         needed by (4): IF2_the_build_as_a_pipeline, IF7_the_factory_builds_itself,
         IF9_everything_raid_does_through_the_pipeline, IF11_agents_deployed_per_system_by_hat · all
-        downstream 11 · finishing it unlocks IF2_the_build_as_a_pipeline,
+        downstream 12 · finishing it unlocks IF2_the_build_as_a_pipeline,
         IF9_everything_raid_does_through_the_pipeline
       - 'same files as IF5_one_compartment with no order between them: idearium/api/index.js'
+      - 'same files as IF13_ollama_writes_the_code with no order between them: idearium/api/index.js'
+      - >-
+        same files as IF17_emerge_first_js_when_it_cannot with no order between them:
+        idearium/api/index.js
+      - >-
+        same files as IF20_gaps_filled_like_a_torrent with no order between them:
+        idearium/api/index.js
     edges:
       - from: docs/2026-11-15-the-factory-phasemap.spec::IF0_the_census
         kind: declared

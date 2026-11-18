@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-15-the-factory-phasemap.spec::IF15_nexus_reviews_deterministically
+type: phase
+id: docs_2026-11-15-the-factory-phasemap.spec::IF15_nexus_reviews_deterministically
+context: pipeline phase IF15_nexus_reviews_deterministically of docs/2026-11-15-the-factory-phasemap.spec
+intent: null
+summary: IF15_nexus_reviews_deterministically (?) — 6 file(s)
+system: idearium
+tags: []
+exported_at: 1794970578478
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1794970578478
+lastSeenAt: 1794970578478
+fingerprint: null
+payload:
+  id: IF15_nexus_reviews_deterministically
+  map: docs/2026-11-15-the-factory-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/verify-first.js
+    - lib/test-first.js
+    - lib/phase-close.js
+    - lib/test-map.js
+    - cortex/core/raid/contract-gates.js
+    - emerge/emerge/lang/checker.js
+  depends_on:
+    - IF13_ollama_writes_the_code
+    - SL2_done_by_evidence
+    - GW24_the_gate_holds_the_agent_gets_a_projection
+  blocks: []
+  spec: null
+  graph: 7b20430fca243bbf
