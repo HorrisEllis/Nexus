@@ -17,7 +17,7 @@
   function build() {
     if (C.root) return;
     C.root = el('div', { class: 'pc', id: 'pc', role: 'dialog', 'aria-label': 'pipeline canvas' });
-    C.top = el('div', { class: 'pc-top' }, [el('b', { text: 'PIPELINE' }), C.name = el('span', { class: 'nm' }),
+    C.top = el('div', { class: 'pc-top' }, [el('button', { class: 'pc-btn', 'data-act': 'map', onclick: () => openMap(C.hooks), text: '◂ Map', title: 'every pipeline, in flight' }), el('b', { text: 'PIPELINE' }), C.name = el('span', { class: 'nm' }),
       el('button', { class: 'pc-btn', 'data-act': 'add', onclick: addStep, text: '＋ Add' }), el('span', { class: 'pc-sp' }),
       C.saveBtn = el('button', { class: 'pc-btn save', 'data-act': 'save', onclick: save, text: 'Save', disabled: '' }),
       el('button', { class: 'pc-btn', 'data-act': 'close', onclick: close, text: '✕ Close' })]);
@@ -30,8 +30,66 @@
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && C.root.classList.contains('open')) { if (C.tab) tab(null); else close(); } });
   }
 
+
+  // ── the flight map (2026-11-18) — James: "i hate the pipline tab. like it shouldn't be a list, it should be visual in the canvas with each system
+  // in the canvas also showing from where to where, like a flight map. like each pipeline, in realtime, to what system, where, and recent ones fade
+  // over a span over a couple of days." · "nope. in the canvas." The canvas's own view: every system a place, every run of the last two days a flight
+  // along the systems its steps call (nexus://<system>), live ones moving; a flight opens its pipeline on this canvas. Heard on COS's stream, not polled.
+  const NS = 'http://www.w3.org/2000/svg';
+  const sv = (n, a = {}, p) => { const e = document.createElementNS(NS, n); for (const [k, v] of Object.entries(a)) e.setAttribute(k, v); if (p) p.appendChild(e); return e; };
+  const COLOR = { done: '#2ee6a6', met: '#2ee6a6', running: '#2ee6a6', failed: '#ff5c7a', cancelled: '#5b6378', paused: '#ffb347', held: '#ffb347', waiting: '#ffb347' };
+  const sysOf = (task) => { const u = String((task && task.step && task.step.config && task.step.config.url) || ''); const m = /^nexus:\/\/([a-z0-9-]+)/i.exec(u); return m ? m[1] : null; };
+  function place(names) {   // COS at the centre, the others on two rings
+    const out = { cos: { x: 500, y: 330 } }; const rest = names.filter(n => n !== 'cos');
+    rest.forEach((n, i) => { const ring = i % 2 ? 300 : 210, a = (i / rest.length) * Math.PI * 2 - Math.PI / 2; out[n] = { x: 500 + Math.cos(a) * ring * 1.35, y: 330 + Math.sin(a) * ring * 0.95 }; });
+    return out;
+  }
+  async function openMap(hooks = {}) {
+    build(); C.hooks = hooks; C.mode = 'map'; C.p = null; C.run = null; C.sel = null; C.dirty = false; C.tab = null;
+    clearInterval(C.poll); clearInterval(C.clock);
+    C.name.textContent = 'every pipeline, in flight · the last two days';
+    C.root.classList.add('open', 'map'); live(); tab(null); await drawMap();
+  }
+  let _mapT = null; const mapSoon = () => { clearTimeout(_mapT); _mapT = setTimeout(() => { if (C.mode === 'map' && C.root.classList.contains('open')) drawMap(); }, 400); };
+  async function drawMap() {
+    let systems = [], pipes = [], runs = [];
+    try { systems = ((await api('GET', '/api/cos/systems')).systems || []); } catch (_) {}
+    try { pipes = ((await api('GET', A('/pipelines'))).pipelines || []); } catch (_) {}
+    try { runs = ((await api('GET', A('/pipeline-runs?limit=120'))).runs || []); } catch (_) {}
+    const byP = new Map(pipes.map(p => [p.id, p]));
+    const names = ['cos', ...new Set([...systems.map(s => s.name === 'ollama-bridge' ? 'ollama' : s.name), ...pipes.flatMap(p => (p.tasks || []).map(sysOf)).filter(Boolean)])];
+    const P = place(names), now = Date.now(), DAY2 = 48 * 3600 * 1000;
+    const svg = sv('svg', { viewBox: '0 0 1000 660', class: 'pc-map', role: 'img', 'aria-label': 'every system, every pipeline run of the last two days as a flight between them' });
+    const gF = sv('g', {}, svg), gS = sv('g', {}, svg);
+    const latest = new Map(); for (const r of runs) { const at = r.startedAt || 0; if (now - at > DAY2 && r.status !== 'running') continue; const k = r.pipelineId; if (!latest.has(k) || (latest.get(k).startedAt || 0) < at) latest.set(k, r); }
+    let i = 0;
+    for (const r of latest.values()) {
+      const p = byP.get(r.pipelineId); const legs = ['cos'];
+      for (const t of (p ? p.tasks : [])) { const s = sysOf(t); if (s && legs[legs.length - 1] !== s && P[s]) legs.push(s); }
+      if (legs.length < 2) legs.push('cos');
+      const age = now - (r.finishedAt || r.startedAt || now), live = r.status === 'running', col = COLOR[r.status] || '#8b93a8';
+      const g = sv('g', { class: 'pc-flight', tabindex: 0, role: 'button', 'aria-label': (r.pipelineName || r.pipelineId) + ' — ' + r.status, style: 'cursor:pointer;opacity:' + (live ? 1 : Math.max(0.14, 1 - age / DAY2)) }, gF);
+      const title = sv('title', {}, g); title.textContent = (r.pipelineName || r.pipelineId) + ' · ' + r.status + (r.error ? ' · ' + String(r.error).slice(0, 120) : '');
+      for (let k = 0; k < legs.length - 1; k++) {
+        const A1 = P[legs[k]], B1 = P[legs[k + 1]]; if (!A1 || !B1) continue;
+        const mx = (A1.x + B1.x) / 2, my = (A1.y + B1.y) / 2, dx = B1.x - A1.x, dy = B1.y - A1.y, L = Math.hypot(dx, dy) || 1, bend = 30 + (i % 5) * 16;
+        const d = 'M' + A1.x + ',' + A1.y + ' Q' + (mx - dy / L * bend) + ',' + (my + dx / L * bend) + ' ' + B1.x + ',' + B1.y;
+        sv('path', { d, fill: 'none', stroke: col, 'stroke-width': live ? 3.2 : 2, 'stroke-linecap': 'round', 'stroke-dasharray': /paused|held|waiting/.test(r.status) ? '7 6' : '' }, g);
+        if (live) { const dot = sv('circle', { r: 4.5, fill: col }, g); sv('animateMotion', { dur: (2.2 + k * 0.6) + 's', repeatCount: 'indefinite', path: d }, dot); }
+      }
+      g.addEventListener('click', () => open(r.pipelineId, C.hooks)); g.addEventListener('keydown', (e) => { if (e.key === 'Enter') open(r.pipelineId, C.hooks); });
+      i++;
+    }
+    const stateOf = (n) => { const s = systems.find(x => x.name === n || (n === 'ollama' && x.name === 'ollama-bridge')); return s ? s.state : (n === 'cos' ? 'up' : null); };
+    for (const n of names) { const pt = P[n]; if (!pt) continue; const st = stateOf(n);
+      const ring = st === 'up' ? '#2ee6a6' : /down|crash|circuit/.test(String(st)) ? '#ff5c7a' : '#3a4258';
+      sv('circle', { cx: pt.x, cy: pt.y, r: n === 'cos' ? 28 : 19, fill: '#121828', stroke: ring, 'stroke-width': 2 }, gS);
+      const t = sv('text', { x: pt.x, y: pt.y + (n === 'cos' ? 47 : 37), 'text-anchor': 'middle', fill: '#c6cbe0', 'font-size': 13, 'font-family': 'ui-monospace, Consolas, monospace' }, gS); t.textContent = n; }
+    const note = el('div', { class: 'pc-mapnote', text: latest.size ? latest.size + ' pipeline(s) in the last two days · click a flight to open it on this canvas' : 'no pipeline ran in the last two days' });
+    C.field.replaceChildren(svg, note);
+  }
   async function open(id, hooks = {}) {
-    build(); C.hooks = hooks; C.sel = null; C.dirty = false; C.tab = null;
+    build(); C.hooks = hooks; C.mode = 'pipe'; C.root.classList.remove('map'); C.sel = null; C.dirty = false; C.tab = null;
     const d = await api('GET', A('/pipelines/' + encodeURIComponent(id)));
     C.p = JSON.parse(JSON.stringify(d.pipeline)); C.layers = d.layers || [];
     C.root.classList.add('open'); live(); await refreshRun(); draw(); tab(null);
@@ -45,7 +103,9 @@
     try { C.es = new EventSource('/api/cos/events'); } catch (_) { return; }
     C.es.addEventListener('open', () => { C.liveOn = true; });
     C.es.addEventListener('error', () => { C.liveOn = false; });
+    for (const k of ['automation.pipeline.start', 'automation.pipeline.done']) C.es.addEventListener(k, () => mapSoon());   // the map hears every run start and end
     C.es.addEventListener('automation.pipeline.task', async (ev) => {
+      mapSoon();
       let d; try { d = JSON.parse(ev.data); } catch (_) { return; }
       if (!C.p || d.pipelineId !== C.p.id || !C.root.classList.contains('open')) return;
       if (!C.run || C.run.id !== d.runId) { await refreshRun(); draw(); return; }
@@ -197,5 +257,5 @@
   }
   // open the canvas on a run just started (the page's ▶ Run): the run is drawn live from its first step
   async function watch(id, runId, hooks) { await open(id, hooks); if (runId && (!C.run || C.run.id !== runId)) { try { C.run = (await api('GET', A('/pipeline-runs/' + encodeURIComponent(runId)))).run; } catch (_) {} draw(); } }
-  window.PipelineCanvas = { open, close, watch, _state: C };
+  window.PipelineCanvas = { open, openMap, close, watch, _state: C };
 })();
