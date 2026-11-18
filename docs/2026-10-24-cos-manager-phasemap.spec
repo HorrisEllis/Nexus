@@ -958,3 +958,19 @@ phases_addendum_2026_11_14_cbw:
       _wakeOnDemand(name, port) serves the page's other direct calls.
     by_the_axioms: "§1.2 (a raw network error is a silent failure to him), §17.7 (the second place of 0.60.524's fault), §5.15 (woken by COS's route, not by reaching into the supervisor)"
     not_built: "the page's other ten direct calls to a system's port do not wake yet; each is its owner's panel, to move onto _wakeOnDemand as it is touched"
+
+# ── ADDENDUM 2026-11-18 — MG15 expanded: systems outlive COS's manager (mapped before code) ──
+# James, 2026-11-18 (after COS restarted itself to load 0.60.575, stopped every system and cut NM1's DeepSeek build mid-run): "coupled. thats going
+# to kill nexus. we are so close to nexus being able to be nexus after 7 months" · "yes the node instances should be hooked into the service, until
+# emerge.exe is doned"
+# Read first: restartCos (cos/manager/server.js) calls sup.shutdown, which stops every system; each system's stdout and stderr are pipes into the
+# manager (supervisor.js spawn: stdio pipe), so a system left running when the manager exits dies at its next log line (EPIPE). No Windows job object
+# holds them (resources.js says so), so a system process can outlive the manager once its output does not depend on it.
+# MG15 slices, in order (each its own release, each proven before the next):
+#   slice o: each system writes to its own log file in COS's data (cos/data/manager/logs/<name>.log, kept to 10 MB, one older file kept), not to a
+#     pipe; the manager reads each file as it grows (fs.watch, no poll) for the console, the cos-boundary lines and EADDRINUSE, as it read the pipe.
+#   slice a: the running table on disk (cos/data/manager/running.json: name, pid, port, startedAt); at boot a system whose pid is alive and whose
+#     address answers is adopted (state up, said "adopted pid N"), not started again; an adopted system is stopped by its pid (taskkill /T).
+#   slice r: COS's own restart (update, his yes, a proposal) leaves the systems running and hands the table to the next manager; stopping the
+#     Windows service still stops them all. Proof: COS restarted during a build, the build goes on, the console shows the adoption.
+# Until emerge.exe replaces node (his), this is how a system and COS's manager are decoupled.
