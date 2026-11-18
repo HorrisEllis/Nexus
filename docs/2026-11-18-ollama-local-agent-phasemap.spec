@@ -480,3 +480,16 @@ addendum_pending: >-
 # Expands, next (his "every method possible"), in order: OL5 lanes (the 30B a slow lane, batched, learned timeouts), OL7 dynamic chunk budgets per
 # model (start small, decompose, branch, escalate), IF3 slice d (the gate asks the intelligence system and its failure record first) and gate memory
 # that accumulates per gate (gate.eg context, persisted), OL4 fit for a memory-mapped model. RAID's routing model (the 3b) to locate before mapping.
+
+## ADDENDUM 2026-11-18 (later) — the pipeline as the model's brain; tension routes; the LLM toolbox (recorded; readings to confirm)
+# James, 2026-11-18: "like nexus should reduce as much complexity and context that the models and agents need, graphs, learning, models for learning
+# and remembering, synthesis and reusing from cortex and ledgers and chatlogs. ledgers, agent tools, pipeline for stepwise planning, literally the
+# pileline can be the llms programmable procedure, process, framework, brain. the more tension between the request, and the end state, the more
+# tension?" · "llm toolbox." (with the text of his innovation toolkit pasted; it lives in docs/innovation-toolkit*.md)
+# The coder's readings, to confirm:
+#   - Tension routes the work: the gap between a request and its end state (OL6's score: tension x weight x f(slope)) decides the model, the size of
+#     the chunks, how many gates and how much context; a small gap goes to the 3b or a deterministic tool, a wide one to the 30B, split smaller.
+#   - The LLM toolbox: his toolkit's sections (is this a framework problem; frame; find the gaps; map the leverage; hostile verification; failure
+#     modes; iterate) run as a .framework the pipeline executes step by step (framework.eg, PC's "yes .framework"), so a model is handed one
+#     section's question at a time with only that step's context, instead of the whole method.
+#   - Nexus carries the memory (Cortex, the ledgers, chat logs, graphs, learned routes); the model is asked the smallest question the step needs.
