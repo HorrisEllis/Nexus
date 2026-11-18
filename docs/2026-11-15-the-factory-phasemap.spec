@@ -321,3 +321,58 @@ order: >-
 #   - tests also from bidirectional causal chaining (spec → code and code → spec agree; his IF-05) and cross-domain verification.
 #   - the component store's primitives move into Pillar's contracts (his "one kernel"); system components stay in each system's own
 #     registry (§5.16). Pillar is Emerge: after Emerge is done (his order), or as the first Emerge-native piece.
+
+# ── ADDENDUM 2026-11-18 — his next asks, mapped onto the phases that own them (mapped only; nothing built) ──
+# James, 2026-11-18 (1): "The tree can be shown in the pipeline canvas. Dependancies, and branching to each components, like the Provence. Like a
+# family tree for each contract? Imagine that. Show the end state at the end. Then the beginning, what if each gate was the raid compartment for
+# the contract, then each disicion is a branch, like showing the entire lineage or tree. Like I want projects to be able to have progress. Like
+# chunks are the progress bar for each and it persists. Also needs to check for files already created in the pipeline. Can use liminal space
+# reader. I feel like the intelligence system needs commands per module and we need emerge, the pipeline, and oLlama working. Then we can
+# autonomously build nexus. Like hook the autonomous mode that copilot has into the build loops and modes. No matter what I say. Pipeline,
+# emerge, and ollama. Gates just need to be much smarter."
+# James, 2026-11-18 (2): "can you make that an option in cos ui. with the raid options and model settings. anything that can help get nexus
+# coding. once emerge, ollama and the pipeline can build. each gate only holds the relevant context, for the next step, plus maybe the previous
+# chunk/brick/piece/step then the agent can query and find context, sythnesize using the primitives as a boundary or constraint field, and then
+# each block a chunk, dynamically decomposed if needed, like even each word in relation to the next, or each line feeding into the next gate and
+# injected into the agent using a .inject node. also the option to load clearglass ui on boot. would that save memory? have a open button in the
+# near the start button for the compartment. then can you see if the system can identify any bottlenecks or memory leaks, polling that can be
+# switched for heartbeat emission, decoupling the systems so they don't need to run with the rest. what about changing the heap or priority
+# based on the request or contract. like using the metrics to determine how much resources, tokens, memory, CPU utilization or time it will
+# take. then dynamically load balance resources based on the metrics, and past runs. like establishing a baseline overtime, and the complexity
+# of requests. a ledger. We need emerge and the pipeline, and with ollama. prioritize gemini since it isn;t against the terms to use browser
+# automation, and we can inject way more context just need to inject intent, the test, and conditions into the chat for each step. like
+# dynamic gating and decomposition per gate, and agent, like have that retry logic escalation"
+#
+# His order, binding over everything below: the pipeline, Emerge and Ollama building; gates much smarter. The rest waits on that unless he says.
+#
+# Where each ask lands (the coder's reading; phases expand, none written again where one covers it):
+#   A. Smarter gates (his "gates just need to be much smarter"): each gate holds only the context for its next step plus the previous chunk;
+#      the agent queries for more; the primitives are the constraint field; a block that is too big decomposes further (down to a line feeding
+#      the next gate); what goes to the agent is a .inject node; per gate: intent, its test, its conditions, retry and escalation per agent.
+#      -> IF3_one_gate (expanded) and IF13_ollama_writes_the_code (the injected context is what makes a small model able to write it).
+#   B. Gemini first among the browser agents (his reading of the providers' terms, his call): RAID's routing chain and escalation.
+#      -> PC16_raid_routes_every_interaction (a routing value, set in RAID; no code).
+#   C. COS UI: the RAID routing options and the model settings on one page, with anything that helps Nexus code.
+#      -> PC16 (its screen; RAID already serves GET/POST /api/raid/routing) and PC17/PC18 (the model fits, COS runs the model server).
+#   D. Clear Glass on boot as an option, and an Open button beside Start for a compartment. Whether it saves memory is to be measured, not
+#      claimed. -> no phase covers it: proposed CN-BOOT in the COS console map (to write after his order allows).
+#   E. Bottlenecks and memory leaks found by the system; polling replaced by heartbeat; systems decoupled so each runs alone.
+#      -> PR6_cos_listens_never_polls (announce-pulse-repair map; slice a built 2026-11-13) and PR4_deviation_raises_the_bpm; CP6 for the leaks.
+#   F. Heap and priority per request or contract, from metrics (tokens, memory, CPU, time) and past runs; load balancing on a baseline that
+#      grows; a ledger. -> CP6a_caps_priority_accounting and CP6f_raid_balances_load (the compartment map).
+#   G. The canvas: each contract's lineage as a family tree (end state, then the beginning), each gate a RAID compartment, each decision a
+#      branch, provenance down to each component; chunks as a project's progress bar that persists. -> IF10_the_map_of_nexus_on_the_canvas and
+#      IF18_the_visual_debugger.
+#   H. The pipeline checks for files already created (the liminal space reader). -> IF14_nexus_plans_deterministically (verify-first exists:
+#      lib/verify-first.js; the reader to be found before it is named).
+#   I. Intelligence: commands per module. -> no phase covers it: proposed in Intelligence's own map (its registry, §5.16).
+#   J. Copilot's autonomous mode hooked into the build loops and modes. -> IF12_nexus_builds_itself_autonomously.
+#
+# To confirm with him (do not guess):
+#   1. "Show the end state at the end. Then the beginning": the tree read from the finished contract back to its start (the goal first), or
+#      both ends pinned with the work filling between?
+#   2. "each gate was the raid compartment for the contract": one compartment per gate, or one per contract with its gates inside?
+#
+# Facts that bear on it, from 2026-11-17/18 on his machine: N1 went through the whole pipeline (Gemini planned, Ollama's 3b coded, closed on
+# its test); GQ1 landed and waits for his verdict; deepseek-coder-v2:16b loads (9.6 GB, ~20 tokens/s) but leaves 3-5% RAM free, under COS's
+# floor, so COS refused to start ollama-bridge; C: was full (0 GB) and the builds after it were cut by COS restarts.
