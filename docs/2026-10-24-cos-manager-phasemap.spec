@@ -974,3 +974,10 @@ phases_addendum_2026_11_14_cbw:
 #   slice r: COS's own restart (update, his yes, a proposal) leaves the systems running and hands the table to the next manager; stopping the
 #     Windows service still stops them all. Proof: COS restarted during a build, the build goes on, the console shows the adoption.
 # Until emerge.exe replaces node (his), this is how a system and COS's manager are decoupled.
+
+# ── ADDENDUM 2026-11-18 (0.60.577) — MG15 slices o, a, r built together ──
+# James, 2026-11-18: "yes the node instances should be hooked into the service, until emerge.exe is doned" · "system states saved as a node file, crash reverts them back to the most recent one." · "Next. Get this built. Please."
+# Built: logs to files (read as they grow; a 500 ms local stat because Windows does not tell fs.watch reliably), the running state as a node file,
+# adoption at boot, COS's restart handing over. Next (his, recorded): "What about instead of ports, we use: nexus://guardian nexus://idearium For each
+# system. Then they wouldn't need ports They would be distinguishable" — each system on a named pipe (\\.\pipe\nexus-<name>), addressed only as
+# nexus://<name>; COS's manager the one HTTP door for the pages (a browser cannot open a pipe). Not mapped as a phase yet.

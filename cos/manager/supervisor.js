@@ -137,6 +137,89 @@ function createSupervisor({ root, declarations = null, policy = {}, ledgerFile =
   // (port, env, health URL, wall mode, autostart, phase, restart). Read at each spawn, boot and crash; a hook that throws leaves the declaration.
   const eff = (d) => { if (typeof hooks.adjust !== 'function') return d; try { return hooks.adjust(d) || d; } catch (e) { log(`[${d.name}] the configuration hook threw: ${e.message} — its declaration is used`); return d; } };
   const LOG_KEEP = 400;
+  // ── MG15 outlive (2026-11-18) — James: "coupled. thats going to kill nexus." · "yes the node instances should be hooked into the service, until
+  // emerge.exe is doned" · "system states saved as a node file, crash reverts them back to the most recent one." A system writes to its own log
+  // file (not a pipe into this manager), so it outlives the manager; the running systems are kept as a node file at every spawn and exit; at boot
+  // a system whose process is alive and answers is adopted, not started again; COS's own restart hands over instead of stopping them. Off for a
+  // test's fake spawn (policy.outlive), on for real processes.
+  const OUT = P.outlive != null ? !!P.outlive : spawnFn === spawn;
+  const LOGS = path.join(path.dirname(LEDGER), 'logs'), STATE = path.join(path.dirname(LEDGER), 'state'), LOG_MAX = 10 * 1024 * 1024;
+  const _alive = (pid) => { if (!pid) return false; try { process.kill(pid, 0); return true; } catch (e) { return e.code === 'EPERM'; } };
+  function lineIn(s, name, text, stream) {
+    if (/EADDRINUSE/.test(text)) s.sawAddrInUse = true;
+    for (const l of text.split('\n')) if (l.trim()) { log(`[${name}] ${l}`); if (/^\[cos-boundary\] /.test(l)) write('wall', name, l.replace(/^\[cos-boundary\] /, '')); s.out.push({ ts: Date.now(), stream, line: l.slice(0, 2000) }); bus.emit('line', { system: name, ...s.out[s.out.length - 1] }); if (s.out.length > LOG_KEEP) s.out.shift(); }
+  }
+  function _openLogs(name) {
+    fs.mkdirSync(LOGS, { recursive: true });
+    const one = (kind) => { const f = path.join(LOGS, `${name}.${kind}.log`); try { if (fs.statSync(f).size > LOG_MAX) fs.renameSync(f, f + '.1'); } catch (_) {}
+      const fd = fs.openSync(f, 'a'); let start = 0; try { start = fs.fstatSync(fd).size; } catch (_) {} return { f, fd, start }; };
+    return { out: one('out'), err: one('err') };
+  }
+  // a log file read as it grows (fs.watch; the reaper's minute reads it too, in case an event was missed): whole lines only, the rest carried
+  function _tail(s, name, stream, file, from) {
+    let pos = from, busy = false, again = false, carry = '';
+    const read = () => {
+      if (busy) { again = true; return; } busy = true;
+      fs.stat(file, (e, st) => {
+        if (e) { busy = false; return; }
+        if (st.size < pos) pos = 0;   // rotated
+        if (st.size === pos) { busy = false; if (again) { again = false; read(); } return; }
+        const len = Math.min(st.size - pos, 1 << 20), buf = Buffer.alloc(len);
+        fs.open(file, 'r', (e2, fd) => { if (e2) { busy = false; return; }
+          fs.read(fd, buf, 0, len, pos, (e3, n) => { fs.close(fd, () => {}); pos += n || 0;
+            const txt = carry + buf.slice(0, n || 0).toString('utf8'); const cut = txt.lastIndexOf('\n');
+            if (cut >= 0) { carry = txt.slice(cut + 1); lineIn(s, name, txt.slice(0, cut), stream); } else carry = txt;
+            busy = false; if (again || pos < st.size) { again = false; read(); } }); });
+      });
+    };
+    let w = null; try { w = fs.watch(file, read); } catch (_) {}
+    // found running it: Windows does not reliably tell fs.watch when another process appends to a file, so the file's size is also read every
+    // 500 ms while the system runs — a local stat of one file, not a request to the system (its liveness stays its heartbeat's)
+    const tick = setInterval(read, 500); if (tick.unref) tick.unref();
+    (s.tails = s.tails || []).push({ w, read, tick }); read();
+  }
+  function _stopTails(s) { for (const x of (s.tails || [])) { try { x.w && x.w.close(); } catch (_) {} try { clearInterval(x.tick); } catch (_) {} } s.tails = []; }
+  function _saveState() {
+    if (!OUT) return;
+    try {
+      const systems = {}; for (const [n, s] of S) if (s.pid) systems[n] = { pid: s.pid, startedAt: s.startedAt, state: s.state };
+      const node = { envelope: 1, type: 'cos-running', id: 'running', at: Date.now(), context: 'the systems COS runs, kept at every spawn and exit (MG15): a crash of the manager comes back to this', payload: { manager: process.pid, systems } };
+      fs.mkdirSync(STATE, { recursive: true });
+      const cur = path.join(STATE, 'running.node'); fs.writeFileSync(cur + '.tmp', JSON.stringify(node)); fs.renameSync(cur + '.tmp', cur);
+      fs.writeFileSync(path.join(STATE, `running-${node.at}.node`), JSON.stringify(node));
+      const old = fs.readdirSync(STATE).filter(f => /^running-\d+\.node$/.test(f)).sort(); for (const f of old.slice(0, Math.max(0, old.length - 5))) { try { fs.unlinkSync(path.join(STATE, f)); } catch (_) {} }
+    } catch (e) { log(`the running state could not be kept: ${e.message}`); }
+  }
+  // an adopted process: started by an earlier manager, still alive; stopped by its pid; its end seen by the kill or the reaper's minute
+  function _adopted(name, pid) {
+    const pr = { pid, adopted: true, on() {}, kill(sig) {
+      try { if (process.platform === 'win32') require('child_process').spawnSync('taskkill', ['/PID', String(pid), '/T', '/F'], { windowsHide: true }); else process.kill(pid, sig || 'SIGTERM'); } catch (_) {}
+      const t = setTimeout(() => { if (!_alive(pid)) onExit(name, pr, null, sig || 'SIGTERM'); }, 1500); if (t.unref) t.unref(); return true; } };
+    return pr;
+  }
+  async function _adopt(by) {
+    if (!OUT) return [];
+    let node = null; try { node = JSON.parse(fs.readFileSync(path.join(STATE, 'running.node'), 'utf8')); } catch (_) { return []; }
+    const got = [];
+    for (const [n, r] of Object.entries((node.payload && node.payload.systems) || {})) {
+      const s = S.get(n); if (!s || s.proc || !r || !_alive(r.pid)) continue;
+      const d = eff(s.decl); let ok = true; if (d.healthUrl) { try { ok = !!(await checkHealth(d.healthUrl)); } catch (_) { ok = false; } }
+      if (!ok) { write('adopt-refused', n, `pid ${r.pid} is alive but its health does not answer at ${d.healthUrl}: not adopted (started by the boot as usual)`, { by }); continue; }
+      s.proc = _adopted(n, r.pid); s.pid = r.pid; s.state = 'up'; s.startedAt = r.startedAt || Date.now(); s.by = by;
+      for (const kind of ['out', 'err']) { const f = path.join(LOGS, `${n}.${kind}.log`); let end = 0; try { end = fs.statSync(f).size; } catch (_) {} _tail(s, n, kind, f, end); }
+      write('adopted', n, `adopted pid ${r.pid}, left running by manager ${node.payload.manager} (${new Date(node.at).toISOString()}): not started again`, { by, pid: r.pid }); got.push(n);
+    }
+    _saveState(); return got;
+  }
+  // COS's own restart: the systems are left running and handed to the next manager (the Windows service's stop still stops them all: shutdown)
+  function handOver({ by = 'person' } = {}) {
+    clearInterval(reaper); clearInterval(desktopWatch);
+    for (const s of S.values()) { _stopTails(s); clearTimers(s); if (s.beatTimer) { clearTimeout(s.beatTimer); s.beatTimer = null; } }
+    _saveState();
+    const n = [...S.values()].filter(s => s.proc).length;
+    write('handover', null, OUT ? `COS restarts: ${n} system(s) left running for the next manager (state/running.node)` : 'COS restarts: systems are piped to this manager (outlive off): stopping them', { by });
+    if (!OUT) for (const [nm, s] of S) if (running(s)) stop(nm, { by });
+  }
   const bus = new EventEmitter(); bus.setMaxListeners(100);   // MG18: every ledger line is announced, so the UI hears it instead of polling
 
   let seq = 0;
@@ -200,11 +283,16 @@ function createSupervisor({ root, declarations = null, policy = {}, ledgerFile =
       s.state = 'desktop'; return false;
     }
     if (!write('spawn', name, `${c.via ? `in compartment ${d.compartment || d.name}, behind its wall (${(d.boundary.mode || 'enforce')}${c.via === 'NODE_OPTIONS' ? ', through NODE_OPTIONS' : ''}): ` : ''}${c.cmd} ${c.args.join(' ')}`, { by })) return false;
-    let proc;
-    try { proc = spawnFn(c.cmd, c.args, { cwd: c.cwd, env: { ...process.env, ...(d.env || {}), ...(c.env || {}) }, stdio: ['ignore', 'pipe', 'pipe'], shell: c.shell, windowsHide: !isWindowed(d, c) }); }   /* SC16 (0.60.400): no console window per system; a windowed one (Clear Glass) shows its own */
-    catch (err) { onExit(name, proc, null, null, `spawn threw: ${err.message}`); return false; }
+    let proc; let fds = null;
+    if (OUT && !isWindowed(d, c)) { try { fds = _openLogs(name); } catch (e) { log(`[${name}] its log files could not be opened (${e.message}): piped to this manager`); fds = null; } }   // MG15
+    try { proc = spawnFn(c.cmd, c.args, { cwd: c.cwd, env: { ...process.env, ...(d.env || {}), ...(c.env || {}) }, stdio: fds ? ['ignore', fds.out.fd, fds.err.fd] : ['ignore', 'pipe', 'pipe'], detached: !!fds, shell: c.shell, windowsHide: !isWindowed(d, c) }); }   /* SC16 (0.60.400): no console window per system; a windowed one (Clear Glass) shows its own */
+    catch (err) { if (fds) { try { fs.closeSync(fds.out.fd); fs.closeSync(fds.err.fd); } catch (_) {} } onExit(name, proc, null, null, `spawn threw: ${err.message}`); return false; }
+    if (fds) { try { fs.closeSync(fds.out.fd); fs.closeSync(fds.err.fd); } catch (_) {} }   // the child holds its own
     s.proc = proc; s.pid = proc.pid || null; s.state = 'starting'; s.startedAt = Date.now(); s.by = by; s.sawAddrInUse = false;
     if (typeof hooks.spawned === 'function' && s.pid) { try { hooks.spawned(name, s.pid); } catch (e) { log(`[${name}] the spawn hook threw: ${e.message}`); } }
+    _stopTails(s);
+    if (fds) { _tail(s, name, 'out', fds.out.f, fds.out.start); _tail(s, name, 'err', fds.err.f, fds.err.start); }
+    _saveState();
     const pipe = (st, stream) => st && st.on('data', (b) => { const t = b.toString(); if (/EADDRINUSE/.test(t)) s.sawAddrInUse = true;
       for (const l of t.split('\n')) if (l.trim()) { log(`[${name}] ${l}`); if (/^\[cos-boundary\] /.test(l)) write('wall', name, l.replace(/^\[cos-boundary\] /, '')); s.out.push({ ts: Date.now(), stream, line: l.slice(0, 2000) }); bus.emit('line', { system: name, ...s.out[s.out.length - 1] });   /* SC11 (0.60.398): every line, for the Console tab */ if (s.out.length > LOG_KEEP) s.out.shift(); } });
     pipe(proc.stdout, 'out'); pipe(proc.stderr, 'err');
@@ -225,7 +313,7 @@ function createSupervisor({ root, declarations = null, policy = {}, ledgerFile =
   function onExit(name, proc, code, signal, threw = null) {
     const s = S.get(name);
     if (proc && s.proc !== proc) return;   // an old child's exit
-    s.proc = null; s.pid = null; s.pause = null; s.lastExit = { code, signal, ts: Date.now() };
+    s.proc = null; s.pid = null; s.pause = null; s.lastExit = { code, signal, ts: Date.now() }; _stopTails(s); _saveState();   // MG15
     if (s.beatTimer) { clearTimeout(s.beatTimer); s.beatTimer = null; } s.missedSince = null;   // PR6: a stopped system is asleep, not missed
     if (s.state === 'stopping') { s.state = 'stopped'; write('stop', name, 'stopped as asked', { code, by: s.by }); return; }
     if (s.state === 'idling') { s.state = 'idle'; write('idle-stop', name, `idle ${Math.round(P.idleMs / 1000)}s; starts again when asked`, { code }); return; }
@@ -296,7 +384,8 @@ function createSupervisor({ root, declarations = null, policy = {}, ledgerFile =
     const E = new Map([...S.values()].map(s => [s, eff(s.decl)]));   // SC2: his autostart, on demand and phase over the declaration
     const want = (s) => (Array.isArray(set) ? set.includes(s.decl.name) : E.get(s).autostart === false ? false : set === 'core' ? !!s.decl.critical : !E.get(s).onDemand);
     const chosen = [...S.values()].filter(want), skipped = [...S.values()].filter(s => !want(s)).map(s => ({ name: s.decl.name, why: E.get(s).autostart === false && !Array.isArray(set) ? 'autostart off (his configuration)' : E.get(s).onDemand ? 'on demand' : `not in bootSet ${JSON.stringify(set)}` }));
-    write('boot', null, `boot set ${JSON.stringify(set)}: ${chosen.length} to start`, { by });
+    const adopted = await _adopt(by);   // MG15: systems left running by the last manager are adopted, not started again
+    write('boot', null, `boot set ${JSON.stringify(set)}: ${chosen.length} to start${adopted.length ? ` (${adopted.length} adopted: ${adopted.join(', ')})` : ''}`, { by });
     const phases = [...new Set(chosen.map(s => E.get(s).phase ?? 99))].sort((a, b) => a - b), started = [];
     for (const ph of phases) {
       const group = chosen.filter(s => (E.get(s).phase ?? 99) === ph);
@@ -313,6 +402,7 @@ function createSupervisor({ root, declarations = null, policy = {}, ledgerFile =
   }
 
   const reaper = setInterval(() => {   // on-demand systems idle past idleMs stop
+    for (const [n, s] of S) { if (s.proc && s.proc.adopted && !_alive(s.proc.pid)) onExit(n, s.proc, null, null); for (const x of (s.tails || [])) x.read(); }   // MG15
     for (const s of S.values()) if (s.decl.onDemand && running(s) && s.state !== 'paused' && s.lastActivity && Date.now() - s.lastActivity > P.idleMs) { s.state = 'idling'; try { s.proc.kill('SIGTERM'); } catch (_) {} }
   }, P.idleCheckMs); if (reaper.unref) reaper.unref();
 
@@ -352,7 +442,7 @@ function createSupervisor({ root, declarations = null, policy = {}, ledgerFile =
 
   const api = { watchDesktop, boot, note, logs, pause, resume, on: (ev, fn) => bus.on(ev, fn), off: (ev, fn) => bus.off(ev, fn), declarations: () => decls.map(d => ({ ...d })), list: () => [...S.values()].map(view), get: (n) => view(must(n)), start, stop, restart, touch, resetCircuit, ledger,
     policy: () => JSON.parse(JSON.stringify(P)), setPolicy: (patch, { by = 'person' } = {}) => { Object.assign(P, patch || {}); write('policy', null, `policy changed: ${JSON.stringify(patch)}`, { by }); return JSON.parse(JSON.stringify(P)); },
-    shutdown, DEFAULTS, ledgerFile: LEDGER, beat, memoryObserve, memoryBaseline, memoryJudge, lastBoot: null, setHooks: (h) => { Object.assign(hooks, h || {}); },
+    shutdown, handOver, outlive: OUT, DEFAULTS, ledgerFile: LEDGER, beat, memoryObserve, memoryBaseline, memoryJudge, lastBoot: null, setHooks: (h) => { Object.assign(hooks, h || {}); },
     // SC4 — a system added while COS runs (its declaration just written by add-system.js): declared live, never started by this
     declare: (d) => { if (!d || !d.name) throw Object.assign(new Error('a declaration needs a name'), { code: 400 }); if (S.has(d.name)) throw Object.assign(new Error(`"${d.name}" is already declared`), { code: 409 });
       decls.push(d); add(d); write('declared', d.name, `added while COS runs: ${d.cmd || 'node'} ${(d.args || []).join(' ')}`, { by: d.addedBy || 'person' }); return view(S.get(d.name)); },

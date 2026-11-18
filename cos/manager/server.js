@@ -480,7 +480,9 @@ if (require.main === module) {
     if (sup.note) sup.note('restart', `COS restarts itself after an update — ${viaAutopilot ? 'autopilot starts it again' : 'relaunch.js starts it again'}`, { by });
     setTimeout(() => {
       try { duties && duties.stop(); } catch (_) {}
-      try { sup.shutdown({ by: `restart:${by}` }); } catch (_) {}
+      // MG15 (2026-11-18) — James: "coupled. thats going to kill nexus." The systems are left running and handed to the next manager, which adopts
+      // them; only stopping the Windows service stops them all (shutdown).
+      try { (sup.handOver || sup.shutdown)({ by: `restart:${by}` }); } catch (_) {}
       try { if (srvRef) srvRef.close(); if (uiRef) uiRef.close(); } catch (_) {}
       if (!viaAutopilot) R.spawnRelauncher({ args: process.argv.slice(1), port: srvRef && srvRef.address() ? srvRef.address().port : Number(process.env.COS_MANAGER_PORT) || 7799 });
       setTimeout(() => process.exit(viaAutopilot ? R.RESTART_CODE : 0), 500);   // not unref'd: with the servers closed, an unref'd timer lets node end with 0 before it fires
