@@ -1402,3 +1402,18 @@ phases_addendum_2026_11_13_rca:
 #   view (2026-11-13 addendum) is where it belongs. Not built.
 # - Compartments per tab: recorded as his question; the coder's view given in the session (0.60.54x already loads Idearium's repos only when
 #   opened; memory is the binding limit). Not decided, not built.
+
+# ── 2026-11-18 — run 74f98418 (N1) recorded as what it proved: orchestration, not implementation ──
+# He pasted a review by ChatGPT (no words of his own): "Don't let a successful pipeline run accidentally become a successful implementation
+# claim. Those are different gates." Acted on as the review asked; the coder agreed and had said the same (0.60.562's changelog).
+#   - pipeline route: DEMONSTRATED (ready → … → landed clean in 2 agent calls, 12 min; held at evidence for his verdict, by GV_D2).
+#   - agent orchestration: DEMONSTRATED (route ollama:…3b > gemini > claude; Gemini planned; Claude wrote the test only after Gemini's page
+#     was blocked; Ollama's brick passed its gate).
+#   - new implementation: NOT demonstrated (Ollama's lib/semantic-variant.js equals the file built 2026-11-04: 0 lines differ).
+#   - test integrity: REVIEWED — tests/n1.test.js's 30 tests map to N1's own description (protect/restore 9, validate 8, jsVariant 3,
+#     similarity 3, the per-agent novelty store of 50 7); 30/30 against today's tree; caveat: never seen failing first (the code existed),
+#     so it proves less than PE6 asks. Proposal 53eb1cbc still open.
+#   - the two rewrites of tests/modules/test-guardian-retry-novelty-installs.js (307 → 246 / 244 lines, dropping its header with his
+#     0.39.265 words): REJECTED pending review (cb3df74b, e526dd33; kept, re-appliable).
+#   - Emerge-first for existing JS: UNRESOLVED (his to decide; kept apart from this run's scope).
+# N1 itself stays paused at evidence: accepting the phase is his.

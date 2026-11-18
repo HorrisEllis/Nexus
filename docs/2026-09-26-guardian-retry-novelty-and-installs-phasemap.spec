@@ -63,6 +63,8 @@ spec:
       files: [guardian/lib/job-retry.js, guardian/lib/ncp-handler.js, guardian/lib/chat-transcripts.js, guardian/server.js, guardian/lib/jobs.js]
       closes: [M1, M2, M3]
     - id: N1
+      # roadmap edit 2026-11-18: (no status) -> DONE 2026-11-18. by evidence — n1.test.js (linked)
+      status: "DONE 2026-11-18. by evidence — n1.test.js (linked)"
       name: lib/semantic-variant.js — protected-token extraction, JS rewriter, novelty store (per agent, 4-gram
             similarity against the last 50 sent), validation
       files: [lib/semantic-variant.js]

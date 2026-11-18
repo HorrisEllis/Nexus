@@ -150,5 +150,7 @@ payload:
         config:
           url: nexus://idearium/api/phases/ledger/log
           method: POST
-          body: '{"phase":"{{vars.phase}}","event":"built","why":"{{vars.why}}","by":"pipeline"}'
+          # 2026-11-18 — run 74f98418 (N1) closed on evidence, then this step failed "say why: a ledger line without a reason is noise":
+          # the run form sends no why. The pipeline says its own reason when none was given (no commas: they split a filter's arguments).
+          body: '{"phase":"{{vars.phase}}","event":"built","why":{{vars.why | default:built through the Idearium build pipeline and closed on evidence | json}},"by":"pipeline"}'
       gate: *ref_0
