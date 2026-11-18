@@ -94,7 +94,7 @@ const src = (p) => fs.readFileSync(path.join(ROOT, p), 'utf8');
       && RMa.fitsModel({ model: 'd', bytes: 8.9e9, sample: smpA }).fits === false);
     check('OL4a-2 RAID decides and says it; Idearium asks RAID and says when it could not',
       /'\/api\/raid\/route\/fit'/.test(src('cortex/boot.js')) && /\[raid\] route: /.test(src('cortex/boot.js')) && /bus\.emit\('raid\.route\.fit'/.test(src('cortex/boot.js'))
-      && /'\/api\/raid\/route\/fit'/.test(src('idearium/api/index.js')) && /RAID did not answer the fit question/.test(src('idearium/api/index.js')));
+      && /'\/api\/raid\/route\/fit'/.test(src('idearium/api/index.js')) && /RAID's last rule \(\$\{_lastRule\}\) decided here/.test(src('idearium/api/index.js')) && /raid-fit-rule\.json/.test(src('idearium/api/index.js')));
     check('PC-17 the coder ladder puts Ollama first', PR.coderRungs(rungs).map(r => r.provider).join() === 'ollama:qwen2.5-coder:3b,claude,chatgpt');
     const cfg = require(path.join(ROOT, 'idearium/lib/config-core.cjs'));
     const cfgText = src('idearium/lib/config-core.cjs');

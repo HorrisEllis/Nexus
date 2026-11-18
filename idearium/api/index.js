@@ -1424,9 +1424,13 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
           // strict rule here is used only when RAID does not answer, and that is said on the run.
           const _local = rungs.filter(r => r && r.base === 'ollama').map(r => { const m = r.model || PRt.modelOf(r.provider); return { provider: r.provider, model: m, bytes: om.sizes ? om.sizes[m] : null }; });
           let _raidFit = null;
-          try { const a = await _nexusClient.post('cortex', '/api/raid/route/fit', { models: _local, loaded: om.loaded || [], for: `${(base && base.phase) || 'a build'} (${runId})` }, { timeout: 10000 }); if (a && a.ok && Array.isArray(a.decisions)) _raidFit = new Map(a.decisions.map(d => [d.model, d])); } catch (_) {}
-          if (!_raidFit && _local.length) appendRow('idearium_phase_runs', { uuid: `${runId}-fit-local`, ...base, state: 'routed', snapshot: commitId, error: null, note: 'RAID did not answer the fit question: the strict rule here decided (1.2x the model must be free)', ts: Date.now() });
-          const fits = (model) => (_raidFit && _raidFit.has(model)) ? { fits: _raidFit.get(model).fits, why: `${_raidFit.get(model).why} (RAID)` } : RM.fitsModel({ model, bytes: om.sizes ? om.sizes[model] : null, loaded: om.loaded || [], sample: smp });
+          // 2026-11-18 — James: "coupled. thats going to kill nexus." RAID's last rule is kept on disk; when RAID does not answer (restarting,
+          // degraded) the build decides by RAID's last rule, not a stricter local one (NM1's retry at 09:16 lost DeepSeek that way).
+          const _ruleFile = path.join(IDEARIUM_DATA_DIR, 'raid-fit-rule.json');
+          try { const a = await _nexusClient.post('cortex', '/api/raid/route/fit', { models: _local, loaded: om.loaded || [], for: `${(base && base.phase) || 'a build'} (${runId})` }, { timeout: 10000 }); if (a && a.ok && Array.isArray(a.decisions)) { _raidFit = new Map(a.decisions.map(d => [d.model, d])); try { fs.writeFileSync(_ruleFile, JSON.stringify({ rule: a.rule, at: Date.now() })); } catch (_) {} } } catch (_) {}
+          let _lastRule = 'strict'; try { _lastRule = JSON.parse(fs.readFileSync(_ruleFile, 'utf8')).rule || 'strict'; } catch (_) {}
+          if (!_raidFit && _local.length) appendRow('idearium_phase_runs', { uuid: `${runId}-fit-local`, ...base, state: 'routed', snapshot: commitId, error: null, note: `RAID did not answer the fit question: RAID's last rule (${_lastRule}) decided here`, ts: Date.now() });
+          const fits = (model) => (_raidFit && _raidFit.has(model)) ? { fits: _raidFit.get(model).fits, why: `${_raidFit.get(model).why} (RAID)` } : RM.fitsModel({ model, bytes: om.sizes ? om.sizes[model] : null, loaded: om.loaded || [], sample: smp, rule: _lastRule });
           const bf = PRt.byFit(rungs, { fits });
           if (bf.skipped.length) {
             rungs = bf.rungs;

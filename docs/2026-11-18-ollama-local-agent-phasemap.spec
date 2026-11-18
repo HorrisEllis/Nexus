@@ -677,3 +677,8 @@ addendum_pending: >-
 #     in its caps (CP6a, a new key). Windows cannot pin a process to swap, but it can trim one: measured, not assumed.
 #   3 the tiny model (the 3b, GPU-resident, ~2 GB VRAM, no RAM cost) as RAID's orchestrator for the fuzzy choices: what a request is, which of the
 #     routes the rules allow fits it, a one-line reason; never a number, a limit or a pass (OL_D9): fit, load and sigma stay computed.
+
+## ADDENDUM 2026-11-18 (0.60.576) — decoupled: a build keeps RAID's last rule when RAID is away (his)
+# James, 2026-11-18: "coupled. thats going to kill nexus. we are so close to nexus being able to be nexus after 7 months"
+# Built: OL4a's fallback is RAID's last known rule, kept on disk by Idearium. The couplings seen today, to remove next: COS's restart restarting
+# Idearium mid-build (COS should adopt running systems, not restart them); Intelligence's growth (IP13 found it); his clients evicting a build's model.
