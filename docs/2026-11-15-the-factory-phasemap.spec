@@ -460,3 +460,28 @@ handoff_2026_11_18: >-
   plan it (derivePlan exists) and Ollama write the test, written in .eg or as data, not JS (his rule; the JS version was reverted). (2) Ollama
   tuned for this machine (flash attention, q8_0 KV cache, one model loaded, num_ctx per job, mmap from the SSD; a MoE coder that fits) —
   researched, applied, measured on a rerun of GQ1. (3) IF13 → IF15 → IF14 … per order_2026_11_18_his; IF19–21 after.
+
+# ── ADDENDUM 2026-11-18 — his method, end state first; a framework node for each step's method (his; supersedes the coder's toolbox reading) ──
+# James, 2026-11-18: "frame it or reframe it. its for stategy, problem solving, alchemy, its end state first reasoning and condition mapping using
+# bidirectional reasoning or causal chaining or manipulation, or emergence you could say. end state is the goal is the scope, conditions are what it
+# takes to get their and whats a stopping point for good enough, so you dont iterate endlessly, if you can't innovate the solution, innovate the
+# method, create new methods to decompose. gap or problem or request or input becomes the end-state. decompose the problem using the canvas and
+# branching into chunks/bricks. then any chunks that get broken down again, each represented on the canvas, like a skill tree or fibinachi sequence.
+# combine the overlap for the highest leverage synthesis, or synthesize gaps for high leverage gaps, when chunks are skipped, synthesize the novel or
+# valuable pieces and discard what's not load bearing, create a dag from each piece thats left, first principles or a constraint field, down to the
+# primitive or structure, anything that changes the shape of the structure is load bearing, that establishes the core or foundation, the
+# deterministic foundation, or the pillars. adversarial agent and failure modes. like i want to be able to program all of this myself each step like
+# instrcutions, or something similar. so maybe each step can have a framework or pipeline node for the method? it is immensely good for gaps or
+# ambiguity. finding leverage in the weaknesses, like perfectionism can be good for quality control and constructive feedback. for instance.
+# reframing. like for bugs. like i want to be able to create frameworks using the pipeline. program copilot,"
+# His method, as the steps it names (the coder's cut; his words above are the source):
+#   1 end state: the gap, problem, request or input becomes the end state (the goal and the scope)
+#   2 conditions: what it takes to get there (bidirectional / causal chaining), and the stopping point for good enough
+#   3 decompose on the canvas: branch into chunks/bricks; a chunk broken down again is drawn under it (a skill tree)
+#   4 synthesize: combine the overlap; synthesize gaps; keep the novel or valuable from skipped chunks; discard what is not load bearing
+#   5 a DAG of what is left, down to the primitives (a constraint field); what changes the structure's shape is load bearing: the pillars
+#   6 adversarial agent and failure modes (weaknesses as leverage: perfectionism as quality control)
+#   7 if the solution cannot be innovated, innovate the method: a new way to decompose
+# Built already: a pipeline step can be a framework (cos/pipeline/framework.eg; PC slice b, 0.60.470) or a sub-pipeline (step type pipeline).
+# Open: (a) his method written as the first .framework, each step a node he can edit; (b) any step of any pipeline may name a method (a framework
+# or pipeline node); (c) frameworks made and edited on the canvas by him, and Copilot programmed the same way.
