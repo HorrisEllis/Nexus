@@ -493,3 +493,17 @@ addendum_pending: >-
 #     modes; iterate) run as a .framework the pipeline executes step by step (framework.eg, PC's "yes .framework"), so a model is handed one
 #     section's question at a time with only that step's context, instead of the whole method.
 #   - Nexus carries the memory (Cortex, the ledgers, chat logs, graphs, learned routes); the model is asked the smallest question the step needs.
+
+## ADDENDUM 2026-11-18 (later) — the 30B measured; his roles revised; boot options; the 30B mapping autonomously by tension (recorded)
+# Measured on his PC with Nexus up: huihui_ai/qwen3-coder-abliterated:30b loaded in 120 s, 1.1 tokens/s, 2.1 of 17.7 GB on the GPU, RAM free 0.7 GB
+# (under COS's 10% floor); unloaded, 10.1 GB free. The page file was still 11.8 GB (his 32 GB setting had not applied).
+# James, 2026-11-18: "yes and do what you can to optimize, like guardian, does it need to be running on boot? clearglass ui on boot? like an option
+# to disable that but a button to open it in cos ui, and option to enable it in the settings of clearglass and right clicking the icon in the tray.
+# maybe the 30b can map when it's needed, 16b when it can. i want to be able to tell the 30b to map autonomously. like if we have it running
+# autonomously, like it does everything its tasked for in nexus, nonlinearly. gaps and open loops, tension is the llms priority maybe? the though
+# with the pipeline, needs to map everything, nonlinear."
+# Set (data): RAID's planner DeepSeek 16b; escalation DeepSeek 16b, the 30B, Gemini, Claude.
+# Open, in order: (1) the 30B loaded only for its step and unloaded after (keep_alive per call, OL3/OL5), the ready gate's memory floor before it;
+# (2) start at boot per system, off for Guardian and Clear Glass's UI unless he enables it, with Open in COS, in Clear Glass's settings and the tray
+# menu (SC12_start_at_boot_each_system expands); (3) an autonomous mapping loop: the open gaps and loops ranked by tension (OL6), the 30B maps the
+# highest first, nonlinearly, each map a pipeline run he can stop (IF12 expands).
