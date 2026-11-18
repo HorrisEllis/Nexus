@@ -81,6 +81,20 @@ const freePort = () => new Promise(r => { const s = net.createServer(); s.listen
     const tr = P.trail('cos/x.js'); assert.deepStrictEqual(tr.map(x => x.run), [r1.run.id, r2.run.id]); assert.strictEqual(tr[0].gate, 'open');
     assert.deepStrictEqual(P.trail('nowhere.js'), []);
   });
+  await t('PW-07', 'FX1a: a failed run resumed: what it finished is not run again, the failed step and the rest run; a step named in redo runs again', async () => {
+    let fail = true; const srv = http.createServer((q, r) => { r.setHeader('content-type', 'application/json'); if (fail) { r.statusCode = 409; r.end('{"ok":false}'); } else r.end('{"ok":true}'); });
+    await new Promise(x => srv.listen(0, '127.0.0.1', x)); const port = srv.address().port;
+    const P = new Pipelines(new AutomationEngine({}), { dir: path.join(tmp, 'g') });
+    const c = P.create({ name: 'resume', tasks: [{ id: 'one', step: { type: 'set', config: { assign: { v: 1 } } } }, { id: 'two', depends_on: ['one'], step: { type: 'api', config: { url: `http://127.0.0.1:${port}/x`, method: 'GET' } } }, { id: 'three', depends_on: ['two'], step: { type: 'set', config: { assign: { w: 2 } } } }] });
+    const pid = (c.pipeline || c).id; const r1 = await P.run(pid, { wait: true });
+    try { assert.strictEqual(r1.run.tasks.two.status, 'failed'); fail = false;
+      const busy = await P.resume('no-such-run'); assert.strictEqual(busy.ok, false);
+      const r2 = await P.resume(r1.run.id, { by: 'test' }); assert.deepStrictEqual(r2.met, ['one'], JSON.stringify(r2));
+      let run = null; for (let i = 0; i < 50 && !(run && run.status !== 'running'); i++) { await new Promise(x => setTimeout(x, 100)); run = P.getRun(r2.runId); }
+      assert.strictEqual(run.status, 'ok', JSON.stringify(run.tasks)); assert.strictEqual(run.resume_of, r1.run.id);
+      const r3 = await P.resume(r1.run.id, { by: 'test', redo: ['one'] }); assert.deepStrictEqual(r3.met, [], 'redo runs it again');
+    } finally { srv.close(); }
+  });
   fs.rmSync(tmp, { recursive: true, force: true });
   console.log(`\n${passed} passed, ${failed} failed`); process.exit(failed ? 1 : 0);
 })();

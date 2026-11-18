@@ -557,3 +557,7 @@ handoff_2026_11_18: >-
 #   FX6 the door: per system, its registry served as the contract the UIs bind to (§5.16); a UI is any client of the door
 # Today's measured state (docs/2026-11-18-session-log-and-stability.md): 0 of the last 60 runs succeeded, each lost to Idearium down/restarting;
 # 0.60.579 and 0.60.580 fix the two causes found in COS's supervisor. The build step's limit raised from 30 s to 60 min (a build takes minutes).
+
+# ── ADDENDUM 2026-11-18 (0.60.581) — FX1a built: a failed run resumed (command, then route) ──
+# James, 2026-11-18: "i want the automation and pipeline built. commands, first, api routes, then the door/drawbridge to expand the ui."
+# FX1a, a failed run resumed: `pipeline-resume <run> [redo,steps]` in COS's console, then POST /api/cos/automation/pipeline-runs/:id/resume. What the run finished is met from its step nodes, the rest run; named steps run again. Found running NM1: the build was still going in Idearium when the run failed after it, and a fresh run would have started a second DeepSeek build. Also, data not code: the NM1 pipeline gained its missing "landed" step (waits for the build to end) and step limits of 10 min (build 60 min) in place of 30 s. test-pipeline-waits-for-a-system 7/7 (PW-07 new). test-cos-pipeline 19/21: CP-00 and CP-01 fail in cos/pipeline/ (not touched here; last changed in 0.60.575): open, not checked against the release before.

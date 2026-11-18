@@ -100,6 +100,7 @@ async function handle(A, { method, url, body = {}, headers = {}, rawBody = '' },
     if (p[2] === 'pipeline-runs' && p[3]) {
       if (!p[4] && method === 'GET') { const r = P.getRun(p[3]); return r ? ok({ ok: true, run: r }) : ok({ ok: false, error: `no run ${p[3]}` }, 404); }
       if (p[4] === 'cancel' && method === 'POST') return res(P.cancel(p[3]));
+      if (p[4] === 'resume' && method === 'POST') return res(await P.resume(p[3], { by: body && body.by, redo: body && body.redo }));   // FX1a
       if (p[4] === 'pause' && method === 'POST') return res(P.pause(p[3], { by: body && body.by }));   // PC8 slice b
       if (p[4] === 'continue' && method === 'POST') return res(P.unpause(p[3], { by: body && body.by, vars: body && body.vars && typeof body.vars === 'object' ? body.vars : null }));   // PC13: answers ride on Continue
     }

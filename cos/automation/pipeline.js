@@ -289,6 +289,18 @@ class Pipelines {
     }
     return out;
   }
+  /** FX1a (2026-11-18) — resume(runId): a run that ended (failed, interrupted, cancelled) starts again from what it finished: its done steps met from
+   *  their step nodes, `redo` names steps to run again even if done. James: "i want the automation and pipeline built. commands, first, api routes".
+   *  Found running NM1: the build was still going in Idearium when the run failed after it; a fresh run would have started a second build. */
+  async resume(runId, { by = 'person', redo = [] } = {}) {
+    const r = this.getRun(runId); if (!r) return { ok: false, error: `no run ${runId}` };
+    if (r.status === 'running' || this._active.has(r.id)) return { ok: false, error: `run ${runId} is still running` };
+    const again = new Set([].concat(redo || []).map(String)), steps = this.steps(r.id), done = {};
+    for (const [id, t] of Object.entries(r.tasks || {})) if (t.status === 'done' && !again.has(id)) done[id] = steps[id] && steps[id].output !== undefined ? steps[id].output : t.output;
+    const res = await this.run(r.pipelineId, { vars: r.vars || {}, wait: false, done, meta: { resume_of: r.id, by } });
+    this._emit('automation.pipeline.resumed', { pipelineId: r.pipelineId, runId: res && res.runId, resume_of: r.id, met: Object.keys(done), by });
+    return { ...(res || { ok: false }), resume_of: r.id, met: Object.keys(done) };
+  }
   runs(pipelineId, limit = 20) {
     let names = []; try { names = fs.readdirSync(this.runsDir).filter(f => f.endsWith('.json')); } catch (_) { return []; }
     return names.map(f => { try { return JSON.parse(fs.readFileSync(path.join(this.runsDir, f), 'utf8')); } catch (_) { return null; } })
