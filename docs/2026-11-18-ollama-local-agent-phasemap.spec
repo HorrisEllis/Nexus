@@ -485,6 +485,47 @@ phases:
       with the chunk, the model and the verdict, for him to accept or reject; repeated suggestions are counted (three is an invariant, his rule).
     proof: "after a build, its proposals are listed with their chunks; the same suggestion from three chunks is counted 3; nothing is built from one unasked"
 
+  OL5b_one_line_for_every_ollama_call:
+    layer: library
+    status: OPEN
+    depends_on: [OL5a_one_load_per_model_per_request]
+    axioms: [§2.1, §1.2, §8.6, §16.2]
+    expands: [OL5_lanes_and_queue, OL9_event_stream]
+    files: [ollama/lib/model-turns.js, ollama/lib/dispatch.js, ollama/routes/generate.js, ollama/routes/queue.js, ollama/test/model-turns.test.js]
+    js_door: [JavaScript in the Ollama system, changed in place and one new module (his, 2026-11-18: "then we can use js for now unless we are coding emerge")]
+    does: >-
+      His "okay. do it." (after: two callers on one Ollama evict each other's model, OLLAMA_MAX_LOADED_MODELS 1; the 30B dropped out of NM1's build
+      when he used the 3b). Every model call the Ollama system makes (its jobs and POST /api/generate) waits its turn in one line: the next turn goes
+      to a caller of the model already loaded, so a model's work stays together; a caller of another model that has waited longer than the cap
+      (OLLAMA_TURN_MAX_WAIT_MS, 10 minutes) goes next, so nothing starves. His "saving performance metrics to a node file": each turn is written as a
+      .metric node (one line per turn, the Ollama system's own data, by day): model, caller, door, wait, run, whether the model had to be loaded
+      (a swap), free memory before and after, outcome. GET /api/queue says the line and the last turns.
+    proof: >-
+      Unit: three waiters for models a, b, a with a loaded run a, a, b; a b that waited past the cap goes first; each turn writes one metric line.
+      On his machine: two callers on two models alternate in batches, not call by call (the metric lines show the swaps).
+  OL5c_his_clients_through_the_line:
+    layer: library
+    status: OPEN
+    depends_on: [OL5b_one_line_for_every_ollama_call]
+    axioms: [§5.10, §5.9, §1.2]
+    files: [ollama/routes/ollama-compat.js, ollama/server.js, ollama/test/ollama-compat.test.js]
+    does: >-
+      Ollama's own API (POST /api/chat, /api/generate in Ollama's shape, GET /api/tags) served by the Ollama system under /ollama/, each call waiting
+      its turn in OL5b's line, so a client he points at http://127.0.0.1:3749/ollama joins the same line as Nexus and no longer evicts a build's model.
+    proof: "a stock Ollama client pointed at the bridge chats; its call shows in the metric lines; a build running at the same time keeps its model"
+  OL20_metrics_against_the_ledger:
+    layer: library
+    status: OPEN
+    depends_on: [OL5b_one_line_for_every_ollama_call]
+    axioms: [§1.1, §14.2, §12.3]
+    expands: [CP6a_caps_priority_accounting, CP6f_raid_balances_load]
+    files: [ollama/metrics/deltas.eg, ollama/test/deltas.test.eg]
+    does: >-
+      His "to understand how to optimize performance in relation to events in the ledger and the deltas between". Read in Emerge: the metric nodes beside
+      the events of the same time (the phase runs, the RAID contract steps, COS's halts and restarts), the delta between each pair (wait, swaps,
+      memory, wall time per landed chunk), and a baseline per model that grows run by run; what moves the deltas most is named, not guessed.
+    proof: "over a day of runs: per model, its baseline and its outliers, each outlier beside the event it followed"
+
 order_of_work:
   # his, 2026-11-08: automation with COS as the engine, then Emerge done, then WARP 2. This map serves the first two; it does not reorder them.
   # §3.4: backend, then route, then command row, then UI.
@@ -584,3 +625,8 @@ addendum_pending: >-
 # Decided (his): (A) Emerge's words fitted to the models' tokenizers: count each construct's tokens per model (prompt_eval_count), rename the
 # costly ones; (B) the grammar enforced at the token level: the parser gives the legal next tokens, every other token blocked (llama.cpp grammar,
 # GAP_4, OL_D5 a). Phases to write: OL18_emerge_fits_the_tokenizer (A, measurable now), OL19_grammar_constrained_emerge (B, after GAP_4 is read).
+
+## ADDENDUM 2026-11-18 (later) — one line for every Ollama call; metrics as nodes (his)
+# James, 2026-11-18: "i was using ollama in the background." · "okay. do it." · "also what about saving performance metrics to a node file to
+# understand how to optimize performance in relation to events in the ledger and the deltas between"
+# Mapped: OL5b (one line, same model next, an age cap; a .metric node per turn), OL5c (Ollama's API on the bridge, for his clients), OL20 (deltas).

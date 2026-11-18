@@ -1,0 +1,141 @@
+envelope: 1
+uuid: nexus-export-graph-phase:OL5c_his_clients_through_the_line:345cb2ad5a7c4eeb
+type: graph
+id: phase:OL5c_his_clients_through_the_line:345cb2ad5a7c4eeb
+context: dependency graph of phase OL5c_his_clients_through_the_line
+intent: null
+summary: 15 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1795011405735
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795011405735
+lastSeenAt: 1795011405735
+fingerprint: null
+payload:
+  for: OL5c_his_clients_through_the_line
+  kind: phase
+  repo: null
+  hash: 345cb2ad5a7c4eeb
+  nodes:
+    - path: ollama/routes/ollama-compat.js
+      role: changes
+      exists: false
+      system: ollama
+    - path: ollama/server.js
+      role: changes
+      exists: true
+      system: ollama
+    - path: ollama/test/ollama-compat.test.js
+      role: changes
+      exists: false
+      system: null
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/ollama-port.js
+      role: uses
+      exists: true
+      system: lib
+    - path: ollama/config.js
+      role: uses
+      exists: true
+      system: ollama
+    - path: ollama/lib/dispatch.js
+      role: uses
+      exists: true
+      system: ollama
+    - path: ollama/lib/http-utils.js
+      role: uses
+      exists: true
+      system: ollama
+    - path: ollama/lib/ollama-client.js
+      role: uses
+      exists: true
+      system: ollama
+    - path: ollama/lib/state.js
+      role: uses
+      exists: true
+      system: ollama
+    - path: ollama/routes/generate.js
+      role: uses
+      exists: true
+      system: ollama
+    - path: ollama/routes/jobs.js
+      role: uses
+      exists: true
+      system: ollama
+    - path: ollama/routes/stream.js
+      role: uses
+      exists: true
+      system: ollama
+    - path: ollama/routes/system.js
+      role: uses
+      exists: true
+      system: ollama
+    - path: ollama/routes/uploads.js
+      role: uses
+      exists: true
+      system: ollama
+  edges:
+    - from: ollama/server.js
+      to: lib/data-home.js
+      kind: requires
+    - from: ollama/server.js
+      to: ollama/config.js
+      kind: requires
+    - from: ollama/server.js
+      to: ollama/lib/state.js
+      kind: requires
+    - from: ollama/server.js
+      to: ollama/lib/ollama-client.js
+      kind: requires
+    - from: ollama/server.js
+      to: ollama/lib/dispatch.js
+      kind: requires
+    - from: ollama/server.js
+      to: ollama/lib/http-utils.js
+      kind: requires
+    - from: ollama/server.js
+      to: lib/ollama-port.js
+      kind: requires
+    - from: ollama/server.js
+      to: ollama/routes/system.js
+      kind: requires
+    - from: ollama/server.js
+      to: ollama/routes/uploads.js
+      kind: requires
+    - from: ollama/server.js
+      to: ollama/routes/stream.js
+      kind: requires
+    - from: ollama/server.js
+      to: ollama/routes/jobs.js
+      kind: requires
+    - from: ollama/server.js
+      to: ollama/routes/generate.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL5b_one_line_for_every_ollama_call
+    dependents: []
+    upstream:
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL5a_one_load_per_model_per_request
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL5b_one_line_for_every_ollama_call
+    downstream: []
+    blockedBy:
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL5b_one_line_for_every_ollama_call
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2 · blocked by OL5b_one_line_for_every_ollama_call
+      - 'depends on (1): OL5b_one_line_for_every_ollama_call · all upstream 2'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-11-18-ollama-local-agent-phasemap.spec::OL5b_one_line_for_every_ollama_call
+        kind: declared

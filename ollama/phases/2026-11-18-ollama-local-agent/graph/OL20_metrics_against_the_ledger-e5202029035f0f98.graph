@@ -1,0 +1,53 @@
+envelope: 1
+uuid: nexus-export-graph-phase:OL20_metrics_against_the_ledger:e5202029035f0f98
+type: graph
+id: phase:OL20_metrics_against_the_ledger:e5202029035f0f98
+context: dependency graph of phase OL20_metrics_against_the_ledger
+intent: null
+summary: 2 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1795011405738
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795011405738
+lastSeenAt: 1795011405738
+fingerprint: null
+payload:
+  for: OL20_metrics_against_the_ledger
+  kind: phase
+  repo: null
+  hash: e5202029035f0f98
+  nodes:
+    - path: ollama/metrics/deltas.eg
+      role: changes
+      exists: false
+      system: ollama
+    - path: ollama/test/deltas.test.eg
+      role: changes
+      exists: false
+      system: ollama
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL5b_one_line_for_every_ollama_call
+    dependents: []
+    upstream:
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL5a_one_load_per_model_per_request
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL5b_one_line_for_every_ollama_call
+    downstream: []
+    blockedBy:
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL5b_one_line_for_every_ollama_call
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2 · blocked by OL5b_one_line_for_every_ollama_call
+      - 'depends on (1): OL5b_one_line_for_every_ollama_call · all upstream 2'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-11-18-ollama-local-agent-phasemap.spec::OL5b_one_line_for_every_ollama_call
+        kind: declared

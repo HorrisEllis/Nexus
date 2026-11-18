@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-18-ollama-local-agent-phasemap.spec::OL20_metrics_against_the_ledger
+type: phase
+id: docs_2026-11-18-ollama-local-agent-phasemap.spec::OL20_metrics_against_the_ledger
+context: pipeline phase OL20_metrics_against_the_ledger of docs/2026-11-18-ollama-local-agent-phasemap.spec
+intent: null
+summary: OL20_metrics_against_the_ledger (library) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1795011405738
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795011405738
+lastSeenAt: 1795011405738
+fingerprint: null
+payload:
+  id: OL20_metrics_against_the_ledger
+  map: docs/2026-11-18-ollama-local-agent-phasemap.spec
+  repo: null
+  layer: library
+  status: OPEN
+  files:
+    - ollama/metrics/deltas.eg
+    - ollama/test/deltas.test.eg
+  depends_on:
+    - OL5b_one_line_for_every_ollama_call
+  blocks: []
+  spec: null
+  graph: e5202029035f0f98

@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-18-ollama-local-agent-phasemap.spec::OL5b_one_line_for_every_ollama_call
+type: phase
+id: docs_2026-11-18-ollama-local-agent-phasemap.spec::OL5b_one_line_for_every_ollama_call
+context: >-
+  pipeline phase OL5b_one_line_for_every_ollama_call of
+  docs/2026-11-18-ollama-local-agent-phasemap.spec
+intent: null
+summary: OL5b_one_line_for_every_ollama_call (library) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1795011405731
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795011405731
+lastSeenAt: 1795011405731
+fingerprint: null
+payload:
+  id: OL5b_one_line_for_every_ollama_call
+  map: docs/2026-11-18-ollama-local-agent-phasemap.spec
+  repo: null
+  layer: library
+  status: OPEN
+  files:
+    - ollama/lib/model-turns.js
+    - ollama/lib/dispatch.js
+    - ollama/routes/generate.js
+    - ollama/routes/queue.js
+    - ollama/test/model-turns.test.js
+  depends_on:
+    - OL5a_one_load_per_model_per_request
+  blocks: []
+  spec: null
+  graph: 7ce1292541423cb3

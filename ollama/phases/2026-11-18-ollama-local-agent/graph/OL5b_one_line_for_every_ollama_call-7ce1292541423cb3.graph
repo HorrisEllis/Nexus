@@ -1,0 +1,184 @@
+envelope: 1
+uuid: nexus-export-graph-phase:OL5b_one_line_for_every_ollama_call:7ce1292541423cb3
+type: graph
+id: phase:OL5b_one_line_for_every_ollama_call:7ce1292541423cb3
+context: dependency graph of phase OL5b_one_line_for_every_ollama_call
+intent: null
+summary: 21 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1795011405731
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795011405731
+lastSeenAt: 1795011405731
+fingerprint: null
+payload:
+  for: OL5b_one_line_for_every_ollama_call
+  kind: phase
+  repo: null
+  hash: 7ce1292541423cb3
+  nodes:
+    - path: ollama/lib/dispatch.js
+      role: changes
+      exists: true
+      system: ollama
+    - path: ollama/lib/model-turns.js
+      role: changes
+      exists: false
+      system: ollama
+    - path: ollama/routes/generate.js
+      role: changes
+      exists: true
+      system: ollama
+    - path: ollama/routes/queue.js
+      role: changes
+      exists: true
+      system: ollama
+    - path: ollama/test/model-turns.test.js
+      role: changes
+      exists: false
+      system: null
+    - path: ollama/lib/command-index.js
+      role: used-by
+      exists: true
+      system: ollama
+    - path: ollama/routes/jobs.js
+      role: used-by
+      exists: true
+      system: ollama
+    - path: ollama/server.js
+      role: used-by
+      exists: true
+      system: ollama
+    - path: tests/modules/test-agent-memory.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: lib/agent-memory.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/seam/detector.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/warp/core/Axiom.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/warp/dispatch/cascade.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/warp/dispatch/index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/warp/dispatch/population.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/warp/plugins/crystallizer-flatfile.js
+      role: uses
+      exists: true
+      system: lib
+    - path: ollama/config.js
+      role: uses
+      exists: true
+      system: ollama
+    - path: ollama/lib/http-utils.js
+      role: uses
+      exists: true
+      system: ollama
+    - path: ollama/lib/model-inventory.js
+      role: uses
+      exists: true
+      system: ollama
+    - path: ollama/lib/ollama-client.js
+      role: uses
+      exists: true
+      system: ollama
+    - path: ollama/lib/state.js
+      role: uses
+      exists: true
+      system: ollama
+  edges:
+    - from: ollama/lib/dispatch.js
+      to: ollama/config.js
+      kind: requires
+    - from: ollama/lib/dispatch.js
+      to: ollama/lib/state.js
+      kind: requires
+    - from: ollama/lib/dispatch.js
+      to: ollama/lib/ollama-client.js
+      kind: requires
+    - from: ollama/lib/dispatch.js
+      to: lib/warp/dispatch/index.js
+      kind: requires
+    - from: ollama/lib/dispatch.js
+      to: lib/warp/dispatch/cascade.js
+      kind: requires
+    - from: ollama/lib/dispatch.js
+      to: lib/warp/plugins/crystallizer-flatfile.js
+      kind: requires
+    - from: ollama/lib/dispatch.js
+      to: lib/warp/dispatch/population.js
+      kind: requires
+    - from: ollama/lib/dispatch.js
+      to: lib/seam/detector.js
+      kind: requires
+    - from: ollama/lib/dispatch.js
+      to: ollama/lib/model-inventory.js
+      kind: requires
+    - from: ollama/lib/dispatch.js
+      to: lib/warp/core/Axiom.js
+      kind: requires
+    - from: ollama/lib/dispatch.js
+      to: lib/agent-memory.js
+      kind: requires
+    - from: ollama/routes/generate.js
+      to: ollama/lib/http-utils.js
+      kind: requires
+    - from: ollama/routes/jobs.js
+      to: ollama/lib/dispatch.js
+      kind: requires
+    - from: ollama/server.js
+      to: ollama/lib/dispatch.js
+      kind: requires
+    - from: tests/modules/test-agent-memory.test.js
+      to: ollama/lib/dispatch.js
+      kind: requires
+    - from: ollama/lib/command-index.js
+      to: ollama/routes/queue.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL5a_one_load_per_model_per_request
+    dependents:
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL5c_his_clients_through_the_line
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL20_metrics_against_the_ledger
+    upstream:
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL5a_one_load_per_model_per_request
+    downstream:
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL20_metrics_against_the_ledger
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL5c_his_clients_through_the_line
+    blockedBy:
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL5a_one_load_per_model_per_request
+    unlocks:
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL5c_his_clients_through_the_line
+      - docs/2026-11-18-ollama-local-agent-phasemap.spec::OL20_metrics_against_the_ledger
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · blocked by OL5a_one_load_per_model_per_request
+      - 'depends on (1): OL5a_one_load_per_model_per_request'
+      - >-
+        needed by (2): OL5c_his_clients_through_the_line, OL20_metrics_against_the_ledger ·
+        finishing it unlocks OL5c_his_clients_through_the_line, OL20_metrics_against_the_ledger
+    edges:
+      - from: docs/2026-11-18-ollama-local-agent-phasemap.spec::OL5a_one_load_per_model_per_request
+        kind: declared
