@@ -987,3 +987,7 @@ phases_addendum_2026_11_14_cbw:
 # MG15b, a port already held is adopted: found running it, Idearium (4800), Guardian (7820) and Orchestrator (9000) were alive and answering but missing from running.node, so every start died on "port already in use" until the circuit opened and the pipeline could not reach Idearium. Before a spawn COS now reads who listens on the system's port (netstat); a live holder is adopted (its health decides up; one that does not answer in 30 s is stopped so a fresh one starts). test-cos-outlive 7/7 (MG15-7 new).
 # Why it happened (coder's reading): those three were started before running.node existed or by a manager that did not keep them; after
 # COS's restart nothing knew their pids. Adopting by port covers any such leftover, not only the ones the node file names.
+# ── ADDENDUM 2026-11-18 (later) — MG15b proven live; MG15c mapped (his: "im getting sick of nexus being so unstalbe") ──
+# Live at 12:31: "port 4800 already held by pid 16156: adopted" (and guardian 7820, orchestrator 9000); all 8 systems up.
+# MG15c (open, mapped only): a live pid whose health does not answer at boot is waited for (retries over 60 s) before a second copy is
+# started; the cause of the 16156 leftover. Stability record and numbers: docs/2026-11-18-session-log-and-stability.md.
