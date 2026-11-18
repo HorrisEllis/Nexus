@@ -513,3 +513,13 @@ handoff_2026_11_18: >-
 #   - the phase-run ledger rows → the engine's run records (the flight recorder reads them)
 # Mapped only for now (his order: the pipeline working first): the flight-map canvas (PC addendum), nexus:// names over ports (MG15 addendum),
 # the 3b as RAID's orchestrator, RAM/swap, retry in a fresh conversation (OL addendum).
+
+# ── ADDENDUM 2026-11-18 (later) — RAID's intake gaps are computed from the input, not a fixed list (his; mapped, not built) ──
+# James, 2026-11-18, pasting COS's Console: a line that is not a COS verb ("pl[lfp[ef") went to RAID, which kept it as an input and asked the same
+# four gaps it asks of every input (which system owns it; a capability or a command; the end state; what must come first). His words: "this is
+# determinstic, gaps aren't static."
+# The coder's reading: RAID's intake decides first, deterministically, what the line is: a typo of a COS verb (edit distance → "did you mean …",
+# not an input); noise (no word Nexus knows, no intent: said, not kept as a contract); or work. For work, each of the four is filled when it can be
+# derived (a system named, a route or command matched, an end state stated) and asked only when it cannot: the gaps left are the real ones, each with
+# what was tried. The 3b may rank the candidates the rules allow (OL addendum), never decide one.
+# To map as a phase in RAID's intake (cortex/core/raid/contract-intake.js) after the pipeline works (his order).

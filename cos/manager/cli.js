@@ -15,7 +15,7 @@
 const TABLE = [
   ['help', 'help [verb]', 'this table'],
   ['ps', 'ps', 'every system: state, pid, port, restarts'],
-  ['start', 'start <system>', 'start it'], ['stop', 'stop <system>', 'stop it'], ['restart', 'restart <system>', 'restart it'],
+  ['start', 'start <system>', 'start it'], ['stop', 'stop <system>', 'stop it'], ['restart', 'restart <system> | restart cos', 'restart it (cos: COS itself; its systems are handed over, not stopped)'],
   ['boot', 'boot [all|core]', 'boot the declared systems phase by phase'],
   ['logs', 'logs <system> [n]', 'its recent output (default 30 lines)'],
   ['config', 'config <system> [key=value …] | config <system> clear <key …>', 'its configuration; set or clear a setting (memory.limit=25%, cpu.limit=2cores, network.port=3760, env.FOO=bar …)'],
@@ -70,7 +70,7 @@ function reachBy(sup) {
   });
 }
 
-function createCli({ sup, resources = null, config = null, notices = null, proposals = null, addSystem = null, usage = null, disks = null, vdisks = null, pipelineSync = null, graphCensus = null, locationOf = null, reach = reachBy(sup), wakeMs = 25000 } = {}) {
+function createCli({ restartCos = null, sup, resources = null, config = null, notices = null, proposals = null, addSystem = null, usage = null, disks = null, vdisks = null, pipelineSync = null, graphCensus = null, locationOf = null, reach = reachBy(sup), wakeMs = 25000 } = {}) {
   async function run(line, { by = 'person' } = {}) {
     // 0.60.517 — "cos <verb>" typed in COS's own console is the verb (his 2026-11-13 `cos pipeline-sync` answered "no verb cos")
     let [verb, ...a] = split(line); if (verb === 'cos' && a.length) verb = a.shift(); const L = [];
@@ -107,7 +107,14 @@ function createCli({ sup, resources = null, config = null, notices = null, propo
           for (const v of sup.list()) L.push(`${pad(v.name, 22)}${pad(v.state, 16)}${pad(v.pid, 8)}${pad(v.port, 7)}${v.restarts && typeof v.restarts === 'object' ? v.restarts.count : v.restarts ?? 0}`); break;
         }
         case 'start': case 'stop': case 'restart': {
-          need(1, row[1]); const v = sup[verb](a[0], { by }); L.push(`${a[0]}: ${v.state}${v.pid ? ` (pid ${v.pid})` : ''}`); break;
+          need(1, row[1]);
+          // 2026-11-18 — James: "the console needs to be able to execute these commands". `restart cos` restarts COS itself from its Console, as his
+          // act (an agent proposes restart-cos instead); the systems are handed over and adopted (MG15), not stopped.
+          if (verb === 'restart' && a[0] === 'cos') {
+            if (/^agent:/.test(String(by || ''))) throw new Error('an agent proposes restart-cos (proposals); restarting COS is a person\'s act');
+            if (typeof restartCos !== 'function') throw new Error('this manager was not started to restart itself');
+            const r = restartCos({ by }); L.push(r && r.ok ? `COS restarts: ${r.how || 'now'}` : `not restarted: ${(r && r.error) || 'no answer'}`); break;
+          } const v = sup[verb](a[0], { by }); L.push(`${a[0]}: ${v.state}${v.pid ? ` (pid ${v.pid})` : ''}`); break;
         }
         case 'boot': { const r = await sup.boot({ set: a[0] || undefined, by }); L.push(`started ${r.started.join(', ') || 'none'}`); for (const s of r.skipped) L.push(`skipped ${s.name}: ${s.why}`); break; }
         case 'logs': { need(1, row[1]); for (const l of sup.logs(a[0], { limit: Number(a[1]) || 30 })) L.push(`${l.stream === 'err' ? '!' : ' '} ${l.line}`); if (!L.length) L.push(`${a[0]} has said nothing yet`); break; }

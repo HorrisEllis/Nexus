@@ -59,7 +59,7 @@ function createServer(sup, opts = {}) {
   // DK6–DK8 0.60.383 — James, 2026-11-03: "It needs to be a virtual disk. For the virtual envirements for qumu also. Like it holds all the data,
   // snapshots, system state." Each system's qcow2: its metadata, files and data in one ext4, its snapshots inside the same file
   const vdisks = require('../disk/vdisk.js').createVDisks({ root, disks });
-  const cli = require('./cli.js').createCli({ sup, resources, config, notices, proposals, addSystem, usage, disks, vdisks, pipelineSync: (o) => syncPipelines(o), graphCensus: (o) => pipeline.graphCensus(o), locationOf: (name) => _locationOf(name) });
+  const cli = require('./cli.js').createCli({ restartCos: (x) => (typeof opts.restartCos === 'function' ? opts.restartCos(x) : { ok: false, error: 'this manager was not started to restart itself' }), sup, resources, config, notices, proposals, addSystem, usage, disks, vdisks, pipelineSync: (o) => syncPipelines(o), graphCensus: (o) => pipeline.graphCensus(o), locationOf: (name) => _locationOf(name) });
   sup.on('ledger', (entry) => { try { notices.fromLedger(entry); } catch (_) {} });
   const checkNotice = () => { try { notices.fromNotice(require('../../lib/nexus-update.js').notice({ root })); } catch (_) {} };
   const noticeTick = setInterval(checkNotice, 10 * 60 * 1000); if (noticeTick.unref) noticeTick.unref(); setTimeout(checkNotice, 2000).unref();
