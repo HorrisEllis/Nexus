@@ -15,6 +15,7 @@ async function handle(req, res, { method, pathname }) {
       running: state.running.size,
       completed_today: state.statsToday.completed,
       failed_today: state.statsToday.failed,
+      line: require('../lib/model-turns.js').shared().status(),   // OL5b: who waits for which model, and the last turns' metrics
     });
     return true;
   }

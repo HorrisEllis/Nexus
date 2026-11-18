@@ -80,8 +80,9 @@ async function dispatchJob(job) {
   const cascade = ({ event }) => runCascade({
     providers: ['ollama'],
     maxAttempts: 1,
-    generate: () => callOllamaRaw(model, event.data.prompt, job.maxTokens, job.timeoutMs, `bridge job ${String(job.uuid).slice(0, 8)}${job.intent ? ` (${job.intent})` : ''}${job.owner ? ` for ${job.owner}` : job.sessionId ? ` for ${job.sessionId}` : ''}`,   // §0.39.266 — whose job it is, in the activity log
-      { onDelta: (d, kind) => _grow(job, d, kind) }),
+    // OL5b, 2026-11-18 — James: "okay. do it.": the call waits its turn in the Ollama system's one line (ollama/lib/model-turns.js)
+    generate: () => require('./model-turns.js').shared().run(model, { caller: `job ${String(job.uuid).slice(0, 8)}${job.owner ? ` for ${job.owner}` : ''}`, door: 'jobs' }, () => callOllamaRaw(model, event.data.prompt, job.maxTokens, job.timeoutMs, `bridge job ${String(job.uuid).slice(0, 8)}${job.intent ? ` (${job.intent})` : ''}${job.owner ? ` for ${job.owner}` : job.sessionId ? ` for ${job.sessionId}` : ''}`,   // §0.39.266 — whose job it is, in the activity log
+      { onDelta: (d, kind) => _grow(job, d, kind) })),
     validate: (output) => ({ ok: true, output }), // hard-axiom filtering happens in unifiedDispatch itself
   }).then(r => ({ ok: r.ok, output: r.output, attempts: r.attempts }));
 

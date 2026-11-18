@@ -18,8 +18,10 @@ async function handle(req, res, { method, pathname }) {
   if (!b.caller) { json(res, 400, { ok: false, error: 'caller required: the tape names who asked' }); return true; }
   if (!state.ollamaOnline) { json(res, 503, { ok: false, error: 'Ollama host unreachable' }); return true; }
   try {
-    const text = await callOllamaRaw(b.model || state.defaultModel, String(b.prompt), b.maxTokens || null, Math.min(parseInt(b.timeoutMs, 10) || 120000, 600000),
-      String(b.caller), { ...(b.system ? { system: String(b.system) } : {}), ...(b.temperature != null ? { temperature: Number(b.temperature) } : {}) });
+    // OL5b, 2026-11-18 — James: "okay. do it.": this door waits its turn in the same line as the jobs (ollama/lib/model-turns.js)
+    const _model = b.model || state.defaultModel;
+    const text = await require('../lib/model-turns.js').shared().run(_model, { caller: String(b.caller), door: 'generate' }, () => callOllamaRaw(_model, String(b.prompt), b.maxTokens || null, Math.min(parseInt(b.timeoutMs, 10) || 120000, 600000),
+      String(b.caller), { ...(b.system ? { system: String(b.system) } : {}), ...(b.temperature != null ? { temperature: Number(b.temperature) } : {}) }));
     json(res, 200, { ok: true, text: String(text || '') });
   } catch (e) { json(res, 502, { ok: false, error: e.message, code: e.code || null }); }
   return true;
