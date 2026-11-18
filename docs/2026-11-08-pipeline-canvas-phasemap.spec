@@ -1443,3 +1443,22 @@ phases_addendum_2026_11_13_rca:
 # (c) COS or Idearium, the coder's recommendation, his to decide: COS owns pipelines (the engine, the runs, the canvas, the flight recorder; it
 #     already is the engine, PC and IF2 say so); Idearium becomes a client that asks COS to run its builds, and its pipeline tools move into COS one
 #     at a time while each keeps working (the strangler pattern IF2 names). Integrating both as peers would keep two places that run pipelines.
+
+## ADDENDUM 2026-11-18 (later) — the cockpit: three canvases on Nexus's own sources; Loom on its way out (his)
+# James, 2026-11-18: "i like it so far. but temporal playback. pause, rewind and replay the map, a timeline to move backwards and forewards, see wires
+# break, tension increase, system increase regime, trace the cause to the effect. i cant zoom in. systems need way more info. also interconnected. three
+# entirely different layers. all a canvas like eravos. ... the pipeline ui needs immense unpgrades. needs to use the component registry per system, have
+# quick tools, to control the system, open it, diagnose it," · "Also the lineage map. The map shows compartments with a pulse. That way it works with
+# genesis. ... You're bad at interconnecting." · "Log in a ledger so far." · "Nope. Look needs to be on its way out. Each component Registry for each
+# system is its own structural authority, that or architect in idearium. Or merge architect and loom. Loom was a mistake. So was architect system."
+# Decided (his, and §5.16): each system's own component registry is the structural authority for that system; Loom is not, and is on its way out;
+# Architect too. Open (his): merge Loom and Architect, or Architect into Idearium.
+# Principles (the coder's, from his corrections): the map consumes Nexus, it is not a second Nexus — nothing hardcoded; every connection carries its
+# provenance (declared in a manifest, observed at runtime, inferred) and when it was last seen; a measurement not read is said, never 0 (§1.2);
+# replay is event replay + state reconstruction (Versionium) + causal trace; one id per system, component, run and agent call, shared by the canvases
+# so a selection in one lights the same id in the others; the lineage map: genesis seed (the logged idea) → RAID request → contract → spec → components
+# → hooks → code → tests → versions, with each compartment pulsing on its heartbeat.
+# Canvases: wiring harness (per-system registries, wires, CFR/RFR2), pipelines (runs, files, gates, editable), agents (models, calls, resources);
+# plus the lineage view and a shared timeline. COS's controls (start, stop, restart, pause, diagnose, logs) are buttons, through COS's own routes.
+# Order: real data first (COS systems and pulses, each system's registry, declared wires), then provenance, controls, Versionium replay, RAID
+# decision playback, lineage.
