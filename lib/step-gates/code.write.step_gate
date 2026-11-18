@@ -47,3 +47,8 @@ payload:
         - "existing code here"
         - "logic goes here"
         - "implementation goes here"
+        # 2026-11-18 — James: "Gates just need to be much smarter." GQ1 (run 40b9a698) landed an Emerge stub: "// Placeholder for quality check logic"
+        - "placeholder for "
+        - "placeholder logic"
+        - "example: always true"
+        - "stub until"

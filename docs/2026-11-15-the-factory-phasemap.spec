@@ -420,3 +420,43 @@ order: >-
 # Decided (his): the tree begins earlier than the contract. The idea as it is logged (an Idearium idea, or any input: his words in the Console,
 # a request, a note) is the seed; the request to RAID, the contract and the .spec grow from it; every decision and direction after is a
 # versioned branch (IF10, IF18; thread T13). Reading 2 (one RAID compartment per gate, or per contract) is still open.
+# ── 2026-11-18 — his, recorded (not yet phases): the contract's family tree on the canvas; progress that persists; Nexus building itself ──
+# James, 2026-11-18: "The tree can be shown in the pipeline canvas. Dependancies, and branching to each components, like the Provence. Like a
+# family tree for each contract? Imagine that. Show the end state at the end. Then the beginning, what if each gate was the raid compartment for
+# the contract, then each disicion is a branch, like showing the entire lineage or tree. Like I want projects to be able to have progress. Like
+# chunks are the progress bar for each and it persists. Also needs to check for files already created in the pipeline. Can use liminal space
+# reader. I feel like the intelligence system needs commands per module and we need emerge, the pipeline, and oLlama working. Then we can
+# autonomously build nexus. Like hook the autonomous mode that copilot has into the build loops and modes." · "No matter what I say. Pipeline,
+# emerge, and ollama. Gates just need to be much smarter."
+# Where each lands (the coder's reading, to confirm when it is reached; his order stands: pipeline, Emerge, Ollama; gates smarter first):
+#   - the contract's family tree (end state at the end, the beginning at the start, each gate a RAID compartment, each decision a branch,
+#     the whole lineage, provenance): IF18 (the visual debugger) with the pinned development tree (CIE map, after Emerge) and IF10.
+#   - progress that persists: a project's chunks are its progress bar (done / gap / open, IF20's gaps with their tension), kept on disk.
+#   - the pipeline checks for files already created: verify-first runs per brick (lib/verify-first.js); a pipeline-level step before the
+#     build (IF15/IF16), with the liminal space reader (intelligence/liminal-space) as one of its sources.
+#   - the intelligence system's commands per module: rows in its own command table (intelligence/commands), each module reachable.
+#   - Copilot's autonomous mode (copilot/lib/autonomy-router.js) hooked into the build loops and modes: IF12, once the pipeline, Emerge and
+#     Ollama work.
+# ── 2026-11-18 — his: RAID is the interface; every gate a RAID compartment with rewind; Copilot thinks (recorded, not built) ──
+# James, 2026-11-18: "we also need to use raid for all decisions, each gate uses raid? raid has the rewind engine per gate like idearium, like
+# snapshot each gate, work surface which would be what the agents are generating or writing, or from the dom mutator in clearglass, idearium
+# already does this. and work area is the compartment that raid created from the request initially, for all of the context, files, and anything
+# else needed for the contract/end-state to be fulfilled. reflection engine, raid has so much to it. we need raid to be the interface. uses
+# copilot to think, which copilot is a agent agnostic hat." · "i don't want any js created." · "that needs to be .eg using cie-eg."
+# Lands on IF3 (one gate), IF4 (rewind in the compartment), IF9 (everything RAID does through the pipeline); readings to confirm when reached.
+# Done the same turn, as data only (no JS, his rule): lib/step-gates/code.write.step_gate gained "placeholder for ", "placeholder logic",
+# "example: always true", "stub until" — the existing no_placeholder check now refuses GQ1's stub ("a placeholder, not the work — line 3").
+# Tried and reverted (his "i don't want any js created"): a JS placeholderIn(), an Ollama-only planMode branch, a test-writer start line.
+
+handoff_2026_11_18: >-
+  For the next session. His rules now: pipeline, Emerge and Ollama, nothing else ("No matter what I say"); no JS created (new logic in .eg via
+  CIE-EG, or in gate/node data); deterministic first, then Ollama, Claude last ("use ollama for anything that can save you tokens"); short.
+  State (main 0.60.566): Claude replies end from their settled .response; Claude is last on every ladder; Gemini's backdrop cleared; N1 closed on
+  its own test (route proved, no new code); GQ1 is OPEN — Ollama wrote an Emerge placeholder that landed; the code.write gate now refuses it.
+  Live settings on his PC (not in git): Idearium routing.escalation = [ollama 3b, ollama deepseek-coder-v2:16b] (Ollama only, no Guardian);
+  Guardian's Claude account chain (Account 2, then Default); Ollama has the 3b and deepseek-coder-v2:16b (8.3 GB). 16 GB RAM, GTX 1650 4 GB,
+  C: SSD ~85 GB free.
+  Next, in order: (1) GQ1's gap — with no reasoning agent on the ladder, planMode says "built as before", so test-first never runs: make Nexus
+  plan it (derivePlan exists) and Ollama write the test, written in .eg or as data, not JS (his rule; the JS version was reverted). (2) Ollama
+  tuned for this machine (flash attention, q8_0 KV cache, one model loaded, num_ctx per job, mmap from the SSD; a MoE coder that fits) —
+  researched, applied, measured on a rerun of GQ1. (3) IF13 → IF15 → IF14 … per order_2026_11_18_his; IF19–21 after.
