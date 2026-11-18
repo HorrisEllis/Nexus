@@ -764,3 +764,13 @@ then they are written by hand.
   line; written `"\{"` as gate.eg does elsewhere. Also found while writing: a JavaScript number is `num` to `type_of`, not `float`.
 - **Gaps found:** the error for a lone `{` in a string names the wrong cause ("unterminated string", not "an interpolation that is not
   closed"); `parse_json` raises on text that is not JSON, so the gate guards it by its first character.
+
+## 2026-11-18 — Intelligence judges its own memory, in Emerge (IP13, 0.60.572)
+- **Measured:** his framework. End state written first (IP13's proof): a scan names the heap against its cap and the heaviest holders; a second scan says what grew.
+- **His words:** "using the intelligence system to scan itself?" · "it needs to be able to do" · "also emerge?"
+- **Method:** Emerge `test` blocks, then the door run on a live Node process (the test's own) twice.
+- **Code:** `intelligence/self/scan.eg` (judgment), `intelligence/self/door.js` (the numbers only Node can read).
+- **Result:** eg test 2/2; test-intelligence-self 5/5.
+- **Failed runs before the pass:** 2. `use` is a keyword, not a variable name ("expected a variable name after var, found use"); a literal 3 is
+  a `num`, not an `int`, so a parameter typed `int` refused it. Also: the script's help line printed under `eg test` (args() is empty there).
+- **Gaps found:** a reserved word as a name is reported as a parse error, not "use is reserved"; number literals have no int type to the checker.

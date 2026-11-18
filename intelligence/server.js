@@ -165,6 +165,15 @@ const server = http.createServer(async (req, res) => {
     });
   } catch (_) { /* logging failure never blocks the real request */ }
 
+  // IP13 2026-11-18 — James: "using the intelligence system to scan itself?" · "it needs to be able to do": its memory, judged in Emerge
+  if (pathname === '/api/intelligence/self' && req.method === 'GET') {
+    try { const r = await require('./self/door.js').scan({}); json(res, r.ok ? 200 : 500, r); } catch (e) { json(res, 500, { ok: false, error: e.message }); }
+    return;
+  }
+  if (pathname === '/api/intelligence/self/snapshot' && req.method === 'POST') {
+    try { json(res, 200, require('./self/door.js').snapshot({})); } catch (e) { json(res, 500, { ok: false, error: e.message }); }
+    return;
+  }
   if (pathname === '/api/intelligence/topo-kernel/stats') {
     try {
       const { TopoKernel } = require('./topo-kernel/index.js');

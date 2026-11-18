@@ -18,6 +18,8 @@ function _c(id, method, path, desc, opts = {}) {
 }
 module.exports = [
   _c('health',       'GET',  '/health',                            'Intelligence system health'),
+  _c('self-scan',     'GET',  '/api/intelligence/self',             'IP13: Intelligence scans its own memory against its cap; judged in Emerge (intelligence/self/scan.eg)'),
+  _c('self-snapshot', 'POST', '/api/intelligence/self/snapshot',    'IP13: a V8 heap snapshot of Intelligence, written to its data'),
   _c('topo-kernel',  'GET',  '/api/intelligence/topo-kernel/stats', 'Sovereign SISO topology kernel — signal/field/shape/trust stats'),
   _c('telemetry',    'GET',  '/api/intelligence/telemetry/status',  'Telemetry-codec runtime module status'),
   _c('friction',     'GET',  '/api/intelligence/friction',          'Per-system friction (Diagnostic measures, Intelligence means) with CFR\'s field friction; each part names its source (CI6)'),

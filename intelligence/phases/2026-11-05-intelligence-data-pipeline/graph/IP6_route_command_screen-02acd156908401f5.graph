@@ -7,11 +7,11 @@ intent: null
 summary: 30 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1793855146003
+exported_at: 1795014510090
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1793855146003
-lastSeenAt: 1793855146003
+firstSeenAt: 1795014510090
+lastSeenAt: 1795014510090
 fingerprint: null
 payload:
   for: IP6_route_command_screen
@@ -220,6 +220,7 @@ payload:
       - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP5_invariants_into_rfr2
     dependents:
       - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP7_the_screen
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP13_intelligence_scans_itself
     upstream:
       - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP1_input_folder_and_reader
       - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP2_baseline_per_series
@@ -230,11 +231,13 @@ payload:
       - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP_D2_where_the_baseline_comes_from
       - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP_D3_how_far_is_a_deviation
     downstream:
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP13_intelligence_scans_itself
       - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP7_the_screen
     blockedBy:
       - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP5_invariants_into_rfr2
     unlocks:
       - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP7_the_screen
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP13_intelligence_scans_itself
     conflicts:
       - with: docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP8_negative_and_shadow_space
         files:
@@ -256,7 +259,9 @@ payload:
     lines:
       - layer 6 · blocked by IP5_invariants_into_rfr2
       - 'depends on (1): IP5_invariants_into_rfr2 · all upstream 8'
-      - 'needed by (1): IP7_the_screen · finishing it unlocks IP7_the_screen'
+      - >-
+        needed by (2): IP7_the_screen, IP13_intelligence_scans_itself · finishing it unlocks
+        IP7_the_screen, IP13_intelligence_scans_itself
       - >-
         same files as IP8_negative_and_shadow_space with no order between them:
         tests/modules/test-intelligence-pipeline.test.js

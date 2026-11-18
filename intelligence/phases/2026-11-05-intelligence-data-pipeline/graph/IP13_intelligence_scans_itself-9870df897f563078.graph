@@ -1,0 +1,256 @@
+envelope: 1
+uuid: nexus-export-graph-phase:IP13_intelligence_scans_itself:9870df897f563078
+type: graph
+id: phase:IP13_intelligence_scans_itself:9870df897f563078
+context: dependency graph of phase IP13_intelligence_scans_itself
+intent: null
+summary: 30 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1795014510110
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795014510110
+lastSeenAt: 1795014510110
+fingerprint: null
+payload:
+  for: IP13_intelligence_scans_itself
+  kind: phase
+  repo: null
+  hash: 9870df897f563078
+  nodes:
+    - path: idearium/cli/route-commands.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: intelligence/registry-components.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: intelligence/self/door.js
+      role: changes
+      exists: false
+      system: intelligence
+    - path: intelligence/self/scan.eg
+      role: changes
+      exists: false
+      system: intelligence
+    - path: intelligence/server.js
+      role: changes
+      exists: true
+      system: intelligence
+    - path: tests/modules/test-intelligence-self.test.js
+      role: changes
+      exists: false
+      system: null
+    - path: diagnostic/tests/causality.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/cli/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/agent-tools/tools/coordination/intelligence-query.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/test-cg-agent-doors.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-cos-compartment-template.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-drawbridge-registry.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-eros-hooks.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-nexus-update.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-node-registry-system.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-release-deliver.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-sovereign-systems.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: intelligence/cfr/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/config.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/field-provider.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/framework-builder.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/liminal-space/index.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: intelligence/routes.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus/nexus-bus.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/self-register-remote.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/warp/core/index.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: intelligence/server.js
+      to: lib/data-home.js
+      kind: requires
+    - from: intelligence/server.js
+      to: intelligence/config.js
+      kind: requires
+    - from: intelligence/server.js
+      to: intelligence/index.js
+      kind: requires
+    - from: intelligence/server.js
+      to: intelligence/cfr/index.js
+      kind: requires
+    - from: intelligence/server.js
+      to: intelligence/framework-builder.js
+      kind: requires
+    - from: intelligence/server.js
+      to: intelligence/field-provider.js
+      kind: requires
+    - from: intelligence/server.js
+      to: intelligence/routes.js
+      kind: requires
+    - from: intelligence/server.js
+      to: intelligence/liminal-space/index.js
+      kind: requires
+    - from: intelligence/server.js
+      to: lib/nexus/nexus-bus.js
+      kind: requires
+    - from: intelligence/server.js
+      to: lib/self-register-remote.js
+      kind: requires
+    - from: intelligence/server.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: intelligence/server.js
+      to: lib/warp/core/index.js
+      kind: requires
+    - from: lib/agent-tools/tools/coordination/intelligence-query.js
+      to: intelligence/registry-components.js
+      kind: requires
+    - from: tests/modules/test-sovereign-systems.test.js
+      to: intelligence/registry-components.js
+      kind: requires
+    - from: diagnostic/tests/causality.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: idearium/cli/index.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-cg-agent-doors.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-cos-compartment-template.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-drawbridge-registry.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-eros-hooks.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-nexus-update.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-node-registry-system.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-release-deliver.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+  crossings:
+    - from: intelligence/server.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: intelligence
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: lib/agent-tools/tools/coordination/intelligence-query.js
+      to: intelligence/registry-components.js
+      fromSystem: lib
+      toSystem: intelligence
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 7
+    deps:
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP6_route_command_screen
+    dependents: []
+    upstream:
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP1_input_folder_and_reader
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP2_baseline_per_series
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP3_deviation_and_regime
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP4_invariants_across_series
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP5_invariants_into_rfr2
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP6_route_command_screen
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP_D1_formats_and_rows
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP_D2_where_the_baseline_comes_from
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP_D3_how_far_is_a_deviation
+    downstream: []
+    blockedBy:
+      - docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP6_route_command_screen
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 7 · blocked by IP6_route_command_screen
+      - 'depends on (1): IP6_route_command_screen · all upstream 9'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-11-05-intelligence-data-pipeline-phasemap.spec::IP6_route_command_screen
+        kind: inferred

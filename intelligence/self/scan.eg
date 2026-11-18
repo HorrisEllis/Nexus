@@ -1,0 +1,79 @@
+// intelligence/self/scan.eg — Intelligence judges its own memory (IP13, docs/2026-11-05-intelligence-data-pipeline-phasemap.spec).
+// James, 2026-11-18: "using the intelligence system to scan itself?" · "it needs to be able to do" · "also emerge?"
+// The door (intelligence/self/door.js) gives the numbers (only Node can read its own heap); this decides what they mean.
+//   eg run intelligence/self/scan.eg judge <file.json>   file: { now, prev, capMB }   → one line of JSON
+//   now/prev: { at, rssMB, heapUsedMB, heapTotalMB, externalMB, spaces: [{ name, usedMB }], holders: [{ name, items, approxMB }] }
+
+let NEAR = 0.8   // near the cap: 80% of it is a gap, said with its numbers, never a restart
+
+fn top(xs: list, key: string, n: num): list {
+  let sorted = sort_by(xs, fn(x) = 0 - (x[key] ?? 0))
+  if len(sorted) > n { return slice(sorted, 0, n) }
+  return sorted
+}
+
+fn find_named(xs: list, name: string): any = find(xs, fn(x) = x.name == name)
+
+// what grew since the last scan: heap, each space, each holder (by items, or by MB when it says MB)
+fn grew(now: map, prev: any): list {
+  if prev == null { return [] }
+  var out = []
+  let dh = now.heapUsedMB - prev.heapUsedMB
+  if dh != 0 { out = push(out, { name: "heap", from: prev.heapUsedMB, to: now.heapUsedMB, delta: dh }) }
+  for s in now.spaces ?? [] {
+    let p = find_named(prev.spaces ?? [], s.name)
+    if p != null and s.usedMB != p.usedMB { out = push(out, { name: "space " + s.name, from: p.usedMB, to: s.usedMB, delta: s.usedMB - p.usedMB }) }
+  }
+  for h in now.holders ?? [] {
+    let p = find_named(prev.holders ?? [], h.name)
+    if p != null and h.items != p.items { out = push(out, { name: "holder " + h.name, from: p.items, to: h.items, delta: h.items - p.items }) }
+  }
+  return sort_by(out, fn(g) = 0 - abs(g.delta))
+}
+
+fn judge(q: map): map {
+  let now = q.now
+  let cap = q.capMB
+  var pct = null
+  var verdict = "ok"
+  var why = "no cap given: nothing to be near"
+  if cap != null and cap > 0 {
+    pct = round(now.heapUsedMB / cap * 1000) / 10
+    if now.heapUsedMB >= cap { verdict = "over"; why = "heap " + str(now.heapUsedMB) + " MB is at or over its cap of " + str(cap) + " MB" }
+    else if now.heapUsedMB >= cap * NEAR { verdict = "near-cap"; why = "heap " + str(now.heapUsedMB) + " MB is " + str(pct) + "% of its cap of " + str(cap) + " MB (a gap: raise the cap or find what grows)" }
+    else { why = "heap " + str(now.heapUsedMB) + " MB is " + str(pct) + "% of its cap of " + str(cap) + " MB" }
+  }
+  return { at: now.at, verdict: verdict, why: why, capMB: cap, capUsePct: pct, rssMB: now.rssMB, heapUsedMB: now.heapUsedMB,
+    heaviestSpaces: top(now.spaces ?? [], "usedMB", 3), heaviestHolders: top(now.holders ?? [], "items", 5), grew: grew(now, q.prev ?? null),
+    gap: verdict != "ok" }
+}
+
+let a = args()
+var cmd = "help"
+if len(a) > 0 { cmd = a[0] }
+if cmd == "judge" {
+  if len(a) < 2 { raise("usage: eg run intelligence/self/scan.eg judge <file.json>") }
+  print(json(judge(parse_json(read_file(a[1])))))
+} else if len(a) > 0 {
+  print(json({ ok: false, error: "commands: judge <file.json>" }))
+}
+
+test "near the cap is a gap with its numbers; under it is ok; no cap is ok, said" {
+  let n = { at: 1, rssMB: 500, heapUsedMB: 330, heapTotalMB: 350, spaces: [{ name: "old_space", usedMB: 300 }, { name: "new_space", usedMB: 8 }], holders: [] }
+  let j = judge({ now: n, capMB: 384 })
+  expect j.verdict == "near-cap" and j.gap and j.capUsePct == 85.9, json(j)
+  expect judge({ now: n, capMB: 768 }).verdict == "ok"
+  expect judge({ now: n, capMB: null }).why == "no cap given: nothing to be near"
+  expect judge({ now: { at: 1, rssMB: 1, heapUsedMB: 400, spaces: [], holders: [] }, capMB: 384 }).verdict == "over"
+}
+
+test "the heaviest spaces and holders, and what grew since the last scan" {
+  let prev = { at: 1, heapUsedMB: 200, spaces: [{ name: "old_space", usedMB: 180 }], holders: [{ name: "loom map", items: 4000 }, { name: "patterns", items: 100 }] }
+  let now = { at: 2, rssMB: 400, heapUsedMB: 330, spaces: [{ name: "old_space", usedMB: 300 }, { name: "code_space", usedMB: 5 }],
+    holders: [{ name: "loom map", items: 4339 }, { name: "patterns", items: 150 }] }
+  let j = judge({ now: now, prev: prev, capMB: 768 })
+  expect j.heaviestSpaces[0].name == "old_space"
+  expect j.heaviestHolders[0].name == "loom map"
+  expect j.grew[0].name == "loom map" or j.grew[0].name == "holder loom map", json(j.grew)
+  expect any(j.grew, fn(g) = g.name == "heap" and g.delta == 130)
+}

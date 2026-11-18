@@ -437,6 +437,13 @@ export const SPEC = [
       for (const n of d.neighbours) console.log(`  ${h.c.dim(`[${n.kind} ${n.score}]`)} ${n.key}  ${h.c.dim(String(n.text).slice(0, 100))}`);
       for (const f of d.stats.systems.failed) console.log(h.c.amber(`  ✗ ${f.system}: ${f.why}`));
     } },
+  // IP13 2026-11-18 — James: "using the intelligence system to scan itself?" · "it needs to be able to do"
+  { key: 'intelligence.self', repo: false, usage: 'intelligence self', about: 'Intelligence scans its own memory: heap against its cap, the heaviest spaces and holders, what grew since the last scan (judged in Emerge)',
+    req: () => ({ system: 'intelligence', method: 'GET', path: '/api/intelligence/self', timeoutMs: 90000 }),
+    print: (d, a, h) => { console.log(`  ${d.verdict}: ${d.why}`); for (const s of d.heaviestSpaces || []) console.log(h.c.dim(`  space ${s.name}: ${s.usedMB} MB`)); for (const x of d.heaviestHolders || []) console.log(h.c.dim(`  holder ${x.name}: ${x.items} items`)); for (const g of (d.grew || []).slice(0, 5)) console.log(`  grew ${g.name}: ${g.from} → ${g.to}`); } },
+  { key: 'intelligence.self.snapshot', repo: false, usage: 'intelligence self snapshot', about: 'a V8 heap snapshot of Intelligence written to its data (open it in Chrome DevTools → Memory)',
+    req: () => ({ system: 'intelligence', method: 'POST', path: '/api/intelligence/self/snapshot', body: {}, timeoutMs: 120000 }),
+    print: (d) => console.log(`  ${d.file} (${d.sizeMB} MB)`) },
   { key: 'lattice.nodes', repo: false, usage: 'lattice nodes', about: 'the node lattice: how many nodes and edges of each kind, which systems were read and which could not be',
     req: () => ({ system: 'intelligence', method: 'GET', path: '/api/intelligence/lattice/nodes' }),
     print: (d, a, h) => { console.log(`  ${d.nodes} nodes · edges ${JSON.stringify(d.edges)} · ${d.timed} with their own time · ${d.dangling} causes naming no node`); console.log(h.c.dim(`  read: ${d.systems.read.join(', ')}`)); for (const f of d.systems.failed) console.log(h.c.amber(`  ✗ ${f.system}: ${f.why}`)); } },

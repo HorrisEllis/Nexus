@@ -207,3 +207,18 @@ proof_planned: >-
   dated journal sample whose friction and integration are tracked across weeks. IP11: planted gaps whose confidence and readings put one each on every route (open
   loop, asked, invariant), the same assessment on a planted conversation with a contradiction in it, and no gap routed unassessed. IP12: a text in chunks where one
   chunk names something no other gives, and a series whose windows are smooth inside and jump at one seam.
+
+  # ── 2026-11-18 — IP13, mapped before code. James, 2026-11-18 (after Intelligence crash-looped: heap out of memory at ~382 MB of a 384 MB cap,
+  # every ~20 s at start): "using the intelligence system to scan itself?" · "it needs to be able to do" · "also emerge?" · "can you use nexus?"
+  IP13_intelligence_scans_itself:
+    status: OPEN
+    depends_on: []
+    files: [intelligence/self/scan.eg, intelligence/self/door.js, intelligence/server.js, intelligence/registry-components.js, idearium/cli/route-commands.js, tests/modules/test-intelligence-self.test.js]
+    does: >-
+      Intelligence reports its own memory and judges it. The door (JavaScript: only Node can read its own heap) takes the numbers: resident memory,
+      heap used and its cap (--max-old-space-size), each V8 heap space, and what each registered holder says it holds (a module registers a name and
+      a size function: the loom map, the patterns, the liminal items, the failure index). The judgment is Emerge (intelligence/self/scan.eg): how
+      near the cap, the heaviest spaces and holders, what grew since the last scan; near the cap (80%) is a gap with its numbers, never a restart.
+      Each scan kept as a line in its own data (persistence); a heap snapshot written on demand for a person or a gate to open. GET
+      /api/intelligence/self, POST /api/intelligence/self/snapshot, and a command row, so Copilot, a gate or COS can ask it.
+    proof: "a scan on his machine names the heap against its cap and the heaviest holders; a second scan says what grew; a snapshot file is written on request"
