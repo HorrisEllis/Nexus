@@ -376,3 +376,15 @@ order: >-
 # Facts that bear on it, from 2026-11-17/18 on his machine: N1 went through the whole pipeline (Gemini planned, Ollama's 3b coded, closed on
 # its test); GQ1 landed and waits for his verdict; deepseek-coder-v2:16b loads (9.6 GB, ~20 tokens/s) but leaves 3-5% RAM free, under COS's
 # floor, so COS refused to start ollama-bridge; C: was full (0 GB) and the builds after it were cut by COS restarts.
+
+# ── ADDENDUM 2026-11-18 (later) — his answer to reading 1; his question on what comes first ──
+# James, 2026-11-18: "i mean the the request to raid or the contract is the beginning of the tree, or the .spec file and how it expands overtime,
+# each disccion and direction branching and versioned, idearium can also use it for versioning and branching versions. like the pipeline is
+# unbelievably high leverage." · "what ever gets us coding faster. smarter gates probably, that should help reduce load to the llm.
+# intelligence, failure mode and fault detection, diagnostic system, and copilot or agent tools. what do you think?"
+# Decided (his): the tree's root is the request to RAID, the contract or the .spec; it grows over time; each decision and direction is a
+# versioned branch; Idearium can use the same tree for its versions and branches (IF10, IF18; Framework thread T13). Reading 2 (one RAID
+# compartment per gate, or one per contract with its gates inside) is still open.
+# First to build (his "smarter gates probably"; the coder's recommendation, said as the coder's): IF3 smarter gates, fed by what Nexus already
+# knows, before any new system work: the failure-mode record (Cortex), the diagnostic and intelligence systems, read by the gate, so the
+# model is asked less. Copilot's and the agents' tools after.

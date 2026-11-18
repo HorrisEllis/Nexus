@@ -477,3 +477,19 @@ by the focus.
   the file-per-step runs of 2026-11-15/18 (N1: 2 calls, no new code; GQ1: 0 calls, a placeholder).
 - **Bias named:** the coder predicts, builds and judges it; a pass is post-hoc until a run he starts reproduces it.
 - **Evidence:** open.
+
+## T13 — "the request to raid or the contract is the beginning of the tree": a contract's lineage, versioned by decision, registered 2026-11-18
+
+- **His words:** 2026-11-18, "The tree can be shown in the pipeline canvas. Dependancies, and branching to each components, like the Provence.
+  Like a family tree for each contract?" · "i mean the the request to raid or the contract is the beginning of the tree, or the .spec file and
+  how it expands overtime, each disccion and direction branching and versioned, idearium can also use it for versioning and branching
+  versions. like the pipeline is unbelievably high leverage."
+- **What the coder did with it:** **conceptual.** Recorded in docs/2026-11-15-the-factory-phasemap.spec (the 2026-11-18 addenda): the root is
+  the request to RAID, the contract or the .spec; every decision and change of direction is a versioned branch; the canvas draws the lineage
+  (IF10, IF18); Idearium can use the same tree for its versions and branches. Nothing built.
+- **Prediction, written before any run:** when each gate's decision is kept as a versioned branch of the contract (on disk, its own node),
+  a build cut part-way (a COS restart, a crash, a full disk: all seen on 2026-11-17/18) resumes from its last passed branch instead of from the
+  start. Measured by: per interrupted run, the steps re-done after the resume and the agent calls spent again, against the same counts for the
+  runs cut on 2026-11-17/18 (NM1 cut twice by COS restarts and started over; RQ0's watchdog retries started over "smaller steps").
+- **Bias named:** the coder predicts, builds and judges it; a pass is post-hoc until a run he starts reproduces it.
+- **Evidence:** open.
