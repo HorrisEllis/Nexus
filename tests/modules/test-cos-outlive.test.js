@@ -50,6 +50,16 @@ const alive = (pid) => { try { process.kill(pid, 0); return true; } catch (e) { 
   c.start('holder', { by: 'test' });
   check('MG15-7 a port already held is adopted, not started again', process.platform !== 'win32' || (await until(() => c.get('holder').state === 'up', 6000) && c.get('holder').pid === held.pid && spawned === 0), JSON.stringify({ spawned, st: c.get('holder').state, pid: c.get('holder').pid, held: held.pid }));
   c.shutdown({ by: 'test' }); held.kill(); try { fs.rmSync(d2, { recursive: true, force: true }); } catch (_) {}
+  // MG15c (0.60.580): a holder that does not answer (busy) is kept as degraded, never stopped
+  const mute = require('child_process').spawn(process.execPath, ['-e', "const s=require('http').createServer(()=>{}).listen(0,'127.0.0.1',()=>console.log(s.address().port))"]);
+  const mport = await new Promise((r) => mute.stdout.once('data', (b) => r(Number(String(b).trim()))));
+  const d3 = fs.mkdtempSync(path.join(os.tmpdir(), 'cos-busy-'));
+  const m = createSupervisor({ root: d3, declarations: [{ name: 'busy', cmd: process.execPath, args: ['-e', 'setTimeout(()=>{},1e6)'], healthUrl: `http://127.0.0.1:${mport}/health`, onDemand: true }],
+    ledgerFile: path.join(d3, 'ledger.jsonl'), policy: { outlive: true, busyAfterMs: 500 }, log: () => {}, checkHealth: async () => false });
+  m.start('busy', { by: 'test' });
+  await until(() => m.ledger({ limit: 20 }).some((e) => e.kind === 'adopted-busy'), 6000); await wait(1500);
+  check('MG15-8 a holder that does not answer is kept as degraded, not stopped', process.platform !== 'win32' || (alive(mute.pid) && m.get('busy').pid === mute.pid && m.get('busy').state === 'degraded'), JSON.stringify({ st: m.get('busy').state, alive: alive(mute.pid) }));
+  m.shutdown({ by: 'test' }); mute.kill(); try { fs.rmSync(d3, { recursive: true, force: true }); } catch (_) {}
   b.shutdown({ by: 'test' });
   try { fs.rmSync(dir, { recursive: true, force: true }); } catch (_) {}
   console.log(`${pass} passed, ${fail} failed`);

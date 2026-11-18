@@ -190,6 +190,15 @@ function createSupervisor({ root, declarations = null, policy = {}, ledgerFile =
       const old = fs.readdirSync(STATE).filter(f => /^running-\d+\.node$/.test(f)).sort(); for (const f of old.slice(0, Math.max(0, old.length - 5))) { try { fs.unlinkSync(path.join(STATE, f)); } catch (_) {} }
     } catch (e) { log(`the running state could not be kept: ${e.message}`); }
   }
+  // MG15c: an adopted system's health, waited for: up when it answers; after 30 s without an answer it is said degraded (busy), never stopped
+  // for it. It stays degraded until it answers; its end is seen by the reaper as for any adopted pid; stopping it is a person's act.
+  function _waitUp(s, pr, d) {
+    if (!d.healthUrl) { s.state = 'up'; return; }
+    (async () => { const t0 = Date.now(); let said = false;
+      while (s.proc === pr) { if (await checkHealth(d.healthUrl)) { if (s.state === 'starting' || s.state === 'degraded') s.state = 'up'; if (said) write('adopted-up', d.name, `pid ${pr.pid} answers after ${Math.round((Date.now() - t0) / 1000)} s`, { pid: pr.pid }); return; }
+        if (!said && Date.now() - t0 > (P.busyAfterMs || 30000)) { said = true; if (s.state === 'starting') s.state = 'degraded'; write('adopted-busy', d.name, `pid ${pr.pid} does not answer at ${d.healthUrl} after 30 s: kept as degraded (busy is not dead), not stopped`, { pid: pr.pid }); }
+        await new Promise(r => setTimeout(r, said ? 5000 : 500)); } })();
+  }
   // MG15b: the pid listening on a local port (Windows: netstat; elsewhere not read, so nothing is adopted by port)
   function _holderOf(port) {
     if (process.platform !== 'win32') return null;
@@ -211,8 +220,10 @@ function createSupervisor({ root, declarations = null, policy = {}, ledgerFile =
     for (const [n, r] of Object.entries((node.payload && node.payload.systems) || {})) {
       const s = S.get(n); if (!s || s.proc || !r || !_alive(r.pid)) continue;
       const d = eff(s.decl); let ok = true; if (d.healthUrl) { try { ok = !!(await checkHealth(d.healthUrl)); } catch (_) { ok = false; } }
-      if (!ok) { write('adopt-refused', n, `pid ${r.pid} is alive but its health does not answer at ${d.healthUrl}: not adopted (started by the boot as usual)`, { by }); continue; }
-      s.proc = _adopted(n, r.pid); s.pid = r.pid; s.state = 'up'; s.startedAt = r.startedAt || Date.now(); s.by = by;
+      // MG15c (2026-11-18): busy is not dead. A live pid that does not answer is still the system (a second copy could never take its port);
+      // it is adopted as degraded and its health is waited for. Found running it: Idearium was refused here mid-build, a copy started, the build lost.
+      if (!ok) write('adopted-busy', n, `pid ${r.pid} is alive but its health does not answer at ${d.healthUrl}: adopted as degraded (busy is not dead), its health waited for`, { by, pid: r.pid });
+      s.proc = _adopted(n, r.pid); s.pid = r.pid; s.state = ok ? 'up' : 'degraded'; if (!ok) _waitUp(s, s.proc, d); s.startedAt = r.startedAt || Date.now(); s.by = by;
       for (const kind of ['out', 'err']) { const f = path.join(LOGS, `${n}.${kind}.log`); let end = 0; try { end = fs.statSync(f).size; } catch (_) {} _tail(s, n, kind, f, end); }
       write('adopted', n, `adopted pid ${r.pid}, left running by manager ${node.payload.manager} (${new Date(node.at).toISOString()}): not started again`, { by, pid: r.pid }); got.push(n);
     }
@@ -299,8 +310,7 @@ function createSupervisor({ root, declarations = null, policy = {}, ledgerFile =
       write('adopted', name, `port ${port} already held by pid ${holder}: adopted, not started again (its health decides up)`, { by, pid: holder });
       for (const kind of ['out', 'err']) { const f = path.join(LOGS, `${name}.${kind}.log`); let end = 0; try { end = fs.statSync(f).size; } catch (_) {} _tail(s, name, kind, f, end); }
       _saveState();
-      (async () => { const until = Date.now() + 30000; while (s.proc === pr && Date.now() < until) { if (await checkHealth(d.healthUrl)) { if (s.state === 'starting') s.state = 'up'; return; } await new Promise(r => setTimeout(r, 500)); }
-        if (s.proc === pr) { write('adopt-refused', name, `pid ${holder} holds port ${port} but its health did not answer in 30 s: stopped, so a fresh one can start`, { by }); pr.kill(); } })();
+      _waitUp(s, pr, d);   // MG15c: never stopped for a slow answer; busy is not dead
       return true;
     }
     if (!write('spawn', name, `${c.via ? `in compartment ${d.compartment || d.name}, behind its wall (${(d.boundary.mode || 'enforce')}${c.via === 'NODE_OPTIONS' ? ', through NODE_OPTIONS' : ''}): ` : ''}${c.cmd} ${c.args.join(' ')}`, { by })) return false;

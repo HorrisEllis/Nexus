@@ -991,3 +991,8 @@ phases_addendum_2026_11_14_cbw:
 # Live at 12:31: "port 4800 already held by pid 16156: adopted" (and guardian 7820, orchestrator 9000); all 8 systems up.
 # MG15c (open, mapped only): a live pid whose health does not answer at boot is waited for (retries over 60 s) before a second copy is
 # started; the cause of the 16156 leftover. Stability record and numbers: docs/2026-11-18-session-log-and-stability.md.
+
+# ── ADDENDUM 2026-11-18 (0.60.580) — MG15c built: busy is not dead ──
+# James, 2026-11-18: "Rerun NM1 now" · "im getting sick of nexus being so unstalbe"
+# MG15c, busy is not dead: the NM1 rerun was lost to 0.60.579 itself. COS booted at 12:43 while Idearium was mid-build (heap snapshot); its health did not answer in 30 s and the new rule stopped it as dead. Now a live pid that does not answer is adopted as degraded and its health waited for; it is never stopped for a slow answer (at boot from running.node, or by its port). test-cos-outlive 8/8 (MG15-8 new).
+# The coder's fault: 0.60.579's stop-on-no-answer killed the build it meant to unblock (Cortex: cos.adopt-refused-busy, coder.killed-busy-system).
