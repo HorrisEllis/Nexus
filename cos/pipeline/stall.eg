@@ -1,0 +1,30 @@
+// cos/pipeline/stall.eg — a run that stopped is noticed (PC8 slice stall, docs/2026-11-08-pipeline-canvas-phasemap.spec, addendum 2026-11-18).
+// James, 2026-11-18: "okay, needs to detect when it's not running"
+// When a run ends and its request is not met, this decides: a step failed for a transient reason and was resumed fewer than MAX times → resume
+// after a wait; anything else → stalled, held for him. Pure: COS's door (cos/pipeline/index.js) reads the request and acts.
+
+let MAX = 3
+let WAITS = [30000, 60000, 120000]
+let TRANSIENT = ["timed out", "timeout", "econnrefused", "econnreset", "socket hang up", " 503", "status 503", "not answering", "did not answer", "unreachable"]
+
+fn transient_why(why: string): bool {
+  let w = lower(why)
+  return any(TRANSIENT, fn(t) = find_text(w, t) >= 0)
+}
+
+// q: { request, steps: [{ task, status, why }], resumed: n } → { action: resume | hold | none, step, why, waitMs }
+fn decide(q: map): map {
+  let failed = filter(q.steps ?? [], fn(s) = s.status == "failed")
+  if len(failed) == 0 { return { action: "none", step: null, why: "no step failed: nothing to resume", waitMs: 0 } }
+  let s = failed[0]
+  let why = str(s.why ?? "")
+  let n = q.resumed ?? 0
+  if transient_why(why) and n < MAX {
+    let wait = WAITS[n]
+    return { action: "resume", step: s.task, why: "step " + s.task + " failed for a transient reason (" + why + "): resumed, attempt " + str(n + 1) + " of " + str(MAX) + ", after " + str(wait / 1000) + " s", waitMs: wait }
+  }
+  if transient_why(why) {
+    return { action: "hold", step: s.task, why: "step " + s.task + " failed for a transient reason " + str(MAX) + " times (" + why + "): stalled, held for you", waitMs: 0 }
+  }
+  return { action: "hold", step: s.task, why: "step " + s.task + " failed (" + why + "): stalled, held for you", waitMs: 0 }
+}

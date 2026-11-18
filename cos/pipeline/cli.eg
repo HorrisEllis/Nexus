@@ -13,6 +13,7 @@ use "../sovereign/card.eg" as sovereign
 use "../census/graph.eg" as graphs
 use "./contract.eg" as contract
 use "../sovereign/location.eg" as location
+use "./stall.eg" as stall
 
 wire box.BoxShape.answer -> "box.answer"
 var last = null
@@ -35,6 +36,9 @@ fn input(): map {
 if cmd == "version" { print(box.BoxShape.version) }
 else if cmd == "baseline" {   // PC8 slice a: { runs: [the engine's saved runs] } → a delta and a baseline per step
   print(json(baseline.baseline(input().runs ?? [])))
+}
+else if cmd == "stall" {   // PC8 slice stall (2026-11-18, his "needs to detect when it's not running"): { request, steps, resumed } → resume | hold | none
+  print(json(stall.decide(input())))
 }
 else if cmd == "boxes" {
   // a pipeline (it has tasks) or a procedure (it has steps) → { kind, graph, ok, problems, unchecked }

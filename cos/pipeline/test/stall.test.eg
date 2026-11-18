@@ -1,0 +1,19 @@
+// cos/pipeline/test/stall.test.eg — PC8 slice stall. eg test cos/pipeline/test/stall.test.eg
+// James, 2026-11-18: "okay, needs to detect when it's not running"
+use "../stall.eg" as stall
+
+test "a transient failure is resumed, backed off, at most three times; then held" {
+  let steps = [{ task: "context", status: "done", why: null }, { task: "dag", status: "failed", why: "GET http://127.0.0.1:4800/api/repos/x/phases/dag: timed out" }]
+  let a = stall.decide({ request: "r1", steps: steps, resumed: 0 })
+  expect a.action == "resume" and a.step == "dag" and a.waitMs == 30000, json(a)
+  expect stall.decide({ request: "r1", steps: steps, resumed: 2 }).waitMs == 120000
+  let h = stall.decide({ request: "r1", steps: steps, resumed: 3 })
+  expect h.action == "hold" and find_text(h.why, "3 times") >= 0, h.why
+}
+
+test "a real failure is held for him at once; no failure is nothing to do" {
+  let gate = stall.decide({ request: "r2", steps: [{ task: "build", status: "failed", why: "the gate did not hold: the output does not contain \"ok\":true" }], resumed: 0 })
+  expect gate.action == "hold" and find_text(gate.why, "held for you") >= 0, gate.why
+  expect stall.decide({ request: "r3", steps: [{ task: "a", status: "done" }], resumed: 0 }).action == "none"
+  expect stall.decide({ request: "r4", steps: [{ task: "x", status: "failed", why: "connect ECONNREFUSED 127.0.0.1:7820" }], resumed: 0 }).action == "resume"
+}

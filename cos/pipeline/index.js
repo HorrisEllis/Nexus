@@ -115,7 +115,25 @@ function createPipeline({ automation, idearium = null, call = null, dataDir } = 
     if (type === 'automation.pipeline.task' && r && r.ok && r.met) await raid('POST', `/${r.request}/evidence`, { key: `step:${r.task}`, value: 'met', by: 'system:cos' });
     // a request's end is an event the engine's triggers hear: pipeline.request.met | held | not_met | cancelled (subject: the pipeline's name)
     if (type === 'automation.pipeline.done' && r && r.ok && r.phase) fire(`pipeline.request.${String(r.phase).replace(/ /g, '_')}`, { name: r.name, pipelineId: r.pipeline, request: r.request, why: r.why || null });
+    // PC8 slice stall (2026-11-18) — James: "okay, needs to detect when it's not running". A run ended and its request is not met: Emerge decides
+    // (cos/pipeline/stall.eg) resume-after-a-wait (transient, at most 3) or held as stalled; said in the console and as an event. Out of this queue.
+    if (type === 'automation.pipeline.done' && r && r.ok && r.request && r.phase && r.phase !== 'met') stallCheck(r.request);
   });
+  const _stallFile = path.join(dataDir, 'stall-resumed.json');
+  const _stallRead = () => { try { return JSON.parse(fs.readFileSync(_stallFile, 'utf8')); } catch (_) { return {}; } };
+  const _stallWrite = (o) => { try { fs.writeFileSync(_stallFile, JSON.stringify(o)); } catch (_) {} };
+  const stallCheck = (id) => setTimeout(async () => {
+    try {
+      const rr = await eg('read', { base: dataDir, id }); if (!rr || !rr.ok || !rr.request) return;
+      const steps = (rr.request.steps || []).map((s) => { const p = s.payload || s; return { task: p.task, status: p.status, why: p.why || p.error || null }; });
+      const counts = _stallRead();
+      const d = await eg('stall', { request: id, steps, resumed: counts[id] || 0 });
+      if (!d || !d.action || d.action === 'none') return;
+      console.log(`[cos/pipeline] ${d.action === 'resume' ? 'resuming' : 'stalled'}: ${id} — ${d.why}`);
+      fire(`pipeline.request.${d.action === 'resume' ? 'retried' : 'stalled'}`, { request: id, step: d.step, why: d.why });
+      if (d.action === 'resume') { counts[id] = (counts[id] || 0) + 1; _stallWrite(counts); setTimeout(() => { resume(id, { by: 'system:cos (stall check)' }).catch((e) => console.warn(`[cos/pipeline] resume of ${id} failed: ${e.message}`)); }, d.waitMs || 30000); }
+    } catch (e) { console.warn(`[cos/pipeline] stall check of ${id} failed: ${e.message}`); }
+  }, 0);
   const runs = {
     // reads wait their turn too, so they see every event that came before them
     list: ({ state = 'active' } = {}) => inOrder(async () => (await eg('list', { base: dataDir, which: state })).requests || []),

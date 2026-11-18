@@ -1417,3 +1417,12 @@ phases_addendum_2026_11_13_rca:
 #     0.39.265 words): REJECTED pending review (cb3df74b, e526dd33; kept, re-appliable).
 #   - Emerge-first for existing JS: UNRESOLVED (his to decide; kept apart from this run's scope).
 # N1 itself stays paused at evidence: accepting the phase is his.
+
+## ADDENDUM 2026-11-18 — PC8 expanded: a run that stopped is noticed (mapped before code)
+# James, 2026-11-18 (NM1's dag step timed out while Idearium re-indexed after a restart; the request stayed active and nothing moved until he asked
+# "what is going one"): "okay, needs to detect when it's not running"
+# PC8 slice stall: when the engine says a run ended (automation.pipeline.done) and its request is not met, COS reads the request and Emerge decides
+# (cos/pipeline/stall.eg): a step failed for a transient reason (timed out, ECONNREFUSED, ECONNRESET, 503, not answering) and resumed fewer than 3
+# times → resume after a wait (30 s, then 60, then 120), said; anything else → stalled, held for him, said. Each decision a console line and an event
+# (pipeline.request.retried | pipeline.request.stalled). Event-driven: no poll. A run that hangs without ending is not covered here (IF3 slice e).
+# files: [cos/pipeline/stall.eg, cos/pipeline/cli.eg, cos/pipeline/index.js, cos/pipeline/test/stall.test.eg]. depends_on: [PC8]. Built next.

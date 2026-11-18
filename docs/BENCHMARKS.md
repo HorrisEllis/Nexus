@@ -774,3 +774,12 @@ then they are written by hand.
 - **Failed runs before the pass:** 2. `use` is a keyword, not a variable name ("expected a variable name after var, found use"); a literal 3 is
   a `num`, not an `int`, so a parameter typed `int` refused it. Also: the script's help line printed under `eg test` (args() is empty there).
 - **Gaps found:** a reserved word as a name is reported as a parse error, not "use is reserved"; number literals have no int type to the checker.
+
+## 2026-11-18 — a stopped run noticed, in Emerge (PC8 slice stall, 0.60.575)
+- **Measured:** his framework; the end state mapped first (PC8 addendum): a run that ended not met is resumed if transient, held if not, said.
+- **His words:** "okay, needs to detect when it's not running"
+- **Method:** Emerge `test` blocks, then the CLI command run on the real case (NM1's dag step: timed out).
+- **Code:** `cos/pipeline/stall.eg`, `cos/pipeline/test/stall.test.eg`; the door in `cos/pipeline/index.js` (event-driven).
+- **Result:** eg test 2/2; the CLI answered resume after 30 s.
+- **Failed runs before the pass:** 0.
+- **Gaps found:** none in Emerge.
