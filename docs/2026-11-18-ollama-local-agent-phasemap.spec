@@ -662,3 +662,18 @@ addendum_pending: >-
 ## ADDENDUM 2026-11-18 (later) — the ladder's fit goes through RAID, said aloud (his)
 # James, 2026-11-18: "supposed to be more events for this exact purpose" · "96% sure. i feel like everything needs to go through raid."
 # Mapped: OL4a_raid_decides_fit_and_says_it.
+
+## ADDENDUM 2026-11-18 (later) — retry in a new conversation with the gate's context; RAM and swap managed; the tiny model as RAID's orchestrator (his)
+# James, 2026-11-18: "retry logic and be starting a new conversation, and injecting the previous gate context into the chat." · "how could we utilize
+# the ssd storage. can we manage what we put on ram and what we put on a swapfile." · "what about using the tiny llm for the load balancing and
+# routing. maybe for raid also, like a tiny 'orchastrator."
+# Found the same hour (NM1): Idearium's watchdog closed the run cut by COS's restart and retried it ("start over, smaller steps"), but RAID was still
+# degraded, so OL4a's fallback (the strict rule) refused DeepSeek again. Fix: the fallback is RAID's last known rule, kept, not the strict one.
+# The coder's readings, to confirm:
+#   1 retry: each retry is a fresh conversation (a new chat for an agent, no history for Ollama) given only the gate's context as one .inject: what
+#     closed it and why, the last output's relevant lines, the step's intent, test and conditions (IF3 slice b), RAID choosing retry/escalate (slice e).
+#   2 RAM and the SSD: weights stay memory-mapped (use_mmap: Windows pages them from the SSD); before a model loads, COS trims the working sets of
+#     systems that are idle (their pages go to the page file on the SSD) so the RAM goes to the model; each system marked keep-in-RAM or may-be-paged
+#     in its caps (CP6a, a new key). Windows cannot pin a process to swap, but it can trim one: measured, not assumed.
+#   3 the tiny model (the 3b, GPU-resident, ~2 GB VRAM, no RAM cost) as RAID's orchestrator for the fuzzy choices: what a request is, which of the
+#     routes the rules allow fits it, a one-line reason; never a number, a limit or a pass (OL_D9): fit, load and sigma stay computed.
