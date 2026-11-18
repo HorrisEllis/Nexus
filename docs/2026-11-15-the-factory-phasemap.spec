@@ -523,3 +523,37 @@ handoff_2026_11_18: >-
 # derived (a system named, a route or command matched, an end state stated) and asked only when it cannot: the gaps left are the real ones, each with
 # what was tried. The 3b may rank the candidates the rules allow (OL addendum), never decide one.
 # To map as a phase in RAID's intake (cortex/core/raid/contract-intake.js) after the pipeline works (his order).
+
+# ── ADDENDUM 2026-11-18 (later) — Idearium the project manager, COS the system manager; lineage from RAID; commands → routes → door (his) ──
+# James, 2026-11-18, verbatim: "look at the 17 files. idearium is beautiful. also agent isnt good enough. agent ollama isn't helpful. what if we
+# fork idearium? then remove redundancy?" · "like ideaos, and the ideas as seeds, tracking the lineage using the branching from the canvas, each
+# disicion," · "like raid creates the beginning of each lineage. each decision, retry, branch, different approach, or versions." · "I want to move
+# whats in the coding tab to the automation engine and pipeline is each linear process, macro, framework, step by step process, event, word or
+# token traversal in emerge, in cos, migrate orchastrator and autopilot into the superviser." · "idearium the project manager, cos the system
+# manager. together they cocreate together." · "i want the automation and pipeline built. commands, first, api routes, then the door/drawbridge
+# to expand the ui." · "Can nexus replace claude?" · and: "this is why the ui is meant to be disposable for each system."
+#
+# Decided (his): Idearium is the project manager (ideas, seeds, specs, phases, lineage); COS is the system manager (processes, pipelines, the
+# automation engine, the supervisor). A pipeline is any linear process: a macro, a framework, a step-by-step method, an event chain, a word or token
+# traversal in Emerge. Orchestrator and Autopilot move into COS's supervisor. Order of delivery (his, = CLAUDE.md): commands, then API routes,
+# then the door (the drawbridge: the component registry, event bus and interaction contract of each system) that the disposable UIs plug into.
+#
+# Coder's readings, for him to correct (not decided):
+#  - "fork Idearium, then remove redundancy": copy Idearium whole as the project manager, then delete what COS's engine now does (runs, retries,
+#    ladders, watchdog) from the copy, rather than migrate piece by piece; the old Idearium retired when the fork passes its tests. Asked.
+#  - "the 17 files": not identified (17 system repos in Idearium's nexus-self? Loom's 17 systems? 17 files of the coding tab?). Asked.
+#  - "agent ollama isn't helpful": measured today — DeepSeek 16b 6 calls, 67% ok, 132 s avg; the 3b 34 calls, 100% ok, 8.6 s avg, used for
+#    analysis/escalation, not code. No NM1 build has yet reached a merged change by a local model.
+#
+# Lineage (mapped, not built): RAID's request is the root node of a lineage (.lineage node file, persistence law); every decision, retry, branch,
+# different approach and version is a child node with its parent, why and who; the canvas branches are views of those nodes (disposable UI).
+#
+# Proposed phases (mapped only; ids FX*, graphs before code; COS-side; each command first, then its route, then the door):
+#   FX1 pipeline editing from the console: step add / set / remove / move / connect on a pipeline (today only whole-pipeline PUT exists)
+#   FX2 diagnose a run: `diagnose <run>` — the failed step, its error, its system's state at that time (COS ledger), RAID's reading
+#   FX3 lineage: `lineage <id>`, `branch <run> <step> "why"`; routes /automation/lineage, /pipeline-runs/:id/branch; .lineage node files
+#   FX4 the coding tab's parts into the engine: inventory of Idearium's coding tab (files, routes) → step types; strangler, copy then retire
+#   FX5 Orchestrator and Autopilot into the supervisor: inventory of what each does that COS does not; their pulses/CFR into COS's heartbeat
+#   FX6 the door: per system, its registry served as the contract the UIs bind to (§5.16); a UI is any client of the door
+# Today's measured state (docs/2026-11-18-session-log-and-stability.md): 0 of the last 60 runs succeeded, each lost to Idearium down/restarting;
+# 0.60.579 and 0.60.580 fix the two causes found in COS's supervisor. The build step's limit raised from 30 s to 60 min (a build takes minutes).
