@@ -1485,3 +1485,12 @@ phases_addendum_2026_11_13_rca:
 # To resume: several previews, flight map first; no side panels; options in a context menu (right-click) and drop-downs, not button rows; zoom in
 # fixed increments; systems as worlds on a non-linear map, synapses lighting the paths events take; the associative lattice (3D) as one option.
 # Coder's lesson: each step after the flight map added surface instead of taking it away. Start from the flight map and subtract.
+
+## ADDENDUM 2026-11-18 (later) — the UI is disposable, per system (his)
+# His words, 2026-11-18, while the previews are pinned: "this is why the ui is meant to be disposable for each system. so we can make many,
+# combine them interchange them custom make them etc."
+# Coder's reading, for him to correct: a view owns no data and no logic; it reads only what the systems' own routes and registries serve
+# (§5.9–5.16), so any number of views can be made, combined, swapped or made to measure without touching a system. The cockpit is therefore
+# not one UI to get right but a set of disposable views over the same sources — the flight map, the worlds, the lattice, the lanes are each
+# one; a rejected one is thrown away at no cost to Nexus. Consequence for the build: the data layer (cos/ui/cockpit-preview/server.js /data,
+# read-only, from each system's routes) is the part kept; views are plugged on top and chosen by him.
