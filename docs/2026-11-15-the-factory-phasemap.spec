@@ -494,3 +494,22 @@ handoff_2026_11_18: >-
 # The coder's reading, to build next as IF3 slice e: a gate that closes or finds a gap asks RAID what now (POST /api/raid/route/next with the gate's
 # why, its history and the run), RAID answers from its policy (retry on the same rung, escalate, split, hold for him) and says the decision aloud;
 # the gate type's own on: stays the answer when RAID does not answer, said.
+
+# ── ADDENDUM 2026-11-18 (later) — decided (his): COS owns the pipeline; Idearium's reusable parts move into the automation engine ──
+# James, 2026-11-18: "Cos own the pipeline. I want more of idearium moved to the automation engine. The automation engine isn't just for repos.
+# Anything from idearium that can be used for other things should be migrated or copied. Continue pipeline. Need this working" · "No the pipeline.
+# Just map the other stuff" · "get the pipeline working today."
+# Decided: COS owns pipelines (engine, runs, gates, canvas, flight recorder); Idearium is a client that asks COS to run its builds.
+# Inventory, the coder's (read across today's work; each to become a step type or gate type of COS's engine, general, not repo-only; copied first,
+# the Idearium copy retired once the engine's passes the same tests — IF2's strangler pattern):
+#   - the model ladder: climb, passes per model, fit by RAID (lib/pipeline-routing.js; OL5a, OL4a) → step type "ask a model" with a ladder
+#   - retry and escalation; the watchdog's stall retry ("start over, smaller steps") → the engine's retry policy per step (PC8 stall, IF3 slice e)
+#   - decomposition (contract-gates _splitDeeper; PC8 expanded_2026_11_14) → step type "decompose": a step that fails becomes a sub-pipeline
+#   - verify-first (lib/verify-first.js): a step skipped when its result already holds → gate type "already met"
+#   - test-first (lib/test-first.js): the test written before the work → step type "test first", any output, not only code
+#   - the brief (lib/coder-brief.js): only what the step needs → the .inject node (IF3 slice b)
+#   - snapshot and rewind (idearium/repo/snapshot*.js) → gate actions checkpoint / rewind (IF4, OL8)
+#   - plan-learning (lib/plan-learning.js): which model did what well → the engine's learned order per step type
+#   - the phase-run ledger rows → the engine's run records (the flight recorder reads them)
+# Mapped only for now (his order: the pipeline working first): the flight-map canvas (PC addendum), nexus:// names over ports (MG15 addendum),
+# the 3b as RAID's orchestrator, RAM/swap, retry in a fresh conversation (OL addendum).
