@@ -231,6 +231,27 @@ phases:
     confirmed_2026_11_14: >-
       James, 2026-11-14 (answering whether a system reaches another by its wire to RAID, RAID passing it on): "yes and with that you can find bottlenecks, tension and friction. like looms map. thats thepoint of cfr and now the pipeline is the final layer"
       Reading (1) confirmed: a system reaches another by its wire to RAID, and RAID routes it on; SW6's crossings end as wires to RAID.
+    expanded_2026_11_18: >-
+      James, 2026-11-18: "need to decouple nexus. routes, capabilities with commands with events nodes. server.js, drawbridge per system. can
+      you make a tool, framework, or something to decouple the system quicker or use ollama". Measured that day (lib/system-boundary.js census,
+      2.5 s): 1,164 crossings in 2,085 files: 150 system to system, 259 upward (lib into a system), 755 kernel (a system into lib). The walls in
+      audit mode saw 287 distinct file edges at runtime (COS ledger, kind wall), most into cos (94), intelligence (55), cortex (35), loom (22).
+      The tool, the coder's design (mapped, not built; each part its command, then its route, then the door; deterministic first, Ollama for the
+      rewrite, Claude last): a COS pipeline "decouple a pair" that a person or RAID starts, one pair at a time, smallest first, resumable
+      (every crossing a .crossing node: from file, to file, the symbols used, the pair, its state).
+        DC1 census as a command and route: `decouple census [pair]` → GET /api/cos/decouple/census (lib/system-boundary.js, moved under COS).
+        DC2 classify each crossing, deterministic: (a) the owner's registry already has a route for the symbol → a rewrite to a call through the
+            caller's drawbridge to RAID (SW6 confirmed_2026_11_14); (b) a pure helper with no state → a copy into the caller's own folder
+            (§5.9: lib is not a home); (c) no route → a capability to add to the owner's drawbridge: registry row, route, command row, event.
+        DC3 the owner's drawbridge grows first, from (c): its registry-components.js row and server.js route, written by Ollama from the
+            row as its spec, checked by the owner's tests.
+        DC4 the caller's rewrite, one file per step: (a) and (b) by a deterministic rewrite where the pattern is uniform; otherwise the 3b or
+            DeepSeek with only the crossing node and the owner's route contract as its brief (OL5a: one load per model per request).
+        DC5 the verdict per crossing: the census shows it gone, the caller's and owner's tests pass, the wall sees no refusal for that edge;
+            at zero for a system, its wall moves from audit to enforce (CP1a) and the ratchet's baseline is written down.
+      Order proposed: the pairs with the fewest crossings first (each finished pair makes a system enforceable); the upward and kernel kinds
+      after SW7 decides what lib keeps. Open for him: whether a crossing becomes a wire through RAID (confirmed 2026-11-14) also for the
+      755 kernel ones, or only system to system.
   SW8_ideariums_census_what_is_misplaced:
     layer: integration
     status: OPEN
