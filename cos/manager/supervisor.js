@@ -209,7 +209,7 @@ function createSupervisor({ root, declarations = null, policy = {}, ledgerFile =
   // an adopted process: started by an earlier manager, still alive; stopped by its pid; its end seen by the kill or the reaper's minute
   function _adopted(name, pid) {
     const pr = { pid, adopted: true, on() {}, kill(sig) {
-      try { if (process.platform === 'win32') require('child_process').spawnSync('taskkill', ['/PID', String(pid), '/T', '/F'], { windowsHide: true }); else process.kill(pid, sig || 'SIGTERM'); } catch (_) {}
+      try { if (process.platform === 'win32') require('child_process').spawnSync('taskkill', ['/PID', String(pid), '/T', '/F'], { windowsHide: true, timeout: 15000 }); else process.kill(pid, sig || 'SIGTERM'); } catch (_) {}
       const t = setTimeout(() => { if (!_alive(pid)) onExit(name, pr, null, sig || 'SIGTERM'); }, 1500); if (t.unref) t.unref(); return true; } };
     return pr;
   }

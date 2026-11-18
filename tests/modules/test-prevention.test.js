@@ -28,6 +28,11 @@ const S = (free) => ({ system: { freeMemPct: free, usedMemPct: 1 - free } });
   const d = P.heavyAllowed({ sample: S(0.27), level: 'ok' });   // CP6a 0.60.518: his 2026-11-13 afternoon, 26.5-30% free after one critical moment
   check('PV-02 prevention, not reaction: under pressure heavy work waits; after a crisis "ok" (22% free) is not enough — it waits for 25%; at 27% (his machine, 2026-11-13) and with headroom it runs',
     !a.ok && /pressure/.test(a.why) && !b.ok && /waits for 25% free, now 22%/.test(b.why) && c.ok && d.ok, JSON.stringify({ a, b, c, d }));
+  // PV-08 (0.60.583) — James, 2026-11-18: "baseline deviation". A machine that normally sits near 24% free is judged by its own baseline less 2σ
+  // (kept between 20% and 25%); one that sits near 50% keeps the 25% line; fewer than 30 readings keep the fixed 25%.
+  const near24 = P.lineFor({ n: 200, mean: 0.24, m2: 0.01 * 0.01 * 199 }), near50 = P.lineFor({ n: 200, mean: 0.5, m2: 0.05 * 0.05 * 199 }), few = P.lineFor({ n: 5, mean: 0.24, m2: 0 });
+  check('PV-08 the line is the machine\'s own: near 24% free normally, it is 22%; near 50%, it stays 25%; with few readings, the fixed 25%',
+    Math.abs(near24.line - 0.22) < 1e-9 && near50.line === 0.25 && few.line === 0.25 && near24.line >= P.FLOOR_FREE, JSON.stringify({ near24, near50, few }));
   P.clear('memory_pressure');
   check('PV-03 with no recent crisis, an ok machine runs heavy work at 22% free', P.heavyAllowed({ sample: S(0.22), level: 'ok' }).ok);
 
@@ -60,7 +65,7 @@ const S = (free) => ({ system: { freeMemPct: free, usedMemPct: 1 - free } });
   // the route, command and Settings line
   try {
     P.record('memory_pressure', { level: 'critical', why: 'route test', by: 'test' });
-    const api = await import(path.join(ROOT, 'idearium/api/index.js'));
+    const api = await import(require('url').pathToFileURL(path.join(ROOT, 'idearium/api/index.js')).href);
     let g; await quiet(async () => { g = await api._route('GET', '/api/system/lean'); });
     const d = g.json.data || g.json;
     let c; await quiet(async () => { c = await api._route('POST', '/api/system/prevention/clear', { cls: 'memory_pressure' }); });

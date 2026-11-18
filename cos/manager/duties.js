@@ -81,6 +81,21 @@ function perPidMemoryMB(pids) {
 }
 
 /** snapshot(systems, memOf) → the autopilot.instance_snapshot payload, autopilot's keys, read from COS's view of each system */
+/** 0.60.583 — the same query without blocking COS: the service killed COS's manager 8 times on 2026-11-18 for a blocked event loop; this
+ *  ran every minute through spawnSync (up to 5 s each, longer under paging). Async: COS answers while Windows answers this. */
+function perPidMemoryMBAsync(pids) {
+  return new Promise((resolve) => {
+    const out = {}; if (!pids.length) return resolve(out);
+    const win = process.platform === 'win32';
+    const cmd = win ? 'powershell' : 'ps', args = win ? ['-NoProfile', '-NonInteractive', '-Command', `Get-Process -Id ${pids.join(',')} -ErrorAction SilentlyContinue | ForEach-Object { '{0},{1}' -f $_.Id,$_.WorkingSet64 }`] : ['-o', 'pid=,rss=', '-p', pids.join(',')];   // wmic is gone from Windows 11
+    require('child_process').execFile(cmd, args, { encoding: 'utf8', timeout: 15000, windowsHide: true }, (err, stdout) => {
+      if (!err && stdout) for (const line of (win ? stdout : stdout.trim()).split('\n')) {
+        if (win) { const [pid, ws] = line.trim().split(',').map(Number); if (pid && !isNaN(ws)) out[pid] = Math.round(ws / 1048576); }
+        else { const [pid, rss] = line.trim().split(/\s+/).map(Number); if (pid && !isNaN(rss)) out[pid] = Math.round(rss / 1024); } }
+      resolve(out);
+    });
+  });
+}
 function snapshot(systems, memOf = perPidMemoryMB) {
   const perSystem = {};
   for (const s of systems) perSystem[s.name] = { status: s.state, pid: s.pid || null, restarts: (s.restarts && s.restarts.count) || 0, crashesInWindow: s.crashesInWindow || 0, port: s.port || null };
@@ -191,7 +206,8 @@ function start({ base = 'http://127.0.0.1:7799', cos: given = null, onLedger = n
   const timers = []; const seen = new Set(); const since = Date.now() - 60_000; let update = null, stopped = false, warned = false;
   if (wireIn) wire(log);
   const once = (fn, what) => Promise.resolve().then(fn).then(() => { warned = false; }).catch((e) => { if (!warned) log(`${what}: COS did not answer (${e.message}) — tried again at the next tick`); warned = true; });
-  const snap = () => once(async () => { const p = snapshot(await cos.systems()); S.writeSnapshot(p);
+  let lastMb = {};   // 0.60.583: the snapshot never waits on Windows: it uses the memory read last minute and refreshes it in the background
+  const snap = () => once(async () => { const sys = await cos.systems(); const p = snapshot(sys, () => lastMb); S.writeSnapshot(p); perPidMemoryMBAsync(sys.filter(s => s.pid).map(s => s.pid)).then((mb) => { lastMb = mb; }).catch(() => {});
     if (p.freeMemPct < 20 && p.topConsumer) log(`memory pressure — free ${p.freeMemPct}% — top real consumer: ${p.topConsumer.system} (${p.topConsumer.mb}MB)`); }, 'instance snapshot');
   const act = async (acts) => { for (const a of acts) {
     if (a.act === 'gap') { try { S.reportGap(a.system, a.entry); log(`circuit open on '${a.system}': gap kernel_circuit_open written`); } catch (e) { log(`circuit open on '${a.system}': the gap could not be written (${e.message})`); } }
@@ -211,4 +227,4 @@ function start({ base = 'http://127.0.0.1:7799', cos: given = null, onLedger = n
   return { stop() { if (stopped) return; stopped = true; try { unhear && unhear(); } catch (_) {} timers.forEach(t => { clearInterval(t); clearTimeout(t); }); try { update && update.stop && update.stop(); } catch (_) {} }, tick: () => Promise.all([snap(), fol()]) };
 }
 
-module.exports = { MODULE_ID, start, cosClient, inProcess, snapshot, follow, perPidMemoryMB, SNAPSHOT_MS };
+module.exports = { MODULE_ID, start, cosClient, inProcess, snapshot, follow, perPidMemoryMB, perPidMemoryMBAsync, SNAPSHOT_MS };
