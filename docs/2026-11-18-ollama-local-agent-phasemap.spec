@@ -463,3 +463,20 @@ ledger_commands:
 addendum_pending: >-
   ## ADDENDUM (to write when the map is committed): which of OL_D1 to OL_D6 he reconciled, in his words and dated; the numbers OL14 measured against the
   estimates here; and GAP_1 to GAP_9 each closed, kept open or moved.
+
+## ADDENDUM 2026-11-18 (0.60.567) — his roles for the models; Guardian last; a local planner built
+# James, 2026-11-18: "do everything you can to optimize. invent, integrate, innovate, find and impliment. every method possible. we can use more ssd
+# storage for a smaller model, maybe deepseek for main tasks and co pilot or general coding, and then a small model for raid routing? 30b for mapping
+# and complex reasoning, using agent tools and intelligence system before anything. then we can use js for now unless we are coding emerge, if we
+# finish that we can train a base model to learn emerge completely. like chunking, dynamic routing per step or gate, both model, agent and context
+# window, idearium has learning for this, like start small, decompose into smaller chunks/bricks dynamically expanding the gates, could also branch,
+# then route to a bigger model if it can't handle the task, then different strategies for different models, and use the intelligence system per gate,
+# persistent memory accumulates per gate." · "guardian only when ollama cant" · "no. use my ssd for a pagefile or swap." · (the 30B) "abolished if possible"
+# Decided (his): roles. qwen3-coder 30B-A3B abliterated (huihui_ai/qwen3-coder-abliterated:30b, Q4, 18.6 GB, on the SSD, the page file his to raise to
+# 32 GB): mapping, planning, tests, complex reasoning, after the agent tools and the intelligence system are asked. deepseek-coder-v2:16b: main tasks,
+# Copilot, general coding. A small model (the 3b): RAID's routing. Guardian's agents only when Ollama cannot. JavaScript allowed for now except when
+# coding Emerge. OLLAMA_MODELS back on the SSD (it pointed at the NAS, D:, and Ollama saw no models).
+# Built (0.60.567): a named Ollama planner (lib/pipeline-routing.js planMode; idearium/api/index.js pdp). Set in RAID (data): planner and escalation.
+# Expands, next (his "every method possible"), in order: OL5 lanes (the 30B a slow lane, batched, learned timeouts), OL7 dynamic chunk budgets per
+# model (start small, decompose, branch, escalate), IF3 slice d (the gate asks the intelligence system and its failure record first) and gate memory
+# that accumulates per gate (gate.eg context, persisted), OL4 fit for a memory-mapped model. RAID's routing model (the 3b) to locate before mapping.

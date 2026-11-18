@@ -1689,7 +1689,8 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
     const allRuns = loadTable('idearium_phase_runs');
     const learned = PL.lessons(allRuns.filter(r => r.state !== 'planned' || r.targetRepo === target.uuid), { system, files: expectFiles });
     const planner = planning.planner;   // 0.60.28 PF1 — null: no planner was ready, the plan is written without a model
-    const pdp = planner ? { ...RA.routeFor(PRt.baseOf(planner)), provider: null } : null;
+    // 2026-11-18 — James: "30b for mapping and complex reasoning". A named Ollama planner (ollama:<model>) plans on that model.
+    const pdp = !planner ? null : PRt.baseOf(planner) === 'ollama' ? { backend: 'ollama', agent: null, provider: null, model: String(planner).slice('ollama:'.length) || null } : { ...RA.routeFor(PRt.baseOf(planner)), provider: null };
     let parsed = null, feedback = '', plannerError = null;
     // §TL1a 0.60.79 — James: "can we not have it chunk everytime it restarts. it needs to persist. all data is meant to
     // persist." A saved contract's plan is the plan: a build started again (a restart, a retry, ▶) reuses it and resumes

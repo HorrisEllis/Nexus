@@ -73,6 +73,10 @@ const src = (p) => fs.readFileSync(path.join(ROOT, p), 'utf8');
     const pm = PR.planMode(PR.policyFrom({}), { rungs });
     check('PC-15 auto: a reasoning agent on the ladder plans, Ollama codes', pm.plan && pm.planner === 'claude', JSON.stringify(pm));
     check('PC-16 never / no Ollama / planner named', !PR.planMode(PR.policyFrom({ plan_code: 'never' }), { rungs }).plan && !PR.planMode(PR.policyFrom({}), { rungs: [rungs[0]] }).plan && PR.planMode(PR.policyFrom({ planner: 'gemini' }), { rungs }).planner === 'gemini');
+    // 2026-11-18 — James: "30b for mapping and complex reasoning": a named Ollama model plans; a bare "ollama" still cannot
+    const big = 'ollama:huihui_ai/qwen3-coder-abliterated:30b';
+    check('PC-16b a named Ollama model plans', PR.planMode(PR.policyFrom({ planner: big }), { rungs }).planner === big && !PR.planMode(PR.policyFrom({ planner: 'ollama' }), { rungs: [rungs[1]] }).plan);
+    check('PC-16c the build calls a named Ollama planner on its model', /model: String\(planner\)\.slice\('ollama:'\.length\)/.test(src('idearium/api/index.js')));
     check('PC-17 the coder ladder puts Ollama first', PR.coderRungs(rungs).map(r => r.provider).join() === 'ollama:qwen2.5-coder:3b,claude,chatgpt');
     const cfg = require(path.join(ROOT, 'idearium/lib/config-core.cjs'));
     const cfgText = src('idearium/lib/config-core.cjs');
