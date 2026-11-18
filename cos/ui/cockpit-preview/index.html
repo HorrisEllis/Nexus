@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nexus Cockpit</title>
+<style>
+  :root { --bg:#04060b; --ink:#e8ecf6; --dim:#7a8299; --line:#182033; --g:#36f2b0; --a:#ffbe55; --r:#ff5d7d; --b:#4ea1ff; --v:#c38bff; }
+  * { box-sizing:border-box; }
+  html,body { margin:0; height:100%; background:var(--bg); color:var(--ink); font:14px/1.4 "Segoe UI", system-ui, sans-serif; overflow:hidden; }
+  .bar { position:absolute; top:0; left:0; right:0; height:50px; display:flex; align-items:center; gap:8px; padding:0 16px; background:#070a12; border-bottom:1px solid var(--line); z-index:8; }
+  .bar b { font:600 11px ui-monospace,Consolas,monospace; letter-spacing:.18em; color:var(--dim); margin-right:10px; }
+  .chip { display:flex; align-items:center; gap:7px; background:#0c111c; border:1px solid var(--line); border-radius:999px; padding:5px 12px 5px 9px; cursor:pointer; user-select:none; color:var(--dim); font-size:13px; }
+  .chip i { width:10px; height:10px; border-radius:50%; background:#2a3248; } .chip.on { color:var(--ink); border-color:#2c3550; } .chip.on i { background:var(--c); box-shadow:0 0 8px var(--c); }
+  .sp { flex:1; } .mono { font:12px ui-monospace,Consolas,monospace; color:var(--dim); }
+  .panes { position:absolute; top:58px; left:8px; right:8px; bottom:96px; display:flex; flex-direction:column; gap:8px; } .panes.with-panel { right:384px; }
+  .pane { flex:1 1 0; min-height:0; display:flex; flex-direction:column; border:1px solid var(--line); border-radius:12px; background:#060912; overflow:hidden; transition:flex .25s; }
+  .pane.focus { flex:3 1 0; } .pane.off { display:none; }
+  .pane header { display:flex; align-items:center; gap:10px; padding:6px 12px; border-bottom:1px solid var(--line); background:#080c16; }
+  .pane header h3 { margin:0; font:600 11px ui-monospace,Consolas,monospace; letter-spacing:.16em; color:var(--c); }
+  .pane header .src { font-size:11px; color:var(--dim); } .pane header button { margin-left:auto; background:#0d1220; border:1px solid #232c44; color:#9aa3bd; border-radius:6px; font-size:11px; padding:3px 8px; cursor:pointer; }
+  .pane header .lg { display:flex; gap:10px; font-size:11px; color:var(--dim); } .lg span::before { content:''; display:inline-block; width:8px; height:8px; border-radius:2px; margin-right:4px; background:var(--k); vertical-align:-1px; }
+  .pane svg { flex:1; width:100%; min-height:0; display:block; cursor:grab; } .pane svg.drag { cursor:grabbing; }
+  .panel { position:absolute; right:8px; top:58px; bottom:96px; width:368px; background:#080b14f5; border:1px solid var(--line); border-radius:12px; padding:16px; overflow:auto; transform:translateX(400px); transition:transform .25s; z-index:7; }
+  .panel.on { transform:none; } .panel h2 { margin:0; font-size:19px; word-break:break-word; } .k { font:600 10px ui-monospace,Consolas,monospace; letter-spacing:.16em; color:var(--dim); margin:16px 0 6px; }
+  .pill { display:inline-block; font:600 11px ui-monospace,Consolas,monospace; padding:2px 8px; border-radius:999px; border:1px solid currentColor; margin-right:6px; }
+  .stats { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:12px; } .stat { background:#0d1220; border:1px solid var(--line); border-radius:10px; padding:8px; } .stat b { display:block; font-size:16px; } .stat span { font-size:11px; color:var(--dim); }
+  .tools { display:grid; grid-template-columns:repeat(3,1fr); gap:6px; margin-top:12px; } .tools button { background:#101627; color:#9aa3bd; border:1px solid #232c44; border-radius:8px; padding:7px 4px; font:inherit; font-size:12px; cursor:not-allowed; }
+  .ev { font:12px ui-monospace,Consolas,monospace; padding:5px 0; border-top:1px solid #111829; color:#c8cee0; word-break:break-word; } .ev em { font-style:normal; color:var(--dim); margin-right:8px; }
+  .note { color:var(--dim); font-size:12px; } .x { position:absolute; right:12px; top:10px; background:none; border:0; color:var(--dim); font-size:18px; cursor:pointer; }
+  .tl { position:absolute; left:0; right:0; bottom:0; height:88px; background:#070a12; border-top:1px solid var(--line); padding:6px 16px; display:grid; grid-template-columns:auto 1fr auto; gap:14px; align-items:center; z-index:8; }
+  .tl .ctl { display:flex; gap:6px; } .tl .ctl button { width:32px; height:32px; border-radius:50%; border:1px solid #232c44; background:#0d1220; color:var(--ink); cursor:pointer; }
+  .track svg { width:100%; height:70px; display:block; } .now { font:600 13px ui-monospace,Consolas,monospace; min-width:170px; text-align:right; }
+  @media (prefers-reduced-motion: reduce) { .mv { display:none; } }
+</style>
+</head>
+<body>
+<div class="bar"><b>NEXUS · COCKPIT</b>
+  <span class="chip on" data-p="agent" style="--c:var(--v)"><i></i>Agents</span>
+  <span class="chip on" data-p="wire" style="--c:var(--a)"><i></i>Wiring harness</span>
+  <span class="chip on" data-p="pipe" style="--c:var(--g)"><i></i>Pipelines</span>
+  <span class="sp"></span><span class="mono" id="hostline">reading Nexus…</span>
+</div>
+<div class="panes" id="panes">
+  <section class="pane" id="P-agent" style="--c:var(--v)"><header><h3>AGENTS</h3><span class="src">every model call · Ollama metrics nodes · one lane per model</span><span class="lg" id="lg-agent"></span><button data-f="agent">focus</button></header><svg></svg></section>
+  <section class="pane" id="P-wire" style="--c:var(--a)"><header><h3>WIRING HARNESS</h3><span class="src">each system's own registry · wires declared in compartment.json · zoom in for components</span><span class="lg"><span style="--k:#ffbe55">wire</span><span style="--k:#ff5d7d">broken (an end is down)</span></span><button data-f="wire">focus</button></header><svg></svg></section>
+  <section class="pane" id="P-pipe" style="--c:var(--g)"><header><h3>PIPELINES</h3><span class="src">COS's engine · one lane per pipeline · steps of the latest run · runs of 24 h</span><span class="lg"><span style="--k:#36f2b0">done</span><span style="--k:#4ea1ff">running</span><span style="--k:#ff5d7d">failed</span><span style="--k:#2a3350">not reached</span></span><button data-f="pipe">focus</button></header><svg></svg></section>
+</div>
+<aside class="panel" id="panel"><button class="x" onclick="closeP()">✕</button><div id="pbody"></div></aside>
+<div class="tl"><div class="ctl"><button id="back" title="rewind">⏮</button><button id="play" title="play / pause">▶</button><button id="live" title="live">●</button></div>
+  <div class="track"><svg id="trk" viewBox="0 0 1000 70" preserveAspectRatio="none"></svg></div><div class="now" id="now"></div></div>
+<script>
+const NS='http://www.w3.org/2000/svg';const S=(n,a={},p)=>{const e=document.createElementNS(NS,n);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;};
+const $=id=>document.getElementById(id);let D=null,T=0,T0=0,T1=0,cur=null;
+const COLS={up:'#36f2b0',starting:'#4ea1ff',degraded:'#ffbe55','waiting-memory':'#ffbe55',down:'#ff5d7d','circuit-open':'#ff5d7d',idle:'#4b5572',declared:'#4b5572',stopped:'#4b5572',desktop:'#4ea1ff'};
+const col=s=>COLS[s]||'#4b5572';const sysName=n=>n==='ollama'?'ollama-bridge':n;const bad=s=>/down|circuit/.test(s);
+const TS={done:'#36f2b0',met:'#36f2b0',running:'#4ea1ff',failed:'#ff5d7d',paused:'#ffbe55',held:'#ffbe55',waiting:'#ffbe55'};
+const PAL=['#4ea1ff','#36f2b0','#ffbe55','#c38bff','#5ee0ff','#ff9f6e','#a4e86b','#ff7ac8'];
+const callerSys=c=>{const m=/for ([a-z-]+)\./.exec(c||'');return m?sysName(m[1]):/copilot/.test(c||'')?'copilot':/idearium|phase|build/.test(c||'')?'idearium':'cos';};
+function stateAt(name,t){if(t>=T1-1000){const s=D.systems.find(x=>x.name===name);return s?s.state:'declared';}let st=null;
+  for(const e of D.events){if(e.at>t)break;if(e.sys!==name)continue;st=({spawn:'starting',crash:'down','circuit-open':'circuit-open',adopted:'up',restart:'starting',stop:'stopped','idle-stop':'idle','pulse-missed':'degraded','pulse-recovered':'up',refused:'waiting-memory','over-limit':'degraded'})[e.kind]||st;}
+  return st||'up';}
+const txt=(p,x,y,s,a={})=>{const t=S('text',Object.assign({x,y,fill:'#c8cee0','font-size':12},a),p);t.textContent=s;return t;};
+const clip=(s,n)=>{s=String(s||'');return s.length>n?s.slice(0,n-1)+'…':s;};
+// each canvas: its own svg, its own layout, its own pan and zoom. They share only ids (a system, a run) and the replay time.
+const PANES={};
+function pane(id,render){const svg=document.querySelector('#P-'+id+' svg');const cam=S('g',{},svg);const P={id,svg,cam,z:1,x:0,y:0,render,moved:false};PANES[id]=P;
+  const apply=()=>{cam.setAttribute('transform',`translate(${P.x},${P.y}) scale(${P.z})`);};P.apply=apply;
+  svg.addEventListener('wheel',e=>{e.preventDefault();const r=svg.getBoundingClientRect(),mx=e.clientX-r.left,my=e.clientY-r.top,f=e.deltaY<0?1.15:1/1.15,nz=Math.min(8,Math.max(.5,P.z*f));P.x=mx-(mx-P.x)*nz/P.z;P.y=my-(my-P.y)*nz/P.z;const crossed=(P.z<1.8)!==(nz<1.8);P.z=nz;apply();if(crossed)draw1(P);},{passive:false});
+  let dr=null;svg.addEventListener('mousedown',e=>{dr={x:e.clientX,y:e.clientY,px:P.x,py:P.y};P.moved=false;});
+  addEventListener('mousemove',e=>{if(!dr)return;const dx=e.clientX-dr.x,dy=e.clientY-dr.y;if(Math.abs(dx)+Math.abs(dy)>4){P.moved=true;svg.classList.add('drag');}P.x=dr.px+dx;P.y=dr.py+dy;apply();});
+  addEventListener('mouseup',()=>{dr=null;svg.classList.remove('drag');});
+  svg.addEventListener('click',e=>{if(e.target===svg&&!P.moved&&cur)closeP();});
+  new ResizeObserver(()=>{if(D)draw1(P);}).observe(svg);}
+const tap=(P,g,fn)=>{g.style.cursor='pointer';g.addEventListener('click',e=>{e.stopPropagation();if(!P.moved)fn();});};
+function draw1(P){const w=P.svg.clientWidth,h=P.svg.clientHeight;if(!w||!h)return;P.svg.setAttribute('viewBox',`0 0 ${w} ${h}`);P.cam.replaceChildren();P.render(P,P.cam,w,h);P.apply();}
+function draw(){for(const P of Object.values(PANES))if(!$('P-'+P.id).classList.contains('off'))draw1(P);
+  $('now').textContent=(T>=T1-1000?'LIVE · ':'REPLAY · ')+new Date(T).toLocaleTimeString();mk.setAttribute('x',(T-T0)/(T1-T0)*1000-1);if(cur&&cur.kind==='sys')openSys(cur.id,true);}
+
+// AGENTS: one lane per model; every call a dot on time, sized by run time, coloured by the system that asked
+pane('agent',(P,G,w,h)=>{const models=[...new Set(D.turns.map(t=>t.model))];const L=190,R=w-24,lane=Math.max(26,(h-26)/Math.max(1,models.length));const A0=D.turns.length?Math.min(T1-2*3600e3,D.turns[0].at-15*60e3):T0,X=t=>L+(t-A0)/(T1-A0)*(R-L),span=(T1-A0)/3600e3,stepH=span>12?3:span>4?1:.5;
+  const callers=[...new Set(D.turns.map(t=>callerSys(t.caller)))];const cc=c=>PAL[callers.indexOf(c)%PAL.length];
+  $('lg-agent').innerHTML=callers.map(c=>`<span style="--k:${cc(c)}">${c}</span>`).join('')+'<span style="--k:#ff5d7d">failed</span>';
+  for(let tt=Math.ceil(A0/(stepH*3600e3))*stepH*3600e3;tt<=T1;tt+=stepH*3600e3){const x=X(tt);S('line',{x1:x,y1:0,x2:x,y2:h-18,stroke:'#111827'},G);txt(G,x+3,h-6,new Date(tt).toLocaleTimeString().slice(0,5),{fill:'#4b5572','font-size':10});}txt(G,R,h-6,'its own window: first call → now',{'text-anchor':'end',fill:'#4b5572','font-size':10});
+  models.forEach((m,i)=>{const y=6+i*lane+lane/2,calls=D.turns.filter(t=>t.model===m&&t.at<=T),ok=calls.filter(t=>t.ok).length,mean=calls.length?Math.round(calls.reduce((a,t)=>a+(t.runMs||0),0)/calls.length/100)/10:null;
+    S('line',{x1:L,y1:y,x2:R,y2:y,stroke:'#141b2c'},G);txt(G,12,y-3,clip(m.split('/').pop(),22),{'font-size':12,fill:'#e0d4ff','font-family':'ui-monospace,Consolas,monospace'});
+    txt(G,12,y+12,calls.length?`${calls.length} calls · ${Math.round(ok/calls.length*100)}% ok · ${mean}s avg`:'no calls',{'font-size':10.5,fill:'#7a8299'});
+    for(const t of calls){const cs=callerSys(t.caller),hit=!cur||cur.kind!=='sys'||cur.id===cs||cur.id==='ollama-bridge';const g=S('g',{opacity:hit?1:.12},G);
+      const r=Math.min(lane/2-3,3+Math.sqrt((t.runMs||0)/1000)*1.6);S('circle',{cx:X(t.at),cy:y,r,fill:cc(cs),'fill-opacity':.75,stroke:t.ok?'none':'#ff5d7d','stroke-width':2.5},g);
+      if(T-t.at<120e3){const p=S('circle',{cx:X(t.at),cy:y,r,fill:'none',stroke:cc(cs),class:'mv'},g);S('animate',{attributeName:'r',values:r+';'+(r+14),dur:'1.4s',repeatCount:'indefinite'},p);S('animate',{attributeName:'opacity',values:'1;0',dur:'1.4s',repeatCount:'indefinite'},p);}
+      S('title',{},g).textContent=`${new Date(t.at).toLocaleTimeString()} · ${t.caller} · ${Math.round((t.runMs||0)/100)/10}s${t.ok?'':' · failed: '+t.error}`;tap(P,g,()=>openTurn(t));}});
+  S('line',{x1:X(T),y1:0,x2:X(T),y2:h-18,stroke:'#e8ecf6','stroke-opacity':.5},G);
+  if(!models.length)txt(G,w/2,h/2,'no model calls recorded',{'text-anchor':'middle',fill:'#7a8299'});});
+
+// WIRING HARNESS: every system a compartment on one line, its registry inside it; declared wires as arcs, never crossing a card
+pane('wire',(P,G,w,h)=>{const sys=D.systems,n=sys.length,step=(w-40)/n,cw=Math.min(128,step-10),ch=58,base=Math.max(h*.56,h-ch-60),xOf={};sys.forEach((s,i)=>xOf[s.name]=20+step*i+step/2);
+  S('defs',{},G).innerHTML='<marker id="ah" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L8,4 L0,8z" fill="#ffbe55"/></marker><marker id="ahr" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L8,4 L0,8z" fill="#ff5d7d"/></marker>';
+  for(const s of sys){const dep=(s.compartment&&s.compartment.dependsOn)||{};for(const [to0,c] of Object.entries(dep)){const to=sysName(to0);if(xOf[to]==null||to===s.name)continue;
+    const a=xOf[s.name]+(xOf[to]>xOf[s.name]?8:-8),b=xOf[to]+(xOf[to]>xOf[s.name]?-14:14),br=bad(stateAt(to,T))||bad(stateAt(s.name,T)),on=!cur||cur.kind!=='sys'||cur.id===s.name||cur.id===to;
+    const top=Math.max(8,base-Math.abs(b-a)*.5);const d=`M${a},${base} C${a},${top} ${b},${top} ${b},${base}`;
+    S('path',{d,fill:'none',stroke:br?'#ff5d7d':'#ffbe55','stroke-width':Math.min(5,.7+Math.log2(1+c)*.7),opacity:on?(cur?.9:.4):.05,'stroke-dasharray':br?'4 6':'','marker-end':on?(br?'url(#ahr)':'url(#ah)'):''},G);
+    if(cur&&on){txt(G,(a+b)/2,top+(base-top)*.25,c+' refs',{'text-anchor':'middle','font-size':10,fill:br?'#ff9fb2':'#ffd58a'});if(!br){const m=S('circle',{r:2.5,fill:'#ffd58a',class:'mv'},G);S('animateMotion',{dur:'2.2s',repeatCount:'indefinite',path:d},m);}}}}
+  for(const s of sys){const x=xOf[s.name],st=stateAt(s.name,T),c=col(st),on=!cur||cur.kind!=='sys'||cur.id===s.name;const g=S('g',{opacity:on?1:.4},G);
+    S('rect',{x:x-cw/2,y:base,width:cw,height:ch,rx:8,fill:'#0b1120',stroke:cur&&cur.id===s.name?'#e8ecf6':c,'stroke-width':cur&&cur.id===s.name?2:1.4},g);S('rect',{x:x-cw/2,y:base,width:4,height:ch,rx:2,fill:c},g);
+    if(st==='up'){const p=S('circle',{cx:x+cw/2-10,cy:base+10,r:3.5,fill:c},g);S('animate',{attributeName:'opacity',values:'1;.2;1',dur:'1.6s',repeatCount:'indefinite'},p);}
+    txt(g,x-cw/2+10,base+18,clip(s.name,14),{'font-size':12.5,'font-weight':600,fill:'#e8ecf6'});txt(g,x-cw/2+10,base+33,st,{'font-size':10.5,fill:c});
+    const reg=s.registry;txt(g,x-cw/2+10,base+48,reg&&reg.read?reg.components.length+' components':'no registry',{'font-size':10.5,fill:'#7a8299'});
+    if(P.z>=1.8&&reg&&reg.read){reg.components.slice(0,24).forEach((cp,k)=>{const yy=base+ch+12+k*11;txt(g,x-cw/2+6,yy,clip(cp.name,22),{'font-size':8.5,fill:'#9aa3bd','font-family':'ui-monospace,Consolas,monospace'});});if(reg.components.length>24)txt(g,x-cw/2+6,base+ch+12+24*11,'+'+(reg.components.length-24)+' more',{'font-size':8.5,fill:'#5b6378'});}
+    tap(P,g,()=>openSys(s.name));}});
+
+// PIPELINES: one lane per pipeline; its steps in order, coloured by the latest run up to the replay time; its runs of 24 h on the right
+pane('pipe',(P,G,w,h)=>{const pl=D.pipelines,lane=Math.max(30,(h-8)/Math.max(1,pl.length)),L=200,HR=Math.min(260,w*.2),SR=w-HR-24;const X=t=>SR+16+(t-T0)/(T1-T0)*(HR-8);
+  pl.forEach((p,i)=>{const y=4+i*lane,runs=D.runs.filter(r=>r.pipelineId===p.id&&r.at<=T).sort((a,b)=>b.at-a.at),last=runs[0];
+    const hit=!cur||(cur.kind==='sys'&&p.steps.some(s=>s.sys&&sysName(s.sys)===cur.id))||(cur.kind==='run'&&cur.pid===p.id);const g=S('g',{opacity:hit?1:.25},G);
+    S('line',{x1:0,y1:y+lane,x2:w,y2:y+lane,stroke:'#111827'},g);txt(g,12,y+lane/2-2,clip(p.name,26),{'font-size':12.5,'font-weight':600,fill:'#e8ecf6'});
+    txt(g,12,y+lane/2+13,last?`${last.status} · ${new Date(last.at).toLocaleTimeString().slice(0,5)} · ${runs.length} runs`:'not run',{'font-size':10.5,fill:last?(TS[last.status]||'#7a8299'):'#4b5572'});
+    const n=Math.max(1,p.steps.length),bw=(SR-L)/n;p.steps.forEach((st,k)=>{const t=last&&last.tasks[st.id],c=t?(TS[t.status]||'#7a8299'):'#2a3350',x=L+k*bw,bh=Math.min(lane-10,40),by=y+(lane-bh)/2;const sg=S('g',{},g);
+      if(k)S('line',{x1:x-4,y1:y+lane/2,x2:x+2,y2:y+lane/2,stroke:'#2a3350','stroke-width':2},sg);
+      S('rect',{x:x+2,y:by,width:bw-8,height:bh,rx:6,fill:t?c:'#0b1120','fill-opacity':t?.16:1,stroke:c,'stroke-width':1.3},sg);
+      if(t&&t.status==='running'){const r=S('rect',{x:x+2,y:by,width:bw-8,height:bh,rx:6,fill:'none',stroke:c,'stroke-width':2.5},sg);S('animate',{attributeName:'stroke-opacity',values:'1;.2;1',dur:'1.2s',repeatCount:'indefinite'},r);}
+      if(bw>46)txt(sg,x+9,by+bh/2+(bh>30&&st.sys?-2:4),clip(st.label||st.id,Math.floor((bw-16)/6.4)),{'font-size':11,fill:'#e8ecf6'});
+      if(bw>46&&bh>30&&st.sys)txt(sg,x+9,by+bh/2+11,'→ '+st.sys+(t&&t.ms!=null?' · '+Math.round(t.ms/100)/10+'s':''),{'font-size':9.5,fill:'#7a8299'});
+      S('title',{},sg).textContent=(st.label||st.id)+(st.sys?' → '+st.sys:'')+(t?' · '+t.status:' · not reached');tap(P,sg,()=>last&&openRun(last,p));});
+    S('line',{x1:SR+16,y1:y+lane/2,x2:SR+HR+8,y2:y+lane/2,stroke:'#141b2c'},g);
+    for(const r of runs.filter(r=>r.at>=T0)){const d=S('circle',{cx:X(r.at),cy:y+lane/2,r:4,fill:TS[r.status]||'#7a8299'},g);S('title',{},d).textContent=new Date(r.at).toLocaleTimeString()+' · '+r.status+(r.error?' · '+r.error:'');tap(P,d,()=>openRun(r,p));}});
+  txt(G,SR+16,h-4,'runs, last 24 h →',{'font-size':9.5,fill:'#4b5572'});});
+
+// the panel: every field from its source, or "not read"
+function showP(html){$('pbody').innerHTML=html;$('panel').classList.add('on');$('panes').classList.add('with-panel');}
+function openSys(n,keep){const was=cur;cur={kind:'sys',id:n};if(!keep&&(!was||was.id!==n)){draw();return;}const s=D.systems.find(x=>x.name===n),st=stateAt(n,T);
+  const reg=s.registry,cm=s.compartment,u=s.usage,evs=D.events.filter(e=>e.sys===n&&e.at<=T).slice(-8).reverse(),calls=D.turns.filter(t=>callerSys(t.caller)===n&&t.at<=T).length,pls=D.pipelines.filter(p=>p.steps.some(x=>x.sys&&sysName(x.sys)===n)).length;
+  showP(`<div class="k">SYSTEM</div><h2>${n}</h2><div style="margin-top:6px"><span class="pill" style="color:${col(st)}">${st}</span>${s.critical?'<span class="pill" style="color:#ffbe55">critical</span>':''}<span class="mono">pid ${s.pid||'—'} · :${s.port||'—'}</span></div>
+  <div class="tools"><button title="to be wired through COS's own routes">Open</button><button title="to be wired">Diagnose</button><button title="to be wired">Restart</button><button title="to be wired">Logs</button><button title="to be wired">Pause</button><button title="to be wired">Snapshot</button></div>
+  <div class="stats"><div class="stat"><b>${reg&&reg.read?reg.components.length:'—'}</b><span>components</span></div><div class="stat"><b>${u&&u.rssMB!=null?u.rssMB+' MB':'—'}</b><span>memory</span></div><div class="stat"><b>${u&&u.cpuPct!=null?u.cpuPct+'%':'—'}</b><span>CPU</span></div>
+  <div class="stat"><b>${pls}</b><span>pipelines call it</span></div><div class="stat"><b>${calls}</b><span>model calls</span></div><div class="stat"><b>${s.restarts!=null?s.restarts:'—'}</b><span>restarts</span></div></div>
+  <div class="k">TENSION · CFR / RFR2</div><span class="note">not read (not wired into this preview yet)</span>
+  <div class="k">REGISTRY · ${n}/registry-components.js</div>${reg&&reg.read?reg.components.slice(0,40).map(c=>`<div class="ev"><em>${c.route||'—'}</em>${c.name}</div>`).join(''):`<div class="ev">${reg?reg.why:'not read'}</div>`}
+  <div class="k">WIRES · declared in ${n}/compartment.json</div>${cm&&Object.keys(cm.dependsOn).length?Object.entries(cm.dependsOn).map(([k,v])=>`<div class="ev"><em>${v} refs</em>${n} → ${k}</div>`).join(''):'<div class="ev">none declared</div>'}
+  <div class="k">EVENTS · COS ledger</div>${evs.map(e=>`<div class="ev"><em>${new Date(e.at).toLocaleTimeString().slice(0,5)} ${e.kind}</em>${e.why}</div>`).join('')||'<div class="ev">none in 24 h</div>'}`);}
+function openRun(r,p){cur={kind:'run',id:r.id,pid:p.id};draw();showP(`<div class="k">PIPELINE RUN</div><h2>${r.name||p.name}</h2><div style="margin-top:6px"><span class="pill" style="color:${TS[r.status]||'#7a8299'}">${r.status}</span><span class="mono">${new Date(r.at).toLocaleTimeString()}</span></div>${r.error?`<div class="ev" style="color:#ff9fb2">${r.error}</div>`:''}
+  <div class="tools"><button>Run</button><button>Continue</button><button>Edit</button><button>Recorder</button><button>Diagnose</button><button>Export</button></div><div class="k">STEPS · COS engine</div>${p.steps.map(st=>{const t=r.tasks[st.id]||{};return `<div class="ev"><em>${t.status||'not reached'}${t.ms!=null?' · '+Math.round(t.ms/100)/10+' s':''}</em>${st.label||st.id}${st.sys?' → '+st.sys:''}</div>`;}).join('')}`);}
+function openTurn(t){cur={kind:'turn',id:t.at};draw();showP(`<div class="k">MODEL CALL</div><h2>${t.model.split('/').pop()}</h2><div style="margin-top:6px"><span class="pill" style="color:${t.ok?'#36f2b0':'#ff5d7d'}">${t.ok?'ok':'failed'}</span><span class="mono">${new Date(t.at).toLocaleTimeString()}</span></div>
+  <div class="stats"><div class="stat"><b>${Math.round((t.runMs||0)/100)/10}s</b><span>run</span></div><div class="stat"><b>${Math.round((t.waitMs||0)/100)/10}s</b><span>waited</span></div><div class="stat"><b>${t.sigma!=null?t.sigma:'—'}</b><span>σ vs its baseline</span></div></div>
+  <div class="k">CALLER</div><div class="ev">${t.caller||'—'} · door ${t.door||'—'}</div><div class="k">MEMORY</div><div class="ev">${t.freeMemMBBefore} → ${t.freeMemMBAfter} MB free${t.swap?' · model swapped':''}</div>${t.error?`<div class="k">ERROR</div><div class="ev" style="color:#ff9fb2">${t.error}</div>`:''}`);}
+function closeP(){$('panel').classList.remove('on');$('panes').classList.remove('with-panel');cur=null;draw();}
+// the shared timeline: COS's ledger of 24 h
+const trk=$('trk');const mk=S('rect',{x:999,y:2,width:2,height:66,fill:'#e8ecf6'});
+const KC={crash:'#ff5d7d','circuit-open':'#ff5d7d',adopted:'#36f2b0',boot:'#36f2b0',handover:'#36f2b0',restart:'#4ea1ff','pulse-missed':'#ffbe55',refused:'#ffbe55','over-limit':'#ffbe55'};
+function track(){trk.replaceChildren();for(let h=0;h<=24;h+=3){const x=h/24*1000;S('line',{x1:x,y1:4,x2:x,y2:60,stroke:'#151c2c'},trk);const l=S('text',{x:x+3,y:68,fill:'#4b5572','font-size':9},trk);l.textContent=new Date(T0+h*3600e3).getHours()+':00';}
+  const rows={};let ri=0;for(const e of D.events){if(e.kind==='spawn')continue;if(!(e.sys in rows))rows[e.sys]=ri++%5;const c=S('circle',{cx:(e.at-T0)/(T1-T0)*1000,cy:10+rows[e.sys]*10,r:3,fill:KC[e.kind]||'#7a8299',style:'cursor:pointer'},trk);
+    S('title',{},c).textContent=new Date(e.at).toLocaleTimeString()+' · '+(e.sys||'cos')+' · '+e.kind+' · '+e.why;c.addEventListener('click',ev=>{ev.stopPropagation();T=e.at;if(e.sys)cur={kind:'sys',id:e.sys};draw();if(e.sys)openSys(e.sys,true);});}
+  trk.appendChild(mk);}
+trk.addEventListener('click',e=>{const r=trk.getBoundingClientRect();T=T0+(e.clientX-r.left)/r.width*(T1-T0);draw();});
+let timer=null;$('play').onclick=function(){if(timer){clearInterval(timer);timer=null;this.textContent='▶';return;}if(T>=T1-1000)T=T0;this.textContent='⏸';timer=setInterval(()=>{T=Math.min(T1,T+(T1-T0)/300);draw();if(T>=T1){clearInterval(timer);timer=null;$('play').textContent='▶';}},80);};
+$('back').onclick=()=>{T=T0;draw();};$('live').onclick=()=>{T=T1;draw();};
+document.querySelectorAll('.chip[data-p]').forEach(b=>b.addEventListener('click',()=>{b.classList.toggle('on');$('P-'+b.dataset.p).classList.toggle('off',!b.classList.contains('on'));setTimeout(draw,30);}));
+document.querySelectorAll('button[data-f]').forEach(b=>b.addEventListener('click',()=>{const p=$('P-'+b.dataset.f),on=!p.classList.contains('focus');document.querySelectorAll('.pane').forEach(x=>x.classList.remove('focus'));p.classList.toggle('focus',on);document.querySelectorAll('button[data-f]').forEach(x=>x.textContent='focus');if(on)b.textContent='unfocus';setTimeout(draw,280);}));
+async function load(){D=await (await fetch('/data')).json();D.turns.sort((a,b)=>a.at-b.at);T1=D.at;T0=T1-24*3600e3;if(!T||T>=T1-60000)T=T1;track();draw();
+  const up=D.systems.filter(s=>s.state==='up').length;$('hostline').textContent=`${up}/${D.systems.length} up · ${D.host?D.host.freeMemPct+'% memory free':'memory not read'} · ${D.events.length} COS events · ${D.runs.length} runs · ${D.turns.length} model calls`;}
+load();setInterval(()=>{if(T>=T1-1000&&!timer)load();},15000);
+</script>
+</body>
+</html>

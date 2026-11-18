@@ -1473,3 +1473,15 @@ phases_addendum_2026_11_13_rca:
 # Coder's reading, for him to correct: a fourth, navigable 3D view — nodes are the same ids (systems, components, runs, agent calls), edges their
 # associations, and live events travel the edges as pulses. Open questions for him: what places a node in 3D (lineage depth, system, time, or
 # learned association), and whether it replaces the lineage view or sits beside it.
+
+## ADDENDUM 2026-11-18 (later) — the cockpit previews PINNED (his); his verdict and direction kept for when they resume
+# His words on the three-canvas preview: "oh my god, fuck no. cluttered. overhwelming. hell no. going backwards. where is the flight map? this is
+# way worst by far." · "also enterprise grade. worlds leading expert level. no noise, redundancy, side panels, excessive buttons over drop down
+# menus. also utilize context menu for options. increments of zoom. what about each system is a world in a world map, of interconnected
+# systems(nodes) in a non linear map of synapsis lighting up pathways between nodes? give me a bunch of previews." Then: "pin in this actually.
+# get the pipeline built and upgraded. log all of the progress and notes."
+# State when pinned: cos/ui/cockpit-preview/ (server.js on :47124, live data: COS systems/usage/engine, each registry, compartment dependsOn,
+# COS ledger, Ollama metrics) holds the three-canvas version he rejected. The flight map (v3, cos/ui/flight-map-previews.html) is the one he liked.
+# To resume: several previews, flight map first; no side panels; options in a context menu (right-click) and drop-downs, not button rows; zoom in
+# fixed increments; systems as worlds on a non-linear map, synapses lighting the paths events take; the associative lattice (3D) as one option.
+# Coder's lesson: each step after the flight map added surface instead of taking it away. Start from the flight map and subtract.
