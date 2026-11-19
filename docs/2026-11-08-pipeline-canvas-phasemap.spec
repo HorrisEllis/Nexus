@@ -1506,3 +1506,16 @@ phases_addendum_2026_11_13_rca:
 ## ADDENDUM 2026-11-19 (0.60.594) — built: a step whose gate passed is not run again (the step node stands)
 # James, 2026-11-19: "Wait pipeline. Yaml file. Each block a step in the pipeline? Then any gate that has passed. Doesn't need to be run again. Reuses the same step. Like each step is a node in an associative lattice, or linear. Like the node for the step holds all the context, like a block in the yaml file or a compartment. Keep getting the pipeline built."
 # a step whose gate passed is not run again: the pipeline was already a YAML node (.pipeline, each task block a step) and every step run already its own .process_step node with its whole output; now each step's inputs are a fingerprint (its step, its gate, the run's vars, what it takes from the steps before), and a step whose gate passed with the same fingerprint in an earlier run is reused: that node stands, its output read back, the step marked reused (from which run). Only a gated step is reused (a step with no gate, as NM1's build, always runs); new inputs, a failed or debug pass, reuse: false on the step, or redo run it again. The decision is Emerge's (cos/automation/reuse.eg, compiled to eg-build/reuse.js, run in the engine); the index of passed steps sits beside the runs (reuse-index.json). reuse.test.eg 2/2; test-pipeline-waits-for-a-system 10/10 (PW-10 new); test-cos-pipeline 19/21 with CP-16 intermittent (failed once, passed once, as before this change).
+
+## ADDENDUM 2026-11-19 (later) — back to the gates; views as styles; the radial web from one origin (his; preview first)
+# James, 2026-11-19, on the flight map that the Pipelines tab opened: "The fuck is this. This needs to go back to the gates. Have different
+# styles. I liked the branching gates because they are agnostic. One starting point. or even the center is where it begins, and propogates
+# outward like an associative web of interconnected nodes, like the lattice. like meaning making. the relationship between things. like
+# components in anything. the structure of nexus, meaning making webs. also the data structure of my own mind." · "continue with the pipeline
+# and emerge. i need this done asap. i figure build the smallest representable unit and expand outward."
+# Done (0.60.599 in the ui): the Pipelines tab opens the gates again; the map is one click away, never the default.
+# Mapped, a preview first (his "Never build without a preview"): the gate canvas has styles, chosen per view, over the same step nodes:
+#  (1) branching gates (as now, agnostic, the default); (2) radial: one origin at the centre (the request, RAID's lineage root) and each
+#  step and gate one ring further out by its depth, branches spreading as a web, live events travelling the edges (the lattice of
+#  2026-11-18, the associative web his mind keeps). One structure, many styles: the views are disposable, the step nodes are the data.
+# And the same principle for the build: the smallest representable unit first, expanded outward (NM1a, lib/file-identity.js, before NM1).
