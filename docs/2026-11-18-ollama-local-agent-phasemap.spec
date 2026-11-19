@@ -698,3 +698,14 @@ addendum_pending: >-
 # NM1 unstuck, three causes found and fixed in Idearium: (1) the coding step decides a local model's fit by RAID's rule (OL4a): DeepSeek wrote and passed NM1's test (planning asked RAID: resident), then every coding step skipped it by its own strict check ("needs ~10.0GB; 7.7GB available", the GPU's 2 GB counted as RAM) and the ladder ran out. (2) A paused repo is said, never a silent stall: nexus/core was paused from the Code tab at 13:48 and every build until 17:06 sat in test-first with 0 calls, closed by the watchdog as stalled four times; now the watchdog writes "waits for ▶, paused by … at …" instead of closing it, and the landed route answers the same. (3) The agent's wait for a repo index is bounded (2 min, as a sync's already was) and never starts a second import. test-plan-code-run-attention 48/48.
 # Status (the coder's correction, the phase blocks above still say OPEN): OL5a built 0.60.568, OL5b 0.60.569, OL5c 0.60.570, OL4a 0.60.574 and
 # 0.60.576 (decoupled), and this release (the coding step). OL1-OL20 otherwise open.
+
+# ── ADDENDUM 2026-11-19 — Nexus codes; Emerge so a base model can be trained in it (his) ──
+# James, 2026-11-19: "I would rather nexus codes after 7 months. That's why emerge needs to work also. So we can train a base model in it. And
+# start coding for real"
+# The measured state that morning: DeepSeek 16b wrote NM1's code for the first time through COS's pipeline; the gate refused it
+# (lib/path-guard.js "does not parse as js: Unexpected token 'function'"; lib/file-identity.js not returned); Gemini timed out, Claude was not
+# connected; nothing landed.
+# Next (built next, 0.60.596): a refused coder reply is retried once on the same model, in a fresh conversation, with the gate's own error and
+# one file per call (his 2026-11-18 "retry logic and be starting a new conversation, and injecting the previous gate context").
+# Recorded, not mapped to a phase yet: Emerge as the language a base model is trained in (his), its corpus the .eg sources, tests and the
+# gate verdicts (OL10's training ledger: every attempt one row, prompt, output, verdict).
