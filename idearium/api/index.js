@@ -1539,7 +1539,11 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
     if (rg && rg.base === 'ollama' && rg.model) {
       try {
         const om = await _ollamaModels();
-        const fit = _require('../../lib/resource-monitor.js').fitsModel({ model: rg.model, bytes: om.sizes ? om.sizes[rg.model] : null, loaded: om.loaded || [] });
+        // 0.60.586 — James, 2026-11-18: "Seriously? I'm so sick of this not working." NM1: DeepSeek wrote the test (planning asked RAID: resident),
+        // then every coding step skipped it here by the strict rule ("needs ~10.0GB; 7.7GB available") and the ladder ran out. The coding step
+        // now decides by RAID's rule too (its last answer, kept by the planning step above), never a stricter one of its own (OL4a).
+        const _rule = (() => { try { return JSON.parse(fs.readFileSync(path.join(IDEARIUM_DATA_DIR, 'raid-fit-rule.json'), 'utf8')).rule || 'strict'; } catch (_) { return 'strict'; } })();
+        const fit = _require('../../lib/resource-monitor.js').fitsModel({ model: rg.model, bytes: om.sizes ? om.sizes[rg.model] : null, loaded: om.loaded || [], rule: _rule });
         if (!fit.fits) {
           const row = { uuid: `${session}-skipped`, ...base, state: 'skipped', memorySkip: true, snapshot: commitId, ...(ck || {}), provider: rg.provider,
             rung: ri + 1, rungs: rungs.length, attempt: tryNo, error: `not enough memory to load it now — ${fit.why}`, needBytes: fit.needBytes, availableBytes: fit.availableBytes, promptChars: msg.length, ts: Date.now() };
@@ -2292,6 +2296,11 @@ async function _watchRuns() {
   const RW = _require('../../lib/run-watch.js');
   const st = RW.stalled(loadTable('idearium_phase_runs'), { stallMs: mins * 60 * 1000 });
   for (const s of st) {
+    // 0.60.586 — James, 2026-11-18: "This needs to work." His nexus/core was paused from the Code tab at 13:48; every NM1 build until 17:06 sat
+    // in test-first with 0 calls (the agent waits for ▶) and was closed here as stalled, four times, the pause never said. A paused repo's run is
+    // not stalled: it is said once, as paused, with who paused it and when, and left to go on when he plays it.
+    try { const RS = _require('../../lib/repo-run-state.js'); const ps = (s.targetRepo && RS.isPaused(s.targetRepo)) ? RS.get(s.targetRepo) : (RS.isPaused(s.repoUuid) ? RS.get(s.repoUuid) : null);
+      if (ps) { if (!loadTable('idearium_phase_runs').some(x => x && x.uuid === `${s.runId}-paused`)) appendRow('idearium_phase_runs', { uuid: `${s.runId}-paused`, runId: s.runId, repoUuid: s.repoUuid, targetRepo: s.targetRepo, map: s.map, phase: s.phase, state: s.state, statusNote: `waits for ▶ — the repo was paused ${ps.by ? 'by ' + ps.by : ''} at ${new Date(ps.since || Date.now()).toLocaleTimeString()}${ps.reason ? ' (' + ps.reason + ')' : ''}`, ts: Date.now() }); continue; } } catch (_) {}
     const why = `no new step for ${Math.round(s.idleMs / 60000)} min after "${s.state}" — the watchdog closed it`;
     appendRow('idearium_phase_runs', { uuid: `${s.runId}-stalled`, runId: s.runId, repoUuid: s.repoUuid, targetRepo: s.targetRepo, map: s.map, phase: s.phase, state: 'stalled', stalledAfter: s.state, error: why, ts: Date.now() });
     getIdeaOS().emit('idearium.repo.phase.run', { runId: s.runId, repoUuid: s.repoUuid, phase: s.phase, state: 'stalled' });
@@ -2803,7 +2812,9 @@ async function _ensureIndexed(repoUuid, { waitMs = parseInt(process.env.IDEARIUM
     const p = typeof NS.syncing === 'function' ? NS.syncing(repoUuid) : null;
     if (p) { const t = Date.now(); await Promise.race([p, new Promise(r => setTimeout(r, waitMs))]); out.waited = Date.now() - t; }
   } catch (_) { /* no nexus-self — nothing to wait for */ }
-  if (_indexing.has(repoUuid)) { const t = Date.now(); await _indexing.get(repoUuid); out.waited += Date.now() - t; }
+  // 0.60.586 — James, 2026-11-18: "This needs to work." NM1's test writer waited here with no limit (0 model calls, Idearium idle, 6+ min):
+  // an index already being built is waited for as long as a sync is (waitMs), then the agent is sent what the repo has, said
+  if (_indexing.has(repoUuid)) { const t = Date.now(); await Promise.race([_indexing.get(repoUuid).catch(() => {}), new Promise(r => setTimeout(r, waitMs))]); out.waited += Date.now() - t; if (_indexing.has(repoUuid)) console.warn(`[api] SB35 ${repoUuid}: its index is still being built after ${Math.round(waitMs / 1000)} s — the agent is sent what the repo has`); }
   const r = L.get(repoUuid) || repo;
   let selfDir = null;
   try { selfDir = path.join(_require('../../lib/nexus-self/store.js').storeRoot(), 'repos', repoUuid); } catch (_) { selfDir = null; }
@@ -2812,6 +2823,7 @@ async function _ensureIndexed(repoUuid, { waitMs = parseInt(process.env.IDEARIUM
   if (found) return { ...out, dir: found, indexed: true };
   const src = candidates.find(_hasSources) || _repoDiskDir(repoUuid);
   if (!src) return { ...out, error: 'no directory holds this repo\'s files' };
+  if (_indexing.has(repoUuid)) return { ...out, dir: src, indexed: false, error: 'its index is still being built: the agent reads the files as they are' };   // 0.60.586: never a second import
   const run = (async () => {
     await new Promise(res => setImmediate(res));
     const pipeline = runImportPipeline(r, src);
@@ -2819,8 +2831,15 @@ async function _ensureIndexed(repoUuid, { waitMs = parseInt(process.env.IDEARIUM
     return pipeline;
   })();
   _indexing.set(repoUuid, run);
+  // 0.60.586: the import is waited for as long as a sync is (waitMs), never longer: past that the agent reads the files as they are and the
+  // import finishes in the background (NM1's test writer sat idle behind it, 0 model calls, CPU 0)
+  const TIMED_OUT = Symbol('timed out');
+  const first = await Promise.race([run.catch((e) => { throw e; }), new Promise((r) => setTimeout(() => r(TIMED_OUT), waitMs))]).catch((e) => ({ __err: e }));
+  if (first === TIMED_OUT) { console.warn(`[api] SB35 ${r.name || repoUuid}: its index is still being built after ${Math.round(waitMs / 1000)} s — the agent reads the files as they are; the import goes on in the background`);
+    run.then(() => {}, () => {}).finally(() => _indexing.delete(repoUuid)); return { ...out, dir: src, indexed: false, error: 'its index is still being built: the agent reads the files as they are' }; }
   try {
-    const pipeline = await run;
+    if (first && first.__err) throw first.__err;
+    const pipeline = first;
     console.log(`[api] SB35 ${r.name || repoUuid}: had no index when its agent was asked — pipeline ran in ${src} → ${pipeline && pipeline.state}`);
     return { ...out, dir: src, indexed: _hasIndex(src), built: true, pipeline: pipeline && pipeline.state };
   } catch (e) {
@@ -9981,6 +10000,9 @@ async function handle(req, res, route, query, body) {
       }
       const said = { runId: f.runId, phase, state: f.state, landed: !!f.landed, ended: !!f.ended, verdict: f.verdict, why: f.why || null, calls: f.cost ? f.cost.calls : null, wallMs: f.wallMs };
       if (f.landed) return ok(res, said);
+      // 0.60.586: a build waiting on a paused repo says so, with who paused it and when (his nexus/core sat paused 3 h behind "still building")
+      let _paused = null; try { const RS = _require('../../lib/repo-run-state.js'); const id = (f.targetRepo || params.uuid); if (RS.isPaused(id)) _paused = RS.get(id); else if (RS.isPaused(params.uuid)) _paused = RS.get(params.uuid); } catch (_) {}
+      if (!f.ended && _paused) return err(res, 409, `${phase} waits for ▶: the repo was paused${_paused.by ? ' by ' + _paused.by : ''} at ${new Date(_paused.since || Date.now()).toLocaleTimeString()}${_paused.reason ? ' (' + _paused.reason + ')' : ''}; play it to go on`, { ...said, paused: true });
       return err(res, 409, f.ended ? `the build of ${phase} ended without landing: ${f.why || f.state}` : `still building ${phase} (${f.state}); ask again`, said);
     }
     case 'repo.phases.closes': {
