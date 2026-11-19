@@ -135,3 +135,13 @@ test "node: the data a step gave is a node of its type with the fields its schem
   let g = d({ type: "vibe" }, { a: 1 })
   expect g.outcome == "gap" and find_text(g.why, "no schema for .vibe") >= 0, g.why
 }
+
+// 0.60.590 — James, 2026-11-18: "Maybe even a debug gate type or setting? Emerge"
+test "a debug gate decides as always, keeps its verdict, and lets the run through" {
+  let d = decide(CHECK, { contains: "ok", debug: true }, "failed", {}, {}).value
+  expect d.outcome == "open" and d.would == "closed" and d.debug == true, json(d)
+  expect find_text(d.why, "debug: would be closed") == 0, d.why
+  expect d.context.lastOutcome == "closed" and d.context.streak == 1, json(d.context)
+  let fine = decide(CHECK, { contains: "ok", debug: true }, "all ok", {}, {}).value
+  expect fine.outcome == "open" and fine.would == null, json(fine)
+}

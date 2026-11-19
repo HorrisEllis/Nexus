@@ -110,6 +110,20 @@ const freePort = () => new Promise(r => { const s = net.createServer(); s.listen
       assert.strictEqual(rr.status, 'debugged', 'a resume keeps its gates open');
     } finally { srv.close(); }
   });
+  await t('PW-09', 'his "edit gates conditions. Not whole runs. Maybe even a debug gate … setting": a gate edited in place; set to debug, only that step\'s failure is recorded and passed; enforce again, it stops', async () => {
+    const P = new Pipelines(new AutomationEngine({}), { dir: path.join(tmp, 'i') });
+    const c = P.create({ name: 'gated', tasks: [{ id: 'a', step: { type: 'set', config: { assign: { v: 'hello' } } }, gate: { contains: 'nope' } }, { id: 'b', depends_on: ['a'], step: { type: 'set', config: { assign: { w: 2 } } } }] });
+    const pid = (c.pipeline || c).id;
+    const shut = await P.run(pid, { wait: true }); assert.strictEqual(shut.run.tasks.b.status, 'blocked', JSON.stringify(shut.run.tasks));
+    const e1 = P.setGate(pid, 'a', { set: { contains: 'hel' } }); assert.strictEqual(e1.gate.contains, 'hel', JSON.stringify(e1));
+    const ok = await P.run(pid, { wait: true }); assert.strictEqual(ok.run.status, 'ok', JSON.stringify(ok.run.tasks.a));
+    const e3 = P.setGate(pid, 'a', { set: { contains: 'nope', debug: true } }); assert.strictEqual(e3.ok, true, JSON.stringify(e3));
+    const dbg = await P.run(pid, { wait: true });
+    assert.strictEqual(dbg.run.tasks.b.status, 'done'); assert.ok(dbg.run.tasks.a.openGate, JSON.stringify(dbg.run.tasks.a)); assert.strictEqual(dbg.run.status, 'debugged');
+    const e2 = P.setGate(pid, 'a', { unset: ['debug'] }); assert.ok(!('debug' in e2.gate), JSON.stringify(e2));
+    const again = await P.run(pid, { wait: true }); assert.strictEqual(again.run.tasks.b.status, 'blocked');
+    assert.strictEqual(P.setGate(pid, 'zz', { set: { x: 1 } }).ok, false);
+  });
   fs.rmSync(tmp, { recursive: true, force: true });
   console.log(`\n${passed} passed, ${failed} failed`); process.exit(failed ? 1 : 0);
 })();

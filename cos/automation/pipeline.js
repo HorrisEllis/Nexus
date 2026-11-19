@@ -101,7 +101,7 @@ function validate(p, { stepTypes = null, validateStep = null } = {}) {
     for (const k of ['takes', 'gives']) if (t[k] != null && (!Array.isArray(t[k]) || t[k].some(x => typeof x !== 'string' || !/^[a-z][a-z0-9_]{0,40}$/.test(x)))) problems.push(`${at}: ${k} is a list of node types (chunk, contract, context …)`);
     if (t.gate != null) {
       if (typeof t.gate !== 'object') problems.push(`${at}: the gate is { notEmpty, contains, equals, matches, element }`);
-      else { for (const k of Object.keys(t.gate)) if (!['notEmpty', 'contains', 'equals', 'matches', 'element', 'type', 'with', 'reasonAt'].includes(k)) problems.push(`${at}: unknown gate key "${k}"`);   // PC5: type + with, a typed gate
+      else { for (const k of Object.keys(t.gate)) if (!['notEmpty', 'contains', 'equals', 'matches', 'element', 'type', 'with', 'reasonAt', 'debug'].includes(k)) problems.push(`${at}: unknown gate key "${k}"`);   // PC5: type + with, a typed gate
         if (t.gate.type != null && (typeof t.gate.type !== 'string' || !/^[\w-]{1,60}$/.test(t.gate.type))) problems.push(`${at}: the gate's type names a gate type`);
         if (t.gate.matches != null) { try { new RegExp(t.gate.matches); } catch (e) { problems.push(`${at}: the gate's pattern is invalid (${e.message})`); } }
         // 2026-10-30 PL7 — an element gate: one of his gates (gateId) or a condition on an element, read after the task by the gate step
@@ -228,6 +228,20 @@ class Pipelines {
     const now = Date.now(); const pipe = { id: randomUUID(), ...this._clean(p), archived: false, createdAt: now, updatedAt: now };
     this._writePipe(pipe); this._emit('automation.pipeline.created', { pipelineId: pipe.id, name: pipe.name });
     return { ok: true, pipeline: pipe };
+  }
+  /** 0.60.590 setGate(id, task, { set, unset, gate }) — his "Just add the ability to edit gates conditions. Not whole runs.": one task's gate edited
+   *  in place (set: { key: value } merged into the gate, into gate.with for a typed gate's conditions; unset: [keys] removed; gate: replaces it), and
+   *  the pipeline saved through update(), so it is validated as any edit is. debug: true is the gate's debug setting (decided in Emerge). */
+  setGate(id, task, { set = null, unset = null, gate = undefined } = {}) {
+    const p = this.get(id); if (!p) return { ok: false, error: `no pipeline ${id}` };
+    const tasks = JSON.parse(JSON.stringify(p.tasks || [])); const t = tasks.find(x => x.id === task); if (!t) return { ok: false, error: `no task ${task} in ${p.name || id}` };
+    let g = gate !== undefined ? gate : (t.gate ? { ...t.gate } : {});
+    if (g && set) for (const [k, v] of Object.entries(set)) { if (g.type && k !== 'type' && k !== 'debug') g.with = { ...(g.with || {}), [k]: v }; else g[k] = v; }
+    if (g && unset) for (const k of [].concat(unset)) { delete g[k]; if (g.with) delete g.with[k]; }
+    if (g && !Object.keys(g).length) g = null;
+    if (g) t.gate = g; else delete t.gate;
+    const r = this.update(id, { tasks });
+    return r && r.ok === false ? r : { ok: true, pipeline: id, task, gate: t.gate || null };
   }
   update(id, patch = {}) {
     const cur = this.get(id); if (!cur) return { ok: false, status: 404, error: `no pipeline ${id}` };
@@ -408,7 +422,7 @@ class Pipelines {
         if (r && r.ok && t.gate && t.gate.type) {
           let g; if (!this.engine._gate) g = { outcome: 'closed', open: false, why: `this engine has no gate types: "${t.gate.type}" is decided by COS's gates`, saw: [], actions: [] };
           else { try { g = await this.engine._gate({ pipelineId: p.id, task: t.id, runId: run.id, attempt: a, gate: t.gate, output: r.output }); } catch (e) { g = { outcome: 'closed', open: false, why: `the gate could not decide: ${e.message}`, saw: [], actions: [] }; } }
-          run.tasks[t.id].gate = { type: t.gate.type, outcome: g.outcome, why: g.why || null, saw: g.saw || [], held: !!g.held, actions: g.actions || [], ...(g.options && g.options.length ? { options: g.options.map(o => o.label) } : {}) };
+          run.tasks[t.id].gate = { type: t.gate.type, outcome: g.outcome, why: g.why || null, ...(g.would ? { would: g.would, debug: true } : {}), saw: g.saw || [], held: !!g.held, actions: g.actions || [], ...(g.options && g.options.length ? { options: g.options.map(o => o.label) } : {}) };
           if (g.open) { outputs[t.id] = r.output; full.set(t.id, r.output); set(t.id, { status: 'done', ms: Date.now() - t0, finishedAt: Date.now(), output: _preview(r.output), error: null }); return true; }
           last = { error: `gate ${g.outcome}: ${g.why}`, output: r.output };
           if (!g.retry) break;   // a gate that says hold, stop or gap is not retried: it has decided
@@ -431,7 +445,9 @@ class Pipelines {
       // 0.60.589 open gates — James, 2026-11-18: "Wouldn't it be better if we can set gates to open instead of pass, so we can have the whole pipeline
       // debugged at once?" A run started with gates open records each failure as the verdict it would have been ("would stop here: …") and lets
       // the steps after it run on what it gave, so one run shows every step's failure. Its steps are marked so the run is never read as met.
-      if (run.openGates && !run.cancelled) {
+      // 0.60.590: or this task's own gate is set to debug (his "edit gates conditions. Not whole runs."): the same record, for this step only
+      const _debug = !!(t.gate && (t.gate.debug === true || (t.gate.with && t.gate.with.debug === true)));
+      if ((run.openGates || _debug) && !run.cancelled) {
         if (last.output !== undefined) { full.set(t.id, last.output); outputs[t.id] = last.output; }
         const why = last.error + (tries > 1 ? ` (after ${tries} attempts)` : '');
         set(t.id, { status: 'done', openGate: { why, at: Date.now() }, note: `gate open — would stop here: ${why}`, ms: Date.now() - t0, finishedAt: Date.now(), error: null, output: last.output !== undefined ? _preview(last.output) : null });
@@ -481,7 +497,7 @@ class Pipelines {
     }
     const states = Object.values(run.tasks).map(x => x.status);
     run.status = run.cancelled ? 'cancelled' : states.every(s => s === 'done' || s === 'skipped') ? 'ok' : 'failed';
-    if (run.openGates && run.status === 'ok' && (run.openFailures || []).length) { run.status = 'debugged'; run.error = `gates open: ${run.openFailures.length} step(s) would have stopped it — ${run.openFailures.map(x => x.task + ': ' + x.why).join(' · ').slice(0, 1500)}`; }   // 0.60.589: never read as met
+    if (run.status === 'ok' && (run.openFailures || []).length) { run.status = 'debugged'; run.error = `gates open: ${run.openFailures.length} step(s) would have stopped it — ${run.openFailures.map(x => x.task + ': ' + x.why).join(' · ').slice(0, 1500)}`; }   // 0.60.589: never read as met
     if (run.status !== 'ok' && run.status !== 'debugged') { const f = p.tasks.find(t => run.tasks[t.id].status === 'failed'); run.error = run.cancelled || (f ? `${f.id}: ${run.tasks[f.id].error}` : 'not every task ran'); }
     // a task never reached (the run stopped) stays waiting; said as not run
     for (const t of p.tasks) if (run.tasks[t.id].status === 'waiting') run.tasks[t.id].error = stop ? 'not run: the pipeline stopped' : 'not run';

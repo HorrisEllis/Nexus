@@ -182,11 +182,21 @@ fn decide(q: map): map {
     if len(held) > ty.hold { held = drop(held, len(held) - ty.hold) }
   }
   let next = { runs: get(ctx, "runs", 0) + 1, last: preview(out), lastOutcome: outcome, lastWhy: why, streak: streak, history: hist, held: held }
+  // 0.60.590 a debug gate — James, 2026-11-18: "Just add the ability to edit gates conditions. Not whole runs. Maybe even a debug gate type or
+  // setting? Emerge". A gate set to debug (with.debug, or q.debug) decides as always, and its verdict is kept (context, history, streak), but it
+  // lets the run through: outcome open, would = what it decided, why says so. Its open actions run; a debug gate never holds or stops.
+  let debug = get(w, "debug", false) == true or get(q, "debug", false) == true
+  var would = null
+  if debug and outcome != "open" {
+    would = outcome
+    why = "debug: would be " + outcome + " — " + str(why)
+    outcome = "open"
+  }
   // the actions, filled again now that the why is known (an action can carry it: the gap handed to Emerge says what closed)
   var acts = []
   let ons = get(q.type, "on", {})
   if has(ons, outcome) { acts = fill(ons[outcome], w, { output: top.output, pipeline: top.pipeline, task: top.task, why: why }) }
-  return { outcome: outcome, why: why, saw: saw, actions: acts, context: next, options: get(ty, "options", []) }
+  return { outcome: outcome, why: why, saw: saw, actions: acts, context: next, options: get(ty, "options", []), debug: debug, would: would }
 }
 
 // plan → the asks COS makes before deciding, filled: [{ id, owner, route, body }]; an ask naming something unset is said, not made
