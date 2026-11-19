@@ -496,6 +496,11 @@ function createServer(sup, opts = {}) {
           const v = await sup[act[2]](name, { by });
           return send(res, v.said ? 409 : 200, { ok: !v.said, system: v, ...(v.said ? { said: v.said } : {}) });   // said = nothing was done, and why
         }
+        // 0.60.597 lean build mode (his "Lean build mode"): a rule's stop or start is RAID's to approve too, with its proof, as a rule's pause is
+        if (/^rule:/.test(String(body.by)) && (act[2] === 'stop' || act[2] === 'start')) {
+          let ok = null; try { ok = await require('../../lib/raid-port.js').approveTool('cos', `cos.${act[2]} ${name}`, { action: act[2], intent: { action: act[2], target: name }, causedBy: body.by, proof: body.proof || null }); } catch (e) { ok = { approved: false, reason: `RAID unreachable: ${e.message}` }; }
+          if (!ok || !ok.approved) { sup.note('raid-refused', `RAID did not approve ${act[2]} of ${name} by ${body.by}: ${(ok && ok.reason) || 'no answer'}`, { by: body.by, system: name }); return send(res, 403, { ok: false, error: `RAID did not approve: ${(ok && ok.reason) || 'no answer'}` }); }
+        }
         const fn = { start: sup.start, stop: sup.stop, restart: sup.restart, 'reset-circuit': sup.resetCircuit }[act[2]];
         return send(res, 200, { ok: true, system: fn(name, { by: body.by }) });
       }

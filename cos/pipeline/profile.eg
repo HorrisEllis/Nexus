@@ -27,6 +27,17 @@ fn decide(q: map): map {
   let called = q.called ?? []
   let free = q.freePct ?? 100
   let line = q.linePct ?? 25
+  // 0.60.597 lean build mode — James, 2026-11-19: "Lean build mode". A paused process keeps its memory, so lean stops what the build does not
+  // reach (started again when the run ends) and unloads every Ollama model the build does not use; at the start of every build, tight or not.
+  if get(q, "lean", false) == true {
+    let off = filter(systems, fn(s) = keep_why(s, called) == "")
+    var mb2 = 0
+    for s in off { mb2 = mb2 + (s.rssMB ?? 0) }
+    let need = get(q, "need", [])
+    let unload = filter(get(q, "loaded", []), fn(m) = not any(need, fn(n) = n == m))
+    return { pause: [], stop: map(off, fn(s) = s.name), unload: unload, keep: map(filter(systems, fn(s) = keep_why(s, called) != ""), fn(s) = { name: s.name, why: keep_why(s, called) }),
+      why: "lean build: " + str(len(off)) + " compartment(s) the build does not reach stopped (about " + str(mb2) + " MB), " + str(len(unload)) + " model(s) it does not use unloaded" }
+  }
   if free >= line + 10 {
     return { pause: [], keep: [], why: "memory is not tight (" + str(free) + "% free, the line is " + str(line) + "%): nothing paused" }
   }

@@ -22,3 +22,11 @@ test "memory not tight: nothing is paused, and it says why" {
   let d = profile.decide({ systems: SYS, called: [], freePct: 40, linePct: 24 })
   expect len(d.pause) == 0 and find_text(d.why, "not tight") >= 0, d.why
 }
+
+// 0.60.597 — James, 2026-11-19: "Lean build mode"
+test "lean: what the build does not reach is stopped, at any memory; models it does not use are unloaded; the kept stay" {
+  let d = profile.decide({ systems: SYS, called: [], freePct: 60, linePct: 24, lean: true, loaded: ["deepseek-coder-v2:16b", "qwen2.5-coder:3b"], need: ["deepseek-coder-v2:16b"] })
+  expect any(d.stop, fn(n) = n == "diagnostic") and not any(d.stop, fn(n) = n == "idearium" or n == "versionium" or n == "intelligence" or n == "cortex"), json(d.stop)
+  expect len(d.unload) == 1 and d.unload[0] == "qwen2.5-coder:3b", json(d.unload)
+  expect len(d.pause) == 0 and find_text(d.why, "lean build") == 0, d.why
+}

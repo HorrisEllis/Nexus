@@ -122,16 +122,29 @@ function createPipeline({ automation, idearium = null, call = null, dataDir } = 
         const systems = ((sj && sj.systems) || []).map((s) => ({ name: s.name, state: s.state, critical: !!s.critical, rssMB: (use[s.name] && use[s.name].rssMB) || 0 }));
         let linePct = 25; try { const PV = require('../../lib/prevention.js'); linePct = Math.round(PV.lineFor(PV.all()._baseline).line * 100); } catch (_) {}
         const freePct = Math.round(os.freemem() / os.totalmem() * 100);
-        const d = await eg('profile', { systems, called, freePct, linePct });
+        // 0.60.597 lean build mode: the run's var lean (or the pipeline's settings.lean) asks for it; the build's own models from RAID's routing
+        const lean = String((data.vars && data.vars.lean) || (p && p.settings && p.settings.lean) || '') === 'on' || (p && p.settings && p.settings.lean === true);
+        let loaded = [], need = [];
+        if (lean) {
+          try { const ps = _json(await call('ollama-bridge', 'GET', '/ollama/api/ps', undefined, 1 << 16)); loaded = ((ps && ps.models) || []).map((m) => m.name); } catch (_) {}
+          try { const rt = _json(await call('cortex', 'GET', '/api/raid/routing', undefined, 1 << 18)); const pol = (rt && rt.policy) || {};
+            need = String(pol.escalation || '').split(',').map((x) => x.trim()).filter((x) => /^ollama:/.test(x)).map((x) => x.slice(7)).slice(0, 1); } catch (_) {}
+        }
+        const d = await eg('profile', { systems, called, freePct, linePct, lean, loaded, need });
         if (!d || !Array.isArray(d.pause)) return;
-        console.log(`[cos/pipeline] build profile: ${d.why}${d.pause.length ? ' — ' + d.pause.join(', ') : ''}`);
-        const done = [];
-        for (const n of d.pause) { const r = _json(await call('cos', 'POST', `/api/cos/systems/${encodeURIComponent(n)}/pause`, { by: 'rule:build-profile', reason: `a build holds the model: ${d.why}`, proof: { kind: 'measured', decidedBy: 'cos/pipeline/profile.eg', freePct, linePct, called, why: d.why, runId: data.runId, at: Date.now() } })); if (r && r.ok !== false) done.push(n); else console.log(`[cos/pipeline] build profile: ${n} not paused — ${(r && r.error) || 'no answer'}`); }   // a pause is RAID's to approve (CP5b): refused, it stays running, said
-        if (done.length) { _profiled.set(data.runId, done); fire('pipeline.profile.paused', { runId: data.runId, paused: done, why: d.why }); }
+        const proof = { kind: 'measured', decidedBy: 'cos/pipeline/profile.eg', freePct, linePct, called, lean, why: d.why, runId: data.runId, at: Date.now() };
+        const todo = [...d.pause, ...(d.stop || [])];
+        console.log(`[cos/pipeline] build profile: ${d.why}${todo.length ? ' — ' + todo.join(', ') : ''}`);
+        const done = [], stopped = [];
+        for (const n of d.pause) { const r = _json(await call('cos', 'POST', `/api/cos/systems/${encodeURIComponent(n)}/pause`, { by: 'rule:build-profile', reason: `a build holds the model: ${d.why}`, proof })); if (r && r.ok !== false) done.push(n); else console.log(`[cos/pipeline] build profile: ${n} not paused — ${(r && r.error) || 'no answer'}`); }   // a pause is RAID's to approve (CP5b): refused, it stays running, said
+        for (const n of (d.stop || [])) { const r = _json(await call('cos', 'POST', `/api/cos/systems/${encodeURIComponent(n)}/stop`, { by: 'rule:build-profile', reason: d.why, proof })); if (r && r.ok !== false) stopped.push(n); else console.log(`[cos/pipeline] lean build: ${n} not stopped — ${(r && r.error) || 'no answer'}`); }   // RAID's to approve, as a pause
+        for (const m of (d.unload || [])) { const r = _json(await call('ollama-bridge', 'POST', '/api/models/unload', { model: m, by: 'rule:build-profile' })); console.log(`[cos/pipeline] lean build: ${m} ${r && r.ok !== false ? 'unloaded' : 'not unloaded'}`); }
+        if (done.length || stopped.length) { _profiled.set(data.runId, { paused: done, stopped }); fire('pipeline.profile.paused', { runId: data.runId, paused: done, stopped, unloaded: d.unload || [], why: d.why }); }
       } else if (type === 'automation.pipeline.done' && _profiled.has(data.runId)) {
-        const names = _profiled.get(data.runId); _profiled.delete(data.runId);
+        const v = _profiled.get(data.runId); _profiled.delete(data.runId); const names = Array.isArray(v) ? v : (v.paused || []), stopped = Array.isArray(v) ? [] : (v.stopped || []);
         for (const n of names) await call('cos', 'POST', `/api/cos/systems/${encodeURIComponent(n)}/resume`, { by: 'system:cos (build profile: undoing its own pause)' });
-        console.log(`[cos/pipeline] build profile: the run ended, resumed ${names.join(', ')}`); fire('pipeline.profile.resumed', { runId: data.runId, resumed: names });
+        for (const n of stopped) await call('cos', 'POST', `/api/cos/systems/${encodeURIComponent(n)}/start`, { by: 'system:cos (lean build: undoing its own stop)' });
+        console.log(`[cos/pipeline] build profile: the run ended, resumed ${[...names, ...stopped].join(', ')}`); fire('pipeline.profile.resumed', { runId: data.runId, resumed: names, started: stopped });
       }
     } catch (e) { console.warn(`[cos/pipeline] build profile: ${e.message} — the run goes on unchanged`); }
   };

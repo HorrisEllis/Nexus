@@ -40,7 +40,7 @@ const TABLE = [
   ['location', 'location [system]', 'where each system lives on this machine, its size, and whether it can be moved (and what holds it if not)'],
   ['pipeline-sync', 'pipeline-sync', 'import every pipeline in Nexus into the Automation tab now: COS\'s own files and each system\'s, by its route; a system that does not answer is named'],
   // AE7 (2026-11-08) — James: "Then an api that eravos can use for the step. So needs full cli commands, events, nodes."
-  ['automation', 'automation workflows | run <id> | step <type> [key=value …] | active | log [n] | catalogue | nodes | export <id> | import <file> | pipelines | pipeline <id> | pipeline-run <id> [open] | pipeline-resume <run> [redo,steps] [open] | pipeline-gate <pipeline> <task> debug|enforce|key=value|-key | runs [pipeline-id] | stop <run-id> | pause <run-id> | continue <run-id> | pipeline-export <id> [file] | systems-pipelines <system> | import-from <system> <id>', 'the automation engine COS runs: its workflows, a run, one step on its own (what an ERAVOS box calls), live runs, the log, the step kinds, workflows as nodes'],
+  ['automation', 'automation workflows | run <id> | step <type> [key=value …] | active | log [n] | catalogue | nodes | export <id> | import <file> | pipelines | pipeline <id> | pipeline-run <id> [open] | pipeline-resume <run> [redo,steps] [open] | pipeline-gate <pipeline> <task> debug|enforce|key=value|-key | pipeline-lean <pipeline> on|off | runs [pipeline-id] | stop <run-id> | pause <run-id> | continue <run-id> | pipeline-export <id> [file] | systems-pipelines <system> | import-from <system> <id>', 'the automation engine COS runs: its workflows, a run, one step on its own (what an ERAVOS box calls), live runs, the log, the step kinds, workflows as nodes'],
   ['vdisk', 'vdisk <system> [make|refresh|verify] | vdisk <system> snapshot|revert|drop <tag>', 'its virtual disk (qcow2): metadata, files and all its data in one file, its snapshots inside'],
 ];
 
@@ -181,6 +181,11 @@ function createCli({ restartCos = null, sup, resources = null, config = null, no
             const r = await call('POST', `/pipeline-runs/${encodeURIComponent(id)}/${sub}`, { by }); L.push(r.ok === false ? `refused: ${r.error}` : `${sub === 'pause' ? 'paused' : 'continued'} ${id.slice(0, 8)}: ${r.status}`); }
           else if (sub === 'pipeline-resume') { need(2, row[1]); let id = a[1]; if (id.length < 36) { const hit = ((await call('GET', '/pipeline-runs?limit=50')).runs || []).filter(x => x.id.startsWith(id)); if (hit.length === 1) id = hit[0].id; }
             const r = await call('POST', `/pipeline-runs/${encodeURIComponent(id)}/resume`, { by, redo: a[2] && a[2] !== 'open' ? a[2].split(',') : [], gates: a.slice(2).includes('open') ? 'open' : null }); L.push(r.ok === false ? `refused: ${r.error}` : `resumed ${id.slice(0, 8)} as run ${String(r.runId || '?').slice(0, 8)}: met ${(r.met || []).join(', ') || 'nothing'}`); }   // FX1a
+          else if (sub === 'pipeline-lean') {   // 0.60.597 — his "Lean build mode": a build of this pipeline stops what it does not reach, unloads idle models
+            need(2, row[1]); const on = a[2] !== 'off';
+            const cur = await call('GET', `/pipelines/${encodeURIComponent(a[1])}`); const settings = { ...((cur.pipeline && cur.pipeline.settings) || {}), lean: on };
+            const r = await call('PUT', `/pipelines/${encodeURIComponent(a[1])}`, { settings });
+            L.push(r.ok === false ? `refused: ${r.error}` : `lean build ${on ? 'on' : 'off'} for ${a[1]}`); }
           else if (sub === 'pipeline-gate') {   // 0.60.590 — his "edit gates conditions. Not whole runs. Maybe even a debug gate type or setting?"
             need(3, row[1]); const set = {}, unset = [];
             for (const x of a.slice(3)) { if (x === 'debug') set.debug = true; else if (x === 'enforce') unset.push('debug'); else if (x.startsWith('-')) unset.push(x.slice(1)); else if (x.includes('=')) { const i = x.indexOf('='); const v = x.slice(i + 1); set[x.slice(0, i)] = v === 'true' ? true : v === 'false' ? false : (v !== '' && !isNaN(Number(v)) ? Number(v) : v); } }
