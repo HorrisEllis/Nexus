@@ -1156,3 +1156,22 @@ catalog GENESIS_FILE_TREE {
 //   - DB21 ("one registry schema every level", his, docs/2026-10-17-system-drawbridge-phasemap.spec) is this at every scale; shelved as an idea
 //     the same day (PIC0), named here so it is not lost.
 // Thread: docs/FRAMEWORK-THREADS.md T8. Nothing in the catalog changes until it is phased.
+
+// ADDENDUM 2026-11-19 — nexus:// names, not ports: each system's addresses are its own metadata, RAID routes by them (his; convention recorded)
+// James, 2026-11-19: "this is why we need to use nexus:// for each system instead of a port so we multiplex. we can also use that with raid
+// for the routing, each new system in cos could have a setting that saves into the .spec data store for the meta data that raid can read can
+// as well, so nothing is hardcoded. that way raid knows where to route, then have the naming convention saved to the genesis spec and my
+// architecture spec." · earlier (2026-11-18): "What about instead of ports, we use: nexus://guardian nexus://idearium"
+// What showed it (0.60.591): Clear Glass answers health on :7704 (its nexus-wire module) and commands on :7702 (its bridge); COS guessed the
+// command address from the health address and Open UI went to the wrong one.
+// THE CONVENTION (proposed for genesis 1.6.0, applied in part by 0.60.591):
+//   - a system is named, never numbered: nexus://<system> is its main surface; nexus://<system>.<surface> a named one (cmd, ui, events, wire …).
+//     A path follows as usual: nexus://idearium/api/phases/next · nexus://clear-glass.cmd/cmd.
+//   - each system declares its own addresses by name, in its own data: today runtime.process.addresses { <surface>: <url> } in its compartment
+//     (Clear Glass declares cmd first); the target is its .spec meta (address: nexus://<system>, addresses: { … } in place of port:), written by
+//     COS when a system is added or imported, so the address lives in one place, the system's own.
+//   - one resolver turns a name into an address (COS's addressOf, 0.60.591); no caller holds a port. RAID reads the same metadata to route a
+//     request to the system and surface that owns it (the SW6 wires through RAID), so RAID knows where to route and nothing is hardcoded.
+//   - multiplexing: one name, many surfaces and transports; a system can move port, pipe or host and only its own declaration changes.
+// NOT YET (mapped): the .spec meta fields and COS writing them at add/import (SC4 builder); RAID reading them; retiring the hardcoded port
+// tables (cos/automation/engine.js SYSTEM_PORTS, lib/nexus-client ports, orchestrator.config.json ports).

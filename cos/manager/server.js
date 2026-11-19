@@ -80,10 +80,17 @@ function createServer(sup, opts = {}) {
   // 0.60.543 — his run, 2026-11-14, with 3 of 13 systems up and Idearium down: a pipeline step that needs a system starts it. Resolving
   // nexus://<system> marks it busy (touch: COS's idle rule does not stop it mid-step) and, when it is down and not held (circuit open, paused),
   // COS starts it, said in the ledger as by 'pipeline'; the step then waits for it to answer (2, 4, 8, 16, 30 s, 0.60.538).
-  automation.setResolver((name) => { const d = sup.declarations().find(x => x.name === name || x.system === name);
+  // 0.60.591 — James, 2026-11-19: "this is why we need to use nexus:// for each system instead of a port so we multiplex … so nothing is hardcoded."
+  // nexus://<system>.<surface> is the address the system declares under that name (runtime.process.addresses: { cmd: … }); nexus://<system> its
+  // main one (its health's origin), as before. Found: Clear Glass's commands are on :7702, its health on :7704, and a guess from the health
+  // address sent Open UI to the wrong one. One resolver for the pipeline's api steps and COS's own acts.
+  const addressOf = (name) => { const [sys, surface] = String(name).split('.'); const d = sup.declarations().find(x => x.name === sys || x.system === sys); if (!d) return null;
+    if (surface) return (d.addresses && d.addresses[surface]) || null;
+    try { return d.healthUrl ? new URL(d.healthUrl).origin : null; } catch (_) { return null; } };
+  automation.setResolver((name0) => { const name = String(name0).split('.')[0]; const d = sup.declarations().find(x => x.name === name || x.system === name);
     if (d) { try { sup.touch(d.name); const v = sup.get(d.name);
       if (!v.pid && !['paused', 'starting', 'restarting'].includes(v.state) && !(v.circuit && v.circuit.open)) sup.start(d.name, { by: 'pipeline' }); } catch (_) {} }
-    try { return d && d.healthUrl ? new URL(d.healthUrl).origin : null; } catch (_) { return null; } });
+    return addressOf(name0); });
   // PC1 — the box shape, through COS's door (cos/pipeline/boxes.js → Emerge's cos/pipeline/box.eg); Idearium's procedures by its route
   const _ideariumGet = (pth) => new Promise((resolve, reject) => {
     const d = sup.declarations().find(x => x.name === 'idearium'); let o; try { o = new URL(d && d.healthUrl).origin; } catch (_) { return reject(new Error('idearium declares no address')); }
@@ -436,7 +443,7 @@ function createServer(sup, opts = {}) {
         if (!s.ui || s.ui.kind !== 'html') return send(res, 409, { ok: false, error: `${name} declares no html UI (its compartment's runtime.process.ui)` });
         let url = null; try { url = new URL(s.ui.path || '/', new URL(s.healthUrl).origin).href; } catch (_) {}
         if (!url) return send(res, 409, { ok: false, error: `${name} has no address to open (no healthUrl)` });
-        const cg = sup.list().find(x => x.name === 'clear-glass'); let cgo = null; try { cgo = new URL(cg.healthUrl).origin; } catch (_) {}
+        const cgo = addressOf('clear-glass.cmd') || addressOf('clear-glass');   // 0.60.591: its declared command address (nexus://clear-glass.cmd), never a guess
         const r = await new Promise((resolve) => { if (!cgo) return resolve({ error: 'Clear Glass is not declared' });
           const data = Buffer.from(JSON.stringify({ eventType: 'window.open', data: { agentId: `compartment:${name}`, url } }));
           const q = http.request(`${cgo}/cmd`, { method: 'POST', timeout: 5000, headers: { 'Content-Type': 'application/json', 'Content-Length': data.length } }, (rr) => { let t = ''; rr.on('data', (c) => { t += c; }); rr.on('end', () => { try { resolve(JSON.parse(t)); } catch (_) { resolve({ error: `HTTP ${rr.statusCode}` }); } }); });
