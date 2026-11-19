@@ -131,6 +131,20 @@ phases:
     does: "POST /api/cos/systems { name, dir, cmd, args, port, health, by } → a proposal (kind add-system); taking it writes <dir>/compartment.json and declares it live (supervisor.declare)"
     proof: "in a fixture root: proposal held; taken → the file written, the system listed and startable; an existing declaration refused"
 
+    expanded_2026_11_18_builder: >-
+      James, 2026-11-18: "i want to be able to open the ui for each systems defined ui in cos ui. like when adding a system have an option for
+      the graphic interface, whether its an exe or html or cli to shape the dependancies for the compartment or system being built or imported.
+      i want that system builder ui to add and create compartments in cos ui. then idearium is the backend repo for it. using the spec."
+      Readings, the coder's, for him to correct (mapped, not built; a preview first, his rule "Never build without a preview"):
+       (1) each system's compartment declares its interface: { kind: html | exe | cli | none, entry } (an html page served by its own
+           server.js, an exe it starts, a CLI of commands); COS opens it from the system's card: html in a COS pane, exe started in his session
+           (as Clear Glass is), cli in COS's console. The UI stays the system's own and disposable (his "the ui is meant to be disposable").
+       (2) the system builder in COS: adding or importing a system asks its interface kind, and the kind shapes the compartment: html needs a
+           server.js route and a port, exe a window and his session (never the service's session 0), cli its command rows; the result is the
+           compartment.json SC4 already writes, through the same proposal.
+       (3) Idearium is its backend: the builder makes the system's spec and its repo in Idearium (the project manager); COS (the system
+           manager) declares and runs it. Each new system starts with its own registry-components.js, its drawbridge (SW6), from the spec.
+      Order (his): commands, routes, then the UI; the builder's UI only after a preview he approves.
   SC5_the_console_ui:
     layer: ui
     status: "DONE 0.60.380 — test-cos-console CC-09 (Clear Glass); the borderless window unverified on Windows"

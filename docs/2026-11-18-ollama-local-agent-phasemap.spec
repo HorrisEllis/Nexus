@@ -221,6 +221,16 @@ phases:
       A value outside its range is refused with its reason; a changed setting survives a restart of the Ollama system and says its source; with the env
       variable set the node reads it and says 'env'; every key in settings_catalog has a node and a rule.
 
+    expanded_2026_11_18_gpu: >-
+      James, 2026-11-18: "are we offloading to the gpu or cpu with ollama. i wanted this to be options in cos settings, in the ollama settings".
+      Measured that day (Ollama's own load log, deepseek-coder-v2:16b on his GTX 1650, 4 GB VRAM): "offloaded 28/28 layers to GPU", yet only
+      0.75 GB of weights sit on the GPU (CUDA0) and 7.7 GB stay in system RAM (CUDA_Host: the MoE experts), with a 1.3 GB KV cache on the GPU.
+      With Nexus running, free RAM fell from 7.1 GB to 0.6 GB within a minute of the load; COS froze and the service killed it.
+      The settings to add, each a .setting node in Ollama's own store, shown in COS Settings → Ollama, per model where Ollama allows it:
+      GPU layers (num_gpu; 0 = CPU only), main GPU, CPU threads (num_thread), context length (num_ctx), KV cache type (OLLAMA_KV_CACHE_TYPE
+      f16 | q8_0 | q4_0: q8_0 halves the 1.3 GB), flash attention, keep-alive, memory mapping (use_mmap), and what is resident now (from /api/ps:
+      size and size_vram), so the choice is made against what is measured. Order (his): command, route, then the COS Settings card. Open for him:
+      the defaults on this machine.
   OL2_settings_routes_and_commands:
     layer: foundation
     status: OPEN
