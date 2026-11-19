@@ -1,0 +1,32 @@
+// cortex/core/raid/resolve.eg — RAID resolves nexus:// names (0.60.592; sovereign-and-wired map, addendum 2026-11-19).
+// James, 2026-11-19: "should'nt that be in the routing system since raid handles inbound requests. shouldn't it be the resolver" · "keep it
+// emerge. follow the architecture" · "this is why we need to use nexus:// for each system instead of a port so we multiplex"
+// The table is each system's own declared addresses, handed to RAID by COS (which owns the declarations): { <system>: { main, surfaces } }.
+// Pure: the same table and name give the same answer. Compiled to CommonJS (eg build) and run inside RAID: no process per call.
+
+// name: "<system>" or "<system>.<surface>", with or without "nexus://" and a path → { ok, system, surface, url, why }
+fn parse(name: string): map {
+  var n = str(name)
+  if find_text(n, "nexus://") == 0 { n = slice(n, 8, len(n)) }
+  let slash = find_text(n, "/")
+  var path = ""
+  if slash >= 0 { path = slice(n, slash, len(n)); n = slice(n, 0, slash) }
+  let dot = find_text(n, ".")
+  if dot >= 0 { return { system: slice(n, 0, dot), surface: slice(n, dot + 1, len(n)), path: path } }
+  return { system: n, surface: null, path: path }
+}
+
+fn resolve(table: map, name: string): map {
+  let p = parse(name)
+  if p.system == "" { return { ok: false, system: null, surface: null, url: null, why: "no system named in \"" + str(name) + "\"" } }
+  if not has(table, p.system) { return { ok: false, system: p.system, surface: p.surface, url: null, why: "no system \"" + p.system + "\" declares an address" } }
+  let s = table[p.system]
+  if p.surface == null {
+    let m = get(s, "main", null)
+    if m == null { return { ok: false, system: p.system, surface: null, url: null, why: p.system + " declares no main address" } }
+    return { ok: true, system: p.system, surface: null, url: m + p.path, why: p.system + "'s main address" }
+  }
+  let surfaces = get(s, "surfaces", {})
+  if not has(surfaces, p.surface) { return { ok: false, system: p.system, surface: p.surface, url: null, why: p.system + " declares no surface \"" + p.surface + "\"" } }
+  return { ok: true, system: p.system, surface: p.surface, url: surfaces[p.surface] + p.path, why: p.system + "'s " + p.surface + " address, as it declares" }
+}

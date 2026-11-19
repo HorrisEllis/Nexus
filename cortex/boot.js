@@ -1172,6 +1172,34 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
+  // 0.60.592 RAID is the resolver — James, 2026-11-19: "shouldn't it be the resolver" · "keep it emerge. follow the architecture". COS, which
+  // owns the declarations, hands RAID each system's own addresses (POST /api/raid/addresses); RAID keeps them as a node in its own data and
+  // resolves nexus://<system>[.<surface>][/path] by cortex/core/raid/resolve.eg (compiled: eg build → eg-build/resolve.js, in this process).
+  if (p === '/api/raid/addresses' || p === '/api/raid/resolve') {
+    const fs = require('fs'), path = require('path');
+    const dir = process.env.RAID_ROUTING_DIR || path.join(__dirname, 'data', 'raid'), file = path.join(dir, 'addresses.node');
+    const read = () => { try { const n = JSON.parse(fs.readFileSync(file, 'utf8')); return (n && n.payload && n.payload.table) || {}; } catch (_) { return {}; } };
+    try {
+      if (p === '/api/raid/addresses' && req.method === 'POST') {
+        let b = await readBody(req); if (typeof b === 'string') { try { b = JSON.parse(b || '{}'); } catch (_) { b = {}; } }
+        const table = (b && b.table && typeof b.table === 'object') ? b.table : null;
+        if (!table) return json(res, 400, { ok: false, error: 'POST { table: { <system>: { main, surfaces } }, by }' });
+        fs.mkdirSync(dir, { recursive: true });
+        const node = { envelope: 1, type: 'raid-addresses', id: 'addresses', at: Date.now(), by: (b && b.by) || null, context: 'each system\'s own declared addresses, handed to RAID by COS; RAID resolves nexus:// names by them (0.60.592)', payload: { table } };
+        fs.writeFileSync(file + '.tmp', JSON.stringify(node, null, 2)); fs.renameSync(file + '.tmp', file);
+        try { bus.emit('raid.addresses', { systems: Object.keys(table).length, by: node.by }, { source: 'raid' }); } catch (_) {}
+        return json(res, 200, { ok: true, systems: Object.keys(table).length });
+      }
+      if (p === '/api/raid/addresses' && req.method === 'GET') return json(res, 200, { ok: true, table: read() });
+      if (p === '/api/raid/resolve') {
+        const name = new URL(req.url, 'http://x').searchParams.get('name') || '';
+        if (!global.__raidResolve) { const RT = require('../emerge/emerge/lang/runtime.js'); global.__raidResolve = require('./core/raid/eg-build/resolve.js')(RT.createRuntime({ file: path.join(__dirname, 'core', 'raid', 'resolve.eg') })); }
+        const r = global.__raidResolve.resolve(read(), name);
+        return json(res, r.ok ? 200 : 404, r);
+      }
+    } catch (e) { return json(res, 500, { ok: false, error: e.message }); }
+  }
+
   if (p === '/api/raid/tunables') {
     const TU = require('./core/raid/tunables.js');
     if (req.method !== 'POST') { json(res, 200, { ok: true, tunables: TU.all() }); return; }

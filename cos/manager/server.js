@@ -84,10 +84,34 @@ function createServer(sup, opts = {}) {
   // nexus://<system>.<surface> is the address the system declares under that name (runtime.process.addresses: { cmd: … }); nexus://<system> its
   // main one (its health's origin), as before. Found: Clear Glass's commands are on :7702, its health on :7704, and a guess from the health
   // address sent Open UI to the wrong one. One resolver for the pipeline's api steps and COS's own acts.
-  const addressOf = (name) => { const [sys, surface] = String(name).split('.'); const d = sup.declarations().find(x => x.name === sys || x.system === sys); if (!d) return null;
+  // what a system declares itself (the bootstrap, and what COS hands RAID): never the answer while RAID answers
+  const declaredAddress = (name) => { const [sys, surface] = String(name).split('.'); const d = sup.declarations().find(x => x.name === sys || x.system === sys); if (!d) return null;
     if (surface) return (d.addresses && d.addresses[surface]) || null;
     try { return d.healthUrl ? new URL(d.healthUrl).origin : null; } catch (_) { return null; } };
-  automation.setResolver((name0) => { const name = String(name0).split('.')[0]; const d = sup.declarations().find(x => x.name === name || x.system === name);
+  // 0.60.592 — James, 2026-11-19: "shouldn't it be the resolver" (RAID handles inbound requests). COS hands RAID the table of every system's own
+  // addresses and asks RAID to resolve; RAID's answers are kept (cos/data/manager/raid-addresses.json) so names resolve while RAID restarts; only
+  // a name RAID never answered falls back to the declaration, said once. RAID's own address (cortex's declaration) is the one bootstrap entry.
+  const _cacheFile = path.join(path.dirname(sup.ledgerFile), 'raid-addresses.json');
+  const _cache = (() => { try { return JSON.parse(require('fs').readFileSync(_cacheFile, 'utf8')); } catch (_) { return {}; } })();
+  const _keep = () => { try { require('fs').writeFileSync(_cacheFile, JSON.stringify(_cache)); } catch (_) {} };
+  const _raid = (method, pth, body) => new Promise((resolve) => { const o = declaredAddress('cortex'); if (!o) return resolve(null);
+    const data = body === undefined ? null : Buffer.from(JSON.stringify(body));
+    const q = http.request(o + pth, { method, timeout: 2000, headers: data ? { 'Content-Type': 'application/json', 'Content-Length': data.length } : {} }, (r) => { let t = ''; r.on('data', (c) => { t += c; }); r.on('end', () => { try { resolve({ status: r.statusCode, body: JSON.parse(t) }); } catch (_) { resolve(null); } }); });
+    q.on('timeout', () => q.destroy()); q.on('error', () => resolve(null)); if (data) q.write(data); q.end(); });
+  const addressTable = () => { const t = {}; for (const d of sup.declarations()) { let main = null; try { main = d.healthUrl ? new URL(d.healthUrl).origin : null; } catch (_) {}
+    const surfaces = {}; for (const [k, v] of Object.entries(d.addresses || {})) if (k !== 'about' && typeof v === 'string') surfaces[k] = v; t[d.name] = { main, surfaces }; } return t; };
+  let _pushed = null;
+  const pushAddresses = async () => { const t = addressTable(), sig = JSON.stringify(t); if (sig === _pushed) return; const r = await _raid('POST', '/api/raid/addresses', { table: t, by: 'cos' }); if (r && r.status === 200) _pushed = sig; };
+  setTimeout(() => { pushAddresses().catch(() => {}); }, 5000).unref(); setInterval(() => { pushAddresses().catch(() => {}); }, 5 * 60 * 1000).unref();
+  const _saidFallback = new Set();
+  const addressOf = async (name) => {
+    const r = await _raid('GET', `/api/raid/resolve?name=${encodeURIComponent(name)}`);
+    if (r && r.body && r.body.ok) { const base = r.body.url; if (_cache[name] !== base) { _cache[name] = base; _keep(); } return base; }
+    if (r && r.body && r.body.ok === false && r.status === 404) { await pushAddresses(); const again = await _raid('GET', `/api/raid/resolve?name=${encodeURIComponent(name)}`); if (again && again.body && again.body.ok) { _cache[name] = again.body.url; _keep(); return again.body.url; } }
+    if (_cache[name]) return _cache[name];   // RAID away: its last answer
+    const d = declaredAddress(name); if (d && !_saidFallback.has(name)) { _saidFallback.add(name); console.log(`[cos] ${name}: RAID did not resolve it (${(r && r.body && r.body.why) || 'RAID did not answer'}); its own declaration used`); }
+    return d; };
+  automation.setResolver(async (name0) => { const name = String(name0).split('.')[0]; const d = sup.declarations().find(x => x.name === name || x.system === name);
     if (d) { try { sup.touch(d.name); const v = sup.get(d.name);
       if (!v.pid && !['paused', 'starting', 'restarting'].includes(v.state) && !(v.circuit && v.circuit.open)) sup.start(d.name, { by: 'pipeline' }); } catch (_) {} }
     return addressOf(name0); });
@@ -441,9 +465,9 @@ function createServer(sup, opts = {}) {
         const name = decodeURIComponent(ou[1]); const s = sup.list().find(x => x.name === name);
         if (!s) return send(res, 404, { ok: false, error: `no system ${name}` });
         if (!s.ui || s.ui.kind !== 'html') return send(res, 409, { ok: false, error: `${name} declares no html UI (its compartment's runtime.process.ui)` });
-        let url = null; try { url = new URL(s.ui.path || '/', new URL(s.healthUrl).origin).href; } catch (_) {}
+        let url = null; try { url = new URL(s.ui.path || '/', (await addressOf(s.ui.surface ? `${name}.${s.ui.surface}` : name)) || undefined).href; } catch (_) {}   // 0.60.592: RAID resolves it
         if (!url) return send(res, 409, { ok: false, error: `${name} has no address to open (no healthUrl)` });
-        const cgo = addressOf('clear-glass.cmd') || addressOf('clear-glass');   // 0.60.591: its declared command address (nexus://clear-glass.cmd), never a guess
+        const cgo = (await addressOf('clear-glass.cmd')) || (await addressOf('clear-glass'));   // 0.60.591: its declared command address (nexus://clear-glass.cmd), never a guess
         const r = await new Promise((resolve) => { if (!cgo) return resolve({ error: 'Clear Glass is not declared' });
           const data = Buffer.from(JSON.stringify({ eventType: 'window.open', data: { agentId: `compartment:${name}`, url } }));
           const q = http.request(`${cgo}/cmd`, { method: 'POST', timeout: 5000, headers: { 'Content-Type': 'application/json', 'Content-Length': data.length } }, (rr) => { let t = ''; rr.on('data', (c) => { t += c; }); rr.on('end', () => { try { resolve(JSON.parse(t)); } catch (_) { resolve({ error: `HTTP ${rr.statusCode}` }); } }); });

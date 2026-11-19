@@ -1,0 +1,18 @@
+// cortex/core/raid/test/resolve.test.eg — RAID resolves nexus:// names. eg test cortex/core/raid/test/resolve.test.eg
+// James, 2026-11-19: "shouldn't it be the resolver" · "so nothing is hardcoded"
+use "../resolve.eg" as resolve
+
+let T = { "clear-glass": { main: "http://127.0.0.1:7704", surfaces: { cmd: "http://127.0.0.1:7702" } }, idearium: { main: "http://127.0.0.1:4800", surfaces: {} } }
+
+test "a system's main address, a named surface, a path kept, with or without nexus://" {
+  expect resolve.resolve(T, "idearium").url == "http://127.0.0.1:4800"
+  expect resolve.resolve(T, "nexus://clear-glass.cmd/cmd").url == "http://127.0.0.1:7702/cmd"
+  expect resolve.resolve(T, "nexus://idearium/api/phases/next").url == "http://127.0.0.1:4800/api/phases/next"
+}
+
+test "what is not declared is said, never guessed" {
+  let a = resolve.resolve(T, "nexus://guardian")
+  expect a.ok == false and find_text(a.why, "no system \"guardian\"") == 0, a.why
+  let b = resolve.resolve(T, "idearium.cmd")
+  expect b.ok == false and find_text(b.why, "declares no surface") >= 0, b.why
+}
