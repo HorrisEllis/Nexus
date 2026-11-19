@@ -264,3 +264,16 @@ phases_addendum_2026_11_13:
 #     the checkout on C: was updated while the one COS ran, on D:, stayed on 0.60.391).
 # Reading his (CA8_R1): "when downloading it" — (a) the COS setup exe asks where Nexus goes, before COS opens; (b) COS's first launch asks, in
 # the wizard (what CA8 describes); (c) both. CA8 stays pinned until he picks it up (0.60.525's addendum).
+
+# ── ADDENDUM 2026-11-19 — a Quit for COS, backed by a command; COS's UI floats over its CLI, as Idearium's spec workshop (his; mapped, preview first) ──
+# James, 2026-11-19: "trey icon isn't working. also give the cos ui a quit button, like down under the settings nothing in any ui should have
+# capability the backend doesn't. cos ui needs to float on top of the cli look at idearium spec workshop."
+# Found that morning: Clear Glass's tray icon did not quit it; its process (pid 14724, started 05:27) outlived "restart", so 0.60.593 was not
+# loaded; taskkill without /F was refused for its child (pid 14240).
+# Decided (his): every UI act has a backend command first (the order: command, route, UI). So:
+#  - COS: `quit [cos|desktop|all]` in COS's console and its route, then a Quit button under Settings in COS's sidebar. Coder's reading of what
+#    each quits, for him to choose: the COS window only (the service and the systems keep running) · the desktop systems too (Clear Glass) ·
+#    everything (the service's own stop, his act, admin).
+#  - Clear Glass: `quit` as its own CLI command (the tray's Quit made a command), so COS can quit or restart it in his session by name.
+#  - COS's UI floats over its CLI: the console is the ground layer, every page a panel above it, as Idearium's spec workshop lays its UI over
+#    its command surface (idearium/ui/workshop.html). A preview first, against the workshop, before any build (his "Never build without a preview").
