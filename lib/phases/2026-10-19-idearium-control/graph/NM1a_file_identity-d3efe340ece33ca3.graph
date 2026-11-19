@@ -1,0 +1,48 @@
+envelope: 1
+uuid: nexus-export-graph-phase:NM1a_file_identity:d3efe340ece33ca3
+type: graph
+id: phase:NM1a_file_identity:d3efe340ece33ca3
+context: dependency graph of phase NM1a_file_identity
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1795120266331
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795120266331
+lastSeenAt: 1795120266331
+fingerprint: null
+payload:
+  for: NM1a_file_identity
+  kind: phase
+  repo: null
+  hash: d3efe340ece33ca3
+  nodes:
+    - path: lib/file-identity.js
+      role: changes
+      exists: false
+      system: lib
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-10-19-idearium-control-phasemap.spec::NM1_one_name_per_file
+    dependents: []
+    upstream:
+      - docs/2026-10-19-idearium-control-phasemap.spec::NM1_one_name_per_file
+    downstream: []
+    blockedBy:
+      - docs/2026-10-19-idearium-control-phasemap.spec::NM1_one_name_per_file
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · blocked by NM1_one_name_per_file
+      - 'depends on (1): NM1_one_name_per_file'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-19-idearium-control-phasemap.spec::NM1_one_name_per_file
+        kind: inferred

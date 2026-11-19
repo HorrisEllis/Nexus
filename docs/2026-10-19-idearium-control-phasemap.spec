@@ -44,6 +44,22 @@ phases:
       "Gemini said tests/…") for one-click archive (RC4b does the labelled ones).
     proof: renaming lib/title.js updates its require in the test, its phase's files and its registry entry in one version
 
+  NM1a_file_identity:
+    layer: foundation
+    status: OPEN
+    depends_on: []
+    slice_of: NM1_one_name_per_file
+    files: [lib/file-identity.js]
+    does: >-
+      The smallest unit of NM1, first (James, 2026-11-19: "build the smallest representable unit and expand outward"). A file's identity
+      is its registry id; its path is a property. lib/file-identity.js, pure, no I/O, no requires: idOf(registry, path) → the id whose path
+      is that path (paths compared with forward slashes, case kept), or null; pathOf(registry, id) → its path, or null; rename(registry, id,
+      newPath) → a new registry (the old one unchanged) with that id's path changed, or { error } when the id is unknown or the new path is
+      already another id's. registry: { entries: [{ id, path }] }.
+    proof: >-
+      a test that requires lib/file-identity.js: idOf finds a path and returns null for an unknown one; pathOf returns the path of an id;
+      rename changes one entry's path, leaves the input registry unchanged, and refuses a path another id holds.
+
   PC1_phase_controls:
     layer: library
     status: OPEN

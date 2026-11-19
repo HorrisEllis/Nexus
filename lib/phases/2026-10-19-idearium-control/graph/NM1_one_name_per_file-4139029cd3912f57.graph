@@ -7,11 +7,11 @@ intent: null
 summary: 9 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1792787677889
+exported_at: 1795120266329
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1792787677889
-lastSeenAt: 1792787677889
+firstSeenAt: 1795120266329
+lastSeenAt: 1795120266329
 fingerprint: null
 payload:
   for: NM1_one_name_per_file
@@ -82,12 +82,13 @@ payload:
     dependents:
       - docs/2026-10-19-idearium-control-phasemap.spec::FM1_file_manager
       - docs/2026-10-20-belief-loop-phasemap.spec::PV1_provenance_on_every_claim
-      - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GR1_graph_primitive
+      - docs/2026-10-19-idearium-control-phasemap.spec::NM1a_file_identity
     upstream: []
     downstream:
       - docs/2026-10-19-idearium-control-phasemap.spec::CT1_fewer_wider_tabs
       - docs/2026-10-19-idearium-control-phasemap.spec::FM1_file_manager
       - docs/2026-10-19-idearium-control-phasemap.spec::FM2_stores_in_the_files_tab
+      - docs/2026-10-19-idearium-control-phasemap.spec::NM1a_file_identity
       - docs/2026-10-19-idearium-control-phasemap.spec::TB1_toolbox
       - docs/2026-10-20-belief-loop-phasemap.spec::AV1_adversarial_review
       - docs/2026-10-20-belief-loop-phasemap.spec::BW1_borrowing
@@ -96,36 +97,24 @@ payload:
       - docs/2026-10-20-belief-loop-phasemap.spec::CY2_invariants_are_crystals
       - docs/2026-10-20-belief-loop-phasemap.spec::CY3_belief_panel
       - docs/2026-10-20-belief-loop-phasemap.spec::EW1_evidence_record_and_weights
-      - docs/2026-10-20-belief-loop-phasemap.spec::IV1_invariant_kinds
-      - docs/2026-10-20-belief-loop-phasemap.spec::IV2_invariant_miner
       - docs/2026-10-20-belief-loop-phasemap.spec::PV1_provenance_on_every_claim
       - docs/2026-10-20-belief-loop-phasemap.spec::RA1_root_cause_through_provenance
       - docs/2026-10-20-belief-loop-phasemap.spec::RA2_learned_source_trust
       - docs/2026-10-20-belief-loop-phasemap.spec::XD1_cross_domain_verification
-      - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::CH0_chunk_census_and_contract
-      - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::CH1_strategies_behind_the_contract
-      - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::CH2_chunk_laws
       - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::CH3_chunk_inspector
-      - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::DK1_dynamic_chunking
-      - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::DK2_learned_granularity
-      - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GR1_graph_primitive
-      - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GR2_graph_views
       - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GR3_graph_query_surface
-      - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GW1_gate_primitive
       - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GW2_gates_at_every_level
       - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::GW3_gate_panel
-      - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::TV1_traversal_primitive
-      - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::TV2_invariant_guided_traversal
-      - docs/2026-10-20-substrate-graph-traversal-chunking-gating-phasemap.spec::TV3_traversal_as_context
     blockedBy: []
     unlocks:
       - docs/2026-10-19-idearium-control-phasemap.spec::FM1_file_manager
+      - docs/2026-10-19-idearium-control-phasemap.spec::NM1a_file_identity
     conflicts: []
     dangling: []
     lines:
       - layer 0 · ready
       - 'depends on (0): —'
       - >-
-        needed by (3): FM1_file_manager, PV1_provenance_on_every_claim, GR1_graph_primitive · all
-        downstream 32 · finishing it unlocks FM1_file_manager
+        needed by (3): FM1_file_manager, PV1_provenance_on_every_claim, NM1a_file_identity · all
+        downstream 20 · finishing it unlocks FM1_file_manager, NM1a_file_identity
     edges: []

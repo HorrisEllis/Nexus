@@ -23,7 +23,9 @@
     document.querySelectorAll('.ae-pane').forEach(p => { p.hidden = p.dataset.pane !== tab; });
     if (tab === 'workflows') flows(); if (tab === 'runs') runs(); if (tab === 'log') log(); desktop(tab === 'desktop');
     // 2026-11-18 — James: "no more lists. only the system overview, with each pipeline visable in from point a to point b": Pipelines opens the flight map
-    if (tab === 'pipelines' && window.PipelineCanvas && window.PipelineCanvas.openMap) setTimeout(() => window.PipelineCanvas.openMap(hooksFor(null)).catch(() => {}), 0); }
+    // 0.60.599 — James, 2026-11-19, on the flight map: "The fuck is this. This needs to go back to the gates." The Pipelines tab no longer opens the
+    // map; it is the gates again, as before 3f3e6b5aa. The map stays one click away (◂ Map on the canvas).
+    }
 
   // ── pipelines ──
   async function pipes() {

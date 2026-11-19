@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-19-idearium-control-phasemap.spec::NM1a_file_identity
+type: phase
+id: docs_2026-10-19-idearium-control-phasemap.spec::NM1a_file_identity
+context: pipeline phase NM1a_file_identity of docs/2026-10-19-idearium-control-phasemap.spec
+intent: null
+summary: NM1a_file_identity (foundation) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1795120266332
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795120266332
+lastSeenAt: 1795120266332
+fingerprint: null
+payload:
+  id: NM1a_file_identity
+  map: docs/2026-10-19-idearium-control-phasemap.spec
+  repo: null
+  layer: foundation
+  status: OPEN
+  files:
+    - lib/file-identity.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: d3efe340ece33ca3
