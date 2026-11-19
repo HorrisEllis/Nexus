@@ -783,3 +783,11 @@ then they are written by hand.
 - **Result:** eg test 2/2; the CLI answered resume after 30 s.
 - **Failed runs before the pass:** 0.
 - **Gaps found:** none in Emerge.
+
+## 2026-11-19 — every step tries another agent, in Emerge (IF22, 0.60.602)
+- **His words:** "each step or gate needs to be able to try another agent, and i need to be able to change that also."
+- **Method:** Emerge `test` blocks, then the engine's module test against a local server (agent a fails, b passes).
+- **Code:** `cos/automation/ladder.eg` (27 lines), `cos/automation/test/ladder.test.eg`; the door in `cos/automation/pipeline.js`.
+- **Result:** eg test 2/2; test-pipeline-waits-for-a-system 12/12.
+- **Failed runs before the pass:** 2. `tries` was typed `int`, and Emerge's numbers are `num` (taught: number types in Emerge are `num`). PW-12 was refused before running because `{{vars.agent}}` was empty at start (taught: a ladder fills a var the run's address check must know).
+- **Gaps found:** `eg build -o <file>` makes a folder named after the file; `-o` takes a folder.

@@ -1,0 +1,18 @@
+// cos/automation/test/ladder.test.eg — every step tries another agent. eg test cos/automation/test/ladder.test.eg
+// James, 2026-11-19: "each step or gate needs to be able to try another agent, and i need to be able to change that also."
+use "../ladder.eg" as L
+
+let A = ["ollama:qwen2.5-coder", "ollama:deepseek-coder-v2:16b"]
+
+test "each attempt takes the next rung; past the last, the last is held" {
+  expect L.pick({ agents: A, attempt: 1 }).agent == "ollama:qwen2.5-coder"
+  let two = L.pick({ agents: A, attempt: 2 })
+  expect two.agent == "ollama:deepseek-coder-v2:16b" and two.rung == 2, two.why
+  let three = L.pick({ agents: A, attempt: 3 })
+  expect three.agent == "ollama:deepseek-coder-v2:16b" and find_text(three.why, "held") >= 0, three.why
+}
+
+test "no ladder: no agent named, RAID routes as before; attempts cover every rung" {
+  expect L.pick({ agents: [], attempt: 1 }).agent == null
+  expect L.tries({ agents: A, retries: 0 }) == 2 and L.tries({ agents: A, retries: 4 }) == 5 and L.tries({ retries: 0 }) == 1
+}

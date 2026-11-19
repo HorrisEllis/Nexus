@@ -34,6 +34,9 @@ function _preview(v, max = 2000) { const s = _text(v); return s.length > max ? `
 /** gateOpen(gate, output) — every key given must hold; no gate → open */
 let _reuseMod = null;   // 0.60.594: cos/automation/reuse.eg, compiled (eg build), run in this process
 function _reuseEg() { if (!_reuseMod) { const RT = require('../../emerge/emerge/lang/runtime.js'); _reuseMod = require('./eg-build/reuse.js')(RT.createRuntime({ file: require('path').join(__dirname, 'reuse.eg') })); } return _reuseMod; }
+// IF22 (0.60.602) — his "each step or gate needs to be able to try another agent, and i need to be able to change that also": the ladder, in Emerge
+let _ladderMod = null;
+function _ladderEg() { if (!_ladderMod) { const RT = require('../../emerge/emerge/lang/runtime.js'); _ladderMod = require('./eg-build/ladder.js')(RT.createRuntime({ file: require('path').join(__dirname, 'ladder.eg') })); } return _ladderMod; }
 function gateOpen(gate, output) {
   if (gate && gate.element !== undefined) { gate = { ...gate }; delete gate.element; }   // the element gate is read by the gate step (PL7)
   // PC12a (0.60.522) — a closed gate says the owner's own words when it names where they are in the output (reasonAt: "body.check.reasons"):
@@ -95,6 +98,7 @@ function validate(p, { stepTypes = null, validateStep = null } = {}) {
     if (t.depends_on != null && !Array.isArray(t.depends_on)) problems.push(`${at}: depends_on is a list of task ids`);
     if (t.retries != null && !(Number.isInteger(t.retries) && t.retries >= 0 && t.retries <= 5)) problems.push(`${at}: retries is 0 to 5`);
     if (t.onFail != null && !['stop', 'continue', 'hold'].includes(t.onFail)) problems.push(`${at}: onFail is stop, continue or hold`);
+    if (t.agents != null && !(Array.isArray(t.agents) && t.agents.length <= 8 && t.agents.every(x => typeof x === 'string' && x.trim()))) problems.push(`${at}: agents is a list of up to 8 agent names (IF22)`);
     // 2026-11-09 — when: { left (a value or template: {{tasks.<id>.output}}, {{vars.x}}), op (steps.js OPS), value } — the step runs only when it holds
     if (t.when != null) { const ops = require('./steps.js').OPS.map(o => o.value);
       if (typeof t.when !== 'object' || Array.isArray(t.when)) problems.push(`${at}: when is { left, op, value }`);
@@ -223,6 +227,7 @@ class Pipelines {
         // 2026-11-09 — the node types a step takes from the steps it waits on, and gives (.chunk, .contract, .context …, lib/node-schemas): the wires carry them
         ...(t.when && typeof t.when === 'object' ? { when: t.when } : {}),   // 2026-11-09 — BrainOS's conditions, on a pipeline step: it runs only when this holds
         ...(Array.isArray(t.takes) && t.takes.length ? { takes: t.takes.map(String) } : {}), ...(Array.isArray(t.gives) && t.gives.length ? { gives: t.gives.map(String) } : {}),
+        ...(Array.isArray(t.agents) && t.agents.length ? { agents: t.agents.map(String) } : {}),   // IF22: the step's agent ladder
         retries: t.retries || 0, onFail: t.onFail || 'stop' })) };
   }
   create(p = {}) {
@@ -244,6 +249,15 @@ class Pipelines {
     if (g) t.gate = g; else delete t.gate;
     const r = this.update(id, { tasks });
     return r && r.ok === false ? r : { ok: true, pipeline: id, task, gate: t.gate || null };
+  }
+  /** IF22 (0.60.602) setAgents(id, task, agents) — his "i need to be able to change that also": one step's agent ladder; [] or null clears it */
+  setAgents(id, task, agents) {
+    const p = this.get(id); if (!p) return { ok: false, status: 404, error: `no pipeline ${id}` };
+    const tasks = JSON.parse(JSON.stringify(p.tasks || [])); const t = tasks.find(x => x.id === task); if (!t) return { ok: false, status: 404, error: `no task ${task} in ${p.name || id}` };
+    if (agents != null && !(Array.isArray(agents) && agents.length <= 8 && agents.every(x => typeof x === 'string' && x.trim()))) return { ok: false, status: 400, error: 'agents is a list of up to 8 agent names' };
+    if (agents && agents.length) t.agents = agents.map(s => s.trim()); else delete t.agents;
+    const r = this.update(id, { tasks });
+    return r && r.ok === false ? r : { ok: true, pipeline: id, task, agents: t.agents || [] };
   }
   update(id, patch = {}) {
     const cur = this.get(id); if (!cur) return { ok: false, status: 404, error: `no pipeline ${id}` };
@@ -352,7 +366,7 @@ class Pipelines {
   needs(p, vars = {}) {
     const all = { ...(p.vars || {}), ...vars }, out = new Set();
     for (const t of p.tasks || []) { const u = t.step && t.step.config && t.step.config.url; if (typeof u !== 'string') continue;
-      for (const m of u.matchAll(/\{\{\s*vars\.([A-Za-z_][\w]*)[^}]*\}\}/g)) if (all[m[1]] === undefined || all[m[1]] === null || String(all[m[1]]).trim() === '') out.add(m[1]); }
+      for (const m of u.matchAll(/\{\{\s*vars\.([A-Za-z_][\w]*)[^}]*\}\}/g)) if (!(m[1] === 'agent' && Array.isArray(t.agents) && t.agents.length) && all[m[1]] === undefined || all[m[1]] === null || String(all[m[1]]).trim() === '') out.add(m[1]); }
     return [...out];
   }
   async run(id, { vars = {}, wait = true, done = null, meta = null, gates = null, redo = null } = {}) {
@@ -387,7 +401,7 @@ class Pipelines {
     // 0.60.538 — James, 2026-11-14: "need an event ledger per step also i feel like, so we can debug it". Every change to a step is kept, in
     // order, on the step itself (run.tasks[id].events, saved with the run): when, what it became, the attempt, the note, the error, the gate.
     const ledger = (id, patch) => { const e = { at: Date.now() };
-      for (const k of ['status', 'attempts', 'note', 'error', 'ms', 'waitMs']) if (patch[k] !== undefined && patch[k] !== null) e[k] = patch[k];
+      for (const k of ['status', 'attempts', 'note', 'error', 'ms', 'waitMs', 'agent']) if (patch[k] !== undefined && patch[k] !== null) e[k] = patch[k];
       if (patch.gate) e.gate = { outcome: patch.gate.outcome, why: patch.gate.why || null }; if (patch.decisions) e.decision = patch.decisions[patch.decisions.length - 1];
       if (patch.held) e.held = patch.held.why; if (patch.output !== undefined && patch.status === 'done') e.output = typeof patch.output === 'string' ? patch.output.slice(0, 300) : patch.output;
       if (Object.keys(e).length < 2) return; const ev = run.tasks[id].events || (run.tasks[id].events = []); ev.push(e); if (ev.length > 200) ev.splice(0, ev.length - 200); };
@@ -412,14 +426,17 @@ class Pipelines {
         let d = { reuse: false }; try { d = _reuseEg().decide({ prev, key, gated: !!t.gate, reuse: t.reuse !== false, redo: !!(run.redo && run.redo.includes(t.id)) }); } catch (_) {}
         if (d.reuse) { const node = this.steps(prev.run)[prev.task || t.id]; const out = node && node.output !== undefined ? node.output : undefined;
           if (out !== undefined) { outputs[t.id] = out; full.set(t.id, out); set(t.id, { status: 'done', reused: { from: prev.run, at: prev.at, ...(prev.pipeline && prev.pipeline !== p.id ? { pipeline: prev.pipeline, task: prev.task } : {}) }, note: `reused — ${d.why}`, ms: 0, finishedAt: Date.now(), error: null, output: _preview(out) }); return true; } } }
-      const tries = 1 + (t.retries || 0); const t0 = Date.now(); let last = null;
+      const ladder = Array.isArray(t.agents) ? t.agents : []; let tries = 1 + (t.retries || 0); try { tries = Math.max(tries, _ladderEg().tries({ agents: ladder, retries: t.retries || 0 })); } catch (_) {}
+      const t0 = Date.now(); let last = null;
       for (let a = 1; a <= tries; a++) {
         if (run.cancelled) { last = { error: run.cancelled }; break; }
         // PC8 slice a (2026-11-10, his "each step measured by a delta"): when the step started, and its wait after the steps it waits on finished
         if (a === 1) { const after = Math.max(run.startedAt, ...(t.depends_on || []).map(d => run.tasks[d] && run.tasks[d].finishedAt || 0)); const now = Date.now();
           set(t.id, { status: 'running', attempts: a, startedAt: now, waitMs: now - after }); } else set(t.id, { status: 'running', attempts: a });
         // __pipelineChain: the pipelines this run sits inside (PL9) — a task that runs a pipeline already in it is refused (a loop)
-        const tv = { ...(p.vars || {}), ...vars, __pipelineChain: [...(Array.isArray(vars.__pipelineChain) ? vars.__pipelineChain : []), p.id], __parent: { engineRun: run.id, task: t.id } };   // 2026-11-09: a step that runs a pipeline names itself as the child's parent (recursive requests)
+        // IF22: this attempt's agent, from the step's ladder (Emerge decides); the step reads {{vars.agent}}, a typed gate gets with.agent
+        let rung = { agent: null }; if (ladder.length) { try { rung = _ladderEg().pick({ agents: ladder, attempt: a }); } catch (e) { rung = { agent: ladder[Math.min(a, ladder.length) - 1], why: `rung ${Math.min(a, ladder.length)}` }; } set(t.id, { agent: rung.agent, note: `agent: ${rung.why}` }); }
+        const tv = { ...(p.vars || {}), ...vars, ...(rung.agent ? { agent: rung.agent } : {}), __pipelineChain: [...(Array.isArray(vars.__pipelineChain) ? vars.__pipelineChain : []), p.id], __parent: { engineRun: run.id, task: t.id } };   // 2026-11-09: a step that runs a pipeline names itself as the child's parent (recursive requests)
         let r; try { r = await this.engine.runStep(t.step, { vars: tv, scope }); } catch (e) { r = { ok: false, error: e.message }; }
         // PC8 slice a: a decision taken during the step (RAID choosing the agent) becomes a step of the run, as it happens
         if (r && r.decision) { const d = { ...r.decision, task: t.id, attempt: a }; run.decisions = [...(run.decisions || []), d];
@@ -436,7 +453,7 @@ class Pipelines {
         // its event) for the canvas. A gate of keys (notEmpty, contains …) is decided here, as before, and recorded the same way.
         if (r && r.ok && t.gate && t.gate.type) {
           let g; if (!this.engine._gate) g = { outcome: 'closed', open: false, why: `this engine has no gate types: "${t.gate.type}" is decided by COS's gates`, saw: [], actions: [] };
-          else { try { g = await this.engine._gate({ pipelineId: p.id, task: t.id, runId: run.id, attempt: a, gate: t.gate, output: r.output }); } catch (e) { g = { outcome: 'closed', open: false, why: `the gate could not decide: ${e.message}`, saw: [], actions: [] }; } }
+          else { try { g = await this.engine._gate({ pipelineId: p.id, task: t.id, runId: run.id, attempt: a, gate: rung.agent ? { ...t.gate, with: { ...(t.gate.with || {}), agent: rung.agent } } : t.gate, output: r.output }); } catch (e) { g = { outcome: 'closed', open: false, why: `the gate could not decide: ${e.message}`, saw: [], actions: [] }; } }
           run.tasks[t.id].gate = { type: t.gate.type, outcome: g.outcome, why: g.why || null, ...(g.would ? { would: g.would, debug: true } : {}), saw: g.saw || [], held: !!g.held, actions: g.actions || [], ...(g.options && g.options.length ? { options: g.options.map(o => o.label) } : {}) };
           if (g.open) { outputs[t.id] = r.output; full.set(t.id, r.output); set(t.id, { status: 'done', ms: Date.now() - t0, finishedAt: Date.now(), output: _preview(r.output), error: null }); return true; }
           last = { error: `gate ${g.outcome}: ${g.why}`, output: r.output };

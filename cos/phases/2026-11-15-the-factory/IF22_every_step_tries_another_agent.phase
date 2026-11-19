@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-15-the-factory-phasemap.spec::IF22_every_step_tries_another_agent
+type: phase
+id: docs_2026-11-15-the-factory-phasemap.spec::IF22_every_step_tries_another_agent
+context: pipeline phase IF22_every_step_tries_another_agent of docs/2026-11-15-the-factory-phasemap.spec
+intent: null
+summary: IF22_every_step_tries_another_agent (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1795126965376
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795126965376
+lastSeenAt: 1795126965376
+fingerprint: null
+payload:
+  id: IF22_every_step_tries_another_agent
+  map: docs/2026-11-15-the-factory-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/automation/ladder.eg
+    - cos/automation/test/ladder.test.eg
+    - cos/automation/pipeline.js
+    - cos/automation/routes.js
+    - cos/manager/cli.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 93caa8bb9ba0c7cb

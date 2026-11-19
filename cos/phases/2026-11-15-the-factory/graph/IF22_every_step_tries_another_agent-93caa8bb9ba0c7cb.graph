@@ -1,0 +1,203 @@
+envelope: 1
+uuid: nexus-export-graph-phase:IF22_every_step_tries_another_agent:93caa8bb9ba0c7cb
+type: graph
+id: phase:IF22_every_step_tries_another_agent:93caa8bb9ba0c7cb
+context: dependency graph of phase IF22_every_step_tries_another_agent
+intent: null
+summary: 23 node(s), 3 crossing(s)
+system: idearium
+tags: []
+exported_at: 1795126965376
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795126965376
+lastSeenAt: 1795126965376
+fingerprint: null
+payload:
+  for: IF22_every_step_tries_another_agent
+  kind: phase
+  repo: null
+  hash: 93caa8bb9ba0c7cb
+  nodes:
+    - path: cos/automation/ladder.eg
+      role: changes
+      exists: false
+      system: cos
+    - path: cos/automation/pipeline.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/automation/routes.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/automation/test/ladder.test.eg
+      role: changes
+      exists: false
+      system: cos
+    - path: cos/manager/cli.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/automation/engine.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/automation/nodes.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/manager/automation-door.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/manager/server.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: lib/automation/pipeline.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/automation/routes.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: cos/automation/cron.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/automation/eg-build/reuse.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/automation/engine.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/automation/from-macro.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/automation/nodes.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/automation/steps.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/automation/template.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/automation/templates.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/automation-door.js
+      role: uses
+      exists: true
+      system: cos
+    - path: emerge/emerge/lang/runtime.js
+      role: uses
+      exists: true
+      system: emerge
+    - path: lib/node-export.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/versionium-record.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: cos/automation/pipeline.js
+      to: cos/automation/template.js
+      kind: requires
+    - from: cos/automation/pipeline.js
+      to: emerge/emerge/lang/runtime.js
+      kind: requires
+    - from: cos/automation/pipeline.js
+      to: cos/automation/eg-build/reuse.js
+      kind: requires
+    - from: cos/automation/pipeline.js
+      to: cos/automation/steps.js
+      kind: requires
+    - from: cos/automation/pipeline.js
+      to: cos/automation/engine.js
+      kind: requires
+    - from: cos/automation/pipeline.js
+      to: lib/node-export.js
+      kind: requires
+    - from: cos/automation/pipeline.js
+      to: lib/versionium-record.js
+      kind: requires
+    - from: cos/automation/routes.js
+      to: cos/automation/templates.js
+      kind: requires
+    - from: cos/automation/routes.js
+      to: cos/automation/nodes.js
+      kind: requires
+    - from: cos/automation/routes.js
+      to: cos/automation/cron.js
+      kind: requires
+    - from: cos/automation/routes.js
+      to: cos/automation/from-macro.js
+      kind: requires
+    - from: cos/manager/cli.js
+      to: cos/manager/automation-door.js
+      kind: requires
+    - from: cos/automation/engine.js
+      to: cos/automation/pipeline.js
+      kind: requires
+    - from: cos/automation/nodes.js
+      to: cos/automation/pipeline.js
+      kind: requires
+    - from: cos/manager/automation-door.js
+      to: cos/automation/pipeline.js
+      kind: requires
+    - from: lib/automation/pipeline.js
+      to: cos/automation/pipeline.js
+      kind: requires
+    - from: lib/automation/routes.js
+      to: cos/automation/routes.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/cli.js
+      kind: requires
+  crossings:
+    - from: cos/automation/pipeline.js
+      to: emerge/emerge/lang/runtime.js
+      fromSystem: cos
+      toSystem: emerge
+      kind: system
+      known: false
+    - from: lib/automation/pipeline.js
+      to: cos/automation/pipeline.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: false
+    - from: lib/automation/routes.js
+      to: cos/automation/routes.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: false
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+    edges: []

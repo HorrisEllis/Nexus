@@ -155,6 +155,22 @@ const freePort = () => new Promise(r => { const s = net.createServer(); s.listen
       await P.run((other.pipeline || other).id, { wait: true }); assert.strictEqual(hits, 2, 'a different step runs');
     } finally { srv.close(); }
   });
+
+  await t('PW-12', 'his "each step or gate needs to be able to try another agent, and i need to be able to change that also": the first agent fails, the second passes, the run names both; the ladder is edited by setAgents', async () => {
+    const seen = []; const srv = http.createServer((q, r) => { seen.push(q.url); r.statusCode = q.url === '/b' ? 200 : 500; r.setHeader('content-type', 'application/json'); r.end(JSON.stringify({ ok: q.url === '/b' })); });
+    await new Promise(x => srv.listen(0, '127.0.0.1', x)); const port = srv.address().port;
+    const P = new Pipelines(new AutomationEngine({}), { dir: path.join(tmp, 'l') });
+    const c = P.create({ name: 'ladder', tasks: [{ id: 'code', agents: ['a', 'b'], reuse: false, step: { type: 'api', config: { url: `http://127.0.0.1:${port}/{{vars.agent}}`, method: 'GET' } } }] });
+    const id = (c.pipeline || c).id;
+    try {
+      const r = await P.run(id, { wait: true });
+      assert.strictEqual(r.run.status, 'ok', JSON.stringify(r.run.tasks.code)); assert.deepStrictEqual(seen, ['/a', '/b']);
+      const agents = (r.run.tasks.code.events || []).map(e => e.agent).filter(Boolean); assert.ok(agents.includes('a') && agents.includes('b'), JSON.stringify(r.run.tasks.code.events));
+      const s = P.setAgents(id, 'code', ['b']); assert.ok(s.ok && s.agents.join() === 'b');
+      assert.deepStrictEqual(P.get(id).tasks[0].agents, ['b']);
+      assert.strictEqual(P.setAgents(id, 'code', [5]).ok, false, 'a bad ladder is refused');
+    } finally { srv.close(); }
+  });
   fs.rmSync(tmp, { recursive: true, force: true });
   console.log(`\n${passed} passed, ${failed} failed`); process.exit(failed ? 1 : 0);
 })();

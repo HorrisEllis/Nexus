@@ -1,0 +1,27 @@
+// cos/automation/ladder.eg — every step tries another agent (IF22, docs/2026-11-15-the-factory-phasemap.spec).
+// James, 2026-11-19: "each step or gate needs to be able to try another agent, and i need to be able to change that also. but we have to get
+// this working with ollama before anything." · "okay. lets do it."
+// Pure. Compiled (eg build → eg-build/ladder.js) and run inside the engine.
+//   pick({ agents, attempt }) → { agent, rung, of, why }   attempt n takes rung n; past the last rung the last one is held
+//   tries({ agents, retries }) → the step's attempts: at least one per rung
+
+fn pick(q: map): map {
+  let agents = get(q, "agents", [])
+  if len(agents) == 0 { return { agent: null, rung: 0, of: 0, why: "no ladder: the step's own agent (RAID's routing)" } }
+  let a = get(q, "attempt", 1)
+  var i = a - 1
+  if i < 0 { i = 0 }
+  var why = "attempt " + str(a) + ": rung " + str(i + 1) + " of " + str(len(agents))
+  if i >= len(agents) {
+    i = len(agents) - 1
+    why = "attempt " + str(a) + ": past the ladder, the last rung held"
+  }
+  return { agent: agents[i], rung: i + 1, of: len(agents), why: why + " (" + str(agents[i]) + ")" }
+}
+
+fn tries(q: map): num {
+  let n = 1 + get(q, "retries", 0)
+  let l = len(get(q, "agents", []))
+  if l > n { return l }
+  return n
+}

@@ -82,6 +82,7 @@ async function handle(A, { method, url, body = {}, headers = {}, rawBody = '' },
       const id = p[3];
       if (!p[4] && method === 'GET') { const x = P.get(id); return x ? ok({ ok: true, pipeline: x, layers: require('./pipeline.js').layers(x) }) : ok({ ok: false, error: `no pipeline ${id}` }, 404); }
       if (!p[4] && method === 'PUT') return res(P.update(id, body || {}));
+      if (p[4] === 'tasks' && p[5] && p[6] === 'agents' && method === 'PATCH') return res(P.setAgents(id, decodeURIComponent(p[5]), body ? body.agents : null));   // IF22 0.60.602 a step's agent ladder
       if (p[4] === 'tasks' && p[5] && p[6] === 'gate' && method === 'PATCH') return res(P.setGate(id, decodeURIComponent(p[5]), { set: body && body.set, unset: body && body.unset, gate: body ? body.gate : undefined }));   // 0.60.590 edit a gate
       if (p[4] === 'archive' && method === 'POST') return res(P.archive(id, { archived: !(body && body.archived === false) }));
       if (p[4] === 'run' && method === 'POST') return res(await P.run(id, { vars: (body && body.vars) || {}, wait: q('wait') === '1' || !!(body && body.wait), gates: body && body.gates === 'open' ? 'open' : null }));   // 0.60.589 gates open
