@@ -50,7 +50,7 @@ function check({ dir = DIR } = {}) {
 function write({ commit } = {}) {
   const node = readNode();
   const files = {};
-  for (const rel of walk(DIR).filter(r => r !== 'emerge.cos').sort()) files[rel] = sha(path.join(DIR, rel));
+  for (const rel of walk(DIR).filter(r => r !== 'emerge.cos' && !isState(r)).sort()) files[rel] = sha(path.join(DIR, rel));   // 0.60.601: the state folders (data/ …) are skipped on write as check() skips them; before, every lock took emerge/data/**
   node.payload.repo = { ...node.payload.repo, commit: commit || node.payload.repo.commit, lockedAt: new Date().toISOString().slice(0, 10), state: STATE, files };
   fs.writeFileSync(NODE, yaml.dump(node, { lineWidth: 160, noRefs: true }));
   return node.payload.repo;

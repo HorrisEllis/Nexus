@@ -1,0 +1,64 @@
+// emerge/emerge/field/field.eg — the constrained relational field, its core (MOD-CRF-FIELD, phase RF1_relational_field;
+// emerge/emerge/spec/field.spec). The smallest unit first.
+// James, 2026-11-19: "This just can't turn static. Constraint relational field." · 2026-11-06: "Let’s spec out the constrain field … Replacing
+// warp." · AXIOMS §14 addendum: a feature is a transition in the constraint field: proposed, judged by every constraint that holds over the
+// state it would make, recorded before it applies.
+// Pure and immutable: every call returns a new field; the same seed and the same transitions give the same field.
+//   field(seed, constraints) → a field: { nodes, relations, constraints, history, observations }
+//   propose(f, t)  → { field, verdict: { admitted, refused, gaps, why } }   t: { id, set: { <node>: value }, cause }
+//   relate(f, r)   → { field, verdict }                                    r: { from, to, kind, cause }
+//   observe(f, o)  → field (evidence recorded; state never changes)        o: { about, value, source }
+//   state_of(f), history_of(f)
+// A constraint: { id, hard, check: fn(nodes) → null (holds) | "why" (does not) | "?…" (unknown: a gap) }.
+
+fn field(seed: map, constraints: list): map {
+  return { nodes: seed, relations: [], constraints: constraints, history: [], observations: [] }
+}
+
+fn judge(constraints: list, next: map): map {
+  var refused = []
+  var gaps = []
+  for c in constraints {
+    let r = c.check(next)
+    if r != null {
+      let w = str(r)
+      if find_text(w, "?") == 0 { gaps = push(gaps, { id: c.id, why: slice(w, 1, len(w)) }) }
+      else if get(c, "hard", true) == true { refused = push(refused, { id: c.id, why: w }) }
+    }
+  }
+  return { refused: refused, gaps: gaps }
+}
+
+fn propose(f: map, t: map): map {
+  var next = clone(f.nodes)
+  for k in keys(get(t, "set", {})) { next[k] = t.set[k] }
+  let j = judge(f.constraints, next)
+  let admitted = len(j.refused) == 0 and len(j.gaps) == 0
+  var why = "admitted: every constraint holds over the next state"
+  if len(j.refused) > 0 { why = "refused by " + join(map(j.refused, fn(x) = x.id + " (" + x.why + ")"), ", ") }
+  else if len(j.gaps) > 0 { why = "a gap: " + join(map(j.gaps, fn(x) = x.id + " cannot tell (" + x.why + ")"), ", ") }
+  let rec = { kind: "transition", id: get(t, "id", null), cause: get(t, "cause", null), set: get(t, "set", {}), admitted: admitted, why: why }
+  var g = clone(f)
+  g.history = push(f.history, rec)          // written before it applies (GATE-CRF-HISTORY)
+  if admitted { g.nodes = next }            // a refused or gapped transition leaves the state unchanged
+  return { field: g, verdict: { admitted: admitted, refused: j.refused, gaps: j.gaps, why: why } }
+}
+
+fn relate(f: map, r: map): map {
+  let ok = has(f.nodes, r.from) and has(f.nodes, r.to)
+  var why = "related: " + str(r.from) + " -" + str(get(r, "kind", "relates")) + "-> " + str(r.to)
+  if not ok { why = "refused: a relation to a missing node (" + str(r.from) + " or " + str(r.to) + ")" }
+  var g = clone(f)
+  g.history = push(f.history, { kind: "relation", from: r.from, to: r.to, rel: get(r, "kind", "relates"), cause: get(r, "cause", null), admitted: ok, why: why })
+  if ok { g.relations = push(f.relations, { from: r.from, to: r.to, kind: get(r, "kind", "relates") }) }
+  return { field: g, verdict: { admitted: ok, refused: [], gaps: [], why: why } }
+}
+
+fn observe(f: map, o: map): map {
+  var g = clone(f)
+  g.observations = push(f.observations, { about: get(o, "about", null), value: get(o, "value", null), source: get(o, "source", null) })
+  return g
+}
+
+fn state_of(f: map): map = f.nodes
+fn history_of(f: map): list = f.history

@@ -1,0 +1,5 @@
+# 0.60.601 — the constrained relational field, its core (Emerge)
+
+James, 2026-11-19: "This just can't turn static. Constraint relational field."
+
+the constrained relational field's core, the smallest unit first (MOD-CRF-FIELD, phase RF1; emerge/emerge/spec/field.spec; AXIOMS §14 addendum: a feature is a transition in the constraint field, proposed, judged by every constraint over the state it would make, recorded before it applies). emerge/emerge/field/field.eg, pure and immutable: field(seed, constraints); propose(f, t) judges every constraint over the next state, records the transition, applies it only when admitted, a refusal names its constraint, an unknown is a gap not a pass; relate(f, r) refuses a relation to a missing node; observe(f, o) records evidence and never changes state. field.test.eg 4/4. Also: scripts/emerge-lock.js wrote emerge/data/** into every lock (write() did not skip the state folders check() skips); fixed, the lock now 406 files and matching. Next: the pipeline as projections of the field (each step a proposed transition, each gate a constraint).

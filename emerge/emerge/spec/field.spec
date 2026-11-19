@@ -323,3 +323,5 @@ spec:
   tests:
     - "tests/modules/test-substrate-spec.test.js — this spec compiles at specDepth 1.0, no BLACK node, invariants valid"
     - "emerge/emerge/field/test/*.eg — each module's acceptance as Emerge test blocks, written with its phase"
+
+  # ADDENDUM 2026-11-19 (0.60.601) — MOD-CRF-FIELD built, its core: James, 2026-11-19: "This just can't turn static. Constraint relational field." field.eg (field, propose, relate, observe, state_of, history_of), field.test.eg 4/4. state and history are reserved words in Emerge: state_of, history_of.

@@ -1,0 +1,46 @@
+// emerge/emerge/field/test/field.test.eg — the field's core. eg test emerge/emerge/field/test/field.test.eg
+// James, 2026-11-19: "This just can't turn static. Constraint relational field."
+use "../field.eg" as F
+
+// a step may only be "landed" once its gate passed; free memory is unknown until read
+fn gate_before_land(n: map): any {
+  if get(n, "step", "") == "landed" and get(n, "gate", "") != "passed" { return "a step lands only through its gate" }
+  return null
+}
+fn memory_known(n: map): any {
+  if get(n, "step", "") == "coding" and get(n, "freeGB", -1) < 0 { return "?free memory not read" }
+  return null
+}
+let C = [{ id: "gate-before-land", hard: true, check: gate_before_land }, { id: "memory-known", hard: true, check: memory_known }]
+
+test "a transition every constraint admits is recorded, then applied" {
+  let f = F.field({ step: "planned", gate: "open" }, C)
+  let r = F.propose(f, { id: "t1", set: { step: "landed", gate: "passed" }, cause: "the gate passed" })
+  expect r.verdict.admitted == true, r.verdict.why
+  expect F.state_of(r.field).step == "landed" and len(F.history_of(r.field)) == 1
+}
+
+test "a refused transition leaves the field unchanged, its refusal recorded with the constraint that refused it" {
+  let f = F.field({ step: "planned", gate: "open" }, C)
+  let r = F.propose(f, { id: "t2", set: { step: "landed" }, cause: "skip the gate" })
+  expect r.verdict.admitted == false and find_text(r.verdict.why, "gate-before-land") >= 0, r.verdict.why
+  expect F.state_of(r.field).step == "planned" and len(F.history_of(r.field)) == 1 and F.history_of(r.field)[0].admitted == false
+}
+
+test "an unknown is a gap, not a pass: the transition waits, said" {
+  let f = F.field({ step: "planned" }, C)
+  let r = F.propose(f, { id: "t3", set: { step: "coding" } })
+  expect r.verdict.admitted == false and len(r.verdict.gaps) == 1 and find_text(r.verdict.why, "a gap") == 0, r.verdict.why
+}
+
+test "the same seed and the same transitions give the same field; a relation to a missing node is refused; an observation never changes state" {
+  let ts = [{ id: "a", set: { step: "coding", freeGB: 6 } }, { id: "b", set: { step: "landed", gate: "passed" } }]
+  var f1 = F.field({ step: "planned" }, C)
+  var f2 = F.field({ step: "planned" }, C)
+  for t in ts { f1 = F.propose(f1, t).field; f2 = F.propose(f2, t).field }
+  expect json(F.state_of(f1)) == json(F.state_of(f2)) and len(F.history_of(f1)) == 2
+  let rel = F.relate(f1, { from: "step", to: "nowhere", kind: "depends" })
+  expect rel.verdict.admitted == false
+  let o = F.observe(f1, { about: "freeGB", value: 0.4, source: "os" })
+  expect json(F.state_of(o)) == json(F.state_of(f1)) and len(o.observations) == 1
+}
