@@ -47,8 +47,11 @@ async function checkOllama() {
     const u = new URL(OLLAMA_HOST);
     http.get(
       { hostname: u.hostname, port: u.port || 11434, path: '/api/tags', timeout: config.HEALTH_CHECK_TIMEOUT_MS },
-      r => { state.ollamaOnline = r.statusCode === 200; res(state.ollamaOnline); }
-    ).on('error', () => { state.ollamaOnline = false; res(false); });
+      // 0.60.598 — found 2026-11-19: the body was never read, so every check (about every 10 s) left its socket open: 1,540 sockets to Ollama
+      // from this bridge after a morning, and Windows refused new ones ("connect ENOBUFS 127.0.0.1:3750"), failing NM1's whole ladder.
+      // The body is drained (the socket closes or returns to the pool) and a timeout destroys the request.
+      r => { r.resume(); state.ollamaOnline = r.statusCode === 200; res(state.ollamaOnline); }
+    ).on('error', () => { state.ollamaOnline = false; res(false); }).on('timeout', function () { this.destroy(); state.ollamaOnline = false; res(false); });
   });
 }
 

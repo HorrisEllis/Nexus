@@ -22,9 +22,7 @@ async function ping() {
   return new Promise(resolve => {
     const url = new URL('/api/tags', ENDPOINT);
 
-    const req = http.get(url, res =>
-      resolve(res.statusCode === 200)
-    );
+    const req = http.get(url, res => { res.resume(); resolve(res.statusCode === 200); });   // 0.60.598: the body drained, so the socket closes (the leak behind ENOBUFS)
 
     req.on('error', () => resolve(false));
 
