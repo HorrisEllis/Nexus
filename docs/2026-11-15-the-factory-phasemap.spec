@@ -561,3 +561,17 @@ handoff_2026_11_18: >-
 # ── ADDENDUM 2026-11-18 (0.60.581) — FX1a built: a failed run resumed (command, then route) ──
 # James, 2026-11-18: "i want the automation and pipeline built. commands, first, api routes, then the door/drawbridge to expand the ui."
 # FX1a, a failed run resumed: `pipeline-resume <run> [redo,steps]` in COS's console, then POST /api/cos/automation/pipeline-runs/:id/resume. What the run finished is met from its step nodes, the rest run; named steps run again. Found running NM1: the build was still going in Idearium when the run failed after it, and a fresh run would have started a second DeepSeek build. Also, data not code: the NM1 pipeline gained its missing "landed" step (waits for the build to end) and step limits of 10 min (build 60 min) in place of 30 s. test-pipeline-waits-for-a-system 7/7 (PW-07 new). test-cos-pipeline 19/21: CP-00 and CP-01 fail in cos/pipeline/ (not touched here; last changed in 0.60.575): open, not checked against the release before.
+
+# ── ADDENDUM 2026-11-18 (later) — hats for every step a model steps into; Idearium's learning used (his; mapped, reuse first) ──
+# James, 2026-11-18: "Smaller model won't code better. Also hats or agent model modes for anything we want the llm to be able to step into.
+# Utilize the learning in idearium." · earlier the same hour: "The gates and steps. Are more intelligent. Compartments. Raid gates. Also make
+# sure to use emerge"
+# Decided (his): the coder stays DeepSeek 16b; no smaller model is tried for coding.
+# Reuse, already built (lib/): hat-forge.js (a named hat = base agent + scoped tools + persona), intent-hat-router.js (intent → hat, automatic),
+# hat-seed-ollama-personalities.js ("a model per model"), plan-learning.js (what planned builds teach the next plan and coder ladder),
+# agent-build-learning.js (which agent succeeds at which build), cg-learning.js; NM1's brief already carried "lessons (went wrong before)".
+# Coder's reading of the gap (mapped, not built): every step type and gate type of COS's engine names its hat (planner, test writer, coder,
+# reviewer, decomposer, RAID gate, diagnose…); the step wears it when a model is asked (hat-forge), the router picks among a step's hats by the
+# input, and the hat's brief carries plan-learning's lessons for that step type. The choice of hat, model and fit is a RAID gate per step and
+# per compartment, its rules in Emerge (.eg), not JS: memory judged per compartment, the GPU's share counted apart from RAM (found today: the
+# coding step's own strict check refused DeepSeek that RAID admitted, 0.60.586).
