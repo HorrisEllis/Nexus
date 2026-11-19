@@ -2562,7 +2562,7 @@ async function _commitRepoSnapshotFor(uuid, body = {}) {
     repo, repoDir: dir, message: body.message || null, causedBy: body.causedBy || null, provenance: body.provenance || null,
     fileLayer: _fileLayers(uuid).fileLayer, snapshotMode: _snapshotMode(),
     commit: async (payload) => {
-      const r = await _versionium('POST', '/api/versionium/commit', payload);
+      const r = await _versionium('POST', '/api/versionium/commit', payload, 120000); /* 0.60.603: a whole-repo snapshot under memory pressure outlasted the client's 8 s default (NM1a run 2813375c) */
       if (!r.ok) return { error: r.error };
       if (r.data?.error) return { error: r.data.error };
       return r.data?.commit || { error: 'versionium returned no commit' };
@@ -3463,7 +3463,7 @@ function _baselineSnapshot(repoUuid, reason) {
         takeSnapshot: ({ message }) => commitRepoSnapshot({
           repo: getRepoLayer().get(repoUuid) || repo, repoDir: dir, message, fileLayer, snapshotMode: _snapshotMode(),
           commit: async (payload) => {
-            const c = await _versionium('POST', '/api/versionium/commit', payload);
+            const c = await _versionium('POST', '/api/versionium/commit', payload, 120000); /* 0.60.603: a whole-repo snapshot under memory pressure outlasted the client's 8 s default (NM1a run 2813375c) */
             if (!c.ok) return { error: c.error };
             return c.data?.commit || { error: c.data?.error || 'versionium returned no commit' };
           },
@@ -8071,7 +8071,7 @@ async function handle(req, res, route, query, body) {
       const r = await handleCode({ method: req.method, op: params.op, layer: getRepoLayer(), repo, uuid: params.uuid, dir, query, body: body || {},
         emit: (type, payload) => { try { os.emit(type, payload); } catch (_) { /* the write already happened */ } }, tool: (body && body._tool) || query._tool || null,
         // §0.39.279 (staging S1) — a staged change is a versionium commit on repo-<uuid>@staging
-        record: async (payload) => { const r = await _versionium('POST', '/api/versionium/commit', payload); if (!r.ok) return { error: r.error }; return (r.data && r.data.commit) || { error: (r.data && r.data.error) || 'versionium returned no commit' }; } });
+        record: async (payload) => { const r = await _versionium('POST', '/api/versionium/commit', payload, 120000); /* 0.60.603: a whole-repo snapshot under memory pressure outlasted the client's 8 s default (NM1a run 2813375c) */ if (!r.ok) return { error: r.error }; return (r.data && r.data.commit) || { error: (r.data && r.data.error) || 'versionium returned no commit' }; } });
       if (r.status >= 400) return err(res, r.status, r.body.error, Object.fromEntries(Object.entries(r.body).filter(([k]) => k !== 'error')));
       if (req.method === 'POST') _deviationAfter(params.uuid, 'files');   // §0.39.280 BS3 — a code write may be a major change
       return ok(res, r.body);
@@ -10497,7 +10497,7 @@ async function handle(req, res, route, query, body) {
           repo: getRepoLayer().get(params.uuid) || repo, repoDir: dir, fileLayer, snapshotMode: _snapshotMode(),
           message: `pre-restore snapshot (before restoring ${params.commitId})`, causedBy: params.commitId,
           commit: async (payload) => {
-            const r = await _versionium('POST', '/api/versionium/commit', payload);
+            const r = await _versionium('POST', '/api/versionium/commit', payload, 120000); /* 0.60.603: a whole-repo snapshot under memory pressure outlasted the client's 8 s default (NM1a run 2813375c) */
             if (!r.ok) return { error: r.error };
             return r.data?.commit || { error: r.data?.error || 'versionium returned no commit' };
           },
