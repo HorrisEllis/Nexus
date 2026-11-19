@@ -1538,3 +1538,13 @@ spec:
 # Next after the JavaScript removal: EM2 (WARP 2) and RF1 with CF1 (the relational constraint field). His words for the field's shape: the primitives
 # (Pillar's contracts) define the structure; anything outside it is noise, and friction introduced. CP11 (docs/2026-11-01-the-compartment-phasemap.spec)
 # is where it is seen.
+
+# ── ADDENDUM 2026-11-19 — his model of the field: the pot, the contract, the .dag worked backwards (RF1; not built) ──
+# James, 2026-11-19: "what is is more defined by what isn't. That's emerge. what lies inside the constrain field, is where emergence happens,
+# like soil in a pot." · "Raid creates the pot(the compartment) from my idea or input that's the creates the contract for the end state of
+# compartment(a rose bush in this analogy.) then the steps are the conditions that create the outcome by working backwards from the end state
+# create the dependancy graph in order for the conditions to be met. The .dag."
+# Reading (coder's, to confirm): compartment = the pot (constraints, what it is not); contract = the end state; .dag = conditions derived
+# backwards from the contract; steps = proposed transitions in the field (field.eg propose); gates = constraints (field.eg judge).
+# Gap found: no phase derives the .dag backwards from a contract; RF1's core (0.60.601) judges transitions but does not plan them.
+# Open question to him: is the contract the field's top layer in place of CRF1's held axioms, or do the axioms sit above it as the pot's walls?

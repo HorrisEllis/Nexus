@@ -132,6 +132,28 @@ Each one: what he said, what was on the table, what he chose, and what a strange
 The rules he set, each in his own words, are in [section 1 of the quote index](2026-10-31-his-words-index.md#1-the-principles-in-his-words).
 Among them: "each phase, has to have a dependany graph before executing." (2026-10-18, [Q1480](his-words/quotes-2026-10-18.md#q1480)) · "the component registry is vital for each project becuase its the spine that makes components dumb." (2026-10-19, [Q1534](his-words/quotes-2026-10-19.md#q1534)) · "full move. each system needs to be sovereign. if cortex going down breaks something, it needs to be moved." (2026-09-19, [Q0545](his-words/quotes-2026-09-19.md#q0545))
 
+## 5b. How he sees the world: the pot and the rose bush (2026-11-19)
+
+His words, verbatim: "what is is more defined by what isn't. That's emerge. what lies inside the constrain field, is where emergence happens,
+like soil in a pot. Planting a seeds and watering it, are creating the conditions for its potential emergence. Like a rose bush. That's the way
+I see the world." · "Raid creates the pot(the compartment) from my idea or input that's the creates the contract for the end state of
+compartment(a rose bush in this analogy.) then the steps are the conditions that create the outcome by working backwards from the end state
+create the dependancy graph in order for the conditions to be met. The .dag." · "How do you grow a rosebush right right well first looking
+backwards" (water, sunlight, warmth, seeds planted in soil, a pot, then buying the pot, soil, seeds, fertilizer).
+
+What it means in Nexus (the coder's reading, his to correct):
+
+| His image | In Nexus |
+|---|---|
+| the pot: what the thing is *not* | the compartment RAID makes from his input; its walls are the constraints |
+| the soil: where emergence happens | the constraint relational field (emerge/emerge/field/field.eg, 0.60.601): any transition every constraint admits may happen |
+| the rose bush | the contract: the end state, fixed first |
+| the conditions, worked backwards | the .dag: each step exists because the step after it needs it |
+| watering, planting | the steps: proposed transitions; gates are the constraints that judge them |
+
+Not yet built: deriving the .dag backwards from the contract. Every pipeline today is written forwards (phase RF1, addendum 2026-11-19).
+The same day: "I am in debt, lonely, working on the one thing that can change that ... Everything is riding on nexus." · "i want and need to be seen."
+
 ## 6. The numbers, as of 2026-10-31
 
 | What | Number | How to check |

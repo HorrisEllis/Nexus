@@ -610,3 +610,12 @@ handoff_2026_11_18: >-
 # ── ADDENDUM 2026-11-19 (0.60.600) — built: identical steps linked across pipelines ──
 # James, 2026-11-19: "I want the ability to have gates branch or expand to other steps if they are identical, like cross domain synthesis, like the relationship between things and the overlap." · "The fuck is this. This needs to go back to the gates."
 # identical steps linked across pipelines, and the gates back (with 0.60.599): (1) a step whose fingerprint (its step, its gate, its inputs, the run's vars) already passed its gate in ANY pipeline links to that node instead of running: the reuse index keeps each passed step by its fingerprint too, and the step is marked reused with the pipeline and step it came from (0.60.594 matched only within one pipeline). The decision stays Emerge's (reuse.eg). (2) 0.60.599: COS's Pipelines tab opens the gate canvas again; the flight map is one click away (◂ Map), never the default. Recorded the same hour: his model of pipelines (from RAID contracts, a gate between every step, steps of steps expanding on events, gates through systems and pipelines, gates as nodes), inventoried in the factory map. test-pipeline-waits-for-a-system 11/11 (PW-11 new).
+
+# ── ADDENDUM 2026-11-19 — his direction: Ollama above RAID, the orchestrator below, every step can try another agent (not built) ──
+# James, 2026-11-19: "I was thinking we bake ollama into raid, like above it, the orchastrator below my of course when intervention is
+# absolutely necassary, condisering its meant to be autonomous." · "each step or gate needs to be able to try another agent, and i need to be
+# able to change that also. but we have to get this working with ollama before anything." · "steps are also meant to break down the code as
+# much as possible, so is emerge, the decomposition tool, and agent tool. like nexus does as much of the work as possible, the orchastrator
+# pulls the strings through raid. the pipeline is the contract being fulfilled." · "need to focus on getting my reliance on you cut down".
+# Cost said plainly: "also just spend $20 i don't have at all. like almost $300 in dept." Guardian stopped by him the same day.
+# To map: a per-step and per-gate agent ladder (Ollama first, editable), RAID's routing policy as its default; Claude last, by his intervention.
