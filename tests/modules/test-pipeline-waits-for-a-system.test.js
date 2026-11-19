@@ -139,6 +139,22 @@ const freePort = () => new Promise(r => { const s = net.createServer(); s.listen
       assert.strictEqual(hits, 3, 'redo: run again'); assert.strictEqual(rr.status, 'ok');
     } finally { srv.close(); }
   });
+  await t('PW-11', 'his "gates branch or expand to other steps if they are identical, like cross domain synthesis": an identical gated step in another pipeline links to the node that already passed; a different one runs', async () => {
+    let hits = 0; const srv = http.createServer((q, r) => { hits++; r.setHeader('content-type', 'application/json'); r.end(JSON.stringify({ ok: true, n: hits })); });
+    await new Promise(x => srv.listen(0, '127.0.0.1', x)); const port = srv.address().port;
+    const P = new Pipelines(new AutomationEngine({}), { dir: path.join(tmp, 'k') });
+    const same = { id: 'probe', step: { type: 'api', config: { url: `http://127.0.0.1:${port}/same`, method: 'GET' } }, gate: { contains: 'ok' } };
+    const one = P.create({ name: 'one', tasks: [same, { id: 'x', depends_on: ['probe'], step: { type: 'set', config: { assign: { a: 1 } } } }] });
+    const two = P.create({ name: 'two', tasks: [same, { id: 'y', depends_on: ['probe'], step: { type: 'set', config: { assign: { b: 2 } } } }] });
+    const other = P.create({ name: 'other', tasks: [{ ...same, step: { type: 'api', config: { url: `http://127.0.0.1:${port}/other`, method: 'GET' } } }] });
+    try {
+      const r1 = await P.run((one.pipeline || one).id, { wait: true }); assert.strictEqual(r1.run.status, 'ok'); assert.strictEqual(hits, 1);
+      const r2 = await P.run((two.pipeline || two).id, { wait: true });
+      assert.strictEqual(hits, 1, 'the identical step in another pipeline did not run again'); assert.strictEqual(r2.run.status, 'ok');
+      assert.ok(r2.run.tasks.probe.reused && r2.run.tasks.probe.reused.pipeline === (one.pipeline || one).id, JSON.stringify(r2.run.tasks.probe));
+      await P.run((other.pipeline || other).id, { wait: true }); assert.strictEqual(hits, 2, 'a different step runs');
+    } finally { srv.close(); }
+  });
   fs.rmSync(tmp, { recursive: true, force: true });
   console.log(`\n${passed} passed, ${failed} failed`); process.exit(failed ? 1 : 0);
 })();

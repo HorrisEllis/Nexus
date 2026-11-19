@@ -265,7 +265,7 @@ class Pipelines {
   _reuseFile() { return path.join(path.dirname(this.runsDir), 'reuse-index.json'); }
   _reuseIndex() { try { return JSON.parse(fs.readFileSync(this._reuseFile(), 'utf8')); } catch (_) { return {}; } }
   _saveStep(p, run, id, output) {
-    { const t0 = run.tasks[id] || {}; if (t0.status === 'done' && t0.inputKey && !t0.reused && !t0.openGate) { try { const ix = this._reuseIndex(); ix[`${p.id}::${id}`] = { key: t0.inputKey, status: 'done', gate: (t0.gate && t0.gate.outcome) || 'open', openGate: false, run: run.id, at: Date.now() }; fs.writeFileSync(this._reuseFile(), JSON.stringify(ix)); } catch (_) {} } }   // 0.60.594
+    { const t0 = run.tasks[id] || {}; if (t0.status === 'done' && t0.inputKey && !t0.reused && !t0.openGate) { try { const ix = this._reuseIndex(); ix[`${p.id}::${id}`] = { key: t0.inputKey, status: 'done', gate: (t0.gate && t0.gate.outcome) || 'open', openGate: false, run: run.id, at: Date.now() }; ix[`key:${t0.inputKey}`] = { ...ix[`${p.id}::${id}`], pipeline: p.id, task: id }; fs.writeFileSync(this._reuseFile(), JSON.stringify(ix)); } catch (_) {} } }   // 0.60.594
     try { const NX = require('../../lib/node-export.js'); const t = run.tasks[id] || {}; const def = (p.tasks || []).find(x => x.id === id) || {};
       const payload = { id, run: run.id, pipeline: p.id, pipelineName: p.name, label: def.label || id, after: def.depends_on || [], gives: ['output'], run_step: def.step || null,
         gate: def.gate || null, status: t.status, attempts: t.attempts, startedAt: t.startedAt || null, finishedAt: t.finishedAt || null, ms: t.ms != null ? t.ms : null,
@@ -408,10 +408,10 @@ class Pipelines {
       { const ownVars = Object.fromEntries(Object.entries({ ...(p.vars || {}), ...vars }).filter(([k]) => !k.startsWith('__')));
         const key = require('crypto').createHash('sha256').update(JSON.stringify({ step: t.step, gate: t.gate || null, vars: ownVars, inputs: (t.depends_on || []).map(d => outputs[d] === undefined ? null : outputs[d]) })).digest('hex').slice(0, 32);
         run.tasks[t.id].inputKey = key;
-        const prev = this._reuseIndex()[`${p.id}::${t.id}`] || null;
+        const _ix = this._reuseIndex(); const prev = _ix[`${p.id}::${t.id}`] || _ix[`key:${key}`] || null;   // 0.60.600: or the same step, passed in ANY pipeline (his cross-domain synthesis)
         let d = { reuse: false }; try { d = _reuseEg().decide({ prev, key, gated: !!t.gate, reuse: t.reuse !== false, redo: !!(run.redo && run.redo.includes(t.id)) }); } catch (_) {}
-        if (d.reuse) { const node = this.steps(prev.run)[t.id]; const out = node && node.output !== undefined ? node.output : undefined;
-          if (out !== undefined) { outputs[t.id] = out; full.set(t.id, out); set(t.id, { status: 'done', reused: { from: prev.run, at: prev.at }, note: `reused — ${d.why}`, ms: 0, finishedAt: Date.now(), error: null, output: _preview(out) }); return true; } } }
+        if (d.reuse) { const node = this.steps(prev.run)[prev.task || t.id]; const out = node && node.output !== undefined ? node.output : undefined;
+          if (out !== undefined) { outputs[t.id] = out; full.set(t.id, out); set(t.id, { status: 'done', reused: { from: prev.run, at: prev.at, ...(prev.pipeline && prev.pipeline !== p.id ? { pipeline: prev.pipeline, task: prev.task } : {}) }, note: `reused — ${d.why}`, ms: 0, finishedAt: Date.now(), error: null, output: _preview(out) }); return true; } } }
       const tries = 1 + (t.retries || 0); const t0 = Date.now(); let last = null;
       for (let a = 1; a <= tries; a++) {
         if (run.cancelled) { last = { error: run.cancelled }; break; }
