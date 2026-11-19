@@ -280,7 +280,9 @@ function createSupervisor({ root, declarations = null, policy = {}, ledgerFile =
     if (Array.isArray(d.cmdCandidates)) {
       const ext = process.platform === 'win32' ? '.cmd' : '';
       const hit = d.cmdCandidates.map(c => c + ext).find(c => fs.existsSync(c));
-      if (hit) cmd = hit; else if (ext) cmd += ext;
+      // 0.60.588: a candidate's electron.exe is used even when its .bin launcher is missing (it was: "spawn electron ENOENT")
+      const viaExe = d.cmdCandidates.map(c => realElectron(c + ext)).find((x, i) => x !== d.cmdCandidates[i] + ext);
+      if (hit) cmd = hit; else if (viaExe) cmd = viaExe; else if (ext) cmd += ext;
       cmd = realElectron(cmd);
     } else if (d.cwd && !path.isAbsolute(cmd) && /[\\/]/.test(cmd)) cmd = path.join(cwd, cmd);
     let args = [...(d.args || [])]; let env = null, via = null;

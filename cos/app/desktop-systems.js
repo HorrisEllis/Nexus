@@ -36,7 +36,11 @@ function windowed(dir, { readdir = (d) => fs.readdirSync(d, { withFileTypes: tru
     for (const p0 of procs) {
       const p = fill(p0, dir);
       if (!p || !/electron/i.test(path.basename(String(p.cmd || '')))) continue;
-      const cmd = realElectron((p.cmdCandidates || []).find(x => exists(x)) || p.cmd, process.platform, exists);
+      // 0.60.588 — his "i can't get clear glass to open" ("spawn electron ENOENT"): node_modules\.bin was missing, so no candidate existed and the
+      // bare 'electron' was spawned. A candidate's electron.exe (beside its .bin) is used even when the .bin launcher itself is missing.
+      const cands = p.cmdCandidates || [];
+      const viaExe = cands.map(x => realElectron(x, process.platform, exists)).find((x, i) => x !== cands[i]);
+      const cmd = realElectron(cands.find(x => exists(x)) || viaExe || p.cmd, process.platform, exists);
       out.push({ name: p.name || e.name, cmd, args: p.args || [], cwd: path.resolve(dir, p.cwd || e.name), env: p.env || {}, healthUrl: p.healthUrl || rt.healthUrl || null });
     }
   }
