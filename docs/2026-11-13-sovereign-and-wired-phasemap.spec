@@ -418,3 +418,21 @@ order: >-
 # ── ADDENDUM 2026-11-13 — SW5b re-aimed: RAID moves into COS (his), so its worker and officiator go to COS, not Cortex ──
 # James, 2026-11-13: "moves into cos. i feel like." (docs/2026-10-23-cos-spine-phasemap.spec CS11, picked up). SW5b waits on CS11 step 1
 # (the callers reach RAID by route) so the worker and officiator move once. Cortex's memory compactors and deduplicator stay Cortex's.
+
+# ── ADDENDUM 2026-11-19 — RAID is the resolver; one event ledger per system; ratings with a slope; Cortex's ledger of ledgers is the associative lattice (his) ──
+# James, 2026-11-19, verbatim: "should'nt that be in the routing system since raid handles inbound requests. shouldn't it be the resolver" ·
+# "okay why not now? we need a ledger and rating for phases with a slope for most load bearing and least implimented or resolved, per system.
+# same with open loop system for the tension. friction rating for bugs. each system needs the ledger for all of that. event ledger.
+# interaction ledger. contract ledger. or maybe each system just has an event ledger. cortex has a ledger for ledgers and a ledger graph for
+# them, no the associative lattice since they are all nodes. thats how i want the associative lattice to work in cortex. a query for all the
+# nodes, components, data, everything it book keeps." · "just continue the pipeline after logging. keep it emerge. follow the architecture"
+# Decided (his):
+#  - RAID resolves nexus://<system>.<surface> (it routes inbound requests); COS's addressOf (0.60.591) becomes RAID's client, keeping RAID's
+#    last answers so names resolve while RAID restarts; RAID's own address is the one bootstrap entry. The logic in Emerge.
+#  - per system, ONE event ledger (his "or maybe each system just has an event ledger"): interactions, contracts, phases, bugs are kinds of
+#    events in it, not separate ledgers. From it, per system: a phase rating with a slope (most load-bearing and least implemented or resolved
+#    first, OL6's load score and IF21), an open-loop tension rating (CFR/RFR2), a friction rating for bugs (from its failures).
+#  - Cortex keeps the ledger of ledgers, and it is the associative lattice: every ledger, node, component and datum Cortex bookkeeps is a node
+#    in it, and one query reaches all of them (the 3D lattice view of 2026-11-18 is its picture).
+# Mapped, not built, except the resolver (built next, 0.60.592). Coder's reading for him to correct: the ratings and the lattice query are
+# Emerge over the ledgers' nodes (pure, as profile.eg and stall.eg are); each system's event ledger is its drawbridge's (SW6, §5.16).
