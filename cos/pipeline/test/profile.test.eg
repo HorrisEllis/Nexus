@@ -1,0 +1,24 @@
+// cos/pipeline/test/profile.test.eg — the build profile. eg test cos/pipeline/test/profile.test.eg
+// James, 2026-11-18: "make it happen. everything that can help improve ollama and the pipeline" · "Compartments. Raid gates. Also make sure to use emerge"
+use "../profile.eg" as profile
+
+let SYS = [
+  { name: "idearium", state: "up", critical: false, rssMB: 444 },
+  { name: "cortex", state: "up", critical: true, rssMB: 120 },
+  { name: "intelligence", state: "up", critical: false, rssMB: 737 },
+  { name: "diagnostic", state: "up", critical: false, rssMB: 318 },
+  { name: "versionium", state: "up", critical: false, rssMB: 24 },
+  { name: "loom", state: "declared", critical: false, rssMB: 0 }
+]
+
+test "memory tight: what the build does not call is paused; the build path, what it calls, the critical and the stopped are kept" {
+  let d = profile.decide({ systems: SYS, called: ["versionium"], freePct: 6, linePct: 24 })
+  expect any(d.pause, fn(n) = n == "intelligence") and any(d.pause, fn(n) = n == "diagnostic"), json(d)
+  expect not any(d.pause, fn(n) = n == "idearium" or n == "cortex" or n == "versionium" or n == "loom"), json(d.pause)
+  expect find_text(d.why, "1055 MB") >= 0, d.why
+}
+
+test "memory not tight: nothing is paused, and it says why" {
+  let d = profile.decide({ systems: SYS, called: [], freePct: 40, linePct: 24 })
+  expect len(d.pause) == 0 and find_text(d.why, "not tight") >= 0, d.why
+}

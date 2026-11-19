@@ -14,6 +14,7 @@ use "../census/graph.eg" as graphs
 use "./contract.eg" as contract
 use "../sovereign/location.eg" as location
 use "./stall.eg" as stall
+use "./profile.eg" as profile
 
 wire box.BoxShape.answer -> "box.answer"
 var last = null
@@ -39,6 +40,9 @@ else if cmd == "baseline" {   // PC8 slice a: { runs: [the engine's saved runs] 
 }
 else if cmd == "stall" {   // PC8 slice stall (2026-11-18, his "needs to detect when it's not running"): { request, steps, resumed } → resume | hold | none
   print(json(stall.decide(input())))
+}
+else if cmd == "profile" {   // 0.60.587 the build profile: { systems, called, freePct, linePct } → { pause, keep, why }
+  print(json(profile.decide(input())))
 }
 else if cmd == "boxes" {
   // a pipeline (it has tasks) or a procedure (it has steps) → { kind, graph, ok, problems, unchecked }

@@ -1,0 +1,36 @@
+// cos/pipeline/profile.eg — the build profile (factory map, addendum 2026-11-18 "hats for every step"; his RAID gates per compartment).
+// James, 2026-11-18: "make it happen. everything that can help improve ollama and the pipeline" · "The gates and steps. Are more intelligent.
+// Compartments. Raid gates. Also make sure to use emerge"
+// Measured that day: DeepSeek's load took free memory from 7.1 GB to 0.6 GB in a minute; COS froze and the service killed it. While a build
+// holds the model, compartments it does not call are paused (CP5b) and resumed when it ends. Pure: COS's door acts on the answer.
+// A compartment is kept when: the build calls it, it is critical, it is one the build path always needs (KEEP), or it is not running.
+// Nothing is paused while memory is above the machine's own line (baseline less 2 sigma, lib/prevention.js): no pressure, no pause.
+
+// a paused process does not refuse a request, it holds it: so what a build reaches by request, even rarely, is kept — guardian carries the
+// ladder's agents, orchestrator takes the registrations and pulses of every system the build calls
+let KEEP = ["cos", "cortex", "ollama-bridge", "ollama", "copilot", "idearium", "emerge", "clear-glass", "guardian", "orchestrator"]
+
+fn keep_why(s: map, called: list): string {
+  let n = str(s.name ?? "")
+  if s.state != "up" { return "not running (" + str(s.state ?? "?") + ")" }
+  if any(KEEP, fn(k) = k == n) { return "the build path needs it" }
+  if any(called, fn(c) = c == n) { return "the build calls it" }
+  if s.critical == true { return "critical" }
+  return ""
+}
+
+// q: { systems: [{ name, state, critical, rssMB }], called: [names], freePct, linePct } → { pause: [names], keep: [{ name, why }], why }
+fn decide(q: map): map {
+  let systems = q.systems ?? []
+  let called = q.called ?? []
+  let free = q.freePct ?? 100
+  let line = q.linePct ?? 25
+  if free >= line + 10 {
+    return { pause: [], keep: [], why: "memory is not tight (" + str(free) + "% free, the line is " + str(line) + "%): nothing paused" }
+  }
+  let keep = map(filter(systems, fn(s) = keep_why(s, called) != ""), fn(s) = { name: s.name, why: keep_why(s, called) })
+  let pause = map(filter(systems, fn(s) = keep_why(s, called) == ""), fn(s) = s.name)
+  var mb = 0
+  for s in filter(systems, fn(s) = keep_why(s, called) == "") { mb = mb + (s.rssMB ?? 0) }
+  return { pause: pause, keep: keep, why: "a build holds the model with " + str(free) + "% free (the line is " + str(line) + "%): " + str(len(pause)) + " compartment(s) the build does not call paused, about " + str(mb) + " MB" }
+}

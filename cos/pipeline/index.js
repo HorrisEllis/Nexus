@@ -104,7 +104,39 @@ function createPipeline({ automation, idearium = null, call = null, dataDir } = 
   });
 
   // ── a request, kept as files ──
-  const onEvent = (type, data) => inOrder(async () => {
+  // 0.60.587 the build profile (cos/pipeline/profile.eg) — James, 2026-11-18: "make it happen. everything that can help improve ollama and the
+  // pipeline" · "Compartments. Raid gates. Also make sure to use emerge". A run whose steps build a phase starts: Emerge decides which running
+  // compartments it does not call are paused while memory is tight; they are resumed, exactly those, when the run ends. Beside the run's own
+  // handling, never in its way: a failure here is said and the run goes on.
+  const _profiled = new Map();   // engine run id → the compartments this profile paused
+  const _json = (r) => { try { return JSON.parse(r && r.body); } catch (_) { return null; } };
+  const profileHook = async (type, data) => {
+    try {
+      if (type === 'automation.pipeline.start') {
+        const p = await getPipeline(data.pipelineId); const tasks = (p && p.tasks) || [];
+        const urls = tasks.map((t) => String((t.step && t.step.config && t.step.config.url) || ''));
+        if (!urls.some((u) => /\/phases\/build\b/.test(u))) return;
+        const called = [...new Set(urls.map((u) => (/^nexus:\/\/([a-z0-9-]+)/i.exec(u) || [])[1]).filter(Boolean))];
+        const sj = _json(await call('cos', 'GET', '/api/cos/systems', undefined, 1 << 20)), uj = _json(await call('cos', 'GET', '/api/cos/usage', undefined, 1 << 20));
+        const use = (uj && uj.usage && uj.usage.systems) || {};
+        const systems = ((sj && sj.systems) || []).map((s) => ({ name: s.name, state: s.state, critical: !!s.critical, rssMB: (use[s.name] && use[s.name].rssMB) || 0 }));
+        let linePct = 25; try { const PV = require('../../lib/prevention.js'); linePct = Math.round(PV.lineFor(PV.all()._baseline).line * 100); } catch (_) {}
+        const freePct = Math.round(os.freemem() / os.totalmem() * 100);
+        const d = await eg('profile', { systems, called, freePct, linePct });
+        if (!d || !Array.isArray(d.pause)) return;
+        console.log(`[cos/pipeline] build profile: ${d.why}${d.pause.length ? ' — ' + d.pause.join(', ') : ''}`);
+        const done = [];
+        for (const n of d.pause) { const r = _json(await call('cos', 'POST', `/api/cos/systems/${encodeURIComponent(n)}/pause`, { by: 'rule:build-profile', reason: `a build holds the model: ${d.why}` })); if (r && r.ok !== false) done.push(n); else console.log(`[cos/pipeline] build profile: ${n} not paused — ${(r && r.error) || 'no answer'}`); }   // a pause is RAID's to approve (CP5b): refused, it stays running, said
+        if (done.length) { _profiled.set(data.runId, done); fire('pipeline.profile.paused', { runId: data.runId, paused: done, why: d.why }); }
+      } else if (type === 'automation.pipeline.done' && _profiled.has(data.runId)) {
+        const names = _profiled.get(data.runId); _profiled.delete(data.runId);
+        for (const n of names) await call('cos', 'POST', `/api/cos/systems/${encodeURIComponent(n)}/resume`, { by: 'system:cos (build profile: undoing its own pause)' });
+        console.log(`[cos/pipeline] build profile: the run ended, resumed ${names.join(', ')}`); fire('pipeline.profile.resumed', { runId: data.runId, resumed: names });
+      }
+    } catch (e) { console.warn(`[cos/pipeline] build profile: ${e.message} — the run goes on unchanged`); }
+  };
+  const onEvent = (type, data) => { profileHook(type, data); return _onEvent(type, data); };
+  const _onEvent = (type, data) => inOrder(async () => {
     const needsPipeline = type === 'automation.pipeline.start' && !(data.meta && data.meta.request);
     const pipeline = needsPipeline ? await getPipeline(data.pipelineId) : null;
     // the run's end: RAID's verdict first (its evidence went in with each step met), then the files
