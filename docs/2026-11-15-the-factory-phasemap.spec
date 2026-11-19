@@ -587,3 +587,22 @@ handoff_2026_11_18: >-
 # ── ADDENDUM 2026-11-19 (0.60.597) — built: lean build mode ──
 # James, 2026-11-19: "Lean build mode" (asked: lean build mode, or more RAM)
 # lean build mode: a paused process keeps its memory, so pausing (the build profile) freed none; lean stops what the build does not reach and unloads every Ollama model it does not use, at the start of every build of a lean pipeline, tight or not; everything stopped is started again when the run ends. Decided in Emerge (cos/pipeline/profile.eg: lean → { stop, unload }, the build's own model kept from RAID's routing); each stop is RAID's to approve with its measured proof, as a pause is (COS's stop and start by a rule now go through RAID too; checked: approved with proof). `pipeline-lean <pipeline> on|off` in COS's console sets it (settings.lean), or a run's var lean=on. profile.test.eg 3/3 (lean new), gate 11/11, stall 2/2; test-cos-service 11/11.
+
+# ── ADDENDUM 2026-11-19 (later) — pipelines from contracts; a gate between every step; steps of steps, expanding on events; identical steps
+#    linked across pipelines; gates through systems and pipelines; gates as nodes (his) ──
+# James, 2026-11-19, verbatim: "Pipelines need to come from contracts. Like from raid. Like each step needs to be editable. Can also be phases.
+# Each step can have steps, can have steps. Dynamically expanding event driven gates. That's why every step must have a gate between it. I want
+# the ability to have gates branch or expand to other steps if they are identical, like cross domain synthesis, like the relationship between
+# things and the overlap. Gates can run through systems or other pipelines. They can be nodes also. Like synapsis runs through neurons, the data
+# moving the pipeline, or to other systems."
+# Where each stands (measured that day):
+#  - from contracts: each request books a RAID .contract v2 (CP-14), but pipelines are planned from the phasemap (plan.eg); the contract →
+#    pipeline direction (RAID's contract is the source, the pipeline its projection) is not built.
+#  - editable: steps (PATCH), gates' conditions (0.60.590 pipeline-gate) — yes. A step that is a phase: the build steps are phases — yes.
+#  - steps of steps: a framework step compiles to a child pipeline, linked both ways (CP-11, CP-12); expanding on an event at run time (a step
+#    that fails or grows becomes its own sub-pipeline, the "decompose" step type of the inventory) — mapped, not built.
+#  - a gate between every step: gates are optional today — not built (every step gets one; the default gate is "it finished, its node holds").
+#  - identical steps linked across pipelines (his cross-domain synthesis): 0.60.594 reuses a passed step within one pipeline by its input
+#    fingerprint — the next unit, built next (0.60.600): the same fingerprint anywhere, any pipeline, links to the node that already passed.
+#  - gates through systems: a gate type asks a system's route (test, verify) — yes; through another pipeline — not built.
+#  - gates and steps as nodes (.gate, .process_step), the data moving through them — yes; their lattice view — mapped (the radial style).
