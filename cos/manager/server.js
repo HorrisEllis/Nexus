@@ -490,7 +490,7 @@ function createServer(sup, opts = {}) {
           const by = String(body.by);
           if (/^agent:/.test(by)) return send(res, 403, { ok: false, error: `an agent proposes; a ${act[2]} is a person's act or a rule's RAID approved (CP-005)` });
           if (/^rule:/.test(by)) {
-            let ok = null; try { ok = await require('../../lib/raid-port.js').approveTool('cos', `cos.${act[2]} ${name}`, { action: act[2], intent: { action: act[2], target: name }, causedBy: by }); } catch (e) { ok = { approved: false, reason: `RAID unreachable: ${e.message}` }; }
+            let ok = null; try { ok = await require('../../lib/raid-port.js').approveTool('cos', `cos.${act[2]} ${name}`, { action: act[2], intent: { action: act[2], target: name }, causedBy: by, proof: body.proof || null })   /* 0.60.595: a rule's evidence goes to RAID, which decides */; } catch (e) { ok = { approved: false, reason: `RAID unreachable: ${e.message}` }; }
             if (!ok || !ok.approved) { sup.note('raid-refused', `RAID did not approve ${act[2]} of ${name} by ${by}: ${(ok && ok.reason) || 'no answer'}`, { by, system: name }); return send(res, 403, { ok: false, error: `RAID did not approve: ${(ok && ok.reason) || 'no answer'}` }); }
           }
           const v = await sup[act[2]](name, { by });

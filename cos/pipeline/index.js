@@ -126,7 +126,7 @@ function createPipeline({ automation, idearium = null, call = null, dataDir } = 
         if (!d || !Array.isArray(d.pause)) return;
         console.log(`[cos/pipeline] build profile: ${d.why}${d.pause.length ? ' — ' + d.pause.join(', ') : ''}`);
         const done = [];
-        for (const n of d.pause) { const r = _json(await call('cos', 'POST', `/api/cos/systems/${encodeURIComponent(n)}/pause`, { by: 'rule:build-profile', reason: `a build holds the model: ${d.why}` })); if (r && r.ok !== false) done.push(n); else console.log(`[cos/pipeline] build profile: ${n} not paused — ${(r && r.error) || 'no answer'}`); }   // a pause is RAID's to approve (CP5b): refused, it stays running, said
+        for (const n of d.pause) { const r = _json(await call('cos', 'POST', `/api/cos/systems/${encodeURIComponent(n)}/pause`, { by: 'rule:build-profile', reason: `a build holds the model: ${d.why}`, proof: { kind: 'measured', decidedBy: 'cos/pipeline/profile.eg', freePct, linePct, called, why: d.why, runId: data.runId, at: Date.now() } })); if (r && r.ok !== false) done.push(n); else console.log(`[cos/pipeline] build profile: ${n} not paused — ${(r && r.error) || 'no answer'}`); }   // a pause is RAID's to approve (CP5b): refused, it stays running, said
         if (done.length) { _profiled.set(data.runId, done); fire('pipeline.profile.paused', { runId: data.runId, paused: done, why: d.why }); }
       } else if (type === 'automation.pipeline.done' && _profiled.has(data.runId)) {
         const names = _profiled.get(data.runId); _profiled.delete(data.runId);
