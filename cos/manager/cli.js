@@ -15,6 +15,7 @@
 const TABLE = [
   ['help', 'help [verb]', 'this table'],
   ['ps', 'ps', 'every system: state, pid, port, restarts'],
+  ['open', 'open <system>', 'its own UI, in its Clear Glass compartment'],
   ['start', 'start <system>', 'start it'], ['stop', 'stop <system>', 'stop it'], ['restart', 'restart <system> | restart cos', 'restart it (cos: COS itself; its systems are handed over, not stopped)'],
   ['boot', 'boot [all|core]', 'boot the declared systems phase by phase'],
   ['logs', 'logs <system> [n]', 'its recent output (default 30 lines)'],
@@ -39,7 +40,7 @@ const TABLE = [
   ['location', 'location [system]', 'where each system lives on this machine, its size, and whether it can be moved (and what holds it if not)'],
   ['pipeline-sync', 'pipeline-sync', 'import every pipeline in Nexus into the Automation tab now: COS\'s own files and each system\'s, by its route; a system that does not answer is named'],
   // AE7 (2026-11-08) — James: "Then an api that eravos can use for the step. So needs full cli commands, events, nodes."
-  ['automation', 'automation workflows | run <id> | step <type> [key=value …] | active | log [n] | catalogue | nodes | export <id> | import <file> | pipelines | pipeline <id> | pipeline-run <id> | pipeline-resume <run> [redo,steps] | runs [pipeline-id] | stop <run-id> | pause <run-id> | continue <run-id> | pipeline-export <id> [file] | systems-pipelines <system> | import-from <system> <id>', 'the automation engine COS runs: its workflows, a run, one step on its own (what an ERAVOS box calls), live runs, the log, the step kinds, workflows as nodes'],
+  ['automation', 'automation workflows | run <id> | step <type> [key=value …] | active | log [n] | catalogue | nodes | export <id> | import <file> | pipelines | pipeline <id> | pipeline-run <id> [open] | pipeline-resume <run> [redo,steps] [open] | runs [pipeline-id] | stop <run-id> | pause <run-id> | continue <run-id> | pipeline-export <id> [file] | systems-pipelines <system> | import-from <system> <id>', 'the automation engine COS runs: its workflows, a run, one step on its own (what an ERAVOS box calls), live runs, the log, the step kinds, workflows as nodes'],
   ['vdisk', 'vdisk <system> [make|refresh|verify] | vdisk <system> snapshot|revert|drop <tag>', 'its virtual disk (qcow2): metadata, files and all its data in one file, its snapshots inside'],
 ];
 
@@ -106,6 +107,14 @@ function createCli({ restartCos = null, sup, resources = null, config = null, no
           L.push(`${pad('SYSTEM', 22)}${pad('STATE', 16)}${pad('PID', 8)}${pad('PORT', 7)}RESTARTS`);
           for (const v of sup.list()) L.push(`${pad(v.name, 22)}${pad(v.state, 16)}${pad(v.pid, 8)}${pad(v.port, 7)}${v.restarts && typeof v.restarts === 'object' ? v.restarts.count : v.restarts ?? 0}`); break;
         }
+        case 'open': {   // 0.60.589 — his "I need to be able to open idearium": a system's declared UI in its own Clear Glass compartment (the route's act)
+          need(1, row[1]);
+          const port = Number(process.env.COS_MANAGER_PORT) || 7799;
+          const r = await new Promise((resolve) => { const data = Buffer.from(JSON.stringify({ by }));
+            const q = require('http').request({ host: '127.0.0.1', port, path: `/api/cos/systems/${encodeURIComponent(a[0])}/open-ui`, method: 'POST', timeout: 8000, headers: { 'Content-Type': 'application/json', 'Content-Length': data.length } }, (rr) => { let t = ''; rr.on('data', (c) => { t += c; }); rr.on('end', () => { try { resolve(JSON.parse(t)); } catch (_) { resolve({ ok: false, error: `HTTP ${rr.statusCode}` }); } }); });
+            q.on('timeout', () => q.destroy(new Error('no answer'))); q.on('error', (e) => resolve({ ok: false, error: e.message })); q.write(data); q.end(); });
+          L.push(r.ok ? `opened ${a[0]} in its Clear Glass compartment: ${r.url}` : `not opened: ${r.error}`); break;
+        }
         case 'start': case 'stop': case 'restart': {
           need(1, row[1]);
           // 2026-11-18 — James: "the console needs to be able to execute these commands". `restart cos` restarts COS itself from its Console, as his
@@ -164,14 +173,14 @@ function createCli({ restartCos = null, sup, resources = null, config = null, no
           else if (sub === 'pipeline') { need(2, row[1]); const r = await call('GET', `/pipelines/${encodeURIComponent(a[1])}`); const p = r.pipeline; L.push(`${p.name} · ${(p.tasks || []).length} steps`);
             const runs = (await call('GET', `/pipeline-runs?pipelineId=${encodeURIComponent(p.id)}&limit=1`)).runs || []; const last = runs[0] || null; if (last) L.push(`last run ${last.id.slice(0, 8)} · ${last.status}`);
             for (const t of p.tasks || []) L.push(`  ${pad(last && last.tasks[t.id] ? last.tasks[t.id].status : '', 9)}${t.label || t.id}${(t.depends_on || []).length ? ' (after ' + t.depends_on.join(', ') + ')' : ''}`); }
-          else if (sub === 'pipeline-run') { need(2, row[1]); const r = await call('POST', `/pipelines/${encodeURIComponent(a[1])}/run`, { by }); L.push(r.ok === false ? `refused: ${r.error}` : `running ${a[1]}: run ${r.runId || (r.run && r.run.id) || '?'}`); }
+          else if (sub === 'pipeline-run') { need(2, row[1]); const r = await call('POST', `/pipelines/${encodeURIComponent(a[1])}/run`, { by, gates: a.slice(2).includes('open') ? 'open' : null }); L.push(r.ok === false ? `refused: ${r.error}` : `running ${a[1]}: run ${r.runId || (r.run && r.run.id) || '?'}`); }
           else if (sub === 'runs') { const r = await call('GET', `/pipeline-runs?limit=20${a[1] ? '&pipelineId=' + encodeURIComponent(a[1]) : ''}`); if (!r.runs.length) L.push('no runs yet');
             for (const x of r.runs) { const t = Object.values(x.tasks || {}); L.push(`${pad(x.status, 9)}${pad(x.id.slice(0, 8), 10)}${pad(t.filter(y => y.status === 'done').length + '/' + t.length, 7)}${x.pipelineName || x.pipelineId}`); } }
           // PC8 slice b (2026-11-11): pause and continue a live run; a run named by the first characters `runs` shows
           else if (sub === 'pause' || sub === 'continue') { need(2, row[1]); let id = a[1]; if (id.length < 36) { const live = ((await call('GET', '/pipeline-runs?limit=50')).runs || []).filter(x => x.id.startsWith(id)); if (live.length === 1) id = live[0].id; }
             const r = await call('POST', `/pipeline-runs/${encodeURIComponent(id)}/${sub}`, { by }); L.push(r.ok === false ? `refused: ${r.error}` : `${sub === 'pause' ? 'paused' : 'continued'} ${id.slice(0, 8)}: ${r.status}`); }
           else if (sub === 'pipeline-resume') { need(2, row[1]); let id = a[1]; if (id.length < 36) { const hit = ((await call('GET', '/pipeline-runs?limit=50')).runs || []).filter(x => x.id.startsWith(id)); if (hit.length === 1) id = hit[0].id; }
-            const r = await call('POST', `/pipeline-runs/${encodeURIComponent(id)}/resume`, { by, redo: a[2] ? a[2].split(',') : [] }); L.push(r.ok === false ? `refused: ${r.error}` : `resumed ${id.slice(0, 8)} as run ${String(r.runId || '?').slice(0, 8)}: met ${(r.met || []).join(', ') || 'nothing'}`); }   // FX1a
+            const r = await call('POST', `/pipeline-runs/${encodeURIComponent(id)}/resume`, { by, redo: a[2] && a[2] !== 'open' ? a[2].split(',') : [], gates: a.slice(2).includes('open') ? 'open' : null }); L.push(r.ok === false ? `refused: ${r.error}` : `resumed ${id.slice(0, 8)} as run ${String(r.runId || '?').slice(0, 8)}: met ${(r.met || []).join(', ') || 'nothing'}`); }   // FX1a
           else if (sub === 'stop') { need(2, row[1]); const r = await call('POST', `/pipeline-runs/${encodeURIComponent(a[1])}/cancel`, { by }); L.push(r.ok === false ? `refused: ${r.error}` : `stopped ${a[1]}`); }
           // 0.60.463 — James, 2026-11-08: "hooking in idearium. The pipeline in idearium is meant to be shown on the canvas." A system's own .pipeline files,
           // read by that system's route (GET /api/pipelines, /api/pipelines/:id — Idearium's first), never its folder (§5.15); imported into the engine.

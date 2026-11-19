@@ -1096,7 +1096,10 @@ function _heapNote(what) {
     console.log(`[idearium/heap] ${what}: ${Math.round(used / 1048576)} MB in use of ${Math.round(limit / 1048576)} MB`);
   } catch (_) {}
 }
-async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null, provider = null, note = '', replan = false, anyway = false, rebuild = false, startedBy = null }) {
+async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null, provider = null, note = '', replan = false, anyway = false, rebuild = false, startedBy = null, gates = null }) {
+  // 0.60.589 gates open (his "set gates to open instead of pass, so we can have the whole pipeline debugged at once"): a gate that would stop the
+  // build records why and lets it go on, so one run shows every failure; the build is never read as met for it (COS marks the run debugged)
+  const _gatesOpen = gates === 'open';
   _heapNote(`build ${phase}: asked`);
   const PH = await import('../repo/phases.js');
   const view = PH.managerView({ repo, repoDir: dir, runs: [] });
@@ -1858,6 +1861,8 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
           const seen = got.existing ? `${testPath} was already on disk — used as the frozen test, not written again (verify-first runs it against each file)` : got.already ? 'the phase is already satisfied: the test passes against the code already present — kept as a regression test' : got.v.verdict === 'not-run' ? got.v.why : `seen failing: ${got.v.why}`;
           tfRow('shaped', { provider: planner, testFirst: { path: testPath, added: sh.added, proposal: prop && prop.ok ? prop.inject.uuid : null },
             note: `${testPath} written first · ${seen} · ${sh.added.length ? `it calls ${sh.added.map(a => `${a.file} ${a.name}`).join(', ')}, which the plan lacked — added` : 'the plan already exports what it calls'} · its run is the first condition${prop && prop.ok ? '' : ` · not proposed: ${((prop && prop.errors) || []).join('; ')}`}` });
+        } else if (policy.testFirst === 'require' && !alreadyDone && _gatesOpen) {
+          tfRow('gate-open', { provider: planner, note: `gate open — test_first require would have stopped here: no usable test was written first (${lastWhy || 'no answer'}); the build goes on to the coders` });
         } else if (policy.testFirst === 'require' && !alreadyDone) {
           const why = `not built: no usable test was written first (${lastWhy || 'no answer'}) — routing.test_first is require; prefer builds without it`;
           tfRow('refused', { provider: planner, error: why });
@@ -10415,7 +10420,7 @@ async function handle(req, res, route, query, body) {
         if (hits.length !== 1) return err(res, hits.length ? 409 : 404, hits.length ? `${phase} is in ${hits.length} phasemaps — name one: ${hits.map(h => h.map).join(', ')}` : `no phase ${phase} in this repo`);
         map = hits[0].map;
       }
-      const r = await _phaseBuild(repo, dir, { startedBy: _starter(req, body), map, phase, backend: body.backend || null, agent: body.agent || null, provider: body.provider || null, note: body.note || '', replan: body.replan === true, anyway: body.anyway === true, rebuild: body.rebuild === true });
+      const r = await _phaseBuild(repo, dir, { startedBy: _starter(req, body), map, phase, backend: body.backend || null, agent: body.agent || null, provider: body.provider || null, note: body.note || '', gates: body.gates === 'open' ? 'open' : null, replan: body.replan === true, anyway: body.anyway === true, rebuild: body.rebuild === true });
       if (!r.ok) return err(res, r.status, r.error, r.extra);
       return ok(res, r.data);
     }

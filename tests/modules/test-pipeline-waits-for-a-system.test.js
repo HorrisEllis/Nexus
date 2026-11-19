@@ -95,6 +95,21 @@ const freePort = () => new Promise(r => { const s = net.createServer(); s.listen
       const r3 = await P.resume(r1.run.id, { by: 'test', redo: ['one'] }); assert.deepStrictEqual(r3.met, [], 'redo runs it again');
     } finally { srv.close(); }
   });
+  await t('PW-08', 'his "set gates to open instead of pass, so we can have the whole pipeline debugged at once": a failing step is recorded and the steps after it run; the run ends debugged, never ok; without it, they are blocked', async () => {
+    const srv = http.createServer((q, r) => { r.statusCode = 500; r.end('{"ok":false}'); }); await new Promise(x => srv.listen(0, '127.0.0.1', x));
+    const P = new Pipelines(new AutomationEngine({}), { dir: path.join(tmp, 'h') });
+    const c = P.create({ name: 'open', tasks: [{ id: 'a', step: { type: 'set', config: { assign: { v: 1 } } } }, { id: 'b', depends_on: ['a'], step: { type: 'api', config: { url: `http://127.0.0.1:${srv.address().port}/x`, method: 'GET' } } }, { id: 'c', depends_on: ['b'], step: { type: 'set', config: { assign: { w: 2 } } } }] });
+    const pid = (c.pipeline || c).id;
+    try {
+      const shut = await P.run(pid, { wait: true });
+      assert.strictEqual(shut.run.tasks.c.status, 'blocked', 'gates closed: c is blocked'); assert.strictEqual(shut.run.status, 'failed');
+      const open = await P.run(pid, { wait: true, gates: 'open' });
+      assert.strictEqual(open.run.tasks.c.status, 'done', JSON.stringify(open.run.tasks)); assert.ok(open.run.tasks.b.openGate && /would stop|HTTP|500|ok/i.test(open.run.tasks.b.note), JSON.stringify(open.run.tasks.b));
+      assert.strictEqual(open.run.status, 'debugged'); assert.match(open.run.error, /1 step\(s\) would have stopped it/); assert.strictEqual(open.run.vars.gates, 'open');
+      const again = await P.resume(open.run.id, { by: 'test', redo: ['b'] }); let rr = null; for (let i = 0; i < 50 && !(rr && rr.status !== 'running'); i++) { await new Promise(x => setTimeout(x, 100)); rr = P.getRun(again.runId); }
+      assert.strictEqual(rr.status, 'debugged', 'a resume keeps its gates open');
+    } finally { srv.close(); }
+  });
   fs.rmSync(tmp, { recursive: true, force: true });
   console.log(`\n${passed} passed, ${failed} failed`); process.exit(failed ? 1 : 0);
 })();

@@ -83,7 +83,7 @@ async function handle(A, { method, url, body = {}, headers = {}, rawBody = '' },
       if (!p[4] && method === 'GET') { const x = P.get(id); return x ? ok({ ok: true, pipeline: x, layers: require('./pipeline.js').layers(x) }) : ok({ ok: false, error: `no pipeline ${id}` }, 404); }
       if (!p[4] && method === 'PUT') return res(P.update(id, body || {}));
       if (p[4] === 'archive' && method === 'POST') return res(P.archive(id, { archived: !(body && body.archived === false) }));
-      if (p[4] === 'run' && method === 'POST') return res(await P.run(id, { vars: (body && body.vars) || {}, wait: q('wait') === '1' || !!(body && body.wait) }));
+      if (p[4] === 'run' && method === 'POST') return res(await P.run(id, { vars: (body && body.vars) || {}, wait: q('wait') === '1' || !!(body && body.wait), gates: body && body.gates === 'open' ? 'open' : null }));   // 0.60.589 gates open
       // 2026-10-30 PN2 — James: "export the .macro and .automation nodes to the .pipeline node". The pipeline as a node file with what it runs bundled;
       // save writes it into the node library (Settings › Automation › node files), beside the .macro and .workflow files
       if (p[4] === 'node') {
@@ -100,7 +100,7 @@ async function handle(A, { method, url, body = {}, headers = {}, rawBody = '' },
     if (p[2] === 'pipeline-runs' && p[3]) {
       if (!p[4] && method === 'GET') { const r = P.getRun(p[3]); return r ? ok({ ok: true, run: r }) : ok({ ok: false, error: `no run ${p[3]}` }, 404); }
       if (p[4] === 'cancel' && method === 'POST') return res(P.cancel(p[3]));
-      if (p[4] === 'resume' && method === 'POST') return res(await P.resume(p[3], { by: body && body.by, redo: body && body.redo }));   // FX1a
+      if (p[4] === 'resume' && method === 'POST') return res(await P.resume(p[3], { by: body && body.by, redo: body && body.redo, gates: body && body.gates === 'open' ? 'open' : null }));   // FX1a
       if (p[4] === 'pause' && method === 'POST') return res(P.pause(p[3], { by: body && body.by }));   // PC8 slice b
       if (p[4] === 'continue' && method === 'POST') return res(P.unpause(p[3], { by: body && body.by, vars: body && body.vars && typeof body.vars === 'object' ? body.vars : null }));   // PC13: answers ride on Continue
     }

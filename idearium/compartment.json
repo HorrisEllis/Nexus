@@ -45,7 +45,12 @@
         ],
         "about": "idearium's wall, declared by idearium (CP1a, 2026-11-01): COS's supervisor starts it behind this; equal to the census's boundaryFor('idearium'); audit: 31 way(s) out still open, so the wall says what it would refuse (DO_D9); enforce when the audit is empty"
       },
-      "maxOldSpaceMB": 1024
+      "maxOldSpaceMB": 1024,
+      "ui": {
+        "kind": "html",
+        "path": "/",
+        "about": "Idearium's own pages (the project manager): opened by COS in its Clear Glass compartment (0.60.589)"
+      }
     }
   },
   "data": {

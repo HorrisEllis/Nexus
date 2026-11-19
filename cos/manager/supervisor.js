@@ -480,7 +480,7 @@ function createSupervisor({ root, declarations = null, policy = {}, ledgerFile =
   function view(s) {
     const d = eff(s.decl);
     return { name: d.name, system: d.system, state: s.state === 'desktop' && s.desktopUp ? 'up' : s.state, inYourSession: s.state === 'desktop' ? !!s.desktopUp : undefined, pause: s.pause ? { ...s.pause, pids: [...s.pause.pids] } : null, pid: s.pid, port: d.healthUrl ? Number((/:(\d+)/.exec(d.healthUrl) || [])[1]) || null : null,
-      healthUrl: d.healthUrl || null, critical: !!d.critical, compartment: d.compartment || null, walled: !!(d.boundary && d.boundary.allow), wallMode: d.boundary ? (d.boundary.mode || 'enforce') : null, wallVia: d.boundary && d.boundary.allow ? (/electron/i.test(String(d.cmd)) ? 'NODE_OPTIONS' : '--require') : null, bootPhase: d.onDemand ? null : (d.phase ?? null), onDemand: !!d.onDemand,
+      healthUrl: d.healthUrl || null, ui: d.ui || null, critical: !!d.critical, compartment: d.compartment || null, walled: !!(d.boundary && d.boundary.allow), wallMode: d.boundary ? (d.boundary.mode || 'enforce') : null, wallVia: d.boundary && d.boundary.allow ? (/electron/i.test(String(d.cmd)) ? 'NODE_OPTIONS' : '--require') : null, bootPhase: d.onDemand ? null : (d.phase ?? null), onDemand: !!d.onDemand,
       restarts: { count: s.restarts, last: s.lastExit ? s.lastExit.ts : null, backoffMs: s.backoffMs }, circuit: { ...s.circuit }, startedAt: s.startedAt, by: s.by,
       // MG16: what autopilot's /status carried, so the door answers in its shape
       crashesInWindow: (prune(s), s.crashes.length), lastExit: s.lastExit, downSince: s.state === 'down' || s.state === 'circuit-open' ? (s.lastExit && s.lastExit.ts) : null, lastActivity: s.lastActivity };

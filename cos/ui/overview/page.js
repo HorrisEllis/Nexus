@@ -40,6 +40,13 @@
     catch (e) { if (!e.refused) COS.notice('err', `${a.t} ${name} was refused: ${e.message}`); }
     finally { card && card.classList.remove('busy'); }
   }
+  // 0.60.589 — his "I need to be able to open idearium": a system's own UI, in its Clear Glass compartment (no confirm: opening a page changes nothing)
+  async function openUi(name, card) {
+    card && card.classList.add('busy');
+    try { const r = await COS.call('POST', `/api/cos/systems/${encodeURIComponent(name)}/open-ui`, { by: 'person' }); COS.notice('ok', `${name} opened in its Clear Glass compartment`); }
+    catch (e) { COS.notice('err', `${name} did not open: ${e.message}`); }
+    finally { card && card.classList.remove('busy'); }
+  }
   async function boot(set) {
     const what = set === 'core' ? 'the critical systems only (the core set); every other system starts when it is asked for' : 'every declared system that is not on demand';
     if (!await COS.confirm({ title: set === 'core' ? 'Boot the core?' : 'Boot everything?', body: `COS starts ${what}, phase by phase, each phase waiting up to 30 s for its health.<br><br>Written to the ledger as your act.`, act: 'Boot' })) return;
@@ -108,6 +115,7 @@
           : s.circuit && s.circuit.open ? h('button', { class: 'btn sm', onclick: (e) => act(s.name, 'reset-circuit', e.target.closest('.card')), html: `${icon('reset')}<span>Reset circuit</span>` })
           : h('button', { class: 'btn sm primary', onclick: (e) => act(s.name, 'start', e.target.closest('.card')), html: `${icon('play')}<span>Start</span>` }),
         running ? h('button', { class: 'btn sm', onclick: (e) => act(s.name, 'restart', e.target.closest('.card')), html: `${icon('restart')}<span>Restart</span>` }) : null,
+        s.ui && s.ui.kind === 'html' ? h('button', { class: 'btn sm', title: `${s.name}'s own UI, in its Clear Glass compartment`, onclick: (e) => openUi(s.name, e.target.closest('.card')), html: `${icon('arrow')}<span>Open UI</span>` }) : null,
         h('span', { class: 'spacer' }),
         h('button', { class: 'btn sm quiet', title: `open ${s.name}'s cockpit`, onclick: () => COS.navigate(`#/c/${encodeURIComponent(s.name)}`), html: `<span>Open</span>${icon('arrow')}` })));
     return el;

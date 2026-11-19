@@ -276,13 +276,14 @@ class Pipelines {
   /** resumeInterrupted() — a run on disk still "running" with no driver in this process was cut off (COS restarted). It is marked interrupted and a
    *  new run of the same pipeline starts with its done steps met from their step nodes (their whole outputs), so only the rest run. Said, never silent. */
   async resumeInterrupted({ by = 'cos (boot)' } = {}) {
+    const gates = null;   // 0.60.589: an interrupted run keeps its own (r.openGates)
     const out = [];
     for (const r of this.runs(null, 500)) {
       if (!r || r.status !== 'running' || this._active.has(r.id)) continue;
       const steps = this.steps(r.id), done = {};
       for (const [id, t] of Object.entries(r.tasks || {})) if (t.status === 'done') done[id] = steps[id] && steps[id].output !== undefined ? steps[id].output : t.output;
       const full = this.getRun(r.id) || r; full.status = 'interrupted'; full.finishedAt = Date.now(); full.error = 'cut off by a restart; resumed from its last finished step';
-      const res = await this.run(r.pipelineId, { vars: r.vars || {}, wait: false, done, meta: { resume_of: r.id, by } });
+      const res = await this.run(r.pipelineId, { vars: r.vars || {}, wait: false, done, meta: { resume_of: r.id, by }, gates: (gates || (r.openGates ? 'open' : null)) });
       full.resumedBy = res && res.runId || null; this._saveRun(full);
       this._emit('automation.pipeline.resumed', { pipelineId: r.pipelineId, runId: res && res.runId, resume_of: r.id, met: Object.keys(done) });
       out.push({ was: r.id, now: res && res.runId, met: Object.keys(done), ok: !!(res && res.ok) });
@@ -292,12 +293,12 @@ class Pipelines {
   /** FX1a (2026-11-18) — resume(runId): a run that ended (failed, interrupted, cancelled) starts again from what it finished: its done steps met from
    *  their step nodes, `redo` names steps to run again even if done. James: "i want the automation and pipeline built. commands, first, api routes".
    *  Found running NM1: the build was still going in Idearium when the run failed after it; a fresh run would have started a second build. */
-  async resume(runId, { by = 'person', redo = [] } = {}) {
+  async resume(runId, { by = 'person', redo = [], gates = null } = {}) {
     const r = this.getRun(runId); if (!r) return { ok: false, error: `no run ${runId}` };
     if (r.status === 'running' || this._active.has(r.id)) return { ok: false, error: `run ${runId} is still running` };
     const again = new Set([].concat(redo || []).map(String)), steps = this.steps(r.id), done = {};
     for (const [id, t] of Object.entries(r.tasks || {})) if (t.status === 'done' && !again.has(id)) done[id] = steps[id] && steps[id].output !== undefined ? steps[id].output : t.output;
-    const res = await this.run(r.pipelineId, { vars: r.vars || {}, wait: false, done, meta: { resume_of: r.id, by } });
+    const res = await this.run(r.pipelineId, { vars: r.vars || {}, wait: false, done, meta: { resume_of: r.id, by }, gates: (gates || (r.openGates ? 'open' : null)) });
     this._emit('automation.pipeline.resumed', { pipelineId: r.pipelineId, runId: res && res.runId, resume_of: r.id, met: Object.keys(done), by });
     return { ...(res || { ok: false }), resume_of: r.id, met: Object.keys(done) };
   }
@@ -335,7 +336,8 @@ class Pipelines {
       for (const m of u.matchAll(/\{\{\s*vars\.([A-Za-z_][\w]*)[^}]*\}\}/g)) if (all[m[1]] === undefined || all[m[1]] === null || String(all[m[1]]).trim() === '') out.add(m[1]); }
     return [...out];
   }
-  async run(id, { vars = {}, wait = true, done = null, meta = null } = {}) {
+  async run(id, { vars = {}, wait = true, done = null, meta = null, gates = null } = {}) {
+    if (gates === 'open') vars = { ...vars, gates: 'open' };   // 0.60.589: the steps see it too ({{vars.gates}}), so a system's own gates can open
     const p = this.get(id); if (!p) return { ok: false, status: 404, error: `no pipeline ${id}` };
     if (p.archived) return { ok: false, error: 'that pipeline is archived; restore it to run it' };
     const v = this.validate(p); if (!v.ok) return { ok: false, error: `the pipeline is not valid: ${v.problems.join('; ')}`, problems: v.problems };
@@ -343,7 +345,7 @@ class Pipelines {
     // 2026-11-10 — James: "it is stuck" (GET /api/repos//phases/map → 404). A value the pipeline puts in an address, left empty, makes a broken
     // address several steps in; it is asked for before anything runs instead: { needs: [names] }, and a run can give them (vars)
     const needs = this.needs(p, vars); if (!done && needs.length) return { ok: false, status: 400, needs, error: `give ${needs.map(n => `vars.${n}`).join(', ')} first: ${needs.length > 1 ? 'they are' : 'it is'} part of a step's address, and empty` };
-    const run = { id: randomUUID(), pipelineId: p.id, pipelineName: p.name, status: 'running', order: layers(p), startedAt: Date.now(), finishedAt: null, vars, ...(meta && meta.resume_of ? { resume_of: meta.resume_of } : {}),
+    const run = { id: randomUUID(), pipelineId: p.id, pipelineName: p.name, status: 'running', openGates: gates === 'open', order: layers(p), startedAt: Date.now(), finishedAt: null, vars, ...(meta && meta.resume_of ? { resume_of: meta.resume_of } : {}),
       tasks: Object.fromEntries(p.tasks.map(t => [t.id, done && Object.prototype.hasOwnProperty.call(done, t.id) ? { label: t.label, status: 'done', attempts: 0, ms: 0, output: _preview(done[t.id]), error: null, blockedBy: null, met: 'earlier' } : { label: t.label, status: 'waiting', attempts: 0, ms: null, output: null, error: null, blockedBy: null }])) };
     this._active.set(run.id, run); this._saveRun(run);
     // vars ride on the start event so a run started anywhere (a trigger, a workflow's pipeline step) is a request the host can keep and resume;
@@ -426,6 +428,17 @@ class Pipelines {
       // 0.60.496 PC8 — James, 2026-10-26: "the gate doesn't wait for me to accept it or not before it fails." · 2026-11-11: "Do it". A step with
       // onFail hold does not fail the run: the run is paused by the pipeline, naming the step and why; the step stays waiting, and continue
       // (the same door as a pause by him) asks it again. Cancelled, it fails as any step does.
+      // 0.60.589 open gates — James, 2026-11-18: "Wouldn't it be better if we can set gates to open instead of pass, so we can have the whole pipeline
+      // debugged at once?" A run started with gates open records each failure as the verdict it would have been ("would stop here: …") and lets
+      // the steps after it run on what it gave, so one run shows every step's failure. Its steps are marked so the run is never read as met.
+      if (run.openGates && !run.cancelled) {
+        if (last.output !== undefined) { full.set(t.id, last.output); outputs[t.id] = last.output; }
+        const why = last.error + (tries > 1 ? ` (after ${tries} attempts)` : '');
+        set(t.id, { status: 'done', openGate: { why, at: Date.now() }, note: `gate open — would stop here: ${why}`, ms: Date.now() - t0, finishedAt: Date.now(), error: null, output: last.output !== undefined ? _preview(last.output) : null });
+        (run.openFailures = run.openFailures || []).push({ task: t.id, why });
+        this._emit('automation.pipeline.gate-open', { pipelineId: p.id, runId: run.id, task: t.id, why });
+        return true;
+      }
       if (t.onFail === 'hold' && !run.cancelled) {
         if (last.output !== undefined) full.set(t.id, last.output);
         const why = last.error + (tries > 1 ? ` (after ${tries} attempts)` : '');
@@ -468,7 +481,8 @@ class Pipelines {
     }
     const states = Object.values(run.tasks).map(x => x.status);
     run.status = run.cancelled ? 'cancelled' : states.every(s => s === 'done' || s === 'skipped') ? 'ok' : 'failed';
-    if (run.status !== 'ok') { const f = p.tasks.find(t => run.tasks[t.id].status === 'failed'); run.error = run.cancelled || (f ? `${f.id}: ${run.tasks[f.id].error}` : 'not every task ran'); }
+    if (run.openGates && run.status === 'ok' && (run.openFailures || []).length) { run.status = 'debugged'; run.error = `gates open: ${run.openFailures.length} step(s) would have stopped it — ${run.openFailures.map(x => x.task + ': ' + x.why).join(' · ').slice(0, 1500)}`; }   // 0.60.589: never read as met
+    if (run.status !== 'ok' && run.status !== 'debugged') { const f = p.tasks.find(t => run.tasks[t.id].status === 'failed'); run.error = run.cancelled || (f ? `${f.id}: ${run.tasks[f.id].error}` : 'not every task ran'); }
     // a task never reached (the run stopped) stays waiting; said as not run
     for (const t of p.tasks) if (run.tasks[t.id].status === 'waiting') run.tasks[t.id].error = stop ? 'not run: the pipeline stopped' : 'not run';
     run.finishedAt = Date.now(); this._saveRun(run);

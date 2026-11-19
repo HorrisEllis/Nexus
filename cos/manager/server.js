@@ -425,6 +425,25 @@ function createServer(sup, opts = {}) {
       const pr = /^\/api\/cos\/proposals\/([^/]+)\/(take|drop)$/.exec(p);
       if (pr && m === 'POST') { try { return send(res, 200, { ok: true, ...(pr[2] === 'take' ? proposals.take(decodeURIComponent(pr[1]), { by: body.by }) : proposals.drop(decodeURIComponent(pr[1]), { by: body.by, why: body.why })) }); }
         catch (e) { return send(res, typeof e.code === 'number' ? e.code : 500, { ok: false, error: e.message }); } }
+      // 0.60.589 — James, 2026-11-18: "I need to be able to open idearium. I can't without opening Firefox" · "It should be consistent with clearglass or
+      // ideariums compartments when they popup." A system that declares its UI ({ ui: { kind: html, path } }) is opened in its own Clear Glass
+      // compartment (window.open with agentId compartment:<name>: its own partition), never a browser of his. Clear Glass runs in his session;
+      // when it does not answer, that is said with what to do.
+      const ou = /^\/api\/cos\/systems\/([^/]+)\/open-ui$/.exec(p);
+      if (ou && m === 'POST') {
+        const name = decodeURIComponent(ou[1]); const s = sup.list().find(x => x.name === name);
+        if (!s) return send(res, 404, { ok: false, error: `no system ${name}` });
+        if (!s.ui || s.ui.kind !== 'html') return send(res, 409, { ok: false, error: `${name} declares no html UI (its compartment's runtime.process.ui)` });
+        let url = null; try { url = new URL(s.ui.path || '/', new URL(s.healthUrl).origin).href; } catch (_) {}
+        if (!url) return send(res, 409, { ok: false, error: `${name} has no address to open (no healthUrl)` });
+        const cg = sup.list().find(x => x.name === 'clear-glass'); let cgo = null; try { cgo = new URL(cg.healthUrl).origin; } catch (_) {}
+        const r = await new Promise((resolve) => { if (!cgo) return resolve({ error: 'Clear Glass is not declared' });
+          const data = Buffer.from(JSON.stringify({ eventType: 'window.open', data: { agentId: `compartment:${name}`, url } }));
+          const q = http.request(`${cgo}/cmd`, { method: 'POST', timeout: 5000, headers: { 'Content-Type': 'application/json', 'Content-Length': data.length } }, (rr) => { let t = ''; rr.on('data', (c) => { t += c; }); rr.on('end', () => { try { resolve(JSON.parse(t)); } catch (_) { resolve({ error: `HTTP ${rr.statusCode}` }); } }); });
+          q.on('timeout', () => q.destroy(new Error('no answer in 5 s'))); q.on('error', (e) => resolve({ error: e.code || e.message })); q.write(data); q.end(); });
+        if (r && r.ok) { sup.note('open-ui', `${name}'s UI opened in its Clear Glass compartment: ${url}`, { by: body.by || 'person', system: name }); return send(res, 200, { ok: true, system: name, url, compartment: `compartment:${name}` }); }
+        return send(res, 503, { ok: false, url, error: `Clear Glass did not open it (${(r && r.error) || 'no answer'}): Clear Glass runs in your session — start it from the COS window, then open again` });
+      }
       const act = /^\/api\/cos\/systems\/([^/]+)(?:\/(start|stop|restart|touch|reset-circuit|pause|resume))?$/.exec(p);
       if (act && m === 'GET' && !act[2]) return send(res, 200, { ok: true, system: sup.get(decodeURIComponent(act[1])) });
       // MG-006: a start, stop, restart, boot or policy change is a person's act or a rule's, and says whose; touch is a request for the system
