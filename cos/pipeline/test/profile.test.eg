@@ -13,9 +13,9 @@ let SYS = [
 
 test "memory tight: what the build does not call is paused; the build path, what it calls, the critical and the stopped are kept" {
   let d = profile.decide({ systems: SYS, called: ["versionium"], freePct: 6, linePct: 24 })
-  expect any(d.pause, fn(n) = n == "intelligence") and any(d.pause, fn(n) = n == "diagnostic"), json(d)
+  expect any(d.pause, fn(n) = n == "diagnostic") and not any(d.pause, fn(n) = n == "intelligence"), json(d)
   expect not any(d.pause, fn(n) = n == "idearium" or n == "cortex" or n == "versionium" or n == "loom"), json(d.pause)
-  expect find_text(d.why, "1055 MB") >= 0, d.why
+  expect find_text(d.why, "318 MB") >= 0, d.why
 }
 
 test "memory not tight: nothing is paused, and it says why" {

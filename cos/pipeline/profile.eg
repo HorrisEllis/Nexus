@@ -8,7 +8,9 @@
 
 // a paused process does not refuse a request, it holds it: so what a build reaches by request, even rarely, is kept — guardian carries the
 // ladder's agents, orchestrator takes the registrations and pulses of every system the build calls
-let KEEP = ["cos", "cortex", "ollama-bridge", "ollama", "copilot", "idearium", "emerge", "clear-glass", "guardian", "orchestrator"]
+// 0.60.596: and what the build's systems reach in turn — versionium (every build is snapshotted before it starts, §17.12) and intelligence (its
+// context). Found in NM1's run at 08:31: paused with RAID's approval, the build failed "the Versionium snapshot before it failed".
+let KEEP = ["cos", "cortex", "ollama-bridge", "ollama", "copilot", "idearium", "emerge", "clear-glass", "guardian", "orchestrator", "versionium", "intelligence"]
 
 fn keep_why(s: map, called: list): string {
   let n = str(s.name ?? "")
