@@ -55,6 +55,15 @@ const opts = async (extra = {}) => { const port = await freePort(); return { sta
     const alive = (p) => { try { process.kill(p, 0); } catch (_) { return false; } try { return !/^\d+ \(.*\) Z/.test(fs.readFileSync(`/proc/${p}/stat`, 'utf8')); } catch (_) { return true; } }; assert.ok(alive(cpid)); await RT.stop(root, 'nexus'); await new Promise(r => setTimeout(r, 400)); assert.strictEqual(alive(cpid), false, 'the grandchild is gone too');
   });
   // 2026-11-17 — James: "it needs to just do that not have a button. or not make another copy period. like it should be a projection ontop of the service"
+  await test('RT-04b MG21: a port held by a Nexus system (its /health answers as one) does not stop the start; one held by anything else does', async () => {
+    const http = require('http'); const root = rootDir(); install(root, '1.0.0', GOOD); const sysPort = await freePort(); const o = await opts(); o.ports = [o.statusPort, sysPort];
+    const nx = http.createServer((q, r) => { r.setHeader('content-type', 'application/json'); r.end('{"ok":true,"service":"idearium"}'); }); await new Promise(ok => nx.listen(sysPort, '127.0.0.1', ok));
+    const r = await RT.start(root, 'nexus', '1.0.0', o); nx.close();
+    try { assert.strictEqual(r.ok, true, JSON.stringify(r)); } finally { await RT.stop(root, 'nexus'); }
+    const other = net.createServer(); await new Promise(ok => other.listen(sysPort, '127.0.0.1', ok));
+    const r2 = await RT.start(root, 'nexus', '1.0.0', o); other.close();
+    assert.strictEqual(r2.ok, false); assert.strictEqual(r2.reason, 'port-busy'); assert.deepStrictEqual(r2.busy, [sysPort]);
+  });
   await test('RT-10 a Nexus already running on the ports is attached to: no second copy, and status follows it', async () => {
     const root = rootDir(); install(root, '1.0.0', GOOD); const o = await opts();
     const kid = require('child_process').spawn(process.execPath, ['-e', 'setInterval(() => {}, 1000)'], { stdio: 'ignore' });

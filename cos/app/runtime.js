@@ -58,6 +58,12 @@ const portFree = (port) => new Promise((ok) => { const s = net.createServer(); s
 /** portsBusy(ports) → the ones already in use (so the message can say which port, not "it did not start") */
 async function portsBusy(ports) { const busy = []; for (const p of ports) if (p && !(await portFree(p))) busy.push(p); return busy; }
 
+/** nexusSystemAt(port) → true when what holds the port answers GET /health as a Nexus system does (JSON with ok, status or service) — MG21 */
+const nexusSystemAt = (port, timeoutMs = 2000) => new Promise((ok) => {
+  const req = require('http').get({ host: '127.0.0.1', port, path: '/health', timeout: timeoutMs }, (res) => { let b = ''; res.on('data', (c) => { if (b.length < 65536) b += c; });
+    res.on('end', () => { try { const j = JSON.parse(b); ok(!!j && typeof j === 'object' && ('ok' in j || 'status' in j || 'service' in j)); } catch (_) { ok(false); } }); });
+  req.on('timeout', () => { req.destroy(); ok(false); }); req.on('error', () => ok(false));
+});
 /** whoRuns(port) → { pid, version } when a Nexus (COS's manager) answers there, else null — what start() attaches to instead of starting a copy */
 const whoRuns = (port, timeoutMs = 2000) => new Promise((ok) => {
   const req = http.get({ host: '127.0.0.1', port, path: '/api/cos/health', timeout: timeoutMs }, (res) => {
@@ -104,7 +110,12 @@ async function start(root, project, version, opts = {}) {
       return { ok: true, attached: true, pid: running.pid, version: running.version || version, supervisor: 'cos', healthyAfterMs: 0, note: `attached to the Nexus already running (pid ${running.pid || '?'}): no second copy` };
     }
   }
-  const busy = await portsBusy(o.ports); if (busy.length) return { ok: false, reason: 'port-busy', error: `port${busy.length > 1 ? 's' : ''} ${busy.join(', ')} already in use by another program: ${project} cannot start until ${busy.length > 1 ? 'they are' : 'it is'} free (only one version runs at a time; is another copy still running?)`, busy };
+  // MG21 (0.60.585) — his screen, 2026-11-18: "i cant get it to start" ("ports 7799, 7820, 4800, 9000 already in use"). Since 0.60.584 the systems
+  // outlive the manager on purpose, so after the service stops they still hold their ports. With COS's own port free, a port held by a Nexus
+  // system (its /health answers as one) does not stop the start: the manager takes it over by its port (MG15b). Anything else still stops it.
+  let busy = await portsBusy(o.ports);
+  if (busy.length && !busy.includes(o.statusPort)) { const theirs = []; for (const p of busy) if (await nexusSystemAt(p)) theirs.push(p); busy = busy.filter(p => !theirs.includes(p)); }
+  if (busy.length) return { ok: false, reason: 'port-busy', error: `port${busy.length > 1 ? 's' : ''} ${busy.join(', ')} already in use by another program: ${project} cannot start until ${busy.length > 1 ? 'they are' : 'it is'} free (only one version runs at a time; is another copy still running?)`, busy };
   fs.mkdirSync(P.logs, { recursive: true }); pruneLogs(P.logs, o.keepLogs);
   const log = path.join(P.logs, `${version}-${new Date().toISOString().replace(/[:.]/g, '-')}.log`); const fd = fs.openSync(log, 'a');
   const env = linked
