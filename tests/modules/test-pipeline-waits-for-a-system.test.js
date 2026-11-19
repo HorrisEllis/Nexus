@@ -124,6 +124,21 @@ const freePort = () => new Promise(r => { const s = net.createServer(); s.listen
     const again = await P.run(pid, { wait: true }); assert.strictEqual(again.run.tasks.b.status, 'blocked');
     assert.strictEqual(P.setGate(pid, 'zz', { set: { x: 1 } }).ok, false);
   });
+  await t('PW-10', 'his "any gate that has passed. Doesn\'t need to be run again. Reuses the same step.": a gated step that passed is reused with its node\'s output; new inputs or redo run it again; a step with no gate always runs', async () => {
+    let hits = 0; const srv = http.createServer((q, r) => { hits++; r.setHeader('content-type', 'application/json'); r.end(JSON.stringify({ ok: true, n: hits })); });
+    await new Promise(x => srv.listen(0, '127.0.0.1', x)); const port = srv.address().port;
+    const P = new Pipelines(new AutomationEngine({}), { dir: path.join(tmp, 'j') });
+    const c = P.create({ name: 'reuse', vars: { x: '1' }, tasks: [{ id: 'a', step: { type: 'api', config: { url: `http://127.0.0.1:${port}/a?x={{vars.x}}`, method: 'GET' } }, gate: { contains: 'ok' } }, { id: 'b', depends_on: ['a'], step: { type: 'set', config: { assign: { w: 2 } } } }] });
+    const pid = (c.pipeline || c).id;
+    try {
+      const r1 = await P.run(pid, { wait: true }); assert.strictEqual(r1.run.status, 'ok'); assert.strictEqual(hits, 1);
+      const r2 = await P.run(pid, { wait: true }); assert.strictEqual(hits, 1, 'a was not run again'); assert.ok(r2.run.tasks.a.reused && r2.run.tasks.a.reused.from === r1.run.id, JSON.stringify(r2.run.tasks.a));
+      assert.strictEqual(r2.run.tasks.b.status, 'done'); assert.strictEqual(r2.run.status, 'ok');
+      const r3 = await P.run(pid, { wait: true, vars: { x: '2' } }); assert.strictEqual(hits, 2, 'new inputs: run again'); assert.ok(!r3.run.tasks.a.reused);
+      const r4 = await P.resume(r3.run.id, { by: 'test', redo: ['a'] }); let rr = null; for (let i = 0; i < 50 && !(rr && rr.status !== 'running'); i++) { await new Promise(x => setTimeout(x, 100)); rr = P.getRun(r4.runId); }
+      assert.strictEqual(hits, 3, 'redo: run again'); assert.strictEqual(rr.status, 'ok');
+    } finally { srv.close(); }
+  });
   fs.rmSync(tmp, { recursive: true, force: true });
   console.log(`\n${passed} passed, ${failed} failed`); process.exit(failed ? 1 : 0);
 })();

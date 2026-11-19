@@ -1,0 +1,19 @@
+// cos/automation/reuse.eg — a step whose gate passed is not run again (0.60.594; pipeline-canvas map, addendum 2026-11-19).
+// James, 2026-11-19: "Wait pipeline. Yaml file. Each block a step in the pipeline? Then any gate that has passed. Doesn't need to be run again.
+// Reuses the same step. Like each step is a node … the node for the step holds all the context" · "Keep getting the pipeline built."
+// Pure. Compiled (eg build → eg-build/reuse.js) and run inside the engine: no process per step.
+// The step's node (.process_step) already holds its whole output; this decides whether the last one stands for this run.
+
+// q: { prev: { key, status, gate, openGate, run, at } | null, key, gated, reuse, redo } → { reuse, why }
+fn decide(q: map): map {
+  if get(q, "redo", false) == true { return { reuse: false, why: "named to run again" } }
+  if get(q, "reuse", true) == false { return { reuse: false, why: "this step is set never to be reused" } }
+  if get(q, "gated", false) != true { return { reuse: false, why: "it has no gate: nothing passed that could stand for this run" } }
+  let prev = get(q, "prev", null)
+  if prev == null { return { reuse: false, why: "it has not run before" } }
+  if get(prev, "status", "") != "done" { return { reuse: false, why: "its last run did not finish (" + str(get(prev, "status", "?")) + ")" } }
+  if get(prev, "openGate", false) == true { return { reuse: false, why: "its last pass was a debug or open gate, not a pass" } }
+  if get(prev, "gate", "open") != "open" { return { reuse: false, why: "its gate did not pass last time (" + str(get(prev, "gate", "?")) + ")" } }
+  if get(prev, "key", "") != get(q, "key", "") { return { reuse: false, why: "what it takes changed since it passed" } }
+  return { reuse: true, why: "its gate passed in run " + str(get(prev, "run", "?")) + " with the same inputs: that node stands, not run again" }
+}

@@ -32,6 +32,8 @@ function _text(v) { if (v == null) return ''; if (typeof v === 'string') return 
 function _preview(v, max = 2000) { const s = _text(v); return s.length > max ? `${s.slice(0, max)}… (${s.length} characters)` : (typeof v === 'string' || v == null ? v : (() => { try { return JSON.parse(s); } catch (_) { return s; } })()); }
 
 /** gateOpen(gate, output) — every key given must hold; no gate → open */
+let _reuseMod = null;   // 0.60.594: cos/automation/reuse.eg, compiled (eg build), run in this process
+function _reuseEg() { if (!_reuseMod) { const RT = require('../../emerge/emerge/lang/runtime.js'); _reuseMod = require('./eg-build/reuse.js')(RT.createRuntime({ file: require('path').join(__dirname, 'reuse.eg') })); } return _reuseMod; }
 function gateOpen(gate, output) {
   if (gate && gate.element !== undefined) { gate = { ...gate }; delete gate.element; }   // the element gate is read by the gate step (PL7)
   // PC12a (0.60.522) — a closed gate says the owner's own words when it names where they are in the output (reasonAt: "body.check.reasons"):
@@ -260,7 +262,10 @@ class Pipelines {
   // using memory for storage. persistence is non negiatiable until the contract has been fullfilled, or dag is complete". Each step of a run is its
   // own node file, runs/<run>/<step>.process_step, written on every change: its state, its event ledger and its WHOLE output (what later steps
   // read; before this it was held only in memory), so a run cut off by a restart resumes from what is on disk (resumeInterrupted).
+  _reuseFile() { return path.join(path.dirname(this.runsDir), 'reuse-index.json'); }
+  _reuseIndex() { try { return JSON.parse(fs.readFileSync(this._reuseFile(), 'utf8')); } catch (_) { return {}; } }
   _saveStep(p, run, id, output) {
+    { const t0 = run.tasks[id] || {}; if (t0.status === 'done' && t0.inputKey && !t0.reused && !t0.openGate) { try { const ix = this._reuseIndex(); ix[`${p.id}::${id}`] = { key: t0.inputKey, status: 'done', gate: (t0.gate && t0.gate.outcome) || 'open', openGate: false, run: run.id, at: Date.now() }; fs.writeFileSync(this._reuseFile(), JSON.stringify(ix)); } catch (_) {} } }   // 0.60.594
     try { const NX = require('../../lib/node-export.js'); const t = run.tasks[id] || {}; const def = (p.tasks || []).find(x => x.id === id) || {};
       const payload = { id, run: run.id, pipeline: p.id, pipelineName: p.name, label: def.label || id, after: def.depends_on || [], gives: ['output'], run_step: def.step || null,
         gate: def.gate || null, status: t.status, attempts: t.attempts, startedAt: t.startedAt || null, finishedAt: t.finishedAt || null, ms: t.ms != null ? t.ms : null,
@@ -312,7 +317,7 @@ class Pipelines {
     if (r.status === 'running' || this._active.has(r.id)) return { ok: false, error: `run ${runId} is still running` };
     const again = new Set([].concat(redo || []).map(String)), steps = this.steps(r.id), done = {};
     for (const [id, t] of Object.entries(r.tasks || {})) if (t.status === 'done' && !again.has(id)) done[id] = steps[id] && steps[id].output !== undefined ? steps[id].output : t.output;
-    const res = await this.run(r.pipelineId, { vars: r.vars || {}, wait: false, done, meta: { resume_of: r.id, by }, gates: (gates || (r.openGates ? 'open' : null)) });
+    const res = await this.run(r.pipelineId, { vars: r.vars || {}, wait: false, done, meta: { resume_of: r.id, by }, gates: (gates || (r.openGates ? 'open' : null)), redo: [...again] });
     this._emit('automation.pipeline.resumed', { pipelineId: r.pipelineId, runId: res && res.runId, resume_of: r.id, met: Object.keys(done), by });
     return { ...(res || { ok: false }), resume_of: r.id, met: Object.keys(done) };
   }
@@ -350,7 +355,7 @@ class Pipelines {
       for (const m of u.matchAll(/\{\{\s*vars\.([A-Za-z_][\w]*)[^}]*\}\}/g)) if (all[m[1]] === undefined || all[m[1]] === null || String(all[m[1]]).trim() === '') out.add(m[1]); }
     return [...out];
   }
-  async run(id, { vars = {}, wait = true, done = null, meta = null, gates = null } = {}) {
+  async run(id, { vars = {}, wait = true, done = null, meta = null, gates = null, redo = null } = {}) {
     if (gates === 'open') vars = { ...vars, gates: 'open' };   // 0.60.589: the steps see it too ({{vars.gates}}), so a system's own gates can open
     const p = this.get(id); if (!p) return { ok: false, status: 404, error: `no pipeline ${id}` };
     if (p.archived) return { ok: false, error: 'that pipeline is archived; restore it to run it' };
@@ -359,7 +364,7 @@ class Pipelines {
     // 2026-11-10 — James: "it is stuck" (GET /api/repos//phases/map → 404). A value the pipeline puts in an address, left empty, makes a broken
     // address several steps in; it is asked for before anything runs instead: { needs: [names] }, and a run can give them (vars)
     const needs = this.needs(p, vars); if (!done && needs.length) return { ok: false, status: 400, needs, error: `give ${needs.map(n => `vars.${n}`).join(', ')} first: ${needs.length > 1 ? 'they are' : 'it is'} part of a step's address, and empty` };
-    const run = { id: randomUUID(), pipelineId: p.id, pipelineName: p.name, status: 'running', openGates: gates === 'open', order: layers(p), startedAt: Date.now(), finishedAt: null, vars, ...(meta && meta.resume_of ? { resume_of: meta.resume_of } : {}),
+    const run = { id: randomUUID(), pipelineId: p.id, pipelineName: p.name, status: 'running', openGates: gates === 'open', redo: Array.isArray(redo) ? redo.map(String) : null, order: layers(p), startedAt: Date.now(), finishedAt: null, vars, ...(meta && meta.resume_of ? { resume_of: meta.resume_of } : {}),
       tasks: Object.fromEntries(p.tasks.map(t => [t.id, done && Object.prototype.hasOwnProperty.call(done, t.id) ? { label: t.label, status: 'done', attempts: 0, ms: 0, output: _preview(done[t.id]), error: null, blockedBy: null, met: 'earlier' } : { label: t.label, status: 'waiting', attempts: 0, ms: null, output: null, error: null, blockedBy: null }])) };
     this._active.set(run.id, run); this._saveRun(run);
     // vars ride on the start event so a run started anywhere (a trigger, a workflow's pipeline step) is a request the host can keep and resume;
@@ -397,6 +402,16 @@ class Pipelines {
     };
     const runTask = async (t) => {
       const scope = { tasks: Object.fromEntries((t.depends_on || []).map(d => [d, { output: outputs[d] }])) };
+      // 0.60.594 — James, 2026-11-19: "any gate that has passed. Doesn't need to be run again. Reuses the same step." The step's inputs are a
+      // fingerprint (its step, its gate, the run's vars, what it takes from the steps before); a step whose gate passed with the same fingerprint
+      // in an earlier run is not run again: that run's node stands, its whole output read back. The decision is Emerge's (cos/automation/reuse.eg).
+      { const ownVars = Object.fromEntries(Object.entries({ ...(p.vars || {}), ...vars }).filter(([k]) => !k.startsWith('__')));
+        const key = require('crypto').createHash('sha256').update(JSON.stringify({ step: t.step, gate: t.gate || null, vars: ownVars, inputs: (t.depends_on || []).map(d => outputs[d] === undefined ? null : outputs[d]) })).digest('hex').slice(0, 32);
+        run.tasks[t.id].inputKey = key;
+        const prev = this._reuseIndex()[`${p.id}::${t.id}`] || null;
+        let d = { reuse: false }; try { d = _reuseEg().decide({ prev, key, gated: !!t.gate, reuse: t.reuse !== false, redo: !!(run.redo && run.redo.includes(t.id)) }); } catch (_) {}
+        if (d.reuse) { const node = this.steps(prev.run)[t.id]; const out = node && node.output !== undefined ? node.output : undefined;
+          if (out !== undefined) { outputs[t.id] = out; full.set(t.id, out); set(t.id, { status: 'done', reused: { from: prev.run, at: prev.at }, note: `reused — ${d.why}`, ms: 0, finishedAt: Date.now(), error: null, output: _preview(out) }); return true; } } }
       const tries = 1 + (t.retries || 0); const t0 = Date.now(); let last = null;
       for (let a = 1; a <= tries; a++) {
         if (run.cancelled) { last = { error: run.cancelled }; break; }

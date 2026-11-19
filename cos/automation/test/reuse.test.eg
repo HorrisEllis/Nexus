@@ -1,0 +1,20 @@
+// cos/automation/test/reuse.test.eg — a step whose gate passed is not run again. eg test cos/automation/test/reuse.test.eg
+// James, 2026-11-19: "any gate that has passed. Doesn't need to be run again. Reuses the same step."
+use "../reuse.eg" as reuse
+
+let PASSED = { key: "k1", status: "done", gate: "open", openGate: false, run: "r1" }
+
+test "a passed gate with the same inputs is reused" {
+  let d = reuse.decide({ prev: PASSED, key: "k1", gated: true })
+  expect d.reuse == true and find_text(d.why, "run r1") >= 0, d.why
+}
+
+test "anything else runs: new inputs, no gate, a failed or debug pass, set never, named to run again, never run" {
+  expect reuse.decide({ prev: PASSED, key: "k2", gated: true }).reuse == false
+  expect reuse.decide({ prev: PASSED, key: "k1", gated: false }).reuse == false
+  expect reuse.decide({ prev: { key: "k1", status: "failed", gate: "closed" }, key: "k1", gated: true }).reuse == false
+  expect reuse.decide({ prev: { key: "k1", status: "done", gate: "open", openGate: true }, key: "k1", gated: true }).reuse == false
+  expect reuse.decide({ prev: PASSED, key: "k1", gated: true, reuse: false }).reuse == false
+  expect reuse.decide({ prev: PASSED, key: "k1", gated: true, redo: true }).reuse == false
+  expect reuse.decide({ prev: null, key: "k1", gated: true }).reuse == false
+}
