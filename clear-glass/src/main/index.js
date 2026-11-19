@@ -1620,6 +1620,7 @@ async function bootstrap() {
     diag,
     urlListener,
     openFn:      openAgentWindow,
+    compartmentOpenFn: (d) => CompartmentWindow.openPage(d || {}),   // 0.60.593 a system's own UI as a compartment window
     closeFn:     closeAgentWindow,
     minimizeFn:  minimizeAgentWindow,
     hideFn:      hideAgentWindow,

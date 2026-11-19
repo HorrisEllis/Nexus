@@ -469,8 +469,10 @@ function createServer(sup, opts = {}) {
         if (!url) return send(res, 409, { ok: false, error: `${name} has no address to open (no healthUrl)` });
         const cgo = (await addressOf('clear-glass.cmd')) || (await addressOf('clear-glass'));   // 0.60.591: its declared command address (nexus://clear-glass.cmd), never a guess
         const r = await new Promise((resolve) => { if (!cgo) return resolve({ error: 'Clear Glass is not declared' });
-          const data = Buffer.from(JSON.stringify({ eventType: 'window.open', data: { agentId: `compartment:${name}`, url } }));
-          const q = http.request(`${cgo}/cmd`, { method: 'POST', timeout: 5000, headers: { 'Content-Type': 'application/json', 'Content-Length': data.length } }, (rr) => { let t = ''; rr.on('data', (c) => { t += c; }); rr.on('end', () => { try { resolve(JSON.parse(t)); } catch (_) { resolve({ error: `HTTP ${rr.statusCode}` }); } }); });
+          // 0.60.593 — his "i said a compartment" · "clearglass is meant to be cli first": Clear Glass's own command, compartment open (its own
+          // partition, a compartment window, never the full agent browser that window.open gave)
+          const data = Buffer.from(JSON.stringify({ name, url, title: `${name}` }));
+          const q = http.request(`${cgo}/cli/compartment/open`, { method: 'POST', timeout: 5000, headers: { 'Content-Type': 'application/json', 'Content-Length': data.length } }, (rr) => { let t = ''; rr.on('data', (c) => { t += c; }); rr.on('end', () => { try { resolve(JSON.parse(t)); } catch (_) { resolve({ error: `HTTP ${rr.statusCode}` }); } }); });
           q.on('timeout', () => q.destroy(new Error('no answer in 5 s'))); q.on('error', (e) => resolve({ error: e.code || e.message })); q.write(data); q.end(); });
         if (r && r.ok) { sup.note('open-ui', `${name}'s UI opened in its Clear Glass compartment: ${url}`, { by: body.by || 'person', system: name }); return send(res, 200, { ok: true, system: name, url, compartment: `compartment:${name}` }); }
         return send(res, 503, { ok: false, url, error: `Clear Glass did not open it (${(r && r.error) || 'no answer'}): Clear Glass runs in your session — start it from the COS window, then open again` });

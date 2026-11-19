@@ -774,6 +774,16 @@ class IpcBridge {
     // directly (not just the on-disk copy) so a caller always gets the
     // truly-current set without needing filesystem access.
     this.app.get('/cli/commands', (req, res) => res.json(this._buildCommandIndex()));
+    // 0.60.593 — James, 2026-11-19: "why is the full browser opening with clearlgass? i said a compartment" · "clearglass is meant to be cli first".
+    // A system's own UI as a compartment window (compartment-window.js openPage: its own partition, no agent browser), as a CLI command first:
+    // POST /cli/compartment/open { name, url, title?, width?, height? } → { ok, opened | focused, partition }. COS reaches it as
+    // nexus://clear-glass.cmd/cli/compartment/open.
+    this.app.post('/cli/compartment/open', (req, res) => {
+      const b = req.body || {};
+      if (!b.url) return res.status(400).json({ ok: false, error: 'POST { name, url, title?, width?, height? }' });
+      try { const r = require('../main/compartment-window.js').openPage({ url: b.url, name: b.name || 'system', title: b.title || null, width: b.width || 1280, height: b.height || 860 }); emit('compartment.opened', { name: b.name || null, url: b.url, ok: !!r.ok }); res.status(r.ok ? 200 : 400).json(r); }
+      catch (e) { res.status(500).json({ ok: false, error: e.message }); }
+    });
 
     // 0.39.272 — the synchronous agent surface: POST /cli/driver (the driver's result in the response, not on SSE),
     // POST /cli/page/read, GET /cli/state, and GET/POST /cli/invoke (every IPC channel by name, same handler).

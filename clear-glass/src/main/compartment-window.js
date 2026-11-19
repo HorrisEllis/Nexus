@@ -107,4 +107,25 @@ function registerIpc(ipcMain, BrowserWindow) {
   });
 }
 
-module.exports = { isCompartmentPage, parseFeatures, windowOptions, attach, registerIpc, PAGES, TITLES };
+/** 0.60.593 openPage({ url, name, title, width, height }) — James, 2026-11-19: "why is the full browser opening with clearlgass? i said a compartment"
+ *  (COS's Open UI had asked for window.open: the full agent browser). A system's own UI opens as a compartment window: an Idearium page that
+ *  draws its own title bar (PAGES) frameless as above; any other page in Clear Glass's glass frame (its title bar over the page, as its popups),
+ *  each system in its own partition (persist:compartment-<name>): its own storage, nothing shared with his browsing. One window per system:
+ *  asked again, it is focused, not opened twice. */
+const _pages = new Map();
+function openPage({ url, name = 'system', title = null, width = 1280, height = 860 } = {}) {
+  const { BrowserWindow } = require('electron');
+  let u; try { u = new URL(url); } catch (_) { return { ok: false, error: `not a url: ${url}` }; }
+  if (!/^https?:$/.test(u.protocol)) return { ok: false, error: 'only http(s) pages open as a compartment' };
+  const key = String(name).replace(/[^\w.-]/g, '_'), prev = _pages.get(key);
+  if (prev && !prev.isDestroyed()) { try { prev.loadURL(url); prev.show(); prev.focus(); } catch (_) {} return { ok: true, focused: true }; }
+  const webPreferences = { partition: `persist:compartment-${key}`, contextIsolation: true, nodeIntegration: false, sandbox: true };
+  const kind = isCompartmentPage(url); let win;
+  if (kind) { const o = windowOptions(kind, `width=${width},height=${height}`, PRELOAD); win = new BrowserWindow({ ...o, title: title || o.title, webPreferences: { ...o.webPreferences, ...webPreferences } }); try { win.removeMenu(); } catch (_) {} }
+  else if (require('electron').BaseWindow && process.env.CG_NATIVE_POPUPS !== '1') win = require('./glass-frame.js').frame({ width, height, minWidth: 480, minHeight: 320, title: title || name, webPreferences });
+  else { win = new BrowserWindow({ ...Frame.popupOptions(`width=${width},height=${height}`), title: title || name, webPreferences }); try { win.removeMenu(); } catch (_) {} }
+  _pages.set(key, win); win.loadURL(url);
+  return { ok: true, opened: true, partition: webPreferences.partition };
+}
+
+module.exports = { isCompartmentPage, parseFeatures, windowOptions, attach, registerIpc, openPage, PAGES, TITLES };

@@ -298,6 +298,8 @@ const urlListenRemoveGate = (urlListener) => gate('url.listen.remove', (event, s
 
 // ── Window gates ──────────────────────────────────────────────────────────
 const windowOpenGate     = (openFn)     => gate('window.open',     (event, stream) => { openFn(event.data);     });
+// 0.60.593 — a system's own UI as a compartment window (compartment-window.js openPage), never the full agent browser
+const compartmentOpenGate = (fn) => gate('compartment.open', (event, stream) => { fn(event.data); });
 const windowCloseGate    = (closeFn)    => gate('window.close',    (event, stream) => { closeFn(event.data);    });
 const windowMinimizeGate = (minimizeFn) => gate('window.minimize', (event, stream) => { minimizeFn(event.data); });
 const windowHideGate     = (hideFn)     => gate('window.hide',     (event, stream) => { hideFn(event.data);     });
@@ -706,7 +708,7 @@ const speechAvailableGate = (speech) => gate('speech.available', (event, stream)
 function registerAll(bus, deps) {
   const {
     driver, dom, ctxMgr, vault, copilot, mesh, diag, urlListener, seam,
-    openFn, closeFn, minimizeFn, hideFn, maximizeFn, getStatusFn, options,
+    openFn, closeFn, minimizeFn, hideFn, maximizeFn, getStatusFn, options, compartmentOpenFn,
     bookmarks, rewind, providerHost, userscripts, siteSettings, passwordVault, speech,
     history, autofillStore,
   } = deps;
@@ -766,6 +768,7 @@ function registerAll(bus, deps) {
     urlListener && urlListenRemoveGate(urlListener),
     // Windows
     openFn     && windowOpenGate(openFn),
+    compartmentOpenFn && compartmentOpenGate(compartmentOpenFn),
     closeFn    && windowCloseGate(closeFn),
     minimizeFn && windowMinimizeGate(minimizeFn),
     hideFn     && windowHideGate(hideFn),
@@ -858,7 +861,7 @@ module.exports = {
   driverExecGate, domQueryGate, domMutateGate, domPickGate,
   contextCreateGate, contextSwitchGate, cookieSaveGate, cookieRestoreGate,
   copilotMessageGate, meshSpawnGate, meshRouteGate, diagRunGate,
-  urlListenGate, windowOpenGate, windowCloseGate, windowMinimizeGate, windowHideGate,
+  urlListenGate, windowOpenGate, compartmentOpenGate, windowCloseGate, windowMinimizeGate, windowHideGate,
   optionsGetGate, optionsSetGate, statusGate,
   bookmarkAddGate, bookmarkRemoveGate, bookmarkListGate, bookmarkOpenGate,
   rewindSnapshotGate, rewindListGate, rewindRestoreGate,

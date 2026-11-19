@@ -86,6 +86,7 @@ const components = [
 
   // ── Windows ──────────────────────────────────────────────────────────────
   _c('window.open',  'POST', '/cmd', 'Open agent browser window', { tags: ['window'], typecode: 'CG-WIN-001' }),
+  _c('compartment.open', 'POST', '/cli/compartment/open', 'Open a system\'s own UI as a compartment window (its own partition, no agent browser) — 0.60.593', { tags: ['window', 'compartment', 'cli'], grammar: ['compartment open', 'cg open'] }),
   _c('window.close', 'POST', '/cmd', 'Close agent window to tray',{ tags: ['window'], typecode: 'CG-WIN-002' }),
 
   // ── Wire / ErosmancerOS bridge ───────────────────────────────────────────
