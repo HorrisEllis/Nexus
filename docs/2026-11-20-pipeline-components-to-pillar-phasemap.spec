@@ -146,3 +146,8 @@ failure_modes:
 #   3. Components to Pillar one by one (DB2–DB4); the dock to COS (DB6, preview first).
 # Open question put to him: switch off Idearium's own build starts (repos.on_stall, the loop) until step 2 lands, so it builds only on ▶.
 # EMB3 state: its test is written by Nexus from its ten examples (0.60.624); not yet built through the rung because Idearium went down mid-run.
+# His, 2026-11-20, watching a run in the Tasks panel: "before you started that run, it identified the problem and went to check but stopped and
+# went idle. like it needs to continue or retry, if ollama is idle when a task is running." To build with step 2 (COS runs the build): a run whose
+# current step waits on a model while the Ollama system's queue has nothing for it (no job queued or running for that run) is stalled at once,
+# not after the watchdog's 20 minutes, and is resumed from its last passed gate (his 2026-11-14 persistence rule), or that step retried; said
+# on the run. Signal: the step's model expectation against GET ollama /api/jobs (its meta.source and phase).
