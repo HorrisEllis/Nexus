@@ -2353,6 +2353,17 @@ async function _autoRetry(info, kind, note) {
     try { _require('../../lib/gap-field.js').report({ type: 'phase.retry.held', body: `${info.phase}: ${kind} retry held — ${limit} ${kind} retries already today. ${String(note).split('\n')[0].slice(0, 200)}`, source: `idearium:${info.repoUuid}:${info.phase}`, domain: 'idearium', severity: 'medium', meta: { kind, limit, runId: info.runId || null } }); } catch (_) {}
     return { ok: false, why: 'limit' };
   }
+  // 0.60.625 — the same failure twice is not retried. James, 2026-11-20: "idearium needs to be fixed. it is killing my pc." Read the same day: the
+  // watchdog rebuilt NM1, NM1a and BX1 for about 46 hours, each a whole build in Idearium's process, ending the same way each time. The flight
+  // recorder's rule (lib/flight-data.js): the same failure from attempt after attempt means the phase or its brief is the cause, not the model.
+  // So when this phase's last two finished runs ended the same way, it is held, said, and not built again until the phase or its map changes.
+  { const sig = (r) => `${(r.last && r.last.state) || '?'}:${String((r.last && (r.last.error || r.last.note)) || '').replace(/\d+/g, '#').slice(0, 90)}`;
+    const done = [...RW.runsOf(rows).values()].filter(r => r.last && r.last.phase === info.phase && RW.isFinal(r) && !/-(review|proof)$/.test(r.runId)).sort((a, b) => (b.last.ts || 0) - (a.last.ts || 0)).slice(0, 2);
+    if (done.length === 2 && sig(done[0]) === sig(done[1])) {
+      said('auto-retry-held', `not retried: the last two runs of ${info.phase} ended the same way (${sig(done[0]).slice(0, 160)}) — the phase or its brief is the cause, not the model (the flight recorder's rule); change it, then build it — ${note}`);
+      try { _require('../../lib/gap-field.js').report({ type: 'phase.retry.same-failure', body: `${info.phase}: held, the same failure twice — ${sig(done[0]).slice(0, 200)}`, source: `idearium:${info.repoUuid}:${info.phase}`, domain: 'idearium', severity: 'medium', meta: { kind, runs: done.map(r => r.runId) } }); } catch (_) {}
+      return { ok: false, why: 'same-failure' };
+    } }
   const active = [...RW.runsOf(rows).values()].some(r => r.last && r.last.phase === info.phase && r.runId !== info.runId && !RW.isFinal(r) && !/-(review|proof)$/.test(r.runId) && Date.now() - (r.last.ts || 0) < 30 * 60 * 1000);
   if (active) { said('auto-retry-held', `not retried: another run of ${info.phase} is still going — ${note}`); return { ok: false, why: 'active' }; }
   const repo = getRepoLayer().get(info.repoUuid);
