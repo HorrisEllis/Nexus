@@ -8,6 +8,7 @@
 //   order(gaps) → { order: [ids], why }       dependencies first; a cycle or a missing dependency is said, not guessed
 //   as_gap(g)   → a pillar:gap { id, missingVariable, affectedConstraint, source, severity, causedBy }, or { refused } as the contract says
 //   needs(names, does) → the dependency graph from the plan's own words: each export depends on the other exports its "does" names
+//   hint(why)   → the fix for a compiler refusal Nexus has met before ("" when it has not): learned from each attempt, one row per refusal
 //   step(q)     → { action: "retry" | "escalate" | "hold", why }   q: { tries, per_rung, rung, rungs }
 
 fn order(gaps: list): map {
@@ -65,6 +66,26 @@ fn needs(names: list, does: map): map {
       if m != n and find_text(text, m) >= 0 { deps = push(deps, m) }
     }
     out[n] = deps
+  }
+  return out
+}
+
+// each row: what Emerge's compiler says, and the fix. Rows come from refusals met in real runs (2026-11-19: DeepSeek 16b on NM1a's gaps).
+let HINTS = [
+  { says: "expected a loop variable", fix: "Loop over a list as: for e in xs, then the block in braces (no parentheses, no let, no of)." },
+  { says: "!", fix: "Emerge has no !: write not x, and != for not-equal." },
+  { says: ";", fix: "No semicolons in Emerge." },
+  { says: "is a loop variable", fix: "A loop variable is read-only: build a new value with var out = [] and out = push(out, item)." },
+  { says: "is a parameter", fix: "A parameter is read-only: build a new value in a var and return it; never change what was passed in." },
+  { says: "expected end of statement, found a string", fix: "No throw: return a map with an error field instead." },
+  { says: "is a let", fix: "A let cannot change: use var for anything that changes." },
+  { says: "is not defined", fix: "Use only the parameters, the other functions in this module, and the builtins len, push, get, keys, str." }
+]
+
+fn hint(why: string): string {
+  var out = ""
+  for h in HINTS {
+    if find_text(why, h.says) >= 0 { out = out + h.fix + " " }
   }
   return out
 }

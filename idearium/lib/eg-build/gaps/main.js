@@ -6,140 +6,161 @@ module.exports = function load($) {
   $.fn("step", 1, v_step);
   $.fn("as_gap", 1, v_as_gap);
   $.fn("needs", 2, v_needs);
+  $.fn("hint", 1, v_hint);
   function v_order(v_gaps) {
     v_gaps = $.ty(v_gaps, "list", false, "parameter gaps of order");
-    $.at(14, F);
-    let v_done = $.list([]);
     $.at(15, F);
-    let v_left = v_gaps;
+    let v_done = $.list([]);
     $.at(16, F);
-    let v_guard = 0;
+    let v_left = v_gaps;
     $.at(17, F);
+    let v_guard = 0;
+    $.at(18, F);
     for (;;) {
-      $.at(17, F);
+      $.at(18, F);
       if (!$.truth($.and($.cmp(">", $.call($.b["len"], [v_left]), 0), () => $.cmp("<=", v_guard, $.call($.b["len"], [v_gaps]))), "while")) break;
       {
-        $.at(18, F);
-        let v_next = $.list([]);
         $.at(19, F);
-        let v_moved = false;
+        let v_next = $.list([]);
         $.at(20, F);
+        let v_moved = false;
+        $.at(21, F);
         for (const v_g of $.iter(v_left, false)) {
-          $.at(21, F);
-          let v_ready = true;
           $.at(22, F);
+          let v_ready = true;
+          $.at(23, F);
           for (const v_d of $.iter($.call($.b["get"], [v_g, $.str(["depends_on"]), $.list([])]), false)) {
-            $.at(23, F);
+            $.at(24, F);
             if ($.truth($.not($.isIn(v_d, v_done)), "if")) {
-              $.at(23, F);
+              $.at(24, F);
               v_ready = false;
             }
           }
-          $.at(25, F);
+          $.at(26, F);
           if ($.truth(v_ready, "if")) {
-            $.at(26, F);
-            v_done = $.call($.b["push"], [v_done, $.get(v_g, "id")]);
             $.at(27, F);
+            v_done = $.call($.b["push"], [v_done, $.get(v_g, "id")]);
+            $.at(28, F);
             v_moved = true;
           } else {
-            $.at(29, F);
+            $.at(30, F);
             v_next = $.call($.b["push"], [v_next, v_g]);
           }
         }
-        $.at(32, F);
-        v_left = v_next;
         $.at(33, F);
-        v_guard = $.add(v_guard, 1);
+        v_left = v_next;
         $.at(34, F);
+        v_guard = $.add(v_guard, 1);
+        $.at(35, F);
         if ($.truth($.and($.not(v_moved), () => $.cmp(">", $.call($.b["len"], [v_left]), 0)), "if")) {
-          $.at(35, F);
+          $.at(36, F);
           return $.ty($.map(["order", v_done, "why", $.add($.add($.str(["stuck: "]), $.call($.b["join"], [$.call($.b["map"], [v_left, $.fn("anonymous", 1, function (v_x) {
-            $.at(35, F);
+            $.at(36, F);
             return $.call($.b["str"], [$.get(v_x, "id")]);
             return null;
           })]), $.str([", "])])), $.str([" wait on a gap that is missing or in a cycle"]))]), "map", false, "return value of order");
         }
       }
     }
-    $.at(38, F);
+    $.at(39, F);
     return $.ty($.map(["order", v_done, "why", $.add($.str(["dependencies first: "]), $.call($.b["join"], [v_done, $.str([" → "])]))]), "map", false, "return value of order");
     return $.ty(null, "map", false, "return value of order");
   }
   function v_step(v_q) {
     v_q = $.ty(v_q, "map", false, "parameter q of step");
-    $.at(42, F);
-    let v_tries = $.call($.b["get"], [v_q, $.str(["tries"]), 0]);
     $.at(43, F);
-    let v_per = $.call($.b["get"], [v_q, $.str(["per_rung"]), 2]);
+    let v_tries = $.call($.b["get"], [v_q, $.str(["tries"]), 0]);
     $.at(44, F);
-    let v_rung = $.call($.b["get"], [v_q, $.str(["rung"]), 1]);
+    let v_per = $.call($.b["get"], [v_q, $.str(["per_rung"]), 2]);
     $.at(45, F);
-    let v_rungs = $.call($.b["get"], [v_q, $.str(["rungs"]), 1]);
+    let v_rung = $.call($.b["get"], [v_q, $.str(["rung"]), 1]);
     $.at(46, F);
+    let v_rungs = $.call($.b["get"], [v_q, $.str(["rungs"]), 1]);
+    $.at(47, F);
     if ($.truth($.cmp("<", v_tries, v_per), "if")) {
-      $.at(46, F);
+      $.at(47, F);
       return $.ty($.map(["action", $.str(["retry"]), "why", $.add($.add($.add($.add($.add($.add($.str(["try "]), $.call($.b["str"], [$.add(v_tries, 1)])), $.str([" of "])), $.call($.b["str"], [v_per])), $.str([" on rung "])), $.call($.b["str"], [v_rung])), $.str([", the refusal fed back"]))]), "map", false, "return value of step");
     }
-    $.at(47, F);
+    $.at(48, F);
     if ($.truth($.cmp("<", v_rung, v_rungs), "if")) {
-      $.at(47, F);
+      $.at(48, F);
       return $.ty($.map(["action", $.str(["escalate"]), "why", $.add($.add($.add($.add($.add($.add($.add($.str(["rung "]), $.call($.b["str"], [v_rung])), $.str([" spent its "])), $.call($.b["str"], [v_per])), $.str([" tries: rung "])), $.call($.b["str"], [$.add(v_rung, 1)])), $.str([" of "])), $.call($.b["str"], [v_rungs]))]), "map", false, "return value of step");
     }
-    $.at(48, F);
+    $.at(49, F);
     return $.ty($.map(["action", $.str(["hold"]), "why", $.str(["every rung spent its tries: held, said, for a person or a smaller gap"])]), "map", false, "return value of step");
     return $.ty(null, "map", false, "return value of step");
   }
   function v_as_gap(v_g) {
     v_g = $.ty(v_g, "map", false, "parameter g of as_gap");
-    $.at(52, F);
-    let v_missing = $.call($.b["get"], [v_g, $.str(["missingVariable"]), null]);
     $.at(53, F);
-    let v_blocks = $.call($.b["get"], [v_g, $.str(["affectedConstraint"]), null]);
+    let v_missing = $.call($.b["get"], [v_g, $.str(["missingVariable"]), null]);
     $.at(54, F);
+    let v_blocks = $.call($.b["get"], [v_g, $.str(["affectedConstraint"]), null]);
+    $.at(55, F);
     if ($.truth($.eq(v_missing, null), "if")) {
-      $.at(54, F);
+      $.at(55, F);
       return $.ty($.map(["refused", $.str(["no missingVariable: a gap names what is missing (pillar:gap)"])]), "map", false, "return value of as_gap");
     }
-    $.at(55, F);
+    $.at(56, F);
     if ($.truth($.eq(v_blocks, null), "if")) {
-      $.at(55, F);
+      $.at(56, F);
       return $.ty($.map(["refused", $.str(["no affectedConstraint: a gap names the constraint it blocks (pillar:gap)"])]), "map", false, "return value of as_gap");
     }
-    $.at(56, F);
+    $.at(57, F);
     return $.ty($.map(["id", $.get(v_g, "id"), "missingVariable", v_missing, "affectedConstraint", v_blocks, "source", $.call($.b["get"], [v_g, $.str(["source"]), $.str(["emerge-rung"])]), "severity", $.call($.b["get"], [v_g, $.str(["severity"]), $.str(["blocking"])]), "causedBy", $.call($.b["get"], [v_g, $.str(["causedBy"]), null])]), "map", false, "return value of as_gap");
     return $.ty(null, "map", false, "return value of as_gap");
   }
   function v_needs(v_names, v_does) {
     v_names = $.ty(v_names, "list", false, "parameter names of needs");
     v_does = $.ty(v_does, "map", false, "parameter does of needs");
-    $.at(60, F);
-    let v_out = $.map([]);
     $.at(61, F);
+    let v_out = $.map([]);
+    $.at(62, F);
     for (const v_n of $.iter(v_names, false)) {
-      $.at(62, F);
-      let v_deps = $.list([]);
       $.at(63, F);
-      let v_text = $.call($.b["str"], [$.call($.b["get"], [v_does, v_n, $.str([""])])]);
+      let v_deps = $.list([]);
       $.at(64, F);
+      let v_text = $.call($.b["str"], [$.call($.b["get"], [v_does, v_n, $.str([""])])]);
+      $.at(65, F);
       for (const v_m of $.iter(v_names, false)) {
-        $.at(65, F);
+        $.at(66, F);
         if ($.truth($.and($.neq(v_m, v_n), () => $.cmp(">=", $.call($.b["find_text"], [v_text, v_m]), 0)), "if")) {
-          $.at(65, F);
+          $.at(66, F);
           v_deps = $.call($.b["push"], [v_deps, v_m]);
         }
       }
-      $.at(67, F);
+      $.at(68, F);
       $.setIndex(v_out, v_n, v_deps);
     }
-    $.at(69, F);
+    $.at(70, F);
     return $.ty(v_out, "map", false, "return value of needs");
     return $.ty(null, "map", false, "return value of needs");
+  }
+  $.at(74, F);
+  let v_HINTS = $.list([$.map(["says", $.str(["expected a loop variable"]), "fix", $.str(["Loop over a list as: for e in xs, then the block in braces (no parentheses, no let, no of)."])]), $.map(["says", $.str(["!"]), "fix", $.str(["Emerge has no !: write not x, and != for not-equal."])]), $.map(["says", $.str([";"]), "fix", $.str(["No semicolons in Emerge."])]), $.map(["says", $.str(["is a loop variable"]), "fix", $.str(["A loop variable is read-only: build a new value with var out = [] and out = push(out, item)."])]), $.map(["says", $.str(["is a parameter"]), "fix", $.str(["A parameter is read-only: build a new value in a var and return it; never change what was passed in."])]), $.map(["says", $.str(["expected end of statement, found a string"]), "fix", $.str(["No throw: return a map with an error field instead."])]), $.map(["says", $.str(["is a let"]), "fix", $.str(["A let cannot change: use var for anything that changes."])]), $.map(["says", $.str(["is not defined"]), "fix", $.str(["Use only the parameters, the other functions in this module, and the builtins len, push, get, keys, str."])])]);
+  function v_hint(v_why) {
+    v_why = $.ty(v_why, "string", false, "parameter why of hint");
+    $.at(86, F);
+    let v_out = $.str([""]);
+    $.at(87, F);
+    for (const v_h of $.iter(v_HINTS, false)) {
+      $.at(88, F);
+      if ($.truth($.cmp(">=", $.call($.b["find_text"], [v_why, $.get(v_h, "says")]), 0), "if")) {
+        $.at(88, F);
+        v_out = $.add($.add(v_out, $.get(v_h, "fix")), $.str([" "]));
+      }
+    }
+    $.at(90, F);
+    return $.ty(v_out, "string", false, "return value of hint");
+    return $.ty(null, "string", false, "return value of hint");
   }
   return Object.assign(Object.create(null), {
     "order": v_order,
     "step": v_step,
     "as_gap": v_as_gap,
     "needs": v_needs,
+    "HINTS": v_HINTS,
+    "hint": v_hint,
   });
 };
 if (require.main === module) {

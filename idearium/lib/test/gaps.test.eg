@@ -28,3 +28,8 @@ test "the dependency graph from the plan's own words" {
   let d = G.needs(["rename", "idOf", "pathOf"], { rename: "uses idOf to find the entry", idOf: "finds a path", pathOf: "the path of an id" })
   expect join(d.rename, ",") == "idOf" and len(d.idOf) == 0, json(d)
 }
+
+test "a refusal met before brings its fix; one never met brings nothing" {
+  expect find_text(G.hint("main.eg:3:7: error: expected a loop variable, found ("), "for e in xs") >= 0
+  expect G.hint("main.eg:1:1: error: something new") == ""
+}

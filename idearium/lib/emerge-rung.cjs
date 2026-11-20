@@ -43,6 +43,7 @@ types: num, bool, list, map, string, any
 let x = 1   (constant)     var y = 0   (variable)     y = 2   y += 1   y -= 1
 if a and b { ... } else if not c { ... } else { ... }        or, and, not
 while i < len(xs) { ... }      for k in 1..n { ... }   (k goes 1 .. n-1; the end is excluded)
+for e in xs { ... }   (each item of a list: no parentheses, no let, no of)
 return value     break     skip (continue)
 comparisons: == != < <= > >=      arithmetic: + - * / %
 lists: [1, 2, 3]   xs[i]   len(xs)   push(xs, v) returns a NEW list (use: xs = push(xs, v))
@@ -50,7 +51,13 @@ maps: { ok: true, n: 3 }   m.ok   (== compares lists and maps by value)
 strings: "text"   s + t   len(s)
 No semicolons. No classes. No imports. Blocks use { }. Every top-level fn is exported.
 No throw, no try: a failure is a returned map, e.g. return { error: "path taken" }.
-A for loop's variable is read-only: build a new value (var out = []  out = push(out, { id: e.id, path: p })), never e.path = p.`;   // 0.60.607: the two refusals DeepSeek 16b met filling rename (throw; a loop variable changed), 2026-11-19
+Loop variables and parameters are read-only. To change one item of a list, build a new list (the pattern):
+  var out = []
+  for x in xs {
+    if x.key == k { out = push(out, { key: x.key, value: v }) } else { out = push(out, x) }
+  }
+  return { items: out }
+Never x.value = v, never xs[i] = v. Compare with ==, !=, and, or, not (never !, &&, ||).`;   // 0.60.607: the two refusals DeepSeek 16b met filling rename (throw; a loop variable changed), 2026-11-19
 
 const _q = (s) => String(s == null ? '' : s);
 function brief({ file, exports = [], expectation = null, context = '', feedback = null } = {}) {
@@ -161,7 +168,7 @@ function createRung({ root = path.resolve(__dirname, '..', '..'), ask, expect, m
           if (!body) { fb = 'the reply had no body'; tries.push({ n, stage: 'gap:' + name, why: fb, ms: Date.now() - t0, gap }); continue; }
           const ck = await eg('lang-check', render(skel, { ...filled, [name]: body }));
           if (ck.missing) { tries.push({ n, stage: 'no-emerge', why: ck.stderr, ms: Date.now() - t0 }); held = 'no-emerge'; break; }
-          if (!ck.ok) { fb = "Emerge's compiler said: " + firstLines(ck.stderr); tries.push({ n, stage: 'gap:' + name, why: fb, ms: Date.now() - t0, gap }); continue; }
+          if (!ck.ok) { const hn = G.hint(String(ck.stderr || '')); fb = "Emerge's compiler said: " + firstLines(ck.stderr) + (hn ? '\nThe fix: ' + hn : ''); tries.push({ n, stage: 'gap:' + name, why: fb, ms: Date.now() - t0, gap }); continue; }
           filled[name] = body; ok = true; tries.push({ n, stage: 'gap:' + name, why: 'filled; compiles', ms: Date.now() - t0, gap });
         }
         if (!ok) { held = held || ('gap ' + name + ' did not fill in ' + maxTries + ' tries'); break; }
