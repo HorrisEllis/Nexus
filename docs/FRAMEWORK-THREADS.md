@@ -496,3 +496,25 @@ by the focus.
 
 - **Expanded, 2026-11-18 (his):** "also ven the idea being logged becomes a seed for the entire lineage tree. like in idearium or from an input". The root moves back one step: the logged idea (Idearium, or any
   input) is the seed of the tree; the RAID request, the contract and the .spec are its first branches. The prediction above is unchanged.
+
+## T14 — "gates need to inject the lesson, and failure mode from the previous attempt": each gap its own file, each try a fresh chat with the lesson, registered 2026-11-19
+
+- **His words:** 2026-11-19, "Each gap it's own file right? like each primitive should be its own file, chunked and referenced. like the way
+  idearium chunks?" · "gates need to inject the lesson, and failure mode from the previous attempt, and try again, like it needs to understand
+  the problem before trying again, like it needs to start a new chat and inject the context, and lesson fix again" · "test my framework and see
+  if it speeds things up".
+- **What the coder did with it:** **executed** (EMB2 expanded): each skeleton gap is a `.gap` node file in Idearium's data
+  (lib/node-export.js, the known type `gap`); every attempt is written to it as it happens (the body tried, the compiler's words, the fix);
+  each try is a fresh Ollama call whose brief carries gaps.eg `lesson()` over every earlier attempt at that gap, across runs.
+- **Prediction, written before any run:** on the file-identity fixture (idOf + rename; rename was refused 3 of 3 on DeepSeek 16b with only the
+  last refusal fed back), qwen3-coder 30b fills both gaps with the lesson injected in no more tries than without it, and a second run on the
+  same gap files starts from the lesson and fills in fewer tries than the first. Measured by: tries per gap, wall time and tokens, from the
+  run's own output, baseline (0.60.610 code) against the change, same model, same fixture, temperature 0.1. Held if tries fall on the second
+  run; failed if they do not.
+- **Bias named:** the same coder predicts, builds and judges; one fixture and one model are a small sample, so a pass is post-hoc evidence
+  until a run he starts reproduces it.
+- **Evidence (2026-11-19, 0.60.611; docs/BENCHMARKS.md):** the prediction as written **failed**. The 30b was not re-run with the lesson: at 12
+  minutes a call on his GTX 1650 it was swapped for DeepSeek 16b, which the prediction did not name (said, not hidden). DeepSeek with every
+  refused body shown back repeated the same body (run 2, 3 of 3): tries did not fall. After the lesson was changed (each body once, the fix
+  first), the run on the folder holding the earlier lessons got past its first refusal on try 2, and the same code from a fresh folder did not
+  (3 of 3). Partial evidence that lessons on disk carry across runs; one fixture, one model, held both times.

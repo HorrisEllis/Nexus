@@ -126,15 +126,61 @@ function bodyOf(text, name) {
   t = t.split('\n').filter(l => l.trim() !== '___' && !/^\s*```/.test(l)).join('\n').replace(/^\n+|\s+$/g, '');
   return t.trim() ? t.split('\n').map(l => (l.startsWith('  ') ? l : '  ' + l.trimStart())).join('\n') : null;
 }
-function briefGap({ skel, filled, name, expectation = null, feedback = null }) {
+function briefGap({ skel, filled, name, expectation = null, feedback = null, lesson = '' }) {
   return [CARD, '', 'Nexus wrote this Emerge module. Fill ONLY the body marked ___ (in fn ' + name + '). The other functions are done or stubbed; do not change them.',
     '', render(skel, filled, name), '',
     expectation ? 'The module must pass this test (run against its exports):\n' + _q(expectation).slice(0, 2500) : '',
+    lesson ? '\nBEFORE YOU WRITE — the lesson from this gap\'s earlier tries:\n' + _q(lesson).slice(0, 3500) : '',
     feedback ? '\nYOUR LAST BODY WAS REFUSED — fix exactly this:\n' + _q(feedback).slice(0, 1200) : '',
     '\nReply with only the body of ' + name + ' (the lines that replace ___), no fn line, no explanation.'].filter(x => x !== '').join('\n');
 }
 
-function createRung({ root = path.resolve(__dirname, '..', '..'), ask, expect, maxTries = 3, timeoutMs = 60000, cli = null } = {}) {
+// EMB2 (0.60.611): each skeleton gap is its own node file, <gapDir>/<file>#<fn>.gap (lib/node-export.js, the known type `gap`), in Idearium's
+// own data (AXIOMS §5.15: the rung is Idearium's). Every attempt is written to it as it happens (§2.1, his 2026-11-14 "stop using memory for
+// storage"), and every try is a fresh chat told gaps.eg lesson() over the gap's earlier attempts, across runs. James, 2026-11-19: "gates need
+// to inject the lesson, and failure mode from the previous attempt, and try again, like it needs to understand the problem before trying again"
+// James, 2026-11-19: "all the relenavnt files per task need to be bundled in athe same folder. not fragmented. stored in a folder, maybe with the
+// contract id or task id? so it needs to be indexed in the node index database for the server.js" — and he chose the contract id. A task's folder
+// is <tasksDir>/<contract>/ (the ▶ build's contract: <repo>/<map>.<phase>, the saved idearium/data/phase-contracts one); every gap of it lives
+// there, and each file is indexed into Idearium's own node database (lib/node-registry.js storeFor('idearium'): idearium/data/node-index, the
+// one its server's registry runs), so `system nodes idearium gap` finds every gap and the folder it is in.
+function taskDirOf(tasksDir, contract, file) {
+  const NE = require('../../lib/node-export.js');
+  const parts = contract ? String(contract).split('/') : ['no-contract', file];   // a gap is never lost for want of a contract (§2.1); said in its record
+  return path.join(tasksDir, ...parts.filter(Boolean).map(p => NE.fileIdOf(p)));
+}
+function gapStore(gapDir, file, { contract = null, index = null } = {}) {
+  if (!gapDir) return null;
+  const NE = require('../../lib/node-export.js');
+  const idOf = (name) => (contract || 'no-contract') + '/' + file + '#' + name;
+  const at = (name) => path.join(gapDir, NE.fileIdOf(file + '#' + name) + '.gap');
+  return {
+    at, dir: gapDir,
+    read(name) { try { return NE.importFromFile(at(name)).payload || null; } catch (_) { return null; } },
+    write(name, rec) {
+      try {
+        const doc = NE.wrap('gap', idOf(name), { ...rec, contract, file, fn: name }, { context: 'a skeleton gap of ' + file + ' (the Emerge rung, EMB2), task ' + (contract || 'no-contract'), system: 'idearium', tags: ['emerge-rung', 'task:' + (contract || 'no-contract')] });
+        fs.mkdirSync(gapDir, { recursive: true }); const p = at(name); fs.writeFileSync(p, NE.toYaml(doc), 'utf8');
+        if (index) { try { require('../../lib/node-index.js').indexNode('gap', doc, p, index); index.flush && index.flush(); } catch (e) { console.log('[emerge-rung] the gap was written but not indexed (said, not silent): ' + e.message); } }
+        return p;
+      } catch (e) { console.log('[emerge-rung] the gap file was not written (said, not silent): ' + e.message); return null; }
+    },
+  };
+}
+
+/** the rung's gaps from Idearium's node index (nodes_gap), newest first: { id, contract, status, tries, last, file } — filtered by contract or
+ *  status; with id, that one gap whole, read from its file (the file is the truth, the index finds it) */
+function listGaps({ root = path.resolve(__dirname, '..', '..'), id = null, contract = null, status = null, store = null } = {}) {
+  const NI = require('../../lib/node-index.js'); const NE = require('../../lib/node-export.js');
+  const db = store || require('../../lib/node-registry.js').storeFor('idearium', { root, fresh: true });
+  const rows = NI.queryNodes('gap', (r) => !r._deleted && (!id || r.id === id) && (!contract || (r.payload && r.payload.contract) === contract), db);
+  if (id) { const r = rows[0]; if (!r) return null; try { return { id: r.id, filePath: r.filePath, ...NE.importFromFile(r.filePath).payload }; } catch (_) { return { id: r.id, filePath: r.filePath, ...(r.payload || {}), said: 'its file is gone; this is the index\'s copy' }; } }
+  return rows.map(r => { const p = r.payload || {}; const a = Array.isArray(p.attempts) ? p.attempts : []; const l = a[a.length - 1] || {};
+    return { id: r.id, contract: p.contract || null, status: p.status || 'open', tries: a.length, last: l.said || null, at: l.at || null, filePath: r.filePath }; })
+    .filter(g => !status || g.status === status).sort((x, y) => String(y.at).localeCompare(String(x.at)));
+}
+
+function createRung({ root = path.resolve(__dirname, '..', '..'), ask, expect, maxTries = 3, timeoutMs = 60000, cli = null, tasksDir = path.join(root, 'idearium', 'data', 'tasks'), indexRoot = root, keep = 3, model = null } = {}) {
   if (typeof ask !== 'function') throw new Error('ask(message) is required: the agent that writes the Emerge');
   const CLI = cli || path.join(root, 'emerge', 'emerge', 'cli.js');
   // Emerge's door, its command line: { ok, code, stdout, stderr, files }
@@ -146,32 +192,38 @@ function createRung({ root = path.resolve(__dirname, '..', '..'), ask, expect, m
   });
   const firstLines = (s, n = 8) => _q(s).split('\n').map(l => l.trim()).filter(Boolean).slice(0, n).join('\n');
 
-  async function build({ file, exports = [], expectation = null, context = '', skeleton = true } = {}) {
+  async function build({ file, exports = [], expectation = null, context = '', skeleton = true, contract = null } = {}) {
     const f = _q(file).replace(/\\/g, '/'); const dir = path.posix.dirname(f); const base = path.posix.basename(f).replace(/\.[cm]?js$/, '');
     const at = (x) => (dir === '.' ? x : `${dir}/${x}`);
     const names = exports.map(e => (typeof e === 'string' ? e : e.name)).filter(Boolean);
-    const tries = []; let feedback = null, source = null;
+    const tries = []; const gapFiles = []; let feedback = null, source = null;
     // 0.60.607 skeleton first: Nexus writes the structure, the agent fills one body at a time (gaps.eg), Emerge's compiler gates each
     const skel = skeleton === false ? null : skeletonOf(exports);
     if (skel) {
       const G = _gapsEg(); const does = Object.fromEntries(skel.fns.map(x => [x.name, x.does + ' ' + x.signature]));
       const graph = G.needs(skel.fns.map(x => x.name), does);
       const o = G.order(skel.fns.map(x => ({ id: x.name, depends_on: graph[x.name] || [] })));
-      const filled = {}; let held = null;
+      let index = null; if (tasksDir && indexRoot) { try { index = require('../../lib/node-registry.js').storeFor('idearium', { root: indexRoot }); } catch (e) { console.log('[emerge-rung] no node index (gaps still written): ' + e.message); } }
+      const filled = {}; let held = null; const store = tasksDir ? gapStore(taskDirOf(tasksDir, contract, f), f, { contract, index }) : null;
       for (const name of o.order) {
         const gap = G.as_gap({ id: name, missingVariable: 'the body of ' + name, affectedConstraint: f + ' compiles in Emerge and passes its expectation', source: 'emerge-rung' });
-        let fb = null, ok = false;
+        const rec = (store && store.read(name)) || { ...gap, status: 'open', attempts: [] };
+        if (!Array.isArray(rec.attempts)) rec.attempts = [];
+        const note = (a) => { rec.attempts.push({ n: rec.attempts.length + 1, at: new Date().toISOString(), model, ...a }); if (store) store.write(name, rec); };
+        let ok = false;
         for (let n = 1; n <= maxTries && !ok; n++) {
           const t0 = Date.now(); let text;
-          try { text = await ask(briefGap({ skel, filled, name, expectation, feedback: fb }), { tryNo: n, gap: name }); } catch (e) { tries.push({ n, stage: 'gap:' + name, why: 'no answer: ' + e.message, ms: Date.now() - t0, gap }); break; }
+          const lesson = G.lesson(rec.attempts, keep);   // a fresh chat each try, told what every earlier try at this gap met (gaps.eg)
+          try { text = await ask(briefGap({ skel, filled, name, expectation, lesson }), { tryNo: n, gap: name }); } catch (e) { tries.push({ n, stage: 'gap:' + name, why: 'no answer: ' + e.message, ms: Date.now() - t0, gap }); break; }
           const body = bodyOf(text, name);
-          if (!body) { fb = 'the reply had no body'; tries.push({ n, stage: 'gap:' + name, why: fb, ms: Date.now() - t0, gap }); continue; }
+          if (!body) { note({ body: null, said: 'the reply had no body', fix: 'Reply with only the lines of the body.', ms: Date.now() - t0 }); tries.push({ n, stage: 'gap:' + name, why: 'the reply had no body', ms: Date.now() - t0, gap }); continue; }
           const ck = await eg('lang-check', render(skel, { ...filled, [name]: body }));
           if (ck.missing) { tries.push({ n, stage: 'no-emerge', why: ck.stderr, ms: Date.now() - t0 }); held = 'no-emerge'; break; }
-          if (!ck.ok) { const hn = G.hint(String(ck.stderr || '')); fb = "Emerge's compiler said: " + firstLines(ck.stderr) + (hn ? '\nThe fix: ' + hn : ''); tries.push({ n, stage: 'gap:' + name, why: fb, ms: Date.now() - t0, gap }); continue; }
-          filled[name] = body; ok = true; tries.push({ n, stage: 'gap:' + name, why: 'filled; compiles', ms: Date.now() - t0, gap });
+          if (!ck.ok) { const said = firstLines(ck.stderr); const hn = G.hint(String(ck.stderr || '')).trim(); note({ body, said, fix: hn, ms: Date.now() - t0 }); tries.push({ n, stage: 'gap:' + name, why: "Emerge's compiler said: " + said + (hn ? '\nThe fix: ' + hn : ''), ms: Date.now() - t0, gap }); continue; }
+          filled[name] = body; ok = true; rec.status = 'filled'; rec.body = body; note({ body, said: 'filled; compiles', fix: '', ok: true, ms: Date.now() - t0 }); tries.push({ n, stage: 'gap:' + name, why: 'filled; compiles', ms: Date.now() - t0, gap });
         }
-        if (!ok) { held = held || ('gap ' + name + ' did not fill in ' + maxTries + ' tries'); break; }
+        if (store) gapFiles.push(store.at(name));
+        if (!ok) { rec.status = 'held'; if (store) store.write(name, rec); held = held || ('gap ' + name + ' did not fill in ' + maxTries + ' tries'); break; }
       }
       console.log('[emerge-rung] ' + f + ': skeleton of ' + skel.fns.length + ' (' + o.why + ') — ' + (held ? 'held: ' + held : 'every gap filled'));
       if (!held) {
@@ -182,7 +234,7 @@ function createRung({ root = path.resolve(__dirname, '..', '..'), ask, expect, m
           for (const [k, v] of Object.entries(b.files)) if (k.startsWith('_emerge/')) files[k] = v;
           const x = typeof expect === 'function' ? await expect({ file: f, files }) : { ok: true, why: 'no expectation given' };
           if (x && x.ok) { tries.push({ n: 1, stage: 'pass', why: (x && x.why) || 'passed', ms: Date.now() - t0 }); console.log('[emerge-rung] ' + f + ': passed, skeleton first');
-            return { ok: true, why: 'skeleton by Nexus, ' + skel.fns.length + ' bodies filled one at a time, checked by Emerge\'s compiler, passed its expectation', tries, source, files, skeleton: true }; }
+            return { ok: true, why: 'skeleton by Nexus, ' + skel.fns.length + ' bodies filled one at a time, checked by Emerge\'s compiler, passed its expectation', tries, source, files, skeleton: true, gapFiles }; }
           feedback = 'The module (skeleton by Nexus, bodies filled) compiled but its expectation failed: ' + ((x && x.why) || 'it did not pass') + '\nThe module was:\n' + source;
           tries.push({ n: 1, stage: 'expect', why: (x && x.why) || 'the expectation did not pass', ms: Date.now() - t0 });
         } else { feedback = 'The filled module did not build: ' + firstLines(b.stderr); tries.push({ n: 1, stage: 'build', why: feedback, ms: Date.now() - t0 }); }
@@ -208,9 +260,9 @@ function createRung({ root = path.resolve(__dirname, '..', '..'), ask, expect, m
       return { ok: true, why: `written in Emerge, checked by its compiler and passed its expectation on try ${n}`, tries, source, files };
     }
     const last = tries[tries.length - 1];
-    return { ok: false, why: last ? `${last.stage}: ${last.why}` : 'no try', tries, source, files: null };
+    return { ok: false, why: last ? `${last.stage}: ${last.why}` : 'no try', tries, source, files: null, gapFiles };
   }
   return { build, eg };
 }
 
-module.exports = { MODULE_ID, VERSION: '1.1.0', CARD, brief, extract, adapter, createRung, skeletonOf, paramsOf, bodyOf, briefGap };
+module.exports = { MODULE_ID, VERSION: '1.2.0', CARD, brief, extract, adapter, createRung, skeletonOf, paramsOf, bodyOf, briefGap, gapStore, taskDirOf, listGaps };

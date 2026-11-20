@@ -105,12 +105,43 @@ const scripted = (replies, seen = []) => async (message, { tryNo }) => { seen.pu
     assert.strictEqual(R.skeletonOf([{ name: 'f' }]), null, 'no signature: no skeleton (the whole-module loop, as before)');
     const asked = [];
     const bodies = { inc: ['  if !x { return 0 }', '  return x + 1'], twice: ['  return inc(inc(x))'] }; const n = {};
-    const ask = async (msg, { gap }) => { asked.push(gap); n[gap] = (n[gap] || 0) + 1; if (gap === 'inc' && n[gap] === 2) assert.ok(/YOUR LAST BODY WAS REFUSED[\s\S]*unexpected character/.test(msg), 'the compiler\'s words fed back'); return bodies[gap][n[gap] - 1]; };
-    const r = await R.createRung({ root: ROOT, ask, expect: async () => ({ ok: true, why: 'stand-in' }) }).build({ file: 'lib/twice.js', exports: ex });
+    const ask = async (msg, { gap }) => { asked.push(gap); n[gap] = (n[gap] || 0) + 1; if (gap === 'inc' && n[gap] === 2) assert.ok(/the lesson from this gap's earlier tries[\s\S]*The fix: Emerge has no ![\s\S]*Refused[\s\S]*unexpected character[\s\S]*if !x/.test(msg), 'the compiler\'s words and the refused body fed back'); return bodies[gap][n[gap] - 1]; };
+    const r = await R.createRung({ root: ROOT, tasksDir: fs.mkdtempSync(path.join(os.tmpdir(), 'er07-')), indexRoot: null, ask, expect: async () => ({ ok: true, why: 'stand-in' }) }).build({ file: 'lib/twice.js', exports: ex });
     assert.ok(r.ok && r.skeleton, JSON.stringify(r.tries));
     assert.deepStrictEqual(asked, ['inc', 'inc', 'twice'], 'inc first (twice names it), the refused body asked again');
     assert.ok(r.tries.filter(t => t.gap).every(t => t.gap.missingVariable && t.gap.affectedConstraint), 'every gap a pillar:gap');
     assert.ok(/fn inc\(x: any\): any \{\n  return x \+ 1\n\}/.test(r.source), r.source);
+  });
+
+  await test('ER-08', 'each gap its own .gap file, every attempt on disk as it happens; a new run\'s fresh chat is told the lesson of every earlier run (EMB2, his "start a new chat and inject the context, and lesson fix again")', async () => {
+    const NE = require(path.join(ROOT, 'lib', 'node-export.js'));
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'er08-')); const tasks = path.join(dir, 'tasks'); const C = 'repo1/map.P1';
+    const ex = [{ name: 'inc', signature: 'inc(x: num) -> num', does: 'x plus one' }];
+    const run1 = await R.createRung({ root: ROOT, tasksDir: tasks, indexRoot: dir, maxTries: 2, model: 'stand-in', ask: async () => '  if !x { return 0 }', expect: async () => ({ ok: true }) }).build({ file: 'lib/inc.js', exports: ex, contract: C });
+    assert.ok(!run1.ok || !run1.skeleton, 'held after two refused tries');
+    assert.strictEqual(run1.gapFiles.length, 1); const g1 = NE.importFromFile(run1.gapFiles[0]);
+    assert.ok(g1.type === 'gap' && g1.payload.status === 'held' && g1.payload.attempts.length === 2 && g1.payload.attempts[0].model === 'stand-in', JSON.stringify(g1.payload));
+    assert.ok(g1.payload.missingVariable && g1.payload.affectedConstraint, 'a pillar:gap');
+    let told = null;
+    const run2 = await R.createRung({ root: ROOT, tasksDir: tasks, indexRoot: dir, ask: async (msg) => { if (told === null) told = msg; return '  return x + 1'; }, expect: async () => ({ ok: true }) }).build({ file: 'lib/inc.js', exports: ex, contract: C });
+    assert.ok(run2.ok && run2.skeleton, JSON.stringify(run2.tries));
+    assert.ok(/tried 2 time\(s\) before[\s\S]*if !x/.test(told), 'the first chat of run 2 knows run 1\'s refusals');
+    const g2 = NE.importFromFile(run2.gapFiles[0]).payload;
+    assert.ok(g2.status === 'filled' && g2.attempts.length === 3 && /x \+ 1/.test(g2.body), JSON.stringify(g2));
+    assert.ok(path.dirname(run2.gapFiles[0]) === path.join(tasks, 'repo1', 'map.P1'), 'the task\'s folder, named by its contract: ' + run2.gapFiles[0]);
+    const listed = R.listGaps({ root: dir, contract: C });
+    assert.ok(listed.length === 1 && listed[0].status === 'filled' && listed[0].tries === 3 && listed[0].filePath === run2.gapFiles[0], 'found through Idearium\'s node index: ' + JSON.stringify(listed));
+    assert.ok(/x \+ 1/.test(R.listGaps({ root: dir, id: listed[0].id }).body), 'one gap whole, from its file');
+    // the server's boot scan, with a gap type folder present: a node indexed from a file in a task folder (here a plain id, which the scan can
+    // match to a type-folder path) stays while its file is there, and goes when it is gone
+    fs.mkdirSync(path.join(dir, 'idearium', 'data', 'nodes', 'gap'), { recursive: true });
+    const NR = require(path.join(ROOT, 'lib', 'node-registry.js')), NI = require(path.join(ROOT, 'lib', 'node-index.js'));
+    const plain = path.join(tasks, 'repo1', 'map.P1', 'plain.gap'); fs.writeFileSync(plain, fs.readFileSync(run2.gapFiles[0]));
+    const db = NR.storeFor('idearium', { root: dir, fresh: true }); NI.indexNode('gap', { ...NE.importFromFile(plain), id: 'plain' }, plain, db); db.flush();
+    NR.createNodeRegistry({ system: 'idearium', root: dir, fresh: true }).scan();
+    assert.strictEqual(R.listGaps({ root: dir, id: 'plain' }) !== null && R.listGaps({ root: dir, contract: C }).length, 2, 'a boot scan keeps nodes whose files are in their task folder');
+    fs.unlinkSync(plain); NR.createNodeRegistry({ system: 'idearium', root: dir, fresh: true }).scan();
+    assert.strictEqual(R.listGaps({ root: dir, id: 'plain' }), null, 'and drops one whose file is gone');
   });
 
   console.log(`\n  ${passed} passed, ${failed} failed`);

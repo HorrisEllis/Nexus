@@ -799,3 +799,15 @@ then they are written by hand.
 - **Result:** gaps.test.eg 5/5; test-emerge-rung 7/7. DeepSeek: idOf filled first try (2 of 2 runs); rename refused 3 of 3 tries on each run.
 - **Failed runs before the pass:** 4. `find` takes a function in Emerge, so membership became `in`. The compiled module was `.js` inside an ES module package, so it became `.cjs`, then a standalone build. ER-05 refused requiring emerge/emerge from Idearium (sovereignty), so it's a standalone build with its own runtime. The shell ate a script's quoting, so the script became a file.
 - **Gaps found:** a body too big for the model (rename) needs splitting into smaller gaps from the plan's steps; the card lacked "no throw" and "loop variables are read-only".
+
+## 2026-11-19 — each gap its own file, each try a fresh chat told the lesson (EMB2 expanded, 0.60.611, thread T14)
+- **His words:** "gates need to inject the lesson, and failure mode from the previous attempt, and try again, like it needs to understand the problem before trying again" · "test my framework and see if it speeds things up"
+- **Method:** the file-identity fixture (idOf + rename, the module's expectation run by `eg test`), through the rung on his machine, temperature 0.1. Baseline: 0.60.610 code. Then 0.60.611 code: two runs on one task folder, a third after the lesson was changed, and a run from a fresh folder.
+- **Code:** `idearium/lib/gaps.eg` lesson(), `idearium/lib/emerge-rung.cjs` (gap files, index), bench script in the session scratchpad (`rung-bench.js`).
+- **Result:**
+  - Qwen3-Coder 30b, baseline: passed. idOf 1 try, rename 2. 2,185 s wall, 2,272 tokens; each call 655–794 s (GTX 1650 4 GB, 16 GB RAM: the 17 GB model runs from disk).
+  - DeepSeek-Coder-V2 16b, lessons as raw refused bodies, runs 1 and 2: held. rename refused 3 of 3 each run, run 2 wrote the same body three times (shown it, it copied it). 225 s and 169 s.
+  - DeepSeek 16b, lessons deduplicated with the fix first, run 3 on the same folder: held, but rename got past "already declared" on try 2 (it renamed the variable), then was refused for changing its parameter. 176 s.
+  - DeepSeek 16b, same code, fresh folder: held, "already declared" 3 of 3. 190 s.
+- **Failed runs before the pass:** the first lesson (every refused body, in full) made the model repeat itself: replaced by each distinct body once with its count, the fix first. Emerge has no `find_last` (split used instead); two statements on one line are refused.
+- **Gaps found:** a held gap must split into smaller gaps (rename: the check, then the new list); the whole-module fallback after a held skeleton spends 3 calls (~100 s) and never passed in these runs.

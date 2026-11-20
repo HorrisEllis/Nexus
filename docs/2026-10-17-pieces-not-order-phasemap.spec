@@ -362,3 +362,23 @@ related:
 # Measured with DeepSeek 16b the same hour (scratchpad, two gaps): idOf filled first try on both runs; rename refused 3 times on each (throw, a
 # loop variable changed, then a parameter changed). The card now says no throw and that loop variables are read-only (the first two refusals).
 # Not yet: a body too big for the model split into smaller gaps from the plan's steps (his "primitive per primitive"); the agent ladder per gap.
+
+# ── ADDENDUM 2026-11-19 (0.60.611) — EMB2 expanded: each gap its own file in its task's folder; each try a fresh chat told the lesson (built) ──
+# James, 2026-11-19: "Each gap it's own file right? like each primitive should be its own file, chunked and referenced. like the way idearium
+# chunks?" · "gates need to inject the lesson, and failure mode from the previous attempt, and try again, like it needs to understand the problem
+# before trying again, like it needs to start a new chat and inject the context, and lesson fix again" · "all the relenavnt files per task need to
+# be bundled in athe same folder. not fragmented. stored in a folder, maybe with the contract id or task id? so it needs to be indexed in the node
+# index database for the server.js". Asked which id names the folder (contract, phase + file, run), he chose the contract id.
+# Built: each skeleton gap is a .gap node file (lib/node-export.js, the known type gap) in idearium/data/tasks/<contract>/ (<repo>/<map>.<phase>),
+# every attempt written as it happens; each indexed into Idearium's own node database (lib/node-registry.js storeFor('idearium')), read by the
+# existing `system nodes idearium gap` route and command; every try a fresh chat told gaps.eg lesson(). lib/node-registry.js's boot scan keeps a
+# node whose file is in a task folder. Decided by his axioms: §2.1 and his 2026-11-14 rule (no work only in memory), §5.15 (the rung is
+# Idearium's, so its gaps are in Idearium's data), §10.3 (no second gap store: the node index is the one way to find them), §8.6 (node-export,
+# node-index, node-registry and the system.nodes route reused; nothing new beside them).
+# Files: idearium/lib/emerge-rung.cjs, idearium/lib/gaps.eg, idearium/lib/eg-build/gaps/main.js, idearium/lib/test/gaps.test.eg,
+# lib/node-registry.js, tests/modules/test-emerge-rung.test.js (ER-08).
+# Measured (docs/BENCHMARKS.md, thread T14): DeepSeek 16b with the earlier runs' lessons on disk got rename past its first refusal; from a fresh
+# folder it repeated it 3 of 3. rename is still held (it changes the registry passed in).
+# Open, his to settle: his 2026-11-19 "or raid? since it should be the contract hub? but maybe both, as a recipe, maybe raid is working memory,
+# idearium is the long term" against his P12 (2026-09-11, "working memory is meant for immediate data for the contract which we should create a
+# compartment for") and his 2026-09-02 "long-term lives in cortex". Not yet: a held gap split into smaller gaps.

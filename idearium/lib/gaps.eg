@@ -79,13 +79,55 @@ let HINTS = [
   { says: "is a parameter", fix: "A parameter is read-only: build a new value in a var and return it; never change what was passed in." },
   { says: "expected end of statement, found a string", fix: "No throw: return a map with an error field instead." },
   { says: "is a let", fix: "A let cannot change: use var for anything that changes." },
-  { says: "is not defined", fix: "Use only the parameters, the other functions in this module, and the builtins len, push, get, keys, str." }
+  { says: "is not defined", fix: "Use only the parameters, the other functions in this module, and the builtins len, push, get, keys, str." },
+  { says: "is already declared", fix: "That name is taken (a parameter, or an earlier let or var): give the new value a new name, e.g. var taken = ..., never var <a parameter's name>." }
 ]
 
 fn hint(why: string): string {
   var out = ""
   for h in HINTS {
     if find_text(why, h.says) >= 0 { out = out + h.fix + " " }
+  }
+  return out
+}
+
+// lesson(attempts, keep) → what a fresh chat is told before it tries a gap again: the last `keep` attempts at this gap (from its .gap file,
+// across runs), each body that was refused, what refused it, and its fix. "" when the gap has never been tried.
+// James, 2026-11-19: "gates need to inject the lesson, and failure mode from the previous attempt, and try again, like it needs to understand
+// the problem before trying again, like it needs to start a new chat and inject the context, and lesson fix again"
+fn lesson(attempts: list, keep: num): string {
+  var refused = []
+  for a in attempts {
+    if not get(a, "ok", false) { refused = push(refused, a) }
+  }
+  let n = len(refused)
+  if n == 0 { return "" }
+  // each distinct body once, with how often it came back: a small model shown its own refused body repeats it word for word (DeepSeek 16b,
+  // 2026-11-19: the same rename body three times in a row, each shown back to it)
+  var seen = []
+  var times = {}
+  for a in refused {
+    let b = str(get(a, "body", "(no body)"))
+    if b in seen {
+      times[b] = times[b] + 1
+    } else {
+      seen = push(seen, b)
+      times[b] = 1
+    }
+  }
+  var out = "This gap was tried " + str(n) + " time(s) before and refused. Do NOT write any body below again. Read each fix, then write a different body.\n"
+  var i = 0
+  if len(seen) > keep { i = len(seen) - keep }
+  while i < len(seen) {
+    let b = seen[i]
+    var last = {}
+    for a in refused {
+      if str(get(a, "body", "(no body)")) == b { last = a }
+    }
+    let f = str(get(last, "fix", ""))
+    if f != "" { out = out + "\nThe fix: " + f }
+    out = out + "\nRefused (" + str(times[b]) + " time(s)): " + str(get(last, "said", "")) + "\nThe refused body was:\n" + b + "\n"
+    i = i + 1
   }
   return out
 }
