@@ -7,11 +7,11 @@ intent: null
 summary: 31 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1795177266402
+exported_at: 1795177423371
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1795177266402
-lastSeenAt: 1795177266402
+firstSeenAt: 1795177423371
+lastSeenAt: 1795177423371
 fingerprint: null
 payload:
   for: EMB1_emerge_writes_the_brick
@@ -226,6 +226,7 @@ payload:
       - docs/2026-10-12-browser-providers-and-work-phasemap.spec::CS0_projects_decomposed_into_components
     dependents:
       - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB2_ollama_writes_emerge_for_the_pipeline
+      - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB3_the_autocorrect
     upstream:
       - docs/2026-10-12-browser-providers-and-work-phasemap.spec::CS0_projects_decomposed_into_components
       - docs/2026-10-12-browser-providers-and-work-phasemap.spec::MX2_the_0_60_components_wired_in_loom
@@ -243,6 +244,7 @@ payload:
     blockedBy: []
     unlocks:
       - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB2_ollama_writes_emerge_for_the_pipeline
+      - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB3_the_autocorrect
     conflicts: []
     dangling: []
     lines:
@@ -251,8 +253,8 @@ payload:
         depends on (3): VF1_verify_first, EAS2_the_language_through_the_door,
         CS0_projects_decomposed_into_components · all upstream 10
       - >-
-        needed by (1): EMB2_ollama_writes_emerge_for_the_pipeline · all downstream 2 · finishing it
-        unlocks EMB2_ollama_writes_emerge_for_the_pipeline
+        needed by (2): EMB2_ollama_writes_emerge_for_the_pipeline, EMB3_the_autocorrect · finishing
+        it unlocks EMB2_ollama_writes_emerge_for_the_pipeline, EMB3_the_autocorrect
     edges:
       - from: docs/2026-10-19-pipeline-root-causes-phasemap.spec::VF1_verify_first
         kind: declared

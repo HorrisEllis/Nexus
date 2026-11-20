@@ -7,11 +7,11 @@ intent: null
 summary: 30 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1795177266405
+exported_at: 1795177423375
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1795177266405
-lastSeenAt: 1795177266405
+firstSeenAt: 1795177423375
+lastSeenAt: 1795177423375
 fingerprint: null
 payload:
   for: EMB2_ollama_writes_emerge_for_the_pipeline
@@ -218,8 +218,7 @@ payload:
     layer: 4
     deps:
       - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB1_emerge_writes_the_brick
-    dependents:
-      - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB3_the_autocorrect
+    dependents: []
     upstream:
       - docs/2026-10-12-browser-providers-and-work-phasemap.spec::CS0_projects_decomposed_into_components
       - docs/2026-10-12-browser-providers-and-work-phasemap.spec::MX2_the_0_60_components_wired_in_loom
@@ -232,11 +231,9 @@ payload:
       - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D0_a_system_not_an_idearium_module
       - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D2_two_contracts_two_names
       - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D3_handlers_run_the_cli
-    downstream:
-      - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB3_the_autocorrect
+    downstream: []
     blockedBy: []
-    unlocks:
-      - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB3_the_autocorrect
+    unlocks: []
     conflicts:
       - with: docs/2026-10-17-pieces-not-order-phasemap.spec::PC5_control_when_he_chooses
         files:
@@ -245,7 +242,7 @@ payload:
     lines:
       - layer 4 · ready
       - 'depends on (1): EMB1_emerge_writes_the_brick · all upstream 11'
-      - 'needed by (1): EMB3_the_autocorrect · finishing it unlocks EMB3_the_autocorrect'
+      - 'needed by (0): —'
       - 'same files as PC5_control_when_he_chooses with no order between them: idearium/api/index.js'
     edges:
       - from: docs/2026-10-17-pieces-not-order-phasemap.spec::EMB1_emerge_writes_the_brick

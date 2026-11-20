@@ -163,7 +163,7 @@ phases:
     axioms: "§17.13 (a missing capability is built into Emerge: the card from Emerge's own map), §8.6 (the rung, the benchmark and self.eg exist), his order (the pipeline builds the rest)"
   EMB3_the_autocorrect:
     status: OPEN
-    depends_on: [EMB2_ollama_writes_emerge_for_the_pipeline]
+    depends_on: [EMB1_emerge_writes_the_brick]   # the rung it is built through (BUILT); corrected 2026-11-20 from EMB2, which is open and which the module does not need
     james: '"like autocorrect" (2026-11-20) · "do it. prove it" (2026-11-20, the first real phase built by the local-model ladder through the ▶ build)'
     files: [idearium/lib/autocorrect.js, idearium/lib/test/autocorrect.test.js]
     does: >-

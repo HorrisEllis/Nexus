@@ -7,11 +7,11 @@ intent: null
 summary: EMB3_the_autocorrect (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1795177266408
+exported_at: 1795177423378
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1795177266408
-lastSeenAt: 1795177266408
+firstSeenAt: 1795177423378
+lastSeenAt: 1795177423378
 fingerprint: null
 payload:
   id: EMB3_the_autocorrect
@@ -23,7 +23,7 @@ payload:
     - idearium/lib/autocorrect.js
     - idearium/lib/test/autocorrect.test.js
   depends_on:
-    - EMB2_ollama_writes_emerge_for_the_pipeline
+    - EMB1_emerge_writes_the_brick
   blocks: []
   spec: null
-  graph: a14c84d6a353d082
+  graph: 3658b4aa0ef1c195
