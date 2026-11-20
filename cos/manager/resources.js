@@ -132,7 +132,17 @@ function createResources(sup, { root = sup.root, store = null, sampleMs = 30000,
     runs.set(name, { pid, heapMB: isNode(declOf(name)) ? c.heapMB : null, over: false });
     applyPriority(name, pid, c.priority);
   }
-  const heapMB = (d) => { try { return caps(d.name).heapMB; } catch (_) { return null; } };
+  // 0.60.626 — dynamic heap (his, 2026-11-20: "we need idearium stablized using the chunking, and dynamic memory heap allocation" · "We need
+  // idwarium"). A system he set to priority high gets, at each start, the larger of his cap and half the memory free then, up to
+  // policy.dynamicHeapMaxMB (3072): his cap stays the floor, nothing is taken below it. Measured the same day: every real build took Idearium to
+  // 93% of its 1,024 MB heap and it went down. Other systems keep his cap as before. policy.dynamicHeap false turns it off.
+  const heapMB = (d) => {
+    let c; try { c = caps(d.name); } catch (_) { return null; }
+    const P = (typeof sup.policy === 'function' && sup.policy()) || {};
+    if (P.dynamicHeap === false || c.priority !== 'high' || !c.heapMB) return c.heapMB;
+    const half = Math.floor(require('os').freemem() / 1024 / 1024 / 2);
+    return Math.max(c.heapMB, Math.min(half, Number(P.dynamicHeapMaxMB) || 3072));
+  };
 
   async function sample() {
     const list = sup.list(), P = sup.policy();
