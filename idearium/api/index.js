@@ -2000,25 +2000,29 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
       const tpath = (plan.testFirst && plan.testFirst.path) || null;
       let expectation = null; try { if (tpath) expectation = String(codeOf(tpath) || '') || null; } catch (_) { expectation = null; }
       const dp = paramsOf(rung);
+      // 0.60.608 — a skeleton gap goes to the model bare: the brief alone, no persona, no tools (his "smallest amount of context per gate").
+      // NM1a 2026-11-19: through the project agent each gap prompt was ~9,960 characters of persona and JavaScript context, and DeepSeek
+      // answered in JavaScript (for (let … of …), ===, semicolons) three times; asked bare it filled the same gap first try. The Ollama
+      // system's job route (nexus://ollama-bridge/api/jobs: its door records every call on the tape), owned by the Emerge rung.
+      const askOllama = async (message, model, gap) => {
+        const q = await _nexusClient.post('ollama', '/api/jobs', { prompt: message, model: model || undefined, intent: 'build', repoUuid: target.uuid, meta: { source: 'idearium.emerge-rung', gap, phase }, options: { temperature: 0.1 } }, { timeout: 30000 });
+        const id = q && (q.jobId || (q.data && q.data.jobId)); if (!id) throw new Error(`the Ollama system did not take the gap: ${JSON.stringify(q).slice(0, 200)}`);
+        for (const until = Date.now() + 15 * 60000; Date.now() < until;) {
+          await new Promise(r => setTimeout(r, 3000));
+          const g = await _nexusClient.get('ollama', `/api/jobs/${encodeURIComponent(id)}`, { timeout: 10000 }).catch(() => null);
+          const j = g && (g.job || (g.data && g.data.job)); if (!j) continue;
+          if (j.status === 'complete') return String(j.result || '');
+          if (j.status === 'failed' || j.status === 'cancelled') throw new Error(`the Ollama job ${j.status}: ${j.error || ''}`);
+        }
+        throw new Error('the Ollama job did not finish in 15 minutes');
+      };
+      // 0.60.615 EMB2 — the ladder, smallest first (routing.emerge_ladder): each model through the same Ollama door; empty, the rung's one model
+      const ladder = (policy.emergeLadder || []).length ? policy.emergeLadder.map(m => ({ name: m, ask: (message, { gap } = {}) => askOllama(message, m, gap) })) : null;
       const rung0 = ER.createRung({
         root: _require('../../lib/nexus-self/systems.js').ROOT, maxTries: 3, tasksDir: path.join(IDEARIUM_DATA_DIR, 'tasks'), model: dp.model || dp.provider || null, method,
+        ...(ladder ? { ladder } : {}),
         ask: async (message, { tryNo, gap } = {}) => {
-          // 0.60.608 — a skeleton gap goes to the model bare: the brief alone, no persona, no tools (his "smallest amount of context per gate").
-          // NM1a 2026-11-19: through the project agent each gap prompt was ~9,960 characters of persona and JavaScript context, and DeepSeek
-          // answered in JavaScript (for (let … of …), ===, semicolons) three times; asked bare it filled the same gap first try. The Ollama
-          // system's job route (nexus://ollama-bridge/api/jobs), owned by the Emerge rung; the rung's own model.
-          if (gap && dp.backend === 'ollama') {
-            const q = await _nexusClient.post('ollama', '/api/jobs', { prompt: message, model: dp.model || undefined, intent: 'build', repoUuid: target.uuid, meta: { source: 'idearium.emerge-rung', gap, phase }, options: { temperature: 0.1 } }, { timeout: 30000 });
-            const id = q && (q.jobId || (q.data && q.data.jobId)); if (!id) throw new Error(`the Ollama system did not take the gap: ${JSON.stringify(q).slice(0, 200)}`);
-            for (const until = Date.now() + 15 * 60000; Date.now() < until;) {
-              await new Promise(r => setTimeout(r, 3000));
-              const g = await _nexusClient.get('ollama', `/api/jobs/${encodeURIComponent(id)}`, { timeout: 10000 }).catch(() => null);
-              const j = g && (g.job || (g.data && g.data.job)); if (!j) continue;
-              if (j.status === 'complete') return String(j.result || '');
-              if (j.status === 'failed' || j.status === 'cancelled') throw new Error(`the Ollama job ${j.status}: ${j.error || ''}`);
-            }
-            throw new Error('the Ollama job did not finish in 15 minutes');
-          }
+          if (gap && dp.backend === 'ollama') return askOllama(message, dp.model, gap);
           const rd = await _agentDir(target.uuid);
           const r = await WR.wrap(() => RA.dispatch({ repo: target, repoDir: rd, message, ...dp, layer: getRepoLayer(), session: `${runId}-ew-${ck.chunk}-t${tryNo}`, maxToolErrors: policy.maxToolErrors || 0, phase: `${map}::${phase}`, noContext: true }),
             { kind: 'emerge-brick', provider: dp.provider || dp.model || dp.agent || dp.backend || null, key: `${target.uuid}\n${message}`, mode: 'cache', fresh: tryNo > 1 });
