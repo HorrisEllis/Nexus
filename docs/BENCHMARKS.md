@@ -819,3 +819,10 @@ then they are written by hand.
 - **Result:** held for the module, but rename passed its gate for the first time: refused 3 of 3 ("expected ) to close the call"), DeepSeek asked why named `findEntryById(registry, id)`, linked in and filled first try (5 s), then rename passed the compiler on its next try (12 s). The module's test failed: rename changed the registry through an alias (`entry.path = newPath`). 290 s wall, 8,233 tokens, of which 3 calls were the whole-module fallback (it wrote unrelated code).
 - **Failed runs before the pass:** `link` dropped a gap already in the chain (caught by its own test).
 - **Gaps found:** Emerge's checker lets a change through an alias of a parameter (the 2026-11-06 gap, still open); a failed module test should become a gap, not a whole-module retry.
+
+## 2026-11-20 — the model ladder end to end, 3b then DeepSeek (EMB2, 0.60.613–614)
+- **His words:** "the smaller we can get llms in ollama coding the better" · "get it working end to end"
+- **Method:** the file-identity fixture through the rung, ladder qwen2.5-coder 3b → DeepSeek-Coder-V2 16b, a failed test reopening the gaps, fresh task folders, temperature 0.1. "Blind": the brief named the exports but not the test; "seen": the test in the brief (the ▶ build's condition).
+- **Result:** 2 of 6 passed. Blind: passed 1 of 4 (162 s, 7,430 tokens: the 3b's calls 20 s, DeepSeek's 132 s); held 3 (136–414 s). Seen: passed 1 of 2 (325 s, 13,288 tokens); held 1 (926 s, 27,701 tokens, DeepSeek asked 16 times on rename). The 3b's Emerge compiled on its first try in every run; every hold was wrong behaviour (the test), not syntax.
+- **Failed runs before the pass:** the first ladder held without climbing (a failed test did not escalate): fixed the same hour. The first "seen" runs were still blind (a script edit missed): rerun and labelled by what they were.
+- **Gaps found:** behaviour, not syntax, is now the wall for small models: a test per gap (which function failed), Emerge's checker refusing a change through an alias of a parameter, and a deterministic autocorrect of the known refusals (his "autocorrect").

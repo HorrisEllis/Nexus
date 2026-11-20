@@ -126,22 +126,10 @@ function bodyOf(text, name) {
   t = t.split('\n').filter(l => l.trim() !== '___' && !/^\s*```/.test(l)).join('\n').replace(/^\n+|\s+$/g, '');
   return t.trim() ? t.split('\n').map(l => (l.startsWith('  ') ? l : '  ' + l.trimStart())).join('\n') : null;
 }
-// his framework per gate (0.60.613; his "My whole framework", 2026-11-20): the executable steps of his .framework (its ```json framework-steps
-// block: each step's id, section, does), read from the file, so the method is his text, editable there, never the coder's words in this file
-const _fw = new Map();
-function frameworkSteps(file) {
-  if (_fw.has(file)) return _fw.get(file);
-  let out = null;
-  try { const t = fs.readFileSync(file, 'utf8'); const at = t.indexOf('```json framework-steps'); const end = at < 0 ? -1 : t.indexOf('```', at + 10);
-    if (end > at) { const j = JSON.parse(t.slice(at + '```json framework-steps'.length, end)); out = new Map((j.steps || []).map(s => [s.id, s])); } } catch (_) { out = null; }
-  _fw.set(file, out); return out;
-}
-function methodOf(fw, ids = []) { if (!fw || !ids || !ids.length) return ''; return ids.map(id => fw.get(id)).filter(Boolean).map(s => '- ' + s.section + ': ' + s.does).join('\n'); }
-
 function briefGap({ skel, filled, name, expectation = null, feedback = null, lesson = '', method = '' }) {
   return [CARD, '', 'Nexus wrote this Emerge module. Fill ONLY the body marked ___ (in fn ' + name + '). The other functions are done or stubbed; do not change them.',
     '', render(skel, filled, name), '',
-    method ? 'The method (James Brooks\'s framework):\n' + method + '\n' : '',
+    method ? 'The method:\n' + method + '\n' : '',
     expectation ? 'The module must pass this test (run against its exports):\n' + _q(expectation).slice(0, 2500) : '',
     lesson ? '\nBEFORE YOU WRITE — the lesson from this gap\'s earlier tries:\n' + _q(lesson).slice(0, 3500) : '',
     feedback ? '\nYOUR LAST BODY WAS REFUSED — fix exactly this:\n' + _q(feedback).slice(0, 1200) : '',
@@ -193,13 +181,13 @@ function listGaps({ root = path.resolve(__dirname, '..', '..'), id = null, contr
     .filter(g => !status || g.status === status).sort((x, y) => String(y.at).localeCompare(String(x.at)));
 }
 
-function createRung({ root = path.resolve(__dirname, '..', '..'), ask, expect, maxTries = 3, timeoutMs = 60000, cli = null, tasksDir = path.join(root, 'idearium', 'data', 'tasks'), indexRoot = root, keep = 3, model = null, maxDepth = 2, maxGaps = 8, ladder = null, rounds = 1,
-  framework = { file: path.join(root, 'docs', 'innovation-toolkit.framework'), gates: { fill: [], diagnose: ['gap', 'constraints'], test: ['hostile'] } } } = {}) {
+function createRung({ root = path.resolve(__dirname, '..', '..'), ask, expect, maxTries = 3, timeoutMs = 60000, cli = null, tasksDir = path.join(root, 'idearium', 'data', 'tasks'), indexRoot = root, keep = 3, model = null, maxDepth = 2, maxGaps = 8, ladder = null, rounds = 1, method = null } = {}) {
   if (typeof ask !== 'function' && !(ladder && ladder.length)) throw new Error('ask(message) is required: the agent that writes the Emerge');
   // the ladder, smallest first: [{ name, ask }] — the first fills every gap; a gap held on it goes to the next, told every earlier try
   const L = ladder && ladder.length ? ladder.filter(x => x && typeof x.ask === 'function') : [{ name: model, ask }];
-  const fw = framework && framework.file ? frameworkSteps(framework.file) : null;
-  const fwGates = { fill: [], diagnose: [], test: [], ...((framework && framework.gates) || {}) };
+  // the method per gate is given, never chosen here (his "the pipeline and gates are agnostic", 2026-11-20; 0.60.614): { fill, diagnose, test } → text, as
+  // the step's own method resolved by COS (cos/automation/method.eg, a task's method:); a gate with none gets none
+  const M = (g) => (method && typeof method === 'object' && typeof method[g] === 'string' ? method[g] : '');
   const ID = /^[A-Za-z_][A-Za-z0-9_]*$/;
   /** the gap that stops `name`: deterministic first (a function its own tries called that does not exist), then the learning memory (what
    *  unblocked a gap stuck the same way before, from Idearium's node index), then one short question to the model. null when none is named. */
@@ -219,7 +207,7 @@ function createRung({ root = path.resolve(__dirname, '..', '..'), ask, expect, m
       ...rec.attempts.filter(a => !a.ok).slice(-3).map(a => '- ' + _q(a.said).split('\n')[0]),
       '', 'The module so far:', render(skel, filled, name), '',
       seen.length ? 'Gaps stuck the same way before were unblocked by a smaller function like:\n' + seen.map(s => '- fn ' + s.signature + ' — ' + s.does).join('\n') + '\n' : '',
-      method ? 'The method (James Brooks\'s framework):\n' + method + '\n' : '',
+      method ? 'The method:\n' + method + '\n' : '',
       'Name ONE smaller new function that, once written, makes ' + name + ' easy (it takes what it needs as parameters and returns a new value; it never changes a parameter).',
       'Reply with exactly one line:  fn <name>(<param>, <param>) — <what it returns>'].filter(x => x !== '').join('\n');
     let text = ''; try { text = await who.ask(msg, { gap: name, diagnose: true, tryNo: 0 }); } catch (_) { return null; }
@@ -259,7 +247,7 @@ function createRung({ root = path.resolve(__dirname, '..', '..'), ask, expect, m
       let chain = o.order.slice(); const depth = {}; const recs = {}; const rungOf = {};
       // 0.60.613 — the ladder, smallest model first (his "the smaller we can get llms in ollama coding the better"; PC_D16 "ollama first"); his
       // framework per gate (his "My whole framework"): the brief of each gate carries his framework's steps for it, read from his .framework.
-      const fillMethod = methodOf(fw, fwGates.fill), diagnoseMethod = methodOf(fw, fwGates.diagnose), testMethod = methodOf(fw, fwGates.test);
+      const fillMethod = M('fill'), diagnoseMethod = M('diagnose'), testMethod = M('test');
       let roundsAt = 0;
       for (let round = 0; ; round++) {
       while (chain.some(x => filled[x] == null) && !held) {
@@ -339,7 +327,7 @@ function createRung({ root = path.resolve(__dirname, '..', '..'), ask, expect, m
         console.log('[emerge-rung] ' + f + ': the test failed — ' + names.join(', ') + ' escalated to ' + ((up && up.name) || 'the next rung'));
       }
       for (const nm of names) if (recs[nm] && filled[nm] != null) {
-        recs[nm].attempts.push({ n: recs[nm].attempts.length + 1, at: new Date().toISOString(), model: recs[nm].gate && recs[nm].gate.model, body: filled[nm], said: "the module's test failed: " + _q(why).split('\n').slice(0, 3).join(' '), fix: testMethod ? 'Attack it before integrating: ' + testMethod.replace(/\n/g, ' ').slice(0, 400) : '' });
+        recs[nm].attempts.push({ n: recs[nm].attempts.length + 1, at: new Date().toISOString(), model: recs[nm].gate && recs[nm].gate.model, body: filled[nm], said: "the module's test failed: " + _q(why).split('\n').slice(0, 3).join(' '), fix: testMethod ? testMethod.replace(/\n/g, ' ').slice(0, 400) : '' });
         recs[nm].status = 'open'; delete recs[nm].gate; filled[nm] = null; if (store) store.write(nm, recs[nm]);
       }
       tries.push({ n: round + 1, stage: 'reopen', why: 'the test failed; reopened ' + names.join(', ') + ' with its words' });
@@ -373,4 +361,4 @@ function createRung({ root = path.resolve(__dirname, '..', '..'), ask, expect, m
   return { build, eg };
 }
 
-module.exports = { MODULE_ID, VERSION: '1.3.0', CARD, brief, extract, adapter, createRung, skeletonOf, paramsOf, bodyOf, briefGap, gapStore, taskDirOf, listGaps, frameworkSteps, methodOf };
+module.exports = { MODULE_ID, VERSION: '1.3.0', CARD, brief, extract, adapter, createRung, skeletonOf, paramsOf, bodyOf, briefGap, gapStore, taskDirOf, listGaps };

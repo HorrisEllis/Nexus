@@ -1,0 +1,28 @@
+// cos/automation/test/method.test.eg — a task's method resolved for its step and gates. eg test cos/automation/test/method.test.eg
+// James, 2026-11-20: "Like you can set the method or framework per gate or step. Remember the pipeline and gates are agnostic."
+use "../method.eg" as M
+
+let FWS = { tk: { steps: [{ id: "gap", section: "Section 3", does: "frame first" }, { id: "hostile", section: "Section 10", does: "attack it" }] } }
+
+test "a framework by id: every step" {
+  let r = M.resolve("tk", FWS)
+  expect r.ok and find_text(r.method, "Section 3: frame first") >= 0 and find_text(r.method, "Section 10: attack it") >= 0, json(r)
+}
+
+test "the named steps of a framework" {
+  let r = M.resolve({ framework: "tk", steps: ["hostile"] }, FWS)
+  expect r.ok and r.method == "- Section 10: attack it", json(r)
+}
+
+test "one method per gate, the step's own gate names" {
+  let r = M.resolve({ diagnose: { framework: "tk", steps: ["gap"] }, test: "tk", fill: { text: "one line at a time" } }, FWS)
+  expect r.ok and r.method.diagnose == "- Section 3: frame first" and r.method.fill == "one line at a time" and find_text(r.method.test, "Section 10") >= 0, json(r)
+}
+
+test "what does not exist is said, never guessed" {
+  let a = M.resolve("ghost", FWS)
+  let b = M.resolve({ diagnose: { framework: "tk", steps: ["nope"] } }, FWS)
+  expect not a.ok and find_text(a.problems[0], "no framework ghost") >= 0
+  expect not b.ok and find_text(b.problems[0], "diagnose: framework tk has no step nope") >= 0, json(b)
+  expect M.resolve(null, FWS).ok and M.resolve(null, FWS).method == null
+}

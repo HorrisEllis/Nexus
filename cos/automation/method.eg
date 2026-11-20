@@ -1,0 +1,57 @@
+// cos/automation/method.eg — a step's method, resolved (0.60.614): what a task's `method:` names becomes the text its step and its gates are given.
+// James, 2026-11-20: "Like you can set the method or framework per gate or step. Remember the pipeline and gates are agnostic." · "framework per
+// step. or pipeline. like i want it to use my framework." · 2026-11-08: "A .framework shouldn't just be a document describing what to do."
+// The pipeline and its gates stay agnostic: a task names its method as data (in its .pipeline, on the canvas); COS resolves it from the
+// frameworks it has (each .framework's executable steps, cos/pipeline/framework.eg); the step reads {{vars.method}}, a typed gate with.method.
+// Pure. pipeline.js loads the frameworks and calls resolve; nothing here reads a file.
+//
+// A method is one of:
+//   "innovation-toolkit"                                   a framework by id: every step of it
+//   { framework: "innovation-toolkit", steps: ["gap"] }    the named steps of it
+//   { text: "..." }                                        given text, as it is
+//   { fill: <a method>, diagnose: <a method>, ... }        one per gate of the step (the step's own gate names: agnostic)
+// resolve(method, frameworks) → { ok, method: text | { gate: text }, problems }   frameworks: { id: { steps: [{ id, section, does }] } }
+
+fn line_of(s: map): string = "- " + str(get(s, "section", get(s, "id", ""))) + ": " + str(get(s, "does", ""))
+
+fn one(m: any, fws: map): map {
+  let t = type_of(m)
+  if t == "string" {
+    if not (m in keys(fws)) { return { text: "", problem: "no framework " + m } }
+    return { text: join(map(get(fws[m], "steps", []), fn(s) = line_of(s)), "\n"), problem: null }
+  }
+  if t != "map" { return { text: "", problem: "a method is a framework id, a framework with its steps, or a text" } }
+  if get(m, "text", null) != null { return { text: str(m.text), problem: null } }
+  let id = get(m, "framework", null)
+  if id == null { return { text: "", problem: "a method names a framework or gives its text" } }
+  if not (id in keys(fws)) { return { text: "", problem: "no framework " + str(id) } }
+  let want = get(m, "steps", [])
+  if len(want) == 0 { return one(id, fws) }
+  var lines = []
+  var problem = null
+  for w in want {
+    let s = find(get(fws[id], "steps", []), fn(x) = get(x, "id", "") == w)
+    if s == null { problem = "framework " + str(id) + " has no step " + str(w) } else { lines = push(lines, line_of(s)) }
+  }
+  return { text: join(lines, "\n"), problem: problem }
+}
+
+fn is_single(m: any): bool = type_of(m) == "string" or (type_of(m) == "map" and (get(m, "framework", null) != null or get(m, "text", null) != null))
+
+fn resolve(m: any, fws: map): map {
+  if m == null { return { ok: true, method: null, problems: [] } }
+  if is_single(m) {
+    let r = one(m, fws)
+    if r.problem != null { return { ok: false, method: r.text, problems: [r.problem] } }
+    return { ok: true, method: r.text, problems: [] }
+  }
+  if type_of(m) != "map" { return { ok: false, method: null, problems: ["a method is a framework id, a framework with its steps, a text, or one per gate"] } }
+  var out = {}
+  var problems = []
+  for g in keys(m) {
+    let r = one(m[g], fws)
+    out[g] = r.text
+    if r.problem != null { problems = push(problems, g + ": " + r.problem) }
+  }
+  return { ok: len(problems) == 0, method: out, problems: problems }
+}

@@ -1519,3 +1519,12 @@ phases_addendum_2026_11_13_rca:
 #  step and gate one ring further out by its depth, branches spreading as a web, live events travelling the edges (the lattice of
 #  2026-11-18, the associative web his mind keeps). One structure, many styles: the views are disposable, the step nodes are the data.
 # And the same principle for the build: the smallest representable unit first, expanded outward (NM1a, lib/file-identity.js, before NM1).
+
+# ── ADDENDUM 2026-11-20 (0.60.614) — PC2 expanded: a method per step and per gate (built) ──
+# James, 2026-11-20: "Like you can set the method or framework per gate or step. Remember the pipeline and gates are agnostic." · "framework per
+# step. or pipeline. like i want it to use my framework." PC2 made a .framework a step; this lets any step and any gate carry a method without
+# being one: a task's `method:` (a framework, its named steps, a text, or one per gate of the step) is resolved by COS in Emerge
+# (cos/automation/method.eg) from its frameworks folder; the step reads {{vars.method}}, a typed gate with.method. Decided by his axioms: §5.8
+# (composability over configuration: a field on any task, not a mode of one engine), §5.14 (the step's runner uses the text; nothing is bound
+# to one framework or one system), §1.2 (a method naming what does not exist fails the task, said). First user: Idearium's build pipeline
+# names his framework for the Emerge rung's gates (diagnose: Sections 3 and 4; test: Section 10), the coder's reading, to confirm with him.

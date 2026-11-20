@@ -189,14 +189,18 @@ const scripted = (replies, seen = []) => async (message, { tryNo }) => { seen.pu
     assert.ok(g.gate.model === 'big' && g.attempts[0].model === 'tiny' && g.gate.tested, JSON.stringify(g));
     // his framework per gate: the diagnose brief carries his Sections 3 and 4 from his .framework file
     let diag = null;
-    await R.createRung({ root: ROOT, tasksDir: tasks, indexRoot: null, maxTries: 1, ask: async (msg, { diagnose }) => { if (diagnose) { diag = msg; return 'nothing'; } return '  if !x { return 1 }'; }, expect: async () => ({ ok: true }) }).build({ file: 'lib/inc2.js', exports: ex, contract: 'r/m.L' });
-    assert.ok(/James Brooks's framework[\s\S]*Section 3[\s\S]*Section 4/.test(diag || ''), 'his method in the diagnose gate');
+    // the method is given per gate (resolved by COS from the step's method:), never chosen by the rung: agnostic
+    const method = { diagnose: '- Section 3 — Finding the gap: frame first\n- Section 4 — Constraints & deconstruct: zoom in to bedrock', test: '- Section 10 — Hostile verification: attack it' };
+    await R.createRung({ root: ROOT, tasksDir: tasks, indexRoot: null, maxTries: 1, method, ask: async (msg, { diagnose }) => { if (diagnose) { diag = msg; return 'nothing'; } return '  if !x { return 1 }'; }, expect: async () => ({ ok: true }) }).build({ file: 'lib/inc2.js', exports: ex, contract: 'r/m.L' });
+    assert.ok(/The method:\n- Section 3[\s\S]*Section 4/.test(diag || ''), 'the given method in the diagnose gate');
+    let none = null; await R.createRung({ root: ROOT, tasksDir: tasks, indexRoot: null, maxTries: 1, ask: async (msg, { diagnose }) => { if (diagnose) { none = msg; return 'nothing'; } return '  if !x { return 1 }'; }, expect: async () => ({ ok: true }) }).build({ file: 'lib/inc2b.js', exports: ex, contract: 'r/m.L' });
+    assert.ok(!/The method:/.test(none || ''), 'no method given, none used: the rung chooses none');
     // a failed module test reopens the gap with its words and his Section 10, once (rounds = 1), then passes
     let calls = 0; const briefs = [];
-    const r2 = await R.createRung({ root: ROOT, tasksDir: tasks, indexRoot: null, maxTries: 1, ask: async (msg) => { briefs.push(msg); return '  return x + 1'; },
+    const r2 = await R.createRung({ root: ROOT, tasksDir: tasks, indexRoot: null, maxTries: 1, method, ask: async (msg) => { briefs.push(msg); return '  return x + 1'; },
       expect: async () => (++calls === 1 ? { ok: false, why: 'inc(1) == 3 failed' } : { ok: true }) }).build({ file: 'lib/inc3.js', exports: ex, contract: 'r/m.L' });
     assert.ok(r2.ok && r2.tries.some(t => t.stage === 'reopen'), JSON.stringify(r2.tries));
-    assert.ok(/the module's test failed: inc\(1\) == 3 failed[\s\S]*Section 10|Attack it before integrating/.test(briefs[1]), briefs[1]);
+    assert.ok(/The fix: - Section 10 — Hostile verification[\s\S]*the module's test failed: inc\(1\) == 3 failed/.test(briefs[1]), briefs[1]);
     // still failing after its rounds: held, never the whole-module loop
     const r3 = await R.createRung({ root: ROOT, tasksDir: tasks, indexRoot: null, maxTries: 1, ask: async () => '  return x + 1', expect: async () => ({ ok: false, why: 'wrong' }) }).build({ file: 'lib/inc4.js', exports: ex, contract: 'r/m.L' });
     assert.ok(!r3.ok && r3.held && /test failed 2 time/.test(r3.why) && !r3.tries.some(t => t.stage === 'no-code' || t.stage === 'compile'), JSON.stringify(r3));

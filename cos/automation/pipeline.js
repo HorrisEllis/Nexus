@@ -36,6 +36,20 @@ let _reuseMod = null;   // 0.60.594: cos/automation/reuse.eg, compiled (eg build
 function _reuseEg() { if (!_reuseMod) { const RT = require('../../emerge/emerge/lang/runtime.js'); _reuseMod = require('./eg-build/reuse.js')(RT.createRuntime({ file: require('path').join(__dirname, 'reuse.eg') })); } return _reuseMod; }
 // IF22 (0.60.602) — his "each step or gate needs to be able to try another agent, and i need to be able to change that also": the ladder, in Emerge
 let _ladderMod = null;
+let _methodMod = null;
+function _methodEg() { if (!_methodMod) { const RT = require('../../emerge/emerge/lang/runtime.js'); _methodMod = require('./eg-build/method.js')(RT.createRuntime({ file: require('path').join(__dirname, 'method.eg') })); } return _methodMod; }
+// the frameworks COS has: each .framework's executable steps by id, from COS's frameworks folder (cos/pipeline/index.js fwDir: docs/, or
+// COS_FRAMEWORKS_DIR), read again when a file changes
+const _fwCache = new Map();
+function _frameworks() {
+  const fs = require('fs'), path = require('path'); const dir = process.env.COS_FRAMEWORKS_DIR || path.join(__dirname, '..', '..', 'docs'); const out = {};
+  let files = []; try { files = fs.readdirSync(dir).filter(f => f.endsWith('.framework')); } catch (_) { return out; }
+  for (const f of files) { const p = path.join(dir, f); let st; try { st = fs.statSync(p); } catch (_) { continue; }
+    const c = _fwCache.get(p); if (c && c.mtime === st.mtimeMs) { if (c.fw) out[c.fw.id] = c.fw; continue; }
+    let fw = null; try { const t = fs.readFileSync(p, 'utf8'); const OPEN = '```json framework-steps'; const at = t.indexOf(OPEN); const end = at < 0 ? -1 : t.indexOf('```', at + OPEN.length); if (end > at) fw = JSON.parse(t.slice(at + OPEN.length, end)); } catch (_) { fw = null; }
+    _fwCache.set(p, { mtime: st.mtimeMs, fw }); if (fw && fw.id) out[fw.id] = fw; }
+  return out;
+}
 function _ladderEg() { if (!_ladderMod) { const RT = require('../../emerge/emerge/lang/runtime.js'); _ladderMod = require('./eg-build/ladder.js')(RT.createRuntime({ file: require('path').join(__dirname, 'ladder.eg') })); } return _ladderMod; }
 function gateOpen(gate, output) {
   if (gate && gate.element !== undefined) { gate = { ...gate }; delete gate.element; }   // the element gate is read by the gate step (PL7)
@@ -228,6 +242,7 @@ class Pipelines {
         ...(t.when && typeof t.when === 'object' ? { when: t.when } : {}),   // 2026-11-09 — BrainOS's conditions, on a pipeline step: it runs only when this holds
         ...(Array.isArray(t.takes) && t.takes.length ? { takes: t.takes.map(String) } : {}), ...(Array.isArray(t.gives) && t.gives.length ? { gives: t.gives.map(String) } : {}),
         ...(Array.isArray(t.agents) && t.agents.length ? { agents: t.agents.map(String) } : {}),   // IF22: the step's agent ladder
+        ...(t.method != null ? { method: t.method } : {}),   // 0.60.614: the step's method (a framework, its steps, or one per gate; method.eg)
         retries: t.retries || 0, onFail: t.onFail || 'stop' })) };
   }
   create(p = {}) {
@@ -427,6 +442,12 @@ class Pipelines {
         if (d.reuse) { const node = this.steps(prev.run)[prev.task || t.id]; const out = node && node.output !== undefined ? node.output : undefined;
           if (out !== undefined) { outputs[t.id] = out; full.set(t.id, out); set(t.id, { status: 'done', reused: { from: prev.run, at: prev.at, ...(prev.pipeline && prev.pipeline !== p.id ? { pipeline: prev.pipeline, task: prev.task } : {}) }, note: `reused — ${d.why}`, ms: 0, finishedAt: Date.now(), error: null, output: _preview(out) }); return true; } } }
       const ladder = Array.isArray(t.agents) ? t.agents : []; let tries = 1 + (t.retries || 0); try { tries = Math.max(tries, _ladderEg().tries({ agents: ladder, retries: t.retries || 0 })); } catch (_) {}
+      // 0.60.614 — the task's method (his "you can set the method or framework per gate or step ... the pipeline and gates are agnostic"):
+      // resolved by Emerge (method.eg) from COS's frameworks; the step reads {{vars.method}} (JSON), a typed gate with.method. A method naming
+      // what does not exist fails the task and says so (§1.2), never runs it without.
+      let meth = null;
+      if (t.method != null) { try { const R = _methodEg().resolve(t.method, _frameworks()); if (!R.ok) { set(t.id, { status: 'failed', error: `method: ${R.problems.join('; ')}`, finishedAt: Date.now() }); return false; } meth = R; set(t.id, { method: t.method }); }
+        catch (e) { set(t.id, { status: 'failed', error: `method: ${e.message}`, finishedAt: Date.now() }); return false; } }
       const t0 = Date.now(); let last = null;
       for (let a = 1; a <= tries; a++) {
         if (run.cancelled) { last = { error: run.cancelled }; break; }
@@ -436,7 +457,7 @@ class Pipelines {
         // __pipelineChain: the pipelines this run sits inside (PL9) — a task that runs a pipeline already in it is refused (a loop)
         // IF22: this attempt's agent, from the step's ladder (Emerge decides); the step reads {{vars.agent}}, a typed gate gets with.agent
         let rung = { agent: null }; if (ladder.length) { try { rung = _ladderEg().pick({ agents: ladder, attempt: a }); } catch (e) { rung = { agent: ladder[Math.min(a, ladder.length) - 1], why: `rung ${Math.min(a, ladder.length)}` }; } set(t.id, { agent: rung.agent, note: `agent: ${rung.why}` }); }
-        const tv = { ...(p.vars || {}), ...vars, ...(rung.agent ? { agent: rung.agent } : {}), __pipelineChain: [...(Array.isArray(vars.__pipelineChain) ? vars.__pipelineChain : []), p.id], __parent: { engineRun: run.id, task: t.id } };   // 2026-11-09: a step that runs a pipeline names itself as the child's parent (recursive requests)
+        const tv = { ...(p.vars || {}), ...vars, ...(rung.agent ? { agent: rung.agent } : {}), method: meth ? JSON.stringify(meth.method) : 'null', __pipelineChain: [...(Array.isArray(vars.__pipelineChain) ? vars.__pipelineChain : []), p.id], __parent: { engineRun: run.id, task: t.id } };   // 2026-11-09: a step that runs a pipeline names itself as the child's parent (recursive requests)
         let r; try { r = await this.engine.runStep(t.step, { vars: tv, scope }); } catch (e) { r = { ok: false, error: e.message }; }
         // PC8 slice a: a decision taken during the step (RAID choosing the agent) becomes a step of the run, as it happens
         if (r && r.decision) { const d = { ...r.decision, task: t.id, attempt: a }; run.decisions = [...(run.decisions || []), d];
@@ -453,7 +474,7 @@ class Pipelines {
         // its event) for the canvas. A gate of keys (notEmpty, contains …) is decided here, as before, and recorded the same way.
         if (r && r.ok && t.gate && t.gate.type) {
           let g; if (!this.engine._gate) g = { outcome: 'closed', open: false, why: `this engine has no gate types: "${t.gate.type}" is decided by COS's gates`, saw: [], actions: [] };
-          else { try { g = await this.engine._gate({ pipelineId: p.id, task: t.id, runId: run.id, attempt: a, gate: rung.agent ? { ...t.gate, with: { ...(t.gate.with || {}), agent: rung.agent } } : t.gate, output: r.output }); } catch (e) { g = { outcome: 'closed', open: false, why: `the gate could not decide: ${e.message}`, saw: [], actions: [] }; } }
+          else { try { g = await this.engine._gate({ pipelineId: p.id, task: t.id, runId: run.id, attempt: a, gate: (rung.agent || meth) ? { ...t.gate, with: { ...(t.gate.with || {}), ...(rung.agent ? { agent: rung.agent } : {}), ...(meth ? { method: meth.method } : {}) } } : t.gate, output: r.output }); } catch (e) { g = { outcome: 'closed', open: false, why: `the gate could not decide: ${e.message}`, saw: [], actions: [] }; } }
           run.tasks[t.id].gate = { type: t.gate.type, outcome: g.outcome, why: g.why || null, ...(g.would ? { would: g.would, debug: true } : {}), saw: g.saw || [], held: !!g.held, actions: g.actions || [], ...(g.options && g.options.length ? { options: g.options.map(o => o.label) } : {}) };
           if (g.open) { outputs[t.id] = r.output; full.set(t.id, r.output); set(t.id, { status: 'done', ms: Date.now() - t0, finishedAt: Date.now(), output: _preview(r.output), error: null }); return true; }
           last = { error: `gate ${g.outcome}: ${g.why}`, output: r.output };

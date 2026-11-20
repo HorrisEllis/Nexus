@@ -462,7 +462,8 @@ const SUITES = [
   'test-cos-console-tab.test.js',   // 0.60.398 SC11 — COS's Console tab: every system's output together, live, and the command line
   'test-cg-element-engine-page.test.js',
   'test-cg-element-engine-page-drive.test.js',   // 0.60.416 EE3a — the page driven in Clear Glass's engine: write/change/remove a hidden rule, My filters, edit his TypeScript, an option   // 0.60.416 EE3a — the Element Engine's full page: hidden rules, his TypeScript copy, routes, command, every area rendered
-  'test-emerge-rung.test.js',   // 0.60.421 EMB1 — Emerge writes the brick: compiler-checked, retried with what failed, judged by its expectation test
+  'test-emerge-rung.test.js',
+  'test-pipeline-method.test.js',   // 0.60.614 — a task's method (a framework, its steps, or one per gate), resolved by COS: his "the pipeline and gates are agnostic"   // 0.60.421 EMB1 — Emerge writes the brick: compiler-checked, retried with what failed, judged by its expectation test
   'test-primitive-factory.test.js',   // 0.60.420 CS0 expanded — a project's own tests prove its modules into verified primitives
   'test-pillar-conform.test.js',   // 0.60.454 PIL3 — Emerge's JS core answers Pillar's cases for pillar:constraint; Pillar judges (the null-field finding recorded)
   'test-pillar.test.js',   // 0.60.422 PIL1 — Pillar stands as its own system, in Emerge: its registry both ways, its CLI, nothing outside pillar/

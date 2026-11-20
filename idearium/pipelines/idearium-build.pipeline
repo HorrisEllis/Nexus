@@ -115,12 +115,26 @@ payload:
       label: Build the phase
       depends_on:
         - room
+      # 0.60.614 — James, 2026-11-20: "Like you can set the method or framework per gate or step. Remember the pipeline and gates are agnostic." ·
+      # "framework per step. or pipeline. like i want it to use my framework." The method of each gate of this step, from his framework
+      # (docs/innovation-toolkit.framework), resolved by COS (cos/automation/method.eg) and sent as {{vars.method}}. Which section serves which
+      # gate is the coder's reading, to confirm with him; edit it here or on the canvas.
+      method:
+        diagnose:
+          framework: innovation-toolkit
+          steps:
+            - gap
+            - constraints
+        test:
+          framework: innovation-toolkit
+          steps:
+            - hostile
       step:
         type: api
         config:
           url: nexus://idearium/api/repos/{{vars.repo}}/phases/build
           method: POST
-          body: '{"phase":"{{vars.phase}}","map":"{{vars.map}}"}'
+          body: '{"phase":"{{vars.phase}}","map":"{{vars.map}}","method":{{vars.method}}}'
           timeoutMs: 240000   # 0.60.494: the snapshot before a build took over 30 s once (run 78d4cc5a); the step gave up while Idearium was still starting it
       gate: *ref_0
     # 0.60.493 — James, 2026-11-11: "continue. get it working". The build step is met when the build has started; this one waits for it to end

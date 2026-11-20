@@ -1096,7 +1096,7 @@ function _heapNote(what) {
     console.log(`[idearium/heap] ${what}: ${Math.round(used / 1048576)} MB in use of ${Math.round(limit / 1048576)} MB`);
   } catch (_) {}
 }
-async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null, provider = null, note = '', replan = false, anyway = false, rebuild = false, startedBy = null, gates = null }) {
+async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null, provider = null, note = '', replan = false, anyway = false, rebuild = false, startedBy = null, gates = null, method = null }) {
   // 0.60.589 gates open (his "set gates to open instead of pass, so we can have the whole pipeline debugged at once"): a gate that would stop the
   // build records why and lets it go on, so one run shows every failure; the build is never read as met for it (COS marks the run debugged)
   const _gatesOpen = gates === 'open';
@@ -2001,7 +2001,7 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
       let expectation = null; try { if (tpath) expectation = String(codeOf(tpath) || '') || null; } catch (_) { expectation = null; }
       const dp = paramsOf(rung);
       const rung0 = ER.createRung({
-        root: _require('../../lib/nexus-self/systems.js').ROOT, maxTries: 3, tasksDir: path.join(IDEARIUM_DATA_DIR, 'tasks'), model: dp.model || dp.provider || null,
+        root: _require('../../lib/nexus-self/systems.js').ROOT, maxTries: 3, tasksDir: path.join(IDEARIUM_DATA_DIR, 'tasks'), model: dp.model || dp.provider || null, method,
         ask: async (message, { tryNo, gap } = {}) => {
           // 0.60.608 — a skeleton gap goes to the model bare: the brief alone, no persona, no tools (his "smallest amount of context per gate").
           // NM1a 2026-11-19: through the project agent each gap prompt was ~9,960 characters of persona and JavaScript context, and DeepSeek
@@ -10438,7 +10438,9 @@ async function handle(req, res, route, query, body) {
         if (hits.length !== 1) return err(res, hits.length ? 409 : 404, hits.length ? `${phase} is in ${hits.length} phasemaps — name one: ${hits.map(h => h.map).join(', ')}` : `no phase ${phase} in this repo`);
         map = hits[0].map;
       }
-      const r = await _phaseBuild(repo, dir, { startedBy: _starter(req, body), map, phase, backend: body.backend || null, agent: body.agent || null, provider: body.provider || null, note: body.note || '', gates: body.gates === 'open' ? 'open' : null, replan: body.replan === true, anyway: body.anyway === true, rebuild: body.rebuild === true });
+      const r = await _phaseBuild(repo, dir, { startedBy: _starter(req, body), map, phase, backend: body.backend || null, agent: body.agent || null, provider: body.provider || null, note: body.note || '', gates: body.gates === 'open' ? 'open' : null, replan: body.replan === true, anyway: body.anyway === true, rebuild: body.rebuild === true,
+        // 0.60.614: the build step's method, resolved by COS from the pipeline's task (cos/automation/method.eg): { gate: text }, handed to the rung
+        method: (() => { let m = body.method; if (typeof m === 'string') { try { m = JSON.parse(m); } catch (_) { m = null; } } return m && typeof m === 'object' ? m : null; })() });
       if (!r.ok) return err(res, r.status, r.error, r.extra);
       return ok(res, r.data);
     }
