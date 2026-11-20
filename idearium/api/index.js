@@ -1888,11 +1888,14 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
             catch (e) { r = { ok: false, error: e.message }; } }
           if (!r || !r.ok) { lastWhy = `the test writer (${writer}) did not answer: ${String((r && r.error) || 'no reply').slice(0, 200)}`; tfRow('no-answer', { provider: writer, attempt: n, error: lastWhy }); if (tfAlts.length) { const nx = tfAlts.shift(); tfRow('fallback', { provider: nx.id, notIndependent: !!nx.notIndependent, note: `${writer} did not answer; ${nx.id} writes the test${nx.notIndependent ? ' (the model that codes: not independent, PE6; kept only if it fails on today\'s tree)' : ''}` }); writer = nx.id; wp = nx.dp; n--; continue; } break; }
           const code = TF.extract(r.text);
-          if (!code) { fb = lastWhy = 'the reply had no code block'; tfRow('invalid', { provider: planner, attempt: n, note: fb }); continue; }
+          // 0.60.622 — smallest first: two unusable tests on one model, and the next model up the ladder writes it, told why (his "each problem with
+          // filling the gap becomes the next gap"); before, only a model that did not answer at all was passed over
+          const _climb = () => { if (n >= 2 && tfAlts.length) { const nx = tfAlts.shift(); tfRow('climb', { provider: nx.id, note: `${writer} gave no usable test in ${n} tries (${String(lastWhy || '').slice(0, 160)}); ${nx.id} writes it` }); writer = nx.id; wp = nx.dp; n = 0; } };
+          if (!code) { fb = lastWhy = 'the reply had no code block'; tfRow('invalid', { provider: writer, attempt: n, note: fb }); _climb(); continue; }
           const v = await TF.validate({ root: _diskDir, plan, testPath, code });
           const d = TF.decide(v.verdict, { alreadyDone });
           if (d === 'accept' || d === 'accept-already') got = { code, v, already: d === 'accept-already' };
-          else { fb = lastWhy = `${v.verdict}: ${v.why}`; tfRow('invalid', { provider: planner, attempt: n, note: lastWhy, tail: v.tail || null }); }
+          else { fb = lastWhy = `${v.verdict}: ${v.why}`; tfRow('invalid', { provider: writer, attempt: n, note: lastWhy, tail: v.tail || null }); _climb(); }
         }
         _relTF();
         if (got) {
