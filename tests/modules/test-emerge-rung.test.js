@@ -175,6 +175,33 @@ const scripted = (replies, seen = []) => async (message, { tryNo }) => { seen.pu
     assert.ok(!r3.ok && r3.held && gf(r3, 'rename').status === 'held', JSON.stringify(r3));
   });
 
+  await test('ER-10', 'the ladder, smallest model first, and his framework per gate: a gap the small model cannot fill (and names nothing for) goes up, told every earlier try; a failed module test reopens the functions under test with its words and his Section 10 (hostile verification)', async () => {
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'er10-')); const tasks = path.join(dir, 'tasks');
+    const ex = [{ name: 'inc', signature: 'inc(x: num) -> num', does: 'x plus one' }];
+    const NE = require(path.join(ROOT, 'lib', 'node-export.js'));
+    const seenBig = [];
+    const ladder = [{ name: 'tiny', ask: async (msg, { diagnose }) => (diagnose ? 'no idea' : '  if !x { return 1 }') },
+                    { name: 'big', ask: async (msg) => { seenBig.push(msg); return '  return x + 1'; } }];
+    const r = await R.createRung({ root: ROOT, tasksDir: tasks, indexRoot: null, maxTries: 1, ladder, expect: async () => ({ ok: true }) }).build({ file: 'lib/inc.js', exports: ex, contract: 'r/m.L' });
+    assert.ok(r.ok && r.tries.some(t => t.stage === 'escalate' && /tiny → big/.test(t.why)), JSON.stringify(r.tries));
+    assert.ok(/if !x/.test(seenBig[0]), 'the bigger model is told the small one\'s refused try');
+    const g = NE.importFromFile(r.gapFiles[0]).payload;
+    assert.ok(g.gate.model === 'big' && g.attempts[0].model === 'tiny' && g.gate.tested, JSON.stringify(g));
+    // his framework per gate: the diagnose brief carries his Sections 3 and 4 from his .framework file
+    let diag = null;
+    await R.createRung({ root: ROOT, tasksDir: tasks, indexRoot: null, maxTries: 1, ask: async (msg, { diagnose }) => { if (diagnose) { diag = msg; return 'nothing'; } return '  if !x { return 1 }'; }, expect: async () => ({ ok: true }) }).build({ file: 'lib/inc2.js', exports: ex, contract: 'r/m.L' });
+    assert.ok(/James Brooks's framework[\s\S]*Section 3[\s\S]*Section 4/.test(diag || ''), 'his method in the diagnose gate');
+    // a failed module test reopens the gap with its words and his Section 10, once (rounds = 1), then passes
+    let calls = 0; const briefs = [];
+    const r2 = await R.createRung({ root: ROOT, tasksDir: tasks, indexRoot: null, maxTries: 1, ask: async (msg) => { briefs.push(msg); return '  return x + 1'; },
+      expect: async () => (++calls === 1 ? { ok: false, why: 'inc(1) == 3 failed' } : { ok: true }) }).build({ file: 'lib/inc3.js', exports: ex, contract: 'r/m.L' });
+    assert.ok(r2.ok && r2.tries.some(t => t.stage === 'reopen'), JSON.stringify(r2.tries));
+    assert.ok(/the module's test failed: inc\(1\) == 3 failed[\s\S]*Section 10|Attack it before integrating/.test(briefs[1]), briefs[1]);
+    // still failing after its rounds: held, never the whole-module loop
+    const r3 = await R.createRung({ root: ROOT, tasksDir: tasks, indexRoot: null, maxTries: 1, ask: async () => '  return x + 1', expect: async () => ({ ok: false, why: 'wrong' }) }).build({ file: 'lib/inc4.js', exports: ex, contract: 'r/m.L' });
+    assert.ok(!r3.ok && r3.held && /test failed 2 time/.test(r3.why) && !r3.tries.some(t => t.stage === 'no-code' || t.stage === 'compile'), JSON.stringify(r3));
+  });
+
   console.log(`\n  ${passed} passed, ${failed} failed`);
   process.exit(failed ? 1 : 0);
 })();

@@ -126,9 +126,22 @@ function bodyOf(text, name) {
   t = t.split('\n').filter(l => l.trim() !== '___' && !/^\s*```/.test(l)).join('\n').replace(/^\n+|\s+$/g, '');
   return t.trim() ? t.split('\n').map(l => (l.startsWith('  ') ? l : '  ' + l.trimStart())).join('\n') : null;
 }
-function briefGap({ skel, filled, name, expectation = null, feedback = null, lesson = '' }) {
+// his framework per gate (0.60.613; his "My whole framework", 2026-11-20): the executable steps of his .framework (its ```json framework-steps
+// block: each step's id, section, does), read from the file, so the method is his text, editable there, never the coder's words in this file
+const _fw = new Map();
+function frameworkSteps(file) {
+  if (_fw.has(file)) return _fw.get(file);
+  let out = null;
+  try { const t = fs.readFileSync(file, 'utf8'); const at = t.indexOf('```json framework-steps'); const end = at < 0 ? -1 : t.indexOf('```', at + 10);
+    if (end > at) { const j = JSON.parse(t.slice(at + '```json framework-steps'.length, end)); out = new Map((j.steps || []).map(s => [s.id, s])); } } catch (_) { out = null; }
+  _fw.set(file, out); return out;
+}
+function methodOf(fw, ids = []) { if (!fw || !ids || !ids.length) return ''; return ids.map(id => fw.get(id)).filter(Boolean).map(s => '- ' + s.section + ': ' + s.does).join('\n'); }
+
+function briefGap({ skel, filled, name, expectation = null, feedback = null, lesson = '', method = '' }) {
   return [CARD, '', 'Nexus wrote this Emerge module. Fill ONLY the body marked ___ (in fn ' + name + '). The other functions are done or stubbed; do not change them.',
     '', render(skel, filled, name), '',
+    method ? 'The method (James Brooks\'s framework):\n' + method + '\n' : '',
     expectation ? 'The module must pass this test (run against its exports):\n' + _q(expectation).slice(0, 2500) : '',
     lesson ? '\nBEFORE YOU WRITE — the lesson from this gap\'s earlier tries:\n' + _q(lesson).slice(0, 3500) : '',
     feedback ? '\nYOUR LAST BODY WAS REFUSED — fix exactly this:\n' + _q(feedback).slice(0, 1200) : '',
@@ -180,12 +193,17 @@ function listGaps({ root = path.resolve(__dirname, '..', '..'), id = null, contr
     .filter(g => !status || g.status === status).sort((x, y) => String(y.at).localeCompare(String(x.at)));
 }
 
-function createRung({ root = path.resolve(__dirname, '..', '..'), ask, expect, maxTries = 3, timeoutMs = 60000, cli = null, tasksDir = path.join(root, 'idearium', 'data', 'tasks'), indexRoot = root, keep = 3, model = null, maxDepth = 2, maxGaps = 8 } = {}) {
-  if (typeof ask !== 'function') throw new Error('ask(message) is required: the agent that writes the Emerge');
+function createRung({ root = path.resolve(__dirname, '..', '..'), ask, expect, maxTries = 3, timeoutMs = 60000, cli = null, tasksDir = path.join(root, 'idearium', 'data', 'tasks'), indexRoot = root, keep = 3, model = null, maxDepth = 2, maxGaps = 8, ladder = null, rounds = 1,
+  framework = { file: path.join(root, 'docs', 'innovation-toolkit.framework'), gates: { fill: [], diagnose: ['gap', 'constraints'], test: ['hostile'] } } } = {}) {
+  if (typeof ask !== 'function' && !(ladder && ladder.length)) throw new Error('ask(message) is required: the agent that writes the Emerge');
+  // the ladder, smallest first: [{ name, ask }] — the first fills every gap; a gap held on it goes to the next, told every earlier try
+  const L = ladder && ladder.length ? ladder.filter(x => x && typeof x.ask === 'function') : [{ name: model, ask }];
+  const fw = framework && framework.file ? frameworkSteps(framework.file) : null;
+  const fwGates = { fill: [], diagnose: [], test: [], ...((framework && framework.gates) || {}) };
   const ID = /^[A-Za-z_][A-Za-z0-9_]*$/;
   /** the gap that stops `name`: deterministic first (a function its own tries called that does not exist), then the learning memory (what
    *  unblocked a gap stuck the same way before, from Idearium's node index), then one short question to the model. null when none is named. */
-  async function blockerFor({ name, rec, st, skel, filled, index }) {
+  async function blockerFor({ name, rec, st, skel, filled, index, who = L[0], method = '' }) {
     const taken = new Set(skel.fns.map(x => x.name));
     const last = [...rec.attempts].reverse().find(a => !a.ok && a.body) || {};
     for (const m of st.missing) {   // its own try called m: the piece it wanted becomes the gap
@@ -201,14 +219,15 @@ function createRung({ root = path.resolve(__dirname, '..', '..'), ask, expect, m
       ...rec.attempts.filter(a => !a.ok).slice(-3).map(a => '- ' + _q(a.said).split('\n')[0]),
       '', 'The module so far:', render(skel, filled, name), '',
       seen.length ? 'Gaps stuck the same way before were unblocked by a smaller function like:\n' + seen.map(s => '- fn ' + s.signature + ' — ' + s.does).join('\n') + '\n' : '',
+      method ? 'The method (James Brooks\'s framework):\n' + method + '\n' : '',
       'Name ONE smaller new function that, once written, makes ' + name + ' easy (it takes what it needs as parameters and returns a new value; it never changes a parameter).',
       'Reply with exactly one line:  fn <name>(<param>, <param>) — <what it returns>'].filter(x => x !== '').join('\n');
-    let text = ''; try { text = await ask(msg, { gap: name, diagnose: true, tryNo: 0 }); } catch (_) { return null; }
+    let text = ''; try { text = await who.ask(msg, { gap: name, diagnose: true, tryNo: 0 }); } catch (_) { return null; }
     const m = /fn\s+([A-Za-z_][A-Za-z0-9_]*)\s*\(([^)]*)\)\s*(?::\s*\w+)?\s*(?:—|--|-|:)?\s*(.*)/.exec(_q(text));
     if (!m || taken.has(m[1])) return null;
     const params = m[2].split(',').map(s => s.trim().split(/[:\s=]/)[0]).filter(Boolean);
     if (!params.every(p => ID.test(p))) return null;
-    return { name: m[1], params, signature: m[1] + '(' + params.join(', ') + ')', does: _q(m[3]).trim().slice(0, 200) || 'what ' + name + ' needs', namedBy: (model || 'the model') + ', asked why ' + name + ' was stuck' };
+    return { name: m[1], params, signature: m[1] + '(' + params.join(', ') + ')', does: _q(m[3]).trim().slice(0, 200) || 'what ' + name + ' needs', namedBy: (who.name || model || 'the model') + ', asked why ' + name + ' was stuck' };
   }
   const CLI = cli || path.join(root, 'emerge', 'emerge', 'cli.js');
   // Emerge's door, its command line: { ok, code, stdout, stderr, files }
@@ -237,35 +256,49 @@ function createRung({ root = path.resolve(__dirname, '..', '..'), ask, expect, m
       // memory, like anything that gets in the way towards filling the gap, becomes a gap in between the current step and the gap it couldn't
       // fill" · "so each problem with filling the gap becomes the next gap, in the link." A held gap gets the gap that stops it linked in just
       // before it (gaps.eg struggle, link, guard); the helper is filled first, then the held gap is tried again with the helper to call.
-      let chain = o.order.slice(); const depth = {}; const recs = {};
+      let chain = o.order.slice(); const depth = {}; const recs = {}; const rungOf = {};
+      // 0.60.613 — the ladder, smallest model first (his "the smaller we can get llms in ollama coding the better"; PC_D16 "ollama first"); his
+      // framework per gate (his "My whole framework"): the brief of each gate carries his framework's steps for it, read from his .framework.
+      const fillMethod = methodOf(fw, fwGates.fill), diagnoseMethod = methodOf(fw, fwGates.diagnose), testMethod = methodOf(fw, fwGates.test);
+      let roundsAt = 0;
+      for (let round = 0; ; round++) {
       while (chain.some(x => filled[x] == null) && !held) {
         const name = chain.find(x => filled[x] == null);
         const gap = G.as_gap({ id: name, missingVariable: 'the body of ' + name, affectedConstraint: f + ' compiles in Emerge and passes its expectation', source: 'emerge-rung' });
         const rec = recs[name] || (store && store.read(name)) || { ...gap, status: 'open', attempts: [] }; recs[name] = rec;
         if (!Array.isArray(rec.attempts)) rec.attempts = [];
-        const note = (a) => { rec.attempts.push({ n: rec.attempts.length + 1, at: new Date().toISOString(), model, ...a }); if (store) store.write(name, rec); };
+        const r = rungOf[name] || 0; const who = L[r];
+        const note = (a) => { rec.attempts.push({ n: rec.attempts.length + 1, at: new Date().toISOString(), model: who.name || model, ...a }); if (store) store.write(name, rec); };
         let ok = false;
         for (let n = 1; n <= maxTries && !ok; n++) {
           const t0 = Date.now(); let text;
           const lesson = G.lesson(rec.attempts, keep);   // a fresh chat each try, told what every earlier try at this gap met (gaps.eg)
-          try { text = await ask(briefGap({ skel, filled, name, expectation, lesson }), { tryNo: n, gap: name }); } catch (e) { tries.push({ n, stage: 'gap:' + name, why: 'no answer: ' + e.message, ms: Date.now() - t0, gap }); break; }
+          try { text = await who.ask(briefGap({ skel, filled, name, expectation, lesson, method: fillMethod }), { tryNo: n, gap: name, rung: r }); } catch (e) { tries.push({ n, stage: 'gap:' + name, why: 'no answer: ' + e.message, ms: Date.now() - t0, gap }); break; }
           const body = bodyOf(text, name);
-          if (!body) { note({ body: null, said: 'the reply had no body', fix: 'Reply with only the lines of the body.', ms: Date.now() - t0 }); tries.push({ n, stage: 'gap:' + name, why: 'the reply had no body', ms: Date.now() - t0, gap }); continue; }
+          if (!body) { note({ body: null, said: 'the reply had no body', fix: 'Reply with only the lines of the body.', ms: Date.now() - t0 }); tries.push({ n, stage: 'gap:' + name, why: 'the reply had no body', ms: Date.now() - t0, gap, model: who.name }); continue; }
           const ck = await eg('lang-check', render(skel, { ...filled, [name]: body }));
           if (ck.missing) { tries.push({ n, stage: 'no-emerge', why: ck.stderr, ms: Date.now() - t0 }); held = 'no-emerge'; break; }
-          if (!ck.ok) { const said = firstLines(ck.stderr); const hn = G.hint(String(ck.stderr || '')).trim(); note({ body, said, fix: hn, ms: Date.now() - t0 }); tries.push({ n, stage: 'gap:' + name, why: "Emerge's compiler said: " + said + (hn ? '\nThe fix: ' + hn : ''), ms: Date.now() - t0, gap }); continue; }
+          if (!ck.ok) { const said = firstLines(ck.stderr); const hn = G.hint(String(ck.stderr || '')).trim(); note({ body, said, fix: hn, ms: Date.now() - t0 }); tries.push({ n, stage: 'gap:' + name, why: "Emerge's compiler said: " + said + (hn ? '\nThe fix: ' + hn : ''), ms: Date.now() - t0, gap, model: who.name }); continue; }
           // his "as each gap passes, gets logged or tagged in the gate as passed and compiled"
-          filled[name] = body; ok = true; rec.status = 'passed'; rec.body = body; rec.gate = { passed: true, compiled: true, by: "Emerge's compiler (lang-check)", at: new Date().toISOString() };
+          filled[name] = body; ok = true; rec.status = 'passed'; rec.body = body; rec.gate = { passed: true, compiled: true, by: "Emerge's compiler (lang-check)", model: who.name || model, at: new Date().toISOString() };
           if (rec.blockedBy && rec.blockedBy.length) rec.unblockedBy = rec.blockedBy.slice();   // the learning memory: what got it past its struggle
-          note({ body, said: 'passed; compiles', fix: '', ok: true, ms: Date.now() - t0 }); tries.push({ n, stage: 'gap:' + name, why: 'passed; compiles', ms: Date.now() - t0, gap });
+          note({ body, said: 'passed; compiles', fix: '', ok: true, ms: Date.now() - t0 }); tries.push({ n, stage: 'gap:' + name, why: 'passed; compiles', ms: Date.now() - t0, gap, model: who.name });
         }
         if (store && !gapFiles.includes(store.at(name))) gapFiles.push(store.at(name));
         if (ok || held) continue;
-        // understand why it is struggling, then link the gap that stops it in between (bounded: §14.4)
+        // understand why it is struggling, then link the gap that stops it in between (bounded: §14.4), with the same small model first
         const st = G.struggle(rec.attempts); rec.struggle = st;
         const g = G.guard(depth[name] || 0, skel.fns.length, maxDepth, maxGaps);
-        const helper = g.ok ? await blockerFor({ name, rec, st, skel, filled, index }) : null;
-        if (!helper) { rec.status = 'held'; if (store) store.write(name, rec); held = 'gap ' + name + ' did not fill in ' + maxTries + ' tries' + (g.ok ? ', and no gap in between could be named' : '; ' + g.why); break; }
+        const helper = g.ok ? await blockerFor({ name, rec, st, skel, filled, index, who, method: diagnoseMethod }) : null;
+        if (!helper) {
+          if (r + 1 < L.length) {   // nothing smaller to link in: the next model up the ladder takes the gap, told every earlier try
+            rungOf[name] = r + 1; rec.status = 'escalated'; if (store) store.write(name, rec);
+            tries.push({ n: 0, stage: 'escalate', why: name + ': ' + (who.name || 'rung ' + (r + 1)) + ' → ' + (L[r + 1].name || 'rung ' + (r + 2)) + (g.ok ? ' (no gap in between could be named)' : ' (' + g.why + ')') });
+            console.log('[emerge-rung] ' + f + ': ' + name + ' escalated to ' + (L[r + 1].name || 'rung ' + (r + 2)));
+            continue;
+          }
+          rec.status = 'held'; if (store) store.write(name, rec); held = 'gap ' + name + ' did not fill on any rung' + (g.ok ? ', and no gap in between could be named' : '; ' + g.why); break;
+        }
         const at2 = skel.fns.findIndex(x => x.name === name); const fns = skel.fns.slice(); fns.splice(at2, 0, helper);
         skel = skeletonOf(fns.map(x => ({ name: x.name, params: x.params, does: x.does, signature: x.signature })));
         chain = G.link(chain, name, helper.name); depth[helper.name] = (depth[name] || 0) + 1;
@@ -278,20 +311,42 @@ function createRung({ root = path.resolve(__dirname, '..', '..'), ask, expect, m
       console.log('[emerge-rung] ' + f + ': skeleton of ' + skel.fns.length + ' (' + o.why + ') — ' + (held ? 'held: ' + held : 'every gap passed'));
       // a held gap stays an open loop with its file and its struggle (IF20: not forced, not faked); the whole-module loop never passed after one
       if (held) return { ok: false, held: true, why: 'held: ' + held, tries, source: render(skel, filled), files: null, skeleton: true, gapFiles };
-      if (!held) {
-        source = render(skel, filled);
-        const t0 = Date.now(); const b = await eg('lang-build', source, ['--standalone']);
-        if (b.ok && b.files && b.files['main.js']) {
-          const files = { [at(base + '.eg')]: source, [at(base + '.eg.js')]: b.files['main.js'], [f]: adapter(f) };
-          for (const [k, v] of Object.entries(b.files)) if (k.startsWith('_emerge/')) files[k] = v;
-          const x = typeof expect === 'function' ? await expect({ file: f, files }) : { ok: true, why: 'no expectation given' };
-          if (x && x.ok) { tries.push({ n: 1, stage: 'pass', why: (x && x.why) || 'passed', ms: Date.now() - t0 }); console.log('[emerge-rung] ' + f + ': passed, skeleton first');
-            return { ok: true, why: 'skeleton by Nexus, ' + skel.fns.length + ' bodies filled one at a time, checked by Emerge\'s compiler, passed its expectation', tries, source, files, skeleton: true, gapFiles }; }
-          feedback = 'The module (skeleton by Nexus, bodies filled) compiled but its expectation failed: ' + ((x && x.why) || 'it did not pass') + '\nThe module was:\n' + source;
-          tries.push({ n: 1, stage: 'expect', why: (x && x.why) || 'the expectation did not pass', ms: Date.now() - t0 });
-        } else { feedback = 'The filled module did not build: ' + firstLines(b.stderr); tries.push({ n: 1, stage: 'build', why: feedback, ms: Date.now() - t0 }); }
+      source = render(skel, filled);
+      const t0 = Date.now(); const b = await eg('lang-build', source, ['--standalone']);
+      let why;
+      if (b.ok && b.files && b.files['main.js']) {
+        const files = { [at(base + '.eg')]: source, [at(base + '.eg.js')]: b.files['main.js'], [f]: adapter(f) };
+        for (const [k, v] of Object.entries(b.files)) if (k.startsWith('_emerge/')) files[k] = v;
+        const x = typeof expect === 'function' ? await expect({ file: f, files }) : { ok: true, why: 'no expectation given' };
+        if (x && x.ok) { tries.push({ n: round + 1, stage: 'pass', why: (x && x.why) || 'passed', ms: Date.now() - t0 }); console.log('[emerge-rung] ' + f + ': passed, skeleton first');
+          for (const nm of Object.keys(recs)) if (recs[nm].status === 'passed') { recs[nm].gate = { ...(recs[nm].gate || {}), tested: true }; if (store) store.write(nm, recs[nm]); }
+          return { ok: true, why: 'skeleton by Nexus, ' + skel.fns.length + ' bodies filled one at a time, checked by Emerge\'s compiler, passed its expectation', tries, source, files, skeleton: true, gapFiles }; }
+        why = (x && x.why) || 'the expectation did not pass'; tries.push({ n: round + 1, stage: 'expect', why, ms: Date.now() - t0 });
+      } else { why = 'the filled module did not build: ' + firstLines(b.stderr); tries.push({ n: round + 1, stage: 'build', why, ms: Date.now() - t0 }); }
+      // his Section 10, hostile verification: a failed test is not a whole-module retry; it is the next gap. The module's own functions (its
+      // exports) are reopened, each told the test's words as a refusal; the helpers that passed stay. Bounded by `rounds` (§14.4).
+      // `rounds` reopenings on one rung, then the functions under test climb the ladder (a wrong body is the small model's limit, as a refusal is)
+      roundsAt++;
+      if (roundsAt > rounds) {
+        let climbed = false;
+        for (const nm of names) if (recs[nm] && (rungOf[nm] || 0) + 1 < L.length) { rungOf[nm] = (rungOf[nm] || 0) + 1; climbed = true; }
+        if (!climbed) {
+          for (const nm of names) if (recs[nm]) { recs[nm].status = 'held'; if (store) store.write(nm, recs[nm]); }
+          return { ok: false, held: true, why: 'held: the module compiled but its test failed ' + (round + 1) + ' time(s), on every rung: ' + why, tries, source, files: null, skeleton: true, gapFiles };
+        }
+        roundsAt = 0; const up = L[rungOf[names.find(nm => recs[nm])] || 0];
+        tries.push({ n: round + 1, stage: 'escalate', why: 'the test failed ' + (round + 1) + ' time(s): ' + names.join(', ') + ' → ' + ((up && up.name) || 'the next rung') });
+        console.log('[emerge-rung] ' + f + ': the test failed — ' + names.join(', ') + ' escalated to ' + ((up && up.name) || 'the next rung'));
+      }
+      for (const nm of names) if (recs[nm] && filled[nm] != null) {
+        recs[nm].attempts.push({ n: recs[nm].attempts.length + 1, at: new Date().toISOString(), model: recs[nm].gate && recs[nm].gate.model, body: filled[nm], said: "the module's test failed: " + _q(why).split('\n').slice(0, 3).join(' '), fix: testMethod ? 'Attack it before integrating: ' + testMethod.replace(/\n/g, ' ').slice(0, 400) : '' });
+        recs[nm].status = 'open'; delete recs[nm].gate; filled[nm] = null; if (store) store.write(nm, recs[nm]);
+      }
+      tries.push({ n: round + 1, stage: 'reopen', why: 'the test failed; reopened ' + names.join(', ') + ' with its words' });
+      console.log('[emerge-rung] ' + f + ': the test failed — reopened ' + names.join(', ') + ' (round ' + (round + 2) + ')');
       }
     }
+    if (!skel) {
     for (let n = 1; n <= maxTries; n++) {
       const t0 = Date.now(); const fail = (stage, why) => { tries.push({ n, stage, why: _q(why).slice(0, 1500), ms: Date.now() - t0 }); feedback = `${stage === 'compile' ? "Emerge's compiler said" : stage === 'expect' ? 'The expectation test said' : stage === 'exports' ? 'Missing' : 'Problem'}: ${why}`; };
       let text; try { text = await ask(brief({ file: f, exports, expectation, context, feedback }), { tryNo: n }); } catch (e) { tries.push({ n, stage: 'no-answer', why: e.message, ms: Date.now() - t0 }); break; }
@@ -311,10 +366,11 @@ function createRung({ root = path.resolve(__dirname, '..', '..'), ask, expect, m
       tries.push({ n, stage: 'pass', why: (x && x.why) || 'passed', ms: Date.now() - t0 });
       return { ok: true, why: `written in Emerge, checked by its compiler and passed its expectation on try ${n}`, tries, source, files };
     }
+    }
     const last = tries[tries.length - 1];
     return { ok: false, why: last ? `${last.stage}: ${last.why}` : 'no try', tries, source, files: null, gapFiles };
   }
   return { build, eg };
 }
 
-module.exports = { MODULE_ID, VERSION: '1.2.0', CARD, brief, extract, adapter, createRung, skeletonOf, paramsOf, bodyOf, briefGap, gapStore, taskDirOf, listGaps };
+module.exports = { MODULE_ID, VERSION: '1.3.0', CARD, brief, extract, adapter, createRung, skeletonOf, paramsOf, bodyOf, briefGap, gapStore, taskDirOf, listGaps, frameworkSteps, methodOf };
