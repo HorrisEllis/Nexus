@@ -630,3 +630,23 @@ has been fullfilled, or dag is complete"
 - **A run is finished only when its contract is met or its DAG is complete.** A restart, a crash or a reboot is not an end: the work resumes from
   what is on disk, from its last passed gate, and says that it resumed.
 - **Reviewing,** treat a `Map`, a variable or a cache that is the only copy of work in flight as a defect to close.
+
+## ADDENDUM 2026-11-20 — the focus: coding with local models, until a base model for Emerge can be trained (his)
+James, 2026-11-20, after the 3b then DeepSeek ladder passed its first module end to end: "this is making me hopeful. need to focus on the coding
+with local models until we can train a base model." Earlier the same day: "the smaller we can get llms in ollama coding the better. emerge should
+have the ability to make tiny models capabile, one primitve at a time, one line, one word." · "the more capable we get the smaller models, the more
+powerful the bigger ones will be also. like it should get smaller over time right?" · "maybe genesis can be a end goal." · "Like you can set the
+method or framework per gate or step. Remember the pipeline and gates are agnostic."
+- **The focus.** Coding with local models: the Emerge rung (EMB2) and the pipeline that runs it. Work outside it waits unless he asks; a finding
+  outside it is said, not acted on.
+- **What already serves it (use it, do not build beside it):** the gap files per contract (idearium/data/tasks/, indexed in Idearium's node
+  database), gaps.eg (lesson, struggle, link, guard), the model ladder and the method per step or gate (cos/automation/method.eg), the Ollama tape
+  (ollama/lib/tape.js: every call recorded, a run replayed without Ollama), the flight recorder (lib/flight-data.js: a run's ladder, cost, waste,
+  failure modes, friction, each agent's land rate), the failure modes in Cortex, the training ledger to build (OL10).
+- **The coder's order for it, his to change:** (1) usable: merged into main, the ladder in the ▶ build, the bench through the Ollama door (taped),
+  the gap chain's links, escalations and reopens as flight-recorder rows; (2) deterministic first: replay recorded bodies through the gates, an
+  autocorrect for the refusals with one known fix, a test per gap; (3) crystals (EQ1, PIL3): a verified gap kept and reused before any model is
+  asked; (4) the duplicates census (PIL5, IF19, IF21): the most-shared primitives across Nexus, built first; (5) the training ledger (OL10) and a
+  base model for Emerge; (6) genesis.spec built whole (MG2) as the end goal.
+- **Measured, never felt:** every run's numbers go in docs/BENCHMARKS.md; the prediction that tokens per verified function fall as crystals grow is
+  written before it is measured (docs/FRAMEWORK-THREADS.md).

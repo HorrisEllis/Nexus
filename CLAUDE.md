@@ -15,6 +15,11 @@ relational field" · "This will be huge. It’s all heading towards something ma
 **Refined 2026-11-10 (his):** "so pipeline working needs to happen. then cos optimized." Within item 1: the pipeline in COS operable (execute, see,
 change, manage, diagnose, export, test; PC8, PC_D13), then COS optimised (heartbeat not polling PR6, deltas PR4, load balancing CP6).
 Money matters now ("I need to be paid, at all."). The Fiverr autofill is built (clear-glass/userscripts/); its first live run is his.
+**The focus, 2026-11-20 (his):** "this is making me hopeful. need to focus on the coding with local models until we can train a base model."
+Coding with local models comes first: the Emerge rung (EMB2: gap files per contract, lessons, the gap chain, the model ladder smallest first,
+a method per step or gate), measured by the flight recorder (lib/flight-data.js) and the Ollama tape (ollama/lib/tape.js), until the verified
+attempts (OL10's training ledger) are enough to train a base model for Emerge. Also his, the same day: "the smaller we can get llms in ollama
+coding the better" · "maybe genesis can be a end goal". The coder's order for it: docs/CLAUDE.md, ADDENDUM 2026-11-20.
 
 ## Law
 - **The axioms are law, for every decision:** `docs/AXIOMS-v3.1.md`. Read Part IV (one line per law) every session, and Group 5C (sovereignty)
