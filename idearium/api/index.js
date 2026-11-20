@@ -1726,7 +1726,25 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
         getIdeaOS().emit('idearium.repo.phase.run', { ...base, state: 'planned', snapshot: commitId, kept: true });
       }
     }
-    for (let n = 1; planner && !(keptPlan && keptPlan.plan) && n <= policy.planAttempts; n++) {
+    // 0.60.618 — deterministic first (his 2026-10-13 order: "a parser, a test, a grep or a check runs before any model"; 2026-11-20: "Everything
+    // chunked, decomposed"). When the phase's own words give every new file it names its signatures (derivePlan, 0.60.617), that is the plan:
+    // no model is asked. Run phrun-mwp9yd3m-o9m0 stalled 11 min on a ~6,100-token planner prompt for a phase whose one signature was written.
+    if (!(keptPlan && keptPlan.plan)) {
+      try {
+        const dv0 = PP.derivePlan({ phaseKey: phase, body: ctx.body, does: ctx.does, proof: ctx.proof, files: expectFiles, registry, system,
+          ownerOf: system ? _require('../../lib/nexus-self/systems.js').ownerOf : null,
+          codeOf: (f) => { try { const t = getRepoLayer().readTextFile(target.uuid, f); return t && !t.error ? String(t.content || '') : null; } catch (_) { return null; } } });
+        const newSrc = dv0.ok ? dv0.plan.files.filter(f => f.new && f.layer !== 'test') : [];
+        if (dv0.ok && newSrc.length && newSrc.every(f => (f.exports || []).length && f.exports.every(e => e && e.signature))) {
+          parsed = dv0;
+          appendRow('idearium_phase_runs', { uuid: `${runId}-plan-derived-planned`, ...base, state: 'planned', snapshot: commitId, provider: null, derived: true,
+            plan: dv0.plan, planSummary: `${PP.summary(dv0.plan)} — planned without a model: the phase names every new file's signatures`, warnings: dv0.warnings, error: null,
+            note: 'deterministic first: the phase\'s own words gave every new file its signatures, so no model was asked to plan', ts: Date.now() });
+          getIdeaOS().emit('idearium.repo.phase.run', { ...base, state: 'planned', snapshot: commitId, derived: true });
+        }
+      } catch (_) { /* the model planner below, as before */ }
+    }
+    for (let n = 1; planner && !(keptPlan && keptPlan.plan) && !(parsed && parsed.ok) && n <= policy.planAttempts; n++) {
       const msg = PP.planPrompt({ phaseKey: phase, title: node.title, body: ctx.body, intent: note, files: expectFiles, registry, spec: specText,
         invariants: ctx.invariants, charter: [charterText, precedent.text].filter(Boolean).join('\n\n'), repoName: target.name, feedback,
         system, atlas, loom, reuse, lessons: learned.text, skeleton: (() => { try { return fs.existsSync(path.join(_repoDiskDir(target.uuid) || '', 'registry-components.js')) && fs.existsSync(path.join(_repoDiskDir(target.uuid) || '', 'interaction-contract.json')); } catch (_) { return false; } })() });
