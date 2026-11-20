@@ -20,6 +20,15 @@
  *   files (on pass) — what lands, beside the planned file:  <dir>/<name>.eg (the source) · <dir>/<name>.eg.js (built) · _emerge/** (Emerge's
  *     runtime, once at the root) · <file> (three lines: the runtime, then the module's top-level functions as plain exports)
  *   brief(), extract(), adapter() are pure and exported for the tests.
+ *
+ * 0.60.607 — skeleton first (EMB1 expanded). James, 2026-11-19: "yes we could have the skeleton gaps, it needs to fill. using the dependancy
+ * graph." · "everything, should be as deterministic as possible, and the llm only when strictly necessary. primitive per primitive" · "get it
+ * working, built, expanded, dont forget pillar". Measured the same day: DeepSeek 16b asked for a whole Emerge function was refused by the
+ * compiler twice; given a skeleton with one gap it filled it first time. So when every export has a signature, Nexus writes the module's
+ * skeleton (each fn, its parameters, a body to fill), and the agent fills one body at a time, in the order the plan's own words give
+ * (gaps.eg needs/order), each gated by Emerge's compiler (lang-check) with its refusal fed back; each gap is a pillar:gap (gaps.eg as_gap).
+ * The filled module is built and judged by its expectation as before. A gap that will not fill, or an expectation that fails, falls back to
+ * the whole-module loop below with what failed. skeletonOf(), paramsOf(), bodyOf() are pure and exported for the tests.
  */
 const fs = require('fs');
 const os = require('os');
@@ -39,7 +48,9 @@ comparisons: == != < <= > >=      arithmetic: + - * / %
 lists: [1, 2, 3]   xs[i]   len(xs)   push(xs, v) returns a NEW list (use: xs = push(xs, v))
 maps: { ok: true, n: 3 }   m.ok   (== compares lists and maps by value)
 strings: "text"   s + t   len(s)
-No semicolons. No classes. No imports. Blocks use { }. Every top-level fn is exported.`;
+No semicolons. No classes. No imports. Blocks use { }. Every top-level fn is exported.
+No throw, no try: a failure is a returned map, e.g. return { error: "path taken" }.
+A for loop's variable is read-only: build a new value (var out = []  out = push(out, { id: e.id, path: p })), never e.path = p.`;   // 0.60.607: the two refusals DeepSeek 16b met filling rename (throw; a loop variable changed), 2026-11-19
 
 const _q = (s) => String(s == null ? '' : s);
 function brief({ file, exports = [], expectation = null, context = '', feedback = null } = {}) {
@@ -75,6 +86,47 @@ module.exports = require('./${base}.eg.js')(createRuntime({ file: '${base}.eg', 
 `;
 }
 
+// ── the skeleton (0.60.607) ──
+let _gapsMod = null;
+function _gapsEg() { if (!_gapsMod) { const dir = path.join(__dirname, 'eg-build', 'gaps'); const { createRuntime } = require(path.join(dir, '_emerge', 'lang', 'runtime.js')); _gapsMod = require(path.join(dir, 'main.js'))(createRuntime({ file: 'gaps.eg' })); } return _gapsMod; }   // gaps.eg built standalone by Emerge's command line (lang-build --standalone): its own runtime, never emerge/emerge (AXIOMS 5.15, ER-05)
+/** an export's parameter names, from its plan signature "name(a: T, b?: T) -> R" (or e.params); null when it cannot be read */
+function paramsOf(e) {
+  if (e && Array.isArray(e.params)) return e.params.map(p => String(p).replace(/[^A-Za-z0-9_]/g, '')).filter(Boolean);
+  const sig = _q(e && e.signature); const open = sig.indexOf('('); if (open < 0) return null;
+  let depth = 0, i = open, cur = '', parts = [];
+  for (i = open + 1; i < sig.length; i++) { const ch = sig[i]; if ('{[<('.includes(ch)) depth++; if ('}]>)'.includes(ch)) { if (depth === 0) break; depth--; } if (ch === ',' && depth === 0) { parts.push(cur); cur = ''; } else cur += ch; }
+  if (i >= sig.length) return null;
+  parts.push(cur); parts = parts.map(p => p.trim()).filter(Boolean);
+  const names = parts.map(p => p.split(/[?:=\s]/)[0].replace(/^\.\.\./, ''));
+  return names.every(n => /^[A-Za-z_][A-Za-z0-9_]*$/.test(n)) ? names : null;
+}
+const MARK = (n) => '{{gap:' + n + '}}';
+/** the module Nexus writes: each export a fn with its parameters (typed any) and a body to fill; null when an export has no readable signature */
+function skeletonOf(exports = []) {
+  const fns = [];
+  for (const e of exports) { const name = typeof e === 'string' ? e : e && e.name; const ps = typeof e === 'string' ? null : paramsOf(e); if (!name || !ps) return null;
+    fns.push({ name, params: ps, does: _q(e.does || ''), signature: _q(e.signature || '') }); }
+  if (!fns.length) return null;
+  const text = fns.map(x => '// ' + (x.signature || x.name).replace(/\n/g, ' ') + (x.does ? ' — ' + x.does.replace(/\n/g, ' ') : '') + '\nfn ' + x.name + '(' + x.params.map(p => p + ': any').join(', ') + '): any {\n' + MARK(x.name) + '\n}').join('\n\n') + '\n';
+  return { text, fns };
+}
+const render = (skel, filled, focus = null) => skel.fns.reduce((s, x) => s.split(MARK(x.name)).join(x.name === focus ? '  ___' : (filled[x.name] != null ? filled[x.name] : '  return null')), skel.text);
+/** a reply's body: a fenced block, else the text; when it wrote the whole fn, only what is inside its braces */
+function bodyOf(text, name) {
+  let t = _q(text).replace(/\r/g, ''); const m = /```[a-z]*\s*\n([\s\S]*?)```/i.exec(t); if (m) t = m[1];
+  const at = t.search(new RegExp('fn\\s+' + name + '\\s*\\('));
+  if (at >= 0) { const open = t.indexOf('{', at); let d = 0, i = open; for (; i < t.length; i++) { if (t[i] === '{') d++; else if (t[i] === '}' && --d === 0) break; } if (open >= 0 && i < t.length) t = t.slice(open + 1, i); }
+  t = t.split('\n').filter(l => l.trim() !== '___' && !/^\s*```/.test(l)).join('\n').replace(/^\n+|\s+$/g, '');
+  return t.trim() ? t.split('\n').map(l => (l.startsWith('  ') ? l : '  ' + l.trimStart())).join('\n') : null;
+}
+function briefGap({ skel, filled, name, expectation = null, feedback = null }) {
+  return [CARD, '', 'Nexus wrote this Emerge module. Fill ONLY the body marked ___ (in fn ' + name + '). The other functions are done or stubbed; do not change them.',
+    '', render(skel, filled, name), '',
+    expectation ? 'The module must pass this test (run against its exports):\n' + _q(expectation).slice(0, 2500) : '',
+    feedback ? '\nYOUR LAST BODY WAS REFUSED — fix exactly this:\n' + _q(feedback).slice(0, 1200) : '',
+    '\nReply with only the body of ' + name + ' (the lines that replace ___), no fn line, no explanation.'].filter(x => x !== '').join('\n');
+}
+
 function createRung({ root = path.resolve(__dirname, '..', '..'), ask, expect, maxTries = 3, timeoutMs = 60000, cli = null } = {}) {
   if (typeof ask !== 'function') throw new Error('ask(message) is required: the agent that writes the Emerge');
   const CLI = cli || path.join(root, 'emerge', 'emerge', 'cli.js');
@@ -87,11 +139,48 @@ function createRung({ root = path.resolve(__dirname, '..', '..'), ask, expect, m
   });
   const firstLines = (s, n = 8) => _q(s).split('\n').map(l => l.trim()).filter(Boolean).slice(0, n).join('\n');
 
-  async function build({ file, exports = [], expectation = null, context = '' } = {}) {
+  async function build({ file, exports = [], expectation = null, context = '', skeleton = true } = {}) {
     const f = _q(file).replace(/\\/g, '/'); const dir = path.posix.dirname(f); const base = path.posix.basename(f).replace(/\.[cm]?js$/, '');
     const at = (x) => (dir === '.' ? x : `${dir}/${x}`);
     const names = exports.map(e => (typeof e === 'string' ? e : e.name)).filter(Boolean);
     const tries = []; let feedback = null, source = null;
+    // 0.60.607 skeleton first: Nexus writes the structure, the agent fills one body at a time (gaps.eg), Emerge's compiler gates each
+    const skel = skeleton === false ? null : skeletonOf(exports);
+    if (skel) {
+      const G = _gapsEg(); const does = Object.fromEntries(skel.fns.map(x => [x.name, x.does + ' ' + x.signature]));
+      const graph = G.needs(skel.fns.map(x => x.name), does);
+      const o = G.order(skel.fns.map(x => ({ id: x.name, depends_on: graph[x.name] || [] })));
+      const filled = {}; let held = null;
+      for (const name of o.order) {
+        const gap = G.as_gap({ id: name, missingVariable: 'the body of ' + name, affectedConstraint: f + ' compiles in Emerge and passes its expectation', source: 'emerge-rung' });
+        let fb = null, ok = false;
+        for (let n = 1; n <= maxTries && !ok; n++) {
+          const t0 = Date.now(); let text;
+          try { text = await ask(briefGap({ skel, filled, name, expectation, feedback: fb }), { tryNo: n, gap: name }); } catch (e) { tries.push({ n, stage: 'gap:' + name, why: 'no answer: ' + e.message, ms: Date.now() - t0, gap }); break; }
+          const body = bodyOf(text, name);
+          if (!body) { fb = 'the reply had no body'; tries.push({ n, stage: 'gap:' + name, why: fb, ms: Date.now() - t0, gap }); continue; }
+          const ck = await eg('lang-check', render(skel, { ...filled, [name]: body }));
+          if (ck.missing) { tries.push({ n, stage: 'no-emerge', why: ck.stderr, ms: Date.now() - t0 }); held = 'no-emerge'; break; }
+          if (!ck.ok) { fb = "Emerge's compiler said: " + firstLines(ck.stderr); tries.push({ n, stage: 'gap:' + name, why: fb, ms: Date.now() - t0, gap }); continue; }
+          filled[name] = body; ok = true; tries.push({ n, stage: 'gap:' + name, why: 'filled; compiles', ms: Date.now() - t0, gap });
+        }
+        if (!ok) { held = held || ('gap ' + name + ' did not fill in ' + maxTries + ' tries'); break; }
+      }
+      console.log('[emerge-rung] ' + f + ': skeleton of ' + skel.fns.length + ' (' + o.why + ') — ' + (held ? 'held: ' + held : 'every gap filled'));
+      if (!held) {
+        source = render(skel, filled);
+        const t0 = Date.now(); const b = await eg('lang-build', source, ['--standalone']);
+        if (b.ok && b.files && b.files['main.js']) {
+          const files = { [at(base + '.eg')]: source, [at(base + '.eg.js')]: b.files['main.js'], [f]: adapter(f) };
+          for (const [k, v] of Object.entries(b.files)) if (k.startsWith('_emerge/')) files[k] = v;
+          const x = typeof expect === 'function' ? await expect({ file: f, files }) : { ok: true, why: 'no expectation given' };
+          if (x && x.ok) { tries.push({ n: 1, stage: 'pass', why: (x && x.why) || 'passed', ms: Date.now() - t0 }); console.log('[emerge-rung] ' + f + ': passed, skeleton first');
+            return { ok: true, why: 'skeleton by Nexus, ' + skel.fns.length + ' bodies filled one at a time, checked by Emerge\'s compiler, passed its expectation', tries, source, files, skeleton: true }; }
+          feedback = 'The module (skeleton by Nexus, bodies filled) compiled but its expectation failed: ' + ((x && x.why) || 'it did not pass') + '\nThe module was:\n' + source;
+          tries.push({ n: 1, stage: 'expect', why: (x && x.why) || 'the expectation did not pass', ms: Date.now() - t0 });
+        } else { feedback = 'The filled module did not build: ' + firstLines(b.stderr); tries.push({ n: 1, stage: 'build', why: feedback, ms: Date.now() - t0 }); }
+      }
+    }
     for (let n = 1; n <= maxTries; n++) {
       const t0 = Date.now(); const fail = (stage, why) => { tries.push({ n, stage, why: _q(why).slice(0, 1500), ms: Date.now() - t0 }); feedback = `${stage === 'compile' ? "Emerge's compiler said" : stage === 'expect' ? 'The expectation test said' : stage === 'exports' ? 'Missing' : 'Problem'}: ${why}`; };
       let text; try { text = await ask(brief({ file: f, exports, expectation, context, feedback }), { tryNo: n }); } catch (e) { tries.push({ n, stage: 'no-answer', why: e.message, ms: Date.now() - t0 }); break; }
@@ -117,4 +206,4 @@ function createRung({ root = path.resolve(__dirname, '..', '..'), ask, expect, m
   return { build, eg };
 }
 
-module.exports = { MODULE_ID, VERSION: '1.0.0', CARD, brief, extract, adapter, createRung };
+module.exports = { MODULE_ID, VERSION: '1.1.0', CARD, brief, extract, adapter, createRung, skeletonOf, paramsOf, bodyOf, briefGap };

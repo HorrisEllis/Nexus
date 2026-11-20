@@ -99,6 +99,20 @@ const scripted = (replies, seen = []) => async (message, { tryNo }) => { seen.pu
     assert.deepStrictEqual(row.req({ args: ['emerge_first', 'off'], flags: {} }).body, { key: 'routing.emerge_first', value: 'off', actor: 'command' });
   });
 
+  await test('ER-07', 'skeleton first (0.60.607, his "the skeleton gaps, it needs to fill. using the dependancy graph"): Nexus writes the fns, the agent fills one body at a time in the order the plan\'s words give, a refused body is fed back, each gap a pillar:gap', async () => {
+    const ex = [{ name: 'twice', signature: 'twice(x: num) -> num', does: 'uses inc twice' }, { name: 'inc', signature: 'inc(x: num) -> num', does: 'x plus one' }];
+    const s = R.skeletonOf(ex); assert.ok(s && /fn twice\(x: any\): any/.test(s.text) && /fn inc\(x: any\): any/.test(s.text), s && s.text);
+    assert.strictEqual(R.skeletonOf([{ name: 'f' }]), null, 'no signature: no skeleton (the whole-module loop, as before)');
+    const asked = [];
+    const bodies = { inc: ['  if !x { return 0 }', '  return x + 1'], twice: ['  return inc(inc(x))'] }; const n = {};
+    const ask = async (msg, { gap }) => { asked.push(gap); n[gap] = (n[gap] || 0) + 1; if (gap === 'inc' && n[gap] === 2) assert.ok(/YOUR LAST BODY WAS REFUSED[\s\S]*unexpected character/.test(msg), 'the compiler\'s words fed back'); return bodies[gap][n[gap] - 1]; };
+    const r = await R.createRung({ root: ROOT, ask, expect: async () => ({ ok: true, why: 'stand-in' }) }).build({ file: 'lib/twice.js', exports: ex });
+    assert.ok(r.ok && r.skeleton, JSON.stringify(r.tries));
+    assert.deepStrictEqual(asked, ['inc', 'inc', 'twice'], 'inc first (twice names it), the refused body asked again');
+    assert.ok(r.tries.filter(t => t.gap).every(t => t.gap.missingVariable && t.gap.affectedConstraint), 'every gap a pillar:gap');
+    assert.ok(/fn inc\(x: any\): any \{\n  return x \+ 1\n\}/.test(r.source), r.source);
+  });
+
   console.log(`\n  ${passed} passed, ${failed} failed`);
   process.exit(failed ? 1 : 0);
 })();

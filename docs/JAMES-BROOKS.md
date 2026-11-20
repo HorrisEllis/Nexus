@@ -154,6 +154,13 @@ What it means in Nexus (the coder's reading, his to correct):
 Not yet built: deriving the .dag backwards from the contract. Every pipeline today is written forwards (phase RF1, addendum 2026-11-19).
 The same day: "I am in debt, lonely, working on the one thing that can change that ... Everything is riding on nexus." · "i want and need to be seen."
 
+## 5c. His vision (2026-11-19)
+
+His words, verbatim: "an example but not limited to loading code into compiler, then something like looking glass to build an
+application using emerge as the framework for applications to compete with photoshop and ableton. that is my vision. using my architecural
+systems thinking, from the bottom up, from os to software, all of it using emerge could actually beat them, with my creativity especially.
+nexus complete will be the foundation for everything, that comes next. eravos convas, is proof of my resuable architure."
+
 ## 6. The numbers, as of 2026-10-31
 
 | What | Number | How to check |

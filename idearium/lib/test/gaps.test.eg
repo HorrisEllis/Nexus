@@ -1,0 +1,30 @@
+// idearium/lib/test/gaps.test.eg — the skeleton's gaps, in dependency order. eg test idearium/lib/test/gaps.test.eg
+// James, 2026-11-19: "yes we could have the skeleton gaps, it needs to fill. using the dependancy graph."
+use "../gaps.eg" as G
+
+test "dependencies first, whatever order they are listed in" {
+  let o = G.order([{ id: "c", depends_on: ["b"] }, { id: "a" }, { id: "b", depends_on: ["a"] }])
+  expect join(o.order, ",") == "a,b,c", o.why
+}
+
+test "a missing dependency or a cycle is said" {
+  let o = G.order([{ id: "a", depends_on: ["zz"] }, { id: "b" }])
+  expect join(o.order, ",") == "b" and find_text(o.why, "stuck") == 0, o.why
+}
+
+test "retry on the rung, then escalate, then hold" {
+  expect G.step({ tries: 1, per_rung: 2, rung: 1, rungs: 2 }).action == "retry"
+  expect G.step({ tries: 2, per_rung: 2, rung: 1, rungs: 2 }).action == "escalate"
+  expect G.step({ tries: 2, per_rung: 2, rung: 2, rungs: 2 }).action == "hold"
+}
+
+test "a gap is a pillar:gap: what is missing and the constraint it blocks, or refused as the contract says" {
+  let g = G.as_gap({ id: "rename", missingVariable: "the body of rename", affectedConstraint: "the module compiles and its expectation passes" })
+  expect g.severity == "blocking" and g.source == "emerge-rung", json(g)
+  expect find_text(G.as_gap({ id: "x", affectedConstraint: "c" }).refused, "missingVariable") >= 0
+}
+
+test "the dependency graph from the plan's own words" {
+  let d = G.needs(["rename", "idOf", "pathOf"], { rename: "uses idOf to find the entry", idOf: "finds a path", pathOf: "the path of an id" })
+  expect join(d.rename, ",") == "idOf" and len(d.idOf) == 0, json(d)
+}

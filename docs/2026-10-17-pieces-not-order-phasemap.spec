@@ -348,3 +348,17 @@ related:
 # The coder's own rule: docs/CLAUDE.md "A dependency graph before every phase".
 # Proof: test-phase-graph 5/5 (PG-03 through the real router; PG-05 in Clear Glass). DG1's own suite stays 3/3. Every suite that
 # builds a phase shows the same result as on 0.60.142.
+
+# ── ADDENDUM 2026-11-19 (0.60.607) — EMB1 expanded: skeleton first, one body per gap (built) ──
+# James, 2026-11-19: "yes we could have the skeleton gaps, it needs to fill. using the dependancy graph." · "everything, should be as deterministic
+# as possible, and the llm only when strictly necessary. primitive per primitive, word by word, component by component, all increment." · "focus
+# on emerge and the pipleline ... look at cie-eg, and the gates per primitive" · "get it working, built, expanded, dont forget pillar".
+# Built: when every export has a signature, Nexus writes the module's skeleton (each fn, its parameters, a body to fill); the agent fills one
+# body at a time in the order the plan's own words give (idearium/lib/gaps.eg: needs, order), each gated by Emerge's compiler through its
+# command line (lang-check) with the refusal fed back; each gap is a pillar:gap (gaps.eg as_gap: missingVariable, affectedConstraint). The
+# filled module is built and judged by its expectation as before; a gap that will not fill, or a failed expectation, falls back to the
+# whole-module loop with what failed. gaps.eg is built standalone by Emerge (eg-build/gaps/, its own runtime: ER-05's rule, never emerge/emerge).
+# Files: idearium/lib/emerge-rung.cjs, idearium/lib/gaps.eg, idearium/lib/test/gaps.test.eg, idearium/lib/eg-build/gaps/, tests/modules/test-emerge-rung.test.js (ER-07).
+# Measured with DeepSeek 16b the same hour (scratchpad, two gaps): idOf filled first try on both runs; rename refused 3 times on each (throw, a
+# loop variable changed, then a parameter changed). The card now says no throw and that loop variables are read-only (the first two refusals).
+# Not yet: a body too big for the model split into smaller gaps from the plan's steps (his "primitive per primitive"); the agent ladder per gap.

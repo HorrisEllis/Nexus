@@ -664,3 +664,13 @@ handoff_2026_11_18: >-
 # ── ADDENDUM 2026-11-19 (0.60.606) — fixed: the planner's registry, the folder budgeted too ──
 # James, 2026-11-19: "suppposed to give it the smallest amount of context per gate. so only what it needs but the tools to reference the map and query nexus."
 # the planner's registry: the phase's own files only, every neighbour budgeted: 0.60.605 always listed a phase file's whole folder, and NM1a's file is in lib/ (160 components), so its 16:52 planner prompt was still 44,112 characters (19,549 of registry) and timed out at 5 minutes. Now only the phase's own files are always listed; the folder and the rest share LIMITS.registryChars (2,000). Measured: 300 components in lib/ → 2,049 characters. Seen the same hour: DeepSeek reads about 53 prompt tokens a second here (2,788 tokens in 52 s); a 9,354-character prompt is answered in about 2 minutes. Tests: context-budget 6/6, plan-code-run-attention 48/48, run-ready 10/10, expectation-tests 7/7.
+
+# ── ADDENDUM 2026-11-19 — his vision, in his words; and the gates as COS compartments ──
+# James, 2026-11-19: "yes we could have the skeleton gaps, it needs to fill. using the dependancy graph." · "the gates need to be compartments
+# from cos. like imagine we have a pipeline step load into a compartment." · "an example but not limited to loading code into compiler, then
+# something like looking glass to build an application using emerge as the framework for applications to compete with photoshop and ableton.
+# that is my vision. using my architecural systems thinking, from the bottom up, from os to software, all of it using emerge could actually beat
+# them, with my creativity especially. nexus complete will be the foundation for everything, that comes next. eravos convas, is proof of my
+# resuable architure." · "this is my vision."
+# Evidence the same hour (scratchpad pile, coder's runs): DeepSeek 16b writing a whole Emerge function was refused by the compiler twice (it kept
+# "!" after the error was fed back); given a skeleton written by Nexus with one gap, it filled the gap (e.id == id) in 2 s and passed 2/2.

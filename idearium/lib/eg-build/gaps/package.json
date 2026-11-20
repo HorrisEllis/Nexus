@@ -1,0 +1,4 @@
+{
+  "type": "commonjs",
+  "description": "gaps.eg built standalone by Emerge (lang-build --standalone): its own runtime, so Idearium never requires emerge/emerge (AXIOMS 5.15)"
+}

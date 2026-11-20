@@ -791,3 +791,11 @@ then they are written by hand.
 - **Result:** eg test 2/2; test-pipeline-waits-for-a-system 12/12.
 - **Failed runs before the pass:** 2. `tries` was typed `int`, and Emerge's numbers are `num` (taught: number types in Emerge are `num`). PW-12 was refused before running because `{{vars.agent}}` was empty at start (taught: a ladder fills a var the run's address check must know).
 - **Gaps found:** `eg build -o <file>` makes a folder named after the file; `-o` takes a folder.
+
+## 2026-11-19 — the Emerge rung writes the skeleton first (EMB1 expanded, 0.60.607)
+- **His words:** "yes we could have the skeleton gaps, it needs to fill. using the dependancy graph." · "dont forget pillar"
+- **Method:** Emerge `test` blocks for the decisions (gaps.eg), the rung's module test with a stand-in agent against Emerge's real command line, then DeepSeek 16b for real on two gaps.
+- **Code:** `idearium/lib/gaps.eg` (order, step, as_gap, needs), the loop in `idearium/lib/emerge-rung.cjs`.
+- **Result:** gaps.test.eg 5/5; test-emerge-rung 7/7. DeepSeek: idOf filled first try (2 of 2 runs); rename refused 3 of 3 tries on each run.
+- **Failed runs before the pass:** 4. `find` takes a function in Emerge, so membership became `in`. The compiled module was `.js` inside an ES module package, so it became `.cjs`, then a standalone build. ER-05 refused requiring emerge/emerge from Idearium (sovereignty), so it's a standalone build with its own runtime. The shell ate a script's quoting, so the script became a file.
+- **Gaps found:** a body too big for the model (rename) needs splitting into smaller gaps from the plan's steps; the card lacked "no throw" and "loop variables are read-only".

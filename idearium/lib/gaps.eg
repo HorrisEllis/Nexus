@@ -1,0 +1,70 @@
+// idearium/lib/gaps.eg — the Emerge rung's skeleton gaps (EMB1 expanded 2026-11-19, docs/2026-10-17-pieces-not-order-phasemap.spec).
+// The decisions, in Emerge; idearium/lib/emerge-rung.cjs does the I/O. Each gap is a pillar:gap (pillar/contracts/contracts.eg): what is
+// missing (a function's body) and the constraint it blocks (the module compiles, its expectation passes).
+// James, 2026-11-19: "yes we could have the skeleton gaps, it needs to fill. using the dependancy graph." · "everything, should be as
+// deterministic as possible, and the llm only when strictly necessary. primitive per primitive"
+// James, same day: "get it working, built, expanded, dont forget pillar".
+// Pure. Compiled (eg build → eg-build/gaps.js, kept as gaps.cjs: idearium/ is an ES module package).
+//   order(gaps) → { order: [ids], why }       dependencies first; a cycle or a missing dependency is said, not guessed
+//   as_gap(g)   → a pillar:gap { id, missingVariable, affectedConstraint, source, severity, causedBy }, or { refused } as the contract says
+//   needs(names, does) → the dependency graph from the plan's own words: each export depends on the other exports its "does" names
+//   step(q)     → { action: "retry" | "escalate" | "hold", why }   q: { tries, per_rung, rung, rungs }
+
+fn order(gaps: list): map {
+  var done = []
+  var left = gaps
+  var guard = 0
+  while len(left) > 0 and guard <= len(gaps) {
+    var next = []
+    var moved = false
+    for g in left {
+      var ready = true
+      for d in get(g, "depends_on", []) {
+        if not (d in done) { ready = false }
+      }
+      if ready {
+        done = push(done, g.id)
+        moved = true
+      } else {
+        next = push(next, g)
+      }
+    }
+    left = next
+    guard = guard + 1
+    if not moved and len(left) > 0 {
+      return { order: done, why: "stuck: " + join(map(left, fn(x) = str(x.id)), ", ") + " wait on a gap that is missing or in a cycle" }
+    }
+  }
+  return { order: done, why: "dependencies first: " + join(done, " → ") }
+}
+
+fn step(q: map): map {
+  let tries = get(q, "tries", 0)
+  let per = get(q, "per_rung", 2)
+  let rung = get(q, "rung", 1)
+  let rungs = get(q, "rungs", 1)
+  if tries < per { return { action: "retry", why: "try " + str(tries + 1) + " of " + str(per) + " on rung " + str(rung) + ", the refusal fed back" } }
+  if rung < rungs { return { action: "escalate", why: "rung " + str(rung) + " spent its " + str(per) + " tries: rung " + str(rung + 1) + " of " + str(rungs) } }
+  return { action: "hold", why: "every rung spent its tries: held, said, for a person or a smaller gap" }
+}
+
+fn as_gap(g: map): map {
+  let missing = get(g, "missingVariable", null)
+  let blocks = get(g, "affectedConstraint", null)
+  if missing == null { return { refused: "no missingVariable: a gap names what is missing (pillar:gap)" } }
+  if blocks == null { return { refused: "no affectedConstraint: a gap names the constraint it blocks (pillar:gap)" } }
+  return { id: g.id, missingVariable: missing, affectedConstraint: blocks, source: get(g, "source", "emerge-rung"), severity: get(g, "severity", "blocking"), causedBy: get(g, "causedBy", null) }
+}
+
+fn needs(names: list, does: map): map {
+  var out = {}
+  for n in names {
+    var deps = []
+    let text = str(get(does, n, ""))
+    for m in names {
+      if m != n and find_text(text, m) >= 0 { deps = push(deps, m) }
+    }
+    out[n] = deps
+  }
+  return out
+}
