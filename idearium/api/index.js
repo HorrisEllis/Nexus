@@ -1854,6 +1854,12 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
           } catch (_) { existingTest = null; }
         }
         if (existingTest != null) got = { code: existingTest, v: { verdict: 'existing', why: `${testPath} is already on disk` }, already: true, existing: true };
+        // 0.60.624 — deterministic first: a phase that gives its examples gets its test written from them, no model, correct by construction
+        if (!got) { try { const ex = TF.examplesFrom(mapText, phase);
+          if (ex.length) { const code = TF.fromExamples({ plan, testPath, examples: ex, moduleType: TF.moduleTypeFor(_diskDir, testPath) });
+            const v = await TF.validate({ root: _diskDir, plan, testPath, code }); const d = TF.decide(v.verdict, { alreadyDone });
+            if (d === 'accept' || d === 'accept-already') { got = { code, v, already: d === 'accept-already' }; tfRow('written', { provider: 'nexus', note: `written by Nexus from the phase's ${ex.length} examples: no model` }); }
+            else tfRow('invalid', { provider: 'nexus', note: `the test from the phase's examples was not usable (${v.verdict}: ${String(v.why || '').slice(0, 200)}): the models write it` }); } } catch (e) { tfRow('invalid', { provider: 'nexus', note: `the examples could not be read: ${e.message}` }); } }
         // 2026-11-15 — his CS12 runs: "the test writer (gemini) did not answer: guardian call failed: connect ECONNREFUSED 127.0.0.1:7820" ended
         // the build. A writer that does not answer hands the test to the next agent on the build's route that is not the one that codes
         // (rungs[0]), PE6 kept; last of all (James: "okay but we have ollama.") the model that codes, said on the row as not independent;
@@ -1892,6 +1898,8 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
           // filling the gap becomes the next gap"); before, only a model that did not answer at all was passed over
           const _climb = () => { if (n >= 2 && tfAlts.length) { const nx = tfAlts.shift(); tfRow('climb', { provider: nx.id, note: `${writer} gave no usable test in ${n} tries (${String(lastWhy || '').slice(0, 160)}); ${nx.id} writes it` }); writer = nx.id; wp = nx.dp; n = 0; } };
           if (!code) { fb = lastWhy = 'the reply had no code block'; tfRow('invalid', { provider: writer, attempt: n, note: fb }); _climb(); continue; }
+          // 0.60.624 — his Section 10 on the model's test: a call expected two ways can never pass; refused before it is frozen
+          { const cx = TF.contradictions(code); if (cx.length) { fb = lastWhy = `the test contradicts itself: ${cx.slice(0, 2).join('; ')}. Each call has one expected result; the phase says which.`; tfRow('invalid', { provider: writer, attempt: n, note: fb }); _climb(); continue; } }
           const v = await TF.validate({ root: _diskDir, plan, testPath, code });
           const d = TF.decide(v.verdict, { alreadyDone });
           if (d === 'accept' || d === 'accept-already') got = { code, v, already: d === 'accept-already' };

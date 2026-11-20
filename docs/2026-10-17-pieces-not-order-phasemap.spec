@@ -173,6 +173,20 @@ phases:
       made, once per kind, in the order met. A body with none of them comes back unchanged with fixes empty. Built by the pipeline: the ▶ build,
       the planner on Ollama, the Emerge rung's ladder (3b, DeepSeek 16b, 30b), nothing outside his PC.
     proof: "its test, planned first: each rewrite, a string left alone, != left alone, an unchanged body with no fixes; built by the ▶ build with every file written by an Ollama model"
+    # 0.60.624 — the exact behaviour, so the test is written from it with no model (his "deterministic first"; the 2026-11-20 runs: each model
+    # invented its own fixes format and DeepSeek's test contradicted itself). fixes are the kinds, each once, in the order met: "!", "&&", "||",
+    # "===", "!==", ";".
+    examples:
+      - 'autocorrect("let x = 1") == { body: "let x = 1", fixes: [] }'
+      - 'autocorrect("if !x { y }") == { body: "if not x { y }", fixes: ["!"] }'
+      - 'autocorrect("a != b") == { body: "a != b", fixes: [] }'
+      - 'autocorrect("a && b") == { body: "a and b", fixes: ["&&"] }'
+      - 'autocorrect("a || b") == { body: "a or b", fixes: ["||"] }'
+      - 'autocorrect("a === b") == { body: "a == b", fixes: ["==="] }'
+      - 'autocorrect("a !== b") == { body: "a != b", fixes: ["!=="] }'
+      - 'autocorrect("let x = 1;") == { body: "let x = 1", fixes: [";"] }'
+      - 'autocorrect("a && !b;") == { body: "a and not b", fixes: ["&&", "!", ";"] }'
+      - 'autocorrect("say \"a && b\"") == { body: "say \"a && b\"", fixes: [] }'
     axioms: "§17.13 (in Emerge, through the rung), deterministic first (his 2026-10-13 order: a parser before any model), §8.6 (the HINTS table in gaps.eg names these refusals)"
   PC6_assembled_and_checked_whole:
     status: OPEN
