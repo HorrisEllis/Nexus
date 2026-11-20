@@ -36,7 +36,8 @@ export function treeHashOf(entries) {
  * collectFiles(repo, repoDir, maxBytes)
  * -> { entries:[{path,sha256,bytes}], buffers: Map(path -> Buffer), skipped:[{path, reason}] }
  */
-export function collectFiles(repo, repoDir, maxBytes) {
+// 0.60.604: keepBuffers false keeps no bytes (the snapshot before a build, off its thread): the files Versionium needs are read again after
+export function collectFiles(repo, repoDir, maxBytes, { keepBuffers = true } = {}) {
   const entries = []; const buffers = new Map(); const skipped = [];
   const root = path.resolve(repoDir);
   // The repo's tree is the chunk-derived file list PLUS the source layer's
@@ -64,7 +65,7 @@ export function collectFiles(repo, repoDir, maxBytes) {
     let buf;
     try { buf = fs.readFileSync(abs); } catch (e) { skipped.push({ path: rel, reason: `unreadable: ${e.code || e.message}` }); continue; }
     entries.push({ path: rel, sha256: sha256(buf), bytes: buf.length });
-    buffers.set(rel, buf);
+    if (keepBuffers) buffers.set(rel, buf);
   }
   entries.sort((a, b) => (a.path < b.path ? -1 : 1));
   return { entries, buffers, skipped };

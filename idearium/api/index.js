@@ -383,7 +383,7 @@ function _repoActivity() {
   return RAct;
 }
 import * as WB from '../lib/idea-workbench.js';
-import { runImportPipeline } from '../repo/import-pipeline.js';
+import { runImportPipeline, runImportPipelineOffThread } from '../repo/import-pipeline.js';
 import { makeBusForwarder } from '../repo/pipeline-events.js';
 
 // §PROJECTS 2026-07-19 — "a place to store projects, easily." A flat
@@ -1256,7 +1256,7 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
     let state = null, why = null;
     try {
       const os = getIdeaOS();
-      const pipeline = dir ? runImportPipeline(getRepoLayer().get(target.uuid), dir, { onEvent: makeBusForwarder((type, payload) => os.emit(type, payload)) }) : null;
+      const pipeline = dir ? await runImportPipelineOffThread(getRepoLayer().get(target.uuid), dir, { onEvent:   /* 0.60.604: off the main thread before a build (SW1) */ makeBusForwarder((type, payload) => os.emit(type, payload)) }) : null;
       state = pipeline ? pipeline.state : null; why = pipeline ? (pipeline.error || null) : 'could not resolve the repo directory';
       if (pipeline && pipeline.state !== 'FAULT') os.emit('idearium.repo.chunk.done', { repoUuid: target.uuid, name: target.name, state, fileCount: (target.files || []).length, chunkCount: null });
     } catch (e) { why = e.message; }

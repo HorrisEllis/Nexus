@@ -34,6 +34,7 @@ import fs from 'fs';
 import path from 'path';
 import crypto from 'crypto';
 import { readLazyVerification } from './verify-lazy.js';
+import { Worker } from 'worker_threads';   // 0.60.604 — the snapshot's two whole-repo passes off the main thread (snapshot-worker.js)
 import { collectFiles, treeHashOf } from './snapshot-files.js';
 import { createRequire } from 'module';
 import { architecture } from './architecture.js';
@@ -393,9 +394,35 @@ export async function _againWhileDown(what, fn, { waits = null, sleep = (ms) => 
   }
 }
 
+/**
+ * prepareOffThread({ repo, repoDir, now, maxBytes }) → { built, col: { entries, skipped, buffers } | null, offThread, offThreadWhy? }
+ * 0.60.604 — James, 2026-11-19: "it is meant to chunk all of that, look at the import pipeline." The record and the file pass run in a worker
+ * (the import pipeline's SW1 pattern), so a big repo never holds Idearium's event loop; no file's bytes are kept: col.buffers reads a file
+ * again when it is asked for (only the files Versionium needs). A worker that cannot start runs it here, and says so.
+ */
+export function prepareOffThread({ repo, repoDir, now, maxBytes = null } = {}) {
+  const lazy = (col) => col && { ...col, buffers: { get: (rel) => fs.readFileSync(path.resolve(repoDir, rel)) } };
+  const inline = (why) => { const built = buildSnapshotRecord({ repo, repoDir, now }); let col = null;
+    if (built.ok && maxBytes != null) { const c = collectFiles(repo, repoDir, maxBytes, { keepBuffers: false }); col = { entries: c.entries, skipped: c.skipped }; }
+    return { built, col: lazy(col), offThread: false, offThreadWhy: why }; };
+  return new Promise((resolve) => {
+    let w, settled = false; const done = (v) => { if (!settled) { settled = true; resolve(v); } };
+    try { w = new Worker(new URL('./snapshot-worker.js', import.meta.url), { workerData: { repo: JSON.parse(JSON.stringify(repo)), repoDir, now, maxBytes } }); }
+    catch (e) { return done(inline(`the worker did not start: ${e.message}`)); }
+    w.on('message', (m) => { if (m && m.error) done({ built: { ok: false, code: 'SNAPSHOT_THREAD', error: `snapshot thread: ${m.error}` }, col: null, offThread: true });
+      else done({ built: m.built, col: lazy(m.col), offThread: true }); });
+    w.on('error', (e) => done({ built: { ok: false, code: 'SNAPSHOT_THREAD', error: `snapshot thread: ${e.message}` }, col: null, offThread: true }));
+    w.on('exit', (code) => done({ built: { ok: false, code: 'SNAPSHOT_THREAD', error: `snapshot thread exited (${code}) before its result` }, col: null, offThread: true }));
+  });
+}
+
 export async function commitRepoSnapshot({ repo, repoDir, commit, message = null, causedBy = null, now, fileLayer = null, snapshotMode = 'delta', provenance = null } = {}) {
   if (typeof commit !== 'function') return { ok: false, code: 'NO_TRANSPORT', error: 'commit function is required' };
-  const built = buildSnapshotRecord({ repo, repoDir, now });
+  // 0.60.604: the file layer's limits first, then the record and the file pass together, off the main thread (prepareOffThread)
+  let limits = null, limitsError = null;
+  if (fileLayer) { try { limits = await _againWhileDown('limits', () => fileLayer.limits()); } catch (e) { limitsError = e; } }
+  const prep = await prepareOffThread({ repo, repoDir, now, maxBytes: limits ? limits.maxFileBytes : null });
+  const built = prep.built;
   if (!built.ok) return built;
   const check = verifyMustRecord(built.record);
   if (!check.complete) return { ok: false, code: 'INCOMPLETE', error: `record is missing §33 fields: ${check.missing.join(', ')}` };
@@ -404,8 +431,8 @@ export async function commitRepoSnapshot({ repo, repoDir, commit, message = null
   let kept = null; let contents = null;
   if (fileLayer) {
     try {
-      const limits = await _againWhileDown('limits', () => fileLayer.limits());
-      const col = collectFiles(repo, repoDir, limits.maxFileBytes);
+      if (limitsError) throw limitsError;
+      const col = prep.col;
       const plan = await _againWhileDown('plan', () => fileLayer.plan(col.entries));
       const tooLarge = new Set(plan.tooLarge || []);
       kept = col.entries.filter(e => !tooLarge.has(e.path));
