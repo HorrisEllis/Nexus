@@ -660,3 +660,7 @@ handoff_2026_11_18: >-
 # as much of the work as possible". Reading (coder's): NM1a's three functions (idOf, pathOf, rename over a registry) are pure and fully named by
 # the phase's proof; Emerge or a deterministic template could write the skeleton and the test from the plan, leaving the model only the bodies.
 # The Tasks queue is UI: a preview first (his rule).
+
+# ── ADDENDUM 2026-11-19 (0.60.606) — fixed: the planner's registry, the folder budgeted too ──
+# James, 2026-11-19: "suppposed to give it the smallest amount of context per gate. so only what it needs but the tools to reference the map and query nexus."
+# the planner's registry: the phase's own files only, every neighbour budgeted: 0.60.605 always listed a phase file's whole folder, and NM1a's file is in lib/ (160 components), so its 16:52 planner prompt was still 44,112 characters (19,549 of registry) and timed out at 5 minutes. Now only the phase's own files are always listed; the folder and the rest share LIMITS.registryChars (2,000). Measured: 300 components in lib/ → 2,049 characters. Seen the same hour: DeepSeek reads about 53 prompt tokens a second here (2,788 tokens in 52 s); a 9,354-character prompt is answered in about 2 minutes. Tests: context-budget 6/6, plan-code-run-attention 48/48, run-ready 10/10, expectation-tests 7/7.
