@@ -1096,6 +1096,23 @@ function _heapNote(what) {
     console.log(`[idearium/heap] ${what}: ${Math.round(used / 1048576)} MB in use of ${Math.round(limit / 1048576)} MB`);
   } catch (_) {}
 }
+// 0.60.608/0.60.619 — a model asked bare: the brief alone, no persona, no tools, through the Ollama system's job route (its door records every
+// call on the tape and keeps the model loaded). The Emerge rung's gaps (0.60.608) and, when the writer is an Ollama model, the test written
+// first (0.60.619: run phrun-mwpaeqr9-1c0w stalled 10 min in test-first through the project agent's large prompt). James, 2026-11-20:
+// "Chunk dude. Signal to noise. ... Everything chunked, decomposed".
+async function _askOllamaBare({ prompt, model = null, repoUuid = null, meta = {}, waitMs = 15 * 60000 }) {
+  const q = await _nexusClient.post('ollama', '/api/jobs', { prompt, model: model || undefined, intent: 'build', repoUuid, meta, options: { temperature: 0.1 } }, { timeout: 30000 });
+  const id = q && (q.jobId || (q.data && q.data.jobId)); if (!id) throw new Error(`the Ollama system did not take the job: ${JSON.stringify(q).slice(0, 200)}`);
+  for (const until = Date.now() + waitMs; Date.now() < until;) {
+    await new Promise(r => setTimeout(r, 3000));
+    const g = await _nexusClient.get('ollama', `/api/jobs/${encodeURIComponent(id)}`, { timeout: 10000 }).catch(() => null);
+    const j = g && (g.job || (g.data && g.data.job)); if (!j) continue;
+    if (j.status === 'complete') return String(j.result || '');
+    if (j.status === 'failed' || j.status === 'cancelled') throw new Error(`the Ollama job ${j.status}: ${j.error || ''}`);
+  }
+  throw new Error(`the Ollama job did not finish in ${Math.round(waitMs / 60000)} minutes`);
+}
+
 async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null, provider = null, note = '', replan = false, anyway = false, rebuild = false, startedBy = null, gates = null, method = null }) {
   // 0.60.589 gates open (his "set gates to open instead of pass, so we can have the whole pipeline debugged at once"): a gate that would stop the
   // build records why and lets it go on, so one run shows every failure; the build is never read as met for it (COS marks the run debugged)
@@ -1856,8 +1873,11 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
           tfRow('writing', { provider: writer, attempt: n, promptChars: msg.length, tokensIn: _tokEst(msg) });
           // §0.60.157 — inside WARP like every build path (James, 2026-10-15: "make sure all builds use warp"); TF2 (0.60.141, the
           // coder's) called the agent outside it, and BP-01 caught it. A retry (n > 1) is asked fresh, as the plan's is.
-          let r; try { const rd = await _agentDir(target.uuid); r = await WR.wrap(() => RA.dispatch({ repo: target, repoDir: rd, message: msg, ...wp, layer: getRepoLayer(), session: `${runId}-tf${n}`, maxToolErrors: policy.maxToolErrors || 0 }), { kind: 'phase-test-first', provider: writer || null, key: `${target.uuid}\n${msg}`, mode: 'cache', fresh: n > 1 }); }
-          catch (e) { r = { ok: false, error: e.message }; }
+          let r;
+          // 0.60.619: an Ollama writer is asked bare (the brief alone), not through the project agent's persona and tools
+          if (wp && wp.backend === 'ollama') { const t0 = Date.now(); try { const text = await _askOllamaBare({ prompt: msg, model: wp.model, repoUuid: target.uuid, meta: { source: 'idearium.test-first', phase } }); r = { ok: true, text, elapsedMs: Date.now() - t0 }; } catch (e) { r = { ok: false, error: e.message }; } }
+          else { try { const rd = await _agentDir(target.uuid); r = await WR.wrap(() => RA.dispatch({ repo: target, repoDir: rd, message: msg, ...wp, layer: getRepoLayer(), session: `${runId}-tf${n}`, maxToolErrors: policy.maxToolErrors || 0 }), { kind: 'phase-test-first', provider: writer || null, key: `${target.uuid}\n${msg}`, mode: 'cache', fresh: n > 1 }); }
+            catch (e) { r = { ok: false, error: e.message }; } }
           if (!r || !r.ok) { lastWhy = `the test writer (${writer}) did not answer: ${String((r && r.error) || 'no reply').slice(0, 200)}`; tfRow('no-answer', { provider: writer, attempt: n, error: lastWhy }); if (tfAlts.length) { const nx = tfAlts.shift(); tfRow('fallback', { provider: nx.id, notIndependent: !!nx.notIndependent, note: `${writer} did not answer; ${nx.id} writes the test${nx.notIndependent ? ' (the model that codes: not independent, PE6; kept only if it fails on today\'s tree)' : ''}` }); writer = nx.id; wp = nx.dp; n--; continue; } break; }
           const code = TF.extract(r.text);
           if (!code) { fb = lastWhy = 'the reply had no code block'; tfRow('invalid', { provider: planner, attempt: n, note: fb }); continue; }
@@ -2022,18 +2042,7 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
       // NM1a 2026-11-19: through the project agent each gap prompt was ~9,960 characters of persona and JavaScript context, and DeepSeek
       // answered in JavaScript (for (let … of …), ===, semicolons) three times; asked bare it filled the same gap first try. The Ollama
       // system's job route (nexus://ollama-bridge/api/jobs: its door records every call on the tape), owned by the Emerge rung.
-      const askOllama = async (message, model, gap) => {
-        const q = await _nexusClient.post('ollama', '/api/jobs', { prompt: message, model: model || undefined, intent: 'build', repoUuid: target.uuid, meta: { source: 'idearium.emerge-rung', gap, phase }, options: { temperature: 0.1 } }, { timeout: 30000 });
-        const id = q && (q.jobId || (q.data && q.data.jobId)); if (!id) throw new Error(`the Ollama system did not take the gap: ${JSON.stringify(q).slice(0, 200)}`);
-        for (const until = Date.now() + 15 * 60000; Date.now() < until;) {
-          await new Promise(r => setTimeout(r, 3000));
-          const g = await _nexusClient.get('ollama', `/api/jobs/${encodeURIComponent(id)}`, { timeout: 10000 }).catch(() => null);
-          const j = g && (g.job || (g.data && g.data.job)); if (!j) continue;
-          if (j.status === 'complete') return String(j.result || '');
-          if (j.status === 'failed' || j.status === 'cancelled') throw new Error(`the Ollama job ${j.status}: ${j.error || ''}`);
-        }
-        throw new Error('the Ollama job did not finish in 15 minutes');
-      };
+      const askOllama = (message, model, gap) => _askOllamaBare({ prompt: message, model, repoUuid: target.uuid, meta: { source: 'idearium.emerge-rung', gap, phase } });
       // 0.60.615 EMB2 — the ladder, smallest first (routing.emerge_ladder): each model through the same Ollama door; empty, the rung's one model
       const ladder = (policy.emergeLadder || []).length ? policy.emergeLadder.map(m => ({ name: m, ask: (message, { gap } = {}) => askOllama(message, m, gap) })) : null;
       const rung0 = ER.createRung({
