@@ -7,11 +7,11 @@ intent: null
 summary: 2 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1795195871165
+exported_at: 1795196825429
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1795195871165
-lastSeenAt: 1795195871165
+firstSeenAt: 1795196825429
+lastSeenAt: 1795196825429
 fingerprint: null
 payload:
   for: DB1_the_pipeline_census
@@ -44,6 +44,7 @@ payload:
       - docs/2026-11-20-pipeline-components-to-pillar-phasemap.spec::DB4_the_first_move_gaps
       - docs/2026-11-20-pipeline-components-to-pillar-phasemap.spec::DB5_the_build_runs_in_cos
       - docs/2026-11-20-pipeline-components-to-pillar-phasemap.spec::DB6_the_dock_from_pillar
+      - docs/2026-11-20-pipeline-components-to-pillar-phasemap.spec::DB7_memory_into_cortex_with_copies
     blockedBy: []
     unlocks: []
     conflicts: []
@@ -51,7 +52,7 @@ payload:
     lines:
       - layer 1 · ready
       - 'depends on (1): IF_D1_the_factory_is_cos'
-      - 'needed by (1): DB2_the_contracts · all downstream 5'
+      - 'needed by (1): DB2_the_contracts · all downstream 6'
     edges:
       - from: docs/2026-11-15-the-factory-phasemap.spec::IF_D1_the_factory_is_cos
         kind: declared

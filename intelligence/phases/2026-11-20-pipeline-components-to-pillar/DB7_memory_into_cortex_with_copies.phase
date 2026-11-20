@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-20-pipeline-components-to-pillar-phasemap.spec::DB7_memory_into_cortex_with_copies
+type: phase
+id: docs_2026-11-20-pipeline-components-to-pillar-phasemap.spec::DB7_memory_into_cortex_with_copies
+context: >-
+  pipeline phase DB7_memory_into_cortex_with_copies of
+  docs/2026-11-20-pipeline-components-to-pillar-phasemap.spec
+intent: null
+summary: DB7_memory_into_cortex_with_copies (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1795196825453
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795196825453
+lastSeenAt: 1795196825453
+fingerprint: null
+payload:
+  id: DB7_memory_into_cortex_with_copies
+  map: docs/2026-11-20-pipeline-components-to-pillar-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - intelligence/lattice/associative-lattice.js
+    - intelligence/lattice/node-lattice.js
+    - intelligence/causal/index.js
+    - idearium/spec-engine/phase-ledger.cjs
+  depends_on:
+    - DB3_the_drawbridge_installs
+    - DB_D2_memory_in_cortex_copies_where_relied_on
+  blocks: []
+  spec: null
+  graph: e14b21cd0ce489b6

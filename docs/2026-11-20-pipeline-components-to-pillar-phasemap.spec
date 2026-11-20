@@ -31,7 +31,31 @@ decisions:
       a_installed_by_contract: "Pillar stays a store with no server; each system installs the components it uses into its compartment (the coder's recommendation: no runtime coupling, one outage breaks nothing)"
       b_pillar_serves: "Pillar becomes a system with its own server.js and routes; systems call its components over the drawbridge at runtime"
     his_to_choose: "a or b (the coder recommends a: §5.15 rule 3, one system's outage breaks no other)"
+    answered: >-
+      2026-11-20, reading a, by his rule the same hour: "any memory system that a system relies on to operate needs to have a copy, or version."
+      A system that relies on a Pillar component to operate keeps its own installed, versioned copy.
     axioms: "§5.9, §5.14, §5.15, §5.16 (each registry its own), §0.3 (archive, never delete), §8.6 (reuse), §16.5"
+  DB_D2_memory_in_cortex_copies_where_relied_on:
+    status: "DECIDED 2026-11-20 (his); the coder's reading of the mechanism, to confirm"
+    james: >-
+      "i feel that cortex should hold the memory systems. associative lattice, and the ring buffer, and the causal field. what do you think? also
+      with the phases?" · then: "any memory system that a system relies on to operate needs to have a copy, or version."
+    found: >-
+      2026-11-20: the associative lattice in intelligence/lattice/ (associative, node, fan-in), copilot/lib/person-model/lattice.js,
+      idearium/architecture-spec/registry/lattice.js, data/lattice/; ring buffers in idearium/spec-engine/spec-compiler/compiler/ring-buffer.js and
+      lib/emergence/.../RingBufferCore.js; the causal field's state kept apart by guardian, the orchestrator and idearium (data/*/cfr), its code in
+      intelligence/causal/, cortex/memory/causal-lookup.js, diagnostic/lib/causality.js, lib/diagnostic-causal.js. Three to five homes each
+      (§10.3). Intelligence, 719 MB at rest, the heaviest system, holds the lattice in memory.
+    chosen: >-
+      Cortex holds each memory canonically (one writer, on disk, indexed, queried by its routes): the lattice's nodes and edges, the events' ring,
+      the causal field's ledger, and the books (the phase ledger, run histories, failure modes: his 2026-11-09 "the ledgers, the failure modes, the
+      records of what happened are Cortex's"). A system that relies on a memory to operate keeps its own versioned copy: it reads its copy, writes
+      go to Cortex, and with Cortex down it runs on its copy and reconciles when Cortex is back (Versionium's postDurable pattern: waits, never
+      dropped). The reasoning over memory (association, causal inference, anomaly) stays Intelligence's, reached through Cortex's routes (§7.3,
+      cognition is not history). The ring buffer is a Pillar primitive; Cortex holds the instance that keeps events. Maps and .phase files stay
+      with the system each phase builds. Moved the drawbridge way, never ripped out.
+    to_confirm: "the phase ledger moving from Idearium (his 2026-11-06: 'add a phase ledger, to idearium') to Cortex's books, Idearium keeping a versioned copy"
+    axioms: "§5.15 rules 1 and 3, §10.1, §10.3, §7.3, §2.1, §17.12 (the buffer pattern)"
 
 phases:
   DB1_the_pipeline_census:
@@ -89,7 +113,16 @@ phases:
       and by Idearium's, each reading its owner's routes. A live preview shown to him first (his rule), then built.
     proof: "the same panels in COS's cockpit and in Idearium's Code tab, one source; Idearium's dock unchanged for him until the swap is shown"
 
-build_order: [DB1, DB2, DB3, DB4, DB5, DB6]
+  DB7_memory_into_cortex_with_copies:
+    status: OPEN
+    depends_on: [DB3_the_drawbridge_installs, DB_D2_memory_in_cortex_copies_where_relied_on]
+    files: [cortex/memory/, intelligence/lattice/associative-lattice.js, intelligence/lattice/node-lattice.js, intelligence/causal/index.js, idearium/spec-engine/phase-ledger.cjs]
+    does: >-
+      DB_D2 built, one memory at a time, the drawbridge way: a census of every memory each system relies on (its readers and writers); Cortex's
+      canonical store for each, chunked on disk and indexed; each relying system's versioned copy with its reconcile; the old homes switched only
+      after their tests pass on the copy, then archived. The lattice first (the heaviest, in Intelligence), then the causal field, then the books.
+    proof: "Cortex stopped: each relying system still answers from its copy and reconciles after; Intelligence's memory at rest measured before and after"
+build_order: [DB1, DB2, DB3, DB4, DB5, DB6, DB7]
 first_slice: "DB1, the census: nothing moves until every pipeline component is found with its callers (§8.4: scan dependencies and consumers before changing any file)."
 failure_modes:
   - "Two copies alive at once drift: each move ends with the old archived, and the census marks a meaning held twice (PIL5)."
