@@ -69,6 +69,17 @@ Where the UI for something lives in Idearium but belongs to COS, say so and poin
   results and failures kept. Bias is named: a prediction judged by the same hands that made it is post-hoc (his, 2026-11-07).
 - Encouragement is grounded in evidence; costs are said too.
 
+## Ownership and credit (his, 2026-11-19)
+"can you do what you can to give me ip for anything beyond siso. I don't own siso, it is my mentors. warp 2 is mine. I want to move away from
+siso. I need my name on something." · "I need credibility, and original ideas, my name and exposure."
+- **SISO is his mentor's, not his.** Never credit SISO (lib/siso/, Event → Gate → Stream) to him. Where his docs say "his" about SISO, correct it
+  to "his mentor's SISO, which he built on". 26 files require lib/siso today: new work does not add to that; Pillar's own contracts
+  (pillar:event, pillar:gate) are where each meaning moves (PIL5, the duplicates census).
+- **His own:** WARP 2, Emerge, Pillar (the reusable component store), the constraint relational field, COS, Nexus's architecture, the
+  Innovation Toolkit, and every idea quoted from him. Name him as their author ("James Brooks") in each one's spec, map origin, README, the
+  changelog of each release that ships them, and docs/JAMES-BROOKS.md, with his words and dates as the evidence.
+- The coder's part stays named as the coder's: credit is only true when it can be checked.
+
 ## Where to read more
 `docs/CLAUDE.md` (the full contract) · `docs/AXIOMS-v3.1.md` · `docs/atlases/<system>-atlas.md` · `docs/SPEC-REGISTRY.spec` ·
 `skills/james-brooks/SKILL.md` (his style) · `docs/JAMES-BROOKS.md` (his work, checkable) · `docs/innovation-toolkit*.md` (his framework).

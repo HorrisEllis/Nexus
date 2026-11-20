@@ -674,3 +674,9 @@ handoff_2026_11_18: >-
 # resuable architure." · "this is my vision."
 # Evidence the same hour (scratchpad pile, coder's runs): DeepSeek 16b writing a whole Emerge function was refused by the compiler twice (it kept
 # "!" after the error was fed back); given a skeleton written by Nexus with one gap, it filled the gap (e.id == id) in 2 s and passed 2/2.
+
+# ── ADDENDUM 2026-11-19 — his, recorded, not built: Ollama embodies Copilot; Pillar is the reusable component store; Idearium's tabs; commands ──
+# James, 2026-11-19: "ollama needs to be able to embody copilot." · "pillar is the resuable component store." · "can you also expand the tabs in
+# idearium?" · "also I need commands for this." Reading (coder's): Copilot's role (reasoning, planning, the agent loop) runs on a local Ollama
+# model as its first rung; Pillar's contracts become the store every reusable component is kept and found in (today lib/component-store.js holds
+# them); the tabs are UI, so a preview first (his rule); commands come before UI (backend → route → command → UI).

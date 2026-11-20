@@ -1555,3 +1555,14 @@ spec:
 # gates between layers of the pipeline, and steps. intelligent gates." · "it also has to compille. since emerge already debugs and tests the code."
 # Reading (coder's): a failed chunk is split smaller before the agent ladder (IF22) escalates; compile and test are deterministic gates (eg build,
 # eg test; node --check for JS) every chunk passes before it lands. Recorded, not built.
+
+# ── ADDENDUM 2026-11-19 (later still) — his: no failure, only a new end state; the field narrows attention; tension and counterfactuals ──
+# James, 2026-11-19: "a branch could be like if a new word needs to be added using say in emerge, like i dont want failed, like the end state is
+# the current task, then if there is gap or bug or error, that becomes the end state until fixed, like expanding the pipeline one by one until it
+# figures it out. like no isn't an answer. wouldn't the axioms in the docs help? like contraint field shrinks the attention or focus, the field of
+# possibilities, like how emerge uses what ifs and compartments, so we could use that for tension and friction detection and counterfactuals for
+# synthesis or expiramentation. built to for cos. its my architecture."
+# Reading (coder's, to confirm with him): a refused step is not "failed": it opens a pillar:gap, and the gap's fix becomes the pipeline's end state
+# (a branch), worked backwards like any contract; when it closes, the original end state resumes. The constraint field narrows what is tried
+# (attention); Emerge's whatif forks run counterfactuals inside a compartment; tension = constraints near refusal, friction = repeated refusals
+# on one gap. Recorded, not built. Owner of the architecture: James Brooks.

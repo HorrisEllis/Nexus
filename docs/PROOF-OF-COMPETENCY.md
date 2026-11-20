@@ -51,7 +51,7 @@ says which part is which (docs/CLAUDE.md, "His decisions, quoted with their cont
 
 ### Systems architecture
 
-He designs a system as kernel-out propagation: a fixed core (SISO's Event → Gate → Stream) with components that hold
+He designs a system as kernel-out propagation: a fixed core (his mentor's SISO, Event → Gate → Stream, which he built on; SISO is not his: his, 2026-11-19, "I don't own siso, it is my mentors") with components that hold
 typed channels, a CLI, and an API (`skills/james-brooks/SKILL.md`, "The Cobalt Core").
 
 - **Evidence:** the order of delivery he set on 2026-10-07 is backend → API → command → UI, in the same phase
