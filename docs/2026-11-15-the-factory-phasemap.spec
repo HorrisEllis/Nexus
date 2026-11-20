@@ -643,3 +643,10 @@ handoff_2026_11_18: >-
 # ── ADDENDUM 2026-11-19 (0.60.604) — fixed: the build snapshot off the main thread ──
 # James, 2026-11-19: "it is meant to chunk all of that, look at the import pipeline." · "no nexus chunks, look at  the import pipeline for idearium. like for importing projects"
 # the snapshot before a build off Idearium's main thread, the import pipeline's own way (SW1, a worker thread): NM1a's build read and hashed the repo twice on the main thread, keeping every file's bytes, and Idearium answered nothing for 11 minutes (phrun-mwo6egoh-vxh3). Now the record and the file pass run in idearium/repo/snapshot-worker.js; no bytes are kept, only the files Versionium needs are read again; the re-index before a build uses runImportPipelineOffThread. Measured on NM1a's repo (5,466 files): 239 s off the thread, the main thread's longest pause 201 ms, its heap 9 MB. Not yet: chunk size by the resource monitor and a COS setting (his "maybe dynamically in relation to the resource manager and the memory heap allocation"); a boot job still holds Idearium about 4 minutes after start, not yet found. The snapshot tests import by a D: path, which Node on Windows refuses (pre-existing).
+
+# ── ADDENDUM 2026-11-19 — his direction, held ("not important right now"): compartments hook into the kernel, the UI set from COS ──
+# James, 2026-11-19: "we could have compartments hook into the kernal or engine, then into the ui. like settings and options for these when
+# creating a new compartment depending on the dependencies." · "have cos connect to the drawbridge and have the ui set in the options with the
+# option to pick the file." · "i love the idearium ui but cos is meant to be the automation workflow and pipline. authority. not important right now."
+# Also asked, same message, for the snapshot: "maybe dynamically in relation to the resource manager and the memory heap allocation, maybe even
+# an option for the in cos and the config" — 0.60.604 took it off the main thread; chunk size by the monitor and the COS option are not built.
