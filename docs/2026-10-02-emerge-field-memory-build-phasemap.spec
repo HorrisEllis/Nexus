@@ -1548,3 +1548,10 @@ spec:
 # backwards from the contract; steps = proposed transitions in the field (field.eg propose); gates = constraints (field.eg judge).
 # Gap found: no phase derives the .dag backwards from a contract; RF1's core (0.60.601) judges transitions but does not plan them.
 # Open question to him: is the contract the field's top layer in place of CRF1's held axioms, or do the axioms sit above it as the pot's walls?
+
+# ── ADDENDUM 2026-11-19 (later) — his: deterministic first, chunking as retry and escalation, intelligent gates between layers ──
+# James, 2026-11-19: "everything, should be as deterministic as possible, and the llm only when strictly necessary. primitive per primitive,
+# word by word, component by component, all increment." · "should be chunked dynamically, especially as retry logic, and escalation strategy.
+# gates between layers of the pipeline, and steps. intelligent gates." · "it also has to compille. since emerge already debugs and tests the code."
+# Reading (coder's): a failed chunk is split smaller before the agent ladder (IF22) escalates; compile and test are deterministic gates (eg build,
+# eg test; node --check for JS) every chunk passes before it lands. Recorded, not built.
