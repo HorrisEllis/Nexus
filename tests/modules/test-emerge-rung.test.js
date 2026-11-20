@@ -219,6 +219,21 @@ const scripted = (replies, seen = []) => async (message, { tryNo }) => { seen.pu
     assert.strictEqual(two.plan.files.find(f => f.path === 'lib/a.js').exports.length, 0, 'and is never guessed onto another');
   });
 
+  await test('ER-12', 'in an ES-module folder (package.json "type": "module", as idearium/ is) the built module is .eg.cjs and the planned file is an ES module exporting each function by name: imported as the test will (0.60.621)', async () => {
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'er12-'));
+    fs.writeFileSync(path.join(dir, 'package.json'), '{ "type": "module" }');
+    fs.mkdirSync(path.join(dir, 'lib'), { recursive: true });
+    const r = await R.createRung({ root: dir, cli: path.join(ROOT, 'emerge', 'emerge', 'cli.js'), tasksDir: null, ask: async () => '  return x + 1', expect: async () => ({ ok: true }) })
+      .build({ file: 'lib/inc.js', exports: [{ name: 'inc', signature: 'inc(x: num) -> num', does: 'x plus one' }] });
+    assert.ok(r.ok && r.files['lib/inc.eg.cjs'] && !r.files['lib/inc.eg.js'] && /export const inc = m\.inc;/.test(r.files['lib/inc.js']), JSON.stringify(Object.keys(r.files || {})));
+    for (const [k, v] of Object.entries(r.files)) { fs.mkdirSync(path.dirname(path.join(dir, k)), { recursive: true }); fs.writeFileSync(path.join(dir, k), v); }
+    const { pathToFileURL } = require('url');
+    const m = await import(pathToFileURL(path.join(dir, 'lib', 'inc.js')).href);
+    assert.strictEqual(m.inc(41), 42, 'imported by name, it runs');
+    assert.strictEqual(R.moduleTypeOf(ROOT, 'idearium/lib/autocorrect.js'), 'module');
+    assert.strictEqual(R.moduleTypeOf(ROOT, 'lib/x.js'), 'commonjs');
+  });
+
   console.log(`\n  ${passed} passed, ${failed} failed`);
   process.exit(failed ? 1 : 0);
 })();

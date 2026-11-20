@@ -82,15 +82,34 @@ function extract(text) {
   return code.trim() ? code.replace(/\s+$/, '') + '\n' : null;
 }
 
-/** the planned file: Emerge's runtime, then the built module's top-level functions as plain exports */
-function adapter(file) {
+/** the planned file: Emerge's runtime, then the built module's top-level functions as plain exports. In an ES-module folder (0.60.621: the
+ *  nearest package.json says "type": "module", as idearium/ does) the planned file is an ES module that loads the built CommonJS (.eg.cjs) through
+ *  createRequire and exports each function by name; elsewhere it is CommonJS as before. */
+function adapter(file, { esm = false, names = [] } = {}) {
   const dir = path.posix.dirname(file); const base = path.posix.basename(file).replace(/\.[cm]?js$/, '');
   const up = dir === '.' ? '.' : dir.split('/').map(() => '..').join('/');
+  if (esm) {
+    return `// built by Emerge from ${base}.eg (EMB1) — edit the .eg, not this file
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
+const { createRuntime } = require('${up}/_emerge/lang/runtime.js');
+const m = require('./${base}.eg.cjs')(createRuntime({ file: '${base}.eg', loadModule: (abs, r) => require(abs.replace(/\\.eg$/, '.cjs'))(r) }));
+${names.map(n => `export const ${n} = m.${n};`).join('\n')}
+export default m;
+`;
+  }
   return `'use strict';
 // built by Emerge from ${base}.eg (EMB1) — edit the .eg, not this file
 const { createRuntime } = require('${up}/_emerge/lang/runtime.js');
 module.exports = require('./${base}.eg.js')(createRuntime({ file: '${base}.eg', loadModule: (abs, r) => require(abs.replace(/\\.eg$/, '.js'))(r) }));
 `;
+}
+/** "module" when the nearest package.json above the file says "type": "module" (as Node decides), else "commonjs" */
+function moduleTypeOf(root, file) {
+  if (/\.mjs$/.test(file)) return 'module'; if (/\.cjs$/.test(file)) return 'commonjs';
+  let d = path.dirname(path.resolve(root || '.', file));
+  for (let i = 0; i < 40; i++) { try { const j = JSON.parse(fs.readFileSync(path.join(d, 'package.json'), 'utf8')); return j.type === 'module' ? 'module' : 'commonjs'; } catch (_) {} const u = path.dirname(d); if (u === d) break; d = u; }
+  return 'commonjs';
 }
 
 // ── the skeleton (0.60.607) ──
@@ -303,7 +322,8 @@ function createRung({ root = path.resolve(__dirname, '..', '..'), ask, expect, m
       const t0 = Date.now(); const b = await eg('lang-build', source, ['--standalone']);
       let why;
       if (b.ok && b.files && b.files['main.js']) {
-        const files = { [at(base + '.eg')]: source, [at(base + '.eg.js')]: b.files['main.js'], [f]: adapter(f) };
+        const esm = moduleTypeOf(root, f) === 'module';   // 0.60.621: in an ES-module folder the built CommonJS is .eg.cjs and the planned file imports it
+        const files = { [at(base + '.eg')]: source, [at(base + (esm ? '.eg.cjs' : '.eg.js'))]: b.files['main.js'], [f]: adapter(f, { esm, names: skel.fns.map(x => x.name) }) };
         for (const [k, v] of Object.entries(b.files)) if (k.startsWith('_emerge/')) files[k] = v;
         const x = typeof expect === 'function' ? await expect({ file: f, files }) : { ok: true, why: 'no expectation given' };
         if (x && x.ok) { tries.push({ n: round + 1, stage: 'pass', why: (x && x.why) || 'passed', ms: Date.now() - t0 }); console.log('[emerge-rung] ' + f + ': passed, skeleton first');
@@ -347,7 +367,8 @@ function createRung({ root = path.resolve(__dirname, '..', '..'), ask, expect, m
       if (missing.length) { fail('exports', `${missing.join(', ')} — define ${missing.length === 1 ? 'it' : 'them'} as top-level fn`); continue; }
       const b = await eg('lang-build', source, ['--standalone']);
       if (!b.ok || !b.files || !b.files['main.js']) { fail('build', firstLines(b.stderr) || 'it did not build'); continue; }
-      const files = { [at(`${base}.eg`)]: source, [at(`${base}.eg.js`)]: b.files['main.js'], [f]: adapter(f) };
+      const esm = moduleTypeOf(root, f) === 'module';
+      const files = { [at(`${base}.eg`)]: source, [at(`${base}${esm ? '.eg.cjs' : '.eg.js'}`)]: b.files['main.js'], [f]: adapter(f, { esm, names }) };
       for (const [k, v] of Object.entries(b.files)) if (k.startsWith('_emerge/')) files[k] = v;
       const x = typeof expect === 'function' ? await expect({ file: f, files }) : { ok: true, why: 'no expectation given' };
       if (!x || !x.ok) { fail('expect', (x && x.why) || 'the expectation did not pass'); continue; }
@@ -361,4 +382,4 @@ function createRung({ root = path.resolve(__dirname, '..', '..'), ask, expect, m
   return { build, eg };
 }
 
-module.exports = { MODULE_ID, VERSION: '1.3.0', CARD, brief, extract, adapter, createRung, skeletonOf, paramsOf, bodyOf, briefGap, gapStore, taskDirOf, listGaps };
+module.exports = { MODULE_ID, VERSION: '1.3.0', CARD, brief, extract, adapter, createRung, skeletonOf, paramsOf, bodyOf, briefGap, gapStore, taskDirOf, listGaps, moduleTypeOf };

@@ -1877,7 +1877,7 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
         // had become the reply on Claude's page)
         const _relTF = (() => { try { return _require('../../lib/repo-inject.js').expectAsking(target.uuid, testPath); } catch (_) { return () => {}; } })();
         for (let n = 1; n <= 2 && !got; n++) {
-          const msg = TF.brief({ plan, phaseKey: phase, does: ctx.does, proof: ctx.proof, testPath, repoName: target.name, feedback: fb });
+          const msg = TF.brief({ plan, phaseKey: phase, does: ctx.does, proof: ctx.proof, testPath, repoName: target.name, feedback: fb, moduleType: TF.moduleTypeFor(_diskDir, testPath) });   // 0.60.621: import or require, as the folder is
           tfRow('writing', { provider: writer, attempt: n, promptChars: msg.length, tokensIn: _tokEst(msg) });
           // §0.60.157 — inside WARP like every build path (James, 2026-10-15: "make sure all builds use warp"); TF2 (0.60.141, the
           // coder's) called the agent outside it, and BP-01 caught it. A retry (n > 1) is asked fresh, as the plan's is.
