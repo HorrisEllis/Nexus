@@ -382,3 +382,16 @@ related:
 # Open, his to settle: his 2026-11-19 "or raid? since it should be the contract hub? but maybe both, as a recipe, maybe raid is working memory,
 # idearium is the long term" against his P12 (2026-09-11, "working memory is meant for immediate data for the contract which we should create a
 # compartment for") and his 2026-09-02 "long-term lives in cortex". Not yet: a held gap split into smaller gaps.
+
+# ── ADDENDUM 2026-11-20 (0.60.612) — EMB2 expanded: the gap chain (built) ──
+# James, 2026-11-20: "if it can't fill a gap, it needs to understand why it's struggling, and add it to the learning memory, like anything that
+# gets in the way towards filling the gap, becomes a gap in between the current step and the gap it couldn't fill" · "so each problem with filling
+# the gap becomes the next gap, in the link." · "as each gap passes, gets logged or tagged in the gate as passed and compiled." This answers the
+# split question put to him on 2026-11-19 (the model names helpers, or a line-by-line printer): his design, a third reading, is what was built.
+# Built: gaps.eg struggle/link/guard; emerge-rung.cjs blockerFor (its own try's missing call first, then the learning memory from the node index,
+# then one question to the model); the gate tag; a held gap stays an open loop (IF20). Decided by his axioms: §14.4 (the chain is bounded), §1.2
+# (held is said, never forced), §2.1 (every link on disk), §8.6 (the node index is the learning memory; nothing new beside it).
+# Measured: DeepSeek 16b named findEntryById for the held rename; both passed the compiler; the module's test then failed (a change through an
+# alias of a parameter, which Emerge's checker lets through). Next, his ideas the same day: a failed test becomes a gap ("test per gap"); Emerge's
+# checker refuses the alias change (CIE14); a 3b fills the smallest gaps, bigger models only for held ones; his framework per step or pipeline
+# ("framework per step. or pipeline. like i want it to use my framework."); rewind and the intelligence system per gate (TL4, PC2/PD4, GW6).
