@@ -127,10 +127,10 @@ const scripted = (replies, seen = []) => async (message, { tryNo }) => { seen.pu
     assert.ok(run2.ok && run2.skeleton, JSON.stringify(run2.tries));
     assert.ok(/tried 2 time\(s\) before[\s\S]*if !x/.test(told), 'the first chat of run 2 knows run 1\'s refusals');
     const g2 = NE.importFromFile(run2.gapFiles[0]).payload;
-    assert.ok(g2.status === 'filled' && g2.attempts.length === 3 && /x \+ 1/.test(g2.body), JSON.stringify(g2));
+    assert.ok(g2.status === 'passed' && g2.gate && g2.gate.compiled && g2.attempts.length === 3 && /x \+ 1/.test(g2.body), JSON.stringify(g2));
     assert.ok(path.dirname(run2.gapFiles[0]) === path.join(tasks, 'repo1', 'map.P1'), 'the task\'s folder, named by its contract: ' + run2.gapFiles[0]);
     const listed = R.listGaps({ root: dir, contract: C });
-    assert.ok(listed.length === 1 && listed[0].status === 'filled' && listed[0].tries === 3 && listed[0].filePath === run2.gapFiles[0], 'found through Idearium\'s node index: ' + JSON.stringify(listed));
+    assert.ok(listed.length === 1 && listed[0].status === 'passed' && listed[0].tries === 3 && listed[0].filePath === run2.gapFiles[0], 'found through Idearium\'s node index: ' + JSON.stringify(listed));
     assert.ok(/x \+ 1/.test(R.listGaps({ root: dir, id: listed[0].id }).body), 'one gap whole, from its file');
     // the server's boot scan, with a gap type folder present: a node indexed from a file in a task folder (here a plain id, which the scan can
     // match to a type-folder path) stays while its file is there, and goes when it is gone
@@ -142,6 +142,37 @@ const scripted = (replies, seen = []) => async (message, { tryNo }) => { seen.pu
     assert.strictEqual(R.listGaps({ root: dir, id: 'plain' }) !== null && R.listGaps({ root: dir, contract: C }).length, 2, 'a boot scan keeps nodes whose files are in their task folder');
     fs.unlinkSync(plain); NR.createNodeRegistry({ system: 'idearium', root: dir, fresh: true }).scan();
     assert.strictEqual(R.listGaps({ root: dir, id: 'plain' }), null, 'and drops one whose file is gone');
+  });
+
+  await test('ER-09', 'the chain (his "each problem with filling the gap becomes the next gap, in the link"): a held gap gets the gap that stops it linked in just before it, filled first, then it passes; each pass tagged in its gate; the learning memory kept', async () => {
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'er09-')); const tasks = path.join(dir, 'tasks');
+    const ex = [{ name: 'rename', signature: 'rename(registry, id, newPath) -> registry', does: 'a new registry with id moved to newPath' }];
+    const NE = require(path.join(ROOT, 'lib', 'node-export.js'));
+    const MOVED = (xs) => '  var out = []\n  for e in ' + xs + ' {\n    if e.id == id { out = push(out, { id: e.id, path: newPath }) } else { out = push(out, e) }\n  }\n  return out';
+    // (1) its own try calls a function that does not exist: that piece becomes the gap in between, named by the try itself
+    const asked = []; let n = 0;
+    const ask1 = async (msg, { gap, diagnose }) => { asked.push(gap + (diagnose ? '?' : '')); if (gap === 'moved') return MOVED('arg1');
+      n++; return n <= 2 || /fn moved\(arg1: any, id: any, newPath: any\)/.test(msg) ? '  return { entries: moved(registry.entries, id, newPath) }' : '  return null'; };
+    const r1 = await R.createRung({ root: ROOT, tasksDir: tasks, indexRoot: dir, maxTries: 2, ask: ask1, expect: async () => ({ ok: true }) }).build({ file: 'lib/ren.js', exports: ex, contract: 'r/m.P1' });
+    assert.ok(r1.ok, JSON.stringify(r1.tries));
+    assert.deepStrictEqual(asked, ['rename', 'rename', 'moved', 'rename'], 'rename twice, then the gap in between, then rename again');
+    assert.ok(/fn moved\(arg1: any, id: any, newPath: any\)[\s\S]*fn rename/.test(r1.source), 'linked in just before the gap it unblocks: ' + r1.source);
+    const gf = (r, x) => NE.importFromFile(r.gapFiles.find(p => p.endsWith('#' + x + '.gap'))).payload;
+    const ren = gf(r1, 'rename'), mov = gf(r1, 'moved');
+    assert.ok(ren.status === 'passed' && ren.gate.passed && ren.gate.compiled && ren.unblockedBy[0] === 'moved' && ren.struggle.missing[0] === 'moved', JSON.stringify(ren));
+    assert.ok(mov.blocks === 'rename' && mov.namedBy === 'its own try' && mov.gate.compiled, JSON.stringify(mov));
+    // (2) nothing to read from its tries: the model is asked once why it is stuck, and the function it names is the gap in between
+    let k = 0; const asked2 = [];
+    const ask2 = async (msg, { gap, diagnose }) => { asked2.push(gap + (diagnose ? '?' : '')); if (diagnose) return 'fn moved(entries, id, newPath) — the entries with id moved to newPath';
+      if (gap === 'moved') return MOVED('entries');
+      k++; return k <= 2 ? '  registry.entries = 1\n  return registry' : '  return { entries: moved(registry.entries, id, newPath) }'; };
+    const r2 = await R.createRung({ root: ROOT, tasksDir: tasks, indexRoot: dir, maxTries: 2, ask: ask2, expect: async () => ({ ok: true }) }).build({ file: 'lib/ren2.js', exports: ex, contract: 'r/m.P2' });
+    assert.ok(r2.ok, JSON.stringify(r2.tries));
+    assert.deepStrictEqual(asked2, ['rename', 'rename', 'rename?', 'moved', 'rename'], 'asked why once, then the named piece, then rename');
+    assert.ok(r2.tries.some(t => t.stage === 'link' && /moved\(entries, id, newPath\)/.test(t.why)), 'the link said in the run');
+    // (3) bounded: a gap that never fills and names nothing stays held, an open loop with its struggle, not forced
+    const r3 = await R.createRung({ root: ROOT, tasksDir: tasks, indexRoot: dir, maxTries: 1, ask: async () => '  if !x { return 1 }', expect: async () => ({ ok: true }) }).build({ file: 'lib/ren3.js', exports: ex, contract: 'r/m.P3' });
+    assert.ok(!r3.ok && r3.held && gf(r3, 'rename').status === 'held', JSON.stringify(r3));
   });
 
   console.log(`\n  ${passed} passed, ${failed} failed`);

@@ -2001,7 +2001,7 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
       let expectation = null; try { if (tpath) expectation = String(codeOf(tpath) || '') || null; } catch (_) { expectation = null; }
       const dp = paramsOf(rung);
       const rung0 = ER.createRung({
-        root: _require('../../lib/nexus-self/systems.js').ROOT, maxTries: 3,
+        root: _require('../../lib/nexus-self/systems.js').ROOT, maxTries: 3, tasksDir: path.join(IDEARIUM_DATA_DIR, 'tasks'), model: dp.model || dp.provider || null,
         ask: async (message, { tryNo, gap } = {}) => {
           // 0.60.608 — a skeleton gap goes to the model bare: the brief alone, no persona, no tools (his "smallest amount of context per gate").
           // NM1a 2026-11-19: through the project agent each gap prompt was ~9,960 characters of persona and JavaScript context, and DeepSeek
@@ -2031,7 +2031,9 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
           return r.ok ? { ok: true, why: `its expectation passed (${r.checks || 0} checks)` } : { ok: false, why: EXT.feedback(r, f) };
         },
       });
-      let res; try { res = await rung0.build({ file: f, exports: pf.exports || [], expectation, context: ctxNote }); } catch (e) { res = { ok: false, why: e.message, tries: [] }; }
+      // 0.60.611/612 EMB2: the gaps of this build live in the folder of its contract (his choice, 2026-11-19): idearium/data/tasks/<repo>/<map>.<phase>/
+      const contractId = `${target.uuid}/${_safeId(map.split('/').pop().replace(/\.spec$/, ''))}.${_safeId(phase)}`;
+      let res; try { res = await rung0.build({ file: f, exports: pf.exports || [], expectation, context: ctxNote, contract: contractId }); } catch (e) { res = { ok: false, why: e.message, tries: [] }; }
       appendRow('idearium_phase_runs', { uuid: `${runId}-${ck.brick}-ew-${Date.now().toString(36)}`, ...base, ...ck, state: res.ok ? 'emerge-passed' : 'emerge-fell-back', provider: `emerge:${rung && rung.provider || 'agent'}`, snapshot: commitId,
         tries: res.tries, note: res.ok ? `${f} written in Emerge — ${res.why}` : `Emerge did not make ${f} (${res.why}); the JavaScript ladder builds it`, ts: Date.now() });
       getIdeaOS().emit('idearium.repo.phase.run', { ...base, ...ck, state: res.ok ? 'emerge-passed' : 'emerge-fell-back', snapshot: commitId });

@@ -43,6 +43,20 @@ test "a fresh chat gets the lesson: every earlier body, what refused it, its fix
   expect G.lesson([{ body: "  ok", said: "filled; compiles", ok: true }], 3) == "", "a body that was accepted is no lesson"
 }
 
+test "what got in the way: the refusal kinds met, and the names its tries called that do not exist" {
+  let st = G.struggle([{ said: "main.eg:2:17: error: \"moved\" is not defined", body: "" }, { said: "main.eg:17:3: error: \"registry\" is a parameter", body: "" }, { said: "filled", ok: true }])
+  expect join(st.missing, ",") == "moved" and "is a parameter" in st.kinds and "is not defined" in st.kinds, json(st)
+}
+
+test "each problem filling a gap becomes the next gap, in the link: just before the gap it unblocks" {
+  expect join(G.link(["a", "b", "c"], "c", "c1"), ",") == "a,b,c1,c"
+  expect join(G.link(["a", "c1", "c"], "c", "c1"), ",") == "a,c1,c", "linked once"
+}
+
+test "the chain stays bounded (§14.4)" {
+  expect G.guard(0, 2, 2, 8).ok and not G.guard(2, 2, 2, 8).ok and not G.guard(0, 8, 2, 8).ok
+}
+
 test "a refusal met before brings its fix; one never met brings nothing" {
   expect find_text(G.hint("main.eg:3:7: error: expected a loop variable, found ("), "for e in xs") >= 0
   expect G.hint("main.eg:1:1: error: something new") == ""

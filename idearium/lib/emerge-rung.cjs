@@ -180,8 +180,36 @@ function listGaps({ root = path.resolve(__dirname, '..', '..'), id = null, contr
     .filter(g => !status || g.status === status).sort((x, y) => String(y.at).localeCompare(String(x.at)));
 }
 
-function createRung({ root = path.resolve(__dirname, '..', '..'), ask, expect, maxTries = 3, timeoutMs = 60000, cli = null, tasksDir = path.join(root, 'idearium', 'data', 'tasks'), indexRoot = root, keep = 3, model = null } = {}) {
+function createRung({ root = path.resolve(__dirname, '..', '..'), ask, expect, maxTries = 3, timeoutMs = 60000, cli = null, tasksDir = path.join(root, 'idearium', 'data', 'tasks'), indexRoot = root, keep = 3, model = null, maxDepth = 2, maxGaps = 8 } = {}) {
   if (typeof ask !== 'function') throw new Error('ask(message) is required: the agent that writes the Emerge');
+  const ID = /^[A-Za-z_][A-Za-z0-9_]*$/;
+  /** the gap that stops `name`: deterministic first (a function its own tries called that does not exist), then the learning memory (what
+   *  unblocked a gap stuck the same way before, from Idearium's node index), then one short question to the model. null when none is named. */
+  async function blockerFor({ name, rec, st, skel, filled, index }) {
+    const taken = new Set(skel.fns.map(x => x.name));
+    const last = [...rec.attempts].reverse().find(a => !a.ok && a.body) || {};
+    for (const m of st.missing) {   // its own try called m: the piece it wanted becomes the gap
+      if (taken.has(m) || !ID.test(m)) continue;
+      const call = new RegExp('\\b' + m + '\\s*\\(([^()]*)\\)').exec(_q(last.body)); const args = call ? call[1].split(',').map(s => s.trim()).filter(Boolean) : [];
+      const params = args.map((a, i) => (ID.test(a) && !taken.has(a) ? a : 'arg' + (i + 1))).filter((p, i, xs) => xs.indexOf(p) === i);
+      return { name: m, params, signature: m + '(' + params.join(', ') + ')', does: 'the piece ' + name + ' called and needs (named by its own try)', namedBy: 'its own try' };
+    }
+    const kinds = st.kinds.concat(st.missing.map(() => 'is not defined'));
+    let seen = [];
+    if (index) { try { seen = require('../../lib/node-index.js').queryNodes('gap', r => r.payload && r.payload.blocks && r.payload.status === 'passed' && r.payload.struggle && (r.payload.struggle.kinds || []).some(k => kinds.includes(k)), index).slice(-3).map(r => r.payload); } catch (_) { seen = []; } }
+    const msg = ['You are helping fill an Emerge module one function at a time. The body of fn ' + name + ' could not be written; its tries were refused:',
+      ...rec.attempts.filter(a => !a.ok).slice(-3).map(a => '- ' + _q(a.said).split('\n')[0]),
+      '', 'The module so far:', render(skel, filled, name), '',
+      seen.length ? 'Gaps stuck the same way before were unblocked by a smaller function like:\n' + seen.map(s => '- fn ' + s.signature + ' — ' + s.does).join('\n') + '\n' : '',
+      'Name ONE smaller new function that, once written, makes ' + name + ' easy (it takes what it needs as parameters and returns a new value; it never changes a parameter).',
+      'Reply with exactly one line:  fn <name>(<param>, <param>) — <what it returns>'].filter(x => x !== '').join('\n');
+    let text = ''; try { text = await ask(msg, { gap: name, diagnose: true, tryNo: 0 }); } catch (_) { return null; }
+    const m = /fn\s+([A-Za-z_][A-Za-z0-9_]*)\s*\(([^)]*)\)\s*(?::\s*\w+)?\s*(?:—|--|-|:)?\s*(.*)/.exec(_q(text));
+    if (!m || taken.has(m[1])) return null;
+    const params = m[2].split(',').map(s => s.trim().split(/[:\s=]/)[0]).filter(Boolean);
+    if (!params.every(p => ID.test(p))) return null;
+    return { name: m[1], params, signature: m[1] + '(' + params.join(', ') + ')', does: _q(m[3]).trim().slice(0, 200) || 'what ' + name + ' needs', namedBy: (model || 'the model') + ', asked why ' + name + ' was stuck' };
+  }
   const CLI = cli || path.join(root, 'emerge', 'emerge', 'cli.js');
   // Emerge's door, its command line: { ok, code, stdout, stderr, files }
   const eg = (cmd, source, extra = []) => new Promise((resolve) => {
@@ -198,16 +226,22 @@ function createRung({ root = path.resolve(__dirname, '..', '..'), ask, expect, m
     const names = exports.map(e => (typeof e === 'string' ? e : e.name)).filter(Boolean);
     const tries = []; const gapFiles = []; let feedback = null, source = null;
     // 0.60.607 skeleton first: Nexus writes the structure, the agent fills one body at a time (gaps.eg), Emerge's compiler gates each
-    const skel = skeleton === false ? null : skeletonOf(exports);
+    let skel = skeleton === false ? null : skeletonOf(exports);
     if (skel) {
       const G = _gapsEg(); const does = Object.fromEntries(skel.fns.map(x => [x.name, x.does + ' ' + x.signature]));
       const graph = G.needs(skel.fns.map(x => x.name), does);
       const o = G.order(skel.fns.map(x => ({ id: x.name, depends_on: graph[x.name] || [] })));
       let index = null; if (tasksDir && indexRoot) { try { index = require('../../lib/node-registry.js').storeFor('idearium', { root: indexRoot }); } catch (e) { console.log('[emerge-rung] no node index (gaps still written): ' + e.message); } }
       const filled = {}; let held = null; const store = tasksDir ? gapStore(taskDirOf(tasksDir, contract, f), f, { contract, index }) : null;
-      for (const name of o.order) {
+      // 0.60.612 — the chain. James, 2026-11-20: "if it can't fill a gap, it needs to understand why it's struggling, and add it to the learning
+      // memory, like anything that gets in the way towards filling the gap, becomes a gap in between the current step and the gap it couldn't
+      // fill" · "so each problem with filling the gap becomes the next gap, in the link." A held gap gets the gap that stops it linked in just
+      // before it (gaps.eg struggle, link, guard); the helper is filled first, then the held gap is tried again with the helper to call.
+      let chain = o.order.slice(); const depth = {}; const recs = {};
+      while (chain.some(x => filled[x] == null) && !held) {
+        const name = chain.find(x => filled[x] == null);
         const gap = G.as_gap({ id: name, missingVariable: 'the body of ' + name, affectedConstraint: f + ' compiles in Emerge and passes its expectation', source: 'emerge-rung' });
-        const rec = (store && store.read(name)) || { ...gap, status: 'open', attempts: [] };
+        const rec = recs[name] || (store && store.read(name)) || { ...gap, status: 'open', attempts: [] }; recs[name] = rec;
         if (!Array.isArray(rec.attempts)) rec.attempts = [];
         const note = (a) => { rec.attempts.push({ n: rec.attempts.length + 1, at: new Date().toISOString(), model, ...a }); if (store) store.write(name, rec); };
         let ok = false;
@@ -220,12 +254,30 @@ function createRung({ root = path.resolve(__dirname, '..', '..'), ask, expect, m
           const ck = await eg('lang-check', render(skel, { ...filled, [name]: body }));
           if (ck.missing) { tries.push({ n, stage: 'no-emerge', why: ck.stderr, ms: Date.now() - t0 }); held = 'no-emerge'; break; }
           if (!ck.ok) { const said = firstLines(ck.stderr); const hn = G.hint(String(ck.stderr || '')).trim(); note({ body, said, fix: hn, ms: Date.now() - t0 }); tries.push({ n, stage: 'gap:' + name, why: "Emerge's compiler said: " + said + (hn ? '\nThe fix: ' + hn : ''), ms: Date.now() - t0, gap }); continue; }
-          filled[name] = body; ok = true; rec.status = 'filled'; rec.body = body; note({ body, said: 'filled; compiles', fix: '', ok: true, ms: Date.now() - t0 }); tries.push({ n, stage: 'gap:' + name, why: 'filled; compiles', ms: Date.now() - t0, gap });
+          // his "as each gap passes, gets logged or tagged in the gate as passed and compiled"
+          filled[name] = body; ok = true; rec.status = 'passed'; rec.body = body; rec.gate = { passed: true, compiled: true, by: "Emerge's compiler (lang-check)", at: new Date().toISOString() };
+          if (rec.blockedBy && rec.blockedBy.length) rec.unblockedBy = rec.blockedBy.slice();   // the learning memory: what got it past its struggle
+          note({ body, said: 'passed; compiles', fix: '', ok: true, ms: Date.now() - t0 }); tries.push({ n, stage: 'gap:' + name, why: 'passed; compiles', ms: Date.now() - t0, gap });
         }
-        if (store) gapFiles.push(store.at(name));
-        if (!ok) { rec.status = 'held'; if (store) store.write(name, rec); held = held || ('gap ' + name + ' did not fill in ' + maxTries + ' tries'); break; }
+        if (store && !gapFiles.includes(store.at(name))) gapFiles.push(store.at(name));
+        if (ok || held) continue;
+        // understand why it is struggling, then link the gap that stops it in between (bounded: §14.4)
+        const st = G.struggle(rec.attempts); rec.struggle = st;
+        const g = G.guard(depth[name] || 0, skel.fns.length, maxDepth, maxGaps);
+        const helper = g.ok ? await blockerFor({ name, rec, st, skel, filled, index }) : null;
+        if (!helper) { rec.status = 'held'; if (store) store.write(name, rec); held = 'gap ' + name + ' did not fill in ' + maxTries + ' tries' + (g.ok ? ', and no gap in between could be named' : '; ' + g.why); break; }
+        const at2 = skel.fns.findIndex(x => x.name === name); const fns = skel.fns.slice(); fns.splice(at2, 0, helper);
+        skel = skeletonOf(fns.map(x => ({ name: x.name, params: x.params, does: x.does, signature: x.signature })));
+        chain = G.link(chain, name, helper.name); depth[helper.name] = (depth[name] || 0) + 1;
+        rec.status = 'blocked'; rec.blockedBy = (rec.blockedBy || []).concat(helper.name); if (store) store.write(name, rec);
+        recs[helper.name] = { ...G.as_gap({ id: helper.name, missingVariable: 'the body of ' + helper.name, affectedConstraint: name + ' can be written (it was held: ' + (st.kinds.concat(st.missing.map(m => m + ' is not defined'))).join('; ') + ')', source: 'emerge-rung', causedBy: name }), status: 'open', attempts: [], blocks: name, struggle: st, namedBy: helper.namedBy, signature: helper.signature, does: helper.does };
+        if (store) store.write(helper.name, recs[helper.name]);
+        tries.push({ n: 0, stage: 'link', why: name + ' held; ' + helper.name + ' linked in before it (' + helper.namedBy + '): ' + helper.signature + ' — ' + helper.does });
+        console.log('[emerge-rung] ' + f + ': ' + name + ' held — the gap in between: ' + helper.signature + ' (' + helper.namedBy + ')');
       }
-      console.log('[emerge-rung] ' + f + ': skeleton of ' + skel.fns.length + ' (' + o.why + ') — ' + (held ? 'held: ' + held : 'every gap filled'));
+      console.log('[emerge-rung] ' + f + ': skeleton of ' + skel.fns.length + ' (' + o.why + ') — ' + (held ? 'held: ' + held : 'every gap passed'));
+      // a held gap stays an open loop with its file and its struggle (IF20: not forced, not faked); the whole-module loop never passed after one
+      if (held) return { ok: false, held: true, why: 'held: ' + held, tries, source: render(skel, filled), files: null, skeleton: true, gapFiles };
       if (!held) {
         source = render(skel, filled);
         const t0 = Date.now(); const b = await eg('lang-build', source, ['--standalone']);

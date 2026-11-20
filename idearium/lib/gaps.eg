@@ -10,6 +10,13 @@
 //   needs(names, does) → the dependency graph from the plan's own words: each export depends on the other exports its "does" names
 //   hint(why)   → the fix for a compiler refusal Nexus has met before ("" when it has not): learned from each attempt, one row per refusal
 //   step(q)     → { action: "retry" | "escalate" | "hold", why }   q: { tries, per_rung, rung, rungs }
+//   lesson(attempts, keep) → what a fresh chat is told before it tries a gap again
+//   struggle(attempts) → what got in the way of a gap: { kinds: [refusal kinds met], missing: [names its tries called that do not exist] }
+//   link(order, before, add) → the chain with a new gap linked in just before the gap it unblocks
+//   guard(depth, gaps, max_depth, max_gaps) → { ok, why }: a gap between gaps only while the chain stays bounded (§14.4)
+// James, 2026-11-20: "if it can't fill a gap, it needs to understand why it's struggling, and add it to the learning memory, like anything that
+// gets in the way towards filling the gap, becomes a gap in between the current step and the gap it couldn't fill" · "so each problem with
+// filling the gap becomes the next gap, in the link." · "as each gap passes, gets logged or tagged in the gate as passed and compiled."
 
 fn order(gaps: list): map {
   var done = []
@@ -89,6 +96,39 @@ fn hint(why: string): string {
     if find_text(why, h.says) >= 0 { out = out + h.fix + " " }
   }
   return out
+}
+
+fn struggle(attempts: list): map {
+  var kinds = []
+  var missing = []
+  for a in attempts {
+    if not get(a, "ok", false) {
+      let s = str(get(a, "said", ""))
+      for h in HINTS {
+        if find_text(s, h.says) >= 0 and not (h.says in kinds) { kinds = push(kinds, h.says) }
+      }
+      let parts = split(s, "\"")
+      if len(parts) >= 3 and find_text(parts[2], "is not defined") >= 0 and not (parts[1] in missing) { missing = push(missing, parts[1]) }
+    }
+  }
+  return { kinds: kinds, missing: missing }
+}
+
+fn link(order: list, before: string, add: string): list {
+  if add in order { return order }
+  var out = []
+  for x in order {
+    if x == before { out = push(out, add) }
+    out = push(out, x)
+  }
+  if not (before in order) { out = push(out, add) }
+  return out
+}
+
+fn guard(depth: num, gaps: num, max_depth: num, max_gaps: num): map {
+  if depth >= max_depth { return { ok: false, why: "held: " + str(depth) + " gaps deep already, the limit is " + str(max_depth) + " (no endless splitting, §14.4)" } }
+  if gaps >= max_gaps { return { ok: false, why: "held: " + str(gaps) + " gaps in this module, the limit is " + str(max_gaps) + " (§14.4)" } }
+  return { ok: true, why: "a gap in between: depth " + str(depth + 1) + " of " + str(max_depth) }
 }
 
 // lesson(attempts, keep) → what a fresh chat is told before it tries a gap again: the last `keep` attempts at this gap (from its .gap file,
