@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-20-pipeline-components-to-pillar-phasemap.spec::DB5_the_build_runs_in_cos
+type: phase
+id: docs_2026-11-20-pipeline-components-to-pillar-phasemap.spec::DB5_the_build_runs_in_cos
+context: >-
+  pipeline phase DB5_the_build_runs_in_cos of
+  docs/2026-11-20-pipeline-components-to-pillar-phasemap.spec
+intent: null
+summary: DB5_the_build_runs_in_cos (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1795195871177
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795195871177
+lastSeenAt: 1795195871177
+fingerprint: null
+payload:
+  id: DB5_the_build_runs_in_cos
+  map: docs/2026-11-20-pipeline-components-to-pillar-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/automation/pipeline.js
+    - idearium/api/index.js
+  depends_on:
+    - DB4_the_first_move_gaps
+    - IF2_the_build_as_a_pipeline
+    - IF6_the_loop_is_cos
+  blocks: []
+  spec: null
+  graph: 60ec425942392a42

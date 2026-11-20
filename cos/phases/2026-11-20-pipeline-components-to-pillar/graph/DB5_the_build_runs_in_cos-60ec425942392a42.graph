@@ -1,0 +1,274 @@
+envelope: 1
+uuid: nexus-export-graph-phase:DB5_the_build_runs_in_cos:60ec425942392a42
+type: graph
+id: phase:DB5_the_build_runs_in_cos:60ec425942392a42
+context: dependency graph of phase DB5_the_build_runs_in_cos
+intent: null
+summary: 26 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1795195871177
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795195871177
+lastSeenAt: 1795195871177
+fingerprint: null
+payload:
+  for: DB5_the_build_runs_in_cos
+  kind: phase
+  repo: null
+  hash: 60ec425942392a42
+  nodes:
+    - path: cos/automation/pipeline.js
+      role: changes
+      exists: true
+      system: cos
+    - path: idearium/api/index.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: cos/automation/engine.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/automation/nodes.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/automation/routes.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/manager/automation-door.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: idearium/cli/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/idearium-service.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/automation/pipeline.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/idearium-build-queue-poller.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/idearium-guardian-dispatch.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/idearium-ingest-stability.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-agent-hat-agnostic.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-change-record.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cos/automation/eg-build/ladder.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/automation/eg-build/method.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/automation/eg-build/reuse.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/automation/engine.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/automation/steps.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/automation/template.js
+      role: uses
+      exists: true
+      system: cos
+    - path: emerge/emerge/lang/runtime.js
+      role: uses
+      exists: true
+      system: emerge
+    - path: idearium/config.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/lib/config.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/node-export.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/versionium-record.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: cos/automation/pipeline.js
+      to: cos/automation/template.js
+      kind: requires
+    - from: cos/automation/pipeline.js
+      to: emerge/emerge/lang/runtime.js
+      kind: requires
+    - from: cos/automation/pipeline.js
+      to: cos/automation/eg-build/reuse.js
+      kind: requires
+    - from: cos/automation/pipeline.js
+      to: cos/automation/eg-build/method.js
+      kind: requires
+    - from: cos/automation/pipeline.js
+      to: cos/automation/eg-build/ladder.js
+      kind: requires
+    - from: cos/automation/pipeline.js
+      to: cos/automation/steps.js
+      kind: requires
+    - from: cos/automation/pipeline.js
+      to: cos/automation/engine.js
+      kind: requires
+    - from: cos/automation/pipeline.js
+      to: lib/node-export.js
+      kind: requires
+    - from: cos/automation/pipeline.js
+      to: lib/versionium-record.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/config.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/lib/config.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/data-home.js
+      kind: requires
+    - from: cos/automation/engine.js
+      to: cos/automation/pipeline.js
+      kind: requires
+    - from: cos/automation/nodes.js
+      to: cos/automation/pipeline.js
+      kind: requires
+    - from: cos/automation/routes.js
+      to: cos/automation/pipeline.js
+      kind: requires
+    - from: cos/manager/automation-door.js
+      to: cos/automation/pipeline.js
+      kind: requires
+    - from: lib/automation/pipeline.js
+      to: cos/automation/pipeline.js
+      kind: requires
+    - from: idearium/cli/index.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: idearium/idearium-service.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/idearium-build-queue-poller.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/idearium-guardian-dispatch.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/idearium-ingest-stability.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/test-agent-hat-agnostic.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/test-change-record.test.js
+      to: idearium/api/index.js
+      kind: requires
+  crossings:
+    - from: cos/automation/pipeline.js
+      to: emerge/emerge/lang/runtime.js
+      fromSystem: cos
+      toSystem: emerge
+      kind: system
+      known: false
+    - from: lib/automation/pipeline.js
+      to: cos/automation/pipeline.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: false
+  ready: true
+  dag:
+    layer: 10
+    deps:
+      - docs/2026-11-20-pipeline-components-to-pillar-phasemap.spec::DB4_the_first_move_gaps
+      - docs/2026-11-15-the-factory-phasemap.spec::IF2_the_build_as_a_pipeline
+      - docs/2026-11-15-the-factory-phasemap.spec::IF6_the_loop_is_cos
+    dependents:
+      - docs/2026-11-20-pipeline-components-to-pillar-phasemap.spec::DB6_the_dock_from_pillar
+    upstream:
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS1_the_skeleton_in_emerge
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS1a_the_boundary_reads_code_not_text
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS2_the_language_through_the_door
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS3_emerge_at_the_top_of_nexus
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS4_callers_through_the_door
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D0_a_system_not_an_idearium_module
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D1_top_level_not_cos_vendor
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D2_two_contracts_two_names
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D3_handlers_run_the_cli
+      - docs/2026-11-06-cie-eg-build-phasemap.spec::CIE1_the_contract_block
+      - docs/2026-11-06-pillar-phasemap.spec::PIL1_pillar_stands
+      - docs/2026-11-06-pillar-phasemap.spec::PIL2_contracts
+      - docs/2026-11-06-pillar-phasemap.spec::PIL3_conformance
+      - docs/2026-11-06-pillar-phasemap.spec::PIL4_three_identities
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D0_the_name_is_pillar
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D1_the_shape_he_brought
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D2_a_process_or_a_library
+      - docs/2026-11-06-pillar-phasemap.spec::PIL_D3_written_in_emerge
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC16_raid_routes_every_interaction
+      - docs/2026-11-15-the-factory-phasemap.spec::IF0_the_census
+      - docs/2026-11-15-the-factory-phasemap.spec::IF1_idearium_asks_agents_through_the_pipeline
+      - docs/2026-11-15-the-factory-phasemap.spec::IF2_the_build_as_a_pipeline
+      - docs/2026-11-15-the-factory-phasemap.spec::IF6_the_loop_is_cos
+      - docs/2026-11-15-the-factory-phasemap.spec::IF_D1_the_factory_is_cos
+      - docs/2026-11-20-pipeline-components-to-pillar-phasemap.spec::DB1_the_pipeline_census
+      - docs/2026-11-20-pipeline-components-to-pillar-phasemap.spec::DB2_the_contracts
+      - docs/2026-11-20-pipeline-components-to-pillar-phasemap.spec::DB3_the_drawbridge_installs
+      - docs/2026-11-20-pipeline-components-to-pillar-phasemap.spec::DB4_the_first_move_gaps
+    downstream:
+      - docs/2026-11-20-pipeline-components-to-pillar-phasemap.spec::DB6_the_dock_from_pillar
+    blockedBy:
+      - docs/2026-11-20-pipeline-components-to-pillar-phasemap.spec::DB4_the_first_move_gaps
+      - docs/2026-11-15-the-factory-phasemap.spec::IF2_the_build_as_a_pipeline
+      - docs/2026-11-15-the-factory-phasemap.spec::IF6_the_loop_is_cos
+    unlocks:
+      - docs/2026-11-20-pipeline-components-to-pillar-phasemap.spec::DB6_the_dock_from_pillar
+    conflicts: []
+    dangling: []
+    lines:
+      - >-
+        layer 10 · blocked by DB4_the_first_move_gaps, IF2_the_build_as_a_pipeline,
+        IF6_the_loop_is_cos
+      - >-
+        depends on (3): DB4_the_first_move_gaps, IF2_the_build_as_a_pipeline, IF6_the_loop_is_cos ·
+        all upstream 28
+      - 'needed by (1): DB6_the_dock_from_pillar · finishing it unlocks DB6_the_dock_from_pillar'
+    edges:
+      - from: docs/2026-11-20-pipeline-components-to-pillar-phasemap.spec::DB4_the_first_move_gaps
+        kind: declared
+      - from: docs/2026-11-15-the-factory-phasemap.spec::IF2_the_build_as_a_pipeline
+        kind: declared
+      - from: docs/2026-11-15-the-factory-phasemap.spec::IF6_the_loop_is_cos
+        kind: declared

@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-20-pipeline-components-to-pillar-phasemap.spec::DB1_the_pipeline_census
+type: phase
+id: docs_2026-11-20-pipeline-components-to-pillar-phasemap.spec::DB1_the_pipeline_census
+context: >-
+  pipeline phase DB1_the_pipeline_census of
+  docs/2026-11-20-pipeline-components-to-pillar-phasemap.spec
+intent: null
+summary: DB1_the_pipeline_census (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1795195871166
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795195871166
+lastSeenAt: 1795195871166
+fingerprint: null
+payload:
+  id: DB1_the_pipeline_census
+  map: docs/2026-11-20-pipeline-components-to-pillar-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - pillar/census/pipeline.eg
+    - pillar/test/census.test.eg
+  depends_on:
+    - IF_D1_the_factory_is_cos
+  blocks: []
+  spec: null
+  graph: fbc34a6aff1c82d3

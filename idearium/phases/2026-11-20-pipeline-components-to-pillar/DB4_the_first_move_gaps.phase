@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-20-pipeline-components-to-pillar-phasemap.spec::DB4_the_first_move_gaps
+type: phase
+id: docs_2026-11-20-pipeline-components-to-pillar-phasemap.spec::DB4_the_first_move_gaps
+context: >-
+  pipeline phase DB4_the_first_move_gaps of
+  docs/2026-11-20-pipeline-components-to-pillar-phasemap.spec
+intent: null
+summary: DB4_the_first_move_gaps (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1795195871174
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795195871174
+lastSeenAt: 1795195871174
+fingerprint: null
+payload:
+  id: DB4_the_first_move_gaps
+  map: docs/2026-11-20-pipeline-components-to-pillar-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/lib/gaps.eg
+    - idearium/lib/emerge-rung.cjs
+    - cos/automation/method.eg
+    - cos/automation/ladder.eg
+  depends_on:
+    - DB3_the_drawbridge_installs
+  blocks: []
+  spec: null
+  graph: b1105d7796a196d7

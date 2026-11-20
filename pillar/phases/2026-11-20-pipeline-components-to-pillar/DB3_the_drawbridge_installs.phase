@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-20-pipeline-components-to-pillar-phasemap.spec::DB3_the_drawbridge_installs
+type: phase
+id: docs_2026-11-20-pipeline-components-to-pillar-phasemap.spec::DB3_the_drawbridge_installs
+context: >-
+  pipeline phase DB3_the_drawbridge_installs of
+  docs/2026-11-20-pipeline-components-to-pillar-phasemap.spec
+intent: null
+summary: DB3_the_drawbridge_installs (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1795195871172
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795195871172
+lastSeenAt: 1795195871172
+fingerprint: null
+payload:
+  id: DB3_the_drawbridge_installs
+  map: docs/2026-11-20-pipeline-components-to-pillar-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - pillar/install.eg
+    - pillar/test/install.test.eg
+    - lib/handoff.js
+  depends_on:
+    - DB2_the_contracts
+    - PIL4_three_identities
+  blocks: []
+  spec: null
+  graph: dfd0e8ebaa2b2143

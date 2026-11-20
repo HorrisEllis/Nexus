@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-20-pipeline-components-to-pillar-phasemap.spec::DB2_the_contracts
+type: phase
+id: docs_2026-11-20-pipeline-components-to-pillar-phasemap.spec::DB2_the_contracts
+context: pipeline phase DB2_the_contracts of docs/2026-11-20-pipeline-components-to-pillar-phasemap.spec
+intent: null
+summary: DB2_the_contracts (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1795195871169
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795195871169
+lastSeenAt: 1795195871169
+fingerprint: null
+payload:
+  id: DB2_the_contracts
+  map: docs/2026-11-20-pipeline-components-to-pillar-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - pillar/contracts/contracts.eg
+    - pillar/test/contracts.test.eg
+  depends_on:
+    - DB1_the_pipeline_census
+    - PIL3_conformance
+  blocks: []
+  spec: null
+  graph: 5fc4bd19f87c32ec

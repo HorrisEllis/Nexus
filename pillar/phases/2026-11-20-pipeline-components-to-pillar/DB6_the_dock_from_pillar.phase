@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-20-pipeline-components-to-pillar-phasemap.spec::DB6_the_dock_from_pillar
+type: phase
+id: docs_2026-11-20-pipeline-components-to-pillar-phasemap.spec::DB6_the_dock_from_pillar
+context: >-
+  pipeline phase DB6_the_dock_from_pillar of
+  docs/2026-11-20-pipeline-components-to-pillar-phasemap.spec
+intent: null
+summary: DB6_the_dock_from_pillar (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1795195871179
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795195871179
+lastSeenAt: 1795195871179
+fingerprint: null
+payload:
+  id: DB6_the_dock_from_pillar
+  map: docs/2026-11-20-pipeline-components-to-pillar-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/ui/js/code-dock.js
+  depends_on:
+    - DB5_the_build_runs_in_cos
+  blocks: []
+  spec: null
+  graph: a29e8ee8031a6409
