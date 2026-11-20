@@ -650,3 +650,13 @@ handoff_2026_11_18: >-
 # option to pick the file." · "i love the idearium ui but cos is meant to be the automation workflow and pipline. authority. not important right now."
 # Also asked, same message, for the snapshot: "maybe dynamically in relation to the resource manager and the memory heap allocation, maybe even
 # an option for the in cos and the config" — 0.60.604 took it off the main thread; chunk size by the monitor and the COS option are not built.
+
+# ── ADDENDUM 2026-11-19 (0.60.605) — fixed: the planner gets only what the phase needs ──
+# James, 2026-11-19: "suppposed to give it the smallest amount of context per gate. so only what it needs but the tools to reference the map and query nexus."
+# the planner gets only the components the phase touches: NM1a's planner prompt (Ollama blob 45a161f4) was 44,003 characters; 19,485 were the component registry (160 rows) for a phase writing one new file, and DeepSeek, mostly on the CPU, had read none of it after 300 s (three calls ended 500 at 5m0s, empty replies). registryText now lists the phase's own files and their folders' components, the rest only under LIMITS.registryChars (2,000), and names the tools that read what is left (code_map, code_search, loom.find). Measured on a 300-row registry: 2,118 characters. Still in the prompt, not cut: the project-agent persona (6,885) and the context search (4,972). Tests: context-budget 6/6, expectation-tests 7/7, plan-code-run-attention 48/48, run-ready 10/10.
+
+# ── ADDENDUM 2026-11-19 — his, recorded, not built: a queue in Idearium's Tasks tab; Emerge to reduce the work ──
+# James, 2026-11-19: "yes also need a queue for background or pending tasks in the tasks tab in idearium." · "isn't emerge supposed to reduce
+# as much of the work as possible". Reading (coder's): NM1a's three functions (idOf, pathOf, rename over a registry) are pure and fully named by
+# the phase's proof; Emerge or a deterministic template could write the skeleton and the test from the plan, leaving the model only the bodies.
+# The Tasks queue is UI: a preview first (his rule).
