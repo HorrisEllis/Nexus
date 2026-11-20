@@ -128,3 +128,21 @@ failure_modes:
   - "Two copies alive at once drift: each move ends with the old archived, and the census marks a meaning held twice (PIL5)."
   - "An installed component falls behind Pillar: offered, not forced; the system's tests decide, and the version each runs is in its registry."
   - "The move itself breaks Idearium: never in one step; each component switches only after its tests pass on the installed one, and switches back by the registry entry."
+
+# ── HANDOFF 2026-11-20 (0.60.626) — DB1 read, the migration's next steps (his: "like we need to migrate, i cant even use idearium, so it needs
+#    to be for the pipeline automation") ──
+# DB1 census, read from the code: Idearium's pipeline backend is idearium/api/index.js _phaseBuild → _watchRuns, 1,261 lines (1116–2377). It
+# requires 44 lib/ modules (compartment, agent-providers, charter, coder-brief, component-store, context-stream, cos-bridge, tokens, …),
+# 3 of Cortex/RAID (contract-adapters, contract-gates, contract-intake), cos/testenv, and idearium/lib/emerge-rung.cjs. COS's boundary audit
+# (cos/data/manager/logs/idearium.err.log) lists its reaches into cortex/core/raid, cos/testenv, guardian/lib, clear-glass, loom.
+# Measured: every real build takes Idearium's heap to ~93% of 1,024 MB and it goes down (EMB3 runs 10–11); its loop and watchdog start builds
+# on their own (NM1, NM1a, BX1 for ~46 h). Done the same day: 0.60.625 (a phase failing the same way twice is held), 0.60.626 (dynamic heap for
+# a high-priority system: his cap the floor, half the free memory up to 3 GB).
+# Next, in order (DB5's strangler, sliced):
+#   1. Lift _phaseBuild out of the server file into idearium/build/phase-build.js with its Idearium access passed in (repo layer, run rows,
+#      proposals, events); Idearium calls it as before, no behaviour change; its tests prove it.
+#   2. COS's automation engine runs that module in its own process, the Idearium access implemented over Idearium's routes (the drawbridge);
+#      the build pipeline's build step calls COS. This is what stops builds crashing Idearium.
+#   3. Components to Pillar one by one (DB2–DB4); the dock to COS (DB6, preview first).
+# Open question put to him: switch off Idearium's own build starts (repos.on_stall, the loop) until step 2 lands, so it builds only on ▶.
+# EMB3 state: its test is written by Nexus from its ten examples (0.60.624); not yet built through the rung because Idearium went down mid-run.
