@@ -100,7 +100,7 @@ async function dispatchJob(job) {
 
     if (!result.ok) {
       job.status = 'failed';
-      job.error = 'axiom rejection: ' + JSON.stringify(result.failures || []);
+      job.error = result.source === 'generation-failed' ? `the model did not generate: ${result.error || 'no reason given'}` : 'axiom rejection: ' + JSON.stringify(result.failures || []);   // 0.60.623
       state.statsToday.failed++;
       broadcast('ollama.job.failed', { uuid: job.uuid, error: job.error });
       finishJob(job);
