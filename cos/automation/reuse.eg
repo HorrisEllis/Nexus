@@ -11,6 +11,9 @@ fn decide(q: map): map {
   if get(q, "gated", false) != true { return { reuse: false, why: "it has no gate: nothing passed that could stand for this run" } }
   let prev = get(q, "prev", null)
   if prev == null { return { reuse: false, why: "it has not run before" } }
+  // 0.60.609: a step stands only if the run it passed in ended ok. NM1a, 2026-11-19: a build "passed" (it started) in a run whose build never
+  // landed, and every later run reused it and asked no model (four runs). His: "any gate that has passed. Doesn't need to be run again."
+  if get(prev, "runEnded", "ok") != "ok" { return { reuse: false, why: "the run it passed in ended " + str(get(prev, "runEnded", "?")) + ": a step whose later steps did not hold does not stand" } }
   if get(prev, "status", "") != "done" { return { reuse: false, why: "its last run did not finish (" + str(get(prev, "status", "?")) + ")" } }
   if get(prev, "openGate", false) == true { return { reuse: false, why: "its last pass was a debug or open gate, not a pass" } }
   if get(prev, "gate", "open") != "open" { return { reuse: false, why: "its gate did not pass last time (" + str(get(prev, "gate", "?")) + ")" } }

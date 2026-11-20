@@ -27,27 +27,32 @@ module.exports = function load($) {
       $.at(13, F);
       return $.ty($.map(["reuse", false, "why", $.str(["it has not run before"])]), "map", false, "return value of decide");
     }
-    $.at(14, F);
-    if ($.truth($.neq($.call($.b["get"], [v_prev, $.str(["status"]), $.str([""])]), $.str(["done"])), "if")) {
-      $.at(14, F);
-      return $.ty($.map(["reuse", false, "why", $.add($.add($.str(["its last run did not finish ("]), $.call($.b["str"], [$.call($.b["get"], [v_prev, $.str(["status"]), $.str(["?"])])])), $.str([")"]))]), "map", false, "return value of decide");
-    }
-    $.at(15, F);
-    if ($.truth($.eq($.call($.b["get"], [v_prev, $.str(["openGate"]), false]), true), "if")) {
-      $.at(15, F);
-      return $.ty($.map(["reuse", false, "why", $.str(["its last pass was a debug or open gate, not a pass"])]), "map", false, "return value of decide");
-    }
     $.at(16, F);
-    if ($.truth($.neq($.call($.b["get"], [v_prev, $.str(["gate"]), $.str(["open"])]), $.str(["open"])), "if")) {
+    if ($.truth($.neq($.call($.b["get"], [v_prev, $.str(["runEnded"]), $.str(["ok"])]), $.str(["ok"])), "if")) {
       $.at(16, F);
-      return $.ty($.map(["reuse", false, "why", $.add($.add($.str(["its gate did not pass last time ("]), $.call($.b["str"], [$.call($.b["get"], [v_prev, $.str(["gate"]), $.str(["?"])])])), $.str([")"]))]), "map", false, "return value of decide");
+      return $.ty($.map(["reuse", false, "why", $.add($.add($.str(["the run it passed in ended "]), $.call($.b["str"], [$.call($.b["get"], [v_prev, $.str(["runEnded"]), $.str(["?"])])])), $.str([": a step whose later steps did not hold does not stand"]))]), "map", false, "return value of decide");
     }
     $.at(17, F);
-    if ($.truth($.neq($.call($.b["get"], [v_prev, $.str(["key"]), $.str([""])]), $.call($.b["get"], [v_q, $.str(["key"]), $.str([""])])), "if")) {
+    if ($.truth($.neq($.call($.b["get"], [v_prev, $.str(["status"]), $.str([""])]), $.str(["done"])), "if")) {
       $.at(17, F);
-      return $.ty($.map(["reuse", false, "why", $.str(["what it takes changed since it passed"])]), "map", false, "return value of decide");
+      return $.ty($.map(["reuse", false, "why", $.add($.add($.str(["its last run did not finish ("]), $.call($.b["str"], [$.call($.b["get"], [v_prev, $.str(["status"]), $.str(["?"])])])), $.str([")"]))]), "map", false, "return value of decide");
     }
     $.at(18, F);
+    if ($.truth($.eq($.call($.b["get"], [v_prev, $.str(["openGate"]), false]), true), "if")) {
+      $.at(18, F);
+      return $.ty($.map(["reuse", false, "why", $.str(["its last pass was a debug or open gate, not a pass"])]), "map", false, "return value of decide");
+    }
+    $.at(19, F);
+    if ($.truth($.neq($.call($.b["get"], [v_prev, $.str(["gate"]), $.str(["open"])]), $.str(["open"])), "if")) {
+      $.at(19, F);
+      return $.ty($.map(["reuse", false, "why", $.add($.add($.str(["its gate did not pass last time ("]), $.call($.b["str"], [$.call($.b["get"], [v_prev, $.str(["gate"]), $.str(["?"])])])), $.str([")"]))]), "map", false, "return value of decide");
+    }
+    $.at(20, F);
+    if ($.truth($.neq($.call($.b["get"], [v_prev, $.str(["key"]), $.str([""])]), $.call($.b["get"], [v_q, $.str(["key"]), $.str([""])])), "if")) {
+      $.at(20, F);
+      return $.ty($.map(["reuse", false, "why", $.str(["what it takes changed since it passed"])]), "map", false, "return value of decide");
+    }
+    $.at(21, F);
     return $.ty($.map(["reuse", true, "why", $.add($.add($.str(["its gate passed in run "]), $.call($.b["str"], [$.call($.b["get"], [v_prev, $.str(["run"]), $.str(["?"])])])), $.str([" with the same inputs: that node stands, not run again"]))]), "map", false, "return value of decide");
     return $.ty(null, "map", false, "return value of decide");
   }

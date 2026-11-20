@@ -18,3 +18,8 @@ test "anything else runs: new inputs, no gate, a failed or debug pass, set never
   expect reuse.decide({ prev: PASSED, key: "k1", gated: true, redo: true }).reuse == false
   expect reuse.decide({ prev: null, key: "k1", gated: true }).reuse == false
 }
+
+test "a step from a run that did not end ok is not reused (0.60.609)" {
+  let d = reuse.decide({ prev: { key: "k1", status: "done", gate: "open", openGate: false, run: "r1", runEnded: "failed" }, key: "k1", gated: true })
+  expect d.reuse == false and find_text(d.why, "ended failed") >= 0, d.why
+}

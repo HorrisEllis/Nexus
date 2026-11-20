@@ -422,7 +422,7 @@ class Pipelines {
       { const ownVars = Object.fromEntries(Object.entries({ ...(p.vars || {}), ...vars }).filter(([k]) => !k.startsWith('__')));
         const key = require('crypto').createHash('sha256').update(JSON.stringify({ step: t.step, gate: t.gate || null, vars: ownVars, inputs: (t.depends_on || []).map(d => outputs[d] === undefined ? null : outputs[d]) })).digest('hex').slice(0, 32);
         run.tasks[t.id].inputKey = key;
-        const _ix = this._reuseIndex(); const prev = _ix[`${p.id}::${t.id}`] || _ix[`key:${key}`] || null;   // 0.60.600: or the same step, passed in ANY pipeline (his cross-domain synthesis)
+        const _ix = this._reuseIndex(); const prev0 = _ix[`${p.id}::${t.id}`] || _ix[`key:${key}`] || null; const prev = prev0 && { ...prev0, runEnded: prev0.run === run.id ? 'ok' : ((this.getRun(prev0.run) || {}).status || 'unknown') };   // 0.60.609: how the run it passed in ended   // 0.60.600: or the same step, passed in ANY pipeline (his cross-domain synthesis)
         let d = { reuse: false }; try { d = _reuseEg().decide({ prev, key, gated: !!t.gate, reuse: t.reuse !== false, redo: !!(run.redo && run.redo.includes(t.id)) }); } catch (_) {}
         if (d.reuse) { const node = this.steps(prev.run)[prev.task || t.id]; const out = node && node.output !== undefined ? node.output : undefined;
           if (out !== undefined) { outputs[t.id] = out; full.set(t.id, out); set(t.id, { status: 'done', reused: { from: prev.run, at: prev.at, ...(prev.pipeline && prev.pipeline !== p.id ? { pipeline: prev.pipeline, task: prev.task } : {}) }, note: `reused — ${d.why}`, ms: 0, finishedAt: Date.now(), error: null, output: _preview(out) }); return true; } } }
