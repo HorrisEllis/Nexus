@@ -102,6 +102,12 @@ module.exports = {
   // 0.60.617 — James, 2026-11-20: "Maybe keep deekseek stay loaded." How long Ollama keeps a model after a call (its keep_alive): a load is paid
   // once per build, not per call (DeepSeek 16b loads in ~38 s on his PC). OLLAMA_KEEP_ALIVE overrides; '' leaves Ollama's own default (5 min).
   KEEP_ALIVE:              process.env.OLLAMA_KEEP_ALIVE != null ? process.env.OLLAMA_KEEP_ALIVE : '30m',
+  // 0.60.620 — James, 2026-11-20: "yes do that, smallest first." Measured the same hour: DeepSeek 16b kept loaded held 7 GB of his 16 GB and left
+  // 0.4 GB free; the PC paged and even the 3b could not answer in 60 s. A model at or under KEEP_ALIVE_MAX_B billion parameters (read from its tag:
+  // ":3b", ":16b", ":30b") stays loaded for KEEP_ALIVE; a bigger one is unloaded as soon as it answers (KEEP_ALIVE_BIG, '0'). OLLAMA_KEEP_ALIVE_MAX_B
+  // and OLLAMA_KEEP_ALIVE_BIG override.
+  KEEP_ALIVE_MAX_B:        parseFloat(process.env.OLLAMA_KEEP_ALIVE_MAX_B || '4'),
+  KEEP_ALIVE_BIG:          process.env.OLLAMA_KEEP_ALIVE_BIG != null ? process.env.OLLAMA_KEEP_ALIVE_BIG : '0',
   RAW_FIRST_TOKEN_MS:      parseInt(process.env.OLLAMA_RAW_FIRST_TOKEN_MS     || '300000', 10),
   RAW_GENERATE_TOTAL_MS:   parseInt(process.env.OLLAMA_RAW_GENERATE_TOTAL_MS  || '600000', 10),
   CONTINUE_MAX_ROUNDS:     parseInt(process.env.OLLAMA_CONTINUE_MAX_ROUNDS    || '3', 10),

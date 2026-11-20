@@ -11,6 +11,10 @@ const config = require('../config.js');
 const { state } = require('./state.js');
 
 const OLLAMA_HOST = config.OLLAMA_HOST;
+// 0.60.620 — smallest first (his, 2026-11-20): a small model stays loaded (config.KEEP_ALIVE), a big one is unloaded once it answers (KEEP_ALIVE_BIG);
+// the size is read from the model's own tag (":3b", ":16b", ":30b"); a tag with no size keeps the small rule
+function _sizeB(model) { const m = /[:_-](\d+(?:\.\d+)?)b\b/i.exec(String(model || '')); return m ? parseFloat(m[1]) : null; }
+function _keepAliveFor(model) { const b = _sizeB(model); const v = b != null && b > (config.KEEP_ALIVE_MAX_B || 4) ? config.KEEP_ALIVE_BIG : config.KEEP_ALIVE; return v != null && v !== '' ? { keep_alive: /^\d+$/.test(String(v)) ? Number(v) : v } : {}; }
 
 // 0.60.535 PC18 slice a — James, 2026-11-13: "Have it use any that's on my pc. Fallback to any other?" · 2026-11-14: "We need the highest
 // leverage, that gets me closer to cutting depende on you and using it the pipeline to build nexus." A call that names a model not installed
@@ -69,7 +73,7 @@ function callOllamaChatWithTools(model, messages, toolSchemas, timeoutMs, caller
   const Tape = require('./tape.js');
   const options = Tape.withSeed(ctx.options);
   const req = { messages, tools: toolSchemas };
-  const body = JSON.stringify({ model, messages, tools: toolSchemas, stream: false, options, ...(config.KEEP_ALIVE ? { keep_alive: config.KEEP_ALIVE } : {}) });   // 0.60.617: his "keep deekseek stay loaded"
+  const body = JSON.stringify({ model, messages, tools: toolSchemas, stream: false, options, ..._keepAliveFor(model) });   // 0.60.617: his "keep deekseek stay loaded"
   const t0 = Date.now();
   const done = (ok, error, res = {}, raw = null) => {
     OA.record({ caller, op: 'chat+tools', model, promptChars: chars, numCtx: ctx.numCtx, ms: Date.now() - t0, ok, error, warning: ctx.warning });
@@ -126,7 +130,7 @@ function _generateOnceRaw(model, prompt, maxTokens, idleMs, caller, extra = {}) 
   const Tape = require('./tape.js');
   const options = { ...Tape.withSeed(ctx.options), ...(extra.optionsOverride || {}) };   // §0.60.7 — the GPU-out-of-memory retry sets num_gpu / num_ctx here
   const treq = { prompt, system: extra.system || null, think: extra.think === false ? false : null };
-  const body = JSON.stringify({ model, prompt, stream: true, options, ...(extra.system ? { system: extra.system } : {}), ...(extra.think === false ? { think: false } : {}), ...(config.KEEP_ALIVE ? { keep_alive: config.KEEP_ALIVE } : {}) });   // 0.60.617: his "keep deekseek stay loaded"
+  const body = JSON.stringify({ model, prompt, stream: true, options, ...(extra.system ? { system: extra.system } : {}), ...(extra.think === false ? { think: false } : {}), ..._keepAliveFor(model) });   // 0.60.617: his "keep deekseek stay loaded"
   const t0 = Date.now();
   const done = (ok, error, res = {}, raw = null) => {
     OA.record({ caller, op: 'generate', model, promptChars: String(prompt || '').length, numCtx: ctx.numCtx, ms: Date.now() - t0, ok, error, warning: ctx.warning });
@@ -258,4 +262,4 @@ async function _generateOnce(model, prompt, maxTokens, idleMs, caller, extra = {
   }
 }
 
-module.exports = { checkOllama, callOllamaChatWithTools, callOllamaRaw, dispatchWithTools, _generateOnce, _ollamaCut, pickInstalled, resolveModel };
+module.exports = { _keepAliveFor,  checkOllama, callOllamaChatWithTools, callOllamaRaw, dispatchWithTools, _generateOnce, _ollamaCut, pickInstalled, resolveModel };

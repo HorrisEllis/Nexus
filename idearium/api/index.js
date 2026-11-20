@@ -1860,6 +1860,14 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
         // TF.validate still keeps a test only if it fails on today's tree.
         let writer = planner, wp = pdp;
         const tfAlts = (rungs || []).slice(1).map(rg => ({ id: rg.provider || rg.base, dp: paramsOf(rg) })).filter(x => x.id && x.id !== planner);
+        // 0.60.620 — James, 2026-11-20: "yes do that, smallest first." With the Emerge ladder set, its smallest model writes the test (asked bare),
+        // and each bigger one on it takes over if the smaller gives no usable test; the routes above follow. The test still has to fail on today's
+        // tree to be kept (TF.validate). Not independent of the coder (PE6) when that model also codes the first gap: said on the row.
+        const _lad = (policy.emergeLadder || []).map(String).filter(Boolean);
+        if (_lad.length) {
+          writer = `ollama:${_lad[0]}`; wp = { backend: 'ollama', agent: null, provider: null, model: _lad[0] };
+          tfAlts.unshift(..._lad.slice(1).map(m => ({ id: `ollama:${m}`, dp: { backend: 'ollama', agent: null, provider: null, model: m }, notIndependent: true })));
+        }
         if (rungs && rungs[0]) { const c0 = { id: rungs[0].provider || rungs[0].base, dp: paramsOf(rungs[0]), notIndependent: true }; if (c0.id && c0.id !== planner && !tfAlts.some(x => x.id === c0.id)) tfAlts.push(c0); }
         // 2026-11-17 — his: "needs to not be using claude unless absolutely necassary" · "ollama building it": the last-resort agents
         // (routing.last_resort) write the test only after the model that codes has tried (independence given up before Claude is used)
