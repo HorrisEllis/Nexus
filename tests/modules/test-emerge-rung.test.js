@@ -206,6 +206,19 @@ const scripted = (replies, seen = []) => async (message, { tryNo }) => { seen.pu
     assert.ok(!r3.ok && r3.held && /test failed 2 time/.test(r3.why) && !r3.tries.some(t => t.stage === 'no-code' || t.stage === 'compile'), JSON.stringify(r3));
   });
 
+  await test('ER-11', 'a plan without a model names a new file\'s exports from the phase\'s own words (0.60.617, his "Everything chunked, decomposed"): the skeleton the rung fills', () => {
+    const P = require(path.join(ROOT, 'lib', 'phase-plan.js'));
+    const does = 'A pure module: autocorrect(body: string) -> { body: string, fixes: list } rewrites what a small model wrote';
+    const r = P.derivePlan({ phaseKey: 'EMB3', does, files: ['idearium/lib/autocorrect.js', 'idearium/lib/test/autocorrect.test.js'], codeOf: () => null });
+    const src = r.plan.files.find(f => f.path === 'idearium/lib/autocorrect.js'), t = r.plan.files.find(f => f.path.endsWith('.test.js'));
+    assert.deepStrictEqual(src.exports.map(e => e.signature), ['autocorrect(body: string) -> { body: string, fixes: list }']);
+    assert.ok(R.skeletonOf(src.exports), 'the rung can write its skeleton from it');
+    assert.strictEqual(t.exports.length, 0, 'the test file is not given the module\'s exports');
+    const two = P.derivePlan({ phaseKey: 'X', does: 'idOf(registry, path) -> string and rename(registry, id, newPath) -> registry', files: ['lib/a.js', 'lib/idOf.js'], codeOf: () => null });
+    assert.deepStrictEqual(two.plan.files.find(f => f.path === 'lib/idOf.js').exports.map(e => e.name), ['idOf'], 'with two new files a signature goes to the file of its name');
+    assert.strictEqual(two.plan.files.find(f => f.path === 'lib/a.js').exports.length, 0, 'and is never guessed onto another');
+  });
+
   console.log(`\n  ${passed} passed, ${failed} failed`);
   process.exit(failed ? 1 : 0);
 })();

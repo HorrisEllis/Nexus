@@ -99,6 +99,9 @@ module.exports = {
   // §0.39.364 — the wait for the FIRST token: the model loading and the prompt being read are not idleness
   // 2026-11-18 — NM1's test-first: deepseek-coder-v2:16b (10.5 GB) loading cold with 6 GB free sent nothing for 120 s (metrics node turn-…-2);
   // 300 s for the first token, the env still overrides. James: "get it working please."
+  // 0.60.617 — James, 2026-11-20: "Maybe keep deekseek stay loaded." How long Ollama keeps a model after a call (its keep_alive): a load is paid
+  // once per build, not per call (DeepSeek 16b loads in ~38 s on his PC). OLLAMA_KEEP_ALIVE overrides; '' leaves Ollama's own default (5 min).
+  KEEP_ALIVE:              process.env.OLLAMA_KEEP_ALIVE != null ? process.env.OLLAMA_KEEP_ALIVE : '30m',
   RAW_FIRST_TOKEN_MS:      parseInt(process.env.OLLAMA_RAW_FIRST_TOKEN_MS     || '300000', 10),
   RAW_GENERATE_TOTAL_MS:   parseInt(process.env.OLLAMA_RAW_GENERATE_TOTAL_MS  || '600000', 10),
   CONTINUE_MAX_ROUNDS:     parseInt(process.env.OLLAMA_CONTINUE_MAX_ROUNDS    || '3', 10),
