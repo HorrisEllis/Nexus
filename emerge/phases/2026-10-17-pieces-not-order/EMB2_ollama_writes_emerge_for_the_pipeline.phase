@@ -9,11 +9,11 @@ intent: null
 summary: EMB2_ollama_writes_emerge_for_the_pipeline (?) — 6 file(s)
 system: idearium
 tags: []
-exported_at: 1794612430668
+exported_at: 1795177245378
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794612430668
-lastSeenAt: 1794612430668
+firstSeenAt: 1795177245378
+lastSeenAt: 1795177245378
 fingerprint: null
 payload:
   id: EMB2_ollama_writes_emerge_for_the_pipeline
@@ -32,4 +32,4 @@ payload:
     - EMB1_emerge_writes_the_brick
   blocks: []
   spec: null
-  graph: 579a25f18ba2e73f
+  graph: 1445f35f70f564f1

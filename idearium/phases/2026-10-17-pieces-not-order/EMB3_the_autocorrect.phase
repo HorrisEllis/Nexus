@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-17-pieces-not-order-phasemap.spec::EMB3_the_autocorrect
+type: phase
+id: docs_2026-10-17-pieces-not-order-phasemap.spec::EMB3_the_autocorrect
+context: pipeline phase EMB3_the_autocorrect of docs/2026-10-17-pieces-not-order-phasemap.spec
+intent: null
+summary: EMB3_the_autocorrect (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1795177266408
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795177266408
+lastSeenAt: 1795177266408
+fingerprint: null
+payload:
+  id: EMB3_the_autocorrect
+  map: docs/2026-10-17-pieces-not-order-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/lib/autocorrect.js
+    - idearium/lib/test/autocorrect.test.js
+  depends_on:
+    - EMB2_ollama_writes_emerge_for_the_pipeline
+  blocks: []
+  spec: null
+  graph: a14c84d6a353d082

@@ -161,6 +161,19 @@ phases:
         d. the remaining CS11 groups (B-F) and PC12 slices (b-d) filed as pipeline requests, one per slice, built by the pipeline.
     proof: "a: a table per model from the real runs; b: the card names every primitive self.eg finds; c: a fixture phase planning one .eg with a .test.eg is built by a stand-in model through the rung (a wrong try's compiler error goes into the next try) and lands only the .eg; d: a slice built by the pipeline"
     axioms: "§17.13 (a missing capability is built into Emerge: the card from Emerge's own map), §8.6 (the rung, the benchmark and self.eg exist), his order (the pipeline builds the rest)"
+  EMB3_the_autocorrect:
+    status: OPEN
+    depends_on: [EMB2_ollama_writes_emerge_for_the_pipeline]
+    james: '"like autocorrect" (2026-11-20) · "do it. prove it" (2026-11-20, the first real phase built by the local-model ladder through the ▶ build)'
+    files: [idearium/lib/autocorrect.js, idearium/lib/test/autocorrect.test.js]
+    does: >-
+      A pure module: autocorrect(body: string) -> { body: string, fixes: list } rewrites, in a body a small model wrote, the JavaScript habits Emerge's
+      compiler refuses and that have exactly one known fix: "!x" becomes "not x" (but "!=" stays), "&&" becomes "and", "||" becomes "or", "===" becomes
+      "==", "!==" becomes "!=", and a semicolon at the end of a line is removed. Text inside double quotes is left as it is. fixes names each rewrite
+      made, once per kind, in the order met. A body with none of them comes back unchanged with fixes empty. Built by the pipeline: the ▶ build,
+      the planner on Ollama, the Emerge rung's ladder (3b, DeepSeek 16b, 30b), nothing outside his PC.
+    proof: "its test, planned first: each rewrite, a string left alone, != left alone, an unchanged body with no fixes; built by the ▶ build with every file written by an Ollama model"
+    axioms: "§17.13 (in Emerge, through the rung), deterministic first (his 2026-10-13 order: a parser before any model), §8.6 (the HINTS table in gaps.eg names these refusals)"
   PC6_assembled_and_checked_whole:
     status: OPEN
     systems: [cortex]

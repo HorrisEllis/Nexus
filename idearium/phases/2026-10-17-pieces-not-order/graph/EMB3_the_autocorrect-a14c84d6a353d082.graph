@@ -1,0 +1,63 @@
+envelope: 1
+uuid: nexus-export-graph-phase:EMB3_the_autocorrect:a14c84d6a353d082
+type: graph
+id: phase:EMB3_the_autocorrect:a14c84d6a353d082
+context: dependency graph of phase EMB3_the_autocorrect
+intent: null
+summary: 2 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1795177266408
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795177266408
+lastSeenAt: 1795177266408
+fingerprint: null
+payload:
+  for: EMB3_the_autocorrect
+  kind: phase
+  repo: null
+  hash: a14c84d6a353d082
+  nodes:
+    - path: idearium/lib/autocorrect.js
+      role: changes
+      exists: false
+      system: idearium
+    - path: idearium/lib/test/autocorrect.test.js
+      role: changes
+      exists: false
+      system: null
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 5
+    deps:
+      - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB2_ollama_writes_emerge_for_the_pipeline
+    dependents: []
+    upstream:
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::CS0_projects_decomposed_into_components
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::MX2_the_0_60_components_wired_in_loom
+      - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB1_emerge_writes_the_brick
+      - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB2_ollama_writes_emerge_for_the_pipeline
+      - docs/2026-10-19-pipeline-root-causes-phasemap.spec::RC4_agent_file_names_guarded
+      - docs/2026-10-19-pipeline-root-causes-phasemap.spec::VF1_verify_first
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS1_the_skeleton_in_emerge
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS1a_the_boundary_reads_code_not_text
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS2_the_language_through_the_door
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D0_a_system_not_an_idearium_module
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D2_two_contracts_two_names
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D3_handlers_run_the_cli
+    downstream: []
+    blockedBy:
+      - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB2_ollama_writes_emerge_for_the_pipeline
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 5 · blocked by EMB2_ollama_writes_emerge_for_the_pipeline
+      - 'depends on (1): EMB2_ollama_writes_emerge_for_the_pipeline · all upstream 12'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-10-17-pieces-not-order-phasemap.spec::EMB2_ollama_writes_emerge_for_the_pipeline
+        kind: declared
