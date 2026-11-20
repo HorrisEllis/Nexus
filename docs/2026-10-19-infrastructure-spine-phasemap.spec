@@ -471,3 +471,16 @@ phases:
 # James, 2026-11-07: "using the architect in idearium can edit the architecture" · his 2026-10-19 origin of this map: "then when making changes,
 # only need to rewire the component registry, like in architect". The registry is now the system's harness; the edit goes through that
 # system's door, gated, recorded in Versionium. Proof sharpened: one rewiring, 0 lines of component code changed. Off the shelf (PIC0).
+
+# ── ADDENDUM 2026-11-20 — AD1 expanded: Emerge hooked into every graph, memory and search tool (mapped; his) ──
+# James, 2026-11-20: "need to hook emerge in all the graphs and memory systems, the search index and query, semantic, symbols and all the search
+# tools for the repos." Read the same day: lib/adapters/emerge.js (FA1, 0.60.286) answers units, symbols and dependencies for .eg correctly
+# (idearium/lib/gaps.eg: its ten units and symbols), but only lib/project-spine.js, project-convert.js and project-split.js ask an adapter.
+# lib/code-intel (decls, structure, chunker, search), lib/phase-graph.js and lib/phase-map-auto.js (every phase's graph), idearium/repo/
+# code-api.js (the Code tab's search), lib/context-atlas.js, lib/context-sources.js, lib/node-edges.js and idearium/lib/chunk-nodes.js call
+# JavaScript scanners directly: no Emerge file has symbols, dependencies (its `use`) or a place in a phase's graph.
+# Expanded, not rewritten (his 2026-11-03 rule): AD1's "the conformance run over the old JS paths" is this. Each tool asks adapterFor(path)
+# (NC0's migration rule: "existing JS paths move behind the JS adapter"), so .eg gets units, symbols and `use` edges wherever .js does; the
+# Emerge adapter's dependencies() reads `use "…" as x`; parse() answers through Emerge's own checker by its command line (§5.15), never a
+# scanner of Nexus's. Vector memory and the chunk index take .eg chunks by its units. Order (his 2026-11-20): after Idearium is stable, the
+# pipeline's components are in Pillar and Ollama works for a fact, unless he moves it up; it serves that work (small models find Emerge to reuse).
