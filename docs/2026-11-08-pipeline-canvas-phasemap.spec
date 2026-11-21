@@ -1528,3 +1528,9 @@ phases_addendum_2026_11_13_rca:
 # (composability over configuration: a field on any task, not a mode of one engine), §5.14 (the step's runner uses the text; nothing is bound
 # to one framework or one system), §1.2 (a method naming what does not exist fails the task, said). First user: Idearium's build pipeline
 # names his framework for the Emerge rung's gates (diagnose: Sections 3 and 4; test: Section 10), the coder's reading, to confirm with him.
+
+# ── IDEA 2026-11-20 (his, recorded; not mapped yet) — context and intent shape the gate's function ──
+# James, 2026-11-20: "Random thought. What if context and intent shaped the gates functions?" Said the same hour as "Make snapshots optional for
+# gates, and maybe disable them for developer or debug gates." (built as 0.60.628, a gate's snapshot setting). The coder's reading, to confirm:
+# a gate's checks are chosen by the request's intent and the context it carries, the pipeline staying the same — a debug intent gets loose gates
+# (no snapshot), a release intent strict ones; it extends PC5 (a gate holds context across runs) and 0.60.614 (a step carries its method).
