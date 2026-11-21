@@ -60,6 +60,17 @@ decisions:
       closed, retries saved, time), the predictions are registered first (docs/FRAMEWORK-THREADS.md), and a result judged by the hands that
       predicted it is named post-hoc.
 
+  OS_D4_copilot_administers_nexus:
+    status: "DECIDED 2026-11-21 (his)"
+    james: '"like copilot should be the system orchastrator and administrator." (2026-11-21)'
+    chosen: "Copilot orchestrates and administers Nexus: it runs the queue of gaps and the self-healing loop (OS12), through RAID (§5.2, §9.1)."
+  OS_D5_what_a_fix_may_do_alone:
+    status: "OPEN — his to say (asked 2026-11-21)"
+    readings: >-
+      (a) every fix applies on its own once its gates pass (tests, snapshot, rewind ready), and he is told after; (b) every fix waits as a
+      proposal for his yes; (c) by kind: a mechanical fix (autocorrect, a config value, a restart) applies on its own, a code or design change
+      waits for his yes.
+
 phases:
   OS1_every_run_on_one_surface:
     status: OPEN
@@ -132,6 +143,27 @@ phases:
     files: []
     does: "Waits on OS_D1 (what a model per file, website and system is)."
     proof: "set when OS_D1 is answered"
+  OS12_nexus_heals_and_improves_itself:
+    status: OPEN
+    depends_on: [OS6_query_everything, OS7_copilot_runs_nexus_from_talk]
+    files: [copilot/assist-loop.js, ollama/routes/stream.js, diagnostic/nexus-diagnostic.js, cortex/self-heal/failure-intake.js, lib/open-loop-taxonomy.js]
+    james: >-
+      "like copilot should be the system orchastrator and administrator. like we could have gaps feed into ollamas continous event stream and a
+      ledger for a queue to have it automatically diagnose and fix the system, pipeline, nexus, like it should be using nexus to understand
+      nexus when it needs to, building understanding and learning, and fixing and optimizing nexus using emerge and the pipeline." (2026-11-21)
+    found: >-
+      The coder's census, 2026-11-21: Ollama's standing channels (ollama/routes/stream.js, /api/stream/:id: one open conversation that keeps
+      its context, streamed live); the Diagnostic system already escalates its gaps to Ollama as background 'diagnose' work that gives way to
+      his (nexus-diagnostic.js; ollama/lib/dispatch.js BACKGROUND_INTENTS); Cortex's self-heal (failure intake, forensics, fault taxonomy,
+      escalation, reports); the open-loop taxonomy; RAID's L8 (failure modes, faults and gaps). Missing: the one queue, and the loop over it.
+    does: >-
+      Copilot is the system's orchestrator and administrator. Every gap, fault and failure mode from every system lands as a row in one queue
+      ledger (Cortex keeps the books, §L13). Copilot works the queue through Ollama's standing channel, in the background, giving way to his
+      work: it uses Nexus to understand Nexus (OS6: the nodes, components, ledgers and failure records), names the cause, and makes the fix
+      as a pipeline (code through the Emerge rung); the fix passes its gates (its tests, a Versionium snapshot before, the rewind if it
+      breaks) and lands per OS_D5. What it learned is kept as nodes (the failure mode, its cause, the fix that held), so the next one is
+      faster: optimising is the same loop on slow or wasteful paths.
+    proof: "a gap planted on purpose is queued, diagnosed from Nexus's own records, fixed through the pipeline, tested, landed per OS_D5, and its lesson found again by the next one"
   OS10_the_translation_chain:
     status: OPEN
     depends_on: [OS5_all_of_nexus_from_the_console, OS2_raid_makes_the_centre_node]
@@ -149,5 +181,5 @@ phases:
       OS_D3 built: RAID fills a request's injected_frameworks with his framework and its decisions read it; a trial runs the same requests
       with and without it, measures named and predictions registered before the runs.
     proof: "one trial of real requests, two arms, the predictions registered before; the difference and its doubts written in FRAMEWORK-THREADS"
-build_order: [OS1, OS3, OS4, OS5, OS6, OS2, OS10, OS7, OS8, OS11, OS9]
+build_order: [OS1, OS3, OS4, OS5, OS6, OS2, OS10, OS7, OS12, OS8, OS11, OS9]
 first_slice: "OS1: Activity reads RAID's queue, COS's runs, Idearium's tasks and Ollama's jobs, one list on the pipeline screen."
