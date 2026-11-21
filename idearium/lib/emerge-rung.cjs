@@ -92,20 +92,27 @@ function extract(text) {
 function adapter(file, { esm = false, names = [] } = {}) {
   const dir = path.posix.dirname(file); const base = path.posix.basename(file).replace(/\.[cm]?js$/, '');
   const up = dir === '.' ? '.' : dir.split('/').map(() => '..').join('/');
+  // 0.60.633 — Emerge's maps reach JavaScript as objects with no prototype, and a JavaScript caller's deepStrictEqual (the build's own test)
+  // reads { body, fixes } as different from them (the cbuild run of 2026-11-21, round 2). At the door every value comes back plain.
+  const PLAIN = `const plain = (v) => Array.isArray(v) ? v.map(plain) : (v && typeof v === 'object' && !(v instanceof Date) ? Object.fromEntries(Object.entries(v).map(([k, x]) => [k, plain(x)])) : v);
+const wrap = (f) => typeof f === 'function' ? (...a) => plain(f(...a)) : plain(f);`;
   if (esm) {
     return `// built by Emerge from ${base}.eg (EMB1) — edit the .eg, not this file
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
 const { createRuntime } = require('${up}/_emerge/lang/runtime.js');
 const m = require('./${base}.eg.cjs')(createRuntime({ file: '${base}.eg', loadModule: (abs, r) => require(abs.replace(/\\.eg$/, '.cjs'))(r) }));
-${names.map(n => `export const ${n} = m.${n};`).join('\n')}
-export default m;
+${PLAIN}
+${names.map(n => `export const ${n} = wrap(m.${n});`).join('\n')}
+export default Object.fromEntries(Object.entries(m).map(([k, f]) => [k, wrap(f)]));
 `;
   }
   return `'use strict';
 // built by Emerge from ${base}.eg (EMB1) — edit the .eg, not this file
 const { createRuntime } = require('${up}/_emerge/lang/runtime.js');
-module.exports = require('./${base}.eg.js')(createRuntime({ file: '${base}.eg', loadModule: (abs, r) => require(abs.replace(/\\.eg$/, '.js'))(r) }));
+${PLAIN}
+const m = require('./${base}.eg.js')(createRuntime({ file: '${base}.eg', loadModule: (abs, r) => require(abs.replace(/\\.eg$/, '.js'))(r) }));
+module.exports = Object.fromEntries(Object.entries(m).map(([k, f]) => [k, wrap(f)]));
 `;
 }
 /** "module" when the nearest package.json above the file says "type": "module" (as Node decides), else "commonjs" */

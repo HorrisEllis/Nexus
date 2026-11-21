@@ -75,11 +75,14 @@ async function ask(prompt, model, gap) {
   // diagnosis is kept in the gap's file as its first lesson: a mechanical repair (data, OS_D5 (c): applies on its own), never code. Bounded.
   const ROUNDS = Math.max(1, Number(arg('rounds', 3)) || 3), store = ER.gapStore(ER.taskDirOf(TASKS, contract, src.path), src.path, { contract });
   const topName = ((src.exports || [])[0] || {}).name || 'autocorrect';
-  async function heal(name, why, evidence) {
+  async function heal(name, why, evidence, built) {
     const rec = store && store.read(name); if (!rec) { row('heal-skipped', { note: `no gap file for ${name}` }); return false; }
+    // a module that compiled but failed the examples: what it was and what it returned go in as a refused try, so the next is told not to repeat it
+    if (built) rec.attempts = (rec.attempts || []).concat({ n: 'test', at: new Date().toISOString(), model: 'the examples test', body: String(built).slice(0, 2500), said: 'compiled, but the examples test failed:\n' + String(evidence || '').slice(0, 900), fix: '', ok: false });
     const refused = (rec.attempts || []).filter((a) => !a.ok && a.n !== 'diagnosis').slice(-4);
     const prompt = [ER.CARD, '', `This Emerge function keeps failing: ${rec.signature || name}${rec.does ? ' — ' + rec.does : ''}.`, why ? `Where it stopped: ${why}` : '',
-      evidence ? 'What the test said:\n' + String(evidence).slice(0, 1500) : '', '', 'Its last refused tries, each with what refused it:',
+      built ? 'The module that compiled (all of it):\n' + String(built).slice(0, 2500) : '',
+      evidence ? 'What the test said (actual against expected):\n' + String(evidence).slice(0, 1500) : '', '', 'Its last refused tries, each with what refused it:',
       ...refused.map((a, i) => `--- try ${i + 1} (${a.model || '?'}): ${a.said}\n${String(a.body || '').slice(0, 700)}`), '',
       'In five lines or fewer: why does every try fail, and what exactly must the next try do instead (which Emerge builtins or which functions of this module to use)? Plain words, no code fence.'].filter((x) => x !== '').join('\n');
     let d; try { d = await ask(prompt, LADDER[LADDER.length - 1], 'diagnose:' + name); } catch (e) { row('heal-failed', { note: `${name}: the diagnosis was not answered (${e.message})` }); return false; }
@@ -103,7 +106,8 @@ async function ask(prompt, model, gap) {
     out = ((t.stdout || '') + (t.stderr || '')).trim();
     row(t.status === 0 ? 'examples-passed' : 'examples-failed', { note: out.split('\n').slice(-6).join(' | ').slice(0, 600), exit: t.status, scratch: T, round });
     if (t.status === 0) break;
-    if (round < ROUNDS && await heal(topName, 'it compiled, but the examples test failed', out.split('\n').slice(-12).join('\n'))) continue;
+    const diff = out.split('\n').filter((l) => /actual|expected|^\s*[+-] |AssertionError|Error:/.test(l)).slice(0, 24).join('\n') || out.split('\n').slice(-20).join('\n');
+    if (round < ROUNDS && await heal(topName, 'it compiled, but the examples test failed', diff, res.source)) continue;
     process.exit(1);
   }
   if (LAND) { for (const [rel, c] of Object.entries(res.files || {})) { const f = path.join(ROOT, rel); fs.mkdirSync(path.dirname(f), { recursive: true }); fs.writeFileSync(f, c); }
