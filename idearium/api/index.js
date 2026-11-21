@@ -1366,6 +1366,9 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
   // chat, a row on the Plan saying from what, to what and why. max_tool_errors failed tool calls in a row end an attempt.
   const policy = _routingPolicy();
   let rungs = [], ladderFrom = null, rungsSkipped = [];
+  // 0.60.631 — a person's pin of one Ollama model is that one rung (run phrun-mwqlfi0m-j17s, 2026-11-21: with no rung the brick skipped the
+  // Emerge rung, its ladder and its gaps, and went to the agent climb, which refused the pin). A pin is never reordered or added to.
+  if (!backend && !agent && /^ollama:./.test(String(provider || ''))) { rungs = [{ provider, base: 'ollama', model: String(provider).slice('ollama:'.length) }]; ladderFrom = 'his pick'; }
   if (!backend && !agent && !provider && policy.escalate) {
     let installed = [];
     let omDerived = null;
@@ -1507,7 +1510,9 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
     ...(ready ? { ready } : {}),
     ...(systemCheck ? { system: { system: systemCheck.system, why: systemCheck.why, conflict: systemCheck.conflict } } : {}), ts: Date.now() });
   getIdeaOS().emit('idearium.repo.phase.run', { ...base, state: 'building', snapshot: commitId });
-  const paramsOf = (rg) => (!rg ? { backend, agent, provider } : rg.base === 'ollama' ? { backend: 'ollama', agent: null, provider: null, model: rg.model || null } : { ...RA.routeFor(rg.base), provider: null });
+  // 0.60.631 — run phrun-mwqlfi0m-j17s (2026-11-21): with no ladder, the provider went raw to the repo agent, which refused
+  // "ollama:deepseek-coder-v2:16b" as unknown; read "ollama:<model>" here the way the planner and the test writer already do
+  const paramsOf = (rg) => (!rg ? (/^ollama:./.test(String(provider || '')) && !backend && !agent ? { backend: 'ollama', agent: null, provider: null, model: String(provider).slice('ollama:'.length) } : { backend, agent, provider }) : rg.base === 'ollama' ? { backend: 'ollama', agent: null, provider: null, model: rg.model || null } : { ...RA.routeFor(rg.base), provider: null });
   // what an attempt wrote to one file: the proposal's content (in review mode nothing is on disk yet), else the file
   const _landedCode = (r, file) => {
     let code = '';

@@ -422,3 +422,7 @@ related:
 # alias of a parameter, which Emerge's checker lets through). Next, his ideas the same day: a failed test becomes a gap ("test per gap"); Emerge's
 # checker refuses the alias change (CIE14); a 3b fills the smallest gaps, bigger models only for held ones; his framework per step or pipeline
 # ("framework per step. or pipeline. like i want it to use my framework."); rewind and the intelligence system per gate (TL4, PC2/PD4, GW6).
+
+## ADDENDUM 0.60.631 (2026-11-21) — a pinned Ollama model builds through the Emerge rung
+# James, 2026-11-21: "okay. get it to code from end to end. we need that proof that its working."
+# a build pinned to ollama:<model> made no rung, so its bricks skipped the Emerge rung and its gaps and went to the agent climb, which refused the pin as an unknown provider (run phrun-mwqlfi0m-j17s); the pin is now one rung, and paramsOf reads ollama:<model> like the planner does
