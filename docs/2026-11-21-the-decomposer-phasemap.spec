@@ -28,6 +28,19 @@ decisions:
       tests and, for Emerge, its compiler (verify) before the next piece moves. Porting a component's behaviour to Emerge (§5.13) is a later step per
       component, a small gap the ladder can fill, never part of the split.
     axioms: "§0.3, §1.2, §5.13, §5.15, §5.16, §8.4, §16.5, §17.13"
+  DC_D2_the_output_is_genesis_shaped:
+    status: "DECIDED 2026-11-21 (his)"
+    james: '"Okay but emerge doesn''t have es modules, and neither does the rest of nexus. Like a reflection of genesis.spec."'
+    context: >-
+      Said after DC1 slice a (0.60.629) taught the split to write ES-module pieces, and its preview of Idearium's server held 194 of 232 units in
+      the door through _require (createRequire(import.meta.url)). Idearium is the one ES-module package in Nexus; Emerge and every other system are
+      CommonJS, shaped as idearium/spec-engine/templates/genesis.spec describes a system (config → server.js → the registry → components → UI).
+    chosen: >-
+      The decomposer reads any project (ES modules included: slice a's adapter stays), and what it writes into Nexus is genesis-shaped: CommonJS
+      pieces like the rest of Nexus, the system's server.js the origin, each component on its registry (the drawbridge), described in CIE-EG. An ES
+      module entering Nexus is converted to CommonJS, not kept as one; slice a's ES-module output is kept only for projects outside Nexus that stay
+      ES modules. Idearium is decomposed into a genesis-shaped system, not split as an ES module (its _require root goes away: every piece has require).
+    changes: "DC1 slice b becomes ES module → CommonJS conversion (import → require, export → module.exports, import.meta.url → __filename); DC4 targets genesis.spec's shape"
 
 phases:
   DC1_the_split_speaks_es_modules:
