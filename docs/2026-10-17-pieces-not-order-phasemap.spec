@@ -426,3 +426,7 @@ related:
 ## ADDENDUM 0.60.631 (2026-11-21) — a pinned Ollama model builds through the Emerge rung
 # James, 2026-11-21: "okay. get it to code from end to end. we need that proof that its working."
 # a build pinned to ollama:<model> made no rung, so its bricks skipped the Emerge rung and its gaps and went to the agent climb, which refused the pin as an unknown provider (run phrun-mwqlfi0m-j17s); the pin is now one rung, and paramsOf reads ollama:<model> like the planner does
+
+## ADDENDUM 0.60.632 (2026-11-21) — the Emerge rung reads the three faults of run 15
+# James, 2026-11-21: "yes. do it, end to end."
+# gaps.eg (Emerge): a name inside a string's braces gets the brace fix (Emerge reads { } in a string as code); only a CALLED name becomes a missing piece; a body that compares its input with the examples' literal texts is refused before it is compiled; the brief says both

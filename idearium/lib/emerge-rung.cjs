@@ -57,7 +57,9 @@ Loop variables and parameters are read-only. To change one item of a list, build
     if x.key == k { out = push(out, { key: x.key, value: v }) } else { out = push(out, x) }
   }
   return { items: out }
-Never x.value = v, never xs[i] = v. Compare with ==, !=, and, or, not (never !, &&, ||).`;   // 0.60.607: the two refusals DeepSeek 16b met filling rename (throw; a loop variable changed), 2026-11-19
+Never x.value = v, never xs[i] = v. Compare with ==, !=, and, or, not (never !, &&, ||).
+Inside a string, { } is code: write a brace in the text itself twice, "if not x {{ y }}".
+Write the general rule. Never compare the input with the examples' own values: the test has other inputs.`;   // 0.60.632: EMB3 run 15   // 0.60.607: the two refusals DeepSeek 16b met filling rename (throw; a loop variable changed), 2026-11-19
 
 const _q = (s) => String(s == null ? '' : s);
 function brief({ file, exports = [], expectation = null, context = '', feedback = null } = {}) {
@@ -283,9 +285,11 @@ function createRung({ root = path.resolve(__dirname, '..', '..'), ask, expect, m
           try { text = await who.ask(briefGap({ skel, filled, name, expectation, lesson, method: fillMethod }), { tryNo: n, gap: name, rung: r }); } catch (e) { tries.push({ n, stage: 'gap:' + name, why: 'no answer: ' + e.message, ms: Date.now() - t0, gap }); break; }
           const body = bodyOf(text, name);
           if (!body) { note({ body: null, said: 'the reply had no body', fix: 'Reply with only the lines of the body.', ms: Date.now() - t0 }); tries.push({ n, stage: 'gap:' + name, why: 'the reply had no body', ms: Date.now() - t0, gap, model: who.name }); continue; }
+          // 0.60.632 — a body that answers the examples instead of the rule is refused before it is compiled (gaps.eg copies_examples)
+          const cx = G.copies_examples(body); if (cx.copies) { note({ body, said: cx.why, fix: cx.fix, ms: Date.now() - t0 }); tries.push({ n, stage: 'gap:' + name, why: cx.why + '\nThe fix: ' + cx.fix, ms: Date.now() - t0, gap, model: who.name }); continue; }
           const ck = await eg('lang-check', render(skel, { ...filled, [name]: body }));
           if (ck.missing) { tries.push({ n, stage: 'no-emerge', why: ck.stderr, ms: Date.now() - t0 }); held = 'no-emerge'; break; }
-          if (!ck.ok) { const said = firstLines(ck.stderr); const hn = G.hint(String(ck.stderr || '')).trim(); note({ body, said, fix: hn, ms: Date.now() - t0 }); tries.push({ n, stage: 'gap:' + name, why: "Emerge's compiler said: " + said + (hn ? '\nThe fix: ' + hn : ''), ms: Date.now() - t0, gap, model: who.name }); continue; }
+          if (!ck.ok) { const said = firstLines(ck.stderr); const hn = String(G.fix_for(String(ck.stderr || ''), body)).trim(); note({ body, said, fix: hn, ms: Date.now() - t0 }); tries.push({ n, stage: 'gap:' + name, why: "Emerge's compiler said: " + said + (hn ? '\nThe fix: ' + hn : ''), ms: Date.now() - t0, gap, model: who.name }); continue; }
           // his "as each gap passes, gets logged or tagged in the gate as passed and compiled"
           filled[name] = body; ok = true; rec.status = 'passed'; rec.body = body; rec.gate = { passed: true, compiled: true, by: "Emerge's compiler (lang-check)", model: who.name || model, at: new Date().toISOString() };
           if (rec.blockedBy && rec.blockedBy.length) rec.unblockedBy = rec.blockedBy.slice();   // the learning memory: what got it past its struggle

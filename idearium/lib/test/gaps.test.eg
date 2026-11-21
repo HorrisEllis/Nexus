@@ -44,7 +44,7 @@ test "a fresh chat gets the lesson: every earlier body, what refused it, its fix
 }
 
 test "what got in the way: the refusal kinds met, and the names its tries called that do not exist" {
-  let st = G.struggle([{ said: "main.eg:2:17: error: \"moved\" is not defined", body: "" }, { said: "main.eg:17:3: error: \"registry\" is a parameter", body: "" }, { said: "filled", ok: true }])
+  let st = G.struggle([{ said: "main.eg:2:17: error: \"moved\" is not defined", body: "  return moved(x)" }, { said: "main.eg:17:3: error: \"registry\" is a parameter", body: "" }, { said: "filled", ok: true }])
   expect join(st.missing, ",") == "moved" and "is a parameter" in st.kinds and "is not defined" in st.kinds, json(st)
 }
 
@@ -60,4 +60,24 @@ test "the chain stays bounded (§14.4)" {
 test "a refusal met before brings its fix; one never met brings nothing" {
   expect find_text(G.hint("main.eg:3:7: error: expected a loop variable, found ("), "for e in xs") >= 0
   expect G.hint("main.eg:1:1: error: something new") == ""
+}
+
+// EMB3 run 15 (2026-11-21): the three faults met in one run, each now a check
+test "a name inside a string's braces gets the brace fix, not the generic one" {
+  let b = "  return \"if !x {{ y }}\""
+  expect G.in_string("return \"a {{{{ y }}}}\"", "y") == true, "y is inside a string's braces"
+  expect G.in_string("return y + 1", "y") == false, "y is plain code"
+  let f = G.fix_for("main.eg:5:78: error: \"y\" is not defined", "  return \"if !x {{ y }}\"")
+  expect find_text(f, "twice") >= 0, f
+}
+
+test "only a CALLED name becomes a missing piece" {
+  let s = G.struggle([{ ok: false, said: "main.eg:2:3: error: \"body\" is not defined", body: "  return len(body)" }, { ok: false, said: "main.eg:2:3: error: \"split_words\" is not defined", body: "  return split_words(t)" }])
+  expect join(s.missing, ",") == "split_words", join(s.missing, ",")
+}
+
+test "a body that answers the examples is caught" {
+  let c = G.copies_examples("  if e == \"let x = 1\" {{ out = push(out, 1) }} else if e == \"a != b\" {{ out = push(out, 2) }}")
+  expect c.copies == true, c.why
+  expect G.copies_examples("  if len(t) == 0 {{ return t }}").copies == false, "one comparison with no literal text is fine"
 }

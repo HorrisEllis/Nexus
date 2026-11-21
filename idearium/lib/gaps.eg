@@ -98,17 +98,49 @@ fn hint(why: string): string {
   return out
 }
 
+// in_string(body, name) → is `name` inside a { } within a string of `body`? Emerge reads { } in a string as code (interpolation), so
+// "if !x {{ y }}" written as "if !x { y }" makes the compiler say "y" is not defined. EMB3 run 15 (2026-11-21): eight tries at one gap met it.
+fn in_string(body: string, name: string): bool {
+  let parts = split(body, "\"")
+  var i = 1
+  while i < len(parts) {
+    if find_text(parts[i], "{{") >= 0 and find_text(parts[i], name) >= 0 { return true }
+    i = i + 2
+  }
+  return false
+}
+
+// fix_for(said, body) → the fix for what the compiler said about this body: a name in a string's braces gets the brace fix, else the hints
+fn fix_for(said: string, body: string): string {
+  let parts = split(said, "\"")
+  if len(parts) >= 3 and find_text(parts[2], "is not defined") >= 0 and in_string(body, parts[1]) {
+    return "Inside a string, {{ }} is read as code. For a brace in the text itself, write it twice: \"if not x {{{{ y }}}}\" is the text if not x {{ y }}."
+  }
+  return hint(said)
+}
+
+// copies_examples(body) → { copies, why, fix }: a body that compares its input with literal text twice or more is answering the examples, not
+// writing the rule. EMB3 run 15: the 3b and the 16b wrote if e == "let x = 1" … for each example of the phase, eight times.
+fn copies_examples(body: string): map {
+  let n = len(split(body, "== \"")) - 1
+  if n >= 2 { return { copies: true, why: "the body compares the input with " + str(n) + " literal texts: it answers the examples, not the rule", fix: "Write the general rule that turns any input into its output. Never test the input against the examples' own values; the test has other inputs." } }
+  return { copies: false, why: "", fix: "" }
+}
+
 fn struggle(attempts: list): map {
   var kinds = []
   var missing = []
   for a in attempts {
     if not get(a, "ok", false) {
       let s = str(get(a, "said", ""))
+      let b = str(get(a, "body", ""))
       for h in HINTS {
         if find_text(s, h.says) >= 0 and not (h.says in kinds) { kinds = push(kinds, h.says) }
       }
       let parts = split(s, "\"")
-      if len(parts) >= 3 and find_text(parts[2], "is not defined") >= 0 and not (parts[1] in missing) { missing = push(missing, parts[1]) }
+      // a missing piece is a function the try CALLED: name( outside a string. A variable it lacked, or a name inside a string's braces, is not
+      // a gap to link in (EMB3 run 15: "body", a parameter, and "y", inside a string, were each linked in as a new function)
+      if len(parts) >= 3 and find_text(parts[2], "is not defined") >= 0 and not (parts[1] in missing) and find_text(b, parts[1] + "(") >= 0 and not in_string(b, parts[1]) { missing = push(missing, parts[1]) }
     }
   }
   return { kinds: kinds, missing: missing }
