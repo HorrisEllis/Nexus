@@ -191,6 +191,27 @@ table.t tbody tr:hover td { background: rgba(255,255,255,.02); }
 .lin::before { content: ''; position: absolute; left: 3px; top: 14px; bottom: -6px; width: 1px; background: var(--rim); }
 .lin:last-child::before { display: none; }
 .lin b { color: var(--bright); font-weight: 500; } .lin .lt { color: var(--text3); } .lin div div { color: var(--text2); margin-top: 1px; }
+.fld { margin: 0 0 9px; }
+.fl { display: block; font: 600 9.5px var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--text3); margin-bottom: 4px; }
+.fl i { color: var(--coral); font-style: normal; }
+.fh { margin-top: 4px; font: 10.5px/1.45 var(--sans); color: var(--text3); }
+#dock-col input:not([type=checkbox]), #dock-col select, #dock-col textarea, .libq { width: 100%; background: var(--bg); border: 1px solid var(--rim); border-radius: 5px; color: var(--bright); font: 11.5px var(--mono); padding: 6px 8px; outline: 0; }
+#dock-col select { appearance: none; cursor: pointer; padding-right: 24px; background-image: linear-gradient(45deg, transparent 50%, var(--text3) 50%), linear-gradient(135deg, var(--text3) 50%, transparent 50%); background-position: calc(100% - 13px) 50%, calc(100% - 9px) 50%; background-size: 4px 4px; background-repeat: no-repeat; }
+#dock-col select option, #dock-col select optgroup { background: var(--bg1); color: var(--text); }
+#dock-col textarea { resize: vertical; line-height: 1.5; }
+#dock-col input:focus, #dock-col select:focus, #dock-col textarea:focus, .libq:focus { border-color: var(--b2); box-shadow: 0 0 0 2px var(--b0); }
+.num { display: flex; align-items: center; gap: 6px; } .num input { width: 110px !important; } .num span { color: var(--text3); font-size: 10.5px; }
+.chk { display: flex; align-items: center; gap: 7px; color: var(--text); font-size: 11.5px; cursor: pointer; }
+.vrow { display: grid; grid-template-columns: 1fr 1.4fr 20px; gap: 5px; margin-bottom: 5px; align-items: center; }
+.vrow input { padding: 5px 7px !important; }
+.addrow { width: 100%; padding: 6px; border: 1px dashed var(--rim); border-radius: 5px; color: var(--text2); font: 11px var(--mono); margin-top: 2px; }
+.addrow:hover { border-color: var(--b2); color: var(--sky); background: var(--b0); }
+.libq { margin: 4px 0 2px; }
+.libi { display: grid; grid-template-columns: 24px 1fr; gap: 6px; width: 100%; text-align: left; padding: 6px 6px; border-radius: 5px; }
+.libi:hover { background: var(--b0); }
+.libi b { display: block; color: var(--bright); font: 500 12px var(--sans); }
+.libi small { display: block; color: var(--text3); font: 10.5px/1.4 var(--sans); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.gl { display: inline-grid; place-items: center; width: 20px; height: 20px; border-radius: 5px; background: var(--b0); color: var(--sky); font-size: 11px; flex: none; }
 .toast { position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%); padding: 8px 14px; border-radius: 7px; background: var(--panel); border: 1px solid var(--rim); color: var(--text); font-size: 12px; box-shadow: 0 10px 30px rgba(0,0,0,.5); z-index: 1001; }
 ::-webkit-scrollbar { width: 9px; height: 9px; } ::-webkit-scrollbar-thumb { background: var(--rim); border-radius: 5px; border: 2px solid transparent; background-clip: padding-box; } ::-webkit-scrollbar-track { background: transparent; }
 </style>
@@ -236,9 +257,31 @@ const P = 'M'; const ICONS = {
 const icon = (k) => `<svg class="i" viewBox="0 0 24 24">${ICONS[k] || ''}</svg>`;
 
 // ── state ──
-const S = { view: (v => v === 'console' ? 'canvas' : v)(store.get('view', 'canvas')), max: false, lin: {}, logs: null, cli: [], draft: '', hist: [], hi: 0, pid: store.get('pid', null), sel: null, job: null, pinned: false, all: false, follow: true, wrap: true, think: false,
+const S = { view: (v => ['console', 'vars', 'settings'].includes(v) ? 'canvas' : v)(store.get('view', 'canvas')), max: false, cat: null, cmds: {}, drafts: {}, edits: {}, rev: 0, lin: {}, logs: null, cli: [], draft: '', hist: [], hi: 0, pid: store.get('pid', null), sel: null, job: null, pinned: false, all: false, follow: true, wrap: true, think: false,
   open: new Set(store.get('dock', ['inspector', 'activity'])), folded: new Set(store.get('folded', [])), split: store.get('split', .6), D: null, ok: 0, base: {}, vp: null, sig: '' };
-const pipe = () => S.D && S.D.pipelines.find((p) => p.id === S.pid);
+const pipe = () => S.drafts[S.pid] || (S.D && S.D.pipelines.find((p) => p.id === S.pid));
+const allPipes = () => [...(S.D ? S.D.pipelines : []), ...Object.values(S.drafts).filter((d) => !(S.D && S.D.pipelines.some((p) => p.id === d.id)))];
+// ── the draft: every edit changes a copy of the pipeline; Save writes it through COS once built, Discard drops it ──
+function draft() { if (!S.drafts[S.pid]) S.drafts[S.pid] = JSON.parse(JSON.stringify(S.D.pipelines.find((p) => p.id === S.pid))); return S.drafts[S.pid]; }
+function edit(fn) { const p = draft(); fn(p); S.edits[p.id] = (S.edits[p.id] || 0) + 1; S.rev++; S.sig = ''; work(); topbar(); }
+const catOf = (type) => S.cat && S.cat.catalogue.find((c) => c.type === type);
+async function loadCat() { if (S.cat) return; S.cat = { catalogue: [], loading: true }; try { const c = await (await fetch('/catalogue')).json(); S.cat = c && c.catalogue ? c : { catalogue: [] }; } catch (_) { S.cat = { catalogue: [] }; } dock(); }
+async function loadCmds(sys) { if (S.cmds[sys]) return; S.cmds[sys] = []; try { S.cmds[sys] = (await (await fetch('/commands?system=' + encodeURIComponent(sys))).json()).paths || []; } catch (_) {} dock(); }
+function newId(p, type) { const b = String(type).replace(/_/g, '-'); let i = 1; while (p.tasks.some((t) => t.id === b + '-' + i)) i++; return b + '-' + i; }
+function stepOf(type) { const c = catOf(type), cfg = {}; for (const f of (c && c.fields) || []) if (f.default !== undefined) cfg[f.key] = f.default; return { label: c ? c.label : type, step: { type, config: cfg } }; }
+// add a step: after the selected one (its followers now follow the new step), or beside it (a parallel branch: same inputs, nothing rewired)
+function addStep(type, how = 'after') { const sel = S.sel && S.sel.id; let nid;
+  edit((p) => { nid = newId(p, type); const s = stepOf(type), at = sel && p.tasks.find((t) => t.id === sel), lastId = p.tasks.length ? p.tasks[p.tasks.length - 1].id : null;
+    const deps = how === 'beside' && at ? [...(at.depends_on || [])] : at ? [at.id] : lastId ? [lastId] : [];
+    if (how === 'after' && at) for (const x of p.tasks) if ((x.depends_on || []).includes(at.id)) x.depends_on = x.depends_on.map((d) => d === at.id ? nid : d);
+    const ix = at ? p.tasks.indexOf(at) + 1 : p.tasks.length; p.tasks.splice(ix, 0, { id: nid, label: s.label, depends_on: deps, step: s.step, gate: null, retries: 0, onFail: 'stop' }); });
+  S.sel = { t: 'step', id: nid }; S.vp = null; openPanel('inspector'); }
+function delStep(id) { edit((p) => { const t = p.tasks.find((x) => x.id === id); if (!t) return; for (const x of p.tasks) if ((x.depends_on || []).includes(id)) x.depends_on = [...new Set(x.depends_on.flatMap((d) => d === id ? (t.depends_on || []) : [d]))]; p.tasks.splice(p.tasks.indexOf(t), 1); }); S.sel = null; S.vp = null; dock(); }
+function dupStep(id) { let nid; edit((p) => { const t = p.tasks.find((x) => x.id === id); if (!t) return; const c = JSON.parse(JSON.stringify(t)); nid = c.id = newId(p, (t.step && t.step.type) || 'step'); c.label = t.label + ' (copy)'; c.depends_on = [t.id];
+  for (const x of p.tasks) if ((x.depends_on || []).includes(t.id)) x.depends_on = x.depends_on.map((d) => d === t.id ? nid : d); p.tasks.splice(p.tasks.indexOf(t) + 1, 0, c); }); S.sel = { t: 'step', id: nid }; S.vp = null; dock(); }
+function catMenu(how) { if (!S.cat || !S.cat.catalogue.length) { loadCat(); return [{ label: 'Reading the step catalogue…', disabled: 'COS is answering' }]; }
+  const groups = [...new Set(S.cat.catalogue.map((c) => c.group))];
+  return groups.flatMap((g) => [{ h: g }, ...S.cat.catalogue.filter((c) => c.group === g).map((c) => ({ label: c.label, glyph: c.icon, hint: c.type, run: () => addStep(c.type, how) }))]); }
 const runs = (id) => S.D ? S.D.runs.filter((r) => r.pipelineId === id).sort((a, b) => (b.at || 0) - (a.at || 0)) : [];
 const last = (id) => runs(id)[0] || null;
 const st = (r, id) => r && r.tasks && r.tasks[id] ? r.tasks[id].status || 'pending' : 'pending';
@@ -279,6 +322,18 @@ const ACTIONS = {
   'view.max':     { label: () => S.max ? 'Show the canvas with the console' : 'Console full height', icon: 'console', kbd: 'C', group: 'View', run: () => { S.max = !S.max; S.sig = ''; S.vp = null; work(); } },
   'dock.cli':     { label: 'Open the terminal (COS CLI)', icon: 'console', kbd: 'T', group: 'Panels', run: () => { openPanel('terminal'); loadLogs().then(dock); setTimeout(() => { const i = $('cliLine'); if (i) i.focus(); }, 50); } },
   'dock.lineage': { label: 'Show provenance and lineage', icon: 'ledger', kbd: 'L', group: 'Panels', run: () => openPanel('lineage') },
+  'step.add':     { label: 'Add a step…', icon: 'plus', kbd: 'A', group: 'Edit', run: () => setTimeout(() => menu(catMenu('after'), null, { search: true, palette: true, placeholder: S.sel ? 'Add a step after the selected one' : 'Add a step at the end' }), 0) },
+  'step.beside':  { label: 'Add a parallel branch…', icon: 'gate', group: 'Edit', off: () => !(S.sel && S.sel.t === 'step') ? 'Select a step first.' : null, run: () => setTimeout(() => menu(catMenu('beside'), null, { search: true, palette: true, placeholder: 'A step beside the selected one (same inputs)' }), 0) },
+  'step.if':      { label: 'Add an If… after it', icon: 'gate', group: 'Edit', off: () => !catOf('condition') ? 'No condition step in the catalogue.' : null, run: () => addStep('condition', 'after') },
+  'step.dup':     { label: 'Duplicate', icon: 'copy', kbd: 'D', group: 'Edit', off: () => !(S.sel && S.sel.t === 'step') ? 'Select a step first.' : null, run: () => dupStep(S.sel.id) },
+  'step.del':     { label: 'Delete step', icon: 'stop', kbd: 'DELETE', group: 'Edit', danger: true, off: () => !(S.sel && S.sel.t === 'step') ? 'Select a step first.' : null, run: () => delStep(S.sel.id) },
+  'gate.editIt':  { label: 'Edit gate', icon: 'gate', group: 'Edit', off: () => !S.sel ? 'Select a step or gate.' : null, run: () => { S.sel = { t: 'gate', id: S.sel.id }; S.sig = ''; work(); openPanel('inspector'); } },
+  'pipe.new':     { label: 'New pipeline', icon: 'plus', group: 'Pipeline', run: () => { const id = 'new-' + Date.now().toString(36); S.drafts[id] = { id, name: 'New pipeline', description: '', vars: {}, settings: {}, tasks: [] }; S.edits[id] = 1; choose(id); } },
+  'pipe.save':    { label: 'Save', icon: 'export', kbd: 'S', group: 'Pipeline', off: () => !S.edits[S.pid] ? 'No changes.' : 'Saving writes the .pipeline through COS (PUT /api/cos/automation/pipelines/:id) once this screen is built.' },
+  'pipe.discard': { label: 'Discard changes', icon: 'stop', group: 'Pipeline', danger: true, off: () => !S.edits[S.pid] ? 'No changes.' : null, run: () => { delete S.drafts[S.pid]; delete S.edits[S.pid]; S.sel = null; S.sig = ''; S.vp = null; if (!pipe()) S.pid = null; draw(); } },
+  'dock.vars':    { label: 'Variables', icon: 'vars', kbd: 'V', group: 'Panels', run: () => openPanel('vars') },
+  'dock.pipe':    { label: 'Pipeline settings', icon: 'settings', group: 'Panels', run: () => openPanel('pipeline') },
+  'dock.lib':     { label: 'Step library', icon: 'canvas', group: 'Panels', run: () => { openPanel('library'); loadCat(); } },
   'view.add':     { label: 'Add a step…', icon: 'plus', group: 'View', off: () => later },
   'pipe.export':  { label: 'Export .pipeline', icon: 'export', group: 'Pipeline', off: () => later },
   'pipe.erv':     { label: 'Open on ERAVOS canvas', icon: 'open', group: 'Pipeline', off: () => later },
@@ -292,10 +347,11 @@ const save = () => { store.set('dock', [...S.open]); store.set('folded', [...S.f
 const openPanel = (id) => { S.open.add(id); S.folded.delete(id); save(); dock(); rail(); };
 const MENUS = {
   run: ['run.start', 'run.pause', 'run.continue', '-', 'run.retry', 'run.model', '-', 'run.cancel'],
-  more: ['pipe.export', 'pipe.erv', 'pipe.dup', 'pipe.copyId', '-', 'dock.lineage', 'dock.cli', '-', 'view.fit', 'view.max', 'dock.all', 'dock.none'],
-  step: ['step.inspect', '-', 'run.retry', 'step.runTo', 'step.skip', '-', 'step.copyId'],
-  gate: ['step.inspect', 'gate.edit', '-', 'run.retry', 'step.copyId'],
-  canvas: ['view.fit', 'view.in', 'view.out', 'view.max', '-', 'view.add', '-', 'run.start', '-', 'dock.lineage', 'dock.cli'],
+  more: ['pipe.new', 'pipe.dup', 'pipe.export', 'pipe.erv', 'pipe.copyId', '-', 'dock.pipe', 'dock.vars', 'dock.lib', 'dock.lineage', 'dock.cli', '-', 'view.fit', 'view.max', 'dock.all', 'dock.none'],
+  step: ['step.inspect', 'gate.editIt', '-', 'step.add', 'step.beside', 'step.if', '-', 'step.dup', 'step.del', '-', 'run.retry', 'step.runTo', 'step.skip', '-', 'step.copyId'],
+  gate: ['gate.editIt', '-', 'step.add', 'step.if', '-', 'run.retry', 'step.copyId'],
+  draft: ['pipe.save', 'pipe.discard'],
+  canvas: ['step.add', 'dock.lib', '-', 'view.fit', 'view.in', 'view.out', 'view.max', '-', 'dock.vars', 'dock.pipe', 'dock.lineage', 'dock.cli', '-', 'run.start'],
   call: ['call.pin', 'call.live', 'call.copy', 'call.context', 'call.replay', '-', 'call.think', 'call.wrap', 'call.all', '-', 'view.max', 'dock.cli'],
 };
 const lbl = (a) => typeof a.label === 'function' ? a.label() : a.label;
@@ -311,7 +367,7 @@ function menu(items, at, opts = {}) {
     const clean = list.filter((x, i, a) => !(x === '-' && (i === 0 || a[i - 1] === '-' || i === a.length - 1)));
     const pick = clean.filter((x) => x !== '-' && !x.h && !x.disabled); act = Math.min(act, Math.max(0, pick.length - 1));
     el.innerHTML = (opts.search ? `<input placeholder="${esc(opts.placeholder || 'Search')}" value="${esc(q)}">` : '') + (clean.length ? clean.map((x) => x === '-' ? '<div class="sep"></div>' : x.h ? `<div class="mh">${esc(x.h)}</div>`
-      : `<button class="mi ${x.danger ? 'danger' : ''} ${pick[act] === x ? 'act' : ''}" ${x.disabled ? `disabled title="${esc(x.disabled)}"` : ''}>${x.icon ? icon(x.icon) : x.dot ? `<span class="sd" style="background:${x.dot}"></span>` : ''}<span class="lab">${esc(x.label)}</span>${x.hint ? `<span class="hint">${esc(x.hint)}</span>` : ''}</button>`).join('') : '<div class="none">Nothing matches.</div>');
+      : `<button class="mi ${x.danger ? 'danger' : ''} ${pick[act] === x ? 'act' : ''}" ${x.disabled ? `disabled title="${esc(x.disabled)}"` : ''}>${x.icon ? icon(x.icon) : x.glyph ? `<span class="gl">${esc(x.glyph)}</span>` : x.dot ? `<span class="sd" style="background:${x.dot}"></span>` : ''}<span class="lab">${esc(x.label)}</span>${x.hint ? `<span class="hint">${esc(x.hint)}</span>` : ''}</button>`).join('') : '<div class="none">Nothing matches.</div>');
     el.querySelectorAll('.mi').forEach((b, i) => { const x = clean.filter((y) => y !== '-' && !y.h)[i]; b.onclick = () => { if (x.disabled) return; closeMenu(); x.run && x.run(); }; b.onmouseenter = () => { if (!x.disabled) { act = pick.indexOf(x); el.querySelectorAll('.mi').forEach((y) => y.classList.remove('act')); b.classList.add('act'); } }; });
     const inp = el.querySelector('input'); if (inp) { inp.oninput = () => { q = inp.value; act = 0; render(); }; inp.focus(); inp.setSelectionRange(q.length, q.length); }
     MENU.pick = pick; MENU.act = () => act; MENU.move = (d) => { act = (act + d + pick.length) % Math.max(1, pick.length); render(); };
@@ -332,7 +388,7 @@ function palette() {
 // ════ VIEWS (side tabs) ════
 const VIEWS = [
   { id: 'canvas', label: 'Canvas', live: () => S.D && S.D.jobs.some((j) => !bg(j) && j.status === 'running') }, { id: 'runs', label: 'Runs' },
-  { id: 'vars', label: 'Vars' }, { id: 'settings', label: 'Settings' }, '-',
+  '-',
   { id: 'gaps', label: 'Gaps', proposed: 'The contract’s .gap files: each open loop, its tries, its lesson, its chain.' },
   { id: 'ladder', label: 'Ladder', proposed: 'Which rung each gap climbed (3b → 16b → 30b) and what unstuck it.' },
   { id: 'tape', label: 'Tape', proposed: 'Replay any model call of a run without Ollama (ollama/lib/tape.js).' },
@@ -350,13 +406,17 @@ function topbar() {
   const p = pipe(), r = p && last(p.id), D = S.D, stale = Date.now() - S.ok > 6000;
   $('top').innerHTML = `<div class="logo">C<span>O</span>S</div>
     <button class="dd" id="pick"><span class="sd" style="background:${col(r && r.status)}"></span><b>${esc(p ? p.name : 'Choose a pipeline')}</b><span style="color:var(--text3);font:11px var(--mono)">${r ? esc(r.status) + ' · ' + ago(r.at) : ''}</span>${icon('chev').replace('class="i"', 'class="i chev"')}</button>
+    <button class="dd" id="addBtn">${icon('plus')}Add step${icon('chev').replace('class="i"', 'class="i chev"')}</button>
     <button class="dd primary" id="runBtn">${icon('play')}Run${icon('chev').replace('class="i"', 'class="i chev"')}</button>
+    ${S.edits[S.pid] ? `<button class="dd" id="draftBtn" title="Your changes are a draft"><span class="sd" style="background:var(--violet)"></span>Draft · ${S.edits[S.pid]} ${S.edits[S.pid] === 1 ? 'change' : 'changes'}${icon('chev').replace('class="i"', 'class="i chev"')}</button>` : ''}
     <div class="grow"></div>
     <button class="search-hint" id="pal">${icon('search')}<span class="grow" style="text-align:left">Search commands</span><span class="kbd">Ctrl K</span></button>
     <button class="icon-btn" id="sys" title="${stale ? 'Not answering' : 'Live'}"><span class="sd" style="background:${stale ? 'var(--coral)' : 'var(--ok)'};${stale ? '' : 'animation:pulse 2s infinite'}"></span></button>
     <button class="icon-btn" id="more" title="More">${icon('more')}</button>`;
-  $('pick').onclick = (e) => dropdown(e.currentTarget, D ? D.pipelines.map((x) => { const lr = last(x.id); return { label: x.name, dot: col(lr && lr.status), hint: lr ? lr.status + ' · ' + ago(lr.at) : 'never run', run: () => choose(x.id) }; }) : [], { search: true, placeholder: 'Find a pipeline' });
+  $('pick').onclick = (e) => dropdown(e.currentTarget, (D ? allPipes() : []).map((x) => { const lr = last(x.id); return { label: x.name, dot: col(lr && lr.status), hint: lr ? lr.status + ' · ' + ago(lr.at) : 'never run', run: () => choose(x.id) }; }) .concat(['-', { label: 'New pipeline', icon: 'plus', run: () => ACTIONS['pipe.new'].run() }]), { search: true, placeholder: 'Find a pipeline' });
   $('runBtn').onclick = (e) => dropdown(e.currentTarget, fromActions(MENUS.run));
+  $('addBtn').onclick = (e) => { loadCat(); dropdown(e.currentTarget, catMenu('after'), { search: true, placeholder: S.sel ? 'Add after the selected step' : 'Add at the end' }); };
+  if ($('draftBtn')) $('draftBtn').onclick = (e) => dropdown(e.currentTarget, fromActions(MENUS.draft));
   $('more').onclick = (e) => dropdown(e.currentTarget, fromActions(MENUS.more));
   $('pal').onclick = palette;
   $('sys').onclick = (e) => { if (!D) return; const h = D.host || {}, m = D.loaded[0];
@@ -383,23 +443,25 @@ function layout(p) {
 function svgOf(p) {
   const r = last(p.id), base = (S.base[p.id] && S.base[p.id].steps) || {}, { pos } = layout(p); let wires = '', gates = '', nodes = '';
   for (const t of p.tasks) for (const d of (t.depends_on || [])) { const a = pos[d], b = pos[t.id]; if (!a || !b) continue;
-    const x1 = a.x + W, y1 = a.y + H / 2, x2 = b.x, y2 = b.y + H / 2, mx = (x1 + x2) / 2, sa = st(r, d), sb = st(r, t.id);
-    const path = x2 <= x1 ? `M${x1},${y1} h18 q8,0 8,8 V${a.y + H + 27} q0,8 -8,8 H${x2 - 44} q-8,0 -8,8 V${y2 - 8} q0,8 8,8 H${x2 - 2}` : `M${x1},${y1} C${mx},${y1} ${mx},${y2} ${x2 - 2},${y2}`;
-    wires += `<path class="wire ${sb === 'running' ? 'live' : /done|complete|passed/.test(sa) ? 'done' : ''}" d="${path}"/>`;
-    const gx = x2 - 22, gt = gtext(t.gate), sel = S.sel && S.sel.t === 'gate' && S.sel.id === t.id;
-    // the gate branches: open → the step it guards; closed → its onFail (stop · continue · hold), drawn as the second path; retries as ↻ n
-    const of = t.onFail || 'stop', bc = of === 'hold' ? 'var(--violet)' : of === 'continue' ? 'var(--amber)' : 'var(--coral)', took = sb === 'failed', bt = 'closed → ' + (of === 'hold' ? 'hold for you' : of);
-    const bw = bt.length * 5.6 + 16;
-    gates += `<g class="gate ${sb === 'failed' ? 'bad' : /done|complete|passed/.test(sb) ? 'ok' : ''} ${sel ? 'sel' : ''}" data-gate="${esc(t.id)}"><title>Gate into “${esc(t.label)}”\nopen when ${esc(gt)}\nclosed: ${esc(of)}${t.retries ? ', after ' + t.retries + ' retries' : ''}</title>
-      <path d="M${gx},${y2 + 10} v20" fill="none" stroke="${bc}" stroke-width="1.2" stroke-dasharray="${took ? '0' : '3 3'}" opacity="${took ? 1 : .55}"/>
-      <rect x="${gx - bw / 2}" y="${y2 + 30}" width="${bw}" height="15" rx="7.5" fill="var(--bg1)" stroke="${bc}" stroke-width="1" opacity="${took ? 1 : .7}"/><text x="${gx}" y="${y2 + 40.5}" text-anchor="middle" style="fill:${bc}">${esc(bt)}</text>
-      <rect x="${gx - 7}" y="${y2 - 7}" width="14" height="14" rx="2" transform="rotate(45 ${gx} ${y2})"/><text x="${gx}" y="${y2 - 13}" text-anchor="middle">${esc(gt.length > 22 ? gt.slice(0, 21) + '…' : gt)}</text>
-      ${t.retries ? `<text x="${gx + 12}" y="${y2 + 4}" style="fill:var(--sky)">↻${t.retries}</text>` : ''}${t.when ? `<text x="${gx - 12}" y="${y2 + 4}" text-anchor="end" style="fill:var(--amber)">when ${esc(String(typeof t.when === 'string' ? t.when : JSON.stringify(t.when)).slice(0, 24))}</text>` : ''}</g>`; }
+    // wires leave from the step's own gate (the engine checks a step's output after it runs: cos/automation/pipeline.js gateOpen(gate, output))
+    const x1 = a.x + W + 34, y1 = a.y + H / 2, x2 = b.x, y2 = b.y + H / 2, mx = (x1 + x2) / 2, sa = st(r, d), sb = st(r, t.id);
+    const path = x2 <= x1 ? `M${x1},${y1} h4 q8,0 8,8 V${a.y + H + 50} q0,8 -8,8 H${x2 - 28} q-8,0 -8,8 V${y2 - 8} q0,8 8,8 H${x2 - 2}` : `M${x1},${y1} C${mx},${y1} ${mx},${y2} ${x2 - 2},${y2}`;
+    wires += `<path class="wire ${sb === 'running' ? 'live' : /done|complete|passed/.test(sa) ? 'done' : ''}" d="${path}"/>`; }
+  // each step's gate, right after it: open → the steps that follow; closed → its onFail (stop · continue · hold), the second path; retries ↻ n
+  for (const t of p.tasks) { const a = pos[t.id]; if (!a) continue;
+    const s = st(r, t.id), gx = a.x + W + 22, gy = a.y + H / 2, gt = gtext(t.gate), sel = S.sel && S.sel.t === 'gate' && S.sel.id === t.id, passed = /done|complete|passed/.test(s);
+    const of = t.onFail || 'stop', bc = of === 'hold' ? 'var(--violet)' : of === 'continue' ? 'var(--amber)' : 'var(--coral)', took = s === 'failed', bt = 'closed → ' + (of === 'hold' ? 'hold' : of), bw = bt.length * 5.6 + 14;
+    wires += `<path class="wire ${passed ? 'done' : ''}" d="M${a.x + W},${gy} H${gx - 10}"/>`;
+    gates += `<g class="gate ${took ? 'bad' : passed ? 'ok' : ''} ${sel ? 'sel' : ''}" data-gate="${esc(t.id)}"><title>Gate after “${esc(t.label)}”\nopen when ${esc(gt)}\nclosed: ${esc(of)}${t.retries ? ', after ' + t.retries + ' retries' : ''}</title>
+      <path d="M${gx},${gy + 10} v18" fill="none" stroke="${bc}" stroke-width="1.2" stroke-dasharray="${took ? '0' : '3 3'}" opacity="${took ? 1 : .55}"/>
+      <rect x="${gx - bw / 2}" y="${gy + 28}" width="${bw}" height="15" rx="7.5" fill="var(--bg1)" stroke="${bc}" stroke-width="1" opacity="${took ? 1 : .7}"/><text x="${gx}" y="${gy + 38.5}" text-anchor="middle" style="fill:${bc}">${esc(bt)}</text>
+      <rect x="${gx - 7}" y="${gy - 7}" width="14" height="14" rx="2" transform="rotate(45 ${gx} ${gy})"/><text x="${gx}" y="${gy - 13}" text-anchor="middle">${esc(gt.length > 16 ? gt.slice(0, 15) + '…' : gt)}</text>
+      ${t.retries ? `<text x="${gx + 11}" y="${gy - 6}" style="fill:var(--sky)">↻${t.retries}</text>` : ''}${t.when ? `<text x="${a.x}" y="${a.y - 6}" style="fill:var(--amber)">only when ${esc(String(typeof t.when === 'string' ? t.when : JSON.stringify(t.when)).slice(0, 30))}</text>` : ''}</g>`; }
   for (const t of p.tasks) { const { x, y } = pos[t.id], s = st(r, t.id), tr = r && r.tasks[t.id], b = base[t.id], c = col(s), ms = tr && tr.ms != null ? tr.ms : null;
     const pct = b && b.mean_ms > 0 && ms != null ? Math.min(100, Math.round(ms / (b.mean_ms + 2 * (b.sigma_ms || 0)) * 100)) : null, sel = S.sel && S.sel.t === 'step' && S.sel.id === t.id;
     nodes += `<g class="node ${s} ${sel ? 'sel' : ''}" data-step="${esc(t.id)}" transform="translate(${x},${y})" style="cursor:pointer"><title>${esc(t.label)}\n${esc(kind(t))} · ${esc(target(t))}</title>
       <rect class="box" width="${W}" height="${H}" rx="9"/><rect class="stripe" width="3" height="${H - 18}" y="9" rx="1.5" fill="${c}"/>
-      <text class="ty" x="14" y="18">${esc(kind(t).toUpperCase())}${t.method ? ' · ' + esc(String(t.method).toUpperCase()) : ''}</text><circle class="dotc" cx="${W - 14}" cy="15" r="4" fill="${c}"/>
+      <text class="ty" x="14" y="18">${catOf(kind(t)) ? esc(catOf(kind(t)).icon + ' ' + catOf(kind(t)).label.toUpperCase()) : esc(kind(t).toUpperCase())}${t.method ? ' · ' + esc(String(t.method).toUpperCase()) : ''}</text><circle class="dotc" cx="${W - 14}" cy="15" r="4" fill="${c}"/>
       <text class="lb" x="14" y="37">${esc(t.label.length > 27 ? t.label.slice(0, 26) + '…' : t.label)}</text><text class="sb" x="14" y="55">${esc(s)}${ms != null ? ' · ' + dur(ms) : ''}${b && b.n ? ' · usual ' + dur(b.mean_ms) : ''}</text>
       ${pct != null ? `<rect x="14" y="${H - 7}" width="${W - 28}" height="2" rx="1" fill="var(--edge)"/><rect x="14" y="${H - 7}" width="${(W - 28) * pct / 100}" height="2" rx="1" fill="${pct >= 100 ? 'var(--coral)' : 'var(--sky)'}"/>` : ''}</g>`; }
   return `<g id="vp">${wires}${gates}${nodes}</g>`;
@@ -454,7 +516,7 @@ function work() {
   const v = VIEWS.find((x) => x.id === S.view);
   if (S.view === 'canvas') {
     if (!p) { w.innerHTML = '<div class="empty" style="margin:auto">Choose a pipeline from the menu at the top.</div>'; return; }
-    const sig = JSON.stringify([p.id, p.tasks.length, last(p.id) && last(p.id).tasks, S.sel, !!S.base[p.id] && !S.base[p.id].loading, S.max]);
+    const sig = JSON.stringify([p.id, p.tasks.length, last(p.id) && last(p.id).tasks, S.sel, !!S.base[p.id] && !S.base[p.id].loading, S.max, S.rev, !!(S.cat && S.cat.catalogue.length)]);
     if (sig !== S.sig || !w.querySelector('svg.cv')) { S.sig = sig;
       w.innerHTML = `<div class="canvas-wrap" style="${S.max ? 'display:none;' : ''}flex-basis:${Math.round(S.split * 100)}%"><svg class="cv">${svgOf(p)}</svg><div class="zoom"><button data-a="view.out" title="Zoom out">−</button><button data-a="view.fit" title="Fit (F)">⤢</button><button data-a="view.in" title="Zoom in">+</button></div></div><div class="splitter" id="split" title="Drag to resize · double-click: console full height"></div>${consoleHtml(S.max)}`;
       if (!S.vp) requestAnimationFrame(fit); else applyVp(); bindCanvas(); bindSplit();
@@ -476,13 +538,56 @@ function bindSplit() { const sp = $('split'); if (!sp) return; sp.ondblclick = (
 // ════ PANELS — Idearium's dock; each declared once, drawn by dock() ════
 const kv = (a, b, attrs = '') => `<div class="kv ${attrs ? 'row' : ''}" ${attrs}><span>${esc(a)}</span><span title="${esc(b)}">${esc(b)}</span></div>`;
 const sec = (t) => `<div class="dk-sec">${esc(t)}</div>`;
+// ── forms, generated: a step's fields come from the engine's catalogue (type, options, default, help, when) ──
+const GATES = [['', 'Always opens'], ['notEmpty', 'Output is not empty'], ['contains', 'Output contains…'], ['equals', 'Output equals…'], ['matches', 'Output matches a pattern…'], ['element', 'A page element… (Clear Glass)']];   // cos/automation/pipeline.js gateOpen
+const ONFAIL = [['stop', 'Stop the run'], ['continue', 'Go on without it'], ['hold', 'Hold the run for me']];                                                                              // pipeline.js validate: stop · continue · hold
+const gkind = (g) => !g ? '' : (GATES.find(([k]) => k && g[k] !== undefined) || [''])[0];
+const optList = (list, cur) => list.map((o) => { const v = Array.isArray(o) ? o[0] : typeof o === 'object' ? o.value : o, l = Array.isArray(o) ? o[1] : typeof o === 'object' ? (o.label || o.value) : o; return `<option value="${esc(v)}" ${String(cur ?? '') === String(v) ? 'selected' : ''}>${esc(l)}</option>`; }).join('');
+const shown = (f, cfg) => !f.when || Object.entries(f.when).every(([k, vs]) => [].concat(vs).map(String).includes(String(cfg[k] ?? '')));
+function field(f, val, path, t) {
+  const id = 'f_' + path.replace(/\W/g, '_'), v = val ?? f.default ?? '', ty = f.type || 'text'; let c;
+  if (ty === 'select' || f.options) c = `<select id="${id}" data-f="${path}">${optList(f.options || [], v)}</select>`;
+  else if (ty === 'system') c = `<select id="${id}" data-f="${path}">${optList(S.D.systems.map((s) => [s.name, s.name + (s.state === 'up' ? '' : ' (' + s.state + ')')]), v)}</select>`;
+  else if (ty === 'branch') { const p = pipe(); c = `<select id="${id}" data-f="${path}">${optList([...(f.extra || []), ...p.tasks.filter((x) => x.id !== t.id).map((x) => [x.id, '→ ' + x.label])], v)}</select>`; }
+  else if (ty === 'code' || ty === 'json' || ty === 'textarea' || ty === 'script') c = `<textarea id="${id}" data-f="${path}" rows="4" spellcheck="false" placeholder="${esc(f.placeholder || '')}">${esc(typeof v === 'string' ? v : JSON.stringify(v, null, 1))}</textarea>`;
+  else if (ty === 'number' || ty === 'duration') c = `<div class="num"><input id="${id}" type="number" data-f="${path}" value="${esc(v)}"><span>${ty === 'duration' ? 'ms' : ''}</span></div>`;
+  else if (ty === 'checkbox' || ty === 'boolean' || ty === 'bool') c = `<label class="chk"><input id="${id}" type="checkbox" data-f="${path}" ${v ? 'checked' : ''}> ${esc(f.label || f.key)}</label>`;
+  else { let dl = ''; if (t && t.step && t.step.type === 'command' && f.key === 'endpoint') { const sys = (t.step.config || {}).system || 'guardian'; loadCmds(sys); dl = `<datalist id="dl_${id}">${(S.cmds[sys] || []).map((x) => `<option value="${esc(x)}">`).join('')}</datalist>`; }
+    c = `<input id="${id}" type="text" data-f="${path}" value="${esc(typeof v === 'string' ? v : JSON.stringify(v))}" placeholder="${esc(f.placeholder || '')}" ${dl ? `list="dl_${id}"` : ''}>${dl}`; }
+  return `<div class="fld">${ty === 'checkbox' || ty === 'boolean' || ty === 'bool' ? '' : `<label class="fl" for="${id}">${esc(f.label || f.key)}${f.required ? ' <i>*</i>' : ''}</label>`}${c}${f.help ? `<div class="fh">${esc(f.help)}</div>` : ''}</div>`;
+}
+const rows = (obj, which, hint) => `<div data-rows="${which}">${Object.entries(obj || {}).map(([k, v]) => `<div class="vrow"><input data-part="k" value="${esc(k)}" placeholder="name" spellcheck="false"><input data-part="v" value="${esc(typeof v === 'string' ? v : JSON.stringify(v))}" placeholder="value" spellcheck="false"><button class="dk-x" data-rowdel title="Remove">×</button></div>`).join('')}<button class="addrow" data-rowadd>+ ${esc(hint)}</button></div>`;
 const PANELS = [
-  { id: 'inspector', label: 'Inspector', render() { const p = pipe(); if (!S.sel || !p) return '<div class="dk-empty">Click a step or a gate on the canvas. Right-click for what you can do with it.</div>';
-      const t = task(S.sel.id), r = last(p.id), tr = r && r.tasks[t.id], b = S.base[p.id] && S.base[p.id].steps && S.base[p.id].steps[t.id], cfg = (t.step && t.step.config) || {};
-      if (S.sel.t === 'gate') return sec('Gate into “' + t.label + '”') + kv('open when', gtext(t.gate)) + kv('open →', t.label) + kv('closed →', { stop: 'the run stops', continue: 'the run goes on without it', hold: 'the run holds for you' }[t.onFail || 'stop'] || t.onFail) + (t.when ? kv('only when', typeof t.when === 'string' ? t.when : JSON.stringify(t.when)) : '') + kv('retries', t.retries || 0) + kv('from', (t.depends_on || []).join(', ') || '—') + kv('last result', tr ? tr.status : '—') + (tr && tr.error ? sec('Why it closed') + `<div class="pre bad">${esc(tr.error)}</div>` : '');
-      return sec(t.label) + kv('kind', kind(t)) + kv('calls', target(t)) + (cfg.method ? kv('method', cfg.method) : '') + (t.method ? kv('framework', t.method) : '') + kv('after', (t.depends_on || []).join(', ') || '—')
-        + sec('Latest run') + kv('status', tr ? tr.status : '—') + kv('took', tr && tr.ms != null ? dur(tr.ms) : '—') + (b ? kv('usual', dur(b.mean_ms) + ' ± ' + dur(b.sigma_ms) + ' over ' + b.n) : '')
-        + (cfg.body ? sec('Sends') + `<div class="pre">${esc(cfg.body)}</div>` : '') + (tr && tr.out ? sec('Gave') + `<div class="pre">${esc(tr.out)}</div>` : '') + (tr && tr.error ? sec('Error') + `<div class="pre bad">${esc(tr.error)}</div>` : ''); } },
+  { id: 'inspector', label: 'Inspector', render() { const p = pipe();
+      if (!S.cat) loadCat();
+      if (!S.sel || !p) return '<div class="dk-empty">Click a step or a gate to change it. Add steps with <b>Add step</b> at the top, the <b>Steps</b> panel, or right-click.</div>';
+      const t = task(S.sel.id); if (!t) return '<div class="dk-empty">That step is gone.</div>';
+      const r = last(p.id), tr = r && r.tasks[t.id], b = S.base[p.id] && S.base[p.id].steps && S.base[p.id].steps[t.id], cfg = (t.step && t.step.config) || {}, others = p.tasks.filter((x) => x.id !== t.id);
+      const runInfo = sec('Last run') + kv('status', tr ? tr.status : '—') + kv('took', tr && tr.ms != null ? dur(tr.ms) : '—') + (b ? kv('usual', dur(b.mean_ms) + ' ± ' + dur(b.sigma_ms) + ' over ' + b.n) : '')
+        + (tr && tr.out ? sec('Gave') + `<div class="pre">${esc(tr.out)}</div>` : '') + (tr && tr.error ? sec('Error') + `<div class="pre bad">${esc(tr.error)}</div>` : '');
+      if (S.sel.t === 'gate') { const k = gkind(t.gate), gv = k && k !== 'notEmpty' && t.gate ? t.gate[k] : '';
+        return sec('Gate after “' + t.label + '”') + `<div class="fld"><label class="fl">Opens when</label><select data-g="kind">${optList(GATES, k)}</select></div>`
+          + (k && k !== 'notEmpty' ? `<div class="fld"><label class="fl">${k === 'matches' ? 'Pattern' : k === 'element' ? 'Element (JSON)' : 'Text'}</label><input type="text" data-g="value" value="${esc(typeof gv === 'string' ? gv : JSON.stringify(gv))}" spellcheck="false"></div>` : '')
+          + `<div class="fld"><label class="fl">If it stays closed</label><select data-f="onFail">${optList(ONFAIL, t.onFail || 'stop')}</select></div>`
+          + `<div class="fld"><label class="fl">Retry the step first</label><div class="num"><input type="number" min="0" data-f="retries" value="${esc(t.retries || 0)}"><span>times</span></div></div>` + runInfo; }
+      const c = catOf(t.step && t.step.type), cats = S.cat ? S.cat.catalogue : [], groups = [...new Set(cats.map((x) => x.group))];
+      let h = `<div class="fld"><label class="fl">Name</label><input type="text" data-f="label" value="${esc(t.label)}"></div>`
+        + `<div class="fld"><label class="fl">Kind</label><select data-type>${c ? '' : `<option selected>${esc((t.step && t.step.type) || '—')}</option>`}${groups.map((g) => `<optgroup label="${esc(g)}">${cats.filter((x) => x.group === g).map((x) => `<option value="${esc(x.type)}" ${c === x ? 'selected' : ''}>${esc(x.icon + '  ' + x.label)}</option>`).join('')}</optgroup>`).join('')}</select>${c && c.help ? `<div class="fh">${esc(c.help)}${c.output ? ' Gives ' + esc(c.output) + '.' : ''}</div>` : ''}</div>`
+        + `<div class="fld"><label class="fl">Runs after</label><select data-f="after">${optList([['', '— the start —'], ...others.map((x) => [x.id, x.label])], (t.depends_on || [])[0] || '')}</select>${(t.depends_on || []).length > 1 ? `<div class="fh">Also waits on ${esc(t.depends_on.slice(1).join(', '))} (a join).</div>` : ''}</div>`;
+      if (c) { const fs = c.fields.filter((f) => shown(f, cfg)); h += fs.length ? sec('Settings') + fs.map((f) => field(f, cfg[f.key], 'cfg.' + f.key, t)).join('') : ''; }
+      else if (S.cat && S.cat.loading) h += '<div class="dk-empty">Reading the step catalogue…</div>';
+      else h += sec('Settings') + `<div class="fld"><label class="fl">Configuration (JSON)</label><textarea data-f="cfgjson" rows="6" spellcheck="false">${esc(JSON.stringify(cfg, null, 1))}</textarea><div class="fh">This kind (${esc((t.step && t.step.type) || '—')}) is not in the engine's catalogue, so its settings are shown as JSON.</div></div>`;
+      h += sec('Gate') + `<div class="kv row" data-opengate><span>${esc(gtext(t.gate))}</span><span>closed → ${esc(t.onFail || 'stop')}${t.retries ? ' · ↻' + t.retries : ''} ›</span></div>`;
+      return h + runInfo; } },
+  { id: 'library', label: 'Steps', render() { if (!S.cat || S.cat.loading) { loadCat(); return '<div class="dk-empty">Reading the step catalogue…</div>'; }
+      const cats = S.cat.catalogue, groups = [...new Set(cats.map((x) => x.group))];
+      return `<div class="dk-empty">Click to add ${S.sel ? 'after the selected step' : 'at the end'}. From COS's engine: ${cats.length} kinds.</div><input class="libq" placeholder="Filter" spellcheck="false">`
+        + groups.map((g) => `<div class="dk-sec">${esc(g)}</div>` + cats.filter((x) => x.group === g).map((x) => `<button class="libi" data-add="${esc(x.type)}" title="${esc(x.help || '')}"><span class="gl">${esc(x.icon)}</span><span><b>${esc(x.label)}</b><small>${esc(x.help || '')}</small></span></button>`).join('')).join(''); } },
+  { id: 'vars', label: 'Variables', count: () => { const p = pipe(); return p ? Object.keys(p.vars || {}).length || '' : ''; },
+    render() { const p = pipe(); if (!p) return '<div class="dk-empty">Choose a pipeline.</div>'; return `<div class="dk-empty">Steps read these as {{vars.<i>name</i>}}.</div>` + rows(p.vars, 'vars', 'Add a variable'); } },
+  { id: 'pipeline', label: 'Pipeline', render() { const p = pipe(); if (!p) return '<div class="dk-empty">Choose a pipeline.</div>';
+      return `<div class="fld"><label class="fl">Name</label><input type="text" data-pf="name" value="${esc(p.name || '')}"></div><div class="fld"><label class="fl">What it does</label><textarea data-pf="description" rows="3">${esc(p.description || '')}</textarea></div>`
+        + sec('Settings') + rows(p.settings, 'settings', 'Add a setting') + sec('File') + kv('id', p.id) + kv('steps', p.tasks.length) + (S.edits[p.id] ? kv('draft', S.edits[p.id] + ' changes, not saved') : ''); } },
   { id: 'activity', label: 'Activity', count: () => S.D ? S.D.jobs.filter((x) => /running|queued/.test(x.status)).length + S.D.runs.filter((x) => x.status === 'running').length || '' : '', live: () => S.D && S.D.jobs.some((x) => x.status === 'running'),
     render() { const D = S.D, rr = D.runs.filter((x) => /running|paused/.test(x.status)), jj = D.jobs.filter((x) => /running|queued/.test(x.status));
       return sec('Pipeline runs') + (rr.length ? rr.map((x) => kv(x.name || x.id, x.status + ' · ' + ago(x.at), `data-goto="${esc(x.pipelineId)}"`)).join('') : '<div class="dk-empty">None.</div>')
@@ -527,6 +632,30 @@ function dock() {
     el.querySelector('.dk-head').oncontextmenu = (e) => { e.preventDefault(); menu([{ label: S.folded.has(id) ? 'Expand' : 'Collapse', icon: 'panel', run: fold }, { label: 'Close', icon: 'stop', run: () => { S.open.delete(id); save(); dock(); rail(); } }, '-', ...fromActions(['dock.all', 'dock.none'])], { x: e.clientX, y: e.clientY }); }; });
   col2.querySelectorAll('[data-call]').forEach((x) => x.onclick = () => { S.job = x.dataset.call; S.pinned = true; if (S.view !== 'canvas' && S.view !== 'console') S.view = 'console'; draw(); });
   col2.querySelectorAll('[data-goto]').forEach((x) => x.onclick = () => choose(x.dataset.goto));
+  // the forms: every box writes into the draft as it changes; a choice that changes which fields show redraws the panel
+  const val = (el) => el.type === 'checkbox' ? el.checked : el.type === 'number' ? (el.value === '' ? null : Number(el.value)) : el.value;
+  col2.querySelectorAll('[data-f]').forEach((el) => { const id = S.sel && S.sel.id, pth = el.dataset.f, redraw = el.tagName === 'SELECT' || el.type === 'checkbox';
+    el.addEventListener(redraw ? 'change' : 'input', () => { const v = val(el);
+      edit((p) => { const t = p.tasks.find((x) => x.id === id); if (!t) return;
+        if (pth === 'label') t.label = v; else if (pth === 'onFail') t.onFail = v; else if (pth === 'retries') t.retries = v || 0;
+        else if (pth === 'after') t.depends_on = v ? [v, ...(t.depends_on || []).slice(1).filter((d) => d !== v)] : (t.depends_on || []).slice(1);
+        else if (pth === 'cfgjson') { try { t.step.config = JSON.parse(v); } catch (_) {} }
+        else if (pth.startsWith('cfg.')) { t.step = t.step || { type: 'log', config: {} }; t.step.config = { ...(t.step.config || {}), [pth.slice(4)]: v }; } });
+      if (redraw) dock(); }); });
+  const ty = col2.querySelector('[data-type]'); if (ty) ty.onchange = () => { const id = S.sel.id, s = stepOf(ty.value); edit((p) => { const t = p.tasks.find((x) => x.id === id); const was = catOf(t.step && t.step.type); if (!was || t.label === was.label) t.label = s.label; t.step = s.step; }); dock(); };
+  col2.querySelectorAll('[data-g]').forEach((el) => el.addEventListener(el.tagName === 'SELECT' ? 'change' : 'input', () => { const id = S.sel.id;
+    edit((p) => { const t = p.tasks.find((x) => x.id === id); if (!t) return; const k = el.dataset.g === 'kind' ? el.value : gkind(t.gate);
+      if (!k) t.gate = null; else { let v = el.dataset.g === 'value' ? el.value : (k === 'notEmpty' ? true : (t.gate && t.gate[gkind(t.gate)] !== true ? t.gate[gkind(t.gate)] : '') || ''); if (k === 'element' && typeof v === 'string') { try { v = JSON.parse(v); } catch (_) {} } t.gate = { [k]: v }; } });
+    if (el.tagName === 'SELECT') dock(); }));
+  const og = col2.querySelector('[data-opengate]'); if (og) og.onclick = () => ACTIONS['gate.editIt'].run();
+  col2.querySelectorAll('[data-pf]').forEach((el) => el.oninput = () => edit((p) => { p[el.dataset.pf] = el.value; }));
+  col2.querySelectorAll('[data-rows]').forEach((box) => { const which = box.dataset.rows;
+    const read = () => { const o = {}; box.querySelectorAll('.vrow').forEach((r) => { const k = r.querySelector('[data-part=k]').value.trim(), raw = r.querySelector('[data-part=v]').value; if (!k) return; let v = raw; if (/^\s*([\[{]|true$|false$|null$|-?\d+(\.\d+)?$)/.test(raw)) { try { v = JSON.parse(raw); } catch (_) {} } o[k] = v; }); return o; };
+    box.querySelectorAll('input').forEach((i) => i.oninput = () => edit((p) => { p[which] = read(); }));
+    box.querySelectorAll('[data-rowdel]').forEach((b) => b.onclick = () => { b.closest('.vrow').remove(); edit((p) => { p[which] = read(); }); dock(); });
+    box.querySelector('[data-rowadd]').onclick = () => { const o = read(); let n = 1; while (o['name' + n] !== undefined) n++; edit((p) => { p[which] = { ...o, ['name' + n]: '' }; }); dock(); const ins = $('dock-col').querySelectorAll(`[data-rows=${which}] [data-part=k]`); if (ins.length) { ins[ins.length - 1].focus(); ins[ins.length - 1].select(); } }; });
+  col2.querySelectorAll('[data-add]').forEach((b) => b.onclick = () => addStep(b.dataset.add, 'after'));
+  const lq = col2.querySelector('.libq'); if (lq) lq.oninput = () => { const q = lq.value.toLowerCase(); col2.querySelectorAll('.libi').forEach((b) => b.style.display = b.textContent.toLowerCase().includes(q) ? '' : 'none'); };
   const tm = $('term'); if (tm) tm.scrollTop = tm.scrollHeight;
   const f = $('cliForm'), inp = $('cliLine');
   if (f) { inp.oninput = () => { S.draft = inp.value; };
@@ -546,7 +675,7 @@ async function tick() { try { S.D = await (await fetch('/data', { cache: 'no-sto
   if (!MENU) topbar(); side(); work();
   const typing = document.activeElement && document.activeElement.id === 'cliLine';
   if (typing) { const p = PANELS.find((x) => x.id === 'terminal'), tm = $('term'), tmp = document.createElement('div'); tmp.innerHTML = p.render(); tm.innerHTML = tmp.querySelector('#term').innerHTML; tm.scrollTop = tm.scrollHeight; rail(); }
-  else if (!(MENU && document.activeElement && document.activeElement.closest && document.activeElement.closest('.menu'))) { dock(); rail(); } }
+  else if (!(document.activeElement && document.activeElement.closest && document.activeElement.closest('#dock-col') && /INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)) && !(MENU && document.activeElement && document.activeElement.closest && document.activeElement.closest('.menu'))) { dock(); rail(); } }
 // keys: Ctrl K the palette; the rest from ACTIONS' kbd; menus by arrows, Enter, Escape
 addEventListener('keydown', (e) => {
   if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); return MENU ? closeMenu() : palette(); }
@@ -558,7 +687,7 @@ addEventListener('keydown', (e) => {
 });
 addEventListener('mousedown', (e) => { if (MENU && !e.target.closest('.menu') && !(MENU.anchor && MENU.anchor.contains(e.target))) closeMenu(); });
 addEventListener('resize', () => { S.vp = null; S.sig = ''; work(); });
-draw(); tick().then(() => S.pid && loadBase(S.pid)); setInterval(tick, 2000);
+draw(); loadCat(); tick().then(() => S.pid && loadBase(S.pid)); setInterval(tick, 2000);
 </script>
 </body>
 </html>

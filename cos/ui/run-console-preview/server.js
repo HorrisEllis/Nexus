@@ -51,6 +51,15 @@ http.createServer(async (q, r) => {
     const [hist, lin] = await Promise.all([ph ? get(4800, '/api/phases/ledger/history?phase=' + encodeURIComponent(ph), 5000) : null, repo ? get(4800, '/api/repos/' + encodeURIComponent(repo) + '/lineage', 5000) : null]);
     return json(r, { idearium: !!(hist || lin), history: hist, lineage: lin && lin.lineage });
   }
+  // the editor reads what COS's engine offers (cos/automation/steps.js CATALOGUE: every step type and its fields) and what each system offers
+  // (its own GET /commands), so nothing in the menus is typed by hand
+  if (u.pathname === '/catalogue') return json(r, await get(7799, '/api/cos/automation/catalogue'));
+  if (u.pathname === '/commands') {
+    const sys = await get(7799, '/api/cos/systems'), s = ((sys && (sys.systems || sys)) || []).find((x) => x.name === u.searchParams.get('system'));
+    const c = s && s.port ? await get(s.port, '/commands', 5000) : null, out = new Set();
+    const walk = (v) => { if (typeof v === 'string') { if (/^\/[a-z]/i.test(v) && v.length < 120) out.add(v.split('?')[0]); } else if (Array.isArray(v)) v.forEach(walk); else if (v && typeof v === 'object') Object.values(v).forEach(walk); };
+    walk(c); return json(r, { system: s ? s.name : null, answered: !!c, paths: [...out].sort().slice(0, 400) });
+  }
   if (u.pathname === '/baseline') return json(r, await get(7799, '/api/cos/pipeline/baseline?pipeline=' + encodeURIComponent(u.searchParams.get('pipeline') || ''), 30000));
   if (u.pathname === '/theme.css') { r.setHeader('Content-Type', 'text/css'); r.end(fs.readFileSync(path.join(ROOT, 'idearium', 'ui', 'css', 'nexus-theme.css'))); return; }
   r.setHeader('Content-Type', 'text/html; charset=utf-8'); r.end(fs.readFileSync(path.join(__dirname, 'index.html')));
