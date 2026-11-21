@@ -70,6 +70,31 @@ decisions:
       (a) every fix applies on its own once its gates pass (tests, snapshot, rewind ready), and he is told after; (b) every fix waits as a
       proposal for his yes; (c) by kind: a mechanical fix (autocorrect, a config value, a restart) applies on its own, a code or design change
       waits for his yes.
+  OS_D6_copilot_has_the_whole_system_through_raid_and_the_pipeline:
+    status: "DECIDED 2026-11-21 (his)"
+    james: >-
+      "copilot needs to be able to have full access to the entire system, like nexus-cli, cos, all of each system, run through raid and the
+      pipeline." (2026-11-21)
+    chosen: >-
+      Copilot can reach every system's every command (nexus-cli, COS's CLI, each system's routes: OS5), never around RAID: each act goes through
+      RAID (approveTool, §5.2, §9.1) and runs as a pipeline, so each is approved, recorded and visible on the one surface.
+  OS_D7_raid_decides_by_branches_confidence_slope_and_compounding:
+    status: "DECIDED 2026-11-21 (his)"
+    james: >-
+      "raid runs through the pipeline also using the intellicgence system and my framework, can generate branches before making a decision
+      using the hypothosis generator and the confidenc escoring, adversarial runs if it is needed, then makes a decision based on slope,
+      confidence and compounding." (2026-11-21)
+    found: >-
+      The coder's census, 2026-11-21: the Intelligence system already has the pieces, none of them in RAID's decisions: patterns held as
+      hypotheses with a confidence, promoted ("crystallised") when they beat the base rate (intelligence/index.js); the adversarial faculty
+      ("probes both; contradiction between the two = gap", intelligence/adversarial.js); delta, the rate of change between ledger entries
+      (the slope; intelligence/cfr/delta.js); sigma, the deviation from baseline (cfr/sigma.js); the compounding effects engine
+      (intelligence/causal/compound.js). RAID writes to the CFR ledger (contract-intake.js) but decides by its router, resolve.eg and tunables.
+      No hypothesis generator makes branches before a decision today.
+    chosen: >-
+      RAID's decision is itself a pipeline: his framework frames the question (OS_D3); the branches are generated as hypotheses (Intelligence);
+      each is scored for confidence; an adversarial run is made when the branches disagree or the confidence is low; the decision is taken on
+      slope (delta), confidence and compounding (the compound engine), and recorded with all three, so it can be checked against what happened.
 
 phases:
   OS1_every_run_on_one_surface:
@@ -164,6 +189,14 @@ phases:
       breaks) and lands per OS_D5. What it learned is kept as nodes (the failure mode, its cause, the fix that held), so the next one is
       faster: optimising is the same loop on slow or wasteful paths.
     proof: "a gap planted on purpose is queued, diagnosed from Nexus's own records, fixed through the pipeline, tested, landed per OS_D5, and its lesson found again by the next one"
+  OS13_raid_decides_as_a_pipeline:
+    status: OPEN
+    depends_on: [OS3_each_step_its_method_agent_tool_or_command, OS11_raid_reads_his_framework_tested]
+    files: [cortex/core/raid/router.js, cortex/core/raid/resolve.eg, intelligence/index.js, intelligence/adversarial.js, intelligence/cfr/delta.js, intelligence/causal/compound.js]
+    does: >-
+      OS_D7 built: a RAID decision runs as a pipeline on the one surface: frame (his framework) → branches (hypotheses) → confidence per branch →
+      adversarial run when needed → decide on slope, confidence and compounding → record all three. Each step a box he can see, change and rerun.
+    proof: "ten real RAID decisions made this way, each with its branches, scores and why on the canvas; checked later against what happened"
   OS10_the_translation_chain:
     status: OPEN
     depends_on: [OS5_all_of_nexus_from_the_console, OS2_raid_makes_the_centre_node]
@@ -181,5 +214,5 @@ phases:
       OS_D3 built: RAID fills a request's injected_frameworks with his framework and its decisions read it; a trial runs the same requests
       with and without it, measures named and predictions registered before the runs.
     proof: "one trial of real requests, two arms, the predictions registered before; the difference and its doubts written in FRAMEWORK-THREADS"
-build_order: [OS1, OS3, OS4, OS5, OS6, OS2, OS10, OS7, OS12, OS8, OS11, OS9]
+build_order: [OS1, OS3, OS4, OS5, OS6, OS2, OS10, OS7, OS12, OS8, OS11, OS13, OS9]
 first_slice: "OS1: Activity reads RAID's queue, COS's runs, Idearium's tasks and Ollama's jobs, one list on the pipeline screen."
