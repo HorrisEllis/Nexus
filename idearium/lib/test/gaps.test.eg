@@ -81,3 +81,12 @@ test "a body that answers the examples is caught" {
   expect c.copies == true, c.why
   expect G.copies_examples("  if len(t) == 0 {{ return t }}").copies == false, "one comparison with no literal text is fine"
 }
+
+test "a rewriter comparing single tokens is not copying the examples" {
+  expect G.copies_examples("  if c == \"!\" {{ return 1 }} else if c == \"&&\" {{ return 2 }} else if c == \";\" {{ return 3 }}").copies == false, "tokens are how a rewriter is written"
+}
+
+test "JavaScript's replace and regex literals get their own fix, not the ! lesson" {
+  let f = G.fix_for("main.eg:74:28: error: unexpected character \"!\"", "  var b = body.replace(/!([^ ]+)/g, \"not $1\")")
+  expect find_text(f, "no .replace") >= 0, f
+}

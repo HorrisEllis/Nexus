@@ -144,7 +144,7 @@ module.exports = function load($) {
     return $.ty(null, "map", false, "return value of needs");
   }
   $.at(81, F);
-  let v_HINTS = $.list([$.map(["says", $.str(["expected a loop variable"]), "fix", $.str(["Loop over a list as: for e in xs, then the block in braces (no parentheses, no let, no of)."])]), $.map(["says", $.str(["!"]), "fix", $.str(["Emerge has no !: write not x, and != for not-equal."])]), $.map(["says", $.str([";"]), "fix", $.str(["No semicolons in Emerge."])]), $.map(["says", $.str(["is a loop variable"]), "fix", $.str(["A loop variable is read-only: build a new value with var out = [] and out = push(out, item)."])]), $.map(["says", $.str(["is a parameter"]), "fix", $.str(["A parameter is read-only: build a new value in a var and return it; never change what was passed in."])]), $.map(["says", $.str(["expected end of statement, found a string"]), "fix", $.str(["No throw: return a map with an error field instead."])]), $.map(["says", $.str(["is a let"]), "fix", $.str(["A let cannot change: use var for anything that changes."])]), $.map(["says", $.str(["is not defined"]), "fix", $.str(["Use only the parameters, the other functions in this module, and the builtins len, push, get, keys, str."])]), $.map(["says", $.str(["is already declared"]), "fix", $.str(["That name is taken (a parameter, or an earlier let or var): give the new value a new name, e.g. var taken = ..., never var <a parameter's name>."])])]);
+  let v_HINTS = $.list([$.map(["says", $.str(["expected a loop variable"]), "fix", $.str(["Loop over a list as: for e in xs, then the block in braces (no parentheses, no let, no of)."])]), $.map(["says", $.str(["!"]), "fix", $.str(["Emerge has no !: write not x, and != for not-equal."])]), $.map(["says", $.str([";"]), "fix", $.str(["No semicolons in Emerge."])]), $.map(["says", $.str(["is a loop variable"]), "fix", $.str(["A loop variable is read-only: build a new value with var out = [] and out = push(out, item)."])]), $.map(["says", $.str(["is a parameter"]), "fix", $.str(["A parameter is read-only: build a new value in a var and return it; never change what was passed in."])]), $.map(["says", $.str(["expected end of statement, found a string"]), "fix", $.str(["No throw: return a map with an error field instead."])]), $.map(["says", $.str(["is a let"]), "fix", $.str(["A let cannot change: use var for anything that changes."])]), $.map(["says", $.str(["is not defined"]), "fix", $.str(["Use only the parameters, the other functions in this module, and the builtins len, push, get, keys, str, split, join, slice, find_text, starts_with, ends_with."])]), $.map(["says", $.str(["is already declared"]), "fix", $.str(["That name is taken (a parameter, or an earlier let or var): give the new value a new name, e.g. var taken = ..., never var <a parameter's name>."])])]);
   function v_hint(v_why) {
     v_why = $.ty(v_why, "string", false, "parameter why of hint");
     $.at(94, F);
@@ -196,55 +196,80 @@ module.exports = function load($) {
       $.at(117, F);
       return $.ty($.str(["Inside a string, { } is read as code. For a brace in the text itself, write it twice: \"if not x {{ y }}\" is the text if not x { y }."]), "string", false, "return value of fix_for");
     }
-    $.at(119, F);
+    $.at(121, F);
+    if ($.truth($.or($.or($.cmp(">=", $.call($.b["find_text"], [v_body, $.str([".replace("])]), 0), () => $.cmp(">=", $.call($.b["find_text"], [v_body, $.str(["(/"])]), 0)), () => $.cmp(">=", $.call($.b["find_text"], [v_body, $.str(["/g"])]), 0)), "if")) {
+      $.at(122, F);
+      return $.ty($.str(["Emerge has no .replace and no regular expressions /.../. Replace text with join(split(s, t), u), or call a function this module already has (they are written above the ___)."]), "string", false, "return value of fix_for");
+    }
+    $.at(124, F);
     return $.ty($.call(v_hint, [v_said]), "string", false, "return value of fix_for");
     return $.ty(null, "string", false, "return value of fix_for");
   }
   function v_copies_examples(v_body) {
     v_body = $.ty(v_body, "string", false, "parameter body of copies_examples");
-    $.at(125, F);
-    let v_n = $.sub($.call($.b["len"], [$.call($.b["split"], [v_body, $.str(["== \""])])]), 1);
-    $.at(126, F);
+    $.at(132, F);
+    let v_parts = $.call($.b["split"], [v_body, $.str(["== \""])]);
+    $.at(133, F);
+    let v_n = 0;
+    $.at(134, F);
+    let v_i = 1;
+    $.at(135, F);
+    for (;;) {
+      $.at(135, F);
+      if (!$.truth($.cmp("<", v_i, $.call($.b["len"], [v_parts])), "while")) break;
+      {
+        $.at(136, F);
+        let v_lit = $.index($.call($.b["split"], [$.index(v_parts, v_i), $.str(["\""])]), 0);
+        $.at(137, F);
+        if ($.truth($.and($.cmp(">=", $.call($.b["len"], [v_lit]), 5), () => $.cmp(">=", $.call($.b["find_text"], [v_lit, $.str([" "])]), 0)), "if")) {
+          $.at(137, F);
+          v_n = $.add(v_n, 1);
+        }
+        $.at(138, F);
+        v_i = $.add(v_i, 1);
+      }
+    }
+    $.at(140, F);
     if ($.truth($.cmp(">=", v_n, 2), "if")) {
-      $.at(126, F);
+      $.at(140, F);
       return $.ty($.map(["copies", true, "why", $.add($.add($.str(["the body compares the input with "]), $.call($.b["str"], [v_n])), $.str([" literal texts: it answers the examples, not the rule"])), "fix", $.str(["Write the general rule that turns any input into its output. Never test the input against the examples' own values; the test has other inputs."])]), "map", false, "return value of copies_examples");
     }
-    $.at(127, F);
+    $.at(141, F);
     return $.ty($.map(["copies", false, "why", $.str([""]), "fix", $.str([""])]), "map", false, "return value of copies_examples");
     return $.ty(null, "map", false, "return value of copies_examples");
   }
   function v_struggle(v_attempts) {
     v_attempts = $.ty(v_attempts, "list", false, "parameter attempts of struggle");
-    $.at(131, F);
+    $.at(145, F);
     let v_kinds = $.list([]);
-    $.at(132, F);
+    $.at(146, F);
     let v_missing = $.list([]);
-    $.at(133, F);
+    $.at(147, F);
     for (const v_a of $.iter(v_attempts, false)) {
-      $.at(134, F);
+      $.at(148, F);
       if ($.truth($.not($.call($.b["get"], [v_a, $.str(["ok"]), false])), "if")) {
-        $.at(135, F);
+        $.at(149, F);
         let v_s = $.call($.b["str"], [$.call($.b["get"], [v_a, $.str(["said"]), $.str([""])])]);
-        $.at(136, F);
+        $.at(150, F);
         let v_b = $.call($.b["str"], [$.call($.b["get"], [v_a, $.str(["body"]), $.str([""])])]);
-        $.at(137, F);
+        $.at(151, F);
         for (const v_h of $.iter(v_HINTS, false)) {
-          $.at(138, F);
+          $.at(152, F);
           if ($.truth($.and($.cmp(">=", $.call($.b["find_text"], [v_s, $.get(v_h, "says")]), 0), () => $.not($.isIn($.get(v_h, "says"), v_kinds))), "if")) {
-            $.at(138, F);
+            $.at(152, F);
             v_kinds = $.call($.b["push"], [v_kinds, $.get(v_h, "says")]);
           }
         }
-        $.at(140, F);
+        $.at(154, F);
         let v_parts = $.call($.b["split"], [v_s, $.str(["\""])]);
-        $.at(143, F);
+        $.at(157, F);
         if ($.truth($.and($.and($.and($.and($.cmp(">=", $.call($.b["len"], [v_parts]), 3), () => $.cmp(">=", $.call($.b["find_text"], [$.index(v_parts, 2), $.str(["is not defined"])]), 0)), () => $.not($.isIn($.index(v_parts, 1), v_missing))), () => $.cmp(">=", $.call($.b["find_text"], [v_b, $.add($.index(v_parts, 1), $.str(["("]))]), 0)), () => $.not($.call(v_in_string, [v_b, $.index(v_parts, 1)]))), "if")) {
-          $.at(143, F);
+          $.at(157, F);
           v_missing = $.call($.b["push"], [v_missing, $.index(v_parts, 1)]);
         }
       }
     }
-    $.at(146, F);
+    $.at(160, F);
     return $.ty($.map(["kinds", v_kinds, "missing", v_missing]), "map", false, "return value of struggle");
     return $.ty(null, "map", false, "return value of struggle");
   }
@@ -252,29 +277,29 @@ module.exports = function load($) {
     v_order = $.ty(v_order, "list", false, "parameter order of link");
     v_before = $.ty(v_before, "string", false, "parameter before of link");
     v_add = $.ty(v_add, "string", false, "parameter add of link");
-    $.at(150, F);
+    $.at(164, F);
     if ($.truth($.isIn(v_add, v_order), "if")) {
-      $.at(150, F);
+      $.at(164, F);
       return $.ty(v_order, "list", false, "return value of link");
     }
-    $.at(151, F);
+    $.at(165, F);
     let v_out = $.list([]);
-    $.at(152, F);
+    $.at(166, F);
     for (const v_x of $.iter(v_order, false)) {
-      $.at(153, F);
+      $.at(167, F);
       if ($.truth($.eq(v_x, v_before), "if")) {
-        $.at(153, F);
+        $.at(167, F);
         v_out = $.call($.b["push"], [v_out, v_add]);
       }
-      $.at(154, F);
+      $.at(168, F);
       v_out = $.call($.b["push"], [v_out, v_x]);
     }
-    $.at(156, F);
+    $.at(170, F);
     if ($.truth($.not($.isIn(v_before, v_order)), "if")) {
-      $.at(156, F);
+      $.at(170, F);
       v_out = $.call($.b["push"], [v_out, v_add]);
     }
-    $.at(157, F);
+    $.at(171, F);
     return $.ty(v_out, "list", false, "return value of link");
     return $.ty(null, "list", false, "return value of link");
   }
@@ -283,99 +308,99 @@ module.exports = function load($) {
     v_gaps = $.ty(v_gaps, "num", false, "parameter gaps of guard");
     v_max_depth = $.ty(v_max_depth, "num", false, "parameter max_depth of guard");
     v_max_gaps = $.ty(v_max_gaps, "num", false, "parameter max_gaps of guard");
-    $.at(161, F);
+    $.at(175, F);
     if ($.truth($.cmp(">=", v_depth, v_max_depth), "if")) {
-      $.at(161, F);
+      $.at(175, F);
       return $.ty($.map(["ok", false, "why", $.add($.add($.add($.add($.str(["held: "]), $.call($.b["str"], [v_depth])), $.str([" gaps deep already, the limit is "])), $.call($.b["str"], [v_max_depth])), $.str([" (no endless splitting, §14.4)"]))]), "map", false, "return value of guard");
     }
-    $.at(162, F);
+    $.at(176, F);
     if ($.truth($.cmp(">=", v_gaps, v_max_gaps), "if")) {
-      $.at(162, F);
+      $.at(176, F);
       return $.ty($.map(["ok", false, "why", $.add($.add($.add($.add($.str(["held: "]), $.call($.b["str"], [v_gaps])), $.str([" gaps in this module, the limit is "])), $.call($.b["str"], [v_max_gaps])), $.str([" (§14.4)"]))]), "map", false, "return value of guard");
     }
-    $.at(163, F);
+    $.at(177, F);
     return $.ty($.map(["ok", true, "why", $.add($.add($.add($.str(["a gap in between: depth "]), $.call($.b["str"], [$.add(v_depth, 1)])), $.str([" of "])), $.call($.b["str"], [v_max_depth]))]), "map", false, "return value of guard");
     return $.ty(null, "map", false, "return value of guard");
   }
   function v_lesson(v_attempts, v_keep) {
     v_attempts = $.ty(v_attempts, "list", false, "parameter attempts of lesson");
     v_keep = $.ty(v_keep, "num", false, "parameter keep of lesson");
-    $.at(171, F);
+    $.at(185, F);
     let v_refused = $.list([]);
-    $.at(172, F);
+    $.at(186, F);
     for (const v_a of $.iter(v_attempts, false)) {
-      $.at(173, F);
+      $.at(187, F);
       if ($.truth($.not($.call($.b["get"], [v_a, $.str(["ok"]), false])), "if")) {
-        $.at(173, F);
+        $.at(187, F);
         v_refused = $.call($.b["push"], [v_refused, v_a]);
       }
     }
-    $.at(175, F);
+    $.at(189, F);
     let v_n = $.call($.b["len"], [v_refused]);
-    $.at(176, F);
+    $.at(190, F);
     if ($.truth($.eq(v_n, 0), "if")) {
-      $.at(176, F);
+      $.at(190, F);
       return $.ty($.str([""]), "string", false, "return value of lesson");
     }
-    $.at(179, F);
+    $.at(193, F);
     let v_seen = $.list([]);
-    $.at(180, F);
+    $.at(194, F);
     let v_times = $.map([]);
-    $.at(181, F);
+    $.at(195, F);
     for (const v_a of $.iter(v_refused, false)) {
-      $.at(182, F);
+      $.at(196, F);
       let v_b = $.call($.b["str"], [$.call($.b["get"], [v_a, $.str(["body"]), $.str(["(no body)"])])]);
-      $.at(183, F);
+      $.at(197, F);
       if ($.truth($.isIn(v_b, v_seen), "if")) {
-        $.at(184, F);
+        $.at(198, F);
         $.setIndex(v_times, v_b, $.add($.index(v_times, v_b), 1));
       } else {
-        $.at(186, F);
+        $.at(200, F);
         v_seen = $.call($.b["push"], [v_seen, v_b]);
-        $.at(187, F);
+        $.at(201, F);
         $.setIndex(v_times, v_b, 1);
       }
     }
-    $.at(190, F);
+    $.at(204, F);
     let v_out = $.add($.add($.str(["This gap was tried "]), $.call($.b["str"], [v_n])), $.str([" time(s) before and refused. Do NOT write any body below again. Read each fix, then write a different body.\n"]));
-    $.at(191, F);
+    $.at(205, F);
     let v_i = 0;
-    $.at(192, F);
+    $.at(206, F);
     if ($.truth($.cmp(">", $.call($.b["len"], [v_seen]), v_keep), "if")) {
-      $.at(192, F);
+      $.at(206, F);
       v_i = $.sub($.call($.b["len"], [v_seen]), v_keep);
     }
-    $.at(193, F);
+    $.at(207, F);
     for (;;) {
-      $.at(193, F);
+      $.at(207, F);
       if (!$.truth($.cmp("<", v_i, $.call($.b["len"], [v_seen])), "while")) break;
       {
-        $.at(194, F);
+        $.at(208, F);
         let v_b = $.index(v_seen, v_i);
-        $.at(195, F);
+        $.at(209, F);
         let v_last = $.map([]);
-        $.at(196, F);
+        $.at(210, F);
         for (const v_a of $.iter(v_refused, false)) {
-          $.at(197, F);
+          $.at(211, F);
           if ($.truth($.eq($.call($.b["str"], [$.call($.b["get"], [v_a, $.str(["body"]), $.str(["(no body)"])])]), v_b), "if")) {
-            $.at(197, F);
+            $.at(211, F);
             v_last = v_a;
           }
         }
-        $.at(199, F);
+        $.at(213, F);
         let v_f = $.call($.b["str"], [$.call($.b["get"], [v_last, $.str(["fix"]), $.str([""])])]);
-        $.at(200, F);
+        $.at(214, F);
         if ($.truth($.neq(v_f, $.str([""])), "if")) {
-          $.at(200, F);
+          $.at(214, F);
           v_out = $.add($.add(v_out, $.str(["\nThe fix: "])), v_f);
         }
-        $.at(201, F);
+        $.at(215, F);
         v_out = $.add($.add($.add($.add($.add($.add($.add(v_out, $.str(["\nRefused ("])), $.call($.b["str"], [$.index(v_times, v_b)])), $.str([" time(s)): "])), $.call($.b["str"], [$.call($.b["get"], [v_last, $.str(["said"]), $.str([""])])])), $.str(["\nThe refused body was:\n"])), v_b), $.str(["\n"]));
-        $.at(202, F);
+        $.at(216, F);
         v_i = $.add(v_i, 1);
       }
     }
-    $.at(204, F);
+    $.at(218, F);
     return $.ty(v_out, "string", false, "return value of lesson");
     return $.ty(null, "string", false, "return value of lesson");
   }

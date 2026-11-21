@@ -59,6 +59,8 @@ Loop variables and parameters are read-only. To change one item of a list, build
   return { items: out }
 Never x.value = v, never xs[i] = v. Compare with ==, !=, and, or, not (never !, &&, ||).
 Inside a string, { } is code: write a brace in the text itself twice, "if not x {{ y }}".
+Text: split(s, sep) -> list, join(xs, sep) -> string, slice(s, from, to), find_text(s, t) (-1 when absent), starts_with(s, t), ends_with(s, t).
+To replace every t in s: join(split(s, t), u). In split(s, "\\""), the odd parts are the text inside double quotes.
 Write the general rule. Never compare the input with the examples' own values: the test has other inputs.`;   // 0.60.632: EMB3 run 15   // 0.60.607: the two refusals DeepSeek 16b met filling rename (throw; a loop variable changed), 2026-11-19
 
 const _q = (s) => String(s == null ? '' : s);
