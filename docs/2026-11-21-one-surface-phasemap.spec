@@ -65,11 +65,23 @@ decisions:
     james: '"like copilot should be the system orchastrator and administrator." (2026-11-21)'
     chosen: "Copilot orchestrates and administers Nexus: it runs the queue of gaps and the self-healing loop (OS12), through RAID (§5.2, §9.1)."
   OS_D5_what_a_fix_may_do_alone:
-    status: "OPEN — his to say (asked 2026-11-21)"
+    status: "DECIDED 2026-11-21 (his): (c)"
     readings: >-
       (a) every fix applies on its own once its gates pass (tests, snapshot, rewind ready), and he is told after; (b) every fix waits as a
       proposal for his yes; (c) by kind: a mechanical fix (autocorrect, a config value, a restart) applies on its own, a code or design change
       waits for his yes.
+    james: >-
+      "(c) By kind. Mechanical fixes apply by themselves: an autocorrect, a config value, a restart. Code or design changes wait for your yes.
+      i agree. maybe has to log in a ledger, or maybe even creates a .repair node sent to raid as the return to raid, then run like a fix file or
+      diff. what do you think? versionium can backup before the repair. failure mode report, can be a node for requesting a repair to raid to
+      route?" (2026-11-21)
+    chosen: >-
+      (c), and the repair's shape is his: a failure-mode report (`failure_mode`, a registered node type) is the request, sent to RAID, which
+      routes it; the answer is a `.repair` node, the contract's return to RAID: the diff (the fix file), why it is right, the gates it passed,
+      the failure it closes, and its kind (mechanical or code/design). Versionium snapshots before it is applied; the ledger logs it; a
+      mechanical repair applies on its own, a code or design repair waits for his yes. A `.repair` that held is found first the next time the
+      same failure comes (the learning memory). `repair` is registered in the node taxonomy (type, schema, owner) before the first one is
+      stored (§10.4). The coder's view, asked for: agreed; it closes the loop as a contract does, and keeps every repair checkable and undoable.
   OS_D6_copilot_has_the_whole_system_through_raid_and_the_pipeline:
     status: "DECIDED 2026-11-21 (his)"
     james: >-
