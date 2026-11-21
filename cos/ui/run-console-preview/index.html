@@ -1,395 +1,551 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="nexus">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>COS · Run Console</title>
+<title>COS · Pipelines</title>
 <link rel="stylesheet" href="/theme.css">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap">
 <style>
+/* Idearium's own tokens, named from its theme (idearium/ui/index.html :root), so this screen and Idearium are one palette */
 :root {
-  --bg: var(--ink, #080814); --bg1: var(--plate, #0d0d1f); --bg2: var(--panel, #111128); --ln: var(--edge, #1e1e3a); --ln2: var(--rim, #2a2a4a);
-  --t1: var(--bright, #eeeeff); --t2: var(--text, #d0d4f0); --t3: var(--dim, #7070a0); --t4: var(--muted, #4a4a7a);
-  --a: var(--ac, #1ad1ff); --a-g: var(--ac-ghost, rgba(26,209,255,.07)); --a-d: var(--ac-dim, rgba(26,209,255,.18)); --a-b: var(--ac-border-hi, rgba(26,209,255,.4));
-  --okc: var(--ok, #00ff88); --wrn: var(--warn, #ffaa00); --bad: var(--err, #ff3355); --vio: #a78bfa;
-  --mono: 'IBM Plex Mono', ui-monospace, Consolas, monospace; --sans: 'IBM Plex Sans', 'Segoe UI', system-ui, sans-serif;
+  --bg: var(--nx-ink); --bg1: var(--nx-plate); --bg2: var(--nx-panel); --bg3: var(--nx-edge); --panel: var(--nx-card);
+  --b0: var(--ac-ghost); --b1: var(--ac-dim); --b2: var(--ac-border-hi); --sky: var(--ac); --sky2: var(--ac-soft, var(--ac));
+  --mint: var(--nx-emerald); --amber: var(--nx-warn); --coral: var(--nx-err); --violet: var(--nx-violet); --ok: var(--nx-ok);
+  --text: var(--nx-text); --text2: var(--nx-dim); --text3: var(--nx-muted); --bright: var(--nx-bright); --rim: var(--nx-rim); --edge: var(--nx-edge); --void: var(--nx-void);
+  --mono: 'IBM Plex Mono', monospace; --sans: 'IBM Plex Sans', sans-serif;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
-html, body { height: 100%; background: var(--bg); color: var(--t2); font: 13px/1.45 var(--sans); overflow: hidden; }
+html, body { background: var(--bg); color: var(--text); font-family: var(--sans); font-size: 13px; height: 100vh; overflow: hidden; }
 button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
-svg.i { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; flex: none; }
-.mono { font-family: var(--mono); }
+svg.i { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .3; } }
 
-/* shell */
-.shell { display: grid; height: 100%; grid-template-rows: 44px 1fr 26px; grid-template-columns: 76px 1fr auto 34px; }
-.top { grid-column: 1 / -1; display: flex; align-items: center; gap: 14px; padding: 0 14px 0 0; background: var(--bg1); border-bottom: 1px solid var(--ln); }
-.top > * { flex-shrink: 0; } .top .crumbs { flex-shrink: 1; }
-.state, .btn, .live, .tool { white-space: nowrap; }
-@media (max-width: 1180px) { .ctl .btn { font-size: 0; gap: 0; padding: 0 8px; } .ctl .btn svg { margin: 0; } .dock.open { width: 300px; } .centre { grid-template-columns: 230px 1fr; } }
-.brand { width: 76px; height: 100%; display: flex; align-items: center; justify-content: center; border-right: 1px solid var(--ln); font: 600 12px var(--mono); letter-spacing: .14em; color: var(--t1); }
-.brand span { color: var(--a); }
-.crumbs { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--t3); min-width: 0; }
-.crumbs b { color: var(--t1); font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.crumbs .sep { color: var(--t4); }
-.state { display: inline-flex; align-items: center; gap: 6px; font: 500 11px var(--mono); padding: 3px 9px; border-radius: 999px; border: 1px solid; text-transform: uppercase; letter-spacing: .06em; }
-.st-running { color: var(--wrn); border-color: rgba(255,170,0,.35); background: rgba(255,170,0,.08); }
-.st-complete, .st-up, .st-passed { color: var(--okc); border-color: rgba(0,255,136,.3); background: rgba(0,255,136,.06); }
-.st-failed, .st-down { color: var(--bad); border-color: rgba(255,51,85,.35); background: rgba(255,51,85,.08); }
-.st-queued, .st-idle { color: var(--t3); border-color: var(--ln2); background: transparent; }
-.dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; flex: none; }
-.st-running .dot, .row.running .dot { animation: pulse 1.2s ease-in-out infinite; }
-@keyframes pulse { 50% { opacity: .3; } }
+.app { display: grid; height: 100vh; grid-template-rows: 46px 40px 1fr 26px; grid-template-columns: auto 1fr; }
+
+/* top bar — Idearium's tabbar */
+.tabbar { grid-column: 1 / -1; display: flex; align-items: center; gap: 12px; padding: 0 14px; background: var(--bg1); border-bottom: 1px solid var(--rim); }
+.logo { font: 600 13px var(--mono); letter-spacing: .14em; color: var(--bright); white-space: nowrap; }
+.logo span { color: var(--sky); }
+.crumbs { display: flex; align-items: center; gap: 8px; font: 12px var(--mono); color: var(--text2); min-width: 0; }
+.crumbs b { color: var(--bright); font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 360px; }
+.crumbs .sep { color: var(--text3); }
+.pill { display: inline-flex; align-items: center; gap: 6px; font: 500 10.5px var(--mono); letter-spacing: .06em; text-transform: uppercase; padding: 3px 9px; border-radius: 999px; border: 1px solid; white-space: nowrap; }
+.pill .d { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.s-running, .s-writing { color: var(--amber); border-color: color-mix(in srgb, var(--amber) 40%, transparent); background: color-mix(in srgb, var(--amber) 8%, transparent); }
+.s-running .d, .s-writing .d { animation: pulse 1.2s ease-in-out infinite; }
+.s-done, .s-complete, .s-passed, .s-up { color: var(--ok); border-color: color-mix(in srgb, var(--ok) 35%, transparent); background: color-mix(in srgb, var(--ok) 6%, transparent); }
+.s-failed, .s-down, .s-cancelled { color: var(--coral); border-color: color-mix(in srgb, var(--coral) 40%, transparent); background: color-mix(in srgb, var(--coral) 8%, transparent); }
+.s-paused, .s-degraded { color: var(--violet); border-color: color-mix(in srgb, var(--violet) 40%, transparent); background: color-mix(in srgb, var(--violet) 8%, transparent); }
+.s-idle, .s-queued, .s-pending, .s-skipped, .s- { color: var(--text2); border-color: var(--rim); background: transparent; }
 .grow { flex: 1; }
-.ctl { display: flex; gap: 6px; }
-.btn { display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 11px; border-radius: 6px; border: 1px solid var(--ln2); background: var(--bg2); color: var(--t2); font-size: 12px; }
-.btn:hover:not([disabled]) { border-color: var(--a-b); color: var(--t1); }
-.btn[disabled] { opacity: .45; cursor: not-allowed; }
-.btn.danger { color: #ff8095; }
-.live { display: inline-flex; align-items: center; gap: 6px; font: 11px var(--mono); color: var(--t3); }
-.live .dot { color: var(--okc); }
-.live.stale .dot { color: var(--bad); animation: none; }
+.btn { display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 11px; border-radius: 5px; border: 1px solid var(--rim); background: var(--bg2); color: var(--text); font: 11px var(--mono); letter-spacing: .03em; white-space: nowrap; transition: all .15s; }
+.btn:hover:not([disabled]) { border-color: var(--b2); color: var(--bright); }
+.btn[disabled] { opacity: .4; cursor: not-allowed; }
+.btn.primary { border-color: var(--b2); background: var(--b0); color: var(--sky); }
+.btn.danger { color: var(--coral); }
+.live { display: inline-flex; align-items: center; gap: 6px; font: 11px var(--mono); color: var(--text2); white-space: nowrap; }
+.live .d { width: 6px; height: 6px; border-radius: 50%; background: var(--ok); animation: pulse 1.6s ease-in-out infinite; }
+.live.stale .d { background: var(--coral); animation: none; }
 
-/* left side tabs */
-.side { grid-row: 2; background: var(--bg1); border-right: 1px solid var(--ln); overflow-y: auto; padding: 6px 0; scrollbar-width: none; }
-.side h6 { font: 600 9px var(--mono); letter-spacing: .14em; color: var(--t4); text-align: center; margin: 10px 0 4px; }
-.stab { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 7px 2px; color: var(--t3); position: relative; font-size: 10.5px; }
-.stab:hover { color: var(--t1); background: rgba(255,255,255,.02); }
-.stab.on { color: var(--t1); }
-.stab.on::before { content: ''; position: absolute; left: 0; top: 6px; bottom: 6px; width: 2px; border-radius: 2px; background: var(--a); }
-.stab.on svg { color: var(--a); }
-.stab .badge { position: absolute; top: 4px; right: 12px; min-width: 15px; height: 15px; padding: 0 4px; border-radius: 8px; background: var(--a-d); color: var(--a); font: 600 9px/15px var(--mono); }
+/* sub tabs — Idearium's .repo-subnav / .repo-subtab-btn, as written there */
+.repo-subnav { grid-column: 1 / -1; display: flex; align-items: center; gap: 2px; padding: 0 12px; background: var(--bg); border-bottom: 1px solid var(--b0); overflow-x: auto; scrollbar-width: none; }
+.repo-subtab-btn { background: none; border: 1px solid transparent; color: var(--text3); font-family: var(--mono); font-size: 11px; letter-spacing: .03em; padding: 6px 13px; border-radius: 5px; cursor: pointer; transition: all .15s; white-space: nowrap; display: inline-flex; align-items: center; gap: 7px; }
+.repo-subtab-btn:hover { color: var(--text); background: rgba(255,255,255,.04); }
+.repo-subtab-btn.active { color: var(--text); background: var(--b0); border-color: var(--b1); }
+.repo-subtab-btn .n { font-size: 10px; color: var(--text3); }
+.repo-subtab-btn.active .n { color: var(--sky); }
+.repo-subtab-btn .new { font-size: 8.5px; color: var(--violet); letter-spacing: .08em; }
+.subsep { width: 1px; height: 16px; background: var(--rim); margin: 0 8px; flex: none; }
 
-/* centre */
-.centre { grid-row: 2; min-width: 0; display: grid; grid-template-columns: 290px 1fr; overflow: hidden; }
-.calls { border-right: 1px solid var(--ln); background: var(--bg); display: flex; flex-direction: column; min-height: 0; }
-.ph { display: flex; align-items: center; gap: 8px; height: 38px; padding: 0 12px; border-bottom: 1px solid var(--ln); font: 600 10px var(--mono); letter-spacing: .12em; color: var(--t3); text-transform: uppercase; flex: none; }
-.seg { display: flex; margin-left: auto; border: 1px solid var(--ln2); border-radius: 6px; overflow: hidden; }
-.seg button { padding: 3px 8px; font: 500 10px var(--mono); color: var(--t3); letter-spacing: .04em; text-transform: none; }
-.seg button.on { background: var(--a-g); color: var(--a); }
+/* left: the pipelines */
+.lib { grid-row: 3; width: 268px; background: var(--bg1); border-right: 1px solid var(--rim); display: flex; flex-direction: column; min-height: 0; transition: width .2s; }
+.lib.min { width: 0; border-right: 0; overflow: hidden; }
+.sec-h { display: flex; align-items: center; gap: 8px; height: 38px; padding: 0 12px; border-bottom: 1px solid var(--edge); font: 600 10px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--text2); flex: none; }
+.sec-h .ct { color: var(--text3); font-weight: 400; }
+.search { margin: 10px 10px 4px; display: flex; align-items: center; gap: 7px; height: 30px; padding: 0 9px; border: 1px solid var(--rim); border-radius: 6px; background: var(--bg); color: var(--text3); flex: none; }
+.search input { flex: 1; min-width: 0; background: none; border: 0; outline: 0; color: var(--text); font: 12px var(--mono); }
+.search:focus-within { border-color: var(--b2); }
+.plist { overflow-y: auto; flex: 1; padding: 6px 6px 12px; }
+.prow { display: block; width: 100%; text-align: left; padding: 9px 10px; border-radius: 6px; border: 1px solid transparent; margin-bottom: 2px; }
+.prow:hover { background: rgba(255,255,255,.025); }
+.prow.on { background: var(--b0); border-color: var(--b1); }
+.prow .t { display: flex; align-items: center; gap: 8px; }
+.prow .t b { font: 500 12.5px var(--sans); color: var(--bright); flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.prow .t .sd { width: 7px; height: 7px; border-radius: 50%; flex: none; background: var(--text3); }
+.prow .meta { margin-top: 3px; font: 10.5px var(--mono); color: var(--text3); display: flex; gap: 8px; }
+.prow .ds { margin-top: 4px; font-size: 11.5px; color: var(--text2); line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
+/* stage */
+.stage { grid-row: 3; min-width: 0; min-height: 0; display: flex; position: relative; }
+.work { flex: 1; min-width: 0; display: flex; flex-direction: column; min-height: 0; }
+.canvas-wrap { position: relative; flex: 1 1 60%; min-height: 120px; background:
+  radial-gradient(circle at 1px 1px, color-mix(in srgb, var(--rim) 70%, transparent) 1px, transparent 0) 0 0 / 22px 22px, var(--void); overflow: hidden; }
+.canvas-wrap svg.cv { width: 100%; height: 100%; display: block; cursor: grab; user-select: none; }
+.canvas-wrap svg.cv.drag { cursor: grabbing; }
+.cv-tools { position: absolute; left: 12px; bottom: 12px; display: flex; gap: 4px; padding: 4px; background: var(--panel); border: 1px solid var(--rim); border-radius: 8px; box-shadow: 0 8px 24px rgba(0,0,0,.4); }
+.cv-tools button { width: 28px; height: 26px; display: grid; place-items: center; border-radius: 5px; color: var(--text2); font: 12px var(--mono); }
+.cv-tools button:hover { background: var(--b0); color: var(--bright); }
+.cv-legend { position: absolute; left: 12px; top: 12px; display: flex; gap: 12px; padding: 6px 10px; background: var(--panel); border: 1px solid var(--rim); border-radius: 8px; font: 10.5px var(--mono); color: var(--text2); }
+.cv-legend i { display: inline-block; width: 8px; height: 8px; border-radius: 2px; margin-right: 5px; vertical-align: -1px; }
+.cv-run { position: absolute; right: 12px; top: 12px; width: 240px; background: var(--panel); border: 1px solid var(--rim); border-radius: 10px; padding: 11px 12px; box-shadow: 0 12px 30px rgba(0,0,0,.45); }
+.cv-run h5 { font: 500 12.5px var(--sans); color: var(--bright); display: flex; align-items: center; gap: 8px; }
+.cv-run .kv { display: flex; justify-content: space-between; font: 11px var(--mono); color: var(--text2); padding-top: 6px; }
+.cv-run .kv b { color: var(--text); font-weight: 500; }
+.prog { height: 4px; border-radius: 2px; background: var(--edge); margin-top: 9px; overflow: hidden; display: flex; }
+.prog i { display: block; height: 100%; }
+.node rect.box { fill: var(--panel); stroke: var(--rim); stroke-width: 1; transition: stroke .15s; }
+.node:hover rect.box { stroke: var(--b2); }
+.node.sel rect.box { stroke: var(--sky); stroke-width: 1.5; filter: drop-shadow(0 0 10px color-mix(in srgb, var(--sky) 35%, transparent)); }
+.node text { font-family: var(--sans); pointer-events: none; }
+.node .lb { font-size: 12.5px; font-weight: 500; fill: var(--bright); }
+.node .sb { font-family: var(--mono); font-size: 10px; fill: var(--text2); }
+.node .ty { font-family: var(--mono); font-size: 9px; letter-spacing: .08em; fill: var(--text3); }
+.node.running .stripe { animation: pulse 1.2s ease-in-out infinite; }
+.wire { fill: none; stroke: var(--rim); stroke-width: 1.5; }
+.wire.done { stroke: color-mix(in srgb, var(--ok) 55%, transparent); }
+.wire.live { stroke: var(--amber); stroke-dasharray: 6 5; animation: flow 1s linear infinite; }
+@keyframes flow { to { stroke-dashoffset: -22; } }
+.gate { cursor: pointer; }
+.gate rect { fill: var(--bg1); stroke: var(--text2); stroke-width: 1.2; }
+.gate.ok rect { stroke: var(--ok); fill: color-mix(in srgb, var(--ok) 12%, var(--bg1)); }
+.gate.bad rect { stroke: var(--coral); fill: color-mix(in srgb, var(--coral) 14%, var(--bg1)); }
+.gate.sel rect { stroke: var(--sky); stroke-width: 2; }
+.gate text { font: 9.5px var(--mono); fill: var(--text3); pointer-events: none; }
+
+/* splitter + console */
+.splitter { height: 6px; flex: none; cursor: row-resize; background: var(--bg1); border-top: 1px solid var(--rim); border-bottom: 1px solid var(--rim); position: relative; }
+.splitter::after { content: ''; position: absolute; left: 50%; top: 1px; width: 36px; height: 2px; margin-left: -18px; border-radius: 2px; background: var(--rim); }
+.splitter:hover::after { background: var(--sky); }
+.console { flex: 0 0 40%; min-height: 90px; display: grid; grid-template-columns: 260px 1fr; background: var(--bg); min-width: 0; }
+.console.full { flex: 1 1 auto; }
+.calls { border-right: 1px solid var(--edge); display: flex; flex-direction: column; min-height: 0; }
+.seg { display: flex; margin-left: auto; border: 1px solid var(--rim); border-radius: 5px; overflow: hidden; }
+.seg button { padding: 2px 8px; font: 500 10px var(--mono); color: var(--text3); text-transform: none; letter-spacing: .02em; }
+.seg button.on { background: var(--b0); color: var(--sky); }
 .list { overflow-y: auto; flex: 1; }
-.grp { font: 600 9.5px var(--mono); letter-spacing: .12em; color: var(--t4); padding: 12px 12px 6px; text-transform: uppercase; }
-.row { display: grid; grid-template-columns: 10px 1fr auto; gap: 4px 9px; align-items: center; padding: 8px 12px; border-left: 2px solid transparent; cursor: pointer; }
-.row:hover { background: rgba(255,255,255,.02); }
-.row.sel { background: var(--a-g); border-left-color: var(--a); }
-.row .dot { grid-row: span 2; }
-.row.running .dot { color: var(--wrn); } .row.complete .dot { color: var(--okc); } .row.failed .dot { color: var(--bad); } .row.queued .dot { color: var(--t4); }
-.row .nm { color: var(--t1); font-size: 12.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.row .tm { font: 11px var(--mono); color: var(--t3); }
-.row .sub { grid-column: 2 / 4; font: 11px var(--mono); color: var(--t3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.empty { padding: 28px 18px; color: var(--t3); font-size: 12.5px; line-height: 1.6; }
-.empty b { color: var(--t2); font-weight: 500; display: block; margin-bottom: 4px; }
-
+.grp { font: 600 9.5px var(--mono); letter-spacing: .12em; color: var(--text3); padding: 10px 12px 5px; text-transform: uppercase; }
+.crow { display: grid; grid-template-columns: 8px 1fr auto; gap: 3px 9px; align-items: center; padding: 7px 12px; border-left: 2px solid transparent; cursor: pointer; width: 100%; text-align: left; }
+.crow:hover { background: rgba(255,255,255,.02); }
+.crow.sel { background: var(--b0); border-left-color: var(--sky); }
+.crow .d { width: 7px; height: 7px; border-radius: 50%; grid-row: span 2; background: var(--text3); }
+.crow.running .d { background: var(--amber); animation: pulse 1.2s infinite; } .crow.complete .d { background: var(--ok); } .crow.failed .d { background: var(--coral); }
+.crow .nm { font-size: 12px; color: var(--bright); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.crow .tm { font: 10.5px var(--mono); color: var(--text2); }
+.crow .sub { grid-column: 2 / 4; font: 10.5px var(--mono); color: var(--text3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .view { display: flex; flex-direction: column; min-width: 0; min-height: 0; }
-.vh { display: flex; align-items: center; gap: 10px; padding: 0 14px; height: 38px; border-bottom: 1px solid var(--ln); flex: none; }
-.vh .title { font: 500 12.5px var(--mono); color: var(--t1); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.tool { display: inline-flex; align-items: center; gap: 5px; height: 24px; padding: 0 8px; border-radius: 5px; color: var(--t3); font: 11px var(--mono); }
-.tool:hover { color: var(--t1); background: rgba(255,255,255,.04); }
-.tool.on { color: var(--a); background: var(--a-g); }
-.metrics { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); border-bottom: 1px solid var(--ln); flex: none; }
-.metric { padding: 9px 14px; border-right: 1px solid var(--ln); min-width: 0; }
+.vh { display: flex; align-items: center; gap: 10px; padding: 0 12px; height: 38px; border-bottom: 1px solid var(--edge); flex: none; }
+.vh .title { font: 500 12px var(--mono); color: var(--bright); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tool { display: inline-flex; align-items: center; height: 22px; padding: 0 8px; border-radius: 4px; color: var(--text3); font: 10.5px var(--mono); white-space: nowrap; }
+.tool:hover { color: var(--text); background: rgba(255,255,255,.04); }
+.tool.on { color: var(--sky); background: var(--b0); }
+.metrics { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); border-bottom: 1px solid var(--edge); flex: none; }
+.metric { padding: 7px 12px; border-right: 1px solid var(--edge); min-width: 0; }
 .metric:last-child { border-right: 0; }
-.metric span { display: block; font: 600 9px var(--mono); letter-spacing: .12em; color: var(--t4); text-transform: uppercase; }
-.metric b { display: block; margin-top: 2px; font: 500 13px var(--mono); color: var(--t1); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.code { flex: 1; overflow: auto; background: var(--void, #00000f); font: 12.5px/1.6 var(--mono); padding: 10px 0 40px; counter-reset: ln; }
+.metric span { display: block; font: 600 8.5px var(--mono); letter-spacing: .12em; color: var(--text3); text-transform: uppercase; }
+.metric b { display: block; margin-top: 1px; font: 500 12px var(--mono); color: var(--bright); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.code { flex: 1; overflow: auto; background: var(--void); font: 12px/1.6 var(--mono); padding: 8px 0 30px; counter-reset: ln; }
 .code.nowrap .l { white-space: pre; }
-.l { position: relative; padding: 0 16px 0 68px; white-space: pre-wrap; word-break: break-word; min-height: 1.6em; }
-.l::before { counter-increment: ln; content: counter(ln); position: absolute; left: 0; width: 52px; text-align: right; color: var(--t4); user-select: none; }
-.l.prose { color: var(--t3); font-family: var(--sans); font-size: 12.5px; }
-.l.fence { color: var(--t4); }
-.l:hover { background: rgba(255,255,255,.015); }
-.caret { display: inline-block; width: 7px; height: 15px; background: var(--wrn); vertical-align: -3px; animation: pulse 1s steps(1) infinite; }
-.k { color: #c792ea; } .s { color: #c3e88d; } .c { color: #546e7a; font-style: italic; } .n { color: #f78c6c; } .f { color: #82aaff; } .p { color: #89ddff; }
-.think { border-bottom: 1px solid var(--ln); background: rgba(167,139,250,.04); padding: 10px 14px 10px 66px; font: 12px/1.55 var(--mono); color: #b9a8f5; max-height: 140px; overflow: auto; white-space: pre-wrap; flex: none; }
-.gate { display: flex; align-items: center; gap: 10px; padding: 9px 14px; border-top: 1px solid var(--ln); background: var(--bg1); font-size: 12px; flex: none; }
-.gate .err { color: #ff8095; font-family: var(--mono); font-size: 11.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.l { position: relative; padding: 0 16px 0 64px; white-space: pre-wrap; word-break: break-word; min-height: 1.6em; color: var(--text); }
+.l::before { counter-increment: ln; content: counter(ln); position: absolute; left: 0; width: 48px; text-align: right; color: var(--text3); user-select: none; }
+.l.prose { color: var(--text2); font-family: var(--sans); }
+.l.fence { color: var(--text3); }
+.caret { display: inline-block; width: 7px; height: 14px; background: var(--amber); vertical-align: -2px; animation: pulse 1s steps(1) infinite; }
+.k { color: #c792ea; } .s { color: #c3e88d; } .c { color: #5c7a8a; font-style: italic; } .n { color: #f78c6c; } .f { color: #82aaff; } .p { color: #89ddff; }
+.think { border-bottom: 1px solid var(--edge); background: color-mix(in srgb, var(--violet) 5%, transparent); padding: 8px 12px 8px 64px; font: 11.5px/1.55 var(--mono); color: var(--violet); max-height: 120px; overflow: auto; white-space: pre-wrap; flex: none; }
+.empty { padding: 22px 16px; color: var(--text2); font-size: 12px; line-height: 1.6; }
+.empty b { color: var(--text); font-weight: 500; display: block; margin-bottom: 3px; }
 
-/* right dock */
-.dock { grid-row: 2; width: 0; overflow: hidden; border-left: 1px solid var(--ln); background: var(--bg1); display: flex; flex-direction: column; transition: width .2s ease; }
-.dock.open { width: 360px; }
-.panel { border-bottom: 1px solid var(--ln); display: flex; flex-direction: column; min-height: 0; }
-.panel.grow { flex: 1 1 0; }
-.panel header { display: flex; align-items: center; gap: 8px; height: 36px; padding: 0 8px 0 12px; flex: none; }
-.panel header h4 { font: 600 10px var(--mono); letter-spacing: .12em; color: var(--t2); text-transform: uppercase; }
-.panel header .ct { font: 11px var(--mono); color: var(--t4); }
-.panel header .x { margin-left: auto; width: 24px; height: 24px; display: grid; place-items: center; border-radius: 5px; color: var(--t3); }
-.panel header .x:hover { background: rgba(255,255,255,.05); color: var(--t1); }
-.panel .body { overflow: auto; padding: 0 12px 12px; min-height: 0; }
-.panel.folded .body { display: none; }
-.kv { display: flex; justify-content: space-between; gap: 10px; padding: 7px 0; border-top: 1px solid var(--ln); font-size: 12px; }
-.kv:first-child { border-top: 0; }
-.kv span:first-child { color: var(--t2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.kv span:last-child { font: 11px var(--mono); color: var(--t3); white-space: nowrap; }
-.pre { font: 11.5px/1.55 var(--mono); color: var(--t3); white-space: pre-wrap; word-break: break-word; background: var(--bg); border: 1px solid var(--ln); border-radius: 6px; padding: 9px 10px; }
-.note { font-size: 11.5px; color: var(--t4); padding: 6px 0; line-height: 1.5; }
-.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; padding-top: 4px; }
-.bar { height: 4px; border-radius: 2px; background: var(--ln); overflow: hidden; margin-top: 5px; }
-.bar i { display: block; height: 100%; background: var(--a); }
-.rail { grid-row: 2; grid-column: 4; background: var(--bg1); border-left: 1px solid var(--ln); display: flex; flex-direction: column; align-items: center; padding-top: 6px; gap: 2px; }
-.rtab { writing-mode: vertical-rl; padding: 12px 0; width: 34px; font: 500 10.5px var(--mono); letter-spacing: .08em; color: var(--t3); position: relative; }
-.rtab:hover { color: var(--t1); }
-.rtab.on { color: var(--a); background: var(--a-g); }
-.rtab.on::after { content: ''; position: absolute; right: 0; top: 6px; bottom: 6px; width: 2px; background: var(--a); border-radius: 2px; }
-.rtab .n { display: inline-block; margin-top: 6px; color: var(--t4); }
-.rail .all { margin-top: auto; font: 10px var(--mono); color: var(--t4); padding: 8px 0; writing-mode: vertical-rl; }
-.rail .all:hover { color: var(--t1); }
+/* the dock — Idearium's #dock-col and #dock-rail, as written there (idearium/ui/index.html §0.60.118 DK2) */
+#dock-col { width: 0; flex: none; display: flex; flex-direction: column; gap: 8px; overflow-y: auto; font-family: var(--mono); padding: 0; transition: width .2s; }
+#dock-col.open { width: min(400px, 40vw); padding: 10px 8px 10px 10px; }
+#dock-col .dk-panel { flex: 0 0 auto; display: flex; flex-direction: column; max-height: 62vh; background: var(--nx-card, var(--bg2)); border: 1px solid var(--nx-rim, rgba(255,255,255,.12)); border-radius: 10px; box-shadow: 0 12px 34px rgba(0,0,0,.45); overflow: hidden; }
+#dock-col .dk-panel.folded { max-height: none; }
+#dock-col .dk-head { display: flex; align-items: center; gap: 6px; padding: 7px 9px; border-bottom: 1px solid var(--nx-rim, rgba(255,255,255,.08)); font-size: 11px; color: var(--text); }
+#dock-col .dk-panel.folded .dk-head { border-bottom: 0; }
+#dock-col .dk-head b { font-weight: 600; letter-spacing: .06em; text-transform: uppercase; font-size: 10.5px; }
+#dock-col .dk-about { color: var(--text3); font-size: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+#dock-col .dk-grow { flex: 1; }
+#dock-col .dk-n { color: var(--text3); font-size: 10px; }
+#dock-col .dk-fold, #dock-col .dk-x { background: none; border: 0; color: var(--text3); cursor: pointer; font: 12px var(--mono); padding: 0 3px; }
+#dock-col .dk-fold:hover, #dock-col .dk-x:hover { color: var(--text); }
+#dock-col .dk-body { overflow-y: auto; padding: 8px 10px; font-size: 11px; color: var(--text2); min-height: 40px; }
+#dock-col .dk-panel.folded .dk-body { display: none; }
+#dock-col .dk-sec { margin: 10px 0 4px; color: var(--text3); font-size: 10px; text-transform: uppercase; letter-spacing: .06em; }
+#dock-col .dk-sec:first-child { margin-top: 0; }
+#dock-col .dk-empty { color: var(--text3); font-size: 11px; padding: 4px 0; line-height: 1.5; }
+#dock-col .dk-bad { color: var(--coral); }
+.kv2 { display: flex; justify-content: space-between; gap: 10px; padding: 5px 0; border-top: 1px solid var(--edge); }
+.kv2:first-child { border-top: 0; }
+.kv2 span:first-child { color: var(--text2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.kv2 span:last-child { color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 60%; text-align: right; }
+.pre { font: 11px/1.55 var(--mono); color: var(--text2); white-space: pre-wrap; word-break: break-word; background: var(--bg); border: 1px solid var(--edge); border-radius: 6px; padding: 8px 9px; max-height: 260px; overflow: auto; }
+.bars { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 6px; }
+#dock-rail { flex: none; display: flex; flex-direction: column; gap: 4px; align-items: stretch; justify-content: center; padding: 8px 0; background: var(--bg); border-left: 1px solid var(--edge); }
+#dock-rail .dk-tab { display: flex; flex-direction: column; align-items: center; gap: 5px; padding: 10px 5px 9px 6px; background: var(--nx-card, var(--bg2)); border: 1px solid var(--nx-rim, rgba(255,255,255,.12)); border-right: 0; border-radius: 8px 0 0 8px; color: var(--text2); font: 600 10px var(--mono); letter-spacing: .08em; cursor: pointer; box-shadow: -6px 0 18px rgba(0,0,0,.35); transition: padding-right .15s, color .15s, background .15s; }
+#dock-rail .dk-tab:hover { color: var(--text); padding-right: 9px; }
+#dock-rail .dk-tab.on { color: var(--text); background: var(--nx-card-hi, rgba(59,130,246,.18)); border-color: var(--accent, var(--sky)); }
+#dock-rail .dk-l { writing-mode: vertical-rl; transform: rotate(180deg); text-transform: uppercase; }
+#dock-rail .dk-n { writing-mode: vertical-rl; transform: rotate(180deg); color: var(--text3); font-weight: 400; }
+#dock-rail .dk-n.warn { color: var(--amber); }
+.dk-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--sky); animation: pulse 1.2s ease-in-out infinite; display: inline-block; }
+#dock-rail .dk-foot { display: flex; flex-direction: column; gap: 2px; margin-top: 4px; }
+#dock-rail .dk-all { background: none; border: 1px solid var(--nx-rim, rgba(255,255,255,.12)); border-right: 0; border-radius: 6px 0 0 6px; color: var(--text3); font: 9px var(--mono); padding: 4px 3px; cursor: pointer; }
+#dock-rail .dk-all:hover { color: var(--text); }
 
-/* placeholder tabs */
-.stub { grid-column: 1 / -1; display: grid; place-items: center; }
-.stub .card { max-width: 520px; border: 1px solid var(--ln); background: var(--bg1); border-radius: 12px; padding: 26px 28px; }
-.stub h2 { font: 500 18px var(--sans); color: var(--t1); display: flex; gap: 10px; align-items: center; }
-.stub p { margin-top: 10px; color: var(--t3); line-height: 1.65; }
-.stub .tag { display: inline-block; margin-top: 14px; font: 11px var(--mono); color: var(--a); border: 1px solid var(--a-b); border-radius: 999px; padding: 2px 10px; }
+/* tables (Runs, Variables, Settings) */
+.page { flex: 1; overflow: auto; padding: 18px 20px; }
+.page h2 { font: 500 16px var(--sans); color: var(--bright); }
+.page .lead { margin-top: 4px; color: var(--text2); font-size: 12.5px; }
+table.t { width: 100%; border-collapse: collapse; margin-top: 14px; font-size: 12px; }
+table.t th { text-align: left; font: 600 9.5px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--text3); padding: 8px 10px; border-bottom: 1px solid var(--rim); position: sticky; top: 0; background: var(--bg); }
+table.t td { padding: 9px 10px; border-bottom: 1px solid var(--edge); color: var(--text); vertical-align: top; }
+table.t td.m { font-family: var(--mono); font-size: 11px; color: var(--text2); }
+table.t tr:hover td { background: rgba(255,255,255,.015); }
+.mini { display: flex; gap: 2px; }
+.mini i { width: 10px; height: 10px; border-radius: 2px; background: var(--edge); }
+.card { max-width: 560px; margin: 8vh auto 0; border: 1px solid var(--rim); background: var(--panel); border-radius: 12px; padding: 24px 26px; }
+.card h2 { display: flex; align-items: center; gap: 10px; }
+.card p { margin-top: 10px; color: var(--text2); line-height: 1.65; font-size: 12.5px; }
+.tag { display: inline-block; margin-top: 14px; font: 10.5px var(--mono); color: var(--sky); border: 1px solid var(--b2); border-radius: 999px; padding: 2px 10px; }
 
-/* status bar */
-.status { grid-column: 1 / -1; display: flex; align-items: center; gap: 18px; padding: 0 12px; background: var(--bg1); border-top: 1px solid var(--ln); font: 11px var(--mono); color: var(--t3); white-space: nowrap; overflow: hidden; }
-.status b { color: var(--t2); font-weight: 500; }
-.status .pv { margin-left: auto; color: var(--vio); }
-::-webkit-scrollbar { width: 9px; height: 9px; } ::-webkit-scrollbar-thumb { background: var(--ln2); border-radius: 5px; border: 2px solid transparent; background-clip: padding-box; } ::-webkit-scrollbar-track { background: transparent; }
+.status { grid-column: 1 / -1; display: flex; align-items: center; gap: 18px; padding: 0 12px; background: var(--bg1); border-top: 1px solid var(--rim); font: 10.5px var(--mono); color: var(--text2); white-space: nowrap; overflow: hidden; }
+.status b { color: var(--text); font-weight: 500; }
+.status .pv { margin-left: auto; color: var(--violet); }
+::-webkit-scrollbar { width: 9px; height: 9px; } ::-webkit-scrollbar-thumb { background: var(--rim); border-radius: 5px; border: 2px solid transparent; background-clip: padding-box; } ::-webkit-scrollbar-track { background: transparent; }
+@media (max-width: 1200px) { .lib { width: 220px; } .console { grid-template-columns: 210px 1fr; } .metrics { grid-template-columns: repeat(3, minmax(0, 1fr)); } .ctl .btn span { display: none; } }
 </style>
 </head>
 <body>
-<div class="shell">
-  <div class="top">
-    <div class="brand">C<span>O</span>S</div>
-    <div class="crumbs"><span>Pipelines</span><span class="sep">/</span><span>nexus</span><span class="sep">/</span><b id="crumb">Run console</b></div>
-    <span class="state st-idle" id="runState"><span class="dot"></span><span>idle</span></span>
+<div class="app">
+  <nav class="tabbar">
+    <button class="btn" id="libBtn" title="Show or hide the pipelines"><svg class="i" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+    <div class="logo">C<span>O</span>S</div>
+    <div class="crumbs"><span>Automation</span><span class="sep">/</span><span>Pipelines</span><span class="sep">/</span><b id="crumb">—</b></div>
+    <span class="pill s-idle" id="runPill"><span class="d"></span><span>—</span></span>
     <div class="grow"></div>
-    <div class="ctl" title="Preview: reads only. These act once the console is built (PC8 slice b already has pause, continue and retry from a step).">
-      <button class="btn" disabled><svg class="i"><path d="M8 5v14M16 5v14"/></svg>Pause</button>
-      <button class="btn" disabled><svg class="i"><path d="M4 12a8 8 0 1 0 3-6.2M4 4v5h5"/></svg>Retry step</button>
-      <button class="btn" disabled><svg class="i"><path d="M12 3v3M12 18v3M4.2 7.5l2.6 1.5M17.2 15l2.6 1.5M4.2 16.5l2.6-1.5M17.2 9l2.6-1.5"/><circle cx="12" cy="12" r="3"/></svg>Change model</button>
-      <button class="btn danger" disabled><svg class="i"><rect x="6" y="6" width="12" height="12" rx="1.5"/></svg>Cancel run</button>
+    <div class="ctl" style="display:flex;gap:6px" title="Preview: reads only. Run, pause, continue, stop and retry already exist in COS's engine (PC8 slice b); they act once this screen is built.">
+      <button class="btn primary" disabled><svg class="i" viewBox="0 0 24 24"><path d="M7 5l12 7-12 7z"/></svg><span>Run</span></button>
+      <button class="btn" disabled><svg class="i" viewBox="0 0 24 24"><path d="M8 5v14M16 5v14"/></svg><span>Pause</span></button>
+      <button class="btn" disabled><svg class="i" viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 0 3-6.2M4 4v5h5"/></svg><span>Retry step</span></button>
+      <button class="btn" disabled><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/></svg><span>Change model</span></button>
+      <button class="btn danger" disabled><svg class="i" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="1.5"/></svg><span>Cancel</span></button>
     </div>
-    <span class="live" id="live"><span class="dot"></span><span id="liveTxt">connecting</span></span>
-  </div>
-
-  <nav class="side" id="side"></nav>
-  <section class="centre" id="centre"></section>
-  <aside class="dock" id="dock"></aside>
-  <div class="rail" id="rail"></div>
-
-  <div class="status" id="status"></div>
+    <span class="live" id="live"><span class="d"></span><span id="liveTxt">connecting</span></span>
+  </nav>
+  <div class="repo-subnav" id="subnav"></div>
+  <aside class="lib" id="lib"></aside>
+  <section class="stage" id="stage">
+    <div class="work" id="work"></div>
+    <div id="dock-col"></div>
+    <div id="dock-rail"></div>
+  </section>
+  <footer class="status" id="status"></footer>
 </div>
-
 <script>
 'use strict';
-// ── icons (stroke paths) ──
-const IC = {
-  home: '<path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/>',
-  idea: '<path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9V16h7v-2.1A6 6 0 0 0 12 3z"/>',
-  notes: '<path d="M5 4h10l4 4v12H5z"/><path d="M15 4v4h4M8 12h8M8 16h5"/>',
-  code: '<path d="M9 8l-4 4 4 4M15 8l4 4-4 4"/>',
-  architect: '<path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/>',
-  spec: '<path d="M6 3h9l3 3v15H6z"/><path d="M9 9h6M9 13h6M9 17h4"/>',
-  phases: '<path d="M4 6h3M4 12h3M4 18h3M10 6h10M10 12h10M10 18h10"/>',
-  finish: '<path d="M5 21V4M5 4h11l-2 4 2 4H5"/>',
-  intelligence: '<path d="M12 3v4M12 17v4M3 12h4M17 12h4"/><circle cx="12" cy="12" r="4"/>',
-  debug: '<rect x="8" y="7" width="8" height="12" rx="4"/><path d="M12 7V4M4 13h4M16 13h4M5 8l3 2M19 8l-3 2M5 18l3-2M19 18l-3-2"/>',
-  versionium: '<circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/>',
-  git: '<circle cx="6" cy="6" r="2"/><circle cx="6" cy="18" r="2"/><circle cx="18" cy="9" r="2"/><path d="M6 8v8M18 11c0 4-6 3-11 6"/>',
-  settings: '<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/>',
-  console: '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 9l3 3-3 3M12 15h5"/>',
-  gaps: '<path d="M4 7h6v4H4zM14 13h6v4h-6z"/><path d="M10 9h2a2 2 0 0 1 2 2v4"/>',
-  ladder: '<path d="M8 3v18M16 3v18M8 7h8M8 12h8M8 17h8"/>',
-  tape: '<circle cx="7" cy="12" r="3"/><circle cx="17" cy="12" r="3"/><path d="M7 15h10"/><rect x="2" y="6" width="20" height="12" rx="2"/>',
-  flight: '<path d="M3 12h4l3-7 4 14 3-7h4"/>',
-  ledger: '<path d="M5 4h12a2 2 0 0 1 2 2v14H7a2 2 0 0 1-2-2z"/><path d="M5 18a2 2 0 0 1 2-2h12"/>',
-};
-const icon = (k) => `<svg class="i" viewBox="0 0 24 24">${IC[k] || ''}</svg>`;
-
-// Idearium's repo tabs, in its order (idearium/ui/index.html #repo-subnav), then the run's own tabs (proposed, additive)
-const TABS = [
-  ['home', 'Home', 'The repo at a glance: what it is, where it stands, what is next.'],
-  ['idea', 'Idea', 'The idea in its four lanes, before it becomes a spec.'],
-  ['notes', 'Notes', 'Notes, ideas, decisions, todos, questions, quotes.'],
-  ['code', 'Code', 'The files and the work surface: every change the agent made, with Apply, Reject, Revert, Promote.'],
-  ['architect', 'Architect', 'The block canvas for the architecture.'],
-  ['spec', 'Spec', 'The spec builder.'],
-  ['phases', 'Phases', 'Every phase map, its phases, runs and the ledger.'],
-  ['finish', 'Finish', 'What stands between the project and done: its spine, docs, tests.'],
-  ['intelligence', 'Intel', 'What the intelligence system has learned about this repo.'],
-  ['debug', 'Debug', 'Faults, their causes and the diagnostics.'],
-  ['versionium', 'Versions', 'Every version and snapshot of the repo.'],
-  ['git', 'Sync & CI', 'Git, sync and CI.'],
-  ['settings', 'Settings', 'The repo\'s agent, prompt, routing and compartment settings.'],
-];
-const RUNTABS = [
-  ['console', 'Console', 'Every model call of the run, streaming as it is written.'],
-  ['gaps', 'Gaps', 'The contract\'s .gap files (idearium/data/tasks/<contract>/): each open loop, its tries, its lesson.'],
-  ['ladder', 'Ladder', 'Which rung each gap climbed: 3b → DeepSeek 16b → Qwen3 30b, and what unstuck it.'],
-  ['tape', 'Tape', 'Replay any model call without Ollama (ollama/lib/tape.js).'],
-  ['flight', 'Flight', 'The run\'s flight record: every step, its timing and outcome (lib/flight-data.js).'],
-  ['ledger', 'Ledger', 'The phase ledger and COS\'s ledger for this run.'],
-];
-// Idearium's dock panels (idearium/ui/js/code-dock.js DOCK_PANELS), same names and purpose
-const DOCK = [['outputs', 'Outputs'], ['changes', 'Changes'], ['tasks', 'Tasks'], ['context', 'Context'], ['tools', 'Tools'], ['control', 'Control']];
-
-const store = { get(k, d) { try { const v = localStorage.getItem('cos.runconsole.' + k); return v == null ? d : JSON.parse(v); } catch (_) { return d; } },
-  set(k, v) { try { localStorage.setItem('cos.runconsole.' + k, JSON.stringify(v)); } catch (_) {} } };
-const S = { tab: 'console', sel: null, pinned: false, filter: store.get('filter', 'run'), follow: true, wrap: true, think: false,
-  open: new Set(store.get('open', ['context', 'tasks', 'control'])), folded: new Set(store.get('folded', [])), D: null, lastOk: 0 };
-
 const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s == null ? '' : s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-const dur = (ms) => ms == null ? '—' : ms < 1000 ? ms + 'ms' : ms < 60000 ? (ms / 1000).toFixed(1) + 's' : Math.floor(ms / 60000) + 'm ' + Math.round((ms % 60000) / 1000) + 's';
+const dur = (ms) => ms == null ? '—' : ms < 1000 ? Math.round(ms) + ' ms' : ms < 60000 ? (ms / 1000).toFixed(1) + ' s' : ms < 3600e3 ? Math.floor(ms / 60000) + 'm ' + Math.round((ms % 60000) / 1000) + 's' : Math.floor(ms / 3600e3) + 'h ' + Math.round((ms % 3600e3) / 60000) + 'm';
 const kfmt = (n) => n == null ? '—' : n >= 1000 ? (n / 1000).toFixed(1) + 'k' : String(n);
-const ago = (t) => { if (!t) return ''; const s = Math.round((Date.now() - t) / 1000); return s < 60 ? s + 's ago' : s < 3600 ? Math.round(s / 60) + 'm ago' : Math.round(s / 3600) + 'h ago'; };
+const ago = (t) => { if (!t) return '—'; const s = Math.round((Date.now() - t) / 1000); return s < 60 ? s + 's ago' : s < 3600 ? Math.round(s / 60) + 'm ago' : s < 86400 ? Math.round(s / 3600) + 'h ago' : Math.round(s / 86400) + 'd ago'; };
 const shortModel = (m) => String(m || '').replace(/^huihui_ai\//, '').replace(/-abliterated?/, '');
 const isBg = (j) => /probe|diagnose/.test(j.intent || '');
-const label = (j) => j.gap ? 'gap · ' + j.gap : j.source ? j.source.replace(/^idearium\./, '') : (j.intent || 'call');
+const store = { get(k, d) { try { const v = localStorage.getItem('cos.pipes.' + k); return v == null ? d : JSON.parse(v); } catch (_) { return d; } }, set(k, v) { try { localStorage.setItem('cos.pipes.' + k, JSON.stringify(v)); } catch (_) {} } };
 
-// ── syntax highlight (JS / Emerge): tokens, escaped piece by piece ──
+// the screen's tabs: the pipeline's own, then the run's (new, additive to Idearium's)
+const TABS = [['canvas', 'Canvas'], ['console', 'Console'], ['runs', 'Runs'], ['vars', 'Variables'], ['settings', 'Settings'], '|',
+  ['gaps', 'Gaps', 1], ['ladder', 'Ladder', 1], ['tape', 'Tape', 1], ['flight', 'Flight', 1], ['ledger', 'Ledger', 1]];
+const STUBS = { gaps: 'The contract\'s .gap files (idearium/data/tasks/<contract>/): each open loop, its tries, its lesson, its chain.', ladder: 'Which rung each gap climbed (3b → DeepSeek 16b → Qwen3 30b) and what unstuck it, from the emerge-gap rows.',
+  tape: 'Replay any model call of a run without Ollama (ollama/lib/tape.js).', flight: 'The run\'s flight record: every step, its timing, its outcome (lib/flight-data.js).', ledger: 'The phase ledger and COS\'s ledger rows for this run.' };
+// the dock: Idearium's six panels (idearium/ui/js/code-dock.js DOCK_PANELS), then the pipeline's own
+const DOCK = [['inspector', 'Inspector', 'the step or gate you picked'], ['run', 'Run', 'the latest run, step by step'], ['outputs', 'Outputs', 'proposals and artifacts'],
+  ['changes', 'Changes', 'the work surface and the workspace'], ['tasks', 'Tasks', 'everything else running'], ['context', 'Context', 'what the model is given'],
+  ['tools', 'Tools', 'systems and models'], ['control', 'Control', 'play, pause, rewind; who answers'], ['history', 'History', 'this pipeline\'s runs']];
+
+const S = { tab: store.get('tab', 'canvas'), pid: store.get('pid', null), selStep: null, selGate: null, selJob: null, pinned: false, filter: 'run', follow: true, wrap: true, think: false, q: '',
+  open: new Set(store.get('open', ['inspector', 'run', 'context'])), folded: new Set(store.get('folded', [])), lib: store.get('lib', true), split: store.get('split', 0.58),
+  D: null, lastOk: 0, base: {}, view: null, sig: '' };
+
+// ── data helpers ──
+const pipe = () => S.D && S.D.pipelines.find((p) => p.id === S.pid);
+const runsOf = (id) => S.D ? S.D.runs.filter((r) => r.pipelineId === id).sort((a, b) => (b.at || 0) - (a.at || 0)) : [];
+const lastRun = (id) => runsOf(id)[0] || null;
+const stepType = (t) => t.step ? (t.step.type || 'step') : 'step';
+const stepTarget = (t) => { const u = t.step && t.step.config && t.step.config.url; const m = /^nexus:\/\/([a-z0-9-]+)(\/\S*)?/i.exec(String(u || '')); return m ? m[1] + (m[2] ? ' ' + m[2].replace(/^\/api/, '') : '') : (u || ''); };
+const gateText = (g) => { if (!g) return 'pass'; return Object.entries(g).map(([k, v]) => k + ' ' + (typeof v === 'string' ? v : JSON.stringify(v))).join(' · '); };
+const stOf = (run, id) => run && run.tasks && run.tasks[id] ? run.tasks[id].status || 'pending' : 'pending';
+const COL = { done: 'var(--ok)', complete: 'var(--ok)', passed: 'var(--ok)', running: 'var(--amber)', failed: 'var(--coral)', paused: 'var(--violet)', skipped: 'var(--text3)', pending: 'var(--text3)', cancelled: 'var(--coral)' };
+
+// ── top, subnav, library ──
+function subnav() {
+  const p = pipe(), runs = p ? runsOf(p.id).length : 0, live = S.D ? S.D.jobs.filter((j) => !isBg(j) && j.status === 'running').length : 0;
+  $('subnav').innerHTML = TABS.map((t) => t === '|' ? '<span class="subsep"></span>' : `<button class="repo-subtab-btn ${S.tab === t[0] ? 'active' : ''}" data-tab="${t[0]}">${t[1]}${
+    t[0] === 'runs' ? ` <span class="n">${runs}</span>` : t[0] === 'console' && live ? ' <span class="dk-dot"></span>' : t[0] === 'canvas' && p ? ` <span class="n">${p.tasks.length}</span>` : ''}${t[2] ? ' <span class="new">NEW</span>' : ''}</button>`).join('');
+  $('subnav').querySelectorAll('[data-tab]').forEach((b) => b.onclick = () => { S.tab = b.dataset.tab; store.set('tab', S.tab); S.sig = ''; drawAll(); });
+}
+function lib() {
+  $('lib').className = 'lib' + (S.lib ? '' : ' min');
+  if (!S.D) { $('lib').innerHTML = '<div class="empty">Reading…</div>'; return; }
+  const ps = S.D.pipelines.filter((p) => !S.q || (p.name + ' ' + p.description).toLowerCase().includes(S.q.toLowerCase()));
+  const keep = $('lib').querySelector('input'); const had = keep && document.activeElement === keep;
+  $('lib').innerHTML = `<div class="sec-h">Pipelines <span class="ct">${S.D.pipelines.length}</span></div>
+    <label class="search"><svg class="i" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"/><path d="M20 20l-4-4"/></svg><input id="q" placeholder="Find a pipeline" value="${esc(S.q)}"></label>
+    <div class="plist">${ps.map((p) => { const r = lastRun(p.id), st = r ? r.status : 'idle';
+      return `<button class="prow ${p.id === S.pid ? 'on' : ''}" data-p="${esc(p.id)}"><div class="t"><span class="sd" style="background:${COL[st] || 'var(--text3)'}"></span><b>${esc(p.name || p.id)}</b></div>
+        <div class="meta"><span>${p.tasks.length} steps</span><span>${r ? esc(st) + ' · ' + ago(r.at) : 'never run'}</span></div>${p.description ? `<div class="ds">${esc(p.description)}</div>` : ''}</button>`; }).join('')}</div>`;
+  $('lib').querySelectorAll('[data-p]').forEach((b) => b.onclick = () => choose(b.dataset.p));
+  const q = $('q'); q.oninput = () => { S.q = q.value; lib(); }; if (had) { q.focus(); q.setSelectionRange(q.value.length, q.value.length); }
+}
+function choose(id) { S.pid = id; store.set('pid', id); S.selStep = null; S.selGate = null; S.view = null; S.sig = ''; drawAll(); loadBase(id); }
+async function loadBase(id) { if (!id || S.base[id]) return; S.base[id] = { loading: true }; try { S.base[id] = await (await fetch('/baseline?pipeline=' + encodeURIComponent(id))).json() || {}; } catch (_) { S.base[id] = {}; } if (S.pid === id) { S.sig = ''; work(); dock(); } }
+
+// ── the canvas ──
+const W = 214, H = 70, GX = 96, GY = 40;
+function layout(p) {
+  const by = Object.fromEntries(p.tasks.map((t) => [t.id, t])), lvl = {};
+  const L = (id, seen = new Set()) => { if (lvl[id] != null) return lvl[id]; if (seen.has(id)) return 0; seen.add(id); const t = by[id]; const d = (t && t.depends_on || []).filter((x) => by[x]); return lvl[id] = d.length ? 1 + Math.max(...d.map((x) => L(x, seen))) : 0; };
+  p.tasks.forEach((t) => L(t.id));
+  const cols = {}; p.tasks.forEach((t) => (cols[lvl[t.id]] = cols[lvl[t.id]] || []).push(t.id));
+  // a long chain wraps into rows that fit the canvas, read left to right, top to bottom, so boxes stay readable
+  const nC = Object.keys(cols).length, tall = Math.max(...Object.values(cols).map((x) => x.length)), wrap = document.querySelector('.canvas-wrap');
+  const rc = wrap ? wrap.getBoundingClientRect() : { width: 1400, height: 500 }, aw = rc.width - 300, ah = rc.height - 90, bandH = tall * (H + GY) - GY + 70;
+  let per = nC, best = 0; for (let k = 1; k <= nC; k++) { const w = 80 + k * (W + GX) - GX, h = 80 + Math.ceil(nC / k) * bandH - 70, s = Math.min(aw / w, ah / h); if (s > best + 1e-6) { best = s; per = k; } }
+  const pos = {}; for (const [c, ids] of Object.entries(cols)) { const row = Math.floor(c / per), col = c % per; ids.forEach((id, i) => pos[id] = { x: 40 + col * (W + GX), y: 40 + row * bandH + i * (H + GY) }); }
+  const rows = Math.ceil(nC / per);
+  return { pos, w: 80 + Math.min(nC, per) * (W + GX) - GX, h: 80 + rows * bandH - 70 };
+}
+function canvasSvg(p) {
+  const run = lastRun(p.id), base = (S.base[p.id] && S.base[p.id].steps) || {}, { pos } = layout(p);
+  let wires = '', gates = '', nodes = '';
+  for (const t of p.tasks) for (const d of (t.depends_on || [])) {
+    const a = pos[d], b = pos[t.id]; if (!a || !b) continue;
+    const x1 = a.x + W, y1 = a.y + H / 2, x2 = b.x, y2 = b.y + H / 2, mx = (x1 + x2) / 2;
+    const sa = stOf(run, d), sb = stOf(run, t.id), cls = sb === 'running' ? 'live' : (sa === 'done' || sa === 'complete' || sa === 'passed') ? 'done' : '';
+    const back = x2 <= x1 ? `M${x1},${y1} h18 q8,0 8,8 V${a.y + H + 27} q0,8 -8,8 H${x2 - 44} q-8,0 -8,8 V${y2 - 8} q0,8 8,8 H${x2 - 2}` : null;
+    wires += `<path class="wire ${cls}" d="${back || `M${x1},${y1} C${mx},${y1} ${mx},${y2} ${x2 - 2},${y2}`}"/>`;
+    const gx = x2 - 22, gy = y2, gs = sb === 'failed' ? 'bad' : (sb === 'done' || sb === 'complete' || sb === 'passed') ? 'ok' : '';
+    const gt = gateText(t.gate); const sel = S.selGate === t.id ? 'sel' : '';
+    gates += `<g class="gate ${gs} ${sel}" data-gate="${esc(t.id)}"><title>Gate into “${esc(t.label)}”: ${esc(gt)}</title><rect x="${gx - 7}" y="${gy - 7}" width="14" height="14" rx="2" transform="rotate(45 ${gx} ${gy})"/>
+      <text x="${gx}" y="${gy + 22}" text-anchor="middle">${esc(gt.length > 22 ? gt.slice(0, 21) + '…' : gt)}</text></g>`;
+  }
+  for (const t of p.tasks) {
+    const { x, y } = pos[t.id], st = stOf(run, t.id), tr = run && run.tasks[t.id], b = base[t.id], c = COL[st] || 'var(--text3)';
+    const ms = tr && tr.ms != null ? tr.ms : null, pct = b && b.mean_ms > 0 && ms != null ? Math.min(100, Math.round(ms / (b.mean_ms + 2 * (b.sigma_ms || 0)) * 100)) : null;
+    const lab = t.label.length > 27 ? t.label.slice(0, 26) + '…' : t.label;
+    nodes += `<g class="node ${st} ${S.selStep === t.id ? 'sel' : ''}" data-step="${esc(t.id)}" transform="translate(${x},${y})" style="cursor:pointer"><title>${esc(t.label)}\n${esc(stepType(t))} · ${esc(stepTarget(t))}</title>
+      <rect class="box" width="${W}" height="${H}" rx="9"/><rect class="stripe" width="3" height="${H - 18}" x="0" y="9" rx="1.5" fill="${c}"/>
+      <text class="ty" x="14" y="18">${esc(stepType(t).toUpperCase())}${t.method ? ' · ' + esc(String(t.method).toUpperCase()) : ''}</text>
+      <circle cx="${W - 14}" cy="15" r="4" fill="${c}"/>
+      <text class="lb" x="14" y="37">${esc(lab)}</text>
+      <text class="sb" x="14" y="55">${esc(st)}${ms != null ? ' · ' + dur(ms) : ''}${b && b.n ? ' · avg ' + dur(b.mean_ms) : ''}</text>
+      ${pct != null ? `<rect x="14" y="${H - 7}" width="${W - 28}" height="2" rx="1" fill="var(--edge)"/><rect x="14" y="${H - 7}" width="${(W - 28) * pct / 100}" height="2" rx="1" fill="${pct >= 100 ? 'var(--coral)' : 'var(--sky)'}"/>` : ''}
+    </g>`;
+  }
+  return `<g id="vp">${wires}${gates}${nodes}</g>`;
+}
+function fit() {
+  const p = pipe(), wrap = document.querySelector('.canvas-wrap'); if (!p || !wrap) return;
+  const L = layout(p), r = wrap.getBoundingClientRect(), pad = 30;
+  const k = Math.min(1.15, (r.width - 300 - pad) / L.w, (r.height - pad - 50) / L.h);
+  S.view = { k: Math.max(.25, k), x: Math.max(pad, (r.width - 260 - L.w * Math.max(.25, k)) / 2), y: Math.max(56, (r.height - L.h * Math.max(.25, k)) / 2) }; applyView();
+}
+function applyView() { const vp = document.getElementById('vp'); if (vp && S.view) vp.setAttribute('transform', `translate(${S.view.x},${S.view.y}) scale(${S.view.k})`); }
+function bindCanvas() {
+  const svg = document.querySelector('svg.cv'); if (!svg) return; let drag = null;
+  svg.onmousedown = (e) => { if (e.target.closest('.node,.gate')) return; drag = { x: e.clientX, y: e.clientY, vx: S.view.x, vy: S.view.y }; svg.classList.add('drag'); };
+  window.onmousemove = (e) => { if (!drag) return; S.view.x = drag.vx + e.clientX - drag.x; S.view.y = drag.vy + e.clientY - drag.y; applyView(); };
+  window.onmouseup = () => { drag = null; svg.classList.remove('drag'); };
+  svg.onwheel = (e) => { e.preventDefault(); const r = svg.getBoundingClientRect(), mx = e.clientX - r.left, my = e.clientY - r.top, k2 = Math.min(2.5, Math.max(.2, S.view.k * (e.deltaY < 0 ? 1.1 : 1 / 1.1)));
+    S.view.x = mx - (mx - S.view.x) * k2 / S.view.k; S.view.y = my - (my - S.view.y) * k2 / S.view.k; S.view.k = k2; applyView(); };
+  svg.onclick = (e) => { const n = e.target.closest('.node'), g = e.target.closest('.gate');
+    if (n) { S.selStep = n.dataset.step; S.selGate = null; } else if (g) { S.selGate = g.dataset.gate; S.selStep = null; } else return;
+    S.open.add('inspector'); S.folded.delete('inspector'); store.set('open', [...S.open]); S.sig = ''; work(); dock(); rail(); };
+  document.querySelectorAll('.cv-tools [data-z]').forEach((b) => b.onclick = () => { const z = b.dataset.z; if (z === 'fit') return fit(); const r = svg.getBoundingClientRect(), f = z === 'in' ? 1.2 : 1 / 1.2, k2 = Math.min(2.5, Math.max(.2, S.view.k * f));
+    S.view.x = r.width / 2 - (r.width / 2 - S.view.x) * k2 / S.view.k; S.view.y = r.height / 2 - (r.height / 2 - S.view.y) * k2 / S.view.k; S.view.k = k2; applyView(); });
+}
+function runCard(p) {
+  const r = lastRun(p.id); if (!r) return `<div class="cv-run"><h5>No runs yet</h5><div class="kv"><span>steps</span><b>${p.tasks.length}</b></div></div>`;
+  const ids = p.tasks.map((t) => t.id), done = ids.filter((i) => /done|complete|passed/.test(stOf(r, i))).length, fail = ids.filter((i) => stOf(r, i) === 'failed').length, runningI = ids.findIndex((i) => stOf(r, i) === 'running');
+  return `<div class="cv-run"><h5>Latest run <span class="pill s-${esc(r.status)}"><span class="d"></span>${esc(r.status)}</span></h5>
+    <div class="kv"><span>step</span><b>${runningI >= 0 ? runningI + 1 : done} of ${ids.length}</b></div>
+    <div class="kv"><span>started</span><b>${ago(r.at)}</b></div><div class="kv"><span>took</span><b>${dur((r.end || Date.now()) - r.at)}</b></div>
+    <div class="prog"><i style="width:${done / ids.length * 100}%;background:var(--ok)"></i><i style="width:${fail / ids.length * 100}%;background:var(--coral)"></i>${runningI >= 0 ? `<i style="width:${100 / ids.length}%;background:var(--amber)"></i>` : ''}</div>
+    ${r.error ? `<div class="kv" style="color:var(--coral);white-space:normal">${esc(r.error.slice(0, 140))}</div>` : ''}</div>`;
+}
+
+// ── the console ──
 const KW = /^(const|let|var|function|return|if|else|for|while|of|in|new|class|extends|import|export|from|default|async|await|try|catch|throw|typeof|require|module|exports|true|false|null|undefined|this|fn|gives|takes|when|use|test|expect)$/;
 function hl(line) {
-  let out = '', i = 0; const re = /(\/\/.*$|#.*$)|('(?:\\.|[^'\\])*'?|"(?:\\.|[^"\\])*"?|`(?:\\.|[^`\\])*`?)|(\b\d+(?:\.\d+)?\b)|([A-Za-z_$][\w$]*)(?=\s*\()|([A-Za-z_$][\w$]*)|([{}()[\];,.=<>+\-*/!?:&|]+)/g;
-  let m; while ((m = re.exec(line))) {
-    out += esc(line.slice(i, m.index)); i = re.lastIndex;
-    if (m[1]) out += `<span class="c">${esc(m[1])}</span>`; else if (m[2]) out += `<span class="s">${esc(m[2])}</span>`;
-    else if (m[3]) out += `<span class="n">${esc(m[3])}</span>`; else if (m[4]) out += KW.test(m[4]) ? `<span class="k">${esc(m[4])}</span>` : `<span class="f">${esc(m[4])}</span>`;
-    else if (m[5]) out += KW.test(m[5]) ? `<span class="k">${esc(m[5])}</span>` : esc(m[5]); else out += `<span class="p">${esc(m[6])}</span>`;
-    if (m[0] === '') re.lastIndex++;
-  }
+  let out = '', i = 0; const re = /(\/\/.*$|#.*$)|('(?:\\.|[^'\\])*'?|"(?:\\.|[^"\\])*"?|`(?:\\.|[^`\\])*`?)|(\b\d+(?:\.\d+)?\b)|([A-Za-z_$][\w$]*)(?=\s*\()|([A-Za-z_$][\w$]*)|([{}()[\];,.=<>+\-*/!?:&|]+)/g; let m;
+  while ((m = re.exec(line))) { out += esc(line.slice(i, m.index)); i = re.lastIndex;
+    if (m[1]) out += `<span class="c">${esc(m[1])}</span>`; else if (m[2]) out += `<span class="s">${esc(m[2])}</span>`; else if (m[3]) out += `<span class="n">${esc(m[3])}</span>`;
+    else if (m[4]) out += `<span class="${KW.test(m[4]) ? 'k' : 'f'}">${esc(m[4])}</span>`; else if (m[5]) out += KW.test(m[5]) ? `<span class="k">${esc(m[5])}</span>` : esc(m[5]); else out += `<span class="p">${esc(m[6])}</span>`;
+    if (m[0] === '') re.lastIndex++; }
   return out + esc(line.slice(i));
 }
 function renderText(text, running) {
-  const lines = String(text || '').split('\n'); let inCode = !/```/.test(text); let html = '';
-  lines.forEach((ln, ix) => {
-    const last = ix === lines.length - 1 ? (running ? '<span class="caret"></span>' : '') : '';
-    if (/^\s*```/.test(ln)) { inCode = !inCode; html += `<div class="l fence">${esc(ln)}${last}</div>`; return; }
-    html += inCode ? `<div class="l">${hl(ln)}${last}</div>` : `<div class="l prose">${esc(ln)}${last}</div>`;
-  });
+  const lines = String(text || '').split('\n'); let inCode = !/```/.test(text), html = '';
+  lines.forEach((ln, ix) => { const c = ix === lines.length - 1 && running ? '<span class="caret"></span>' : '';
+    if (/^\s*```/.test(ln)) { inCode = !inCode; html += `<div class="l fence">${esc(ln)}${c}</div>`; return; }
+    html += inCode ? `<div class="l">${hl(ln)}${c}</div>` : `<div class="l prose">${esc(ln)}${c}</div>`; });
   return html;
 }
-
-// ── left side tabs ──
-function side() {
-  const D = S.D, live = D ? D.jobs.filter((j) => !isBg(j) && j.status === 'running').length : 0;
-  const b = ([id, name]) => `<button class="stab ${S.tab === id ? 'on' : ''}" data-tab="${id}" title="${esc(name)}">${icon(id)}<span>${esc(name)}</span>${id === 'console' && live ? `<span class="badge">${live}</span>` : ''}</button>`;
-  $('side').innerHTML = '<h6>RUN</h6>' + RUNTABS.map(b).join('') + '<h6>REPO</h6>' + TABS.map(b).join('');
-  $('side').querySelectorAll('.stab').forEach((x) => x.onclick = () => { S.tab = x.dataset.tab; draw(); });
+const jlabel = (j) => j.gap ? 'gap · ' + j.gap : j.source ? j.source.replace(/^idearium\./, '') : (j.intent || 'call');
+function pickJob() {
+  const D = S.D, pool = D.jobs.filter((j) => S.filter === 'all' || !isBg(j));
+  if (S.pinned && D.jobs.some((j) => j.id === S.selJob)) return D.jobs.find((j) => j.id === S.selJob);
+  const j = pool.find((x) => x.status === 'running') || pool.slice().sort((a, b) => (b.at || b.queued || 0) - (a.at || a.queued || 0))[0]; S.selJob = j ? j.id : null; return j || null;
 }
-
-// ── centre ──
-function pick(D) {
-  const pool = D.jobs.filter((j) => S.filter === 'all' || !isBg(j));
-  if (S.pinned && D.jobs.some((j) => j.id === S.sel)) return D.jobs.find((j) => j.id === S.sel);
-  const run = pool.find((j) => j.status === 'running') || pool.slice().sort((a, b) => (b.at || b.queued || 0) - (a.at || a.queued || 0))[0];
-  S.sel = run ? run.id : null; return run || null;
-}
-function centre() {
-  const D = S.D, all = [...TABS, ...RUNTABS], t = all.find((x) => x[0] === S.tab);
-  if (S.tab !== 'console') {
-    const repo = TABS.some((x) => x[0] === S.tab);
-    $('centre').innerHTML = `<div class="stub"><div class="card"><h2>${icon(S.tab)}${esc(t[1])}</h2><p>${esc(t[2])}</p><p>${repo
-      ? 'Idearium\'s tab, moved into COS through the drawbridge by its own phase (DB1–DB7): Idearium keeps it until the move is verified. Not drawn in this preview.'
-      : 'Proposed, additive to Idearium. Yours to choose. Not drawn in this preview.'}</p><span class="tag">${repo ? 'from Idearium' : 'new · proposed'}</span></div></div>`;
-    $('crumb').textContent = t[1]; return;
-  }
-  $('crumb').textContent = 'Run console';
-  if (!D) { $('centre').innerHTML = '<div class="calls"><div class="empty">Reading…</div></div><div class="view"></div>'; return; }
-  const j = pick(D);
-  const pool = D.jobs.filter((x) => S.filter === 'all' || !isBg(x)).sort((a, b) => (b.at || b.queued || 0) - (a.at || a.queued || 0));
-  const act = pool.filter((x) => x.status === 'running' || x.status === 'queued'), done = pool.filter((x) => !(x.status === 'running' || x.status === 'queued'));
-  const row = (x) => `<div class="row ${esc(x.status)} ${x.id === S.sel ? 'sel' : ''}" data-id="${esc(x.id)}"><span class="dot"></span><span class="nm">${esc(label(x))}</span><span class="tm">${x.status === 'queued' ? 'queued' : dur(x.ms)}</span>
-    <span class="sub">${esc(shortModel(x.model))} · ${kfmt(x.chars)} chars${x.end ? ' · ' + ago(x.end) : ''}</span></div>`;
-  const list = (act.length ? `<div class="grp">Active · ${act.length}</div>` + act.map(row).join('') : '')
-    + (done.length ? `<div class="grp">Finished · ${done.length}</div>` + done.slice(0, 40).map(row).join('') : '')
-    || `<div class="empty"><b>No model calls in this run yet.</b>The run is planning, which asks no model. Calls appear here the moment the test writer or a gap is asked. "All" shows Ollama's own background checks.</div>`;
-  const prevScroll = document.querySelector('.code'); const atBottom = prevScroll ? prevScroll.scrollTop + prevScroll.clientHeight >= prevScroll.scrollHeight - 30 : true; const prevTop = prevScroll ? prevScroll.scrollTop : 0;
-  let view = '<div class="view"><div class="empty" style="margin:auto;text-align:center"><b>Nothing selected</b>Pick a call on the left.</div></div>';
-  if (j) {
-    const secs = (j.ms || 0) / 1000, tps = secs > 0 ? (j.chars / 4 / secs).toFixed(1) : '—';
-    view = `<div class="view">
-      <div class="vh"><span class="state st-${esc(j.status)}"><span class="dot"></span>${esc(j.status)}</span><span class="title">${esc(label(j))}</span><div class="grow"></div>
-        <button class="tool ${S.follow ? 'on' : ''}" data-t="follow">Follow</button><button class="tool ${S.wrap ? 'on' : ''}" data-t="wrap">Wrap</button>
-        <button class="tool ${S.think ? 'on' : ''}" data-t="think"${j.thinking ? '' : ' disabled style="opacity:.35"'}>Thinking</button><button class="tool" data-t="copy">Copy</button>
-        ${S.pinned ? '<button class="tool on" data-t="unpin">Pinned · follow live</button>' : ''}</div>
-      <div class="metrics">
-        <div class="metric"><span>Model</span><b title="${esc(j.model)}">${esc(shortModel(j.model))}</b></div>
-        <div class="metric"><span>Source</span><b>${esc((j.source || j.intent || '—').replace(/^idearium\./, ''))}</b></div>
-        <div class="metric"><span>Elapsed</span><b>${dur(j.ms)}</b></div>
-        <div class="metric"><span>Output</span><b>${kfmt(j.chars)} chars</b></div>
-        <div class="metric"><span>Rate</span><b>${tps} tok/s</b></div>
-        <div class="metric"><span>Prompt</span><b>${kfmt(j.promptChars)} chars</b></div>
-      </div>
+function consoleHtml(full) {
+  const D = S.D; if (!D) return `<div class="console${full ? ' full' : ''}"><div class="empty">Reading…</div></div>`;
+  const j = pickJob(), pool = D.jobs.filter((x) => S.filter === 'all' || !isBg(x)).sort((a, b) => (b.at || b.queued || 0) - (a.at || a.queued || 0));
+  const act = pool.filter((x) => /running|queued/.test(x.status)), done = pool.filter((x) => !/running|queued/.test(x.status));
+  const row = (x) => `<button class="crow ${esc(x.status)} ${x.id === S.selJob ? 'sel' : ''}" data-job="${esc(x.id)}"><span class="d"></span><span class="nm">${esc(jlabel(x))}</span><span class="tm">${x.status === 'queued' ? 'queued' : dur(x.ms)}</span><span class="sub">${esc(shortModel(x.model))} · ${kfmt(x.chars)} chars${x.end ? ' · ' + ago(x.end) : ''}</span></button>`;
+  const list = (act.length ? `<div class="grp">Active · ${act.length}</div>${act.map(row).join('')}` : '') + (done.length ? `<div class="grp">Finished · ${done.length}</div>${done.slice(0, 40).map(row).join('')}` : '')
+    || '<div class="empty"><b>No model calls in this run yet.</b>Planning asks no model. Calls appear the moment the test writer or a gap is asked. “All” shows Ollama’s own background checks.</div>';
+  let view = '<div class="view"><div class="empty" style="margin:auto;text-align:center"><b>Nothing selected</b>Pick a call.</div></div>';
+  if (j) { const secs = (j.ms || 0) / 1000, tps = secs > 0 ? (j.chars / 4 / secs).toFixed(1) : '—';
+    view = `<div class="view"><div class="vh"><span class="pill s-${j.status === 'complete' ? 'done' : esc(j.status)}"><span class="d"></span>${j.status === 'running' ? 'writing' : esc(j.status)}</span><span class="title">${esc(jlabel(j))}</span><span class="grow"></span>
+      <button class="tool ${S.follow ? 'on' : ''}" data-t="follow">Follow</button><button class="tool ${S.wrap ? 'on' : ''}" data-t="wrap">Wrap</button><button class="tool ${S.think ? 'on' : ''}" data-t="think" ${j.thinking ? '' : 'disabled style="opacity:.35"'}>Thinking</button><button class="tool" data-t="copy">Copy</button>${S.pinned ? '<button class="tool on" data-t="unpin">Pinned · back to live</button>' : ''}</div>
+      <div class="metrics"><div class="metric"><span>Model</span><b title="${esc(j.model)}">${esc(shortModel(j.model))}</b></div><div class="metric"><span>Source</span><b>${esc((j.source || j.intent || '—').replace(/^idearium\./, ''))}</b></div>
+        <div class="metric"><span>Elapsed</span><b>${dur(j.ms)}</b></div><div class="metric"><span>Output</span><b>${kfmt(j.chars)} chars</b></div><div class="metric"><span>Rate</span><b>${tps} tok/s</b></div><div class="metric"><span>Prompt</span><b>${kfmt(j.promptChars)} chars</b></div></div>
       ${S.think && j.thinking ? `<div class="think">${esc(j.thinking)}</div>` : ''}
-      <div class="code ${S.wrap ? '' : 'nowrap'}" id="code">${j.text ? renderText(j.text, j.status === 'running') : `<div class="l prose">${j.status === 'queued' ? 'Waiting for Ollama…' : j.status === 'running' ? 'Loading the model; the first words arrive shortly.' : '(no output)'}${j.status === 'running' ? '<span class="caret"></span>' : ''}</div>`}</div>
-      <div class="gate">${j.status === 'failed' ? `<span class="state st-failed"><span class="dot"></span>failed</span><span class="err" title="${esc(j.error)}">${esc(j.error)}</span>`
-        : j.status === 'complete' ? `<span class="state st-complete"><span class="dot"></span>returned</span><span style="color:var(--t3)">Its test and gate result join here once the console is built (the run's flight record).</span>`
-        : `<span class="state st-running"><span class="dot"></span>writing</span><span style="color:var(--t3)">${j.at ? 'started ' + ago(j.at) : 'queued ' + ago(j.queued)}</span>`}</div>
-    </div>`;
-  }
-  $('centre').innerHTML = `<div class="calls"><div class="ph">Calls<div class="seg"><button data-f="run" class="${S.filter === 'run' ? 'on' : ''}">Run</button><button data-f="all" class="${S.filter === 'all' ? 'on' : ''}">All</button></div></div><div class="list">${list}</div></div>${view}`;
-  $('centre').querySelectorAll('.row').forEach((x) => x.onclick = () => { S.sel = x.dataset.id; S.pinned = true; draw(); });
-  $('centre').querySelectorAll('[data-f]').forEach((x) => x.onclick = () => { S.filter = x.dataset.f; store.set('filter', S.filter); S.pinned = false; draw(); });
-  $('centre').querySelectorAll('[data-t]').forEach((x) => x.onclick = () => {
-    const t = x.dataset.t; if (t === 'copy') { try { navigator.clipboard.writeText(j.text || ''); x.textContent = 'Copied'; } catch (_) {} return; }
-    if (t === 'unpin') S.pinned = false; else S[t] = !S[t]; draw();
-  });
-  const c = $('code'); if (c) c.scrollTop = (S.follow && atBottom) || !prevScroll ? c.scrollHeight : prevTop;
+      <div class="code ${S.wrap ? '' : 'nowrap'}" id="code">${j.text ? renderText(j.text, j.status === 'running') : `<div class="l prose">${j.status === 'queued' ? 'Waiting for Ollama…' : j.status === 'running' ? 'Loading the model; the first words arrive shortly.' : j.error ? '✗ ' + esc(j.error) : '(no output)'}${j.status === 'running' ? '<span class="caret"></span>' : ''}</div>`}</div></div>`; }
+  return `<div class="console${full ? ' full' : ''}" id="console" style="${full ? '' : `flex-basis:${Math.round((1 - S.split) * 100)}%`}"><div class="calls"><div class="sec-h">Model calls<div class="seg"><button data-f="run" class="${S.filter === 'run' ? 'on' : ''}">Run</button><button data-f="all" class="${S.filter === 'all' ? 'on' : ''}">All</button></div></div><div class="list">${list}</div></div>${view}</div>`;
+}
+function bindConsole() {
+  const w = $('work'); const j = S.D && S.D.jobs.find((x) => x.id === S.selJob);
+  w.querySelectorAll('[data-job]').forEach((x) => x.onclick = () => { S.selJob = x.dataset.job; S.pinned = true; S.sig = ''; work(); dock(); });
+  w.querySelectorAll('[data-f]').forEach((x) => x.onclick = () => { S.filter = x.dataset.f; S.pinned = false; S.sig = ''; work(); });
+  w.querySelectorAll('[data-t]').forEach((x) => x.onclick = () => { const t = x.dataset.t; if (t === 'copy') { try { navigator.clipboard.writeText((j && j.text) || ''); x.textContent = 'Copied'; } catch (_) {} return; }
+    if (t === 'unpin') S.pinned = false; else S[t] = !S[t]; S.sig = ''; work(); });
 }
 
-// ── right dock: Idearium's panels ──
-function panelBody(id, D, j) {
-  if (!D) return '<div class="note">Reading…</div>';
-  const fg = D.jobs.filter((x) => !isBg(x));
-  if (id === 'tasks') { const a = D.jobs.filter((x) => x.status === 'running' || x.status === 'queued');
-    return a.length ? a.map((x) => `<div class="kv"><span>${esc(label(x))}</span><span>${esc(x.status)} · ${dur(x.ms)}</span></div>`).join('') : '<div class="note">Nothing running.</div>'; }
-  if (id === 'context') return j ? `<div class="note">What ${esc(shortModel(j.model))} was given (${kfmt(j.promptChars)} chars${j.promptChars > 4000 ? ', first 4k shown' : ''}).</div><div class="pre">${esc(j.prompt || '(no prompt kept)')}</div>` : '<div class="note">Select a call.</div>';
-  if (id === 'outputs') { const o = fg.filter((x) => x.status === 'complete').slice(0, 12);
-    return o.length ? o.map((x) => `<div class="kv"><span>${esc(label(x))}</span><span>${kfmt(x.chars)} · ${ago(x.end)}</span></div>`).join('') : '<div class="note">No finished calls in this run yet. Proposals from the run land here, for you to apply.</div>'; }
-  if (id === 'changes') return '<div class="note">The work surface: every file the run changed, with Apply, Reject, Revert. Read from Idearium (GET /api/repos/:uuid/worksurface) once the console is built. Not read in this preview: Idearium is serving a build.</div>';
-  if (id === 'tools') { const up = D.systems.filter((s) => s.state === 'up').length;
-    return `<div class="note">Systems · ${up}/${D.systems.length} up</div>` + D.systems.map((s) => `<div class="kv"><span>${esc(s.name)}</span><span class="${s.state === 'up' ? '' : 'mono'}" style="color:${s.state === 'up' ? 'var(--okc)' : s.state === 'degraded' ? 'var(--wrn)' : 'var(--t3)'}">${esc(s.state)}</span></div>`).join(''); }
-  if (id === 'control') {
-    const m = D.loaded[0];
-    return `<div class="note">Who answers: the ladder, smallest first.</div>
-      ${['qwen2.5-coder 3b', 'deepseek-coder-v2 16b', 'qwen3-coder 30b'].map((r, i) => `<div class="kv"><span>${i + 1}. ${r}</span><span>${m && shortModel(m.name).includes(r.split(' ')[0].split('-')[0]) ? 'loaded' : ''}</span></div>`).join('')}
-      <div class="grid2"><button class="btn" disabled>Pause</button><button class="btn" disabled>Continue</button><button class="btn" disabled>Retry step</button><button class="btn danger" disabled>Cancel</button></div>
-      <div class="note">Buttons act once built. Pause, continue and retry already exist in the engine (PC8 slice b); cancel and change model are the next slice.</div>`;
+// ── the work area per tab ──
+function work() {
+  const p = pipe(), w = $('work');
+  $('crumb').textContent = p ? p.name : '—';
+  const prevCode = $('code'), atBottom = prevCode ? prevCode.scrollTop + prevCode.clientHeight >= prevCode.scrollHeight - 30 : true, prevTop = prevCode ? prevCode.scrollTop : 0;
+  const listEl = w.querySelector('.calls .list'), listTop = listEl ? listEl.scrollTop : 0;
+  if (S.tab === 'canvas') {
+    if (!p) { w.innerHTML = '<div class="card"><h2>Pick a pipeline</h2><p>Choose one on the left to see its steps and gates.</p></div>'; return; }
+    const sig = JSON.stringify([p.id, p.tasks.length, lastRun(p.id) && lastRun(p.id).tasks, S.selStep, S.selGate, !!S.base[p.id] && !S.base[p.id].loading]);
+    if (sig !== S.sig || !w.querySelector('svg.cv')) {
+      S.sig = sig;
+      const keepConsole = w.querySelector('#console');
+      w.innerHTML = `<div class="canvas-wrap" style="flex-basis:${Math.round(S.split * 100)}%"><svg class="cv">${canvasSvg(p)}</svg>
+        <div class="cv-legend"><span><i style="background:var(--ok)"></i>passed</span><span><i style="background:var(--amber)"></i>running</span><span><i style="background:var(--coral)"></i>failed</span><span><i style="background:var(--text3)"></i>pending</span><span>◆ gate</span></div>
+        ${runCard(p)}<div class="cv-tools"><button data-z="in" title="Zoom in">+</button><button data-z="out" title="Zoom out">−</button><button data-z="fit" title="Fit">⤢</button></div></div>
+        <div class="splitter" id="split"></div>${consoleHtml(false)}`;
+      if (!S.view) requestAnimationFrame(fit); else applyView();
+      bindCanvas(); bindSplit();
+    } else { const c = $('console'); if (c) { c.outerHTML = consoleHtml(false); } }
+    bindConsole();
+  } else if (S.tab === 'console') { w.innerHTML = consoleHtml(true); bindConsole(); }
+  else if (S.tab === 'runs') {
+    const rs = p ? runsOf(p.id) : [];
+    w.innerHTML = `<div class="page"><h2>Runs</h2><div class="lead">${p ? esc(p.name) + ' · ' + rs.length + ' runs kept by COS' : 'Pick a pipeline.'}</div>${rs.length ? `<table class="t"><thead><tr><th>Status</th><th>Run</th><th>Started</th><th>Took</th><th>Steps</th><th>Error</th></tr></thead><tbody>${rs.map((r) =>
+      `<tr><td><span class="pill s-${esc(r.status)}"><span class="d"></span>${esc(r.status)}</span></td><td class="m">${esc(r.id.slice(0, 10))}</td><td class="m">${r.at ? new Date(r.at).toLocaleString() : '—'}</td><td class="m">${r.at ? dur((r.end || Date.now()) - r.at) : '—'}</td>
+      <td><div class="mini">${p.tasks.map((t) => `<i title="${esc(t.label)}: ${esc(stOf(r, t.id))}" style="background:${COL[stOf(r, t.id)] || 'var(--edge)'}"></i>`).join('')}</div></td><td class="m" style="color:var(--coral)">${esc((r.error || '').slice(0, 120))}</td></tr>`).join('')}</tbody></table>` : '<div class="empty">No runs yet.</div>'}</div>`;
+  } else if (S.tab === 'vars' || S.tab === 'settings') {
+    const o = p ? (S.tab === 'vars' ? p.vars : p.settings) : {}, e = Object.entries(o || {});
+    w.innerHTML = `<div class="page"><h2>${S.tab === 'vars' ? 'Variables' : 'Settings'}</h2><div class="lead">${S.tab === 'vars' ? 'What the steps read as {{vars.…}}.' : 'The pipeline\'s own settings.'} Read from its .pipeline; edited here once built.</div>
+      ${e.length ? `<table class="t"><thead><tr><th>Name</th><th>Value</th></tr></thead><tbody>${e.map(([k, v]) => `<tr><td class="m" style="color:var(--text)">${esc(k)}</td><td class="m">${esc(typeof v === 'string' ? v : JSON.stringify(v))}</td></tr>`).join('')}</tbody></table>` : '<div class="empty">None set.</div>'}</div>`;
+  } else {
+    const t = TABS.find((x) => x[0] === S.tab);
+    w.innerHTML = `<div class="page"><div class="card"><h2>${esc(t[1])}</h2><p>${esc(STUBS[S.tab])}</p><p>Proposed, additive to Idearium’s tabs. Yours to choose; not drawn in this preview.</p><span class="tag">new · proposed</span></div></div>`;
   }
+  const c = $('code'); if (c) c.scrollTop = (S.follow && atBottom) || !prevCode ? c.scrollHeight : prevTop;
+  const nl = w.querySelector('.calls .list'); if (nl) nl.scrollTop = listTop;
+}
+function bindSplit() {
+  const sp = $('split'); if (!sp) return;
+  sp.onmousedown = (e) => { e.preventDefault(); const r = $('work').getBoundingClientRect();
+    const mv = (ev) => { S.split = Math.min(.85, Math.max(.2, (ev.clientY - r.top) / r.height)); document.querySelector('.canvas-wrap').style.flexBasis = S.split * 100 + '%'; const c = $('console'); if (c) c.style.flexBasis = (1 - S.split) * 100 + '%'; };
+    const up = () => { window.removeEventListener('mousemove', mv); window.removeEventListener('mouseup', up); store.set('split', S.split); };
+    window.addEventListener('mousemove', mv); window.addEventListener('mouseup', up); };
+}
+
+// ── the dock ──
+function panel(id) {
+  const D = S.D, p = pipe(), r = p ? lastRun(p.id) : null, j = D ? D.jobs.find((x) => x.id === S.selJob) : null;
+  if (!D) return '<div class="dk-empty">Reading…</div>';
+  const kv = (a, b) => `<div class="kv2"><span>${esc(a)}</span><span title="${esc(b)}">${esc(b)}</span></div>`;
+  if (id === 'inspector') {
+    const t = p && (S.selStep || S.selGate) ? p.tasks.find((x) => x.id === (S.selStep || S.selGate)) : null;
+    if (!t) return '<div class="dk-empty">Click a step or a gate (◆) on the canvas.</div>';
+    const tr = r && r.tasks[t.id], b = S.base[p.id] && S.base[p.id].steps && S.base[p.id].steps[t.id];
+    if (S.selGate) return `<div class="dk-sec">Gate into “${esc(t.label)}”</div>${kv('passes when', gateText(t.gate))}${kv('on fail', t.onFail || 'stop')}${kv('retries', t.retries != null ? t.retries : 0)}${kv('from', (t.depends_on || []).join(', ') || '—')}
+      ${kv('last result', tr ? tr.status : '—')}${tr && tr.error ? `<div class="dk-sec">Why it closed</div><div class="pre dk-bad">${esc(tr.error)}</div>` : ''}`;
+    const cfg = t.step && t.step.config || {};
+    return `<div class="dk-sec">Step</div>${kv('name', t.label)}${kv('id', t.id)}${kv('kind', stepType(t))}${kv('calls', stepTarget(t) || '—')}${cfg.method ? kv('method', cfg.method) : ''}${kv('method (framework)', t.method || '—')}${kv('depends on', (t.depends_on || []).join(', ') || '—')}
+      <div class="dk-sec">Latest run</div>${kv('status', tr ? tr.status : '—')}${kv('took', tr && tr.ms != null ? dur(tr.ms) : '—')}
+      <div class="dk-sec">Baseline</div>${b ? kv('runs', b.n) + kv('usual', dur(b.mean_ms) + ' ± ' + dur(b.sigma_ms)) + kv('waits', b.wait_mean_ms != null ? dur(b.wait_mean_ms) : '—') : `<div class="dk-empty">${S.base[p.id] && S.base[p.id].loading ? 'Reading the baseline…' : 'No baseline yet.'}</div>`}
+      ${cfg.body ? `<div class="dk-sec">Sends</div><div class="pre">${esc(cfg.body)}</div>` : ''}${tr && tr.out ? `<div class="dk-sec">Gave</div><div class="pre">${esc(tr.out)}</div>` : ''}${tr && tr.error ? `<div class="dk-sec">Error</div><div class="pre dk-bad">${esc(tr.error)}</div>` : ''}`;
+  }
+  if (id === 'run') { if (!p) return '<div class="dk-empty">Pick a pipeline.</div>'; if (!r) return '<div class="dk-empty">Never run.</div>';
+    return `${kv('status', r.status)}${kv('started', ago(r.at))}${kv('took', dur((r.end || Date.now()) - r.at))}<div class="dk-sec">Steps</div>` + p.tasks.map((t, i) => { const s = stOf(r, t.id), x = r.tasks[t.id];
+      return `<div class="kv2"><span><span style="color:${COL[s]}">●</span> ${i + 1}. ${esc(t.label)}</span><span>${esc(s)}${x && x.ms != null ? ' · ' + dur(x.ms) : ''}</span></div>`; }).join(''); }
+  if (id === 'history') { if (!p) return '<div class="dk-empty">Pick a pipeline.</div>'; const rs = runsOf(p.id).slice(0, 12);
+    return rs.length ? rs.map((x) => kv((x.status || '') + ' · ' + ago(x.at), x.at ? dur((x.end || Date.now()) - x.at) : '')).join('') : '<div class="dk-empty">No runs.</div>'; }
+  if (id === 'tasks') { const a = D.jobs.filter((x) => /running|queued/.test(x.status)); const ar = D.runs.filter((x) => x.status === 'running');
+    return `<div class="dk-sec">Pipeline runs</div>${ar.length ? ar.map((x) => kv(x.name || x.id, 'running · ' + ago(x.at))).join('') : '<div class="dk-empty">None running.</div>'}<div class="dk-sec">Model calls</div>${a.length ? a.map((x) => kv(jlabel(x), x.status + ' · ' + dur(x.ms))).join('') : '<div class="dk-empty">None.</div>'}`; }
+  if (id === 'context') return j ? `<div class="dk-empty">What ${esc(shortModel(j.model))} was given · ${kfmt(j.promptChars)} chars${j.promptChars > 4000 ? ' (first 4k)' : ''}</div><div class="pre">${esc(j.prompt || '(no prompt kept)')}</div>` : '<div class="dk-empty">Pick a model call in the console.</div>';
+  if (id === 'outputs') { const o = D.jobs.filter((x) => !isBg(x) && x.status === 'complete').slice(0, 12);
+    return o.length ? o.map((x) => kv(jlabel(x), kfmt(x.chars) + ' · ' + ago(x.end))).join('') : '<div class="dk-empty">No finished calls in this run yet. A run’s proposals land here, for you to apply.</div>'; }
+  if (id === 'changes') return '<div class="dk-empty">The work surface: every file the run changed, with Apply, Reject, Revert (Idearium’s GET /api/repos/:uuid/worksurface, through the drawbridge). Not read in this preview.</div>';
+  if (id === 'tools') { const m = D.loaded;
+    return `<div class="dk-sec">Ollama</div>${m.length ? m.map((x) => kv(shortModel(x.name), (x.vramMB / 1024).toFixed(1) + ' GB VRAM')).join('') : '<div class="dk-empty">No model loaded.</div>'}<div class="dk-sec">Systems · ${D.systems.filter((s) => s.state === 'up').length}/${D.systems.length} up</div>`
+      + D.systems.map((s) => `<div class="kv2"><span>${esc(s.name)}</span><span style="color:${s.state === 'up' ? 'var(--ok)' : s.state === 'degraded' ? 'var(--amber)' : 'var(--text3)'}">${esc(s.state)}</span></div>`).join(''); }
+  if (id === 'control') return `<div class="dk-sec">Who answers · the ladder</div>${['qwen2.5-coder 3b', 'deepseek-coder-v2 16b', 'qwen3-coder 30b'].map((x, i) => kv((i + 1) + '. ' + x, '')).join('')}
+    <div class="bars"><button class="btn" disabled>Pause</button><button class="btn" disabled>Continue</button><button class="btn" disabled>Retry step</button><button class="btn danger" disabled>Cancel</button></div>
+    <div class="dk-empty" style="margin-top:8px">Pause, continue and retry exist in COS’s engine (PC8 slice b); cancel and change model are the next slice.</div>`;
+  return '';
+}
+function count(id) {
+  const D = S.D, p = pipe(); if (!D) return '';
+  if (id === 'tasks') return D.jobs.filter((x) => /running|queued/.test(x.status)).length || '';
+  if (id === 'outputs') return D.jobs.filter((x) => !isBg(x) && x.status === 'complete').length || '';
+  if (id === 'history') return p ? runsOf(p.id).length || '' : '';
+  if (id === 'tools') return D.systems.filter((s) => s.state !== 'up').length || '';
   return '';
 }
 function dock() {
-  const D = S.D, j = D ? D.jobs.find((x) => x.id === S.sel) : null; const open = DOCK.filter(([id]) => S.open.has(id));
-  $('dock').className = 'dock' + (open.length ? ' open' : '');
-  const keep = {}; $('dock').querySelectorAll('.panel .body').forEach((b) => keep[b.parentNode.dataset.p] = b.scrollTop);
-  $('dock').innerHTML = open.map(([id, name]) => {
-    const ct = !D ? '' : id === 'tasks' ? D.jobs.filter((x) => x.status === 'running' || x.status === 'queued').length : id === 'outputs' ? D.jobs.filter((x) => !isBg(x) && x.status === 'complete').length : id === 'tools' ? D.systems.length : '';
-    return `<section class="panel ${S.folded.has(id) ? 'folded' : 'grow'}" data-p="${id}"><header><button class="x" data-fold="${id}" title="Collapse">${S.folded.has(id) ? '▸' : '▾'}</button><h4>${name}</h4><span class="ct">${ct}</span><button class="x" data-close="${id}" title="Close">×</button></header><div class="body">${panelBody(id, D, j)}</div></section>`;
-  }).join('');
-  $('dock').querySelectorAll('.panel .body').forEach((b) => { if (keep[b.parentNode.dataset.p]) b.scrollTop = keep[b.parentNode.dataset.p]; });
-  $('dock').querySelectorAll('[data-fold]').forEach((x) => x.onclick = () => { const k = x.dataset.fold; S.folded.has(k) ? S.folded.delete(k) : S.folded.add(k); store.set('folded', [...S.folded]); dock(); });
-  $('dock').querySelectorAll('[data-close]').forEach((x) => x.onclick = () => { S.open.delete(x.dataset.close); store.set('open', [...S.open]); dock(); rail(); });
+  const open = DOCK.filter(([id]) => S.open.has(id)), col = $('dock-col');
+  const keep = {}; col.querySelectorAll('.dk-panel').forEach((x) => { const b = x.querySelector('.dk-body'); if (b) keep[x.dataset.p] = b.scrollTop; });
+  col.className = open.length ? 'open' : '';
+  col.innerHTML = open.map(([id, name, about]) => `<section class="dk-panel ${S.folded.has(id) ? 'folded' : ''}" data-p="${id}"><div class="dk-head"><button class="dk-fold" data-fold="${id}">${S.folded.has(id) ? '▸' : '▾'}</button><b>${name}</b><span class="dk-about">${about}</span><span class="dk-grow"></span><span class="dk-n">${count(id)}</span><button class="dk-x" data-x="${id}" title="Close">×</button></div><div class="dk-body">${panel(id)}</div></section>`).join('');
+  col.querySelectorAll('.dk-panel').forEach((x) => { const b = x.querySelector('.dk-body'); if (b && keep[x.dataset.p]) b.scrollTop = keep[x.dataset.p]; });
+  col.querySelectorAll('[data-fold]').forEach((b) => b.onclick = () => { const k = b.dataset.fold; S.folded.has(k) ? S.folded.delete(k) : S.folded.add(k); store.set('folded', [...S.folded]); dock(); });
+  col.querySelectorAll('[data-x]').forEach((b) => b.onclick = () => { S.open.delete(b.dataset.x); store.set('open', [...S.open]); dock(); rail(); });
 }
 function rail() {
-  $('rail').innerHTML = DOCK.map(([id, name]) => `<button class="rtab ${S.open.has(id) ? 'on' : ''}" data-r="${id}">${name}</button>`).join('')
-    + `<button class="all" id="allBtn">${S.open.size ? 'none' : 'all'}</button>`;
-  $('rail').querySelectorAll('[data-r]').forEach((x) => x.onclick = () => { const k = x.dataset.r; S.open.has(k) ? S.open.delete(k) : S.open.add(k); store.set('open', [...S.open]); dock(); rail(); });
-  $('allBtn').onclick = () => { S.open = new Set(S.open.size ? [] : DOCK.map((d) => d[0])); store.set('open', [...S.open]); dock(); rail(); };
+  const live = S.D ? S.D.jobs.some((j) => j.status === 'running') : false;
+  $('dock-rail').innerHTML = DOCK.map(([id, name]) => { const n = count(id);
+    return `<button class="dk-tab ${S.open.has(id) ? 'on' : ''}" data-r="${id}" title="${name}">${id === 'tasks' && live ? '<span class="dk-dot"></span>' : ''}<span class="dk-l">${name}</span>${n !== '' ? `<span class="dk-n ${id === 'tools' ? 'warn' : ''}">${n}</span>` : ''}</button>`; }).join('')
+    + `<div class="dk-foot"><button class="dk-all" data-all="1">all</button><button class="dk-all" data-all="0">none</button></div>`;
+  $('dock-rail').querySelectorAll('[data-r]').forEach((b) => b.onclick = () => { const k = b.dataset.r; S.open.has(k) ? S.open.delete(k) : S.open.add(k); store.set('open', [...S.open]); dock(); rail(); });
+  $('dock-rail').querySelectorAll('[data-all]').forEach((b) => b.onclick = () => { S.open = new Set(b.dataset.all === '1' ? DOCK.map((d) => d[0]) : []); store.set('open', [...S.open]); dock(); rail(); });
 }
-
-// ── top state + status bar ──
 function chrome() {
-  const D = S.D; const stale = Date.now() - S.lastOk > 6000;
+  const D = S.D, stale = Date.now() - S.lastOk > 6000;
   $('live').className = 'live' + (stale ? ' stale' : ''); $('liveTxt').textContent = stale ? 'no answer' : 'live';
-  if (!D) return;
-  const fg = D.jobs.filter((x) => !isBg(x)), running = fg.some((x) => x.status === 'running'), failed = fg[0] && fg[0].status === 'failed';
-  const st = running ? 'running' : 'idle';
-  $('runState').className = 'state st-' + st; $('runState').innerHTML = `<span class="dot"></span><span>${running ? 'model writing' : 'no model call'}</span>`;
-  const h = D.host || {}, m = D.loaded[0], up = D.systems.filter((s) => s.state === 'up').length;
-  $('status').innerHTML = `<span>Ollama <b>${m ? esc(shortModel(m.name)) : 'no model loaded'}</b>${m ? ` · ${(m.vramMB / 1024).toFixed(1)} GB VRAM of ${(m.sizeMB / 1024).toFixed(1)} GB` : ''}</span>
-    <span>RAM free <b>${h.freeMB != null ? (h.freeMB / 1024).toFixed(1) + ' GB' : '—'}</b>${h.freeMemPct != null ? ` (${h.freeMemPct}%)` : ''}</span>
-    <span>CPU <b>${h.cpuPct != null ? h.cpuPct + '%' : '—'}</b></span><span>Systems <b>${up}/${D.systems.length}</b> up</span>
-    <span>Calls <b>${fg.filter((x) => x.status === 'running').length}</b> running · <b>${fg.length}</b> in view</span>
-    <span>Updated <b>${new Date(D.at).toLocaleTimeString()}</b></span><span class="pv">Preview · live data · reads only</span>`;
+  const p = pipe(), r = p && lastRun(p.id), st = r ? r.status : 'idle';
+  $('runPill').className = 'pill s-' + st; $('runPill').innerHTML = `<span class="d"></span><span>${p ? (r ? esc(st) : 'never run') : 'no pipeline'}</span>`;
+  if (!D) return; const h = D.host || {}, m = D.loaded[0], up = D.systems.filter((s) => s.state === 'up').length, fg = D.jobs.filter((x) => !isBg(x));
+  $('status').innerHTML = `<span>Ollama <b>${m ? esc(shortModel(m.name)) : 'no model loaded'}</b>${m ? ' · ' + (m.vramMB / 1024).toFixed(1) + ' GB VRAM' : ''}</span><span>RAM free <b>${h.freeMB != null ? (h.freeMB / 1024).toFixed(1) + ' GB' : '—'}</b></span>
+    <span>CPU <b>${h.cpuPct != null ? h.cpuPct + '%' : '—'}</b></span><span>Systems <b>${up}/${D.systems.length}</b> up</span><span>Pipelines <b>${D.pipelines.length}</b> · runs <b>${D.runs.filter((x) => x.status === 'running').length}</b> running</span>
+    <span>Model calls <b>${fg.filter((x) => x.status === 'running').length}</b> running</span><span>Updated <b>${new Date(D.at).toLocaleTimeString()}</b></span><span class="pv">Preview · live data · reads only</span>`;
 }
-function draw() { side(); centre(); dock(); chrome(); }
+function drawAll() { subnav(); lib(); work(); dock(); rail(); chrome(); }
 async function tick() {
-  try { const r = await fetch('/data', { cache: 'no-store' }); S.D = await r.json(); S.lastOk = Date.now(); } catch (_) {}
-  if (S.tab === 'console') centre(); side(); dock(); chrome();
+  try { S.D = await (await fetch('/data', { cache: 'no-store' })).json(); S.lastOk = Date.now(); } catch (_) {}
+  if (S.D && (!S.pid || !pipe())) { const first = S.D.pipelines[0]; if (first) { S.pid = first.id; loadBase(first.id); } }
+  subnav(); if (document.activeElement && document.activeElement.id !== 'q') lib(); work(); dock(); rail(); chrome();
 }
-rail(); draw(); tick(); setInterval(tick, 1500);
+$('libBtn').onclick = () => { S.lib = !S.lib; store.set('lib', S.lib); lib(); setTimeout(() => { if (S.tab === 'canvas') fit(); }, 220); };
+drawAll(); tick().then(() => { if (S.pid) loadBase(S.pid); }); setInterval(tick, 2000);
 </script>
 </body>
 </html>
