@@ -1,0 +1,50 @@
+envelope: 1
+uuid: nexus-export-graph-phase:DC5_the_multitool:0f4e0f33a5fdcc48
+type: graph
+id: phase:DC5_the_multitool:0f4e0f33a5fdcc48
+context: dependency graph of phase DC5_the_multitool
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1795266457495
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795266457495
+lastSeenAt: 1795266457495
+fingerprint: null
+payload:
+  for: DC5_the_multitool
+  kind: phase
+  repo: null
+  hash: 0f4e0f33a5fdcc48
+  nodes:
+    - path: cos/automation/method.eg
+      role: changes
+      exists: true
+      system: cos
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-11-21-the-decomposer-phasemap.spec::DC3_wired_to_the_drawbridge_in_cie_eg
+    dependents: []
+    upstream:
+      - docs/2026-11-21-the-decomposer-phasemap.spec::DC1_the_split_speaks_es_modules
+      - docs/2026-11-21-the-decomposer-phasemap.spec::DC2_decompose_inside_files
+      - docs/2026-11-21-the-decomposer-phasemap.spec::DC3_wired_to_the_drawbridge_in_cie_eg
+    downstream: []
+    blockedBy:
+      - docs/2026-11-21-the-decomposer-phasemap.spec::DC3_wired_to_the_drawbridge_in_cie_eg
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 3 · blocked by DC3_wired_to_the_drawbridge_in_cie_eg
+      - 'depends on (1): DC3_wired_to_the_drawbridge_in_cie_eg · all upstream 3'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-11-21-the-decomposer-phasemap.spec::DC3_wired_to_the_drawbridge_in_cie_eg
+        kind: declared

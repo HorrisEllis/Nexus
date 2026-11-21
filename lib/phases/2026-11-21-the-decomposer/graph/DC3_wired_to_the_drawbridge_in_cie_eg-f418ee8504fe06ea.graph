@@ -1,0 +1,114 @@
+envelope: 1
+uuid: nexus-export-graph-phase:DC3_wired_to_the_drawbridge_in_cie_eg:f418ee8504fe06ea
+type: graph
+id: phase:DC3_wired_to_the_drawbridge_in_cie_eg:f418ee8504fe06ea
+context: dependency graph of phase DC3_wired_to_the_drawbridge_in_cie_eg
+intent: null
+summary: 10 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1795266457491
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795266457491
+lastSeenAt: 1795266457491
+fingerprint: null
+payload:
+  for: DC3_wired_to_the_drawbridge_in_cie_eg
+  kind: phase
+  repo: null
+  hash: f418ee8504fe06ea
+  nodes:
+    - path: emerge/emerge/lang/cie/self.eg
+      role: changes
+      exists: true
+      system: emerge
+    - path: lib/project-convert.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/project-spine.js
+      role: changes
+      exists: true
+      system: lib
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/intent-flow.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/project-refactor.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/adapters/contract.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/phase-dag.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/phasemap-parse.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/spec-from-markdown.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/project-spine.js
+      to: lib/adapters/contract.js
+      kind: requires
+    - from: lib/project-convert.js
+      to: lib/spec-from-markdown.js
+      kind: requires
+    - from: lib/project-convert.js
+      to: lib/phasemap-parse.js
+      kind: requires
+    - from: lib/project-convert.js
+      to: lib/phase-dag.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/project-spine.js
+      kind: requires
+    - from: lib/intent-flow.js
+      to: lib/project-spine.js
+      kind: requires
+    - from: lib/project-refactor.js
+      to: lib/project-spine.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-11-21-the-decomposer-phasemap.spec::DC2_decompose_inside_files
+    dependents:
+      - docs/2026-11-21-the-decomposer-phasemap.spec::DC4_idearium_decomposed
+      - docs/2026-11-21-the-decomposer-phasemap.spec::DC5_the_multitool
+    upstream:
+      - docs/2026-11-21-the-decomposer-phasemap.spec::DC1_the_split_speaks_es_modules
+      - docs/2026-11-21-the-decomposer-phasemap.spec::DC2_decompose_inside_files
+    downstream:
+      - docs/2026-11-21-the-decomposer-phasemap.spec::DC4_idearium_decomposed
+      - docs/2026-11-21-the-decomposer-phasemap.spec::DC5_the_multitool
+    blockedBy:
+      - docs/2026-11-21-the-decomposer-phasemap.spec::DC2_decompose_inside_files
+    unlocks:
+      - docs/2026-11-21-the-decomposer-phasemap.spec::DC4_idearium_decomposed
+      - docs/2026-11-21-the-decomposer-phasemap.spec::DC5_the_multitool
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2 · blocked by DC2_decompose_inside_files
+      - 'depends on (1): DC2_decompose_inside_files · all upstream 2'
+      - >-
+        needed by (2): DC4_idearium_decomposed, DC5_the_multitool · finishing it unlocks
+        DC4_idearium_decomposed, DC5_the_multitool
+    edges:
+      - from: docs/2026-11-21-the-decomposer-phasemap.spec::DC2_decompose_inside_files
+        kind: declared

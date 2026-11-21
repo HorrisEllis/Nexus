@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-21-the-decomposer-phasemap.spec::DC5_the_multitool
+type: phase
+id: docs_2026-11-21-the-decomposer-phasemap.spec::DC5_the_multitool
+context: pipeline phase DC5_the_multitool of docs/2026-11-21-the-decomposer-phasemap.spec
+intent: null
+summary: DC5_the_multitool (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1795266457495
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795266457495
+lastSeenAt: 1795266457495
+fingerprint: null
+payload:
+  id: DC5_the_multitool
+  map: docs/2026-11-21-the-decomposer-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/automation/method.eg
+  depends_on:
+    - DC3_wired_to_the_drawbridge_in_cie_eg
+  blocks: []
+  spec: null
+  graph: 0f4e0f33a5fdcc48

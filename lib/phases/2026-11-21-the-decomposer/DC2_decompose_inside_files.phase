@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-21-the-decomposer-phasemap.spec::DC2_decompose_inside_files
+type: phase
+id: docs_2026-11-21-the-decomposer-phasemap.spec::DC2_decompose_inside_files
+context: pipeline phase DC2_decompose_inside_files of docs/2026-11-21-the-decomposer-phasemap.spec
+intent: null
+summary: DC2_decompose_inside_files (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1795266457489
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795266457489
+lastSeenAt: 1795266457489
+fingerprint: null
+payload:
+  id: DC2_decompose_inside_files
+  map: docs/2026-11-21-the-decomposer-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/project-decompose.js
+    - lib/component-store.js
+    - lib/adapters/contract.js
+  depends_on:
+    - DC1_the_split_speaks_es_modules
+  blocks: []
+  spec: null
+  graph: 82b57c2a6c1f3db4

@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-21-the-decomposer-phasemap.spec::DC1_the_split_speaks_es_modules
+type: phase
+id: docs_2026-11-21-the-decomposer-phasemap.spec::DC1_the_split_speaks_es_modules
+context: pipeline phase DC1_the_split_speaks_es_modules of docs/2026-11-21-the-decomposer-phasemap.spec
+intent: null
+summary: DC1_the_split_speaks_es_modules (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1795266457485
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795266457485
+lastSeenAt: 1795266457485
+fingerprint: null
+payload:
+  id: DC1_the_split_speaks_es_modules
+  map: docs/2026-11-21-the-decomposer-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/project-split.js
+    - lib/adapters/javascript.js
+    - tests/modules/test-project-split.test.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: ebc361ac2750ee4d

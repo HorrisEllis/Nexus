@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-21-the-decomposer-phasemap.spec::DC3_wired_to_the_drawbridge_in_cie_eg
+type: phase
+id: docs_2026-11-21-the-decomposer-phasemap.spec::DC3_wired_to_the_drawbridge_in_cie_eg
+context: >-
+  pipeline phase DC3_wired_to_the_drawbridge_in_cie_eg of
+  docs/2026-11-21-the-decomposer-phasemap.spec
+intent: null
+summary: DC3_wired_to_the_drawbridge_in_cie_eg (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1795266457491
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795266457491
+lastSeenAt: 1795266457491
+fingerprint: null
+payload:
+  id: DC3_wired_to_the_drawbridge_in_cie_eg
+  map: docs/2026-11-21-the-decomposer-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - lib/project-spine.js
+    - lib/project-convert.js
+    - emerge/emerge/lang/cie/self.eg
+  depends_on:
+    - DC2_decompose_inside_files
+  blocks: []
+  spec: null
+  graph: f418ee8504fe06ea

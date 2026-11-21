@@ -1,0 +1,101 @@
+envelope: 1
+uuid: nexus-export-graph-phase:DC1_the_split_speaks_es_modules:ebc361ac2750ee4d
+type: graph
+id: phase:DC1_the_split_speaks_es_modules:ebc361ac2750ee4d
+context: dependency graph of phase DC1_the_split_speaks_es_modules
+intent: null
+summary: 9 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1795266457485
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795266457485
+lastSeenAt: 1795266457485
+fingerprint: null
+payload:
+  for: DC1_the_split_speaks_es_modules
+  kind: phase
+  repo: null
+  hash: ebc361ac2750ee4d
+  nodes:
+    - path: lib/adapters/javascript.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/project-split.js
+      role: changes
+      exists: true
+      system: lib
+    - path: tests/modules/test-project-split.test.js
+      role: changes
+      exists: false
+      system: null
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/adapters/contract.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/adapters/contract.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/code-intel/decls.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/code-intel/structure.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/code-intel/text.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/project-split.js
+      to: lib/adapters/contract.js
+      kind: requires
+    - from: lib/adapters/javascript.js
+      to: lib/code-intel/structure.js
+      kind: requires
+    - from: lib/adapters/javascript.js
+      to: lib/code-intel/decls.js
+      kind: requires
+    - from: lib/adapters/javascript.js
+      to: lib/code-intel/text.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/project-split.js
+      kind: requires
+    - from: lib/adapters/contract.js
+      to: lib/adapters/javascript.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-11-21-the-decomposer-phasemap.spec::DC2_decompose_inside_files
+    upstream: []
+    downstream:
+      - docs/2026-11-21-the-decomposer-phasemap.spec::DC2_decompose_inside_files
+      - docs/2026-11-21-the-decomposer-phasemap.spec::DC3_wired_to_the_drawbridge_in_cie_eg
+      - docs/2026-11-21-the-decomposer-phasemap.spec::DC4_idearium_decomposed
+      - docs/2026-11-21-the-decomposer-phasemap.spec::DC5_the_multitool
+    blockedBy: []
+    unlocks:
+      - docs/2026-11-21-the-decomposer-phasemap.spec::DC2_decompose_inside_files
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0 · ready
+      - 'depends on (0): —'
+      - >-
+        needed by (1): DC2_decompose_inside_files · all downstream 4 · finishing it unlocks
+        DC2_decompose_inside_files
+    edges: []

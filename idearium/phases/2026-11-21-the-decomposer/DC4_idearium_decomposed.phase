@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-21-the-decomposer-phasemap.spec::DC4_idearium_decomposed
+type: phase
+id: docs_2026-11-21-the-decomposer-phasemap.spec::DC4_idearium_decomposed
+context: pipeline phase DC4_idearium_decomposed of docs/2026-11-21-the-decomposer-phasemap.spec
+intent: null
+summary: DC4_idearium_decomposed (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1795266457493
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795266457493
+lastSeenAt: 1795266457493
+fingerprint: null
+payload:
+  id: DC4_idearium_decomposed
+  map: docs/2026-11-21-the-decomposer-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/api/index.js
+  depends_on:
+    - DC3_wired_to_the_drawbridge_in_cie_eg
+  blocks: []
+  spec: null
+  graph: 357c3131d4a2bec2
