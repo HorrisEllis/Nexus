@@ -7,11 +7,11 @@ intent: null
 summary: 8 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1795285529454
+exported_at: 1795297064221
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1795285529454
-lastSeenAt: 1795285529454
+firstSeenAt: 1795297064221
+lastSeenAt: 1795297064221
 fingerprint: null
 payload:
   for: OS3_each_step_its_method_agent_tool_or_command
@@ -86,20 +86,27 @@ payload:
       - docs/2026-11-21-one-surface-phasemap.spec::OS1_every_run_on_one_surface
       - docs/2026-11-21-one-surface-phasemap.spec::OS2_raid_makes_the_centre_node
     downstream:
+      - docs/2026-11-21-one-surface-phasemap.spec::OS11_raid_reads_his_framework_tested
       - docs/2026-11-21-one-surface-phasemap.spec::OS4_pipelines_get_triggers_schedules_conditions
       - docs/2026-11-21-one-surface-phasemap.spec::OS8_experiments_and_trials
     blockedBy:
       - docs/2026-11-21-one-surface-phasemap.spec::OS2_raid_makes_the_centre_node
     unlocks:
       - docs/2026-11-21-one-surface-phasemap.spec::OS8_experiments_and_trials
-    conflicts: []
+    conflicts:
+      - with: docs/2026-11-21-one-surface-phasemap.spec::OS10_the_translation_chain
+        files:
+          - cos/automation/method.eg
     dangling: []
     lines:
       - layer 2 · blocked by OS2_raid_makes_the_centre_node
       - 'depends on (1): OS2_raid_makes_the_centre_node · all upstream 2'
       - >-
         needed by (2): OS8_experiments_and_trials, OS4_pipelines_get_triggers_schedules_conditions ·
-        finishing it unlocks OS8_experiments_and_trials
+        all downstream 3 · finishing it unlocks OS8_experiments_and_trials
+      - >-
+        same files as OS10_the_translation_chain with no order between them:
+        cos/automation/method.eg
     edges:
       - from: docs/2026-11-21-one-surface-phasemap.spec::OS2_raid_makes_the_centre_node
         kind: inferred

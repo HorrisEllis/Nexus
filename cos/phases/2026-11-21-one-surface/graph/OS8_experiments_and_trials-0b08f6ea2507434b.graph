@@ -7,11 +7,11 @@ intent: null
 summary: 15 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1795285529465
+exported_at: 1795297064234
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1795285529465
-lastSeenAt: 1795285529465
+firstSeenAt: 1795297064234
+lastSeenAt: 1795297064234
 fingerprint: null
 payload:
   for: OS8_experiments_and_trials
@@ -140,15 +140,18 @@ payload:
     layer: 3
     deps:
       - docs/2026-11-21-one-surface-phasemap.spec::OS3_each_step_its_method_agent_tool_or_command
-    dependents: []
+    dependents:
+      - docs/2026-11-21-one-surface-phasemap.spec::OS11_raid_reads_his_framework_tested
     upstream:
       - docs/2026-11-21-one-surface-phasemap.spec::OS1_every_run_on_one_surface
       - docs/2026-11-21-one-surface-phasemap.spec::OS2_raid_makes_the_centre_node
       - docs/2026-11-21-one-surface-phasemap.spec::OS3_each_step_its_method_agent_tool_or_command
-    downstream: []
+    downstream:
+      - docs/2026-11-21-one-surface-phasemap.spec::OS11_raid_reads_his_framework_tested
     blockedBy:
       - docs/2026-11-21-one-surface-phasemap.spec::OS3_each_step_its_method_agent_tool_or_command
-    unlocks: []
+    unlocks:
+      - docs/2026-11-21-one-surface-phasemap.spec::OS11_raid_reads_his_framework_tested
     conflicts:
       - with: docs/2026-11-21-one-surface-phasemap.spec::OS4_pipelines_get_triggers_schedules_conditions
         files:
@@ -157,7 +160,9 @@ payload:
     lines:
       - layer 3 · blocked by OS3_each_step_its_method_agent_tool_or_command
       - 'depends on (1): OS3_each_step_its_method_agent_tool_or_command · all upstream 3'
-      - 'needed by (0): —'
+      - >-
+        needed by (1): OS11_raid_reads_his_framework_tested · finishing it unlocks
+        OS11_raid_reads_his_framework_tested
       - >-
         same files as OS4_pipelines_get_triggers_schedules_conditions with no order between them:
         cos/automation/pipeline.js

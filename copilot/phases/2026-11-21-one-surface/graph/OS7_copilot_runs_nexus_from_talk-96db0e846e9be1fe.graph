@@ -7,11 +7,11 @@ intent: null
 summary: 6 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1795285529463
+exported_at: 1795297064232
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1795285529463
-lastSeenAt: 1795285529463
+firstSeenAt: 1795297064232
+lastSeenAt: 1795297064232
 fingerprint: null
 payload:
   for: OS7_copilot_runs_nexus_from_talk
@@ -72,12 +72,16 @@ payload:
       - docs/2026-11-21-one-surface-phasemap.spec::OS5_all_of_nexus_from_the_console
       - docs/2026-11-21-one-surface-phasemap.spec::OS6_query_everything
     unlocks: []
-    conflicts: []
+    conflicts:
+      - with: docs/2026-11-21-one-surface-phasemap.spec::OS10_the_translation_chain
+        files:
+          - copilot/assist-loop.js
     dangling: []
     lines:
       - layer 3 · blocked by OS5_all_of_nexus_from_the_console, OS6_query_everything
       - 'depends on (2): OS5_all_of_nexus_from_the_console, OS6_query_everything · all upstream 3'
       - 'needed by (1): OS9_a_model_per_node_interconnected'
+      - 'same files as OS10_the_translation_chain with no order between them: copilot/assist-loop.js'
     edges:
       - from: docs/2026-11-21-one-surface-phasemap.spec::OS5_all_of_nexus_from_the_console
         kind: declared

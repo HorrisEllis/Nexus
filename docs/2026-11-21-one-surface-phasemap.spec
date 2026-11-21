@@ -33,6 +33,32 @@ decisions:
       (a) a model as an understanding: each file, website and system has a node that says what it is, what it does and what it relates to,
       kept current by Copilot and linked to the others (a graph of Nexus: Loom's, or Cortex's index); (b) a model as the AI that works on it:
       which Ollama model handles each file, site or system, set per node; (c) a model as a data shape: each one's schema, as a node.
+  OS_D2_copilot_translates_through_his_framework_into_a_contract:
+    status: "DECIDED 2026-11-21 (his)"
+    james: >-
+      "what if we use copilot as a translation layer between the me and what i put into the cli and emerge. the interpreter would use my
+      framework for my inputs. then create a contract to send to raid then raid to emerge" · "yes, exactly."
+    chosen: >-
+      One chain, each link a record: his words → Copilot (the translation layer) → his framework, run on the input by the interpreter
+      (method.eg) → a contract (L0 the input a node, L2 its DAG, L3 its end state) → RAID → Emerge. Deterministic first, the small model last:
+      Emerge's own `eg say` turns the words it knows into Emerge with no model (each word shown with his quote); only the words it does not
+      know become gaps, and only those go to a model.
+    found: >-
+      The coder's census, 2026-11-21: `eg say` / `eg teach` / `eg words` exist in Emerge; method.eg resolves his framework per pipeline step;
+      L0 and L3 are built in part, L2 partly; there is no RAID → Emerge hop (RAID hands work to agents).
+    axioms: "§5.2 (routing through RAID), §5.13 (Emerge is behaviour), §8.6 (reuse before build), Nexus is for small models (his)"
+  OS_D3_raid_decides_with_his_framework_and_it_is_tested:
+    status: "DECIDED 2026-11-21 (his)"
+    james: '"that could also prove my framework. my framework is agnostic, wait, raid uses it for its decisions?" · "yes, exactly."'
+    found: >-
+      It does not, today. RAID decides by its router, resolve.eg, its tunables, its signal-to-noise filter and its recorded outcomes; none read
+      his framework. The slot exists: a request's compartment is spawned with a constraint frame whose `injected_frameworks` RAID passes empty
+      (cortex/core/raid/contract-intake.js:834, `injectedFrameworks: []`; lib/compartment-engine.js _assembleConstraintFrame).
+    chosen: >-
+      RAID fills `injected_frameworks` with his framework (agnostic: any .framework he names) and its decisions read it. It is proved, not
+      assumed: the same requests run with and without it (OS8's arms), what is measured is named before any run (decisions that held, gaps
+      closed, retries saved, time), the predictions are registered first (docs/FRAMEWORK-THREADS.md), and a result judged by the hands that
+      predicted it is named post-hoc.
 
 phases:
   OS1_every_run_on_one_surface:
@@ -106,5 +132,22 @@ phases:
     files: []
     does: "Waits on OS_D1 (what a model per file, website and system is)."
     proof: "set when OS_D1 is answered"
-build_order: [OS1, OS3, OS4, OS5, OS6, OS2, OS7, OS8, OS9]
+  OS10_the_translation_chain:
+    status: OPEN
+    depends_on: [OS5_all_of_nexus_from_the_console, OS2_raid_makes_the_centre_node]
+    files: [copilot/assist-loop.js, cos/automation/method.eg, cortex/core/raid/contract-intake.js, emerge/emerge/lang/say]
+    does: >-
+      OS_D2 built: a sentence of his, typed in the console or said to Copilot, goes through `eg say` first (the words it knows, no model),
+      the unknown words as gaps to a small model, his framework run on the input (method.eg), and comes out a contract RAID takes; RAID's
+      result is Emerge, checked by its compiler. Each link a row, so he sees what each word became and why.
+    proof: "three requests of his, in his words, each shown word by word to Emerge through a contract RAID ran; the words no model touched counted"
+  OS11_raid_reads_his_framework_tested:
+    status: OPEN
+    depends_on: [OS8_experiments_and_trials]
+    files: [cortex/core/raid/contract-intake.js, lib/compartment-engine.js, docs/FRAMEWORK-THREADS.md]
+    does: >-
+      OS_D3 built: RAID fills a request's injected_frameworks with his framework and its decisions read it; a trial runs the same requests
+      with and without it, measures named and predictions registered before the runs.
+    proof: "one trial of real requests, two arms, the predictions registered before; the difference and its doubts written in FRAMEWORK-THREADS"
+build_order: [OS1, OS3, OS4, OS5, OS6, OS2, OS10, OS7, OS8, OS11, OS9]
 first_slice: "OS1: Activity reads RAID's queue, COS's runs, Idearium's tasks and Ollama's jobs, one list on the pipeline screen."

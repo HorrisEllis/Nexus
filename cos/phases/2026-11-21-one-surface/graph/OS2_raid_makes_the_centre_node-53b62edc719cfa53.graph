@@ -7,11 +7,11 @@ intent: null
 summary: 16 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1795285529451
+exported_at: 1795297064218
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1795285529451
-lastSeenAt: 1795285529451
+firstSeenAt: 1795297064218
+lastSeenAt: 1795297064218
 fingerprint: null
 payload:
   for: OS2_raid_makes_the_centre_node
@@ -145,11 +145,14 @@ payload:
     deps:
       - docs/2026-11-21-one-surface-phasemap.spec::OS1_every_run_on_one_surface
     dependents:
+      - docs/2026-11-21-one-surface-phasemap.spec::OS10_the_translation_chain
       - docs/2026-11-21-one-surface-phasemap.spec::OS3_each_step_its_method_agent_tool_or_command
       - docs/2026-11-21-one-surface-phasemap.spec::OS4_pipelines_get_triggers_schedules_conditions
     upstream:
       - docs/2026-11-21-one-surface-phasemap.spec::OS1_every_run_on_one_surface
     downstream:
+      - docs/2026-11-21-one-surface-phasemap.spec::OS10_the_translation_chain
+      - docs/2026-11-21-one-surface-phasemap.spec::OS11_raid_reads_his_framework_tested
       - docs/2026-11-21-one-surface-phasemap.spec::OS3_each_step_its_method_agent_tool_or_command
       - docs/2026-11-21-one-surface-phasemap.spec::OS4_pipelines_get_triggers_schedules_conditions
       - docs/2026-11-21-one-surface-phasemap.spec::OS8_experiments_and_trials
@@ -163,8 +166,8 @@ payload:
       - layer 1 · blocked by OS1_every_run_on_one_surface
       - 'depends on (1): OS1_every_run_on_one_surface'
       - >-
-        needed by (2): OS3_each_step_its_method_agent_tool_or_command,
-        OS4_pipelines_get_triggers_schedules_conditions · all downstream 3 · finishing it unlocks
+        needed by (3): OS10_the_translation_chain, OS3_each_step_its_method_agent_tool_or_command,
+        OS4_pipelines_get_triggers_schedules_conditions · all downstream 5 · finishing it unlocks
         OS3_each_step_its_method_agent_tool_or_command
     edges:
       - from: docs/2026-11-21-one-surface-phasemap.spec::OS1_every_run_on_one_surface
