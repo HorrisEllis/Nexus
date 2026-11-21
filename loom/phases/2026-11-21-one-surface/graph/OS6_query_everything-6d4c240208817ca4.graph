@@ -1,0 +1,108 @@
+envelope: 1
+uuid: nexus-export-graph-phase:OS6_query_everything:6d4c240208817ca4
+type: graph
+id: phase:OS6_query_everything:6d4c240208817ca4
+context: dependency graph of phase OS6_query_everything
+intent: null
+summary: 8 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1795285529461
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795285529461
+lastSeenAt: 1795285529461
+fingerprint: null
+payload:
+  for: OS6_query_everything
+  kind: phase
+  repo: null
+  hash: 6d4c240208817ca4
+  nodes:
+    - path: orchestrator/lib/mcp-server.js
+      role: changes
+      exists: true
+      system: orchestrator
+    - path: lib/cli/nexus.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: orchestrator/lib/mcp-stdio.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: orchestrator/orchestrator.js
+      role: used-by
+      exists: true
+      system: orchestrator
+    - path: tests/nexus-full-audit.js
+      role: used-by
+      exists: true
+      system: null
+    - path: lib/agent-tools/tools/nexus/command.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/event-contract-check.js
+      role: uses
+      exists: true
+      system: lib
+    - path: orchestrator/lib/mcp-tools-tokensave.js
+      role: uses
+      exists: true
+      system: orchestrator
+  edges:
+    - from: orchestrator/lib/mcp-server.js
+      to: lib/event-contract-check.js
+      kind: requires
+    - from: orchestrator/lib/mcp-server.js
+      to: lib/agent-tools/tools/nexus/command.js
+      kind: requires
+    - from: orchestrator/lib/mcp-server.js
+      to: orchestrator/lib/mcp-tools-tokensave.js
+      kind: requires
+    - from: lib/cli/nexus.js
+      to: orchestrator/lib/mcp-server.js
+      kind: requires
+    - from: orchestrator/lib/mcp-stdio.js
+      to: orchestrator/lib/mcp-server.js
+      kind: requires
+    - from: orchestrator/orchestrator.js
+      to: orchestrator/lib/mcp-server.js
+      kind: requires
+    - from: tests/nexus-full-audit.js
+      to: orchestrator/lib/mcp-server.js
+      kind: requires
+  crossings:
+    - from: lib/cli/nexus.js
+      to: orchestrator/lib/mcp-server.js
+      fromSystem: lib
+      toSystem: orchestrator
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-11-21-one-surface-phasemap.spec::OS5_all_of_nexus_from_the_console
+    dependents:
+      - docs/2026-11-21-one-surface-phasemap.spec::OS7_copilot_runs_nexus_from_talk
+      - docs/2026-11-21-one-surface-phasemap.spec::OS9_a_model_per_node_interconnected
+    upstream:
+      - docs/2026-11-21-one-surface-phasemap.spec::OS1_every_run_on_one_surface
+      - docs/2026-11-21-one-surface-phasemap.spec::OS5_all_of_nexus_from_the_console
+    downstream:
+      - docs/2026-11-21-one-surface-phasemap.spec::OS7_copilot_runs_nexus_from_talk
+      - docs/2026-11-21-one-surface-phasemap.spec::OS9_a_model_per_node_interconnected
+    blockedBy:
+      - docs/2026-11-21-one-surface-phasemap.spec::OS5_all_of_nexus_from_the_console
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2 · blocked by OS5_all_of_nexus_from_the_console
+      - 'depends on (1): OS5_all_of_nexus_from_the_console · all upstream 2'
+      - 'needed by (2): OS7_copilot_runs_nexus_from_talk, OS9_a_model_per_node_interconnected'
+    edges:
+      - from: docs/2026-11-21-one-surface-phasemap.spec::OS5_all_of_nexus_from_the_console
+        kind: declared

@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-21-one-surface-phasemap.spec::OS9_a_model_per_node_interconnected
+type: phase
+id: docs_2026-11-21-one-surface-phasemap.spec::OS9_a_model_per_node_interconnected
+context: pipeline phase OS9_a_model_per_node_interconnected of docs/2026-11-21-one-surface-phasemap.spec
+intent: null
+summary: OS9_a_model_per_node_interconnected (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1795285529467
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795285529467
+lastSeenAt: 1795285529467
+fingerprint: null
+payload:
+  id: OS9_a_model_per_node_interconnected
+  map: docs/2026-11-21-one-surface-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - OS6_query_everything
+    - OS7_copilot_runs_nexus_from_talk
+  blocks: []
+  spec: null
+  graph: e51105e215f1f7ba

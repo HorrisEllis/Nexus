@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-21-one-surface-phasemap.spec::OS6_query_everything
+type: phase
+id: docs_2026-11-21-one-surface-phasemap.spec::OS6_query_everything
+context: pipeline phase OS6_query_everything of docs/2026-11-21-one-surface-phasemap.spec
+intent: null
+summary: OS6_query_everything (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1795285529461
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795285529461
+lastSeenAt: 1795285529461
+fingerprint: null
+payload:
+  id: OS6_query_everything
+  map: docs/2026-11-21-one-surface-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - orchestrator/lib/mcp-server.js
+  depends_on:
+    - OS5_all_of_nexus_from_the_console
+  blocks: []
+  spec: null
+  graph: 6d4c240208817ca4

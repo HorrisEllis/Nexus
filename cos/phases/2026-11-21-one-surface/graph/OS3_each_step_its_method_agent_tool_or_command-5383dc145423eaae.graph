@@ -1,0 +1,105 @@
+envelope: 1
+uuid: nexus-export-graph-phase:OS3_each_step_its_method_agent_tool_or_command:5383dc145423eaae
+type: graph
+id: phase:OS3_each_step_its_method_agent_tool_or_command:5383dc145423eaae
+context: dependency graph of phase OS3_each_step_its_method_agent_tool_or_command
+intent: null
+summary: 8 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1795285529454
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795285529454
+lastSeenAt: 1795285529454
+fingerprint: null
+payload:
+  for: OS3_each_step_its_method_agent_tool_or_command
+  kind: phase
+  repo: null
+  hash: 5383dc145423eaae
+  nodes:
+    - path: cos/automation/method.eg
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/automation/steps.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/ui/run-console-preview/index.html
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/automation/engine.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/automation/pipeline.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/automation/routes.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: lib/automation/steps.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: cos/automation/cron.js
+      role: uses
+      exists: true
+      system: cos
+  edges:
+    - from: cos/automation/steps.js
+      to: cos/automation/cron.js
+      kind: requires
+    - from: cos/automation/engine.js
+      to: cos/automation/steps.js
+      kind: requires
+    - from: cos/automation/pipeline.js
+      to: cos/automation/steps.js
+      kind: requires
+    - from: cos/automation/routes.js
+      to: cos/automation/steps.js
+      kind: requires
+    - from: lib/automation/steps.js
+      to: cos/automation/steps.js
+      kind: requires
+  crossings:
+    - from: lib/automation/steps.js
+      to: cos/automation/steps.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: false
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-11-21-one-surface-phasemap.spec::OS2_raid_makes_the_centre_node
+    dependents:
+      - docs/2026-11-21-one-surface-phasemap.spec::OS8_experiments_and_trials
+      - docs/2026-11-21-one-surface-phasemap.spec::OS4_pipelines_get_triggers_schedules_conditions
+    upstream:
+      - docs/2026-11-21-one-surface-phasemap.spec::OS1_every_run_on_one_surface
+      - docs/2026-11-21-one-surface-phasemap.spec::OS2_raid_makes_the_centre_node
+    downstream:
+      - docs/2026-11-21-one-surface-phasemap.spec::OS4_pipelines_get_triggers_schedules_conditions
+      - docs/2026-11-21-one-surface-phasemap.spec::OS8_experiments_and_trials
+    blockedBy:
+      - docs/2026-11-21-one-surface-phasemap.spec::OS2_raid_makes_the_centre_node
+    unlocks:
+      - docs/2026-11-21-one-surface-phasemap.spec::OS8_experiments_and_trials
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2 · blocked by OS2_raid_makes_the_centre_node
+      - 'depends on (1): OS2_raid_makes_the_centre_node · all upstream 2'
+      - >-
+        needed by (2): OS8_experiments_and_trials, OS4_pipelines_get_triggers_schedules_conditions ·
+        finishing it unlocks OS8_experiments_and_trials
+    edges:
+      - from: docs/2026-11-21-one-surface-phasemap.spec::OS2_raid_makes_the_centre_node
+        kind: inferred

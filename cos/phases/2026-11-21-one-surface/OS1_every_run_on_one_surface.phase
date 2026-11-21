@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-21-one-surface-phasemap.spec::OS1_every_run_on_one_surface
+type: phase
+id: docs_2026-11-21-one-surface-phasemap.spec::OS1_every_run_on_one_surface
+context: pipeline phase OS1_every_run_on_one_surface of docs/2026-11-21-one-surface-phasemap.spec
+intent: null
+summary: OS1_every_run_on_one_surface (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1795285529447
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795285529447
+lastSeenAt: 1795285529447
+fingerprint: null
+payload:
+  id: OS1_every_run_on_one_surface
+  map: docs/2026-11-21-one-surface-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/ui/run-console-preview/server.js
+    - cos/manager/automation-door.js
+    - lib/raid-port.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 9aff3fc97c6f005e

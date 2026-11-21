@@ -1,0 +1,166 @@
+envelope: 1
+uuid: nexus-export-graph-phase:OS8_experiments_and_trials:0b08f6ea2507434b
+type: graph
+id: phase:OS8_experiments_and_trials:0b08f6ea2507434b
+context: dependency graph of phase OS8_experiments_and_trials
+intent: null
+summary: 15 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1795285529465
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795285529465
+lastSeenAt: 1795285529465
+fingerprint: null
+payload:
+  for: OS8_experiments_and_trials
+  kind: phase
+  repo: null
+  hash: 0b08f6ea2507434b
+  nodes:
+    - path: cos/automation/pipeline.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/automation/engine.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/automation/nodes.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/automation/routes.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/manager/automation-door.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: lib/automation/pipeline.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: cos/automation/eg-build/ladder.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/automation/eg-build/method.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/automation/eg-build/reuse.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/automation/engine.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/automation/steps.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/automation/template.js
+      role: uses
+      exists: true
+      system: cos
+    - path: emerge/emerge/lang/runtime.js
+      role: uses
+      exists: true
+      system: emerge
+    - path: lib/node-export.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/versionium-record.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: cos/automation/pipeline.js
+      to: cos/automation/template.js
+      kind: requires
+    - from: cos/automation/pipeline.js
+      to: emerge/emerge/lang/runtime.js
+      kind: requires
+    - from: cos/automation/pipeline.js
+      to: cos/automation/eg-build/reuse.js
+      kind: requires
+    - from: cos/automation/pipeline.js
+      to: cos/automation/eg-build/method.js
+      kind: requires
+    - from: cos/automation/pipeline.js
+      to: cos/automation/eg-build/ladder.js
+      kind: requires
+    - from: cos/automation/pipeline.js
+      to: cos/automation/steps.js
+      kind: requires
+    - from: cos/automation/pipeline.js
+      to: cos/automation/engine.js
+      kind: requires
+    - from: cos/automation/pipeline.js
+      to: lib/node-export.js
+      kind: requires
+    - from: cos/automation/pipeline.js
+      to: lib/versionium-record.js
+      kind: requires
+    - from: cos/automation/engine.js
+      to: cos/automation/pipeline.js
+      kind: requires
+    - from: cos/automation/nodes.js
+      to: cos/automation/pipeline.js
+      kind: requires
+    - from: cos/automation/routes.js
+      to: cos/automation/pipeline.js
+      kind: requires
+    - from: cos/manager/automation-door.js
+      to: cos/automation/pipeline.js
+      kind: requires
+    - from: lib/automation/pipeline.js
+      to: cos/automation/pipeline.js
+      kind: requires
+  crossings:
+    - from: cos/automation/pipeline.js
+      to: emerge/emerge/lang/runtime.js
+      fromSystem: cos
+      toSystem: emerge
+      kind: system
+      known: false
+    - from: lib/automation/pipeline.js
+      to: cos/automation/pipeline.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: false
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-11-21-one-surface-phasemap.spec::OS3_each_step_its_method_agent_tool_or_command
+    dependents: []
+    upstream:
+      - docs/2026-11-21-one-surface-phasemap.spec::OS1_every_run_on_one_surface
+      - docs/2026-11-21-one-surface-phasemap.spec::OS2_raid_makes_the_centre_node
+      - docs/2026-11-21-one-surface-phasemap.spec::OS3_each_step_its_method_agent_tool_or_command
+    downstream: []
+    blockedBy:
+      - docs/2026-11-21-one-surface-phasemap.spec::OS3_each_step_its_method_agent_tool_or_command
+    unlocks: []
+    conflicts:
+      - with: docs/2026-11-21-one-surface-phasemap.spec::OS4_pipelines_get_triggers_schedules_conditions
+        files:
+          - cos/automation/pipeline.js
+    dangling: []
+    lines:
+      - layer 3 · blocked by OS3_each_step_its_method_agent_tool_or_command
+      - 'depends on (1): OS3_each_step_its_method_agent_tool_or_command · all upstream 3'
+      - 'needed by (0): —'
+      - >-
+        same files as OS4_pipelines_get_triggers_schedules_conditions with no order between them:
+        cos/automation/pipeline.js
+    edges:
+      - from: docs/2026-11-21-one-surface-phasemap.spec::OS3_each_step_its_method_agent_tool_or_command
+        kind: declared

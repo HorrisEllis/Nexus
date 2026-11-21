@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-21-one-surface-phasemap.spec::OS4_pipelines_get_triggers_schedules_conditions
+type: phase
+id: docs_2026-11-21-one-surface-phasemap.spec::OS4_pipelines_get_triggers_schedules_conditions
+context: >-
+  pipeline phase OS4_pipelines_get_triggers_schedules_conditions of
+  docs/2026-11-21-one-surface-phasemap.spec
+intent: null
+summary: OS4_pipelines_get_triggers_schedules_conditions (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1795285529457
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795285529457
+lastSeenAt: 1795285529457
+fingerprint: null
+payload:
+  id: OS4_pipelines_get_triggers_schedules_conditions
+  map: docs/2026-11-21-one-surface-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/automation/pipeline.js
+    - cos/automation/cron.js
+    - cos/automation/steps.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: be0082b767118bdf

@@ -1,0 +1,85 @@
+envelope: 1
+uuid: nexus-export-graph-phase:OS7_copilot_runs_nexus_from_talk:96db0e846e9be1fe
+type: graph
+id: phase:OS7_copilot_runs_nexus_from_talk:96db0e846e9be1fe
+context: dependency graph of phase OS7_copilot_runs_nexus_from_talk
+intent: null
+summary: 6 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1795285529463
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795285529463
+lastSeenAt: 1795285529463
+fingerprint: null
+payload:
+  for: OS7_copilot_runs_nexus_from_talk
+  kind: phase
+  repo: null
+  hash: 96db0e846e9be1fe
+  nodes:
+    - path: copilot/assist-loop.js
+      role: changes
+      exists: true
+      system: copilot
+    - path: copilot/intents.js
+      role: changes
+      exists: true
+      system: copilot
+    - path: docs/2026-11-17-raid-request-lifecycle-phasemap.spec
+      role: changes
+      exists: true
+      system: null
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/registry-components.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: lib/hooks/index.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: copilot/intents.js
+      to: lib/hooks/index.js
+      kind: requires
+    - from: copilot/intents.js
+      to: copilot/registry-components.js
+      kind: requires
+    - from: copilot/server.js
+      to: copilot/intents.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-11-21-one-surface-phasemap.spec::OS5_all_of_nexus_from_the_console
+      - docs/2026-11-21-one-surface-phasemap.spec::OS6_query_everything
+    dependents:
+      - docs/2026-11-21-one-surface-phasemap.spec::OS9_a_model_per_node_interconnected
+    upstream:
+      - docs/2026-11-21-one-surface-phasemap.spec::OS1_every_run_on_one_surface
+      - docs/2026-11-21-one-surface-phasemap.spec::OS5_all_of_nexus_from_the_console
+      - docs/2026-11-21-one-surface-phasemap.spec::OS6_query_everything
+    downstream:
+      - docs/2026-11-21-one-surface-phasemap.spec::OS9_a_model_per_node_interconnected
+    blockedBy:
+      - docs/2026-11-21-one-surface-phasemap.spec::OS5_all_of_nexus_from_the_console
+      - docs/2026-11-21-one-surface-phasemap.spec::OS6_query_everything
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 3 · blocked by OS5_all_of_nexus_from_the_console, OS6_query_everything
+      - 'depends on (2): OS5_all_of_nexus_from_the_console, OS6_query_everything · all upstream 3'
+      - 'needed by (1): OS9_a_model_per_node_interconnected'
+    edges:
+      - from: docs/2026-11-21-one-surface-phasemap.spec::OS5_all_of_nexus_from_the_console
+        kind: declared
+      - from: docs/2026-11-21-one-surface-phasemap.spec::OS6_query_everything
+        kind: declared

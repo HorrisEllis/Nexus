@@ -1,0 +1,51 @@
+envelope: 1
+uuid: nexus-export-graph-phase:OS9_a_model_per_node_interconnected:e51105e215f1f7ba
+type: graph
+id: phase:OS9_a_model_per_node_interconnected:e51105e215f1f7ba
+context: dependency graph of phase OS9_a_model_per_node_interconnected
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1795285529467
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795285529467
+lastSeenAt: 1795285529467
+fingerprint: null
+payload:
+  for: OS9_a_model_per_node_interconnected
+  kind: phase
+  repo: null
+  hash: e51105e215f1f7ba
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    layer: 4
+    deps:
+      - docs/2026-11-21-one-surface-phasemap.spec::OS6_query_everything
+      - docs/2026-11-21-one-surface-phasemap.spec::OS7_copilot_runs_nexus_from_talk
+    dependents: []
+    upstream:
+      - docs/2026-11-21-one-surface-phasemap.spec::OS1_every_run_on_one_surface
+      - docs/2026-11-21-one-surface-phasemap.spec::OS5_all_of_nexus_from_the_console
+      - docs/2026-11-21-one-surface-phasemap.spec::OS6_query_everything
+      - docs/2026-11-21-one-surface-phasemap.spec::OS7_copilot_runs_nexus_from_talk
+    downstream: []
+    blockedBy:
+      - docs/2026-11-21-one-surface-phasemap.spec::OS6_query_everything
+      - docs/2026-11-21-one-surface-phasemap.spec::OS7_copilot_runs_nexus_from_talk
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 4 · blocked by OS6_query_everything, OS7_copilot_runs_nexus_from_talk
+      - 'depends on (2): OS6_query_everything, OS7_copilot_runs_nexus_from_talk · all upstream 4'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-11-21-one-surface-phasemap.spec::OS6_query_everything
+        kind: declared
+      - from: docs/2026-11-21-one-surface-phasemap.spec::OS7_copilot_runs_nexus_from_talk
+        kind: declared

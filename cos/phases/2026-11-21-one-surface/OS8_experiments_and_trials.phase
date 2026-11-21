@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-21-one-surface-phasemap.spec::OS8_experiments_and_trials
+type: phase
+id: docs_2026-11-21-one-surface-phasemap.spec::OS8_experiments_and_trials
+context: pipeline phase OS8_experiments_and_trials of docs/2026-11-21-one-surface-phasemap.spec
+intent: null
+summary: OS8_experiments_and_trials (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1795285529465
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795285529465
+lastSeenAt: 1795285529465
+fingerprint: null
+payload:
+  id: OS8_experiments_and_trials
+  map: docs/2026-11-21-one-surface-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/automation/pipeline.js
+  depends_on:
+    - OS3_each_step_its_method_agent_tool_or_command
+  blocks: []
+  spec: null
+  graph: 0b08f6ea2507434b

@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-21-one-surface-phasemap.spec::OS5_all_of_nexus_from_the_console
+type: phase
+id: docs_2026-11-21-one-surface-phasemap.spec::OS5_all_of_nexus_from_the_console
+context: pipeline phase OS5_all_of_nexus_from_the_console of docs/2026-11-21-one-surface-phasemap.spec
+intent: null
+summary: OS5_all_of_nexus_from_the_console (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1795285529459
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795285529459
+lastSeenAt: 1795285529459
+fingerprint: null
+payload:
+  id: OS5_all_of_nexus_from_the_console
+  map: docs/2026-11-21-one-surface-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/manager/cli.js
+    - idearium/cli/route-commands.js
+    - lib/raid-port.js
+  depends_on:
+    - OS1_every_run_on_one_surface
+  blocks: []
+  spec: null
+  graph: bea6c77ad4e7a848

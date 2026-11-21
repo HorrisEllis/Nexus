@@ -1,0 +1,237 @@
+envelope: 1
+uuid: nexus-export-graph-phase:OS5_all_of_nexus_from_the_console:bea6c77ad4e7a848
+type: graph
+id: phase:OS5_all_of_nexus_from_the_console:bea6c77ad4e7a848
+context: dependency graph of phase OS5_all_of_nexus_from_the_console
+intent: null
+summary: 26 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1795285529459
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795285529459
+lastSeenAt: 1795285529459
+fingerprint: null
+payload:
+  for: OS5_all_of_nexus_from_the_console
+  kind: phase
+  repo: null
+  hash: bea6c77ad4e7a848
+  nodes:
+    - path: cos/manager/cli.js
+      role: changes
+      exists: true
+      system: cos
+    - path: idearium/cli/route-commands.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: lib/raid-port.js
+      role: changes
+      exists: true
+      system: lib
+    - path: cos/manager/server.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: diagnostic/tests/causality.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/cli/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: tests/modules/test-cg-agent-doors.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-cos-compartment-template.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-drawbridge-registry.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-eros-hooks.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-nexus-update.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-node-registry-system.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-release-deliver.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-sovereign-systems.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/core/raid/contract-adapters.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/contract-gates.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cos/manager/automation-door.js
+      role: uses
+      exists: true
+      system: cos
+    - path: lib/agent-tools/tools/nexus/recall.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/architecture-migrate.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/git-pr.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-client.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-read.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-self/systems.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/node-export.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/resource-monitor.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: cos/manager/cli.js
+      to: cos/manager/automation-door.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-gates.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: lib/node-export.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-adapters.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: lib/architecture-migrate.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: lib/git-pr.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: lib/resource-monitor.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: lib/agent-tools/tools/nexus/recall.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: lib/nexus-read.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: lib/nexus-client.js
+      kind: requires
+    - from: lib/raid-port.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/cli.js
+      kind: requires
+    - from: diagnostic/tests/causality.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: idearium/cli/index.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-cg-agent-doors.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-cos-compartment-template.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-drawbridge-registry.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-eros-hooks.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-nexus-update.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-node-registry-system.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-release-deliver.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-sovereign-systems.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+  crossings:
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-gates.js
+      fromSystem: idearium
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-adapters.js
+      fromSystem: idearium
+      toSystem: cortex
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-11-21-one-surface-phasemap.spec::OS1_every_run_on_one_surface
+    dependents:
+      - docs/2026-11-21-one-surface-phasemap.spec::OS6_query_everything
+      - docs/2026-11-21-one-surface-phasemap.spec::OS7_copilot_runs_nexus_from_talk
+    upstream:
+      - docs/2026-11-21-one-surface-phasemap.spec::OS1_every_run_on_one_surface
+    downstream:
+      - docs/2026-11-21-one-surface-phasemap.spec::OS6_query_everything
+      - docs/2026-11-21-one-surface-phasemap.spec::OS7_copilot_runs_nexus_from_talk
+      - docs/2026-11-21-one-surface-phasemap.spec::OS9_a_model_per_node_interconnected
+    blockedBy:
+      - docs/2026-11-21-one-surface-phasemap.spec::OS1_every_run_on_one_surface
+    unlocks:
+      - docs/2026-11-21-one-surface-phasemap.spec::OS6_query_everything
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · blocked by OS1_every_run_on_one_surface
+      - 'depends on (1): OS1_every_run_on_one_surface'
+      - >-
+        needed by (2): OS6_query_everything, OS7_copilot_runs_nexus_from_talk · all downstream 3 ·
+        finishing it unlocks OS6_query_everything
+    edges:
+      - from: docs/2026-11-21-one-surface-phasemap.spec::OS1_every_run_on_one_surface
+        kind: declared

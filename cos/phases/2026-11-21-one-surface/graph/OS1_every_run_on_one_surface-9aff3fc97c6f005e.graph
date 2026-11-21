@@ -1,0 +1,150 @@
+envelope: 1
+uuid: nexus-export-graph-phase:OS1_every_run_on_one_surface:9aff3fc97c6f005e
+type: graph
+id: phase:OS1_every_run_on_one_surface:9aff3fc97c6f005e
+context: dependency graph of phase OS1_every_run_on_one_surface
+intent: null
+summary: 15 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1795285529447
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795285529447
+lastSeenAt: 1795285529447
+fingerprint: null
+payload:
+  for: OS1_every_run_on_one_surface
+  kind: phase
+  repo: null
+  hash: 9aff3fc97c6f005e
+  nodes:
+    - path: cos/manager/automation-door.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/ui/run-console-preview/server.js
+      role: changes
+      exists: true
+      system: cos
+    - path: lib/raid-port.js
+      role: changes
+      exists: true
+      system: lib
+    - path: cortex/boot.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cos/manager/cli.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/manager/resources.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/manager/server.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: guardian/api-dispatch.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: guardian/lib/dispatcher.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: guardian/server.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: tests/modules/test-orchestrator-automation.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cos/automation/engine.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/automation/pipeline.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/automation/routes.js
+      role: uses
+      exists: true
+      system: cos
+    - path: lib/nexus-self/systems.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: cos/manager/automation-door.js
+      to: cos/automation/engine.js
+      kind: requires
+    - from: cos/manager/automation-door.js
+      to: cos/automation/pipeline.js
+      kind: requires
+    - from: cos/manager/automation-door.js
+      to: cos/automation/routes.js
+      kind: requires
+    - from: lib/raid-port.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: cos/manager/cli.js
+      to: cos/manager/automation-door.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/automation-door.js
+      kind: requires
+    - from: tests/modules/test-orchestrator-automation.test.js
+      to: cos/manager/automation-door.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/raid-port.js
+      kind: requires
+    - from: cos/manager/resources.js
+      to: lib/raid-port.js
+      kind: requires
+    - from: guardian/api-dispatch.js
+      to: lib/raid-port.js
+      kind: requires
+    - from: guardian/lib/dispatcher.js
+      to: lib/raid-port.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/raid-port.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-11-21-one-surface-phasemap.spec::OS2_raid_makes_the_centre_node
+      - docs/2026-11-21-one-surface-phasemap.spec::OS5_all_of_nexus_from_the_console
+    upstream: []
+    downstream:
+      - docs/2026-11-21-one-surface-phasemap.spec::OS2_raid_makes_the_centre_node
+      - docs/2026-11-21-one-surface-phasemap.spec::OS3_each_step_its_method_agent_tool_or_command
+      - docs/2026-11-21-one-surface-phasemap.spec::OS4_pipelines_get_triggers_schedules_conditions
+      - docs/2026-11-21-one-surface-phasemap.spec::OS5_all_of_nexus_from_the_console
+      - docs/2026-11-21-one-surface-phasemap.spec::OS6_query_everything
+      - docs/2026-11-21-one-surface-phasemap.spec::OS7_copilot_runs_nexus_from_talk
+      - docs/2026-11-21-one-surface-phasemap.spec::OS8_experiments_and_trials
+      - docs/2026-11-21-one-surface-phasemap.spec::OS9_a_model_per_node_interconnected
+    blockedBy: []
+    unlocks:
+      - docs/2026-11-21-one-surface-phasemap.spec::OS2_raid_makes_the_centre_node
+      - docs/2026-11-21-one-surface-phasemap.spec::OS5_all_of_nexus_from_the_console
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0 · ready
+      - 'depends on (0): —'
+      - >-
+        needed by (2): OS2_raid_makes_the_centre_node, OS5_all_of_nexus_from_the_console · all
+        downstream 8 · finishing it unlocks OS2_raid_makes_the_centre_node,
+        OS5_all_of_nexus_from_the_console
+    edges: []

@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-21-one-surface-phasemap.spec::OS2_raid_makes_the_centre_node
+type: phase
+id: docs_2026-11-21-one-surface-phasemap.spec::OS2_raid_makes_the_centre_node
+context: pipeline phase OS2_raid_makes_the_centre_node of docs/2026-11-21-one-surface-phasemap.spec
+intent: null
+summary: OS2_raid_makes_the_centre_node (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1795285529451
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795285529451
+lastSeenAt: 1795285529451
+fingerprint: null
+payload:
+  id: OS2_raid_makes_the_centre_node
+  map: docs/2026-11-21-one-surface-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/automation/pipeline.js
+    - cos/ui/run-console-preview/index.html
+  depends_on:
+    - OS1_every_run_on_one_surface
+  blocks: []
+  spec: null
+  graph: 53b62edc719cfa53

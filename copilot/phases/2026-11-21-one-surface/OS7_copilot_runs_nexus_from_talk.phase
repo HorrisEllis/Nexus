@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-21-one-surface-phasemap.spec::OS7_copilot_runs_nexus_from_talk
+type: phase
+id: docs_2026-11-21-one-surface-phasemap.spec::OS7_copilot_runs_nexus_from_talk
+context: pipeline phase OS7_copilot_runs_nexus_from_talk of docs/2026-11-21-one-surface-phasemap.spec
+intent: null
+summary: OS7_copilot_runs_nexus_from_talk (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1795285529463
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795285529463
+lastSeenAt: 1795285529463
+fingerprint: null
+payload:
+  id: OS7_copilot_runs_nexus_from_talk
+  map: docs/2026-11-21-one-surface-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - copilot/assist-loop.js
+    - copilot/intents.js
+    - docs/2026-11-17-raid-request-lifecycle-phasemap.spec
+  depends_on:
+    - OS5_all_of_nexus_from_the_console
+    - OS6_query_everything
+  blocks: []
+  spec: null
+  graph: 96db0e846e9be1fe
