@@ -2061,7 +2061,10 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
       // NM1a 2026-11-19: through the project agent each gap prompt was ~9,960 characters of persona and JavaScript context, and DeepSeek
       // answered in JavaScript (for (let … of …), ===, semicolons) three times; asked bare it filled the same gap first try. The Ollama
       // system's job route (nexus://ollama-bridge/api/jobs: its door records every call on the tape), owned by the Emerge rung.
-      const askOllama = (message, model, gap) => _askOllamaBare({ prompt: message, model, repoUuid: target.uuid, meta: { source: 'idearium.emerge-rung', gap, phase } });
+      // 0.60.627 — his, 2026-11-20: "Make sure when a task is running. It can't get stuck like that." Run phrun-mwplppmb-1d8s sat 40 min in the rung with
+      // no row and no model call. Each call now writes a progress row first (the gap, the model), so the run is never silent and a stall is seen.
+      const askOllama = (message, model, gap) => { try { appendRow('idearium_phase_runs', { uuid: `${runId}-${ck.brick}-eg-${Date.now().toString(36)}`, ...base, ...ck, state: 'emerge-gap', step: gap || 'gap', provider: `ollama:${model || ''}`, promptChars: String(message).length, ts: Date.now() }); } catch (_) {}
+        return _askOllamaBare({ prompt: message, model, repoUuid: target.uuid, meta: { source: 'idearium.emerge-rung', gap, phase } }); };
       // 0.60.615 EMB2 — the ladder, smallest first (routing.emerge_ladder): each model through the same Ollama door; empty, the rung's one model
       const ladder = (policy.emergeLadder || []).length ? policy.emergeLadder.map(m => ({ name: m, ask: (message, { gap } = {}) => askOllama(message, m, gap) })) : null;
       const rung0 = ER.createRung({
@@ -2083,7 +2086,11 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
       });
       // 0.60.611/612 EMB2: the gaps of this build live in the folder of its contract (his choice, 2026-11-19): idearium/data/tasks/<repo>/<map>.<phase>/
       const contractId = `${target.uuid}/${_safeId(map.split('/').pop().replace(/\.spec$/, ''))}.${_safeId(phase)}`;
-      let res; try { res = await rung0.build({ file: f, exports: pf.exports || [], expectation, context: ctxNote, contract: contractId }); } catch (e) { res = { ok: false, why: e.message, tries: [] }; }
+      // 0.60.627: the rung cannot hang the build — no result within repos.emerge_minutes (default 45) and the brick is held with that reason
+      const _egMs = Math.max(5, Number(_cfg('repos.emerge_minutes', 45)) || 45) * 60000; let _egTimer = null;
+      let res; try { res = await Promise.race([rung0.build({ file: f, exports: pf.exports || [], expectation, context: ctxNote, contract: contractId }),
+        new Promise(r => { _egTimer = setTimeout(() => r({ ok: false, timedOut: true, why: `the Emerge rung gave no result in ${Math.round(_egMs / 60000)} min: held, not hung (his "It can't get stuck like that")`, tries: [] }), _egMs); })]); }
+      catch (e) { res = { ok: false, why: e.message, tries: [] }; } finally { if (_egTimer) clearTimeout(_egTimer); }
       appendRow('idearium_phase_runs', { uuid: `${runId}-${ck.brick}-ew-${Date.now().toString(36)}`, ...base, ...ck, state: res.ok ? 'emerge-passed' : 'emerge-fell-back', provider: `emerge:${rung && rung.provider || 'agent'}`, snapshot: commitId,
         tries: res.tries, note: res.ok ? `${f} written in Emerge — ${res.why}` : `Emerge did not make ${f} (${res.why}); the JavaScript ladder builds it`, ts: Date.now() });
       getIdeaOS().emit('idearium.repo.phase.run', { ...base, ...ck, state: res.ok ? 'emerge-passed' : 'emerge-fell-back', snapshot: commitId });
