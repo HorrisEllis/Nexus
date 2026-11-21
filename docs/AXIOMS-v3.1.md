@@ -223,7 +223,8 @@ Before communication begins: identity is verified, versions are negotiated, capa
 The user interface is a projection of system state, not the system itself. Removing the UI must not affect execution. Replacing the UI must require no changes to business logic. The UI is a consumer of contracts, never their owner.
 
 **§5.13 Syntax Is Not Architecture**
-Language syntax belongs to the language, not the architecture. Structure is separated by responsibility — HTML is structure, CSS is presentation, JavaScript is behaviour, specs are contracts, schemas are truth, events are communication. No layer owns another. Each layer communicates only through declared contracts.
+Language syntax belongs to the language, not the architecture. Structure is separated by responsibility — HTML is structure, CSS is presentation, Emerge is behaviour, specs are contracts, schemas are truth, events are communication. No layer owns another. Each layer communicates only through declared contracts.
+*↳ Amended 2026-11-21, his: "The Axiom 5.13 replace the JavaScript with a merge" (read as Emerge: §17.13, no non-Emerge code unless the contract or the project names it; the reading is the coder's, to confirm). Superseded wording, kept (§0.3): ~~JavaScript is behaviour~~. Said the same day as his decomposer: each component its own file, each syntax its own file, every one wired to its system's drawbridge and described in CIE-EG.*
 
 **§5.14 Every Layer Is Replaceable**
 Any implementation may be replaced provided it satisfies the same contract. Replacing the UI, the database, the transport, the language, or the renderer must not require changes outside the declared interface. The contract — not the implementation — is the dependency.
@@ -348,6 +349,10 @@ A projection table is never written directly. Any direct write to a projection t
 
 **§10.3 Competing Truth Layers Are a System Failure**
 When two systems disagree on the state of the same entity, that is a `ledger_divergence` gap. Named, tracked, resolved.
+
+**§10.4 Nodes Are Data; a Node Type Is Registered Before It Is Stored** *(2026-11-21, his)*
+Nodes are data in the system. A new kind of node is registered in the node taxonomy (its type, its schema, the system that owns it) before any node of it is integrated into the database of the system it is meant for. A node of an unregistered type is refused, said, never stored silently.
+*↳ James, 2026-11-21: "also do write nodes are data in the system. New nodes must be registered in the node taxonomy before integrating into the database for the intended system." Where it is checked: lib/node-export.js KNOWN_TYPES and the schemas (lib/node-schemas/, each system's own schemas/), the taxonomy (docs/NODE-TAXONOMY.md), and each system's node registry (lib/node-registry.js, which already refuses a node that fails its schema). EQ5's rule (every extension defined, with a ledger) is the same law for files.*
 
 ---
 
@@ -651,6 +656,7 @@ reach for another language.
 §10.1  Each data type has exactly one write authority.
 §10.2  Projections are derived, not written.
 §10.3  Competing truth layers are a system failure.
+§10.4  Nodes are data; a node type is registered in the taxonomy before it enters a system's database.
 §11.1  Every cause is as important as the conditions of its effect.
 §11.2  Compounding effects are documented and named.
 §11.3  Compound analysis is async, gated, and selective.
