@@ -1534,3 +1534,9 @@ phases_addendum_2026_11_13_rca:
 # gates, and maybe disable them for developer or debug gates." (built as 0.60.628, a gate's snapshot setting). The coder's reading, to confirm:
 # a gate's checks are chosen by the request's intent and the context it carries, the pipeline staying the same — a debug intent gets loose gates
 # (no snapshot), a release intent strict ones; it extends PC5 (a gate holds context across runs) and 0.60.614 (a step carries its method).
+# Then, 2026-11-21: "Like gates are constraint fields". The coder's reading, to confirm: his Section 3's constraint field ("probabilistic
+# probability, built on top of deterministic probability ... deterministic variables, invariants, principles, or primitives as a boundary") as
+# the gate: its boundary the invariants (the compiler, the contract, no contradiction: hard, always); inside it a space that context and intent
+# widen or narrow (debug: no snapshot; release: snapshot and every test); an output inside the field passes, and how far outside is a measured
+# tension (sigma, delta: CF1). Joins WARP 2 and the constraint relational field (his order, item 3; EM2, RF1, CF1). 0.60.628's snapshot setting
+# and 0.60.614's method per gate are its first, crude form.
