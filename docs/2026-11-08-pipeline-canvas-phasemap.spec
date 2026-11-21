@@ -1557,3 +1557,16 @@ phases_addendum_2026_11_13_rca:
 # James, 2026-11-21: "Slow to open. A pipeline's details wait about 10 seconds on the step-timing data before anything draws. Optional data is holding up the main screen, which is a bug."
 # cos/ui/automation/engine.js open(): the steps draw first (124 ms), the baseline (~10 s) is fetched after and fills the bars. The route's own
 # speed is still open (cos/pipeline/index.js baseline()).
+
+## ADDENDUM 2026-11-21 — PC_D15 a pipeline has a type (his); any box is anything (his); the preview of both
+# James, 2026-11-21: "i need to be able to change the type of pipeline, like from state dependant linear stepwise, to stateless associative
+# lattice and node based gates" · asked what each type does when it runs: "One the constraint relation field map. Another one that starts from
+# the center and propagates outward. Then we have the normal branching one that can be used for a million things like we have logged to phase."
+# · on box kinds: "Anything. All of them. Node files. Programmable steps. Instructions. Look at all the phases" · on variables: "I don't know
+# what they even are" (so they are shown as the pipeline's Inputs, said in plain words, inside the Pipeline panel).
+# Decided (his): three types, kept on the pipeline as `kind`: branching (stepwise; what COS's engine runs today), radial (from the origin
+# outward, ring by ring), field (the constraint relational field: gates are the nodes, each relating the step it reads to the steps it admits).
+# Previewed in cos/ui/run-console-preview (drawn and edited; saved with the pipeline). OPEN, the coder's reading to confirm with him: the run order
+# of radial (a ring runs when the ring inside it passed) and of the field (a step runs when every gate around it holds) in the engine
+# (cos/automation/pipeline.js); a box can be a catalogue step, a system, another pipeline (opens in place: PC4's recursion), a phase (built by
+# the build pipeline for that phase) or a component (from its system's own registry).

@@ -20,11 +20,11 @@ html, body { background: var(--bg); color: var(--text); font: 13px var(--sans); 
 button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
 svg.i { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; flex: none; }
 @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .3; } }
-.app { display: grid; height: 100vh; grid-template-rows: 44px 2px 1fr; grid-template-columns: 56px 1fr; }
+.app { display: grid; height: 100vh; grid-template-rows: 44px 2px 1fr; grid-template-columns: 64px 1fr; }
 
 /* top: a picker, the run menu, the overflow menu, the live dot */
 .top { grid-column: 1 / -1; display: flex; align-items: center; gap: 8px; padding: 0 10px 0 0; background: var(--bg1); border-bottom: 1px solid var(--rim); }
-.logo { width: 56px; text-align: center; font: 600 12px var(--mono); letter-spacing: .14em; color: var(--bright); flex: none; }
+.logo { width: 64px; text-align: center; font: 600 12px var(--mono); letter-spacing: .14em; color: var(--bright); flex: none; }
 .logo span { color: var(--sky); }
 .dd { display: inline-flex; align-items: center; gap: 8px; height: 30px; padding: 0 10px; border-radius: 6px; border: 1px solid transparent; color: var(--text); font: 12.5px var(--sans); white-space: nowrap; transition: all .15s; }
 .dd:hover, .dd.open { background: rgba(255,255,255,.04); border-color: var(--rim); }
@@ -70,6 +70,7 @@ svg.cv.drag { cursor: grabbing; }
 .node .lb { font: 500 12.5px var(--sans); fill: var(--bright); }
 .node .sb { font: 10px var(--mono); fill: var(--text2); }
 .node .ty { font: 9px var(--mono); letter-spacing: .08em; fill: var(--text3); }
+.node .ds { font: 10.5px var(--sans); fill: var(--text2); }
 .node.running .stripe, .node.running .dotc { animation: pulse 1.2s infinite; }
 .wire { fill: none; stroke: var(--rim); stroke-width: 1.5; }
 .wire.done { stroke: color-mix(in srgb, var(--ok) 55%, transparent); }
@@ -160,6 +161,8 @@ svg.cv.drag { cursor: grabbing; }
 .menu .mi[disabled] { color: var(--text3); cursor: default; }
 .menu .mi[disabled] svg { color: var(--text3); }
 .menu .mi.danger:not([disabled]) { color: var(--coral); }
+.menu .mi .lab small { display: block; white-space: normal; color: var(--text3); font-size: 11px; line-height: 1.4; margin-top: 1px; }
+.menu .mi[disabled] .lab { white-space: normal; font-size: 11px; line-height: 1.45; }
 .menu .sep { height: 1px; background: var(--rim); margin: 5px 4px; }
 .menu .mh { padding: 6px 9px 3px; font: 600 9.5px var(--mono); letter-spacing: .1em; color: var(--text3); text-transform: uppercase; }
 .menu input { width: 100%; height: 30px; margin-bottom: 4px; padding: 0 9px; border: 1px solid var(--rim); border-radius: 6px; background: var(--bg); color: var(--text); font: 12.5px var(--sans); outline: 0; }
@@ -212,6 +215,17 @@ table.t tbody tr:hover td { background: rgba(255,255,255,.02); }
 .libi b { display: block; color: var(--bright); font: 500 12px var(--sans); }
 .libi small { display: block; color: var(--text3); font: 10.5px/1.4 var(--sans); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .gl { display: inline-grid; place-items: center; width: 20px; height: 20px; border-radius: 5px; background: var(--b0); color: var(--sky); font-size: 11px; flex: none; }
+.lh { display: flex; align-items: center; gap: 16px; } .lh h2 { white-space: nowrap; } .lh .ct { color: var(--text3); font: 12px var(--mono); }
+.lq { flex: 1; max-width: 520px; height: 32px; padding: 0 11px; border: 1px solid var(--rim); border-radius: 6px; background: var(--bg1); color: var(--bright); font: 12.5px var(--sans); outline: 0; }
+.lq:focus { border-color: var(--b2); }
+.page .lead { margin-top: 6px; color: var(--text2); font-size: 12px; } .page .lead b { color: var(--text); font-weight: 500; }
+table.t .nm { font-weight: 500; color: var(--bright); } table.t .sub { margin-top: 2px; color: var(--text3); font-size: 11.5px; line-height: 1.45; max-width: 720px; }
+.addbtn { padding: 4px 10px; border: 1px solid var(--rim); border-radius: 5px; color: var(--text2); font: 11px var(--mono); white-space: nowrap; }
+.addbtn:hover { border-color: var(--b2); color: var(--sky); background: var(--b0); }
+#toasts { position: fixed; right: 50px; bottom: 16px; display: flex; flex-direction: column; gap: 6px; z-index: 1001; max-width: 380px; }
+#toasts .toast { position: static; transform: none; display: flex; align-items: center; gap: 9px; cursor: pointer; animation: pop .15s ease-out; }
+#toasts .toast .sd { background: var(--sky); } #toasts .toast.bad .sd { background: var(--coral); } #toasts .toast.ok .sd { background: var(--ok); } #toasts .toast.warn .sd { background: var(--amber); }
+#toasts .toast.bad { border-color: color-mix(in srgb, var(--coral) 40%, var(--rim)); } #toasts .toast.warn { border-color: color-mix(in srgb, var(--amber) 40%, var(--rim)); }
 .toast { position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%); padding: 8px 14px; border-radius: 7px; background: var(--panel); border: 1px solid var(--rim); color: var(--text); font-size: 12px; box-shadow: 0 10px 30px rgba(0,0,0,.5); z-index: 1001; }
 ::-webkit-scrollbar { width: 9px; height: 9px; } ::-webkit-scrollbar-thumb { background: var(--rim); border-radius: 5px; border: 2px solid transparent; background-clip: padding-box; } ::-webkit-scrollbar-track { background: transparent; }
 </style>
@@ -235,7 +249,14 @@ const ago = (t) => { if (!t) return '—'; const s = Math.round((Date.now() - t)
 const model = (m) => String(m || '').replace(/^huihui_ai\//, '').replace(/-abliterated?/, '');
 const bg = (j) => /probe|diagnose/.test(j.intent || '');
 const store = { get(k, d) { try { const v = localStorage.getItem('cos.pipes.' + k); return v == null ? d : JSON.parse(v); } catch (_) { return d; } }, set(k, v) { try { localStorage.setItem('cos.pipes.' + k, JSON.stringify(v)); } catch (_) {} } };
-const toast = (t) => { const e = document.createElement('div'); e.className = 'toast'; e.textContent = t; document.body.appendChild(e); setTimeout(() => e.remove(), 2200); };
+// toasts: what needs his eye now (a system changed state, memory is low, a copy happened), stacked bottom right, gone on their own or on click
+function toast(t, kind = '', ms = 3200) { let box = document.getElementById('toasts'); if (!box) { box = document.createElement('div'); box.id = 'toasts'; document.body.appendChild(box); }
+  const e = document.createElement('div'); e.className = 'toast ' + kind; e.innerHTML = `<span class="sd"></span><span>${esc(t)}</span>`; e.onclick = () => e.remove(); box.appendChild(e); setTimeout(() => e.remove(), ms); }
+function watch(prev, D) {
+  if (!prev) { const down = D.systems.filter((s) => s.state !== 'up'); if (down.length) toast(`${down.length === 1 ? down[0].name + ' is ' + down[0].state : down.length + ' systems are not up: ' + down.map((s) => s.name).join(', ')}`, 'bad', 7000); }
+  else for (const s of D.systems) { const o = prev.systems.find((x) => x.name === s.name); if (o && o.state !== s.state) toast(`${s.name}: ${o.state} → ${s.state}`, s.state === 'up' ? 'ok' : 'bad', 6000); }
+  const h = D.host || {}; if (h.freeMemPct != null && h.freeMemPct < 12 && Date.now() - (S.memWarn || 0) > 300000) { S.memWarn = Date.now(); toast(`Memory is low: ${(h.freeMB / 1024).toFixed(1)} GB free (${h.freeMemPct}%)`, 'warn', 7000); }
+  const m = D.loaded[0], pm = prev && prev.loaded[0]; if (prev && (m && m.name) !== (pm && pm.name)) toast(m ? `Ollama loaded ${model(m.name)} (${(m.vramMB / 1024).toFixed(1)} GB)` : 'Ollama unloaded its model', '', 4000); }
 const COL = { done: 'var(--ok)', complete: 'var(--ok)', passed: 'var(--ok)', running: 'var(--amber)', failed: 'var(--coral)', cancelled: 'var(--coral)', paused: 'var(--violet)', waiting: 'var(--text2)' };
 const col = (s) => COL[s] || 'var(--text3)';
 
@@ -248,7 +269,8 @@ const P = 'M'; const ICONS = {
   tape: '<circle cx="7" cy="12" r="3"/><circle cx="17" cy="12" r="3"/><path d="M7 15h10"/><rect x="2" y="6" width="20" height="12" rx="2"/>', flight: '<path d="M3 12h4l3-7 4 14 3-7h4"/>',
   ledger: '<path d="M5 4h12a2 2 0 0 1 2 2v14H7a2 2 0 0 1-2-2zM5 18a2 2 0 0 1 2-2h12"/>', play: '<path d="M7 5l12 7-12 7z"/>', pause: '<path d="M8 5v14M16 5v14"/>',
   retry: '<path d="M4 12a8 8 0 1 0 3-6.2M4 4v5h5"/>', stop: '<rect x="6" y="6" width="12" height="12" rx="1.5"/>', chip: '<rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4"/>',
-  chev: '<path d="M6 9l6 6 6-6"/>', more: '<circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/>', search: '<circle cx="11" cy="11" r="6"/><path d="M20 20l-4-4"/>',
+  chev: '<path d="M6 9l6 6 6-6"/>', radial: '<circle cx="12" cy="12" r="2"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="10"/>',
+  phases: '<path d="M4 5h4v4H4zM10 10h4v4h-4zM16 15h4v4h-4zM8 7h2a2 2 0 0 1 2 2v1M14 12h2a2 2 0 0 1 2 2v1"/>', components: '<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><path d="M17.5 14v7M14 17.5h7"/>', more: '<circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/>', search: '<circle cx="11" cy="11" r="6"/><path d="M20 20l-4-4"/>',
   inspect: '<circle cx="11" cy="11" r="6"/><path d="M20 20l-4-4M11 8v6M8 11h6"/>', copy: '<rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3"/>',
   pin: '<path d="M12 17v5M5 17h14l-2-5V5H7v7z"/>', fit: '<path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/>', plus: '<path d="M12 5v14M5 12h14"/>', minus: '<path d="M5 12h14"/>',
   export: '<path d="M12 3v12M7 10l5 5 5-5M5 21h14"/>', open: '<path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/>', skip: '<path d="M5 5l9 7-9 7zM18 5v14"/>',
@@ -257,7 +279,7 @@ const P = 'M'; const ICONS = {
 const icon = (k) => `<svg class="i" viewBox="0 0 24 24">${ICONS[k] || ''}</svg>`;
 
 // ── state ──
-const S = { view: (v => ['console', 'vars', 'settings'].includes(v) ? 'canvas' : v)(store.get('view', 'canvas')), max: false, cat: null, cmds: {}, drafts: {}, edits: {}, rev: 0, lin: {}, logs: null, cli: [], draft: '', hist: [], hi: 0, pid: store.get('pid', null), sel: null, job: null, pinned: false, all: false, follow: true, wrap: true, think: false,
+const S = { view: (v => ['console', 'vars', 'settings'].includes(v) ? 'canvas' : v)(store.get('view', 'canvas')), max: false, stack: [], phases: null, comps: null, cat: null, cmds: {}, drafts: {}, edits: {}, rev: 0, lin: {}, logs: null, cli: [], draft: '', hist: [], hi: 0, pid: store.get('pid', null), sel: null, job: null, pinned: false, all: false, follow: true, wrap: true, think: false,
   open: new Set(store.get('dock', ['inspector', 'activity'])), folded: new Set(store.get('folded', [])), split: store.get('split', .6), D: null, ok: 0, base: {}, vp: null, sig: '' };
 const pipe = () => S.drafts[S.pid] || (S.D && S.D.pipelines.find((p) => p.id === S.pid));
 const allPipes = () => [...(S.D ? S.D.pipelines : []), ...Object.values(S.drafts).filter((d) => !(S.D && S.D.pipelines.some((p) => p.id === d.id)))];
@@ -268,10 +290,20 @@ const catOf = (type) => S.cat && S.cat.catalogue.find((c) => c.type === type);
 async function loadCat() { if (S.cat) return; S.cat = { catalogue: [], loading: true }; try { const c = await (await fetch('/catalogue')).json(); S.cat = c && c.catalogue ? c : { catalogue: [] }; } catch (_) { S.cat = { catalogue: [] }; } dock(); }
 async function loadCmds(sys) { if (S.cmds[sys]) return; S.cmds[sys] = []; try { S.cmds[sys] = (await (await fetch('/commands?system=' + encodeURIComponent(sys))).json()).paths || []; } catch (_) {} dock(); }
 function newId(p, type) { const b = String(type).replace(/_/g, '-'); let i = 1; while (p.tasks.some((t) => t.id === b + '-' + i)) i++; return b + '-' + i; }
-function stepOf(type) { const c = catOf(type), cfg = {}; for (const f of (c && c.fields) || []) if (f.default !== undefined) cfg[f.key] = f.default; return { label: c ? c.label : type, step: { type, config: cfg } }; }
+function stepOf(type, preset) { const c = catOf(type), cfg = {}; for (const f of (c && c.fields) || []) if (f.default !== undefined) cfg[f.key] = f.default; return { label: (preset && preset.label) || (c ? c.label : type), step: { type, config: { ...cfg, ...((preset && preset.config) || {}) } } }; }
+// boxes from what Nexus already holds: a phase (built by the Idearium build pipeline, for that phase), a component (called through its system), a system, a pipeline
+function addPhase(x) { const bp = allPipes().find((q) => /idearium build pipeline/i.test(q.name)); if (!bp) return toast('No build pipeline in COS to build a phase with', 'bad'); addStep('pipeline', 'after', { label: x.id, config: { pipeline: bp.id, vars: { phase: x.id, map: x.map } } }); toast('Added the phase ' + x.id); }
+function addComp(x) { addStep('command', 'after', { label: x.name, config: { system: x.system, method: x.method === 'POST' ? 'POST' : 'GET', endpoint: x.path || '' } }); toast('Added ' + x.name + ' (' + x.system + ')'); }
+async function loadPhases() { if (S.phases) return; try { S.phases = (await (await fetch('/phases')).json()).phases || []; } catch (_) { S.phases = []; } work(); }
+async function loadComps() { if (S.comps) return; try { S.comps = (await (await fetch('/components')).json()).components || []; } catch (_) { S.comps = []; } work(); }
+function fromNexus(how) { return [{ h: 'From Nexus' },
+  { label: 'A system…', icon: 'chip', desc: 'A box that asks one of Nexus’s systems', run: () => setTimeout(() => menu(S.D.systems.map((s) => ({ label: s.name, dot: s.state === 'up' ? 'var(--ok)' : 'var(--amber)', hint: s.state, run: () => addStep('command', how, { label: 'Ask ' + s.name, config: { system: s.name } }) })), null, { search: true, palette: true, placeholder: 'Which system?' }), 0) },
+  { label: 'Another pipeline…', icon: 'canvas', desc: 'Runs a whole pipeline as one box; double-click opens it', run: () => setTimeout(() => menu(allPipes().filter((x) => x.id !== S.pid).map((x) => ({ label: x.name, hint: x.tasks.length + ' steps', run: () => addStep('pipeline', how, { label: x.name, config: { pipeline: x.id } }) })), null, { search: true, palette: true, placeholder: 'Which pipeline?' }), 0) },
+  { label: 'A phase…', icon: 'phases', desc: 'Any of the phases in the maps', run: () => setView('phases') },
+  { label: 'A component…', icon: 'components', desc: 'Any component in a system’s registry', run: () => setView('components') }]; }
 // add a step: after the selected one (its followers now follow the new step), or beside it (a parallel branch: same inputs, nothing rewired)
-function addStep(type, how = 'after') { const sel = S.sel && S.sel.id; let nid;
-  edit((p) => { nid = newId(p, type); const s = stepOf(type), at = sel && p.tasks.find((t) => t.id === sel), lastId = p.tasks.length ? p.tasks[p.tasks.length - 1].id : null;
+function addStep(type, how = 'after', preset = null) { const sel = S.sel && S.sel.id; let nid;
+  edit((p) => { nid = newId(p, type); const s = stepOf(type, preset), at = sel && p.tasks.find((t) => t.id === sel), lastId = p.tasks.length ? p.tasks[p.tasks.length - 1].id : null;
     const deps = how === 'beside' && at ? [...(at.depends_on || [])] : at ? [at.id] : lastId ? [lastId] : [];
     if (how === 'after' && at) for (const x of p.tasks) if ((x.depends_on || []).includes(at.id)) x.depends_on = x.depends_on.map((d) => d === at.id ? nid : d);
     const ix = at ? p.tasks.indexOf(at) + 1 : p.tasks.length; p.tasks.splice(ix, 0, { id: nid, label: s.label, depends_on: deps, step: s.step, gate: null, retries: 0, onFail: 'stop' }); });
@@ -281,7 +313,7 @@ function dupStep(id) { let nid; edit((p) => { const t = p.tasks.find((x) => x.id
   for (const x of p.tasks) if ((x.depends_on || []).includes(t.id)) x.depends_on = x.depends_on.map((d) => d === t.id ? nid : d); p.tasks.splice(p.tasks.indexOf(t) + 1, 0, c); }); S.sel = { t: 'step', id: nid }; S.vp = null; dock(); }
 function catMenu(how) { if (!S.cat || !S.cat.catalogue.length) { loadCat(); return [{ label: 'Reading the step catalogue…', disabled: 'COS is answering' }]; }
   const groups = [...new Set(S.cat.catalogue.map((c) => c.group))];
-  return groups.flatMap((g) => [{ h: g }, ...S.cat.catalogue.filter((c) => c.group === g).map((c) => ({ label: c.label, glyph: c.icon, hint: c.type, run: () => addStep(c.type, how) }))]); }
+  return [...fromNexus(how), ...groups.flatMap((g) => [{ h: g }, ...S.cat.catalogue.filter((c) => c.group === g).map((c) => ({ label: c.label, glyph: c.icon, hint: c.type, run: () => addStep(c.type, how) }))])]; }
 const runs = (id) => S.D ? S.D.runs.filter((r) => r.pipelineId === id).sort((a, b) => (b.at || 0) - (a.at || 0)) : [];
 const last = (id) => runs(id)[0] || null;
 const st = (r, id) => r && r.tasks && r.tasks[id] ? r.tasks[id].status || 'pending' : 'pending';
@@ -331,7 +363,7 @@ const ACTIONS = {
   'pipe.new':     { label: 'New pipeline', icon: 'plus', group: 'Pipeline', run: () => { const id = 'new-' + Date.now().toString(36); S.drafts[id] = { id, name: 'New pipeline', description: '', vars: {}, settings: {}, tasks: [] }; S.edits[id] = 1; choose(id); } },
   'pipe.save':    { label: 'Save', icon: 'export', kbd: 'S', group: 'Pipeline', off: () => !S.edits[S.pid] ? 'No changes.' : 'Saving writes the .pipeline through COS (PUT /api/cos/automation/pipelines/:id) once this screen is built.' },
   'pipe.discard': { label: 'Discard changes', icon: 'stop', group: 'Pipeline', danger: true, off: () => !S.edits[S.pid] ? 'No changes.' : null, run: () => { delete S.drafts[S.pid]; delete S.edits[S.pid]; S.sel = null; S.sig = ''; S.vp = null; if (!pipe()) S.pid = null; draw(); } },
-  'dock.vars':    { label: 'Variables', icon: 'vars', kbd: 'V', group: 'Panels', run: () => openPanel('vars') },
+  'dock.vars':    { label: 'Inputs', icon: 'vars', group: 'Panels', run: () => openPanel('pipeline') },
   'dock.pipe':    { label: 'Pipeline settings', icon: 'settings', group: 'Panels', run: () => openPanel('pipeline') },
   'dock.lib':     { label: 'Step library', icon: 'canvas', group: 'Panels', run: () => { openPanel('library'); loadCat(); } },
   'view.add':     { label: 'Add a step…', icon: 'plus', group: 'View', off: () => later },
@@ -347,11 +379,11 @@ const save = () => { store.set('dock', [...S.open]); store.set('folded', [...S.f
 const openPanel = (id) => { S.open.add(id); S.folded.delete(id); save(); dock(); rail(); };
 const MENUS = {
   run: ['run.start', 'run.pause', 'run.continue', '-', 'run.retry', 'run.model', '-', 'run.cancel'],
-  more: ['pipe.new', 'pipe.dup', 'pipe.export', 'pipe.erv', 'pipe.copyId', '-', 'dock.pipe', 'dock.vars', 'dock.lib', 'dock.lineage', 'dock.cli', '-', 'view.fit', 'view.max', 'dock.all', 'dock.none'],
+  more: ['pipe.new', 'pipe.dup', 'pipe.export', 'pipe.erv', 'pipe.copyId', '-', 'dock.pipe', 'dock.lib', 'dock.lineage', 'dock.cli', '-', 'view.fit', 'view.max', 'dock.all', 'dock.none'],
   step: ['step.inspect', 'gate.editIt', '-', 'step.add', 'step.beside', 'step.if', '-', 'step.dup', 'step.del', '-', 'run.retry', 'step.runTo', 'step.skip', '-', 'step.copyId'],
   gate: ['gate.editIt', '-', 'step.add', 'step.if', '-', 'run.retry', 'step.copyId'],
   draft: ['pipe.save', 'pipe.discard'],
-  canvas: ['step.add', 'dock.lib', '-', 'view.fit', 'view.in', 'view.out', 'view.max', '-', 'dock.vars', 'dock.pipe', 'dock.lineage', 'dock.cli', '-', 'run.start'],
+  canvas: ['step.add', 'dock.lib', '-', 'view.fit', 'view.in', 'view.out', 'view.max', '-', 'dock.pipe', 'dock.lineage', 'dock.cli', '-', 'run.start'],
   call: ['call.pin', 'call.live', 'call.copy', 'call.context', 'call.replay', '-', 'call.think', 'call.wrap', 'call.all', '-', 'view.max', 'dock.cli'],
 };
 const lbl = (a) => typeof a.label === 'function' ? a.label() : a.label;
@@ -367,7 +399,7 @@ function menu(items, at, opts = {}) {
     const clean = list.filter((x, i, a) => !(x === '-' && (i === 0 || a[i - 1] === '-' || i === a.length - 1)));
     const pick = clean.filter((x) => x !== '-' && !x.h && !x.disabled); act = Math.min(act, Math.max(0, pick.length - 1));
     el.innerHTML = (opts.search ? `<input placeholder="${esc(opts.placeholder || 'Search')}" value="${esc(q)}">` : '') + (clean.length ? clean.map((x) => x === '-' ? '<div class="sep"></div>' : x.h ? `<div class="mh">${esc(x.h)}</div>`
-      : `<button class="mi ${x.danger ? 'danger' : ''} ${pick[act] === x ? 'act' : ''}" ${x.disabled ? `disabled title="${esc(x.disabled)}"` : ''}>${x.icon ? icon(x.icon) : x.glyph ? `<span class="gl">${esc(x.glyph)}</span>` : x.dot ? `<span class="sd" style="background:${x.dot}"></span>` : ''}<span class="lab">${esc(x.label)}</span>${x.hint ? `<span class="hint">${esc(x.hint)}</span>` : ''}</button>`).join('') : '<div class="none">Nothing matches.</div>');
+      : `<button class="mi ${x.danger ? 'danger' : ''} ${pick[act] === x ? 'act' : ''}" ${x.disabled ? `disabled title="${esc(x.disabled)}"` : ''}>${x.icon ? icon(x.icon) : x.glyph ? `<span class="gl">${esc(x.glyph)}</span>` : x.dot ? `<span class="sd" style="background:${x.dot}"></span>` : ''}<span class="lab">${esc(x.label)}${x.desc ? `<small>${esc(x.desc)}</small>` : ''}</span>${x.hint ? `<span class="hint">${esc(x.hint)}</span>` : ''}</button>`).join('') : '<div class="none">Nothing matches.</div>');
     el.querySelectorAll('.mi').forEach((b, i) => { const x = clean.filter((y) => y !== '-' && !y.h)[i]; b.onclick = () => { if (x.disabled) return; closeMenu(); x.run && x.run(); }; b.onmouseenter = () => { if (!x.disabled) { act = pick.indexOf(x); el.querySelectorAll('.mi').forEach((y) => y.classList.remove('act')); b.classList.add('act'); } }; });
     const inp = el.querySelector('input'); if (inp) { inp.oninput = () => { q = inp.value; act = 0; render(); }; inp.focus(); inp.setSelectionRange(q.length, q.length); }
     MENU.pick = pick; MENU.act = () => act; MENU.move = (d) => { act = (act + d + pick.length) % Math.max(1, pick.length); render(); };
@@ -388,6 +420,7 @@ function palette() {
 // ════ VIEWS (side tabs) ════
 const VIEWS = [
   { id: 'canvas', label: 'Canvas', live: () => S.D && S.D.jobs.some((j) => !bg(j) && j.status === 'running') }, { id: 'runs', label: 'Runs' },
+  { id: 'phases', label: 'Phases' }, { id: 'components', label: 'Parts', title: 'Components: every system’s registry' },
   '-',
   { id: 'gaps', label: 'Gaps', proposed: 'The contract’s .gap files: each open loop, its tries, its lesson, its chain.' },
   { id: 'ladder', label: 'Ladder', proposed: 'Which rung each gap climbed (3b → 16b → 30b) and what unstuck it.' },
@@ -405,7 +438,9 @@ function side() {
 function topbar() {
   const p = pipe(), r = p && last(p.id), D = S.D, stale = Date.now() - S.ok > 6000;
   $('top').innerHTML = `<div class="logo">C<span>O</span>S</div>
+    ${S.stack.length ? `<button class="dd" id="backBtn" title="Back to the pipeline this one sits in">‹ ${esc((allPipes().find((x) => x.id === S.stack[S.stack.length - 1]) || {}).name || 'back')}</button><span style="color:var(--text3)">/</span>` : ''}
     <button class="dd" id="pick"><span class="sd" style="background:${col(r && r.status)}"></span><b>${esc(p ? p.name : 'Choose a pipeline')}</b><span style="color:var(--text3);font:11px var(--mono)">${r ? esc(r.status) + ' · ' + ago(r.at) : ''}</span>${icon('chev').replace('class="i"', 'class="i chev"')}</button>
+    ${p ? `<button class="dd" id="modeBtn" title="The pipeline's type">${icon(modeOf(p) === 'branching' ? 'canvas' : modeOf(p) === 'radial' ? 'radial' : 'gate')}${esc((MODES.find((m) => m[0] === modeOf(p)) || MODES[0])[1])}${icon('chev').replace('class="i"', 'class="i chev"')}</button>` : ''}
     <button class="dd" id="addBtn">${icon('plus')}Add step${icon('chev').replace('class="i"', 'class="i chev"')}</button>
     <button class="dd primary" id="runBtn">${icon('play')}Run${icon('chev').replace('class="i"', 'class="i chev"')}</button>
     ${S.edits[S.pid] ? `<button class="dd" id="draftBtn" title="Your changes are a draft"><span class="sd" style="background:var(--violet)"></span>Draft · ${S.edits[S.pid]} ${S.edits[S.pid] === 1 ? 'change' : 'changes'}${icon('chev').replace('class="i"', 'class="i chev"')}</button>` : ''}
@@ -416,6 +451,9 @@ function topbar() {
   $('pick').onclick = (e) => dropdown(e.currentTarget, (D ? allPipes() : []).map((x) => { const lr = last(x.id); return { label: x.name, dot: col(lr && lr.status), hint: lr ? lr.status + ' · ' + ago(lr.at) : 'never run', run: () => choose(x.id) }; }) .concat(['-', { label: 'New pipeline', icon: 'plus', run: () => ACTIONS['pipe.new'].run() }]), { search: true, placeholder: 'Find a pipeline' });
   $('runBtn').onclick = (e) => dropdown(e.currentTarget, fromActions(MENUS.run));
   $('addBtn').onclick = (e) => { loadCat(); dropdown(e.currentTarget, catMenu('after'), { search: true, placeholder: S.sel ? 'Add after the selected step' : 'Add at the end' }); };
+  if ($('modeBtn')) $('modeBtn').onclick = (e) => dropdown(e.currentTarget, [{ h: 'Type' }, ...MODES.map(([k, l, d]) => ({ label: l, desc: d, icon: k === 'branching' ? 'canvas' : k === 'radial' ? 'radial' : 'gate', hint: modeOf(pipe()) === k ? '✓' : '', run: () => { edit((q) => { q.kind = k; }); S.vp = null; S.sig = ''; work(); } })),
+    '-', { label: 'COS’s engine runs branching today; radial and the field are drawn and saved, and their run order is the next phase.', disabled: ' ' }]);
+  if ($('backBtn')) $('backBtn').onclick = () => { const id = S.stack.pop(); choose(id, true); };
   if ($('draftBtn')) $('draftBtn').onclick = (e) => dropdown(e.currentTarget, fromActions(MENUS.draft));
   $('more').onclick = (e) => dropdown(e.currentTarget, fromActions(MENUS.more));
   $('pal').onclick = palette;
@@ -425,33 +463,72 @@ function topbar() {
       { h: 'Systems · ' + D.systems.filter((s) => s.state === 'up').length + '/' + D.systems.length + ' up' }, ...D.systems.map((s) => ({ label: s.name, dot: s.state === 'up' ? 'var(--ok)' : s.state === 'degraded' ? 'var(--amber)' : 'var(--text3)', hint: s.state }))]); };
   const pr = $('progress'); pr.innerHTML = p ? p.tasks.map((t) => `<i style="background:${r ? col(st(r, t.id)) : 'var(--edge)'}" title="${esc(t.label)}"></i>`).join('') : '';
 }
-function choose(id) { S.pid = id; store.set('pid', id); S.sel = null; S.vp = null; S.sig = ''; draw(); loadBase(id); }
+function choose(id, nested) { if (!nested) S.stack = []; S.pid = id; store.set('pid', id); S.sel = null; S.vp = null; S.sig = ''; draw(); loadBase(id); }
 async function loadBase(id) { if (!id || S.base[id]) return; S.base[id] = { loading: true }; try { S.base[id] = await (await fetch('/baseline?pipeline=' + encodeURIComponent(id))).json() || {}; } catch (_) { S.base[id] = {}; } if (S.pid === id) { S.sig = ''; work(); dock(); } }
 
 // ════ canvas ════
-const W = 214, H = 70, GX = 96, GY = 40;
+const W = 214, H = 84, GX = 96, GY = 40;
+// the three pipeline types (his, 2026-11-21): "One the constraint relation field map. Another one that starts from the center and propagates outward.
+// Then we have the normal branching one that can be used for a million things like we have logged to phase."
+const MODES = [
+  ['branching', 'Branching', 'Step by step: a step runs when the steps before it passed their gates. The one phases use.'],
+  ['radial', 'Radial', 'Starts at the centre and spreads outward: each ring runs once the ring inside it has passed.'],
+  ['field', 'Constraint field', 'Gates are the nodes: each relates the step it reads to the steps it lets through. A step runs when every gate around it holds.'],
+];
+const modeOf = (p) => (p && p.kind) || 'branching';
+// where a wire meets a box: the point on the box's edge facing (fx, fy)
+function edgeOf(b, fx, fy) { const cx = b.x + W / 2, cy = b.y + H / 2, dx = fx - cx, dy = fy - cy; if (!dx && !dy) return { x: cx, y: cy }; const k = Math.min(Math.abs((W / 2) / (dx || 1e-9)), Math.abs((H / 2) / (dy || 1e-9))); return { x: cx + dx * k, y: cy + dy * k }; }
 function layout(p) {
-  const by = Object.fromEntries(p.tasks.map((t) => [t.id, t])), lv = {};
+  const by = Object.fromEntries(p.tasks.map((t) => [t.id, t])), lv = {}, mode = modeOf(p);
   const L = (id, seen = new Set()) => { if (lv[id] != null) return lv[id]; if (seen.has(id)) return 0; seen.add(id); const d = ((by[id] || {}).depends_on || []).filter((x) => by[x]); return lv[id] = d.length ? 1 + Math.max(...d.map((x) => L(x, seen))) : 0; };
   p.tasks.forEach((t) => L(t.id)); const cols = {}; p.tasks.forEach((t) => (cols[lv[t.id]] = cols[lv[t.id]] || []).push(t.id));
-  const nC = Object.keys(cols).length, tall = Math.max(...Object.values(cols).map((x) => x.length)), wrap = document.querySelector('.canvas-wrap');
-  const rc = wrap ? wrap.getBoundingClientRect() : { width: 1400, height: 500 }, aw = rc.width - 40, ah = rc.height - 50, band = tall * (H + GY) - GY + 70;
-  let per = nC, best = 0; for (let k = 1; k <= nC; k++) { const s = Math.min(aw / (80 + k * (W + GX) - GX), ah / (80 + Math.ceil(nC / k) * band - 70)); if (s > best + 1e-6) { best = s; per = k; } }
-  const pos = {}; for (const [c, ids] of Object.entries(cols)) ids.forEach((id, i) => pos[id] = { x: 40 + (c % per) * (W + GX), y: 40 + Math.floor(c / per) * band + i * (H + GY) });
-  return { pos, w: 80 + Math.min(nC, per) * (W + GX) - GX, h: 80 + Math.ceil(nC / per) * band - 70 };
+  const pos = {}, gpos = {};
+  if (!p.tasks.length) return { pos, gpos, w: 400, h: 200, mode };
+  if (mode === 'branching') {
+    const nC = Object.keys(cols).length, tall = Math.max(...Object.values(cols).map((x) => x.length)), wrap = document.querySelector('.canvas-wrap');
+    const rc = wrap ? wrap.getBoundingClientRect() : { width: 1400, height: 500 }, aw = rc.width - 40, ah = rc.height - 50, band = tall * (H + GY) - GY + 70;
+    let per = nC, best = 0; for (let k = 1; k <= nC; k++) { const s = Math.min(aw / (80 + k * (W + GX) - GX), ah / (80 + Math.ceil(nC / k) * band - 70)); if (s > best + 1e-6) { best = s; per = k; } }
+    for (const [c, ids] of Object.entries(cols)) ids.forEach((id, i) => { pos[id] = { x: 40 + (c % per) * (W + GX), y: 40 + Math.floor(c / per) * band + i * (H + GY) }; gpos[id] = { x: pos[id].x + W + 22, y: pos[id].y + H / 2 }; });
+    return { pos, gpos, w: 80 + Math.min(nC, per) * (W + GX), h: 80 + Math.ceil(nC / per) * band - 70, mode };
+  }
+  const n = p.tasks.length;
+  if (mode === 'radial') {   // ring = how far from the origin; each ring rotated a little so wires do not stack
+    // a spiral out from the origin: the distance grows with the ring (√ring, so a long chain stays compact), each ring turned by the golden angle
+    for (const [l, ids] of Object.entries(cols)) ids.forEach((id, i) => { const rad = 250 * Math.sqrt(+l) * (1 + i * .35), a = (+l) * 2.4 + (i / ids.length) * 2 * Math.PI - Math.PI / 2, cx = rad * Math.cos(a), cy = rad * Math.sin(a);
+      pos[id] = { x: cx - W / 2, y: cy - H / 2 }; const len = Math.hypot(cx, cy), ux = len ? cx / len : 1, uy = len ? cy / len : 0; gpos[id] = { x: cx + ux * (W / 2 + 30), y: cy + uy * (H / 2 + 30) }; });
+  } else {   // the field: steps on the outer ring, each gate on the inner ring between the step it reads and the steps it lets through
+    const Ro = Math.max(320, n * 62), Ri = Ro * .48, ang = {};
+    p.tasks.forEach((t, i) => { const a = (i / n) * 2 * Math.PI - Math.PI / 2; ang[t.id] = a; pos[t.id] = { x: Ro * Math.cos(a) - W / 2, y: Ro * Math.sin(a) - H / 2 }; });
+    for (const t of p.tasks) { const outs = p.tasks.filter((x) => (x.depends_on || []).includes(t.id)).map((x) => ang[x.id]), all = [ang[t.id], ...outs];
+      const a = Math.atan2(all.reduce((s, v) => s + Math.sin(v), 0), all.reduce((s, v) => s + Math.cos(v), 0)); gpos[t.id] = { x: Ri * Math.cos(a), y: Ri * Math.sin(a) }; }
+  }
+  const xs = [...Object.values(pos).flatMap((q) => [q.x, q.x + W]), ...Object.values(gpos).flatMap((g) => [g.x - 60, g.x + 60])], ys = [...Object.values(pos).flatMap((q) => [q.y, q.y + H]), ...Object.values(gpos).flatMap((g) => [g.y - 20, g.y + 50])];
+  const mx = Math.min(...xs) - 40, my = Math.min(...ys) - 40; for (const q of [...Object.values(pos), ...Object.values(gpos)]) { q.x -= mx; q.y -= my; }
+  return { pos, gpos, w: Math.max(...xs) - mx + 40, h: Math.max(...ys) - my + 40, mode };
 }
+// what a box does, in plain words, from its kind and its settings
+function describe(t) { const k = kind(t), c = catOf(k), cfg = (t.step && t.step.config) || {};
+  if (k === 'command') return `Asks ${cfg.system || 'a system'}: ${cfg.method || 'GET'} ${cfg.endpoint || ''}`;
+  if (k === 'api') { const m = /^nexus:\/\/([a-z0-9-]+)(\/\S*)?/i.exec(String(cfg.url || '')); return m ? `Asks ${m[1]}: ${cfg.method || 'GET'} ${(m[2] || '').replace(/^\/api/, '').replace(/\{\{[^}]+\}\}/g, '…')}` : `Calls ${cfg.url || 'an address'}`; }
+  if (k === 'pipeline') { const q = allPipes().find((x) => x.id === cfg.pipeline || x.name === cfg.pipeline); return `Runs the pipeline “${q ? q.name : cfg.pipeline || '?'}”${cfg.vars && cfg.vars.phase ? ' for ' + cfg.vars.phase : ''}`; }
+  if (k === 'procedure') return `Follows the procedure ${cfg.procedure || '?'}`;
+  if (k === 'framework') return `Works through the framework ${cfg.framework || '?'}`;
+  if (k === 'agent') return `Asks ${cfg.agentKey || 'an agent'}: ${String(cfg.prompt || '').slice(0, 60)}`;
+  return c ? c.help : k; }
 function svgOf(p) {
-  const r = last(p.id), base = (S.base[p.id] && S.base[p.id].steps) || {}, { pos } = layout(p); let wires = '', gates = '', nodes = '';
-  for (const t of p.tasks) for (const d of (t.depends_on || [])) { const a = pos[d], b = pos[t.id]; if (!a || !b) continue;
+  const r = last(p.id), base = (S.base[p.id] && S.base[p.id].steps) || {}, { pos, gpos, mode } = layout(p); let wires = '', gates = '', nodes = '';
+  for (const t of p.tasks) for (const d of (t.depends_on || [])) { const a = pos[d], b = pos[t.id], g = gpos[d]; if (!a || !b) continue;
     // wires leave from the step's own gate (the engine checks a step's output after it runs: cos/automation/pipeline.js gateOpen(gate, output))
-    const x1 = a.x + W + 34, y1 = a.y + H / 2, x2 = b.x, y2 = b.y + H / 2, mx = (x1 + x2) / 2, sa = st(r, d), sb = st(r, t.id);
-    const path = x2 <= x1 ? `M${x1},${y1} h4 q8,0 8,8 V${a.y + H + 50} q0,8 -8,8 H${x2 - 28} q-8,0 -8,8 V${y2 - 8} q0,8 8,8 H${x2 - 2}` : `M${x1},${y1} C${mx},${y1} ${mx},${y2} ${x2 - 2},${y2}`;
+    const sa = st(r, d), sb = st(r, t.id); let path;
+    if (mode === 'branching') { const x1 = g.x + 12, y1 = g.y, x2 = b.x, y2 = b.y + H / 2, mx = (x1 + x2) / 2;
+      path = x2 <= x1 ? `M${x1},${y1} h4 q8,0 8,8 V${a.y + H + 50} q0,8 -8,8 H${x2 - 28} q-8,0 -8,8 V${y2 - 8} q0,8 8,8 H${x2 - 2}` : `M${x1},${y1} C${mx},${y1} ${mx},${y2} ${x2 - 2},${y2}`; }
+    else { const e = edgeOf(b, g.x, g.y), qx = (g.x + e.x) / 2 + (e.y - g.y) * .12, qy = (g.y + e.y) / 2 - (e.x - g.x) * .12; path = `M${g.x},${g.y} Q${qx},${qy} ${e.x},${e.y}`; }
     wires += `<path class="wire ${sb === 'running' ? 'live' : /done|complete|passed/.test(sa) ? 'done' : ''}" d="${path}"/>`; }
-  // each step's gate, right after it: open → the steps that follow; closed → its onFail (stop · continue · hold), the second path; retries ↻ n
+  // each step's gate: open → the steps that follow; closed → its onFail (stop · continue · hold), the second path; retries ↻ n
   for (const t of p.tasks) { const a = pos[t.id]; if (!a) continue;
-    const s = st(r, t.id), gx = a.x + W + 22, gy = a.y + H / 2, gt = gtext(t.gate), sel = S.sel && S.sel.t === 'gate' && S.sel.id === t.id, passed = /done|complete|passed/.test(s);
+    const s = st(r, t.id), gx = gpos[t.id].x, gy = gpos[t.id].y, gt = gtext(t.gate), sel = S.sel && S.sel.t === 'gate' && S.sel.id === t.id, passed = /done|complete|passed/.test(s);
     const of = t.onFail || 'stop', bc = of === 'hold' ? 'var(--violet)' : of === 'continue' ? 'var(--amber)' : 'var(--coral)', took = s === 'failed', bt = 'closed → ' + (of === 'hold' ? 'hold' : of), bw = bt.length * 5.6 + 14;
-    wires += `<path class="wire ${passed ? 'done' : ''}" d="M${a.x + W},${gy} H${gx - 10}"/>`;
+    const e0 = edgeOf(a, gx, gy); wires += `<path class="wire ${passed ? 'done' : ''}" d="${mode === 'branching' ? `M${a.x + W},${gy} H${gx - 10}` : `M${e0.x},${e0.y} L${gx},${gy}`}"/>`;
     gates += `<g class="gate ${took ? 'bad' : passed ? 'ok' : ''} ${sel ? 'sel' : ''}" data-gate="${esc(t.id)}"><title>Gate after “${esc(t.label)}”\nopen when ${esc(gt)}\nclosed: ${esc(of)}${t.retries ? ', after ' + t.retries + ' retries' : ''}</title>
       <path d="M${gx},${gy + 10} v18" fill="none" stroke="${bc}" stroke-width="1.2" stroke-dasharray="${took ? '0' : '3 3'}" opacity="${took ? 1 : .55}"/>
       <rect x="${gx - bw / 2}" y="${gy + 28}" width="${bw}" height="15" rx="7.5" fill="var(--bg1)" stroke="${bc}" stroke-width="1" opacity="${took ? 1 : .7}"/><text x="${gx}" y="${gy + 38.5}" text-anchor="middle" style="fill:${bc}">${esc(bt)}</text>
@@ -459,14 +536,14 @@ function svgOf(p) {
       ${t.retries ? `<text x="${gx + 11}" y="${gy - 6}" style="fill:var(--sky)">↻${t.retries}</text>` : ''}${t.when ? `<text x="${a.x}" y="${a.y - 6}" style="fill:var(--amber)">only when ${esc(String(typeof t.when === 'string' ? t.when : JSON.stringify(t.when)).slice(0, 30))}</text>` : ''}</g>`; }
   for (const t of p.tasks) { const { x, y } = pos[t.id], s = st(r, t.id), tr = r && r.tasks[t.id], b = base[t.id], c = col(s), ms = tr && tr.ms != null ? tr.ms : null;
     const pct = b && b.mean_ms > 0 && ms != null ? Math.min(100, Math.round(ms / (b.mean_ms + 2 * (b.sigma_ms || 0)) * 100)) : null, sel = S.sel && S.sel.t === 'step' && S.sel.id === t.id;
-    nodes += `<g class="node ${s} ${sel ? 'sel' : ''}" data-step="${esc(t.id)}" transform="translate(${x},${y})" style="cursor:pointer"><title>${esc(t.label)}\n${esc(kind(t))} · ${esc(target(t))}</title>
+    nodes += `<g class="node ${s} ${sel ? 'sel' : ''}" data-step="${esc(t.id)}" transform="translate(${x},${y})" style="cursor:pointer"><title>${esc(t.label)}\n${esc(describe(t))}${kind(t) === 'pipeline' ? '\nDouble-click to open it' : ''}</title>
       <rect class="box" width="${W}" height="${H}" rx="9"/><rect class="stripe" width="3" height="${H - 18}" y="9" rx="1.5" fill="${c}"/>
       <text class="ty" x="14" y="18">${catOf(kind(t)) ? esc(catOf(kind(t)).icon + ' ' + catOf(kind(t)).label.toUpperCase()) : esc(kind(t).toUpperCase())}${t.method ? ' · ' + esc(String(t.method).toUpperCase()) : ''}</text><circle class="dotc" cx="${W - 14}" cy="15" r="4" fill="${c}"/>
-      <text class="lb" x="14" y="37">${esc(t.label.length > 27 ? t.label.slice(0, 26) + '…' : t.label)}</text><text class="sb" x="14" y="55">${esc(s)}${ms != null ? ' · ' + dur(ms) : ''}${b && b.n ? ' · usual ' + dur(b.mean_ms) : ''}</text>
+      <text class="lb" x="14" y="37">${esc(t.label.length > 27 ? t.label.slice(0, 26) + '…' : t.label)}</text><text class="ds" x="14" y="54">${esc((d => d.length > 38 ? d.slice(0, 37) + '…' : d)(describe(t) || ''))}</text><text class="sb" x="14" y="72">${esc(s)}${ms != null ? ' · ' + dur(ms) : ''}${b && b.n ? ' · usual ' + dur(b.mean_ms) : ''}</text>
       ${pct != null ? `<rect x="14" y="${H - 7}" width="${W - 28}" height="2" rx="1" fill="var(--edge)"/><rect x="14" y="${H - 7}" width="${(W - 28) * pct / 100}" height="2" rx="1" fill="${pct >= 100 ? 'var(--coral)' : 'var(--sky)'}"/>` : ''}</g>`; }
   return `<g id="vp">${wires}${gates}${nodes}</g>`;
 }
-function fit() { const p = pipe(), w = document.querySelector('.canvas-wrap'); if (!p || !w) return; const L = layout(p), r = w.getBoundingClientRect(), k = Math.max(.25, Math.min(1.2, (r.width - 40) / L.w, (r.height - 30) / L.h)); S.vp = { k, x: (r.width - L.w * k) / 2, y: Math.max(10, (r.height - L.h * k) / 2) }; applyVp(); }
+function fit() { const p = pipe(), w = document.querySelector('.canvas-wrap'); if (!p || !w) return; const L = layout(p), r = w.getBoundingClientRect(), k = Math.max(.15, Math.min(1.2, (r.width - 40) / L.w, (r.height - 30) / L.h)); S.vp = { k, x: (r.width - L.w * k) / 2, y: Math.max(10, (r.height - L.h * k) / 2) }; applyVp(); }
 function zoom(f, cx, cy) { const s = document.querySelector('svg.cv'); if (!s || !S.vp) return; const r = s.getBoundingClientRect(); cx = cx == null ? r.width / 2 : cx; cy = cy == null ? r.height / 2 : cy; const k = Math.min(2.5, Math.max(.2, S.vp.k * f)); S.vp.x = cx - (cx - S.vp.x) * k / S.vp.k; S.vp.y = cy - (cy - S.vp.y) * k / S.vp.k; S.vp.k = k; applyVp(); }
 function applyVp() { const v = $('vp'); if (v && S.vp) v.setAttribute('transform', `translate(${S.vp.x},${S.vp.y}) scale(${S.vp.k})`); }
 function select(t, id) { S.sel = id ? { t, id } : null; S.sig = ''; work(); dock(); }
@@ -477,7 +554,10 @@ function bindCanvas() {
   onmouseup = () => { drag = null; s.classList.remove('drag'); };
   s.onwheel = (e) => { e.preventDefault(); const r = s.getBoundingClientRect(); zoom(e.deltaY < 0 ? 1.1 : 1 / 1.1, e.clientX - r.left, e.clientY - r.top); };
   s.onclick = (e) => { const n = e.target.closest('.node'), g = e.target.closest('.gate'); if (n) select('step', n.dataset.step); else if (g) select('gate', g.dataset.gate); else if (S.sel) select(null); };
-  s.ondblclick = (e) => { if (e.target.closest('.node,.gate')) openPanel('inspector'); };
+  // a pipeline box opens into its own canvas and back (PC4: "A pipeline or procedure box opens into its own canvas and back (recursive)")
+  s.ondblclick = (e) => { const n = e.target.closest('.node'); if (n) { const t = task(n.dataset.step), cfg = (t && t.step && t.step.config) || {};
+      if (t && kind(t) === 'pipeline') { const q = allPipes().find((x) => x.id === cfg.pipeline || x.name === cfg.pipeline); if (q) { S.stack.push(S.pid); return choose(q.id, true); } toast('That pipeline is not in COS: ' + (cfg.pipeline || '?')); } }
+    if (e.target.closest('.node,.gate')) openPanel('inspector'); };
   s.oncontextmenu = (e) => { e.preventDefault(); const n = e.target.closest('.node'), g = e.target.closest('.gate');
     if (n) select('step', n.dataset.step); else if (g) select('gate', g.dataset.gate);
     const t = S.sel && task(S.sel.id); menu([...(t && (n || g) ? [{ h: (g ? 'Gate · ' : '') + t.label }] : []), ...fromActions(n ? MENUS.step : g ? MENUS.gate : MENUS.canvas)], { x: e.clientX, y: e.clientY }); };
@@ -514,6 +594,8 @@ function bindConsole() {
 function work() {
   const p = pipe(), w = $('work'), pc = $('code'), bottom = pc ? pc.scrollTop + pc.clientHeight >= pc.scrollHeight - 30 : true, ptop = pc ? pc.scrollTop : 0, pl = w.querySelector('.calls .list'), ltop = pl ? pl.scrollTop : 0;
   const v = VIEWS.find((x) => x.id === S.view);
+  if (S.view === 'phases' || S.view === 'components') { const key = S.view + ':' + !!(S.view === 'phases' ? S.phases : S.comps); if (w.dataset.v === key) return; w.dataset.v = key; return listView(w); }
+  delete w.dataset.v;
   if (S.view === 'canvas') {
     if (!p) { w.innerHTML = '<div class="empty" style="margin:auto">Choose a pipeline from the menu at the top.</div>'; return; }
     const sig = JSON.stringify([p.id, p.tasks.length, last(p.id) && last(p.id).tasks, S.sel, !!S.base[p.id] && !S.base[p.id].loading, S.max, S.rev, !!(S.cat && S.cat.catalogue.length)]);
@@ -531,6 +613,19 @@ function work() {
   } else w.innerHTML = `<div class="empty" style="margin:auto;max-width:440px;text-align:center"><b style="font-size:14px;color:var(--bright)">${esc(v.label)}</b>${esc(v.proposed)}<br><span style="color:var(--violet)">Proposed · yours to choose</span></div>`;
   const c = $('code'); if (c) c.scrollTop = (S.follow && bottom) || !pc ? c.scrollHeight : ptop; const nl = w.querySelector('.calls .list'); if (nl) nl.scrollTop = ltop;
 }
+// the Phases and Components side tabs: everything Nexus holds, searchable, each one a box with + Add (drawn once; the search filters in place)
+function listView(w) {
+  const ph = S.view === 'phases', data = ph ? S.phases : S.comps;
+  if (!data) { w.innerHTML = '<div class="empty" style="margin:auto">Reading…</div>'; (ph ? loadPhases : loadComps)(); return; }
+  const stc = (s) => /PARTLY|IN PROGRESS/i.test(s) ? 'var(--amber)' : /DONE|BUILT|CLOSED|DECIDED/i.test(s) ? 'var(--ok)' : /OPEN/i.test(s) ? 'var(--sky)' : 'var(--text2)';
+  const body = ph ? data.map((x, i) => `<tr><td><b class="nm">${esc(x.id)}</b><div class="sub">${esc(x.does)}</div></td><td class="m">${esc(x.map.replace(/^docs\//, '').replace(/-phasemap\.spec$/, ''))}</td><td><span class="pill" style="color:${stc(x.status)}"><span class="sd" style="background:${stc(x.status)}"></span>${esc(x.status || '—')}</span></td><td><button class="addbtn" data-addi="${i}">+ Add</button></td></tr>`).join('')
+    : data.map((x, i) => `<tr><td><b class="nm">${esc(x.name)}</b><div class="sub">${esc(x.about)}</div></td><td class="m">${esc(x.system)}</td><td class="m">${esc(((x.method || '') + ' ' + (x.path || '')).trim() || '—')}</td><td><button class="addbtn" data-addi="${i}">+ Add</button></td></tr>`).join('');
+  w.innerHTML = `<div class="page"><div class="lh"><h2>${ph ? 'Phases' : 'Components'} <span class="ct">${data.length}</span></h2><input class="lq" placeholder="${ph ? 'Find a phase: its name, map, status or what it does' : 'Find a component: its name, system or route'}" spellcheck="false"></div>
+    <div class="lead">${ph ? 'Every phase in the maps. <b>+ Add</b> puts it on the canvas as a box that builds it.' : 'Every component in each system’s own registry. <b>+ Add</b> puts it on the canvas as a box that calls it.'}</div>
+    <table class="t"><thead><tr>${ph ? '<th>Phase</th><th>Map</th><th>Status</th><th></th>' : '<th>Component</th><th>System</th><th>Route</th><th></th>'}</tr></thead><tbody>${body}</tbody></table></div>`;
+  const q = w.querySelector('.lq'); q.oninput = () => { const s = q.value.toLowerCase(); w.querySelectorAll('tbody tr').forEach((tr) => tr.style.display = tr.textContent.toLowerCase().includes(s) ? '' : 'none'); };
+  w.querySelectorAll('[data-addi]').forEach((b) => b.onclick = () => { const x = data[+b.dataset.addi]; if (!pipe()) return toast('Choose a pipeline first', 'warn'); setView('canvas'); ph ? addPhase(x) : addComp(x); });
+}
 function bindSplit() { const sp = $('split'); if (!sp) return; sp.ondblclick = () => ACTIONS['view.max'].run(); sp.onmousedown = (e) => { e.preventDefault(); const r = $('work').getBoundingClientRect();
   const mv = (ev) => { S.split = Math.min(.85, Math.max(.2, (ev.clientY - r.top) / r.height)); document.querySelector('.canvas-wrap').style.flexBasis = S.split * 100 + '%'; const c = $('console'); if (c) c.style.flexBasis = (1 - S.split) * 100 + '%'; };
   const up = () => { removeEventListener('mousemove', mv); removeEventListener('mouseup', up); store.set('split', S.split); fit(); }; addEventListener('mousemove', mv); addEventListener('mouseup', up); }; }
@@ -546,7 +641,8 @@ const optList = (list, cur) => list.map((o) => { const v = Array.isArray(o) ? o[
 const shown = (f, cfg) => !f.when || Object.entries(f.when).every(([k, vs]) => [].concat(vs).map(String).includes(String(cfg[k] ?? '')));
 function field(f, val, path, t) {
   const id = 'f_' + path.replace(/\W/g, '_'), v = val ?? f.default ?? '', ty = f.type || 'text'; let c;
-  if (ty === 'select' || f.options) c = `<select id="${id}" data-f="${path}">${optList(f.options || [], v)}</select>`;
+  if (t && t.step && t.step.type === 'pipeline' && f.key === 'pipeline') c = `<select id="${id}" data-f="${path}">${optList([['', '— choose —'], ...allPipes().map((x) => [x.id, x.name + (x.id === S.pid ? ' (this one)' : '')])], v)}</select>`;
+  else if (ty === 'select' || f.options) c = `<select id="${id}" data-f="${path}">${optList(f.options || [], v)}</select>`;
   else if (ty === 'system') c = `<select id="${id}" data-f="${path}">${optList(S.D.systems.map((s) => [s.name, s.name + (s.state === 'up' ? '' : ' (' + s.state + ')')]), v)}</select>`;
   else if (ty === 'branch') { const p = pipe(); c = `<select id="${id}" data-f="${path}">${optList([...(f.extra || []), ...p.tasks.filter((x) => x.id !== t.id).map((x) => [x.id, '→ ' + x.label])], v)}</select>`; }
   else if (ty === 'code' || ty === 'json' || ty === 'textarea' || ty === 'script') c = `<textarea id="${id}" data-f="${path}" rows="4" spellcheck="false" placeholder="${esc(f.placeholder || '')}">${esc(typeof v === 'string' ? v : JSON.stringify(v, null, 1))}</textarea>`;
@@ -583,10 +679,11 @@ const PANELS = [
       const cats = S.cat.catalogue, groups = [...new Set(cats.map((x) => x.group))];
       return `<div class="dk-empty">Click to add ${S.sel ? 'after the selected step' : 'at the end'}. From COS's engine: ${cats.length} kinds.</div><input class="libq" placeholder="Filter" spellcheck="false">`
         + groups.map((g) => `<div class="dk-sec">${esc(g)}</div>` + cats.filter((x) => x.group === g).map((x) => `<button class="libi" data-add="${esc(x.type)}" title="${esc(x.help || '')}"><span class="gl">${esc(x.icon)}</span><span><b>${esc(x.label)}</b><small>${esc(x.help || '')}</small></span></button>`).join('')).join(''); } },
-  { id: 'vars', label: 'Variables', count: () => { const p = pipe(); return p ? Object.keys(p.vars || {}).length || '' : ''; },
+  { id: 'vars', label: 'Variables', hidden: true, count: () => { const p = pipe(); return p ? Object.keys(p.vars || {}).length || '' : ''; },
     render() { const p = pipe(); if (!p) return '<div class="dk-empty">Choose a pipeline.</div>'; return `<div class="dk-empty">Steps read these as {{vars.<i>name</i>}}.</div>` + rows(p.vars, 'vars', 'Add a variable'); } },
   { id: 'pipeline', label: 'Pipeline', render() { const p = pipe(); if (!p) return '<div class="dk-empty">Choose a pipeline.</div>';
       return `<div class="fld"><label class="fl">Name</label><input type="text" data-pf="name" value="${esc(p.name || '')}"></div><div class="fld"><label class="fl">What it does</label><textarea data-pf="description" rows="3">${esc(p.description || '')}</textarea></div>`
+        + sec('Inputs') + '<div class="dk-empty">What the pipeline is given when it starts, like which phase to build. A step uses one by naming it: {{vars.phase}}. Asked for when you press Run.</div>' + rows(p.vars, 'vars', 'Add an input')
         + sec('Settings') + rows(p.settings, 'settings', 'Add a setting') + sec('File') + kv('id', p.id) + kv('steps', p.tasks.length) + (S.edits[p.id] ? kv('draft', S.edits[p.id] + ' changes, not saved') : ''); } },
   { id: 'activity', label: 'Activity', count: () => S.D ? S.D.jobs.filter((x) => /running|queued/.test(x.status)).length + S.D.runs.filter((x) => x.status === 'running').length || '' : '', live: () => S.D && S.D.jobs.some((x) => x.status === 'running'),
     render() { const D = S.D, rr = D.runs.filter((x) => /running|paused/.test(x.status)), jj = D.jobs.filter((x) => /running|queued/.test(x.status));
@@ -612,7 +709,7 @@ const PANELS = [
       if (L.lineage) h += sec('Repo lineage') + `<div class="pre">${esc(JSON.stringify(L.lineage, null, 1).slice(0, 3000))}</div>`;
       return h; } },
   { id: 'changes', label: 'Changes', render: () => '<div class="dk-empty">Every file the run changed, with Apply, Reject, Revert: Idearium’s work surface through the drawbridge. Not read in this preview.</div>' },
-  { id: 'system', label: 'System', count: () => S.D ? S.D.systems.filter((s) => s.state !== 'up').length || '' : '', warn: true,
+  { id: 'system', label: 'System', hidden: true, count: () => S.D ? S.D.systems.filter((s) => s.state !== 'up').length || '' : '', warn: true,
     render() { const D = S.D; return sec('Ollama') + (D.loaded.length ? D.loaded.map((m) => kv(model(m.name), (m.vramMB / 1024).toFixed(1) + ' GB VRAM')).join('') : '<div class="dk-empty">No model loaded.</div>')
       + sec('Systems') + D.systems.map((s) => `<div class="kv"><span>${esc(s.name)}</span><span style="color:${s.state === 'up' ? 'var(--ok)' : s.state === 'degraded' ? 'var(--amber)' : 'var(--text3)'}">${esc(s.state)}</span></div>`).join(''); } },
 ];
@@ -624,7 +721,7 @@ async function runCli(line) { S.cli.push({ system: 'you', ts: Date.now(), stream
   S.cli.push(...(out.length ? out : ['(no output)']).map((l) => ({ system: 'cos', ts: Date.now(), stream: 'reply', line: String(l) }))); S.cli = S.cli.slice(-200); dock(); }
 function dock() {
   const col2 = $('dock-col'), keep = {}; col2.querySelectorAll('.dk-panel').forEach((x) => keep[x.dataset.p] = x.querySelector('.dk-body').scrollTop);
-  const open = PANELS.filter((x) => S.open.has(x.id)); col2.className = open.length ? 'open' : '';
+  const open = PANELS.filter((x) => !x.hidden && S.open.has(x.id)); col2.className = open.length ? 'open' : '';
   col2.innerHTML = open.map((x) => `<section class="dk-panel ${S.folded.has(x.id) ? 'folded' : ''}" data-p="${x.id}"><div class="dk-head"><button class="dk-fold">${S.folded.has(x.id) ? '▸' : '▾'}</button><b>${x.label}</b><span class="dk-grow"></span><span class="dk-n">${x.count ? x.count() : ''}</span><button class="dk-x" title="Close">×</button></div><div class="dk-body">${S.D ? x.render() : '<div class="dk-empty">Reading…</div>'}</div></section>`).join('');
   col2.querySelectorAll('.dk-panel').forEach((el) => { const id = el.dataset.p; el.querySelector('.dk-body').scrollTop = keep[id] || 0;
     const fold = () => { S.folded.has(id) ? S.folded.delete(id) : S.folded.add(id); save(); dock(); };
@@ -663,13 +760,13 @@ function dock() {
     f.onsubmit = (e) => { e.preventDefault(); const l = inp.value.trim(); if (!l) return; S.hist.push(l); S.hi = S.hist.length; S.draft = ''; runCli(l); }; }
 }
 function rail() {
-  $('dock-rail').innerHTML = PANELS.map((x) => { const n = x.count ? x.count() : ''; return `<button class="dk-tab ${S.open.has(x.id) ? 'on' : ''}" data-r="${x.id}">${x.live && x.live() ? '<span class="dk-dot"></span>' : ''}<span class="dk-l">${x.label}</span>${n !== '' ? `<span class="dk-n ${x.warn ? 'warn' : ''}">${n}</span>` : ''}</button>`; }).join('');
+  $('dock-rail').innerHTML = PANELS.filter((x) => !x.hidden).map((x) => { const n = x.count ? x.count() : ''; return `<button class="dk-tab ${S.open.has(x.id) ? 'on' : ''}" data-r="${x.id}">${x.live && x.live() ? '<span class="dk-dot"></span>' : ''}<span class="dk-l">${x.label}</span>${n !== '' ? `<span class="dk-n ${x.warn ? 'warn' : ''}">${n}</span>` : ''}</button>`; }).join('');
   $('dock-rail').querySelectorAll('[data-r]').forEach((b) => { b.onclick = () => { const k = b.dataset.r; S.open.has(k) ? S.open.delete(k) : (S.open.add(k), S.folded.delete(k)); save(); dock(); rail(); };
     b.oncontextmenu = (e) => { e.preventDefault(); menu(fromActions(['dock.all', 'dock.none']), { x: e.clientX, y: e.clientY }); }; });
 }
 
 function draw() { topbar(); side(); work(); dock(); rail(); }
-async function tick() { try { S.D = await (await fetch('/data', { cache: 'no-store' })).json(); S.ok = Date.now(); } catch (_) {}
+async function tick() { try { const prev = S.D; S.D = await (await fetch('/data', { cache: 'no-store' })).json(); S.ok = Date.now(); watch(prev, S.D); } catch (_) {}
   if (S.D && !pipe() && S.D.pipelines[0]) { S.pid = S.D.pipelines[0].id; loadBase(S.pid); }
   await loadLogs();
   if (!MENU) topbar(); side(); work();

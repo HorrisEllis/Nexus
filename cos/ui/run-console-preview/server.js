@@ -12,6 +12,7 @@ const ROOT = path.resolve(__dirname, '..', '..', '..');
 const get = (port, p, ms = 6000) => new Promise((res) => { const q = http.get({ host: '127.0.0.1', port, path: p, timeout: ms }, (r) => { let t = ''; r.on('data', (c) => t += c); r.on('end', () => { try { res(JSON.parse(t)); } catch (_) { res(null); } }); }); q.on('timeout', () => { q.destroy(); res(null); }); q.on('error', () => res(null)); });
 const tail = (s, n) => { s = String(s || ''); return s.length > n ? s.slice(-n) : s; };
 const head = (s, n) => { s = String(s || ''); return s.length > n ? s.slice(0, n) : s; };
+let PH = null;
 const json = (r, o) => { r.setHeader('Content-Type', 'application/json'); r.end(JSON.stringify(o)); };
 http.createServer(async (q, r) => {
   const u = new URL(q.url, 'http://x');
@@ -59,6 +60,27 @@ http.createServer(async (q, r) => {
     const c = s && s.port ? await get(s.port, '/commands', 5000) : null, out = new Set();
     const walk = (v) => { if (typeof v === 'string') { if (/^\/[a-z]/i.test(v) && v.length < 120) out.add(v.split('?')[0]); } else if (Array.isArray(v)) v.forEach(walk); else if (v && typeof v === 'object') Object.values(v).forEach(walk); };
     walk(c); return json(r, { system: s ? s.name : null, answered: !!c, paths: [...out].sort().slice(0, 400) });
+  }
+  // the maps' phases (docs/*.spec, the files the ledger and Idearium read): each phase, its map, status, what it does, what it waits on
+  if (u.pathname === '/phases') {
+    if (!PH || Date.now() - PH.at > 60000) { const out = [], dir = path.join(ROOT, 'docs');
+      for (const f of fs.readdirSync(dir).filter((x) => /phasemap\.spec$/.test(x))) { let txt; try { txt = fs.readFileSync(path.join(dir, f), 'utf8'); } catch (_) { continue; }
+        const lines = txt.split(/\r?\n/), at = lines.findIndex((l) => /^phases:\s*$/.test(l)); if (at < 0) continue; let cur = null;
+        for (let i = at + 1; i < lines.length; i++) { const l = lines[i]; if (/^\S/.test(l)) break;
+          const m = /^  ([A-Za-z][A-Za-z0-9_]*):\s*$/.exec(l); if (m) { cur = { id: m[1], map: 'docs/' + f, status: '', does: '', depends_on: [] }; out.push(cur); continue; }
+          if (!cur) continue; const s = /^    status:\s*"?([A-Za-z_ -]+)/.exec(l); if (s && !cur.status) cur.status = s[1].trim();
+          const d = /^    depends_on:\s*\[(.*)\]/.exec(l); if (d && !cur.depends_on.length) cur.depends_on = d[1].split(',').map((x) => x.trim()).filter(Boolean);
+          if (/^    does:/.test(l) && !cur.does) { let t = l.replace(/^    does:\s*(>-|\|)?\s*/, ''); for (let j = i + 1; j < lines.length && /^      /.test(lines[j]) && t.length < 260; j++) t += ' ' + lines[j].trim(); cur.does = t.replace(/^["']|["']$/g, '').slice(0, 280); } } }
+      PH = { at: Date.now(), phases: out }; }
+    return json(r, { phases: PH.phases });
+  }
+  // each system's own component registry (its registry-components.js, the drawbridge: §5.16), read as the cockpit preview reads it
+  if (u.pathname === '/components') {
+    const sys = await get(7799, '/api/cos/systems'), DIR = { 'ollama-bridge': 'ollama' }, out = [];
+    for (const s of ((sys && (sys.systems || sys)) || [])) { const f = path.join(ROOT, DIR[s.name] || s.name, 'registry-components.js');
+      try { delete require.cache[require.resolve(f)]; const m = require(f), list = Array.isArray(m) ? m : (m.COMPONENTS || m.components || []);
+        for (const c of list) out.push({ system: s.name, id: c.id || c.name, name: c.name || c.id, about: c.description || c.about || '', method: c.route && c.route.method || null, path: c.route && c.route.path || null }); } catch (_) {} }
+    return json(r, { components: out });
   }
   if (u.pathname === '/baseline') return json(r, await get(7799, '/api/cos/pipeline/baseline?pipeline=' + encodeURIComponent(u.searchParams.get('pipeline') || ''), 30000));
   if (u.pathname === '/theme.css') { r.setHeader('Content-Type', 'text/css'); r.end(fs.readFileSync(path.join(ROOT, 'idearium', 'ui', 'css', 'nexus-theme.css'))); return; }
