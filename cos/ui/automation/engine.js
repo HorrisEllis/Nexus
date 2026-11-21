@@ -41,9 +41,12 @@
     $('ae-p-title').textContent = p.name || p.id; $('ae-p-tag').textContent = (p.tasks || []).length + ' steps';
     let last = null; try { const r = await api('GET', A('/pipeline-runs?pipelineId=' + encodeURIComponent(id) + '&limit=1')); last = (r.runs || [])[0] || null; } catch (_) {}
     // PC8 slice a (2026-11-10, his "each step can be used as a progress status, with an indicator or bar"): each step's baseline over its runs
-    try { S.base = await api('GET', '/api/cos/pipeline/baseline?pipeline=' + encodeURIComponent(id)); } catch (_) { S.base = null; }
+    // 0.60.630 — his, 2026-11-21: "Slow to open ... Optional data is holding up the main screen, which is a bug." The steps draw at once; the
+    // baseline (~10 s on the server) arrives after and redraws the bars, if this pipeline is still the one open. The last one read is kept per pipeline.
+    S.baseBy = S.baseBy || {}; S.base = S.baseBy[id] || null;
     S.run = last; draw(p);
     if (last && last.status === 'running') follow(last.id);
+    api('GET', '/api/cos/pipeline/baseline?pipeline=' + encodeURIComponent(id)).then((b) => { S.baseBy[id] = b; if (S.sel === id) { S.base = b; draw(p); } }).catch(() => {});
   }
   function draw(p) {
     const run = S.run, t = run ? run.tasks || {} : {};

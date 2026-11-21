@@ -650,6 +650,18 @@ built_2026_11_09_plan:
         7. ask him: only what Nexus could not find or build (RQ8), as a question in the run, the run held, never dropped.
       Every rung is a line in the run's ledger (PC8 slice c), so Nexus learns which rung unsticks which kind of step (the learned order, RAID).
       Not "stuck": a step ends passed, decomposed, answered, escalated or asked.
+    expanded_2026_11_21_the_run_console: >-
+      James, 2026-11-21: "ideariums work surface, where it shows the code being generated live. i would love a console for that or something in the
+      pipeline. like a console for the pipeline, and the ui have all the side tabs idearium does, plus anything else additive?" Slice d, "seeing":
+      a run console in COS's pipeline screen. Reuse found (the coder's census, 2026-11-21): the live text is already kept on each Ollama job while it
+      runs (ollama/lib/dispatch.js job.partial, LS1 0.39.356; GET /api/jobs, GET /api/jobs/:id), with its model, meta.source and timing; Idearium's
+      work surface (idearium/ui/js/work-surface.js, GET /api/repos/:uuid/worksurface) shows the files changed; COS's console (SC11,
+      cos/ui/console) already merges every system's lines. The run console joins them per run: each model call a block (step, gap, model,
+      rung) streaming as it is written, the code fenced, then its test and gate result. The side rail carries Idearium's repo tabs (Home, Idea,
+      Spec, Phases, Code, Architect, Debug, Finish, Git, Intelligence, Notes, Versionium, Settings) as COS tabs, each moved by its own phase
+      through the drawbridge (DB1–DB7), never stripped; additive tabs the coder proposes, for him to choose: Gaps (the contract's .gap files),
+      the ladder (which rung each gap climbed), the tape (replay a call), the flight record, the ledger. Preview first (his rule), on live data:
+      cos/ui/run-console-preview/. The coder's reading, to confirm with him.
     status: OPEN   # slice a BUILT 0.60.481 (a delta and a baseline per step; RAID's decisions as steps; the bar); slice b BUILT 0.60.484 (pause, continue, retry from a step)
     james: '"seeing, changing, managing, diagnosing, exporting, testing, agnostic." · "record each step in raids decision, dynamically building each step, as it goes. it all needs to be visable."'
     depends_on: [PC_D13_the_pipeline_works_first_then_cos_optimised, PC5_programmable_gate_types]
@@ -1540,3 +1552,8 @@ phases_addendum_2026_11_13_rca:
 # widen or narrow (debug: no snapshot; release: snapshot and every test); an output inside the field passes, and how far outside is a measured
 # tension (sigma, delta: CF1). Joins WARP 2 and the constraint relational field (his order, item 3; EM2, RF1, CF1). 0.60.628's snapshot setting
 # and 0.60.614's method per gate are its first, crude form.
+
+## ADDENDUM 0.60.630 (2026-11-21) — PC8: a pipeline opens at once
+# James, 2026-11-21: "Slow to open. A pipeline's details wait about 10 seconds on the step-timing data before anything draws. Optional data is holding up the main screen, which is a bug."
+# cos/ui/automation/engine.js open(): the steps draw first (124 ms), the baseline (~10 s) is fetched after and fills the bars. The route's own
+# speed is still open (cos/pipeline/index.js baseline()).
