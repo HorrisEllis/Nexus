@@ -29,12 +29,27 @@ http.createServer(async (q, r) => {
       error: x.error ? head(x.error, 300) : null, tasks: x.tasks || {} }));
     const pipes = ((pl && pl.pipelines) || []).filter((p) => !p.archived).map((p) => ({ id: p.id, name: p.name, description: p.description || '', vars: p.vars || {}, settings: p.settings || {},
       updatedAt: p.updatedAt, tasks: (p.tasks || []).map((t) => ({ id: t.id, label: t.label || t.id, depends_on: t.depends_on || t.dependsOn || [], step: t.step || null, gate: t.gate || null,
-        retries: t.retries, onFail: t.onFail, method: t.method || null })) }));
+        retries: t.retries, onFail: t.onFail, when: t.when || null, method: t.method || null })), createdAt: p.createdAt || null }));
     for (const s of rr) for (const k of Object.keys(s.tasks)) { const v = s.tasks[k] || {}; s.tasks[k] = { status: v.status, ms: v.ms, error: v.error ? head(v.error, 300) : null, out: v.output ? head(typeof v.output === 'string' ? v.output : JSON.stringify(v.output), 1500) : null }; }
     const up = ((sys && (sys.systems || sys)) || []).map((s) => ({ name: s.name, state: s.state, port: s.port }));
     const host = use && use.usage ? use.usage.host : null;
     const loaded = ((ps && ps.models) || []).map((m) => ({ name: m.name, vramMB: Math.round((m.size_vram || 0) / 1048576), sizeMB: Math.round((m.size || 0) / 1048576) }));
     return json(r, { at: Date.now(), jobs: out, runs: rr, pipelines: pipes, systems: up, host, loaded });
+  }
+  // the side panel's terminal: COS's console lines, and its command line (the same route COS's Console page uses; what is typed there is his)
+  if (u.pathname === '/logs') return json(r, await get(7799, '/api/cos/console?limit=' + Math.min(800, Number(u.searchParams.get('limit')) || 300)));
+  if (u.pathname === '/cli' && q.method === 'POST') {
+    let b = ''; q.on('data', (c) => b += c); await new Promise((res) => q.on('end', res));
+    let line = ''; try { line = String(JSON.parse(b).line || ''); } catch (_) {}
+    const out = await new Promise((res) => { const body = JSON.stringify({ line, by: 'person' }); const rq = http.request({ host: '127.0.0.1', port: 7799, path: '/api/cos/cli', method: 'POST', headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(body) }, timeout: 60000 },
+      (rs) => { let t = ''; rs.on('data', (c) => t += c); rs.on('end', () => { try { res(JSON.parse(t)); } catch (_) { res({ lines: [t.slice(0, 2000)] }); } }); }); rq.on('timeout', () => { rq.destroy(); res({ lines: ['(COS did not answer in 60 s)'] }); }); rq.on('error', (e) => res({ lines: [e.message] })); rq.end(body); });
+    return json(r, out);
+  }
+  // provenance: the phase's ledger history and the repo's lineage, from Idearium's own routes (it may not answer: said, not hidden)
+  if (u.pathname === '/lineage') {
+    const ph = u.searchParams.get('phase'), repo = u.searchParams.get('repo');
+    const [hist, lin] = await Promise.all([ph ? get(4800, '/api/phases/ledger/history?phase=' + encodeURIComponent(ph), 5000) : null, repo ? get(4800, '/api/repos/' + encodeURIComponent(repo) + '/lineage', 5000) : null]);
+    return json(r, { idearium: !!(hist || lin), history: hist, lineage: lin && lin.lineage });
   }
   if (u.pathname === '/baseline') return json(r, await get(7799, '/api/cos/pipeline/baseline?pipeline=' + encodeURIComponent(u.searchParams.get('pipeline') || ''), 30000));
   if (u.pathname === '/theme.css') { r.setHeader('Content-Type', 'text/css'); r.end(fs.readFileSync(path.join(ROOT, 'idearium', 'ui', 'css', 'nexus-theme.css'))); return; }
