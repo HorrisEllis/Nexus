@@ -170,7 +170,9 @@ const plainFiles = () => Object.entries(FILES).map(([p, c]) => ({ path: p.replac
     assert.match(pl.door, /module\.exports = \{ where, bump, read, greet, ROOT \};/, 'the door exports as written');
     const v = X.verify(pl, { files });
     assert.ok(v.ok, JSON.stringify(v).slice(0, 400)); assert.deepStrictEqual(Object.keys(v.after).sort(), ['ROOT', '__name', '__type', 'bump', 'greet', 'read', 'where']);
-    assert.match(X.plan('m.mjs', 'export const a = 1;\nexport const b = 2;\n').refused, /ES module/);
+    // 0.60.629 DC1: an ES module splits now (was refused); TypeScript is still refused, said
+    { const em = X.plan('m.mjs', 'export const a = 1;\nexport const b = 2;\n'); assert.ok(em.ok && em.pieces.length === 2 && /export \{ a \} from/.test(em.door), JSON.stringify(em).slice(0, 300)); }
+    assert.match(X.plan('m.ts', 'export const a: number = 1;\nexport const b: number = 2;\n').refused, /TypeScript/);
     assert.match(X.plan('one.js', "function a() {}\nmodule.exports = { a };\n").refused, /fewer than two/);
     const bad = { ...pl, writes: pl.writes.map(w => (w.path === 'kernel/counter.js' ? { ...w, after: w.after.replace('module.exports = { count, bump, read };', 'module.exports = { count, bump };') } : w)) };
     assert.strictEqual(X.verify(bad, { files }).ok, false, 'a split that changes the exports is caught');
