@@ -1113,7 +1113,7 @@ async function _askOllamaBare({ prompt, model = null, repoUuid = null, meta = {}
   throw new Error(`the Ollama job did not finish in ${Math.round(waitMs / 60000)} minutes`);
 }
 
-async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null, provider = null, note = '', replan = false, anyway = false, rebuild = false, startedBy = null, gates = null, method = null }) {
+async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null, provider = null, note = '', replan = false, anyway = false, rebuild = false, startedBy = null, gates = null, method = null, snapshot = null }) {
   // 0.60.589 gates open (his "set gates to open instead of pass, so we can have the whole pipeline debugged at once"): a gate that would stop the
   // build records why and lets it go on, so one run shows every failure; the build is never read as met for it (COS marks the run debugged)
   const _gatesOpen = gates === 'open';
@@ -1285,6 +1285,15 @@ async function _phaseBuild(repo, dir, { map, phase, backend = null, agent = null
       appendRow('idearium_phase_runs', { uuid: `${runId}-refused`, ...base, state: 'refused', snapshot: snap.data.commitId, error: `no registry: ${reason}`, ts: Date.now() });
       return { ok: false, status: 409, error: `not built: the repo has no component registry to build on (spine, event bus, interaction contract, components) — ${reason}`, extra: { code: 'NO_REGISTRY', snapshot: snap.data.commitId } };
     }
+  }
+  // 0.60.628 — the snapshot before a build is a gate's setting, his: "Make snapshots optional for gates, and maybe disable them for developer or debug
+  // gates." (2026-11-20). required (the default, as before): no snapshot, no build. optional: Versionium unreachable (down, crashed, waiting for
+  // memory), the build goes on and says so; a snapshot Versionium refuses for a reason still stops it. off: a developer or debug gate, never
+  // refused for it. Either way what a build makes lands as proposals he applies or rejects. Set per build (body.snapshot) or routing.build_snapshot.
+  const _snapMode = ['required', 'optional', 'off'].includes(String(snapshot || '')) ? String(snapshot) : ((() => { try { return _routingPolicy().buildSnapshot; } catch (_) { return null; } })() || 'required');
+  if (!snap.ok && (_snapMode === 'off' || (_snapMode === 'optional' && /unreachable|ECONNREFUSED|ECONNRESET|socket hang up|timed? ?out|circuit|waiting-memory/i.test(String(snap.error || ''))))) {
+    appendRow('idearium_phase_runs', { uuid: `${runId}-snapshot-deferred`, ...base, state: 'snapshot-deferred', note: `snapshot ${_snapMode}: no snapshot before it (${String(snap.error).slice(0, 160)}); the build goes on, its work lands as proposals`, ts: Date.now() });
+    snap = { ok: true, deferred: true, data: { commitId: `deferred-${runId}`, record: { mustRecord: { registryVersion: { available: true, reason: 'not checked: Versionium unreachable' } } } } };
   }
   if (!snap.ok) {
     appendRow('idearium_phase_runs', { uuid: `${runId}-refused`, ...base, state: 'refused', error: `no snapshot: ${snap.error}`, ts: Date.now() });
@@ -10508,6 +10517,7 @@ async function handle(req, res, route, query, body) {
       }
       const r = await _phaseBuild(repo, dir, { startedBy: _starter(req, body), map, phase, backend: body.backend || null, agent: body.agent || null, provider: body.provider || null, note: body.note || '', gates: body.gates === 'open' ? 'open' : null, replan: body.replan === true, anyway: body.anyway === true, rebuild: body.rebuild === true,
         // 0.60.614: the build step's method, resolved by COS from the pipeline's task (cos/automation/method.eg): { gate: text }, handed to the rung
+        snapshot: ['required', 'optional', 'off'].includes(body.snapshot) ? body.snapshot : null,   // 0.60.628: the gate's snapshot setting (his)
         method: (() => { let m = body.method; if (typeof m === 'string') { try { m = JSON.parse(m); } catch (_) { m = null; } } return m && typeof m === 'object' ? m : null; })() });
       if (!r.ok) return err(res, r.status, r.error, r.extra);
       return ok(res, r.data);

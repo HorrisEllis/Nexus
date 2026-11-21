@@ -282,7 +282,8 @@ const SCHEMA = {
     // 0.60.141 TF2 — James: "needs to build a test first then use that to shape expectation and conditions." require: no usable test written first → not built · prefer: built anyway, said · off
     test_first:          { default: 'require', enum: ['require', 'prefer', 'off'], copilot_writable: true, type: 'string' },
     emerge_first:        { default: 'prefer', enum: ['prefer', 'off'], copilot_writable: true, type: 'string' },   // EMB1 0.60.421 — a new planned JS file tried in Emerge first
-    emerge_ladder:       { default: '', copilot_writable: true, type: 'string' },   // EMB2 0.60.615 — the Emerge rung's Ollama models, smallest first, comma-separated (his "the smaller we can get llms in ollama coding the better"); empty: the rung's one model
+    emerge_ladder:       { default: '', copilot_writable: true, type: 'string' },
+    build_snapshot:      { default: 'required', enum: ['required', 'optional', 'off'], copilot_writable: false, type: 'string' },   // 0.60.628 (his): "Make snapshots optional for gates, and maybe disable them for developer or debug gates." His to set: not writable by an agent   // EMB2 0.60.615 — the Emerge rung's Ollama models, smallest first, comma-separated (his "the smaller we can get llms in ollama coding the better"); empty: the rung's one model
     contract_depth:      { default: 3, min: 1, max: 8, copilot_writable: true, type: 'number' },   // §BR2 0.60.40 — how deep a brick may split
     contract_concurrency: { default: 2, min: 1, max: 8, copilot_writable: true, type: 'number' },
   },
