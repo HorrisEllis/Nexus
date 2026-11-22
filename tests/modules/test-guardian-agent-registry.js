@@ -73,7 +73,7 @@ test('AGT-004', 'registerAgent() with real, complete input+output pair succeeds 
   assert.strictEqual(r.enabled, true);
 });
 
-test('AGT-005', 'listAgents() returns real, previously-registered agents, sorted by createdAt', () => {
+test('AGT-005', 'listAgents() returns real, previously-registered agents, sorted by createdAt', () => { require('../../clear-glass/src/storage/jaa.js').setDir(fs.mkdtempSync(path.join(require('os').tmpdir(), 'agt-005-')));   // AC10: a store that was never read no longer writes over what is there, so this test gets its own empty one
   const store = new NexusOptions();
   store.registerAgent({ agentName: 'first', origin: 'https://a.com', input: { selector: '#a' }, output: { selector: '#b' } });
   store.registerAgent({ agentName: 'second', origin: 'https://b.com', input: { selector: '#c' }, output: { selector: '#d' } });

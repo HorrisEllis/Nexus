@@ -1,0 +1,12 @@
+/* renderer/settings/sections/profiles.css — Profiles (AC10). Every rule is scoped to this area. */
+body[data-area="profiles"] .pf-grid { display: grid; grid-template-columns: minmax(220px, 300px) minmax(0, 1fr); gap: 14px; align-items: start; }
+body[data-area="profiles"] .pf-item { display: grid; grid-template-columns: 32px minmax(0, 1fr) auto; gap: 10px; align-items: center; width: 100%; padding: 10px 12px; background: none; border: 0; border-top: 1px solid color-mix(in srgb, var(--ink-hi) 10%, transparent); color: inherit; text-align: left; cursor: pointer; }
+body[data-area="profiles"] .pf-item:first-child { border-top: 0; }
+body[data-area="profiles"] .pf-item:hover { background: color-mix(in srgb, var(--ink-hi) 5%, transparent); }
+body[data-area="profiles"] .pf-item.on { background: color-mix(in srgb, var(--ink-hi) 9%, transparent); }
+body[data-area="profiles"] .pf-av { width: 32px; height: 32px; border-radius: 8px; display: grid; place-items: center; font-weight: 600; color: #07101c; background: hsl(var(--h) 72% 68%); }
+body[data-area="profiles"] .pf-name { min-width: 0; }
+body[data-area="profiles"] .pf-name b { display: block; font-weight: 600; color: var(--ink-hi); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+body[data-area="profiles"] .pf-name small { opacity: .65; }
+body[data-area="profiles"] .pf-def { font-size: 10.5px; padding: 2px 6px; border: 1px solid currentColor; border-radius: 5px; opacity: .8; }
+@media (max-width: 760px) { body[data-area="profiles"] .pf-grid { grid-template-columns: minmax(0, 1fr); } }

@@ -216,12 +216,12 @@ let _profileRules = null;   // AC10: Clear Glass's own compiled copy, loaded on 
 
 class NexusOptions {
   constructor() {
-    this.data = { ...DEFAULTS };
+    this.data = { ...DEFAULTS }; this._loaded = false;   // AC10: nothing is saved over the store until it has been read (the 2026-11-20 wipe)
   }
 
   async load() {
     try {
-      const raw = this._kv().load();
+      const raw = this._kv().load(); this._loaded = true;
       if (Object.keys(raw).length) {
         this.data = { ...DEFAULTS, ...raw };
 
@@ -306,7 +306,17 @@ class NexusOptions {
   _kv() { return this._jaa || (this._jaa = new JaaKV('cg_options', { legacyFile: OPTIONS_PATH })); }
 
   /** _persist() — the one real place this store writes: one JAA row per option key. */
+  // AC10: a save before a good read lays its changes over what is on disk; if the disk still cannot be read, nothing is written and the next save tries again.
+  _readBeforeWrite() {
+    try {
+      const raw = this._kv().load(), isObj = (v) => v !== null && typeof v === 'object' && !Array.isArray(v), out = { ...DEFAULTS, ...raw };
+      for (const [k, v] of Object.entries(this.data)) { if (JSON.stringify(v) === JSON.stringify(DEFAULTS[k])) continue; out[k] = isObj(v) && isObj(raw[k]) ? { ...raw[k], ...v } : v; }
+      this.data = out; this._loaded = true; return true;
+    } catch (e) { console.warn(`[NexusOptions] save refused, the store could not be read: ${e.message}`); return false; }
+  }
+
   _persist() {
+    if (!this._loaded && !this._readBeforeWrite()) return;
     // 0.60.279 VE6 — James, 2026-10-29: "yes, clear glass macros and settings too." (§17.12) Each burst of saves goes to Versionium: which
     // keys changed, before → after, secrets redacted (lib/versionium-record.js settingsRecorder; buffered while it is down; never blocks).
     try {

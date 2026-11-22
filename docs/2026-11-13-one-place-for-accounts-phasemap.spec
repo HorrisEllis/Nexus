@@ -288,3 +288,9 @@ phases_addendum_2026_11_22:
 # Emerge may be absent. Rebuild after changing profiles.eg. Other systems reach profiles only through Clear Glass's /profiles routes.
 # Found the same day, read from its store (counts only): on 2026-11-20 at 13:17 a Clear Glass process wrote its defaults over the store: accounts 8→0, listeners 1→0, shortcuts 2→0.
 # The last good copy (2026-11-18, 8 accounts) is still in the store's journal. Not restored yet: his yes first.
+# ADDENDUM 2026-11-22 (0.60.637) — AC10 slice b. James, 2026-11-22: "i just clearglass to have one source of truth for cookies and accounts, hooked into the profiles" · "okay profiles are in clearglass. no coupline" · "Yes, build it".
+# Built: the Profiles screen in Clear Glass Settings (renderer/settings/sections/profiles.js, .css; IPC profiles:*; preload cg.profiles). No Open button until slice c moves tabs and agents onto profile jars.
+# The 2026-11-20 wipe, cause found: tests/modules/test-guardian-agent-registry.js moved only HOME, but on Windows the store path comes from APPDATA, so the test opened his real store. Its unread store saved its defaults over everything (the agent it saved, persist-check @ d.com, is that test's).
+# The coder repeated the fault on 2026-11-22: running tests/modules/clear-glass-accounts.test.js twice added 11 test accounts to his real store. Found within minutes; the restore removed them.
+# Fixed: a test process cannot open the real Clear Glass store or import its legacy file (src/storage/jaa.js), and a store that was never read cannot save over what is on disk (src/options/store.js).
+# Restored from the last record before the wipe: accounts 8, listeners 1, shortcuts 2. Backup: %APPDATA%/.clear-glass/backups/options-before-restore-2026-11-22. Not restored: other settings that test removed (url bar sizes, pinned and disabled plugins, chatCapture, floatCli, netPolicy); his call.

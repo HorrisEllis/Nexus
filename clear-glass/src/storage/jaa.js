@@ -39,7 +39,16 @@ const CG_DIR  = cgDir();
 let _store = null, _storeDir = null;
 let _dirOverride = null;
 
-function _dir() { return _dirOverride || process.env.CG_JAA_DIR || path.join(cgDir(), 'jaa'); }
+// AC10: a test process never opens the person's real store. Tests moved only HOME, but on Windows the path comes from APPDATA, so on 2026-11-20 a test wrote its defaults over his 8 accounts.
+function _dir() {
+  if (_dirOverride || process.env.CG_JAA_DIR) return _dirOverride || process.env.CG_JAA_DIR;
+  const d = path.join(cgDir(), 'jaa'); let sandbox = null;
+  try { sandbox = require('../../../lib/test-sandbox.js').ensure(); } catch (_) { /* no sandbox module: not a test tree */ }
+  if (!sandbox) return d;
+  const me = require('os').userInfo().homedir, real = [path.join(me, 'AppData', 'Roaming', '.clear-glass', 'jaa'), path.join(me, '.clear-glass', 'jaa')].map((p) => path.resolve(p).toLowerCase());
+  if (!real.includes(path.resolve(d).toLowerCase())) return d;
+  const home = process.env.HOME; return home && path.resolve(home).toLowerCase() !== path.resolve(me).toLowerCase() ? path.join(home, '.clear-glass', 'jaa') : path.join(sandbox, 'clear-glass-jaa');
+}
 
 /**
  * The shared store. Location is resolved on every call (CG_JAA_DIR, then
@@ -67,7 +76,9 @@ function _importOnce(st, table, legacyFile, toShape, write) {
   if (st.get(META, { id: key })) return false;
   if (st.count(table) > 0) { st.insert(META, { id: key, table, file: null, ts: Date.now(), note: 'table already populated' }); return false; }
   let imported = false;
-  if (legacyFile && fs.existsSync(legacyFile)) {
+  // AC10: in a test, a legacy file outside the test's own folder is the person's real one, and is not imported.
+  const own = !process.env.NEXUS_TEST_SANDBOX || (legacyFile && path.resolve(legacyFile).toLowerCase().startsWith(path.resolve(_dir(), '..').toLowerCase()));
+  if (legacyFile && own && fs.existsSync(legacyFile)) {
     try {
       const raw = JSON.parse(fs.readFileSync(legacyFile, 'utf8'));
       write(toShape ? toShape(raw) : raw);

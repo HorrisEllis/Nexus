@@ -1758,6 +1758,7 @@ class IpcBridge {
     ipcMain.handle('accounts:delete',     async (e, d) => this.options?.deleteAccount(d.id));
     ipcMain.handle('accounts:linkAgent',  async (e, d) => this.options?.linkAgent(d.id, d.agentKey));
     ipcMain.handle('accounts:unlinkAgent',async (e, d) => this.options?.unlinkAgent(d.id, d.agentKey));
+    for (const [ch, run] of Object.entries({ list: (o) => o.listProfiles(), create: (o, d) => o.createProfile(d.name), rename: (o, d) => o.renameProfile(d.id, d.name), setDefault: (o, d) => o.setDefaultProfile(d.id), delete: (o, d) => o.deleteProfile(d.id), link: (o, d) => o.linkProfileAccount(d.id, d.account), unlink: (o, d) => o.unlinkProfileAccount(d.id, d.account) })) ipcMain.handle(`profiles:${ch}`, async (e, d = {}) => (this.options ? run(this.options, d) : { ok: false, error: 'options not ready' }));   // AC10 slice b
     // §BUILT 2026-09-19 — James: "account manager with account ids for
     // providers," then "library ui." Real backend (options/store.js)
     // and Guardian-facing gates existed; this real IPC surface — what
