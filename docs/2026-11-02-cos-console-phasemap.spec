@@ -547,3 +547,4 @@ phases_addendum_2026_11_22_storage:
     held_a: "Move Nexus is shown and held, with why: the switch to a new folder is the exe's, and the exe has no door for it yet (CA7 slice b, pinned by him 2026-11-13). Open folder copies the path: the manager runs as a service with no desktop."
     proof_a: "eg test storage.test.eg; the routes on a real manager: a deleted code file found and restored; an agent refused; the tab on live data in the browser"
     axioms_a: "§8.6 (update, backup, service door reused), §5.15 (the exe's settings through its door), §1.2 (a held tool says why), §0.3 (repair restores, backup copies, nothing is deleted), §17.13 (the judgment in Emerge; the door runs the OS commands)"
+# ADDENDUM 2026-11-22 (0.60.634) — SC19 slice a: the live deploy showed only D: (the service is not told COS_APP_ROOT); the system drive is always read.

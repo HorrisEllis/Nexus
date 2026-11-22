@@ -219,7 +219,7 @@ function createPipeline({ automation, idearium = null, call = null, dataDir } = 
   async function storageRead({ treeRoot = root, cosRoot = null } = {}) {
     const [st, lock] = await Promise.all([sh('git', [...gitIn(treeRoot), 'status', '--porcelain', '--no-renames', '-z'], { cwd: treeRoot }), sh(process.execPath, ['scripts/emerge-lock.js', '--check'], { cwd: treeRoot })]);
     if (!st.ok) return { ok: false, code: 500, error: `git could not read this folder: ${st.err.trim().split('\n').pop()}` };
-    const seen = new Set(), drives = [treeRoot, cosRoot].filter(Boolean).map(driveOf).filter(d => d && !seen.has(d.at) && seen.add(d.at));
+    const seen = new Set(), drives = [treeRoot, cosRoot, process.env.SystemDrive ? process.env.SystemDrive + path.sep : null].filter(Boolean).map(driveOf).filter(d => d && !seen.has(d.at) && seen.add(d.at));
     const v = await eg('storage', { entries: st.out.split('\0').filter(Boolean), lock_ok: lock.ok, lock_says: (lock.out + lock.err).trim().split('\n').pop() || '', drives });
     return v.ok ? { ...v, root: treeRoot, cosRoot } : { ok: false, code: 500, error: v.error || 'Emerge gave no verdict' };
   }
