@@ -1,0 +1,57 @@
+// clear-glass/src/profiles/test/profiles.test.eg — a profile is the source of truth (AC10). eg test clear-glass/src/profiles/test/profiles.test.eg
+// James Brooks, 2026-11-18: "the profiles are the source of truth." · "accounts can be used across profiles."
+use "../profiles.eg" as P
+
+let ACC = [{ id: "a", label: "Gemini 1", providers: ["gemini"] }, { id: "b", label: "Claude 1", providers: ["claude"] }, { id: "c", label: "Gemini 2", providers: ["gemini"] }]
+let INFO = { a: { providers: ["gemini"] }, b: { providers: ["claude"] }, c: { providers: ["gemini"] }, d: { providers: ["chatgpt"] } }
+fn start(): map = P.apply({}, { op: "ensure", accounts: ACC, ids: ["p1", "p2", "p3"], now: 1 }).state
+
+test "first run: one default profile on the normal session; a second account on one provider gets its own jar" {
+  let s = start()
+  expect s.defaultId == "p1" and s.profiles.p1.partition == "default" and s.profiles.p1.accounts == ["a", "b"]
+  expect s.profiles.p2.name == "Gemini 2" and s.profiles.p2.partition == "persist:profile-p2" and s.profiles.p2.accounts == ["c"]
+}
+
+test "ensure again changes nothing, and places only a new account" {
+  let s = start()
+  expect P.apply(s, { op: "ensure", accounts: ACC, ids: ["x"], now: 2 }).state == s
+  let more = push(ACC, { id: "d", label: "ChatGPT 1", providers: ["chatgpt"] })
+  expect P.apply(s, { op: "ensure", accounts: more, ids: ["x"], now: 2 }).state.profiles.p1.accounts == ["a", "b", "d"]
+}
+
+test "an account can be in several profiles, but a jar holds one sign-in per site" {
+  let s = start()
+  let r = P.apply(s, { op: "link", profile: "p2", account: "b", info: INFO, now: 2 })
+  expect r.ok and r.state.profiles.p2.accounts == ["c", "b"]
+  let no = P.apply(s, { op: "link", profile: "p1", account: "c", info: INFO, now: 2 })
+  expect not no.ok and no.why contains "already holds a gemini account"
+  expect not P.apply(s, { op: "link", profile: "p1", account: "ghost", info: INFO, now: 2 }).ok
+}
+
+test "no account is ever left without a profile" {
+  let s = start()
+  expect not P.apply(s, { op: "unlink", profile: "p2", account: "c", now: 2 }).ok
+  expect not P.apply(s, { op: "delete", profile: "p2", now: 2 }).ok
+  expect not P.apply(s, { op: "delete", profile: "p1", now: 2 }).ok
+  let two = P.apply(s, { op: "link", profile: "p2", account: "b", info: INFO, now: 2 }).state
+  expect P.apply(two, { op: "unlink", profile: "p1", account: "b", now: 3 }).state.profiles.p1.accounts == ["a"]
+  let e = P.apply(s, { op: "create", id: "p9", name: "Empty", now: 2 }).state
+  expect not has(P.apply(e, { op: "delete", profile: "p9", now: 3 }).state.profiles, "p9")
+}
+
+test "names are one each; renames and the default are kept" {
+  let s = start()
+  expect not P.apply(s, { op: "create", id: "z", name: " default ", now: 2 }).ok
+  expect P.apply(s, { op: "rename", profile: "p2", name: "Work", now: 2 }).state.profiles.p2.name == "Work"
+  expect not P.apply(s, { op: "rename", profile: "p2", name: "DEFAULT", now: 2 }).ok
+  expect P.apply(s, { op: "default", profile: "p2", now: 2 }).state.defaultId == "p2"
+}
+
+test "a job runs in the profile asked for when it holds the account, else the default, else the one that does" {
+  let s = P.apply(start(), { op: "link", profile: "p2", account: "b", info: INFO, now: 2 }).state
+  expect P.resolve(s, "b", "p2").id == "p2"
+  expect P.resolve(s, "b", null).id == "p1"
+  expect P.resolve(s, "a", "p2").id == "p1"
+  expect P.resolve(s, "c", null).id == "p2"
+  expect P.resolve(s, "ghost", null) == null
+}

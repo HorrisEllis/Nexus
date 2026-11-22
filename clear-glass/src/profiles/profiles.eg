@@ -1,0 +1,136 @@
+// clear-glass/src/profiles/profiles.eg — a profile is the one source of truth for its cookies, logins and accounts (AC10, docs/2026-11-13-one-place-for-accounts-phasemap.spec).
+// James Brooks, 2026-11-18: "need one source of truth for all cookies, logins, accounts, etc per profile also like firefox. the profiles are the source of truth." ·
+// 2026-11-17: "it should not have different cookies unless its a different profile." · 2026-11-22: "i just clearglass to have one source of truth for cookies and
+// accounts, hooked into the profiles" · asked Clear Glass or COS's vault: "yes clearglass."
+//
+//   apply(state, op) → { ok, state, profile?, why? }    every change to profiles, decided here; Clear Glass's store only keeps the answer
+//   resolve(state, account, wanted) → profile | null    which profile a job for this account runs in
+//
+// state: { profiles: { <id>: { id, name, partition, accounts: [ids], createdAt, updatedAt } }, defaultId }
+// One jar per profile: "default" is the session every normal tab uses; any other is persist:profile-<id>.
+// A jar holds one sign-in per site, so a profile holds one account per provider; a second account on the same provider lives in its own profile.
+// An account may be in several profiles. ids and the time come from the door: nothing here is random.
+
+fn _ids(st: map): list = keys(get(st, "profiles", {}))
+
+fn _with(st: map, p: map): map {
+  var ps = clone(get(st, "profiles", {}))
+  ps[p.id] = p
+  return { profiles: ps, defaultId: get(st, "defaultId", null) }
+}
+
+fn _provs(info: map, account: string): list = get(get(info, account, {}), "providers", [])
+
+/** the account already in this profile that holds one of this account's providers, or null */
+fn clash(p: map, account: string, info: map): any {
+  let mine = _provs(info, account)
+  for other in p.accounts {
+    if other != account {
+      for x in _provs(info, other) {
+        if index_of(mine, x) >= 0 { return { account: other, provider: x } }
+      }
+    }
+  }
+  return null
+}
+
+fn _new(id: string, name: string, partition: string, accounts: list, now: num): map =
+  { id: id, name: name, partition: partition, accounts: accounts, createdAt: now, updatedAt: now }
+
+/** first run, and whenever an account is new: each account joins the default profile, or its own when the default already holds that provider */
+fn ensure(st: map, list_of: list, new_ids: list, now: num): map {
+  var s = { profiles: clone(get(st, "profiles", {})), defaultId: get(st, "defaultId", null) }
+  var n = 0
+  if s.defaultId == null or not has(s.profiles, s.defaultId) {
+    let id = new_ids[n]
+    n += 1
+    s = _with({ profiles: s.profiles, defaultId: id }, _new(id, "Default", "default", [], now))
+  }
+  var info = {}
+  for a in list_of { info[a.id] = { providers: get(a, "providers", []) } }
+  var placed = {}
+  for pid in _ids(s) { for acc in s.profiles[pid].accounts { placed[acc] = true } }
+  for a in list_of {
+    if not has(placed, a.id) {
+      var d = clone(s.profiles[s.defaultId])
+      d.accounts = push(d.accounts, a.id)
+      if clash(d, a.id, info) == null {
+        d.updatedAt = now
+        s = _with(s, d)
+      } else {
+        let id = new_ids[n]
+        n += 1
+        s = _with(s, _new(id, get(a, "label", "Profile"), "persist:profile-" + id, [a.id], now))
+      }
+      placed[a.id] = true
+    }
+  }
+  return { ok: true, state: s, used: n }
+}
+
+fn apply(st: map, op: map): map {
+  let kind = get(op, "op", "")
+  let now = get(op, "now", 0)
+  if kind == "ensure" { return ensure(st, get(op, "accounts", []), get(op, "ids", []), now) }
+  if kind == "create" {
+    let name = trim(str(get(op, "name", "")))
+    if name == "" { return { ok: false, why: "a profile needs a name" } }
+    for pid in _ids(st) { if lower(st.profiles[pid].name) == lower(name) { return { ok: false, why: "a profile is already named " + name } } }
+    let p = _new(op.id, name, "persist:profile-" + op.id, [], now)
+    return { ok: true, state: _with(st, p), profile: p }
+  }
+  let id = get(op, "profile", "")
+  if not has(get(st, "profiles", {}), id) { return { ok: false, why: "no profile " + str(id) } }
+  var p = clone(st.profiles[id])
+  if kind == "rename" {
+    let name = trim(str(get(op, "name", "")))
+    if name == "" { return { ok: false, why: "a profile needs a name" } }
+    for pid in _ids(st) { if pid != id and lower(st.profiles[pid].name) == lower(name) { return { ok: false, why: "a profile is already named " + name } } }
+    p.name = name
+    p.updatedAt = now
+    return { ok: true, state: _with(st, p), profile: p }
+  }
+  if kind == "default" { return { ok: true, state: { profiles: st.profiles, defaultId: id }, profile: p } }
+  if kind == "link" {
+    let acc = str(get(op, "account", ""))
+    let info = get(op, "info", {})
+    if not has(info, acc) { return { ok: false, why: "no account " + acc } }
+    if index_of(p.accounts, acc) >= 0 { return { ok: true, state: st, profile: p } }
+    let c = clash(p, acc, info)
+    if c != null { return { ok: false, why: p.name + " already holds a " + c.provider + " account: one jar holds one sign-in per site, so this account needs another profile" } }
+    p.accounts = push(p.accounts, acc)
+    p.updatedAt = now
+    return { ok: true, state: _with(st, p), profile: p }
+  }
+  if kind == "unlink" {
+    let acc = str(get(op, "account", ""))
+    if index_of(p.accounts, acc) < 0 { return { ok: true, state: st, profile: p } }
+    var elsewhere = false
+    for pid in _ids(st) { if pid != id and index_of(st.profiles[pid].accounts, acc) >= 0 { elsewhere = true } }
+    if not elsewhere { return { ok: false, why: "this is the account's only profile: add it to another first" } }
+    p.accounts = filter(p.accounts, fn(x) = x != acc)
+    p.updatedAt = now
+    return { ok: true, state: _with(st, p), profile: p }
+  }
+  if kind == "delete" {
+    if id == st.defaultId { return { ok: false, why: "the default profile cannot be removed: make another the default first" } }
+    for acc in p.accounts {
+      var elsewhere = false
+      for pid in _ids(st) { if pid != id and index_of(st.profiles[pid].accounts, acc) >= 0 { elsewhere = true } }
+      if not elsewhere { return { ok: false, why: p.name + " is the only profile of one of its accounts: move it first" } }
+    }
+    var ps = {}
+    for pid in _ids(st) { if pid != id { ps[pid] = st.profiles[pid] } }
+    return { ok: true, state: { profiles: ps, defaultId: st.defaultId }, profile: p }
+  }
+  return { ok: false, why: "no such change: " + str(kind) }
+}
+
+fn resolve(st: map, account: string, wanted: any): any {
+  let ps = get(st, "profiles", {})
+  if wanted != null and has(ps, wanted) and index_of(ps[wanted].accounts, account) >= 0 { return ps[wanted] }
+  let d = get(st, "defaultId", null)
+  if d != null and has(ps, d) and index_of(ps[d].accounts, account) >= 0 { return ps[d] }
+  for pid in sort(keys(ps)) { if index_of(ps[pid].accounts, account) >= 0 { return ps[pid] } }
+  return null
+}

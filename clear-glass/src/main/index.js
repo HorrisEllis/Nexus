@@ -1922,6 +1922,16 @@ async function bootstrap() {
       try { const r = await acctSwitch().capture(req.params.id, req.body && req.body.accountId); res.status(r.ok ? 200 : 409).json(r); }
       catch (e) { res.status(500).json({ ok: false, error: e.message }); }
     });
+    // AC10 (2026-11-22) — James: "one source of truth for cookies and accounts, hooked into the profiles". Reads for every system; a change is a person's.
+    const _profileSend = (res, r) => res.status(r && r.ok ? 200 : 409).json(r || { ok: false, error: 'no answer' });
+    const _profileAct = (req, res, fn) => { if (/^agent:/.test(String((req.body && req.body.by) || ''))) return res.status(403).json({ ok: false, error: 'an agent proposes; a profile is changed by a person' }); _profileSend(res, fn(req.body || {})); };
+    ipcBridge.app.get('/profiles', (req, res) => _profileSend(res, nexusOptions.listProfiles()));
+    ipcBridge.app.get('/profiles/resolve', (req, res) => { const a = String(req.query.account || ''); if (!a) return res.status(400).json({ ok: false, error: 'account required' }); _profileSend(res, nexusOptions.resolveProfile(a, req.query.profile ? String(req.query.profile) : null)); });
+    ipcBridge.app.post('/profiles', (req, res) => _profileAct(req, res, b => nexusOptions.createProfile(b.name)));
+    ipcBridge.app.patch('/profiles/:id', (req, res) => _profileAct(req, res, b => b.default === true ? nexusOptions.setDefaultProfile(req.params.id) : nexusOptions.renameProfile(req.params.id, b.name)));
+    ipcBridge.app.delete('/profiles/:id', (req, res) => _profileAct(req, res, () => nexusOptions.deleteProfile(req.params.id)));
+    ipcBridge.app.post('/profiles/:id/accounts/:account', (req, res) => _profileAct(req, res, () => nexusOptions.linkProfileAccount(req.params.id, req.params.account)));
+    ipcBridge.app.delete('/profiles/:id/accounts/:account', (req, res) => _profileAct(req, res, () => nexusOptions.unlinkProfileAccount(req.params.id, req.params.account)));
     ipcBridge.app.get('/accounts', (req, res) => res.json({ ok: true, accounts: nexusOptions.listAccounts().map(a => ({ id: a.id, label: a.label, agentKeys: a.agentKeys, providers: Object.keys(a.providerAccounts || {}) })), defaults: nexusOptions.get().accountDefaults || {} }));
     ipcBridge.app.post('/compartment/set-active', (req, res) => {
       try {

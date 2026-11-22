@@ -7,11 +7,11 @@ intent: null
 summary: 29 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1794578166670
+exported_at: 1795361652827
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794578166670
-lastSeenAt: 1794578166670
+firstSeenAt: 1795361652827
+lastSeenAt: 1795361652827
 fingerprint: null
 payload:
   for: AC1_the_vault_as_a_library
@@ -238,7 +238,10 @@ payload:
       - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC2_clear_glass_keeps_through_cos
       - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC3_one_list_of_accounts
       - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC8_credential_types
-    conflicts: []
+    conflicts:
+      - with: docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC10_profiles_the_source_of_truth
+        files:
+          - idearium/cli/route-commands.js
     dangling: []
     lines:
       - layer 2 · blocked by AC0_what_each_piece_holds
@@ -248,6 +251,9 @@ payload:
         AC4_system_secrets, AC7_fallback_routing_and_one_popup, AC8_credential_types · all
         downstream 6 · finishing it unlocks AC2_clear_glass_keeps_through_cos,
         AC3_one_list_of_accounts, AC8_credential_types
+      - >-
+        same files as AC10_profiles_the_source_of_truth with no order between them:
+        idearium/cli/route-commands.js
     edges:
       - from: docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC0_what_each_piece_holds
         kind: declared

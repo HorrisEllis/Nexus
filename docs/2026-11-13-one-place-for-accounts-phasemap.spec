@@ -258,3 +258,28 @@ order: "AC0 → AC6 (built) → AC1 → AC2, AC3, AC9 side by side → AC7, AC8 
 #   - a hat per COS page and per site ("location based models"), so Copilot knows where it is; a profile can be a compartment linked to hats;
 #   - the UI uses the same profile as the agents; UI consolidation, bookmark and login detection updated after.
 # Order (his): after Ollama and intelligent gates that compound.
+
+# ── ADDENDUM 2026-11-22 (map, before code) — AC_D1 changed by him: Clear Glass owns cookies and accounts; a profile is their source of truth (AC10) ──
+# James, 2026-11-22: "i just clearglass to have one source of truth for cookies and accounts, hooked into the profiles". Asked Clear Glass or COS's vault
+# (his 2026-11-13 AC_D1), with what each costs: "yes clearglass." AC_D1 is kept (§0.3) and superseded: AC1 to AC3's "through COS's vault" no longer apply to
+# accounts and cookies. Stands on his 2026-11-17 ("it should not have different cookies unless its a different profile") and 2026-11-18 ("the profiles are
+# the source of truth ... each profile has a id, each account or login has an id ... accounts can be used across profiles"). Found: Clear Glass has no
+# browser profile today ("profiles" in its code are autofill profiles and per-account provider tabs).
+decisions_addendum_2026_11_22:
+  AC_D6_clear_glass_owns_it:
+    status: "DECIDED 2026-11-22 (his): Clear Glass, superseding AC_D1 for cookies and accounts"
+    cost_said: "other systems cannot read accounts while Clear Glass is down, unless an encrypted backup to COS's vault is added later"
+phases_addendum_2026_11_22:
+  AC10_profiles_the_source_of_truth:
+    status: OPEN
+    depends_on: [AC_D6_clear_glass_owns_it]
+    james: '"i just clearglass to have one source of truth for cookies and accounts, hooked into the profiles" · "yes clearglass." (2026-11-22)'
+    files: [clear-glass/src/profiles/profiles.eg, clear-glass/src/profiles/main.eg, clear-glass/src/profiles/test/profiles.test.eg, clear-glass/src/options/store.js, clear-glass/src/main/index.js, idearium/cli/route-commands.js]
+    does: >-
+      Slice a: a profile is a record with an id, one jar and its accounts. The rules are Emerge's (profiles.eg); Clear Glass's account store keeps the
+      answer; routes /profiles. On first read every account is placed: in Default (the normal session), or in its own profile when Default already holds
+      that provider, since one jar holds one sign-in per site. No cookie moves. Slice b (after his yes on a preview): the Profiles screen. Slice c: every
+      tab, provider tab and agent runs in its profile's jar, each sign-in copied in first, old jars kept until he confirms. Slice d: Guardian routes to a
+      profile id, and the other account lists read Clear Glass's.
+    proof: "a: eg test; the store and routes on a throwaway store; c: on his machine, every signed-in provider still signed in after the move"
+    axioms: "§10.3 one truth per kind of data, §5.15 one owner, §0.3 old jars kept, §8.6 his account store and per-account tabs reused"

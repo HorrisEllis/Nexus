@@ -1,0 +1,164 @@
+envelope: 1
+uuid: nexus-export-graph-phase:AC6_key_slots:d78b463482eea9d4
+type: graph
+id: phase:AC6_key_slots:d78b463482eea9d4
+context: dependency graph of phase AC6_key_slots
+intent: null
+summary: 18 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1795361652831
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795361652831
+lastSeenAt: 1795361652831
+fingerprint: null
+payload:
+  for: AC6_key_slots
+  kind: phase
+  repo: null
+  hash: d78b463482eea9d4
+  nodes:
+    - path: cos/foundation/constants.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/vault/crypto.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/vault/key-slots.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/vault/keyring.js
+      role: changes
+      exists: true
+      system: cos
+    - path: tests/modules/test-cos-vault-key-slots.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: clear-glass/src/rewind/engine.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: cos/cli/commands/map.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/cli/index.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/foundation/snapshot.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/host/event-bus.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/host/gates/compartment.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/host/index.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/host/state-store.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/host/system-map.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/playground/branch.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/playground/compare.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/vault/store.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: lib/test-sandbox.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: cos/foundation/constants.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: clear-glass/src/rewind/engine.js
+      to: cos/vault/keyring.js
+      kind: requires
+    - from: cos/vault/store.js
+      to: cos/vault/crypto.js
+      kind: requires
+    - from: cos/cli/commands/map.js
+      to: cos/foundation/constants.js
+      kind: requires
+    - from: cos/cli/index.js
+      to: cos/foundation/constants.js
+      kind: requires
+    - from: cos/foundation/snapshot.js
+      to: cos/foundation/constants.js
+      kind: requires
+    - from: cos/host/event-bus.js
+      to: cos/foundation/constants.js
+      kind: requires
+    - from: cos/host/gates/compartment.js
+      to: cos/foundation/constants.js
+      kind: requires
+    - from: cos/host/index.js
+      to: cos/foundation/constants.js
+      kind: requires
+    - from: cos/host/state-store.js
+      to: cos/foundation/constants.js
+      kind: requires
+    - from: cos/host/system-map.js
+      to: cos/foundation/constants.js
+      kind: requires
+    - from: cos/playground/branch.js
+      to: cos/foundation/constants.js
+      kind: requires
+    - from: cos/playground/compare.js
+      to: cos/foundation/constants.js
+      kind: requires
+  crossings:
+    - from: clear-glass/src/rewind/engine.js
+      to: cos/vault/keyring.js
+      fromSystem: clear-glass
+      toSystem: cos
+      kind: system
+      known: false
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC1_the_vault_as_a_library
+    upstream: []
+    downstream:
+      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC1_the_vault_as_a_library
+      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC2_clear_glass_keeps_through_cos
+      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC3_one_list_of_accounts
+      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC4_system_secrets
+      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC5_the_accounts_page
+      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC7_fallback_routing_and_one_popup
+      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC8_credential_types
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0
+      - 'depends on (0): —'
+      - 'needed by (1): AC1_the_vault_as_a_library · all downstream 7'
+    edges: []

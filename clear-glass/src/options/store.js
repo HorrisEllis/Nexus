@@ -445,6 +445,31 @@ class NexusOptions {
     return { ok: true, agentKey, id };
   }
 
+  // AC10 (2026-11-22) — James: "i just clearglass to have one source of truth for cookies and accounts, hooked into the profiles". What a change means is
+  // Emerge's (src/profiles/profiles.eg); this keeps the answer, beside the accounts it points at. No cookie moves here.
+  _profilesAsk(op) {
+    const os = require('os'), { execFileSync } = require('child_process'), f = path.join(os.tmpdir(), `cg-profiles-${process.pid}-${randomUUID()}.json`);
+    fs.writeFileSync(f, JSON.stringify({ state: this.data.profileState || {}, op: { now: Date.now(), ...op } }));
+    try { const out = execFileSync(process.execPath, [path.join(__dirname, '..', '..', '..', 'emerge', 'emerge', 'lang', 'eg.js'), 'run', path.join(__dirname, '..', 'profiles', 'main.eg'), f], { encoding: 'utf8', timeout: 20000, windowsHide: true, env: { ...process.env, ELECTRON_RUN_AS_NODE: '1' } });
+      return JSON.parse(out.trim().split('\n').pop()); }
+    catch (e) { return { ok: false, why: `Emerge did not answer: ${String(e.stderr || e.message).trim().split('\n').pop()}` }; }
+    finally { try { fs.unlinkSync(f); } catch (_) {} }
+  }
+  _profileInfo() { return Object.fromEntries(this.listAccounts().map(a => [a.id, { label: a.label, providers: [...new Set([...(a.agentKeys || []), ...Object.keys(a.providerAccounts || {})])] }])); }
+  _profileChange(op) { const r = this._profilesAsk(op); if (!r.ok) return { ok: false, error: r.why }; this.data = { ...this.data, profileState: r.state }; this._persist(); return { ok: true, ...(r.profile ? { profile: r.profile } : {}) }; }
+  listProfiles() {
+    const st = this.data.profileState || {}, info = this._profileInfo(), placed = new Set(Object.values(st.profiles || {}).flatMap(p => p.accounts));
+    if (!st.defaultId || Object.keys(info).some(id => !placed.has(id))) { const c = this._profileChange({ op: 'ensure', accounts: Object.entries(info).map(([id, a]) => ({ id, ...a })), ids: Array.from({ length: Object.keys(info).length + 1 }, () => randomUUID()) }); if (!c.ok) return c; }
+    const s = this.data.profileState; return { ok: true, defaultId: s.defaultId, profiles: Object.values(s.profiles).sort((a, b) => (b.id === s.defaultId) - (a.id === s.defaultId) || a.createdAt - b.createdAt) };
+  }
+  createProfile(name) { this.listProfiles(); return this._profileChange({ op: 'create', id: randomUUID(), name }); }
+  renameProfile(profile, name) { return this._profileChange({ op: 'rename', profile, name }); }
+  setDefaultProfile(profile) { return this._profileChange({ op: 'default', profile }); }
+  deleteProfile(profile) { return this._profileChange({ op: 'delete', profile }); }
+  linkProfileAccount(profile, account) { return this._profileChange({ op: 'link', profile, account, info: this._profileInfo() }); }
+  unlinkProfileAccount(profile, account) { return this._profileChange({ op: 'unlink', profile, account }); }
+  resolveProfile(account, wanted = null) { const l = this.listProfiles(); if (!l.ok) return l; const r = this._profilesAsk({ op: 'resolve', account, wanted }); return r.ok ? { ok: true, profile: r.profile } : { ok: false, error: r.why }; }
+
   /**
    * resolveAccountForDispatch(agentKey, explicit) — the authority guardian
    * asks. Explicit id must exist AND be linked to this agent (never a silent
