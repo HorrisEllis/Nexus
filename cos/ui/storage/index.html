@@ -1,0 +1,27 @@
+<!doctype html>
+<!-- cos/ui/storage/index.html — Settings › Storage and data (SC19 slice a, docs/2026-11-02-cos-console-phasemap.spec).
+     James, 2026-11-22: "first give cos ui a tab for storage and data, like location of nexus, reinstall tools, verifify integrity tools, manage nexus,
+     in the cos ui settings." · shown the preview: "Yes, build it". Reads and acts only through COS's routes and the exe's door. -->
+<html lang="en" data-theme="nexus" data-accent="cycle">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Storage and data · COS</title>
+  <link rel="stylesheet" href="../core/theme.css"><link rel="stylesheet" href="../core/core.css"><link rel="stylesheet" href="page.css">
+</head>
+<body class="cos-page">
+  <div data-refusals></div>
+  <header class="st-hero">
+    <div><h1>Storage and data</h1><p>Where Nexus lives, whether its files are whole, and the tools to repair, reinstall and manage it. Each tool says what it will touch before it runs.</p></div>
+    <div class="st-state" id="state" role="status"><i class="dot"></i><span>reading…</span></div>
+  </header>
+  <p class="st-job" id="job" role="status" hidden></p>
+  <div class="st-grid">
+    <section class="panel"><div class="panel-head"><h2>Location</h2><button class="btn" id="copy">Copy folder path</button></div><div class="panel-body"><div class="st-kv" id="loc"></div><div id="drives"></div></div></section>
+    <section class="panel"><div class="panel-head"><h2>Integrity</h2><button class="btn primary" id="verify">Verify now</button></div><div class="panel-body"><div class="st-counts" id="counts"></div><div id="checks"></div></div></section>
+    <section class="panel"><div class="panel-head"><h2>Repair and reinstall</h2><span class="tag">asks first</span></div><div class="panel-body" id="tools"></div></section>
+    <section class="panel"><div class="panel-head"><h2>Manage Nexus</h2><span class="tag" id="up"></span></div><div class="panel-body"><div id="manage"></div><div class="st-sys" id="sys"></div></div></section>
+    <section class="panel st-wide"><div class="panel-head"><h2>Data by system</h2><span class="tag" id="sz">measuring…</span></div><div class="panel-body"><div class="st-sizes" id="sizes"></div></div></section>
+  </div>
+  <script src="../core/core.js"></script>
+  <script src="page.js"></script>
+</body>
+</html>

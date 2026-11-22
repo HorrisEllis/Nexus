@@ -528,6 +528,45 @@
     },
     {
       "method": "GET",
+      "path": "/api/cos/storage",
+      "out": "{ root, cosRoot, drives, low, integrity: { missing, changed, added, dataMissing, dataChanged, dataAdded, missing_code, sample }, lock, headline, job } \u2014 SC19: is Nexus whole"
+    },
+    {
+      "method": "GET",
+      "path": "/api/cos/storage/sizes",
+      "in": "?again=1",
+      "out": "{ at, measuring, folders: [{ name, bytes }] } \u2014 each system's data, measured and kept on disk"
+    },
+    {
+      "method": "POST",
+      "path": "/api/cos/storage/repair",
+      "in": "{ by, confirm: true }",
+      "out": "202 { job } \u2014 restores only missing code files from HEAD",
+      "personAct": true
+    },
+    {
+      "method": "POST",
+      "path": "/api/cos/storage/dependencies",
+      "in": "{ by, confirm: true }",
+      "out": "202 { job } \u2014 npm install from the lockfile, then the running systems restart",
+      "personAct": true
+    },
+    {
+      "method": "POST",
+      "path": "/api/cos/storage/restart",
+      "in": "{ by, confirm: true }",
+      "out": "202 { job } \u2014 the running systems restart in boot order",
+      "personAct": true
+    },
+    {
+      "method": "POST",
+      "path": "/api/cos/storage/backup",
+      "in": "{ by, confirm: true }",
+      "out": "202 { job } \u2014 a git backup branch with the uncommitted edits, and the data folders as an archive beside Nexus",
+      "personAct": true
+    },
+    {
+      "method": "GET",
       "path": "/api/cos/systems/:name/tree",
       "out": "?in=backend|data &path= \u2014 a folder: { dirs, files: [{ name, bytes, mtime }] }; a file: { file, text | rows, total | withheld }; in=data with no path: { roots: [{ id: own|root, label, about, exists }] } \u2014 a system's whole folder, or its data folders, read-only (SC18)"
     },
@@ -738,13 +777,14 @@
     "cos.desktop.act": "{ at, verb, args, by, why, ok, reason? } \u2014 every act of the desktop driver, or why it was refused (PC9, 2026-11-11)",
     "cos.ledger": "{ entry: SupervisorLedgerEntry } \u2014 every line the supervisor writes, as it is written",
     "cos.system.state": "{ name, state, pid } \u2014 a system's state changed",
-    "cos.usage": "{ usage } — COS's resource sample (every 30 s): the host's CPU and memory and each system's; PR6 slice a, pages listen instead of polling",
+    "cos.usage": "{ usage } \u2014 COS's resource sample (every 30 s): the host's CPU and memory and each system's; PR6 slice a, pages listen instead of polling",
     "cos.ui.navigate": "{ to } \u2014 a page asks the shell to open a route",
     "cos.ui.notice": "{ level, text } \u2014 a page asks the shell to say something",
     "cos.ui.tab": "{ tab } \u2014 the shell tells a cockpit which tab the address names",
     "cos.update": "{ phase: started | refused | none | restarted | restart-failed | updated, mode, ... } \u2014 the update's steps, as they happen (CE2, 2026-11-02)",
     "cos.notice": "{ notice, counts } | { read, counts } \u2014 the bell: a notice kept, or notices read (SC1, 2026-11-02)",
-    "cos.console": "{ lines: [{ system, ts, stream: out | err, line }], dropped? } \u2014 what the systems print, in batches every 200 ms (SC11, 2026-11-05)"
+    "cos.console": "{ lines: [{ system, ts, stream: out | err, line }], dropped? } \u2014 what the systems print, in batches every 200 ms (SC11, 2026-11-05)",
+    "cos.storage": "{ id, tool, by, state: running | done | failed, at, finishedAt?, says? } \u2014 a Storage and data tool as it runs (SC19)"
   },
   "pages": [
     {
@@ -803,8 +843,9 @@
       ],
       "listens": [
         "cos.system.state",
-        "cos.ledger"
-      , "cos.usage"],
+        "cos.ledger",
+        "cos.usage"
+      ],
       "emits": [
         "cos.ui.navigate",
         "cos.ui.notice"
@@ -1109,6 +1150,37 @@
       "tab": 1,
       "tabTitle": "Network",
       "movedTo": "SC7 expanded 2026-11-08 \u2014 James: \"network should move to the settings under a network tab. startup and services tab. \u2026 updates should move to a update tab.\" A tab of Settings now (nav settings); its own route still opens it alone."
+    },
+    {
+      "id": "storage",
+      "title": "Storage and data",
+      "path": "storage/",
+      "route": "#/storage",
+      "nav": "settings",
+      "built": true,
+      "phase": "SC19_storage_the_drives_and_what_fills_them",
+      "routes": [
+        "GET /api/cos/storage",
+        "GET /api/cos/storage/sizes",
+        "POST /api/cos/storage/repair",
+        "POST /api/cos/storage/dependencies",
+        "POST /api/cos/storage/restart",
+        "POST /api/cos/storage/backup",
+        "GET /api/cos/update",
+        "GET /api/cos/update/history",
+        "POST /api/cos/update/rollback",
+        "GET /api/cos/systems"
+      ],
+      "listens": [
+        "cos.storage",
+        "cos.system.state"
+      ],
+      "emits": [
+        "cos.ui.notice"
+      ],
+      "about": "where Nexus lives, whether its files are whole, and the tools to repair, reinstall and manage it",
+      "tab": 4,
+      "tabTitle": "Storage and data"
     },
     {
       "id": "deployments",

@@ -1,0 +1,24 @@
+// cos/sovereign/test/storage.test.eg — is Nexus whole (SC19). eg test cos/sovereign/test/storage.test.eg
+// James, 2026-11-22: "first give cos ui a tab for storage and data, like location of nexus, reinstall tools, verifify integrity tools, manage nexus"
+use "../storage.eg" as S
+
+test "code and data are told apart" {
+  expect S.is_data("data/cortex/a.json") and S.is_data("copilot/data/x") and S.is_data("_archive/a.js") and S.is_data("lib/run.jsonl")
+  expect not S.is_data("lib/data.js") and not S.is_data("cos/manager/server.js")
+}
+
+test "a lost code file is offered for repair; lost data, changes and new files are only counted" {
+  let c = S.read_status([" D lib/a.js", " D data/x/y.json", " M lib/b.js", " M copilot/data/z", "?? lib/new.js", "?? data/n", "D  lib/staged.js"])
+  expect c.missing == 1 and c.missing_code == ["lib/a.js"]
+  expect c.dataMissing == 1 and c.changed == 2 and c.dataChanged == 1 and c.added == 1 and c.dataAdded == 1
+}
+
+test "the headline says the worst thing: a full drive, then missing code, then the lock" {
+  let big = { at: "D:\\", total: 100, free: 50 }
+  let full = { at: "C:\\", total: 100, free: 1 }
+  expect S.verdict({ entries: [], lock_ok: true, drives: [big] }).headline == { level: "ok", says: "Nexus is whole" }
+  expect S.verdict({ entries: [], lock_ok: false, drives: [big] }).headline.says == "Emerge does not match its lock"
+  expect S.verdict({ entries: [" D lib/a.js"], lock_ok: false, drives: [big] }).headline.says == "1 code files missing"
+  let v = S.verdict({ entries: [" D lib/a.js"], lock_ok: true, drives: [big, full] })
+  expect v.headline.level == "warn" and v.low.at == "C:\\" and v.headline.says == "low:C:\\"
+}

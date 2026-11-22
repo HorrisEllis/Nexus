@@ -211,6 +211,37 @@ function createPipeline({ automation, idearium = null, call = null, dataDir } = 
   // rows from data (NEXUS_DATA_ROOT, else <root>/data); markdown: the atlas page as well
   // CA7 slice a (2026-11-13), his "can be moved anbd changed in each systems individual settings": where each system lives and whether it can move
   async function locations({ treeRoot = root, systems = SOV_SYSTEMS } = {}) { return eg('locations', { root: treeRoot, systems }); }
+  // SC19 slice a (2026-11-22) — James: "first give cos ui a tab for storage and data, like location of nexus, reinstall tools, verifify integrity tools,
+  // manage nexus". This door only runs the OS's commands; what they mean is Emerge's (cos/sovereign/storage.eg).
+  const sh = (cmd, args, opts = {}) => new Promise(r => execFile(cmd, args, { cwd: opts.cwd || root, timeout: opts.timeout || 120000, maxBuffer: 64 << 20, windowsHide: true }, (e, o, x) => r({ ok: !e, code: e ? e.code : 0, out: String(o || ''), err: String(x || (e && e.message) || '') })));
+  const gitIn = (treeRoot) => ['-c', `safe.directory=${String(treeRoot).replace(/\\/g, '/')}`, '-c', 'core.quotepath=off'];
+  const driveOf = (p) => { try { const s = fs.statfsSync(p); return { at: path.parse(path.resolve(p)).root, total: s.blocks * s.bsize, free: s.bavail * s.bsize }; } catch (_) { return null; } };
+  async function storageRead({ treeRoot = root, cosRoot = null } = {}) {
+    const [st, lock] = await Promise.all([sh('git', [...gitIn(treeRoot), 'status', '--porcelain', '--no-renames', '-z'], { cwd: treeRoot }), sh(process.execPath, ['scripts/emerge-lock.js', '--check'], { cwd: treeRoot })]);
+    if (!st.ok) return { ok: false, code: 500, error: `git could not read this folder: ${st.err.trim().split('\n').pop()}` };
+    const seen = new Set(), drives = [treeRoot, cosRoot].filter(Boolean).map(driveOf).filter(d => d && !seen.has(d.at) && seen.add(d.at));
+    const v = await eg('storage', { entries: st.out.split('\0').filter(Boolean), lock_ok: lock.ok, lock_says: (lock.out + lock.err).trim().split('\n').pop() || '', drives });
+    return v.ok ? { ...v, root: treeRoot, cosRoot } : { ok: false, code: 500, error: v.error || 'Emerge gave no verdict' };
+  }
+  // restores only what git says the working tree lost, and only code: read again here, never from what a page last saw
+  async function storageRepair({ treeRoot = root } = {}) {
+    const v = await storageRead({ treeRoot }); if (!v.ok) return v;
+    const files = v.integrity.missing_code; if (!files.length) return { ok: true, restored: [] };
+    const r = await new Promise((resolve) => { const c = execFile('git', [...gitIn(treeRoot), 'restore', '--source=HEAD', '--worktree', '--pathspec-from-file=-', '--pathspec-file-nul'], { cwd: treeRoot, windowsHide: true, timeout: 120000 }, (e, o, x) => resolve({ ok: !e, err: String(x || (e && e.message) || '') })); c.stdin.end(files.join('\0')); });
+    return r.ok ? { ok: true, restored: files } : { ok: false, code: 500, error: `git could not restore them: ${r.err.trim().split('\n').pop()}` };
+  }
+  // what each system's data holds: measured on request, kept on disk, one measure at a time
+  const sizesFile = path.join(dataDir, 'storage-sizes.json'); let measuring = null;
+  const bytesIn = async (dir) => { let n = 0; const st = [dir]; while (st.length) { const d = st.pop(); let es = []; try { es = await fs.promises.readdir(d, { withFileTypes: true }); } catch (_) { continue; }
+    for (const e of es) { const p = path.join(d, e.name); if (e.isDirectory()) st.push(p); else if (e.isFile()) { try { n += (await fs.promises.stat(p)).size; } catch (_) {} } } } return n; };
+  function storageSizes({ treeRoot = root, again = false } = {}) {
+    let last = null; try { last = JSON.parse(fs.readFileSync(sizesFile, 'utf8')); } catch (_) {}
+    if (!measuring && (again || !last || Date.now() - last.at > 3600000)) measuring = (async () => { const names = new Set(); try { for (const e of await fs.promises.readdir(path.join(treeRoot, 'data'), { withFileTypes: true })) if (e.isDirectory()) names.add(e.name); } catch (_) {}
+      for (const e of await fs.promises.readdir(treeRoot, { withFileTypes: true })) if (e.isDirectory() && !/^(\.|node_modules$|data$|_archive$)/.test(e.name) && fs.existsSync(path.join(treeRoot, e.name, 'data'))) names.add(e.name);
+      const folders = []; for (const n of names) folders.push({ name: n, bytes: await bytesIn(path.join(treeRoot, 'data', n)) + await bytesIn(path.join(treeRoot, n, 'data')) });
+      folders.sort((a, b) => b.bytes - a.bytes); fs.mkdirSync(dataDir, { recursive: true }); fs.writeFileSync(sizesFile, JSON.stringify({ at: Date.now(), folders })); })().catch(() => {}).finally(() => { measuring = null; });
+    return { ok: true, measuring: !!measuring, ...(last || { at: null, folders: [] }) };
+  }
   async function graphCensus({ treeRoot = root, data = process.env.NEXUS_DATA_ROOT || path.join(root, 'data'), markdown = false } = {}) {
     return eg('graph-census', { root: treeRoot, data, markdown });
   }
@@ -381,7 +412,7 @@ function createPipeline({ automation, idearium = null, call = null, dataDir } = 
     return { ...out, pipeline: id, latestRun: latest ? { id: latest.id, status: latest.status, decisions: latest.decisions || [] } : null };
   }
 
-  return { boxes, gates, runs, frameworks, frameworkStep, decideGate, onEvent, request, resume, retry, ready, sovereign, graphCensus, locations, planPhase, buildNext, sync, sources, fromErv, baseline };
+  return { boxes, gates, runs, frameworks, frameworkStep, decideGate, onEvent, request, resume, retry, ready, sovereign, graphCensus, locations, storageRead, storageRepair, storageSizes, planPhase, buildNext, sync, sources, fromErv, baseline };
 }
 
 module.exports = { createPipeline, MODULE_ID: 'cos.pipeline', VERSION: '1.0.0' };

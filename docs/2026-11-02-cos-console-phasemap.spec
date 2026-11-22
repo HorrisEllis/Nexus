@@ -527,3 +527,23 @@ phases_addendum_2026_11_14_ch:
 # ── ADDENDUM 2026-11-19 (0.60.593) — Open UI: a compartment window, by Clear Glass's own CLI command ──
 # James, 2026-11-19: "okay why is the full browser opening with clearlgass? i said a compartment" · "clearglass is meant to be cli first"
 # Open UI opens a compartment window, by Clear Glass's own command: COS had asked Clear Glass for window.open, which is its full agent browser. Now Clear Glass has the command `compartment open` (POST /cli/compartment/open { name, url, title?, width?, height? }, in its registry, listed by /cli/commands), which opens the page as a compartment window (compartment-window.js openPage): an Idearium page that draws its own title bar frameless, any other page in Clear Glass's glass frame, each system in its own partition (persist:compartment-<name>), one window per system (asked again, focused). Also a bus event compartment.open (gate) for the same act. COS's Open UI calls nexus://clear-glass.cmd/cli/compartment/open. test-compartment-window 5/6 (CW-03 failed before this change, checked). Clear Glass loads it at its next start; COS at its next restart.
+
+# ── ADDENDUM 2026-11-22 (map, before code) — SC19 expanded, slice a: Settings › Storage and data (his; preview approved) ──
+# James, 2026-11-22: "first give cos ui a tab for storage and data, like location of nexus, reinstall tools, verifify integrity tools, manage nexus, in
+# the cos ui settings." Shown the live preview, asked whether to build it: "Yes, build it".
+# Read first (§8.6): Settings' tabs are the contract's pages (nav settings). Updates has the rollback (POST /api/cos/update/rollback) and the git backup
+# (lib/nexus-update.js gitBackup). The exe owns the service (cosStart.setStartup applies it). CA7 slice a has each system's location.
+phases_addendum_2026_11_22_storage:
+  SC19_storage_the_drives_and_what_fills_them:
+    expanded_2026_11_22_a: >-
+      A tab of Settings. Location: Nexus's folder, COS's, the version, GitHub, the service, each drive's free space. Integrity: git's status read in
+      Emerge (cos/sovereign/storage.eg): code files missing, changed, not tracked; data counted apart; Emerge's lock; the last backup. Repair and
+      reinstall: restore missing code files from HEAD (nothing else), npm install from the lockfile then restart the systems, reinstall the service
+      through the exe's door, roll back the last update. Manage: restart Nexus, back up now (a git backup branch with the uncommitted edits as a patch,
+      and the data folders as an archive beside Nexus). Data by system, measured and kept on disk. Each act is a person's (an agent's is a 403), named
+      before it runs, written to COS's ledger; a long one is a job kept on disk and streamed as cos.storage.
+    files_a: [cos/sovereign/storage.eg, cos/sovereign/test/storage.test.eg, cos/pipeline/cli.eg, cos/pipeline/index.js, cos/manager/server.js, cos/manager/contract.json, idearium/cli/route-commands.js, cos/ui/storage/index.html, cos/ui/storage/page.js, cos/ui/storage/page.css]
+    depends_on_a: [SC19_storage_the_drives_and_what_fills_them, SC7_the_updates_section]
+    held_a: "Move Nexus is shown and held, with why: the switch to a new folder is the exe's, and the exe has no door for it yet (CA7 slice b, pinned by him 2026-11-13). Open folder copies the path: the manager runs as a service with no desktop."
+    proof_a: "eg test storage.test.eg; the routes on a real manager: a deleted code file found and restored; an agent refused; the tab on live data in the browser"
+    axioms_a: "§8.6 (update, backup, service door reused), §5.15 (the exe's settings through its door), §1.2 (a held tool says why), §0.3 (repair restores, backup copies, nothing is deleted), §17.13 (the judgment in Emerge; the door runs the OS commands)"

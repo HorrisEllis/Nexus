@@ -7,11 +7,11 @@ intent: null
 summary: SC7_the_updates_section (ui) — 15 file(s)
 system: idearium
 tags: []
-exported_at: 1794626874840
+exported_at: 1795359271874
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794626874840
-lastSeenAt: 1794626874840
+firstSeenAt: 1795359271874
+lastSeenAt: 1795359271874
 fingerprint: null
 payload:
   id: SC7_the_updates_section
@@ -44,4 +44,4 @@ payload:
   blocks:
     - MOD-MG-UI-UPDATES
   spec: cos/spec/cos-console.spec
-  graph: ea2137899903c49f
+  graph: 6535f9bb523074d8

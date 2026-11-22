@@ -1,0 +1,266 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SC7_the_updates_section:6535f9bb523074d8
+type: graph
+id: phase:SC7_the_updates_section:6535f9bb523074d8
+context: dependency graph of phase SC7_the_updates_section
+intent: null
+summary: 35 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1795359271874
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795359271874
+lastSeenAt: 1795359271874
+fingerprint: null
+payload:
+  for: SC7_the_updates_section
+  kind: phase
+  repo: null
+  hash: 6535f9bb523074d8
+  nodes:
+    - path: cos/app/desktop/main.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/app/desktop/starting-preload.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/app/version.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/app/window.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/manager/contract.json
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/spec/cos-console.spec
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/ui/core/core.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/ui/settings/index.html
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/ui/settings/page.css
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/ui/settings/page.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/ui/shell/index.html
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/ui/shell/page.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/ui/startup/index.html
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/ui/startup/page.css
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/ui/startup/page.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/ui/updates/page.js
+      role: changes
+      exists: true
+      system: cos
+    - path: lib/cli/nexus-cli.js
+      role: changes
+      exists: true
+      system: lib
+    - path: run-all.js
+      role: changes
+      exists: true
+      system: null
+    - path: tests/modules/run-all.js
+      role: changes
+      exists: true
+      system: null
+    - path: tests/modules/test-cos-app-window.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: tests/modules/test-cos-console.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: tests/modules/test-cos-settings.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: cos/app/controller.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: tests/modules/cli-copilot-fallback.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-cos-app-build.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-cos-app-self-update.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: copilot/cli.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: cos/app/controller.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/app/git-trust.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/app/install.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/app/logon.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/app/settings.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/app/shell.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/app/store.js
+      role: uses
+      exists: true
+      system: cos
+    - path: lib/test-sandbox.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: cos/app/desktop/main.js
+      to: cos/app/controller.js
+      kind: requires
+    - from: cos/app/desktop/main.js
+      to: cos/app/store.js
+      kind: requires
+    - from: cos/app/desktop/main.js
+      to: cos/app/settings.js
+      kind: requires
+    - from: cos/app/desktop/main.js
+      to: cos/app/shell.js
+      kind: requires
+    - from: cos/app/desktop/main.js
+      to: cos/app/logon.js
+      kind: requires
+    - from: cos/app/desktop/main.js
+      to: cos/app/install.js
+      kind: requires
+    - from: cos/app/desktop/main.js
+      to: cos/app/git-trust.js
+      kind: requires
+    - from: tests/modules/test-cos-settings.test.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: lib/cli/nexus-cli.js
+      to: copilot/cli.js
+      kind: requires
+    - from: cos/app/controller.js
+      to: cos/app/version.js
+      kind: requires
+    - from: tests/modules/test-cos-app-build.test.js
+      to: cos/app/version.js
+      kind: requires
+    - from: tests/modules/test-cos-app-self-update.test.js
+      to: cos/app/version.js
+      kind: requires
+    - from: tests/modules/cli-copilot-fallback.test.js
+      to: lib/cli/nexus-cli.js
+      kind: requires
+  crossings:
+    - from: lib/cli/nexus-cli.js
+      to: copilot/cli.js
+      fromSystem: lib
+      toSystem: copilot
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 6
+    deps:
+      - docs/2026-11-02-cos-console-phasemap.spec::SC1_the_bell
+      - docs/2026-11-02-cos-console-phasemap.spec::SC5_the_console_ui
+      - docs/2026-11-02-cos-console-phasemap.spec::SC14_each_system_opens_in_its_own_window
+    dependents:
+      - docs/2026-11-02-cos-console-phasemap.spec::SC8_the_specs_at_full_depth
+      - docs/2026-11-02-cos-console-phasemap.spec::SC9_the_zip_dropzone_updater
+      - docs/2026-11-02-cos-console-phasemap.spec::SC10_the_zip_history
+      - docs/2026-11-02-cos-console-phasemap.spec::SC19_storage_the_drives_and_what_fills_them
+    upstream:
+      - docs/2026-11-02-cos-console-phasemap.spec::SC11_the_console_tab
+      - docs/2026-11-02-cos-console-phasemap.spec::SC14_each_system_opens_in_its_own_window
+      - docs/2026-11-02-cos-console-phasemap.spec::SC1_the_bell
+      - docs/2026-11-02-cos-console-phasemap.spec::SC2_configuration_per_system
+      - docs/2026-11-02-cos-console-phasemap.spec::SC3_system_command_line
+      - docs/2026-11-02-cos-console-phasemap.spec::SC4_add_a_system
+      - docs/2026-11-02-cos-console-phasemap.spec::SC5_the_console_ui
+      - docs/2026-11-02-cos-console-phasemap.spec::SC_D1_units_and_what_the_os_enforces
+      - docs/2026-11-02-cos-console-phasemap.spec::SC_D2_where_the_configuration_lives
+      - docs/2026-11-02-cos-console-phasemap.spec::SC_D3_ports_are_announced_not_guessed
+      - docs/2026-11-02-cos-console-phasemap.spec::SC_D4_adding_a_system_is_a_proposal
+      - docs/2026-11-02-cos-console-phasemap.spec::SC_D5_cos_has_its_own_command_line
+    downstream:
+      - docs/2026-11-02-cos-console-phasemap.spec::SC10_the_zip_history
+      - docs/2026-11-02-cos-console-phasemap.spec::SC19_storage_the_drives_and_what_fills_them
+      - docs/2026-11-02-cos-console-phasemap.spec::SC20_every_location_a_setting
+      - docs/2026-11-02-cos-console-phasemap.spec::SC21_controlled_access_to_both_drives
+      - docs/2026-11-02-cos-console-phasemap.spec::SC8_the_specs_at_full_depth
+      - docs/2026-11-02-cos-console-phasemap.spec::SC9_the_zip_dropzone_updater
+    blockedBy:
+      - docs/2026-11-02-cos-console-phasemap.spec::SC14_each_system_opens_in_its_own_window
+    unlocks:
+      - docs/2026-11-02-cos-console-phasemap.spec::SC8_the_specs_at_full_depth
+      - docs/2026-11-02-cos-console-phasemap.spec::SC9_the_zip_dropzone_updater
+      - docs/2026-11-02-cos-console-phasemap.spec::SC10_the_zip_history
+      - docs/2026-11-02-cos-console-phasemap.spec::SC19_storage_the_drives_and_what_fills_them
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 6 · blocked by SC14_each_system_opens_in_its_own_window
+      - >-
+        depends on (3): SC1_the_bell, SC5_the_console_ui, SC14_each_system_opens_in_its_own_window ·
+        all upstream 12
+      - >-
+        needed by (4): SC8_the_specs_at_full_depth, SC9_the_zip_dropzone_updater,
+        SC10_the_zip_history, SC19_storage_the_drives_and_what_fills_them · all downstream 6 ·
+        finishing it unlocks SC8_the_specs_at_full_depth, SC9_the_zip_dropzone_updater,
+        SC10_the_zip_history, SC19_storage_the_drives_and_what_fills_them
+    edges:
+      - from: docs/2026-11-02-cos-console-phasemap.spec::SC1_the_bell
+        kind: declared
+      - from: docs/2026-11-02-cos-console-phasemap.spec::SC5_the_console_ui
+        kind: declared
+      - from: docs/2026-11-02-cos-console-phasemap.spec::SC14_each_system_opens_in_its_own_window
+        kind: inferred

@@ -1,0 +1,74 @@
+// cos/sovereign/storage.eg — is Nexus whole: its files read from git, each named code or data (SC19, docs/2026-11-02-cos-console-phasemap.spec)
+// James, 2026-11-22: "first give cos ui a tab for storage and data, like location of nexus, reinstall tools, verifify integrity tools, manage
+// nexus, in the cos ui settings."
+//
+//   verdict({ entries, lock_ok, lock_says, drives }) → { ok, integrity, lock, drives, low, headline }
+//
+// entries: `git status --porcelain --no-renames -z`, one "XY path" each. A file the working tree lost (Y is D) is missing; only a code file is
+// ever offered for repair, so data, which is meant to change, is counted and left alone. drives: [{ at, total, free }].
+
+let DATA_FOLDERS = ["data", "_archive", "log", "logs"]
+let LOW_DRIVE = 0.05
+
+fn is_data(f: string): bool {
+  let parts = split(f, "/")
+  var i = 0
+  while i < len(parts) - 1 {
+    if index_of(DATA_FOLDERS, parts[i]) >= 0 { return true }
+    i += 1
+  }
+  return f ends_with ".jsonl" or f ends_with ".ndjson" or f ends_with ".log"
+}
+
+fn read_status(entries: list): map {
+  var c = { missing: 0, changed: 0, added: 0, dataMissing: 0, dataChanged: 0, dataAdded: 0 }
+  var lost = []
+  var sample = []
+  for e in entries {
+    if len(e) > 3 {
+      let x = slice(e, 0, 2)
+      let f = slice(e, 3)
+      let data = is_data(f)
+      if x == "??" {
+        if data { c.dataAdded += 1 } else { c.added += 1 }
+      } else if slice(x, 1, 2) == "D" {
+        if data { c.dataMissing += 1 } else {
+          c.missing += 1
+          lost = push(lost, f)
+          if len(sample) < 8 { sample = push(sample, "missing " + f) }
+        }
+      } else {
+        if data { c.dataChanged += 1 } else {
+          c.changed += 1
+          if len(sample) < 8 { sample = push(sample, "changed " + f) }
+        }
+      }
+    }
+  }
+  c["missing_code"] = lost
+  c["sample"] = sample
+  return c
+}
+
+fn low_drive(drives: list): any {
+  var low = null
+  for d in drives {
+    if d.total > 0 and d.free / d.total < LOW_DRIVE {
+      if low == null or d.free < low.free { low = d }
+    }
+  }
+  return low
+}
+
+fn verdict(q: map): map {
+  let c = read_status(get(q, "entries", []))
+  let drives = get(q, "drives", [])
+  let low = low_drive(drives)
+  let lock_ok = get(q, "lock_ok", false)
+  var level = "ok"
+  var says = "Nexus is whole"
+  if not lock_ok { level = "warn"; says = "Emerge does not match its lock" }
+  if c.missing > 0 { level = "warn"; says = str(c.missing) + " code files missing" }
+  if low != null { level = "warn"; says = "low:" + low.at }
+  return { ok: true, integrity: c, lock: { ok: lock_ok, says: get(q, "lock_says", "") }, drives: drives, low: low, headline: { level: level, says: says } }
+}

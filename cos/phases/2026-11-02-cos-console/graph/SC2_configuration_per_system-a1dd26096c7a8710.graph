@@ -7,11 +7,11 @@ intent: null
 summary: 18 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1794626874797
+exported_at: 1795359271819
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794626874797
-lastSeenAt: 1794626874797
+firstSeenAt: 1795359271819
+lastSeenAt: 1795359271819
 fingerprint: null
 payload:
   for: SC2_configuration_per_system
@@ -153,6 +153,9 @@ payload:
       - docs/2026-11-02-cos-console-phasemap.spec::SC14_each_system_opens_in_its_own_window
       - docs/2026-11-02-cos-console-phasemap.spec::SC15_nexus_cli_in_the_console
       - docs/2026-11-02-cos-console-phasemap.spec::SC16_no_console_windows
+      - docs/2026-11-02-cos-console-phasemap.spec::SC19_storage_the_drives_and_what_fills_them
+      - docs/2026-11-02-cos-console-phasemap.spec::SC20_every_location_a_setting
+      - docs/2026-11-02-cos-console-phasemap.spec::SC21_controlled_access_to_both_drives
       - docs/2026-11-02-cos-console-phasemap.spec::SC3_system_command_line
       - docs/2026-11-02-cos-console-phasemap.spec::SC5_the_console_ui
       - docs/2026-11-02-cos-console-phasemap.spec::SC7_the_updates_section
@@ -172,7 +175,7 @@ payload:
         SC_D3_ports_are_announced_not_guessed
       - >-
         needed by (3): SC3_system_command_line, SC5_the_console_ui, SC12_start_at_boot_each_system ·
-        all downstream 13 · finishing it unlocks SC3_system_command_line, SC5_the_console_ui,
+        all downstream 16 · finishing it unlocks SC3_system_command_line, SC5_the_console_ui,
         SC12_start_at_boot_each_system
     edges:
       - from: docs/2026-11-02-cos-console-phasemap.spec::SC_D1_units_and_what_the_os_enforces

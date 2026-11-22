@@ -272,6 +272,38 @@ function createServer(sup, opts = {}) {
       // CA7 slice a (2026-11-13) — James: "should be a first time setup wizard, storage location of each system/nexus" · "second one, can be moved anbd
       // changed in each systems individual settings." Where each system lives, whether it can be moved, and what holds it if not (cos/sovereign/location.eg);
       // one system's answer adds its folder on this machine and its size on disk (files under it, node_modules included: that moves too)
+      // SC19 slice a (2026-11-22) — James: "first give cos ui a tab for storage and data, like location of nexus, reinstall tools, verifify integrity tools,
+      // manage nexus". Reads are open; each act is a person's, confirmed, on the ledger; a long one is a job kept on disk and streamed as cos.storage.
+      if (p.startsWith('/api/cos/storage')) {
+        const cosRoot = process.env.COS_APP_ROOT || null, jobFile = path.join(process.env.COS_MANAGER_DATA || path.join(root, 'cos', 'data', 'manager'), 'storage-job.json');
+        const readJob = () => { try { return JSON.parse(require('fs').readFileSync(jobFile, 'utf8')); } catch (_) { return null; } };
+        const keepJob = (j) => { require('fs').mkdirSync(path.dirname(jobFile), { recursive: true }); require('fs').writeFileSync(jobFile, JSON.stringify(j)); broadcast('cos.storage', j); };
+        if (m === 'GET' && p === '/api/cos/storage') { const r = await pipeline.storageRead({ treeRoot: root, cosRoot }); return send(res, r.ok ? 200 : (r.code || 500), { ...r, job: readJob() }); }
+        if (m === 'GET' && p === '/api/cos/storage/sizes') return send(res, 200, pipeline.storageSizes({ treeRoot: root, again: u.searchParams.get('again') === '1' }));
+        const act = /^\/api\/cos\/storage\/(repair|dependencies|restart|backup)$/.exec(p);
+        if (!act || m !== 'POST') return send(res, 404, { ok: false, error: `no storage route ${m} ${p}` });
+        if (!body.by) return send(res, 400, { ok: false, error: 'say who acts: { "by": "person" }' });
+        if (/^agent:/.test(String(body.by))) return send(res, 403, { ok: false, error: 'an agent proposes; this is a person\'s act' });
+        if (body.confirm !== true) return send(res, 400, { ok: false, needsConfirm: true, error: 'this changes Nexus: pass confirm:true once the person has said yes' });
+        const was = readJob(); if (was && was.state === 'running' && Date.now() - was.at < 3600000) return send(res, 409, { ok: false, error: `${was.tool} is still running` });
+        const tool = act[1], job = { id: require('crypto').randomUUID(), tool, by: body.by, state: 'running', at: Date.now() };
+        if (!sup.note('storage', `${tool} started`, { by: body.by })) return send(res, 500, { ok: false, error: 'the ledger cannot be written: nothing was done' });
+        keepJob(job); send(res, 202, { ok: true, job });
+        const cp = require('child_process'), restartAll = async () => { const names = sup.list().filter(v => v.state === 'up').sort((a, b) => (a.bootPhase || 0) - (b.bootPhase || 0)).map(v => v.name); for (const n of names) { sup.restart(n, { by: body.by }); await new Promise(z => setTimeout(z, 2500)); } return names; };
+        const shell = (line, cwd, timeout) => new Promise(z => cp.exec(line, { cwd, timeout, maxBuffer: 16 << 20, windowsHide: true }, (e, o, x) => z({ ok: !e, say: String(x || o || (e && e.message) || '').trim().split('\n').pop() })));
+        (async () => {
+          if (tool === 'repair') { const r = await pipeline.storageRepair({ treeRoot: root }); if (!r.ok) throw new Error(r.error); return { says: r.restored.length ? `${r.restored.length} code files restored` : 'no code file was missing', restored: r.restored }; }
+          if (tool === 'dependencies') { const r = await shell('npm install --no-audit --no-fund', root, 900000); if (!r.ok) throw new Error(`npm install failed: ${r.say}`); const names = await restartAll(); return { says: `dependencies installed; ${names.length} systems restarted` }; }
+          if (tool === 'restart') { const names = await restartAll(); return { says: `${names.length} systems restarted` }; }
+          const b = require(path.join(root, 'lib/nexus-update.js')).gitBackup({ root, why: 'Settings › Storage and data' }); if (!b.ok) throw new Error(b.error);
+          const fsx = require('fs'), stamp = new Date().toISOString().replace(/[:.]/g, '-'), dir = path.join(path.dirname(root), 'nexus-backups', stamp), folders = fsx.readdirSync(root, { withFileTypes: true }).filter(e => e.isDirectory() && !/^(\.|node_modules$|_archive$)/.test(e.name)).map(e => e.name === 'data' ? 'data' : `${e.name}/data`).filter(f => fsx.existsSync(path.join(root, f)));
+          fsx.mkdirSync(dir, { recursive: true }); const tar = await new Promise(z => cp.execFile('tar', ['-czf', 'data.tgz', '-C', root, ...folders], { cwd: dir, timeout: 3600000, windowsHide: true, maxBuffer: 16 << 20 }, (e, o, x) => z({ code: e ? e.code : 0, say: String(x || '').trim().split('\n').pop() })));
+          const size = (() => { try { return fsx.statSync(path.join(dir, 'data.tgz')).size; } catch (_) { return 0; } })(); if (!size || (tar.code !== 0 && tar.code !== 1)) throw new Error(`the data archive failed: ${tar.say}`);
+          return { says: `backed up: code on ${b.branch}, data in ${dir}`, branch: b.branch, dir, bytes: size };
+        })().then(r => { const d = { ...job, state: 'done', finishedAt: Date.now(), ...r }; keepJob(d); sup.note('storage', `${tool}: ${r.says}`, { by: body.by }); })
+          .catch(e => { keepJob({ ...job, state: 'failed', finishedAt: Date.now(), says: e.message }); sup.note('storage', `${tool} failed: ${e.message}`, { by: body.by }); });
+        return;
+      }
       if (m === 'GET' && p === '/api/cos/locations') { const r = await pipeline.locations(); return send(res, r.ok ? 200 : (r.code || 500), { ...r, root, cosRoot: process.env.COS_APP_ROOT || null }); }
       // SC18 (0.60.545) — James, 2026-11-15, of a system's cockpit: "data per system needs to be the data folders, or setup when creating a new system.
       // also the files tab needs to be each systems entire compartment backend." Both tabs read the system's own folders through this route (the old
