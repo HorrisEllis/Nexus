@@ -274,7 +274,7 @@ phases_addendum_2026_11_22:
     status: OPEN
     depends_on: [AC_D6_clear_glass_owns_it]
     james: '"i just clearglass to have one source of truth for cookies and accounts, hooked into the profiles" · "yes clearglass." (2026-11-22)'
-    files: [clear-glass/src/profiles/profiles.eg, clear-glass/src/profiles/main.eg, clear-glass/src/profiles/test/profiles.test.eg, clear-glass/src/options/store.js, clear-glass/src/main/index.js, idearium/cli/route-commands.js]
+    files: [clear-glass/src/profiles/profiles.eg, clear-glass/src/profiles/built, clear-glass/src/profiles/test/profiles.test.eg, clear-glass/src/options/store.js, clear-glass/src/main/index.js, idearium/cli/route-commands.js]
     does: >-
       Slice a: a profile is a record with an id, one jar and its accounts. The rules are Emerge's (profiles.eg); Clear Glass's account store keeps the
       answer; routes /profiles. On first read every account is placed: in Default (the normal session), or in its own profile when Default already holds
@@ -283,3 +283,8 @@ phases_addendum_2026_11_22:
       profile id, and the other account lists read Clear Glass's.
     proof: "a: eg test; the store and routes on a throwaway store; c: on his machine, every signed-in provider still signed in after the move"
     axioms: "§10.3 one truth per kind of data, §5.15 one owner, §0.3 old jars kept, §8.6 his account store and per-account tabs reused"
+# ADDENDUM 2026-11-22 (0.60.636) — AC10: James: "okay profiles are in clearglass. no coupline". The first slice started Emerge's toolchain from Emerge's folder at run time.
+# Now the rules are compiled once (eg build --standalone) into clear-glass/src/profiles/built and run in Clear Glass's own process: no other system's folder is read,
+# Emerge may be absent. Rebuild after changing profiles.eg. Other systems reach profiles only through Clear Glass's /profiles routes.
+# Found the same day, read from its store (counts only): on 2026-11-20 at 13:17 a Clear Glass process wrote its defaults over the store: accounts 8→0, listeners 1→0, shortcuts 2→0.
+# The last good copy (2026-11-18, 8 accounts) is still in the store's journal. Not restored yet: his yes first.

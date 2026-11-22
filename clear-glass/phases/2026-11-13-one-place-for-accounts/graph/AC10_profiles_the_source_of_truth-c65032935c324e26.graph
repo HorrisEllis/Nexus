@@ -1,0 +1,235 @@
+envelope: 1
+uuid: nexus-export-graph-phase:AC10_profiles_the_source_of_truth:c65032935c324e26
+type: graph
+id: phase:AC10_profiles_the_source_of_truth:c65032935c324e26
+context: dependency graph of phase AC10_profiles_the_source_of_truth
+intent: null
+summary: 29 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1795361896855
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795361896855
+lastSeenAt: 1795361896855
+fingerprint: null
+payload:
+  for: AC10_profiles_the_source_of_truth
+  kind: phase
+  repo: null
+  hash: c65032935c324e26
+  nodes:
+    - path: clear-glass/src/main/index.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/options/store.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/profiles/profiles.eg
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/profiles/test/profiles.test.eg
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: idearium/cli/route-commands.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: clear-glass/src/driver/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/ipc/bridge.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.pre-userscripts.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/mesh/agent-mesh.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: diagnostic/tests/causality.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/cli/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: tests/modules/clear-glass-accounts.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/clear-glass-eros-autostart.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/nexus-options-autoboot.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-cg-agent-doors.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-eros-hooks.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: clear-glass/src/main/compartment-window.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/window-frame.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/page/element-gate.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/profiles/built/_emerge/lang/runtime.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/profiles/built/profiles.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/shortcuts/registry.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/shortcuts/site-keys.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/site-settings/readers.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/storage/jaa.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/toolbar/commands.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/versionium-record.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: clear-glass/src/options/store.js
+      to: clear-glass/src/storage/jaa.js
+      kind: requires
+    - from: clear-glass/src/options/store.js
+      to: clear-glass/src/toolbar/commands.js
+      kind: requires
+    - from: clear-glass/src/options/store.js
+      to: lib/versionium-record.js
+      kind: requires
+    - from: clear-glass/src/options/store.js
+      to: clear-glass/src/profiles/built/profiles.js
+      kind: requires
+    - from: clear-glass/src/options/store.js
+      to: clear-glass/src/profiles/built/_emerge/lang/runtime.js
+      kind: requires
+    - from: clear-glass/src/options/store.js
+      to: clear-glass/src/shortcuts/registry.js
+      kind: requires
+    - from: clear-glass/src/options/store.js
+      to: clear-glass/src/shortcuts/site-keys.js
+      kind: requires
+    - from: clear-glass/src/options/store.js
+      to: clear-glass/src/page/element-gate.js
+      kind: requires
+    - from: clear-glass/src/options/store.js
+      to: clear-glass/src/site-settings/readers.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: lib/data-home.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/main/compartment-window.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/main/window-frame.js
+      kind: requires
+    - from: clear-glass/src/main/index.pre-userscripts.js
+      to: clear-glass/src/options/store.js
+      kind: requires
+    - from: tests/modules/clear-glass-accounts.test.js
+      to: clear-glass/src/options/store.js
+      kind: requires
+    - from: tests/modules/clear-glass-eros-autostart.test.js
+      to: clear-glass/src/options/store.js
+      kind: requires
+    - from: tests/modules/nexus-options-autoboot.test.js
+      to: clear-glass/src/options/store.js
+      kind: requires
+    - from: tests/modules/test-eros-hooks.test.js
+      to: clear-glass/src/options/store.js
+      kind: requires
+    - from: clear-glass/src/driver/index.js
+      to: clear-glass/src/main/index.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/main/index.js
+      kind: requires
+    - from: clear-glass/src/mesh/agent-mesh.js
+      to: clear-glass/src/main/index.js
+      kind: requires
+    - from: diagnostic/tests/causality.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: idearium/cli/index.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-cg-agent-doors.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts:
+      - with: docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC1_the_vault_as_a_library
+        files:
+          - idearium/cli/route-commands.js
+    dangling:
+      - AC_D6_clear_glass_owns_it
+    lines:
+      - layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+      - 'DANGLING depends_on: AC_D6_clear_glass_owns_it'
+      - >-
+        same files as AC1_the_vault_as_a_library with no order between them:
+        idearium/cli/route-commands.js
+    edges: []

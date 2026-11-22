@@ -212,6 +212,8 @@ const DEFAULTS = {
   accountDefaults: {},
 };
 
+let _profileRules = null;   // AC10: Clear Glass's own compiled copy, loaded on first use
+
 class NexusOptions {
   constructor() {
     this.data = { ...DEFAULTS };
@@ -446,14 +448,13 @@ class NexusOptions {
   }
 
   // AC10 (2026-11-22) — James: "i just clearglass to have one source of truth for cookies and accounts, hooked into the profiles". What a change means is
-  // Emerge's (src/profiles/profiles.eg); this keeps the answer, beside the accounts it points at. No cookie moves here.
+  // written in Emerge (src/profiles/profiles.eg) and compiled into Clear Glass (src/profiles/built): his "no coupline", nothing outside this system is reached.
   _profilesAsk(op) {
-    const os = require('os'), { execFileSync } = require('child_process'), f = path.join(os.tmpdir(), `cg-profiles-${process.pid}-${randomUUID()}.json`);
-    fs.writeFileSync(f, JSON.stringify({ state: this.data.profileState || {}, op: { now: Date.now(), ...op } }));
-    try { const out = execFileSync(process.execPath, [path.join(__dirname, '..', '..', '..', 'emerge', 'emerge', 'lang', 'eg.js'), 'run', path.join(__dirname, '..', 'profiles', 'main.eg'), f], { encoding: 'utf8', timeout: 20000, windowsHide: true, env: { ...process.env, ELECTRON_RUN_AS_NODE: '1' } });
-      return JSON.parse(out.trim().split('\n').pop()); }
-    catch (e) { return { ok: false, why: `Emerge did not answer: ${String(e.stderr || e.message).trim().split('\n').pop()}` }; }
-    finally { try { fs.unlinkSync(f); } catch (_) {} }
+    try {
+      if (!_profileRules) { const load = require('../profiles/built/profiles.js'), { createRuntime } = require('../profiles/built/_emerge/lang/runtime.js'); _profileRules = load(createRuntime({ file: 'profiles.eg' })); }
+      const o = { now: Date.now(), ...op }, st = this.data.profileState || {};
+      return JSON.parse(JSON.stringify(o.op === 'resolve' ? { ok: true, profile: _profileRules.resolve(st, String(o.account), o.wanted ?? null) } : _profileRules.apply(st, o)));
+    } catch (e) { return { ok: false, why: `the profile rules failed: ${e.message}` }; }
   }
   _profileInfo() { return Object.fromEntries(this.listAccounts().map(a => [a.id, { label: a.label, providers: [...new Set([...(a.agentKeys || []), ...Object.keys(a.providerAccounts || {})])] }])); }
   _profileChange(op) { const r = this._profilesAsk(op); if (!r.ok) return { ok: false, error: r.why }; this.data = { ...this.data, profileState: r.state }; this._persist(); return { ok: true, ...(r.profile ? { profile: r.profile } : {}) }; }
