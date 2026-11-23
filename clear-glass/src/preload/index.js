@@ -226,7 +226,7 @@ contextBridge.exposeInMainWorld('ClearGlass', {
     a11yOpenControl: (wcId, n)         => ipcRenderer.invoke('site-profile:a11yOpenControl', { wcId, n }),
   },
 
-  profiles: { list: () => ipcRenderer.invoke('profiles:list'), create: (name) => ipcRenderer.invoke('profiles:create', { name }), rename: (id, name) => ipcRenderer.invoke('profiles:rename', { id, name }), setDefault: (id) => ipcRenderer.invoke('profiles:setDefault', { id }), delete: (id) => ipcRenderer.invoke('profiles:delete', { id }), link: (id, account) => ipcRenderer.invoke('profiles:link', { id, account }), unlink: (id, account) => ipcRenderer.invoke('profiles:unlink', { id, account }) },   // AC10 slice b
+  profiles: { logins: (id) => ipcRenderer.invoke('profiles:logins', { id }), signOut: (id, site) => ipcRenderer.invoke('profiles:signOut', { id, site }), list: () => ipcRenderer.invoke('profiles:list'), create: (name) => ipcRenderer.invoke('profiles:create', { name }), rename: (id, name) => ipcRenderer.invoke('profiles:rename', { id, name }), setDefault: (id) => ipcRenderer.invoke('profiles:setDefault', { id }), delete: (id) => ipcRenderer.invoke('profiles:delete', { id }), link: (id, account) => ipcRenderer.invoke('profiles:link', { id, account }), unlink: (id, account) => ipcRenderer.invoke('profiles:unlink', { id, account }) },   // AC10 slice b
 
   // ── Accounts (real, per-agentKey identity — §PHASE-3 2026-08-23) ──────
   accounts: {

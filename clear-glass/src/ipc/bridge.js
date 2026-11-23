@@ -1758,6 +1758,8 @@ class IpcBridge {
     ipcMain.handle('accounts:delete',     async (e, d) => this.options?.deleteAccount(d.id));
     ipcMain.handle('accounts:linkAgent',  async (e, d) => this.options?.linkAgent(d.id, d.agentKey));
     ipcMain.handle('accounts:unlinkAgent',async (e, d) => this.options?.unlinkAgent(d.id, d.agentKey));
+    ipcMain.handle('profiles:logins', async (e, d = {}) => _profileLogins(this, d.id));
+    ipcMain.handle('profiles:signOut', async (e, d = {}) => _profileSignOut(this, d.id, d.site));
     for (const [ch, run] of Object.entries({ list: (o) => o.listProfiles(), create: (o, d) => o.createProfile(d.name), rename: (o, d) => o.renameProfile(d.id, d.name), setDefault: (o, d) => o.setDefaultProfile(d.id), delete: (o, d) => o.deleteProfile(d.id), link: (o, d) => o.linkProfileAccount(d.id, d.account), unlink: (o, d) => o.unlinkProfileAccount(d.id, d.account) })) ipcMain.handle(`profiles:${ch}`, async (e, d = {}) => (this.options ? run(this.options, d) : { ok: false, error: 'options not ready' }));   // AC10 slice b
     // §BUILT 2026-09-19 — James: "account manager with account ids for
     // providers," then "library ui." Real backend (options/store.js)
@@ -3739,5 +3741,28 @@ function gigChecks(driver, agentId) {
   };
 }
 
+
+// AC10 logins (2026-11-22) — James: "Now all of the rest of them. You know... like an actual browser." · "I didn't say account providers. I said logins."
+// Reads cookie names and domains from the profile's own jar; a cookie value never leaves this function.
+const _profileJar = (p) => (p.partition === 'default' ? session.defaultSession : session.fromPartition(p.partition));
+async function _profileLogins(b, id) {
+  if (!b.options) return { ok: false, error: 'options not ready' };
+  const l = b.options.listProfiles(); if (!l.ok) return l;
+  const p = l.profiles.find((x) => x.id === id); if (!p) return { ok: false, error: `no profile ${id}` };
+  const { siteOf, isAuthCookie } = require('../cookies/session-hub');
+  const cookies = (await _profileJar(p).cookies.get({})).map((c) => ({ site: siteOf(c.domain), name: c.name, auth: isAuthCookie(c) }));
+  const passwords = (b.passwordVault?.list() || []).map((e) => { let host = e.origin; try { host = new URL(e.origin).hostname; } catch (_) { /* an origin that is not a url is its own site */ } return { id: e.id, site: siteOf(host), username: e.username, accountId: e.accountId || null }; });
+  return b.options.profileLogins(p, p.id === l.defaultId, cookies, passwords);
+}
+async function _profileSignOut(b, id, site) {
+  const r = await _profileLogins(b, id); if (!r.ok) return r;
+  if (!r.logins.some((x) => x.site === site && x.signedIn)) return { ok: false, error: `not signed in to ${site} in this profile` };
+  const p = b.options.listProfiles().profiles.find((x) => x.id === id), jar = _profileJar(p), { siteOf } = require('../cookies/session-hub'), { cookieSetArgs } = require('../cookies/vault');
+  let removed = 0, failed = 0;
+  for (const c of (await jar.cookies.get({})).filter((x) => siteOf(x.domain) === site)) { try { await jar.cookies.remove(cookieSetArgs(c).url, c.name); removed++; } catch (_) { failed++; } }
+  return failed ? { ok: false, error: `${failed} cookies for ${site} could not be removed`, removed } : { ok: true, site, removed };
+}
+IpcBridge.profileLogins = _profileLogins;
+IpcBridge.profileSignOut = _profileSignOut;
 
 module.exports = IpcBridge;

@@ -126,6 +126,45 @@ fn apply(st: map, op: map): map {
   return { ok: false, why: "no such change: " + str(kind) }
 }
 
+/** does this cookie name look like a sign-in on any site? Names only: a value never reaches this file */
+fn signs_in(name: string): any {
+  let n = lower(name)
+  for x in ["csrf", "callback", "nonce", "consent", "test", "analytics", "theme", "locale", "device", "tracking", "_ga"] { if n contains x { return false } }
+  for x in ["session", "auth", "token", "jwt", "login", "logged", "psid"] { if n contains x { return true } }
+  return index_of(["sid", "ssid", "sapisid", "c_user", "xs", "li_at", "sso", "_puid"], n) >= 0
+}
+
+/**
+ * every login in this profile, like a browser's list: each site with a sign-in cookie in its jar or a saved password.
+ * James Brooks, 2026-11-22: "Now all of the rest of them. You know... like an actual browser." · "I didn't say account providers. I said logins."
+ * A password belongs to its account's profile; one with no account belongs to the default profile.
+ */
+fn logins(p: map, is_default: any, cookies: list, passwords: list): list {
+  var sites = {}
+  for c in cookies {
+    var s = clone(get(sites, c.site, { site: c.site, signedIn: false, cookies: 0, signIns: 0, passwords: [] }))
+    s.cookies = s.cookies + 1
+    if get(c, "auth", false) or signs_in(str(get(c, "name", ""))) {
+      s.signedIn = true
+      s.signIns = s.signIns + 1
+    }
+    sites[c.site] = s
+  }
+  for w in passwords {
+    let acc = get(w, "accountId", null)
+    if (acc == null and is_default) or (acc != null and index_of(p.accounts, acc) >= 0) {
+      var s = clone(get(sites, w.site, { site: w.site, signedIn: false, cookies: 0, signIns: 0, passwords: [] }))
+      s.passwords = push(s.passwords, { id: w.id, username: w.username })
+      sites[w.site] = s
+    }
+  }
+  var out = []
+  for k in sort(keys(sites)) {
+    if sites[k].signedIn or len(sites[k].passwords) > 0 { out = push(out, sites[k]) }
+  }
+  return out
+}
+
 fn resolve(st: map, account: string, wanted: any): any {
   let ps = get(st, "profiles", {})
   if wanted != null and has(ps, wanted) and index_of(ps[wanted].accounts, account) >= 0 { return ps[wanted] }

@@ -55,3 +55,13 @@ test "a job runs in the profile asked for when it holds the account, else the de
   expect P.resolve(s, "c", null).id == "p2"
   expect P.resolve(s, "ghost", null) == null
 }
+
+test "logins: every signed-in site and saved password, not every site with a cookie" {
+  let p = { accounts: ["a"] }
+  let cookies = [{ site: "proton.me", name: "AUTH-1" }, { site: "fiverr.com", name: "logged_in" }, { site: "ads.com", name: "_ga_x" }, { site: "news.com", name: "theme" }, { site: "site.com", name: "csrf-token" }, { site: "facebook.com", name: "c_user" }]
+  let pw = [{ id: "1", site: "chatgpt.com", username: "u", accountId: null }, { id: "2", site: "proton.me", username: "v", accountId: "a" }, { id: "3", site: "other.com", username: "w", accountId: "zz" }]
+  let l = P.logins(p, true, cookies, pw)
+  expect map(l, fn(x) = x.site) == ["chatgpt.com", "facebook.com", "fiverr.com", "proton.me"]
+  expect l[3].signedIn and l[3].passwords[0].username == "v" and not l[0].signedIn
+  expect map(P.logins(p, false, [], pw), fn(x) = x.site) == ["proton.me"]
+}

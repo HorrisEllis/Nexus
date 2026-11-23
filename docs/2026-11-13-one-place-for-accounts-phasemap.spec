@@ -294,3 +294,7 @@ phases_addendum_2026_11_22:
 # The coder repeated the fault on 2026-11-22: running tests/modules/clear-glass-accounts.test.js twice added 11 test accounts to his real store. Found within minutes; the restore removed them.
 # Fixed: a test process cannot open the real Clear Glass store or import its legacy file (src/storage/jaa.js), and a store that was never read cannot save over what is on disk (src/options/store.js).
 # Restored from the last record before the wipe: accounts 8, listeners 1, shortcuts 2. Backup: %APPDATA%/.clear-glass/backups/options-before-restore-2026-11-22. Not restored: other settings that test removed (url bar sizes, pinned and disabled plugins, chatCapture, floatCli, netPolicy); his call.
+# ADDENDUM 2026-11-22 (0.60.638) — AC10, Logins. James, 2026-11-22: "Now all of the rest of them. You know... like an actual browser." · "I didn’t say account providers. I said logins."
+# Each profile lists every site with a sign-in cookie in its jar or a saved password, with a sign-out per site. The rule is logins()/signs_in() in src/profiles/profiles.eg (names only, compiled into src/profiles/built).
+# Door: IPC profiles:logins, profiles:signOut; routes GET /profiles/:id/logins, DELETE /profiles/:id/logins/:site (a person's only); command clear-glass.profile-logins.
+# Limits: sign-in is judged from cookie names, so a listed site may be expired and an unusual one may be missed. Passwords are not created: only what the vault holds is shown. Sign-out on a provider's site also reaches its provider tab through the session hub.

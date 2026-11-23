@@ -479,6 +479,7 @@ class NexusOptions {
   deleteProfile(profile) { return this._profileChange({ op: 'delete', profile }); }
   linkProfileAccount(profile, account) { return this._profileChange({ op: 'link', profile, account, info: this._profileInfo() }); }
   unlinkProfileAccount(profile, account) { return this._profileChange({ op: 'unlink', profile, account }); }
+  profileLogins(p, isDefault, cookies, passwords) { try { this._profilesAsk({ op: 'none' }); return { ok: true, profile: p.id, logins: JSON.parse(JSON.stringify(_profileRules.logins(p, !!isDefault, cookies, passwords))) }; } catch (e) { return { ok: false, error: `the login list failed: ${e.message}` }; } }
   resolveProfile(account, wanted = null) { const l = this.listProfiles(); if (!l.ok) return l; const r = this._profilesAsk({ op: 'resolve', account, wanted }); return r.ok ? { ok: true, profile: r.profile } : { ok: false, error: r.why }; }
 
   /**

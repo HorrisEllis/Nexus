@@ -1932,6 +1932,8 @@ async function bootstrap() {
     ipcBridge.app.delete('/profiles/:id', (req, res) => _profileAct(req, res, () => nexusOptions.deleteProfile(req.params.id)));
     ipcBridge.app.post('/profiles/:id/accounts/:account', (req, res) => _profileAct(req, res, () => nexusOptions.linkProfileAccount(req.params.id, req.params.account)));
     ipcBridge.app.delete('/profiles/:id/accounts/:account', (req, res) => _profileAct(req, res, () => nexusOptions.unlinkProfileAccount(req.params.id, req.params.account)));
+    ipcBridge.app.get('/profiles/:id/logins', async (req, res) => _profileSend(res, await ipcBridge.constructor.profileLogins(ipcBridge, req.params.id)));
+    ipcBridge.app.delete('/profiles/:id/logins/:site', async (req, res) => { if (/^agent:/.test(String((req.body && req.body.by) || ''))) return res.status(403).json({ ok: false, error: 'an agent proposes; a sign-out is a person\'s' }); _profileSend(res, await ipcBridge.constructor.profileSignOut(ipcBridge, req.params.id, req.params.site)); });
     ipcBridge.app.get('/accounts', (req, res) => res.json({ ok: true, accounts: nexusOptions.listAccounts().map(a => ({ id: a.id, label: a.label, agentKeys: a.agentKeys, providers: Object.keys(a.providerAccounts || {}) })), defaults: nexusOptions.get().accountDefaults || {} }));
     ipcBridge.app.post('/compartment/set-active', (req, res) => {
       try {

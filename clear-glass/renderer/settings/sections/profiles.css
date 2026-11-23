@@ -6,6 +6,7 @@ body[data-area="profiles"] .pf-item:hover { background: color-mix(in srgb, var(-
 body[data-area="profiles"] .pf-item.on { background: color-mix(in srgb, var(--ink-hi) 9%, transparent); }
 body[data-area="profiles"] .pf-av { width: 32px; height: 32px; border-radius: 8px; display: grid; place-items: center; font-weight: 600; color: #07101c; background: hsl(var(--h) 72% 68%); }
 body[data-area="profiles"] .pf-name { min-width: 0; }
+body[data-area="profiles"] .pf-main { display: grid; gap: 14px; min-width: 0; }
 body[data-area="profiles"] .pf-name b { display: block; font-weight: 600; color: var(--ink-hi); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 body[data-area="profiles"] .pf-name small { opacity: .65; }
 body[data-area="profiles"] .pf-def { font-size: 10.5px; padding: 2px 6px; border: 1px solid currentColor; border-radius: 5px; opacity: .8; }

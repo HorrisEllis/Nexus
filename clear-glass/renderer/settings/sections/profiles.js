@@ -47,6 +47,15 @@
         h('div', { class: 'row' }, h('div', { class: 'what' }, h('div', { class: 'd', text: 'Add an account to this profile' })), h('div', { class: 'acts' }, btn('Add…', () => addFlow(p, accounts, rerender), 'sm')))] });
   }
 
+  // James, 2026-11-22: "Now all of the rest of them. You know... like an actual browser." · "I didn't say account providers. I said logins."
+  function loginsPane(p, r, rerender) {
+    const list = (r && r.logins) || [];
+    const rows = list.map((x) => { const names = x.passwords.map((w) => w.username).join(', ');
+      return h('div', { class: 'row' }, h('div', { class: 'what' }, h('div', { class: 't', text: x.site }), h('div', { class: 'd', text: `${x.signedIn ? 'Signed in' : 'Not signed in'} · ${names ? `password saved for ${names}` : 'no saved password'}` })),
+        h('div', { class: 'acts' }, x.signedIn ? btn('Sign out', async () => { if (await confirmDo(`Sign out of ${x.site}?`, `Removes ${x.site}’s cookies from this profile. A saved password stays. Any tab or agent using ${x.site} is signed out too.`, 'Sign out')) act(() => cg.profiles.signOut(p.id, x.site), 'sign out', `Signed out of ${x.site}`, rerender); }, 'sm') : null)); });
+    return pane({ title: 'Logins', sub: `${list.length} site${list.length === 1 ? '' : 's'} in this profile`, flush: true, body: rows.length ? rows : [h('div', { class: 'row' }, h('div', { class: 'what' }, h('div', { class: 'd', text: 'No logins in this profile yet' })))] });
+  }
+
   section({
     id: 'profiles', group: 'Accounts & agents', icon: '◎', label: 'Profiles',
     keywords: 'profile profiles cookies logins accounts jar firefox source of truth',
@@ -55,10 +64,11 @@
       const [l, accounts] = await Promise.all([ask(() => cg.profiles.list(), 'profiles'), call(() => cg.accounts.list(), 'accounts')]);
       tools.append(btn('New profile', () => nameFlow('New profile', '', 'Create profile', (v) => cg.profiles.create(v), rerender), 'primary'));
       if (!l.profiles.some((p) => p.id === selected)) selected = l.defaultId;
+      const shown = l.profiles.find((p) => p.id === selected), logins = await ask(() => cg.profiles.logins(selected), 'logins');
       const list = l.profiles.map((p) => h('button', { class: `pf-item${p.id === selected ? ' on' : ''}`, onclick: () => { selected = p.id; rerender(); } }, avatar(p),
         h('span', { class: 'pf-name' }, h('b', { text: p.name }), h('small', { text: count(p.accounts.length) })), p.id === l.defaultId ? h('span', { class: 'pf-def', text: 'default' }) : h('span', {})));
       return [h('div', { class: 'banner warn' }, h('div', {}, h('div', { class: 't', text: 'Tabs and agents have not moved onto profiles yet' }), h('div', { class: 'd', text: 'They keep their current sign-ins until the cookie move, and your existing jars are kept.' }))),
-        h('div', { class: 'pf-grid' }, pane({ title: 'Your profiles', sub: `${l.profiles.length} profiles · ${count(accounts.length)}`, flush: true, body: list }), detail(l.profiles.find((p) => p.id === selected), l, accounts, rerender))];
+        h('div', { class: 'pf-grid' }, pane({ title: 'Your profiles', sub: `${l.profiles.length} profiles · ${count(accounts.length)}`, flush: true, body: list }), h('div', { class: 'pf-main' }, loginsPane(shown, logins, rerender), detail(shown, l, accounts, rerender)))];
     },
   });
 })();
