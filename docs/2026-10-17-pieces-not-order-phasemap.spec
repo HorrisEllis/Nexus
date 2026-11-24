@@ -172,6 +172,17 @@ phases:
       Slice a (now): reuse, repair, split on repeat. Slice b: a phase split from its end state into a DAG of pieces by Nexus, each with its own examples, his framework per gate, so no hand split is needed.
     proof: "a second run of a passed phase asks no model; a refused !x is repaired before the compiler; a repeated body links a smaller piece; slice b: a phase not split by hand builds on the 3b"
     axioms: "§0.3 nothing lost, persistence (his 2026-11-14), §8.6 reuse, §14.4 bounded"
+  EMB5_trials_start_at_raid:
+    status: OPEN
+    depends_on: [EMB4_torrent_pieces, AC13_intent_routes_to_ids]
+    expands: [T13]
+    james: '"where the trials run. like raid creates the beginning of the pipeline. like all inputs go to raid. the hub. the routes to each system dynamically, non linear." (2026-11-23) · "nexus is a way to test what i can. its a lab, like my mind is." (2026-11-23)'
+    files: [cos/ui/lab, cos/manager/server.js, cos/manager/contract.json, cos/build/emerge-build.js, cortex/boot.js, cortex/core/raid, idearium/cli/route-commands.js]
+    does: >-
+      The Lab is where trials run, not only where they are seen. A trial (a phase to build, a prediction to test) is one input, and every input goes to RAID first: RAID opens the request, which is the root of its pipeline (T13), and routes each step to the system that does it (the COS builder, Idearium, the Ollama system), chosen per step, not in a fixed line. A step that fails or splits sends its new pieces back through RAID.
+      Each step, its system, its model calls and its result are the trial's record, shown in the Lab as it happens, and every trial is graded in the proof (A to Failed). Nothing reaches a system except through its route.
+    proof: "a trial started from the Lab appears as a RAID request, its steps land on at least two systems through their routes, and its result and grade show in the Lab without a command line"
+    axioms: "§5.9-§5.16 sovereignty, routes only; §10.3 one hub; persistence (his 2026-11-14)"
   EMB3_the_autocorrect:
     # roadmap edit 2026-11-20: OPEN -> IN PROGRESS 2026-11-20.
     # 2026-11-23: IN PROGRESS -> BUILT 0.60.642 (the 3b in small pieces; its 10 examples pass; see the addenda below)

@@ -7,11 +7,11 @@ intent: null
 summary: 4 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1795499716292
+exported_at: 1795499767481
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1795499716292
-lastSeenAt: 1795499716292
+firstSeenAt: 1795499767481
+lastSeenAt: 1795499767481
 fingerprint: null
 payload:
   for: EMB3_the_autocorrect
@@ -70,6 +70,7 @@ payload:
       - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D3_handlers_run_the_cli
     downstream:
       - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB4_torrent_pieces
+      - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB5_trials_start_at_raid
     blockedBy: []
     unlocks:
       - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB4_torrent_pieces
@@ -78,7 +79,9 @@ payload:
     lines:
       - layer 4
       - 'depends on (1): EMB1_emerge_writes_the_brick · all upstream 11'
-      - 'needed by (1): EMB4_torrent_pieces · finishing it unlocks EMB4_torrent_pieces'
+      - >-
+        needed by (1): EMB4_torrent_pieces · all downstream 2 · finishing it unlocks
+        EMB4_torrent_pieces
     edges:
       - from: docs/2026-10-17-pieces-not-order-phasemap.spec::EMB1_emerge_writes_the_brick
         kind: declared

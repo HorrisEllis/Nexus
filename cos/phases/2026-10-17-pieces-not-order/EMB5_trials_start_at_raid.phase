@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-17-pieces-not-order-phasemap.spec::EMB5_trials_start_at_raid
+type: phase
+id: docs_2026-10-17-pieces-not-order-phasemap.spec::EMB5_trials_start_at_raid
+context: pipeline phase EMB5_trials_start_at_raid of docs/2026-10-17-pieces-not-order-phasemap.spec
+intent: null
+summary: EMB5_trials_start_at_raid (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1795499767478
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795499767478
+lastSeenAt: 1795499767478
+fingerprint: null
+payload:
+  id: EMB5_trials_start_at_raid
+  map: docs/2026-10-17-pieces-not-order-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/manager/server.js
+    - cos/manager/contract.json
+    - cos/build/emerge-build.js
+    - cortex/boot.js
+    - idearium/cli/route-commands.js
+  depends_on:
+    - EMB4_torrent_pieces
+    - AC13_intent_routes_to_ids
+  blocks: []
+  spec: null
+  graph: 77afd0641ee7792c

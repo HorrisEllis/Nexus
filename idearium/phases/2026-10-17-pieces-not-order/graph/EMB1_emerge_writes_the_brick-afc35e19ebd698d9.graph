@@ -7,11 +7,11 @@ intent: null
 summary: 31 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1795497761378
+exported_at: 1795499767469
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1795497761378
-lastSeenAt: 1795497761378
+firstSeenAt: 1795499767469
+lastSeenAt: 1795499767469
 fingerprint: null
 payload:
   for: EMB1_emerge_writes_the_brick
@@ -248,6 +248,7 @@ payload:
       - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB2_ollama_writes_emerge_for_the_pipeline
       - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB3_the_autocorrect
       - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB4_torrent_pieces
+      - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB5_trials_start_at_raid
     blockedBy: []
     unlocks:
       - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB2_ollama_writes_emerge_for_the_pipeline
@@ -261,7 +262,7 @@ payload:
         CS0_projects_decomposed_into_components · all upstream 10
       - >-
         needed by (2): EMB2_ollama_writes_emerge_for_the_pipeline, EMB3_the_autocorrect · all
-        downstream 3 · finishing it unlocks EMB2_ollama_writes_emerge_for_the_pipeline,
+        downstream 4 · finishing it unlocks EMB2_ollama_writes_emerge_for_the_pipeline,
         EMB3_the_autocorrect
     edges:
       - from: docs/2026-10-19-pipeline-root-causes-phasemap.spec::VF1_verify_first
