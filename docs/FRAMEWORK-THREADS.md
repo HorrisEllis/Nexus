@@ -541,6 +541,13 @@ by the focus.
   that exists. Found: the missing rung is the first one, the **end state** (his "end state first"). A phase has no checkable end state until
   someone writes its examples. The rule is not changed here. Who writes the end state (the 3b from the proof's words, the coder, or him) is
   asked before the splitter is built. Reproduce: `node ../nexus-build-data/t15-fixture.js` from the repo root.
+- **EMB6, the end state by the 3b (2026-11-23, his choice: "The 3b, I approve"):** the prediction (in the map before the run) was at least 3
+  checked examples for at least 2 of the first three queued phases whose words give signatures. **Held on form, failed on meaning.** GW1 got 19
+  and GWK1 got 6 on the first answer. OS1 got none: its file is a server, with no functions. Run against the code those phases already have,
+  **0 of 25 agree** (10 throw, 15 differ). The 3b guessed the data shapes: every `walk` call was refused with "chain must be { id, steps:[...] }",
+  and most GW1 lines return their input unchanged. Nexus's checks (form, a planned function, parses, no contradiction) cannot see meaning.
+  Grade: Failed (meaning). Bias: the coder chose the existing code as the reference. That code may not meet the phase either.
+  Reproduce: `node cos/build/emerge-build.js --map <map> --phase <id> --end-state`, then `node ../nexus-build-data/es-vs-code.js <id>…`.
 
 ## T16 — "a continuous data stream to inject what we need into the model upstream", registered and measured 2026-11-23
 

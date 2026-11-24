@@ -163,7 +163,7 @@ phases:
     axioms: "§17.13 (a missing capability is built into Emerge: the card from Emerge's own map), §8.6 (the rung, the benchmark and self.eg exist), his order (the pipeline builds the rest)"
   EMB4_torrent_pieces:
     status: OPEN
-    depends_on: [EMB3_the_autocorrect]
+    depends_on: [EMB3_the_autocorrect, EMB6_the_end_state_first]
     james: '"I''m not selling a model. It was supposed to be this way. Like torrents in a magnet link. The pieces always save. the torrent style way of generating. Like litterally can''t be broken own enough, is how each word in relation to its next rate you know the compiler works. It''s fine component in relation to its next. The traversal. Every step can be broken down using end state first and a dag. Like nothing too small as long as it''s persistent. Using my framework. Dynamically expanding and contracting." (2026-11-23)'
     files: [idearium/lib/emerge-rung.cjs, idearium/lib/gaps.eg, idearium/lib/eg-build/gaps, idearium/lib/test/gaps.test.eg, idearium/lib/autocorrect.eg, cos/build/emerge-build.js, tests/modules/test-emerge-rung.test.js]
     does: >-
@@ -183,6 +183,18 @@ phases:
       Each step, its system, its model calls and its result are the trial's record, shown in the Lab as it happens, and every trial is graded in the proof (A to Failed). Nothing reaches a system except through its route.
     proof: "a trial started from the Lab appears as a RAID request, its steps land on at least two systems through their routes, and its result and grade show in the Lab without a command line"
     axioms: "§5.9-§5.16 sovereignty, routes only; §10.3 one hub; persistence (his 2026-11-14)"
+  EMB6_the_end_state_first:
+    status: OPEN
+    depends_on: [EMB3_the_autocorrect]
+    james: '"Every step can be broken down using end state first and a dag." (2026-11-23) · asked who writes each phase''s end state (the 3b with his approval, or the coder), he chose: "The 3b, I approve" (2026-11-23)'
+    found: "2026-11-23, measured before any splitter run: lib/build-queue.js gives 289 buildable phases and none has examples, so the COS builder (plan, then test from examples, then the rung) can take none of them. The missing rung is the first: the end state."
+    files: [cos/build/emerge-build.js, cos/manager/server.js, cos/manager/contract.json, cos/ui/lab, idearium/cli/route-commands.js]
+    does: >-
+      Before any code, a phase gets its end state: examples, each 'call(args) == expected', the form lib/test-first.js already turns into a test with no model.
+      The 3b writes them from the phase's own words (does, proof) and the signatures its plan gives; nothing else is in its prompt. Every answer is saved first (a piece on disk), then checked by what Nexus already has: test-first's examplesFrom keeps only well-formed lines, each call must be a planned export, fromExamples must give a test that parses, and contradictions() refuses a call expected two ways.
+      The checked examples wait for him in the Lab. He accepts or rejects each; only accepted examples are written into the phase's map, and only then can the builder take the phase. A model never grades its own end state: his yes does.
+    proof: "on the first three phases of the build queue whose words give signatures (rule fixed before the run: GW1_the_baton, GWK1_the_walker_and_chain_schema, OS1_every_run_on_one_surface), the 3b alone, no hand edit, gives at least 3 checked examples for at least 2 of the 3; each answer and check is on disk; prediction registered 2026-11-23 before the run"
+    axioms: "end state first (his framework); persistence (his 2026-11-14); §8.6 reuse; Claude last (his, Nexus is for small models)"
   EMB3_the_autocorrect:
     # roadmap edit 2026-11-20: OPEN -> IN PROGRESS 2026-11-20.
     # 2026-11-23: IN PROGRESS -> BUILT 0.60.642 (the 3b in small pieces; its 10 examples pass; see the addenda below)

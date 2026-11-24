@@ -48,6 +48,49 @@ async function ask(prompt, model, gap) {
   throw new Error('the Ollama job did not finish in 15 minutes');
 }
 
+// EMB6, the end state first. James, 2026-11-23: "Every step can be broken down using end state first and a dag." · asked who writes it: "The 3b, I approve"
+// --end-state: the 3b writes the phase's examples from its own words; each answer is saved before it is checked; the checks are test-first's own
+// (examplesFrom, fromExamples, contradictions) plus "a planned function" and "it parses". Checked lines wait for his yes in the Lab; nothing enters the map here.
+const END_STATE = !!arg('end-state'), ES_DIR = path.join(ROOT, 'cos', 'data', 'build', 'end-state');
+async function endState({ ph, plan, src, mapText }) {
+  const TF = require(path.join(ROOT, 'lib', 'test-first.js')), vm = require('vm'), file = path.join(ES_DIR, PHASE + '.json');
+  fs.mkdirSync(ES_DIR, { recursive: true });
+  const rec = fs.existsSync(file) ? JSON.parse(fs.readFileSync(file, 'utf8')) : { map: MAP, phase: PHASE, file: src.path, examples: [], answers: [] };
+  const save = () => fs.writeFileSync(file, JSON.stringify(rec, null, 1));
+  if (rec.examples.length >= 3) { row('end-state-kept', { note: `${rec.examples.length} examples already on disk; no model asked`, file }); return 0; }
+  // a plan read from a file that exists names its exports only: each function's parameters are read from that same file (no model)
+  const code = (() => { try { return fs.readFileSync(path.join(ROOT, src.path), 'utf8'); } catch (_) { return ''; } })();
+  const sigOf = (e) => { if (/\(/.test(e.signature || '')) return e.signature; const n = String(e.name || '').replace(/[^\w$]/g, '');
+    const m = n && new RegExp(`(?:function\\s*\\*?\\s*${n}|\\b${n}\\s*[:=]\\s*(?:async\\s+)?(?:function\\s*)?|^\\s*(?:async\\s+)?${n})\\s*\\(([^)]*)\\)`, 'm').exec(code); return m ? `${n}(${m[1].replace(/\s+/g, ' ').trim()})` : null; };
+  const fns = (src.exports || []).filter((e) => !/^_/.test(e.name || '')).map((e) => ({ ...e, signature: sigOf(e) })).filter((e) => e.signature), names = new Set(fns.map((e) => e.name)), already = TF.examplesFrom(mapText, PHASE);
+  if (!fns.length) { row('refused', { note: 'the plan gives no function signatures to write examples for' }); return 1; }
+  const quote = (l) => `      - '${l.replace(/'/g, "''")}'`;
+  for (let n = rec.answers.length + 1; n <= 3 && rec.examples.length < 3; n++) {
+    const refusedLast = (rec.answers[rec.answers.length - 1] || {}).refused || [];
+    const prompt = [`Phase ${PHASE}, file ${src.path}.`, `What it must do: ${String(ph.does || '').trim()}`, `How it is proven: ${String(ph.proof || '').trim()}`,
+      'Its functions:', ...fns.map((e) => '  ' + e.signature + (e.does ? ' — ' + e.does : '')), '',
+      'Write 3 to 6 examples of what these functions return, one per line, exactly in this form and nothing else:', '  name(args) == expected',
+      'Arguments and expected values are plain literals: numbers, true/false/null, strings in double quotes, arrays, objects. No variables, no functions, no comments, no code fence.',
+      'Only call the functions listed. Never write the same call twice.',
+      ...(refusedLast.length ? ['', 'Your last lines were refused; do not repeat them:', ...refusedLast.map((x) => `  ${x.line}  (${x.why})`)] : [])].join('\n');
+    let said; try { said = await ask(prompt, LADDER[0], 'end-state:' + PHASE); } catch (e) { row('end-state-failed', { note: e.message }); return 1; }
+    const a = { n, at: new Date().toISOString(), model: LADDER[0], promptChars: prompt.length, said: String(said || ''), kept: [], refused: [] }; rec.answers.push(a); save();   // saved before it is checked
+    const lines = a.said.split(/\r?\n/).map((l) => l.trim().replace(/^[-*\d.)\s]+(?=\w)/, '').replace(/^[`'"]+|[`'"]+$/g, '').trim()).filter((l) => /\)\s*==/.test(l));
+    for (const line of lines) {
+      const why = (() => {
+        if (!TF.examplesFrom(`  ${PHASE}:\n    examples:\n${quote(line)}\n`, PHASE).length) return 'not in the form name(args) == expected';
+        const nm = (/^(\w+)\s*\(/.exec(line) || [])[1]; if (!names.has(nm)) return `${nm || 'it'} is not one of the planned functions`;
+        const k = line.search(/\)\s*==/); try { new vm.Script(`(${line.slice(0, k + 1)}, ${line.slice(k + 1).replace(/^\s*==\s*/, '')})`); } catch (e) { return 'does not parse: ' + e.message; }
+        if ([...rec.examples, ...already].some((x) => x === line)) return 'already kept';
+        const t = TF.fromExamples({ plan, testPath: 'x.test.js', examples: [...rec.examples.map((x) => x.line), line] }); const c = TF.contradictions(t || '');
+        return c.length ? 'contradicts a kept line: ' + c[0] : null; })();
+      if (why) a.refused.push({ line, why }); else { a.kept.push(line); rec.examples.push({ line, by: LADDER[0], answer: n, status: 'waiting' }); }
+    }
+    save(); row('end-state', { note: `answer ${n}: ${a.kept.length} kept, ${a.refused.length} refused; ${rec.examples.length} waiting for his yes`, kept: a.kept, refused: a.refused, file });
+  }
+  return rec.examples.length >= 3 ? 0 : 1;
+}
+
 (async () => {
   row('started', { note: `ladder ${LADDER.join(' → ')}${LAND ? '; lands when the examples pass' : ''}`, ladder: LADDER });
   // 1. the phase, from its map
@@ -61,6 +104,7 @@ async function ask(prompt, model, gap) {
   const src = plan && (plan.files || []).find((f) => f.path && !/\.test\.[cm]?js$/.test(f.path) && /\.[cm]?js$/.test(f.path));
   if (!src) { row('refused', { note: 'the phase’s words gave no file with signatures: ' + JSON.stringify(dv).slice(0, 300) }); process.exit(1); }
   row('planned', { note: `${src.path}: ${(src.exports || []).map((e) => e.signature || e.name).join('; ')} (no model)`, file: src.path, exports: src.exports });
+  if (END_STATE) process.exit(await endState({ ph, plan, src, mapText }));
   // 3. the test, from the phase's examples (no model)
   const TF = require(path.join(ROOT, 'lib', 'test-first.js')), testPath = TF.pathFor(plan, PHASE), moduleType = TF.moduleTypeFor(ROOT, src.path);
   const examples = TF.examplesFrom(mapText, PHASE), tf = TF.fromExamples({ plan, testPath, examples, moduleType }), testText = tf && (tf.content || tf.text || tf.test || (typeof tf === 'string' ? tf : null));

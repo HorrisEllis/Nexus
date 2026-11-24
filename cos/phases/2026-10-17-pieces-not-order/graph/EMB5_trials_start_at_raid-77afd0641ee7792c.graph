@@ -7,11 +7,11 @@ intent: null
 summary: 29 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1795499767478
+exported_at: 1795501275671
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1795499767478
-lastSeenAt: 1795499767478
+firstSeenAt: 1795501275671
+lastSeenAt: 1795501275671
 fingerprint: null
 payload:
   for: EMB5_trials_start_at_raid
@@ -211,7 +211,7 @@ payload:
   crossings: []
   ready: true
   dag:
-    layer: 6
+    layer: 7
     deps:
       - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB4_torrent_pieces
       - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC13_intent_routes_to_ids
@@ -222,6 +222,7 @@ payload:
       - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB1_emerge_writes_the_brick
       - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB3_the_autocorrect
       - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB4_torrent_pieces
+      - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB6_the_end_state_first
       - docs/2026-10-19-pipeline-root-causes-phasemap.spec::RC4_agent_file_names_guarded
       - docs/2026-10-19-pipeline-root-causes-phasemap.spec::VF1_verify_first
       - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS1_the_skeleton_in_emerge
@@ -242,8 +243,8 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - layer 6 · blocked by EMB4_torrent_pieces, AC13_intent_routes_to_ids
-      - 'depends on (2): EMB4_torrent_pieces, AC13_intent_routes_to_ids · all upstream 17'
+      - layer 7 · blocked by EMB4_torrent_pieces, AC13_intent_routes_to_ids
+      - 'depends on (2): EMB4_torrent_pieces, AC13_intent_routes_to_ids · all upstream 18'
       - 'needed by (0): —'
     edges:
       - from: docs/2026-10-17-pieces-not-order-phasemap.spec::EMB4_torrent_pieces
