@@ -321,9 +321,9 @@ phases_addendum_2026_11_22:
     status: OPEN
     depends_on: []
     james: '"also the nexus:// for using the systems on nexus." (2026-11-23) · "this is why we need to use nexus:// for each system instead of a port" (2026-11-19)'
-    files: [clear-glass/src/main/index.js, clear-glass/renderer/browser.js, cos/manager/server.js, idearium/cli/route-commands.js]
+    files: [clear-glass/plugins/nexus-addresses, clear-glass/src/main/index.js, clear-glass/renderer/browser.js, lib/nexus-uri.js, cos/manager/server.js, idearium/cli/route-commands.js]
     does: >-
-      Typing nexus://guardian or nexus://<system>.<surface> in the address bar opens that system. Clear Glass has no such scheme today. It asks COS's existing addressOf resolver by route and hardcodes no port. Agents use the same names.
+      Typing nexus://guardian or nexus://<system>.<surface> in the address bar opens that system. Clear Glass already registers nexus:// links (lib/nexus-uri.js, with actions for repo, repo-chunk and compartment): this expands that door with system names and the address bar. It asks COS's existing addressOf resolver through a plugin (AC_D8) and hardcodes no port. Agents use the same names.
     proof: "nexus://idearium opens Idearium in a tab; a stopped or unknown system says so in the page"
     axioms: "§5.16 the system registry connects systems"
   AC15_passwords_and_autofill_chip_per_profile:
