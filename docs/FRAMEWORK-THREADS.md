@@ -535,6 +535,12 @@ by the focus.
   and no hand split; failed otherwise. Measured by: pieces made, splits, model calls and passes, from each run's ledger.
 - **Bias named:** the coder builds the splitter and judges the runs. Grade B at best, until a run he starts reproduces it (grade A).
 - **Evidence:** open.
+- **The fixture rule failed before any run (2026-11-23, kept):** lib/build-queue.js gives 289 buildable phases (of 1,675 open). None names a test
+  that exists (their proofs name tests still to be written, test-first). Under any rule, none of the 289 has examples, so the COS builder
+  (plan → test from examples → rung) can take **none** of them. Its words give signatures for 49. Only 3 open phases in all 260 maps name a test
+  that exists. Found: the missing rung is the first one, the **end state** (his "end state first"). A phase has no checkable end state until
+  someone writes its examples. The rule is not changed here. Who writes the end state (the 3b from the proof's words, the coder, or him) is
+  asked before the splitter is built. Reproduce: `node ../nexus-build-data/t15-fixture.js` from the repo root.
 
 ## T16 — "a continuous data stream to inject what we need into the model upstream", registered and measured 2026-11-23
 
