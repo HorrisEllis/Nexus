@@ -325,6 +325,18 @@ phases_addendum_2026_11_22:
       Typing nexus://guardian or nexus://<system>.<surface> in the address bar opens that system. Clear Glass has no such scheme today. It asks COS's existing addressOf resolver by route and hardcodes no port. Agents use the same names.
     proof: "nexus://idearium opens Idearium in a tab; a stopped or unknown system says so in the page"
     axioms: "§5.16 the system registry connects systems"
+  AC15_passwords_and_autofill_chip_per_profile:
+    status: OPEN
+    depends_on: [AC11_accounts_per_login_per_site]
+    expands: [PW1_service, AF1_active_profile_and_fill_one]
+    james: '"hook in the password manager also. and the autofill chip. just like firefox" (2026-11-23)'
+    files: [clear-glass/src/passwords/vault.js, clear-glass/src/passwords/service.js, clear-glass/src/main/passwords-wiring.js, clear-glass/src/autofill/suggest.js, clear-glass/src/ipc/bridge.js, clear-glass/src/preload/index.js, clear-glass/renderer/autofill-inline.js, clear-glass/renderer/autofill-inline.css, clear-glass/renderer/settings/sections/profiles.js]
+    does: >-
+      The existing password vault and offer are tied to the profile and account: a saved login belongs to one account in one profile, and existing entries keep their account or go to Default.
+      The existing chip under each field also lists this profile's saved logins for this exact site; choosing one fills username and password. Autofill data follows the browser profile, and today's data stays in Default.
+      A password is filled only on a person's click, only for the exact origin (PW-002), and never into a compartment, sandbox or agent. Guardian and agents never receive one.
+    proof: "a login saved in one profile is not offered in another; a look-alike origin and a compartment are refused; an agent cannot read or trigger a password fill"
+    axioms: "§5.9 sovereignty, §8.6 the vault, offer and chip reused, §10.3 one truth per kind of data"
 # ADDENDUM 2026-11-22 (0.60.636) — AC10: James: "okay profiles are in clearglass. no coupline". The first slice started Emerge's toolchain from Emerge's folder at run time.
 # Now the rules are compiled once (eg build --standalone) into clear-glass/src/profiles/built and run in Clear Glass's own process: no other system's folder is read,
 # Emerge may be absent. Rebuild after changing profiles.eg. Other systems reach profiles only through Clear Glass's /profiles routes.

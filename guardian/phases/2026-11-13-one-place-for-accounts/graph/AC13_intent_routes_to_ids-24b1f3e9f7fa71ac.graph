@@ -7,11 +7,11 @@ intent: null
 summary: 29 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1795479918033
+exported_at: 1795482937999
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1795479918033
-lastSeenAt: 1795479918033
+firstSeenAt: 1795482937999
+lastSeenAt: 1795482937999
 fingerprint: null
 payload:
   for: AC13_intent_routes_to_ids
@@ -227,16 +227,19 @@ payload:
     deps:
       - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC11_accounts_per_login_per_site
       - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC12_one_browser_identity_per_profile
-    dependents: []
+    dependents:
+      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC14_nexus_addresses_in_the_browser
     upstream:
       - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC10_profiles_the_source_of_truth
       - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC11_accounts_per_login_per_site
       - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC12_one_browser_identity_per_profile
-    downstream: []
+    downstream:
+      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC14_nexus_addresses_in_the_browser
     blockedBy:
       - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC11_accounts_per_login_per_site
       - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC12_one_browser_identity_per_profile
-    unlocks: []
+    unlocks:
+      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC14_nexus_addresses_in_the_browser
     conflicts:
       - with: docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC1_the_vault_as_a_library
         files:
@@ -244,26 +247,21 @@ payload:
       - with: docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC3_one_list_of_accounts
         files:
           - guardian/lib/account-routing.js
-      - with: docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC14_nexus_addresses_in_the_browser
-        files:
-          - clear-glass/src/main/index.js
-          - idearium/cli/route-commands.js
     dangling: []
     lines:
       - layer 3 · blocked by AC11_accounts_per_login_per_site, AC12_one_browser_identity_per_profile
       - >-
         depends on (2): AC11_accounts_per_login_per_site, AC12_one_browser_identity_per_profile ·
         all upstream 3
-      - 'needed by (0): —'
+      - >-
+        needed by (1): AC14_nexus_addresses_in_the_browser · finishing it unlocks
+        AC14_nexus_addresses_in_the_browser
       - >-
         same files as AC1_the_vault_as_a_library with no order between them:
         idearium/cli/route-commands.js
       - >-
         same files as AC3_one_list_of_accounts with no order between them:
         guardian/lib/account-routing.js
-      - >-
-        same files as AC14_nexus_addresses_in_the_browser with no order between them:
-        clear-glass/src/main/index.js, idearium/cli/route-commands.js
     edges:
       - from: docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC11_accounts_per_login_per_site
         kind: declared

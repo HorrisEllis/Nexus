@@ -7,11 +7,11 @@ intent: null
 summary: 21 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1795394338669
+exported_at: 1795482937962
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1795394338669
-lastSeenAt: 1795394338669
+firstSeenAt: 1795482937962
+lastSeenAt: 1795482937962
 fingerprint: null
 payload:
   for: AC2_clear_glass_keeps_through_cos
@@ -164,12 +164,19 @@ payload:
     blockedBy:
       - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC1_the_vault_as_a_library
     unlocks: []
-    conflicts: []
+    conflicts:
+      - with: docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC15_passwords_and_autofill_chip_per_profile
+        files:
+          - clear-glass/src/passwords/vault.js
+          - clear-glass/src/passwords/service.js
     dangling: []
     lines:
       - layer 3 · blocked by AC1_the_vault_as_a_library
       - 'depends on (1): AC1_the_vault_as_a_library · all upstream 4'
       - 'needed by (1): AC5_the_accounts_page'
+      - >-
+        same files as AC15_passwords_and_autofill_chip_per_profile with no order between them:
+        clear-glass/src/passwords/vault.js, clear-glass/src/passwords/service.js
     edges:
       - from: docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC1_the_vault_as_a_library
         kind: declared
