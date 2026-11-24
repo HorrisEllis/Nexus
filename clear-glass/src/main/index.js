@@ -1903,7 +1903,7 @@ async function bootstrap() {
     ipcBridge.app.post('/accounts/session/consolidate', async (req, res) => {
       try {
         const ids = req.body && req.body.provider ? [req.body.provider] : sessionHub().providers();
-        const results = []; for (const id of ids) { sessionHub().attach(id); const r = await sessionHub().consolidate(id, { force: !!(req.body && req.body.force) }); results.push(r); if (r.action === 'consolidated') await acctSwitch().sync(id, { reload: true }).catch(() => {}); }
+        const results = []; for (const id of ids) { sessionHub().attach(id); const hub = sessionHub(), take = !!(req.body && req.body.take && req.body.provider), r = hub.oneJar() ? await hub.moveIn(id, { force: !!(req.body && req.body.force), take }) : await hub.consolidate(id, { force: !!(req.body && req.body.force) }); results.push(r); if (hub.oneJar() && ['consolidated', 'completed'].includes(r.action)) await acctSwitch().reloadTabs(id).catch(() => {}); else if (r.action === 'consolidated') await acctSwitch().sync(id, { reload: true }).catch(() => {}); }
         res.json({ ok: results.every(r => r.ok), results });
       } catch (e) { res.status(500).json({ ok: false, error: e.message }); }
     });
@@ -2325,7 +2325,7 @@ function hubReady(provider) {
     _hubBoot.set(provider, (async () => {
       const hub = sessionHub();
       try { hub.attach(provider); } catch (e) { console.warn(`[session-hub] ${provider}: not attached — ${e.message}`); }
-      try { const r = await hub.consolidate(provider); if (r.action === 'consolidated') await acctSwitch().sync(provider, { reload: false }).catch(() => {}); return r; }
+      try { const r = await hub.consolidate(provider); if (hub.oneJar() || r.action === 'consolidated') await acctSwitch().sync(provider, { reload: false }).catch(() => {}); return r; }   // AC10 c: the tab is marked as the account its jar belongs to
       catch (e) { console.warn(`[session-hub] ${provider}: consolidation failed — ${e.message}`); return { ok: false, provider, error: e.message }; }
     })());
   }

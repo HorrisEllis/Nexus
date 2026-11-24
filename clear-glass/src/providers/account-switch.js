@@ -218,6 +218,9 @@ function createAccountSwitch({ providerHost, vault, options, getProvider = () =>
     return next;
   }
 
+  /** reloadTabs(provider) — the provider's open tabs load its page again, after its login was repaired */
+  async function reloadTabs(provider) { const d = (() => { try { return getProvider(provider); } catch (_) { return null; } })(); const loads = await Promise.all(_windows(provider).map(w => _reload(w, d && d.url))); return loads.length; }
+
   /** signedOut(provider, accountId) — the Accounts page signed that account out; a tab that runs as it is signed out too */
   async function signedOut(provider, accountId) {
     if (current(provider) !== accountId) return { ok: true, provider, action: 'unchanged', why: `the tab does not run as “${accountId}”` };
@@ -322,7 +325,7 @@ function createAccountSwitch({ providerHost, vault, options, getProvider = () =>
       known: (options.listAccounts ? options.listAccounts() : []).filter(a => (a.agentKeys || []).includes(provider)).map(a => ({ id: a.id, label: a.label })) };
   }
 
-  return { MODULE_ID, VERSION, current, capture, use, sync, signedOut, beginSignIn, endSignIn, settled, markCurrent, state };
+  return { MODULE_ID, VERSION, reloadTabs, current, capture, use, sync, signedOut, beginSignIn, endSignIn, settled, markCurrent, state };
 }
 
 module.exports = { MODULE_ID, VERSION, createAccountSwitch };

@@ -229,12 +229,26 @@ class SessionHub {
    * moveIn(provider) — AC10 c: the profile's jar gets this provider's sign-in, once. A sign-in it already holds is left alone. If it has none, the
    * first sign-in found in the old jars is copied in, only that provider's sites. The old jars are read and never changed.
    */
-  async moveIn(provider, { force = false } = {}) {
-    const key = `${provider}@profile`;
-    if (!force && this._marker(key)) return { ok: true, provider, action: 'already-done' };
-    const target = this.sessionFor(provider);
-    if ((await this._read(target, provider)).some(isAuthCookie)) { this._setMarker(key, { action: 'unchanged', from: 'profile' }); return { ok: true, provider, action: 'unchanged', from: 'profile' }; }
-    const sources = [{ key: 'provider', ses: this.session.fromPartition(canonicalPartition(provider)) }];
+  // 2026-11-23 — James: "the login loop thats never been fixed. still happenign". Read in his jars (names only): the old mirror copied ChatGPT's session token
+  // into the normal jar, but not the oai-did and cf_clearance it was issued with, so the page was handed a token from one device with another device's id.
+  // A login is its whole set of cookies on its sites. Same token, different set: the set it was issued with comes across. A different token is another login:
+  // left alone unless a person asks for this one (take).
+  async moveIn(provider, { force = false, take = false } = {}) {
+    const key = `${provider}@profile-whole`;
+    if (!force && !take && this._marker(key)) return { ok: true, provider, action: 'already-done' };
+    const target = this.sessionFor(provider), mine = await this._read(target, provider);
+    const old = this.session.fromPartition(canonicalPartition(provider));
+    if (mine.some(isAuthCookie)) {
+      const theirs = await this._read(old, provider), tokens = theirs.filter(isAuthCookie), have = new Map(mine.map(c => [idOf(c), c.value]));
+      const sameLogin = tokens.length > 0 && tokens.every(c => have.get(idOf(c)) === c.value);
+      if (!take && !sameLogin) { this._setMarker(key, { action: 'unchanged', from: 'profile' }); return { ok: true, provider, action: 'unchanged', from: 'profile' }; }
+      if (!tokens.length) return { ok: false, provider, action: 'nothing', error: `no ${provider} sign-in in the old jar` };
+      let n = 0; for (const c of theirs) { if (have.get(idOf(c)) === c.value) continue; try { await target.cookies.set(CookieVault.cookieSetArgs(c)); n++; } catch (_) { /* a cookie Chromium refuses is counted by what landed */ } }
+      this._setMarker(key, { action: n ? 'completed' : 'unchanged', from: 'provider', written: n });
+      if (n) this.log(`[session-hub] ${provider} — the login's whole set moved into its profile (${n} cookies); the old jar is unchanged`);
+      return { ok: true, provider, action: n ? 'completed' : 'unchanged', from: 'provider', written: n };
+    }
+    const sources = [{ key: 'provider', ses: old }];
     const dispatch = (() => { try { return this.dispatchAccount(provider); } catch (_) { return null; } })();
     for (const id of this._legacyIds(provider).sort((a, b) => (a === dispatch ? -1 : b === dispatch ? 1 : 0))) sources.push({ key: `mesh:${id}`, ses: this.session.fromPartition(legacyMeshPartition(provider, id)) });
     let winner = null; for (const s of sources) { const cookies = await this._read(s.ses, provider); if (cookies.some(isAuthCookie)) { winner = { ...s, cookies }; break; } }
@@ -263,7 +277,7 @@ class SessionHub {
   async status(provider) {
     const row = async (ses) => { const c = await this._read(ses, provider); return { cookies: c.length, signedIn: c.some(isAuthCookie) }; };
     const norm = this.normalSession();
-    return { provider, partition: canonicalPartition(provider), provider_session: await row(this.sessionFor(provider)), normal_tab: norm ? await row(norm) : null,
+    return { provider, partition: this.partition(provider), provider_session: await row(this.sessionFor(provider)), normal_tab: norm ? await row(norm) : null,
       mirrored: this._attached.has(provider), migrated: this._marker(provider) };
   }
 }
