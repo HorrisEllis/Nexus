@@ -36,13 +36,27 @@ const call = (method, p, body, ms = 30000) => new Promise((res, rej) => { const 
   const q = http.request({ host: '127.0.0.1', port: OLLAMA, path: p, method, timeout: ms, headers: b ? { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(b) } : {} }, (r) => { let t = ''; r.on('data', (c) => t += c); r.on('end', () => { try { res(JSON.parse(t)); } catch (_) { res(null); } }); });
   q.on('timeout', () => { q.destroy(); rej(new Error('the Ollama system did not answer in ' + ms + ' ms')); }); q.on('error', rej); if (b) q.write(b); q.end(); });
 // a retry is asked less deterministically (2026-11-24: at 0.1 the 3b wrote one refused body 9 times in a row): try 1 at 0.1, then 0.5, then 0.9
-async function ask(prompt, model, gap, tryNo = 1) {
+// 2026-11-24: COS puts the Ollama system to sleep when idle and wakes it on its own schedule; a job in flight was lost with the process and the
+// builder waited out its 15 minutes. So the system is woken through COS before each question, and a job that disappears is asked again.
+const COS_PORT = Number(arg('cos-port', 7799));
+const cosCall = (method, p, body) => new Promise((res) => { const b = body ? JSON.stringify(body) : null; const q = http.request({ host: '127.0.0.1', port: COS_PORT, path: p, method, timeout: 60000, headers: b ? { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(b) } : {} }, (r) => { let t = ''; r.on('data', (c) => t += c); r.on('end', () => { try { res(JSON.parse(t)); } catch (_) { res(null); } }); }); q.on('error', () => res(null)); q.on('timeout', () => { q.destroy(); res(null); }); if (b) q.write(b); q.end(); });
+async function wakeOllama() {
+  if (await call('GET', '/health', null, 3000).catch(() => null)) return true;
+  await cosCall('POST', '/api/cos/systems/ollama-bridge/start', { by: 'rule:emerge-build' });
+  for (let i = 0; i < 30; i++) { await new Promise((r) => setTimeout(r, 2000)); if (await call('GET', '/health', null, 3000).catch(() => null)) { row('ollama-woken', { note: 'the Ollama system was asleep; woken through COS' }); return true; } }
+  return false;
+}
+async function ask(prompt, model, gap, tryNo = 1, again = 0) {
   row('gap-asked', { gap, model, promptChars: prompt.length });
+  if (!(await wakeOllama())) throw new Error('the Ollama system is not up and COS could not wake it');
   const q = await call('POST', '/api/jobs', { prompt, model, intent: 'build', meta: { source: 'cos.emerge-build', gap, phase: PHASE, run: RUN }, options: { temperature: Math.min(0.9, 0.1 + 0.4 * Math.max(0, (Number(tryNo) || 1) - 1)) } });
   const id = q && (q.jobId || (q.data && q.data.jobId)); if (!id) throw new Error('the Ollama system did not take the job: ' + JSON.stringify(q).slice(0, 200));
+  let missing = 0;
   for (const until = Date.now() + 15 * 60000; Date.now() < until;) {
     await new Promise((r) => setTimeout(r, 3000));
-    const g = await call('GET', '/api/jobs/' + encodeURIComponent(id), null, 10000).catch(() => null), j = g && (g.job || (g.data && g.data.job)); if (!j) continue;
+    const g = await call('GET', '/api/jobs/' + encodeURIComponent(id), null, 10000).catch(() => null), j = g && (g.job || (g.data && g.data.job));
+    if (!j) { if (++missing >= 5 && again < 2) { row('job-lost', { gap, note: 'the job is gone (the Ollama system restarted?); asked again' }); return ask(prompt, model, gap, tryNo, again + 1); } continue; }
+    missing = 0;
     if (j.status === 'complete') { row('gap-answered', { gap, model, ms: j.durationMs || null, chars: String(j.result || '').length }); return String(j.result || ''); }
     if (j.status === 'failed' || j.status === 'cancelled') throw new Error('the Ollama job ' + j.status + ': ' + (j.error || ''));
   }

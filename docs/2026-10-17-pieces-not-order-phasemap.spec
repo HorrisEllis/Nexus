@@ -222,6 +222,17 @@ phases:
   EMB8_the_contract_at_every_level:
     status: OPEN
     depends_on: [EMB6_the_end_state_first]
+    expanded_2026_11_24_small_gates: >-
+      His words: "why so long? aren't the gates for each function supposed to reduce that? like gates only hold what is absolutely needed, and
+      then can use the agent and repo tools to reference the map, contract, raid compartment worksurface, context, etc." · "Also the test file
+      needs to be made first, conditions, and dependencies, prerequisites, need to shape expectations I feel like. Bidirectional causal chaining."
+      (2026-11-24). Measured: replace_all's brief was 4,519 to 6,390 characters; what it needs (its signature and its contract) is 169. Each gate's
+      brief now holds only: the piece's own function and contract, the signatures (never the bodies) of the functions already in the module, the
+      lines of the Emerge card its examples call for (chosen by what the examples hold: text, lists, maps), and the last refusal's reason. The map,
+      the module, the RAID contract and the work surface stay where they are, by reference. Reading, the coder's, to confirm: bidirectional causal
+      chaining is the test file first, its conditions flowing down to each piece (a caller's expectation says what each function it calls must
+      return) and each piece's prerequisites flowing up (what it may call, what it needs first); the next slice derives a helper's examples from
+      the module test, not only from existing code.
     james: '"component. like look at the component registry. like its all here. look at the architecture spec and genasis" · asked whether to apply THE_CONTRACT_JOINS_THEM (genesis 1.6.0, proposed 2026-11-14, mapped, never applied): "yes like constraints, need to be acknowledged also. my framework does all of this. at every level across any domain" · "the primitives are the boundaries for the structure. Anything that can''t be changed without changing the shape of the structure. The dag should create the expectations. Create the check list. Pre-req is for prerequisites for understanding requests before starting. Using my framework." · "Pipeline. Pipeline. Pipeline. As simple as possible." (2026-11-23)'
     found: "2026-11-23: the 3b fills a piece well when the piece carries its own end state and copies when it does not (EMB6, EMB7: add_kind, given only its name, copied the Emerge card in every try). The component is already the agnostic block, the same at every level (genesis: 'nexus is recursive ... the same architecture on every level'; BEHAVIOR_IS_THE_COMPONENT: same input, same output). Its schema says what it is for, its capabilities, hooks and consumers, but not what it returns: THE_CONTRACT_JOINS_THEM was the missing field."
     reading: "the coder's, to confirm: one contract block, the same on a system, a module, a component and a hook (one function, a direct in-hook): signature (the values it accepts), examples (input → output), constraints (each acknowledged: an invariant, the shape that cannot change; a boundary, a range; a rule; a resource), and its depends_on, read from the wires. A level whose contract is missing is the next thing to map; a leaf with a contract is what the 3b fills."

@@ -196,6 +196,38 @@ const TEMPLATE_MENU = [
   ['guard_then', 'refuse a bad input, else compute', 'if REFUSE_WHEN { return REFUSAL } / return VALUE', ['refuse_when', 'refusal', 'value']],
   ['scan_text', 'walk a text one character at a time (c is the character, i its position)', 'var acc = START / var i = 0 / while i < len(TEXT) { let c = slice(TEXT, i, i + 1) / acc = STEP / i += 1 } / return RESULT', ['start', 'text', 'step', 'result']],
 ];
+// EMB8 small gates (2026-11-24). James: "aren't the gates for each function supposed to reduce that? like gates only hold what is absolutely
+// needed". Measured: replace_all's brief was 4,519 to 6,390 characters; what it needs is 169. A piece with a contract is briefed with its own
+// function and contract, the signatures (never the bodies) of the module's other functions, only the card lines its examples call for, and
+// the last refusal's reason. Everything else stays where it is.
+function cardFor(examples = []) {
+  const ex = examples.join('\n'), lines = CARD.split('\n'), pick = (re) => lines.filter((l) => re.test(l));
+  const core = pick(/^(You write Emerge|fn name\(|let x = 1|if a and b|for e in xs|return value|comparisons:|No semicolons|No throw|Never x\.value|Write the general rule)/);
+  const text = /"/.test(ex) ? pick(/^(strings:|Inside a string|Text: split|To replace every)/) : [];
+  const list = /\[/.test(ex) ? pick(/^lists:/) : [], map = /\{/.test(ex) ? pick(/^maps:/) : [];
+  const pattern = /\[\s*\{/.test(ex) ? lines.slice(lines.findIndex((l) => /^Loop variables/.test(l)), lines.findIndex((l) => /^Never x\.value/.test(l))) : [];
+  return [...core.slice(0, 1), ...core.slice(1), ...list, ...map, ...text, ...pattern].join('\n');
+}
+/** an example in Emerge's own literals: the call's arguments and the expected value re-written (a recorded 'x' in single quotes is JavaScript) */
+function egLine(l) {
+  const s = _q(l), k = s.search(/\)\s*==/); if (k < 0) return s;
+  const call = s.slice(0, k + 1), at = call.indexOf('('), want = s.slice(k + 1).replace(/^\s*==\s*/, '');
+  try { const vm = require('vm'), args = vm.runInNewContext(`[${call.slice(at + 1, -1)}]`, {}, { timeout: 50 }), w = vm.runInNewContext(`(${want})`, {}, { timeout: 50 });
+    return `${call.slice(0, at)}(${args.map((a) => JSON.stringify(a)).join(', ')}) == ${JSON.stringify(w)}`; } catch (_) { return s; }
+}
+function briefPiece({ skel, filled, name, lesson = '' }) {
+  const me = skel.fns.find((x) => x.name === name) || {}, c = me.contract || {}, ex = (c.examples || []).slice(0, 6), cs = (c.constraints || []).slice(0, 4);
+  const others = skel.fns.filter((x) => x.name !== name && filled[x.name] != null).map((x) => `fn ${x.name}(${(x.params || []).join(', ')})`);   // only what exists can be called
+  const last = _q(lesson).split('\n').filter((l) => /^Refused|^The fix:/.test(l)).slice(-2).join('\n');
+  return [cardFor(ex), '',
+    `Write the body of this one Emerge function${me.does ? ' (' + me.does + ')' : ''}:`, `fn ${name}(${(me.params || []).join(', ')}) {`, '  ___', '}', '',
+    ex.length ? 'It must give exactly these (write the rule they share; other inputs are tested too):\n' + ex.map((x) => '  ' + egLine(x)).join('\n') : '',
+    cs.length ? 'Constraints:\n' + cs.map((x) => '  - ' + _q(x.says || x)).join('\n') : '',
+    others.length ? 'Other functions in the module you may call (signatures only):\n' + others.map((x) => '  ' + x).join('\n') : '',
+    last ? 'Your last try was refused:\n' + last : '',
+    `Reply with only the body of ${name} (the lines that replace ___), no fn line, no explanation.`].filter((x) => x !== '').join('\n');
+}
+
 function briefTemplate(args) {
   const base = briefGap(args).replace(/\nReply with only the body of [^\n]*$/, '');
   return [base, '', 'Do not write the body yourself. Choose the template whose shape fits ' + args.name + ', and write each of its holes as ONE Emerge expression.',
@@ -368,7 +400,7 @@ function createRung({ root = path.resolve(__dirname, '..', '..'), ask, expect, m
                 if (code) { text = code; via = 'template ' + tp.template; tries.push({ n, stage: 'template:' + name, why: tp.template + ' ' + JSON.stringify(tp.holes).slice(0, 200), gap, model: who.name }); }
                 else note({ body: null, via: 'template ' + tp.template, said: 'Emerge did not render it: ' + firstLines((syn && (syn.stdout + syn.stderr)) || 'no answer', 2), fix: '', ms: Date.now() - t0 }); } }
             catch (e) { tries.push({ n, stage: 'template:' + name, why: 'no answer: ' + e.message, gap }); } }
-          if (text == null) try { text = await who.ask(briefGap({ skel, filled, name, expectation, lesson, method: fillMethod }), { tryNo: n, gap: name, rung: r }); } catch (e) { tries.push({ n, stage: 'gap:' + name, why: 'no answer: ' + e.message, ms: Date.now() - t0, gap }); break; }
+          if (text == null) try { const small = process.env.EMERGE_RUNG_SMALL !== '0' && (((skel.fns.find(x => x.name === name) || {}).contract || {}).examples || []).length; text = await who.ask(small ? briefPiece({ skel, filled, name, lesson }) : briefGap({ skel, filled, name, expectation, lesson, method: fillMethod }), { tryNo: n, gap: name, rung: r }); } catch (e) { tries.push({ n, stage: 'gap:' + name, why: 'no answer: ' + e.message, ms: Date.now() - t0, gap }); break; }
           let body = bodyOf(text, name);
           if (!body) { note({ body: null, said: 'the reply had no body', fix: 'Reply with only the lines of the body.', ms: Date.now() - t0 }); tries.push({ n, stage: 'gap:' + name, why: 'the reply had no body', ms: Date.now() - t0, gap, model: who.name }); continue; }
           // a body already refused: no more tries on this model, the next one up takes the gap (gaps.eg repeats)
@@ -498,4 +530,4 @@ function createRung({ root = path.resolve(__dirname, '..', '..'), ask, expect, m
   return { build, eg };
 }
 
-module.exports = { MODULE_ID, VERSION: '1.4.0', CARD, brief, briefTemplate, templateOf, TEMPLATE_MENU, extract, adapter, createRung, skeletonOf, paramsOf, bodyOf, briefGap, gapStore, taskDirOf, listGaps, moduleTypeOf };
+module.exports = { MODULE_ID, VERSION: '1.5.0', CARD, brief, briefPiece, cardFor, briefTemplate, templateOf, TEMPLATE_MENU, extract, adapter, createRung, skeletonOf, paramsOf, bodyOf, briefGap, gapStore, taskDirOf, listGaps, moduleTypeOf };

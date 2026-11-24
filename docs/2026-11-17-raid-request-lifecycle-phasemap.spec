@@ -224,6 +224,17 @@ stages:
     exists: "RL_D6, RL_D8 (the pipeline programs it; programmable, observable, diagnosable); COS's pipeline runs (cos/pipeline/runs.eg: run, dag, steps, nodes, gates); the pipeline canvas map (docs/2026-11-08-pipeline-canvas-phasemap.spec PC4 the box kinds, PC8 operate); BrainOS's map (docs/2026-10-21-brainos-into-idearium-phasemap.spec): BX1 census and BX2 flow sources DONE, BX3 flow canvas, BX4 agents, BX5 node controls, BX6 pipeline edit, BX7 automation PLANNED"
     gap: "each step a box naming its intent, its agent and its system, running one command or agent tool through RAID; he adds and wires steps on the canvas; each run kept as its lineage (which branch was taken and why), so the canvas is also the debugger and the history"
     owner_phase: PC4, PC8 (pipeline canvas); BX3, BX6, BX7 move to COS (RL_D9)
+  L16_the_contract_compartment_and_its_record:
+    his: '"each contract, sent to the pipeline would have a ledger from the moment the compartment gets created, maybe a contract compartment, maybe make a template in cos, to reuse them, and any more that you need, from gates, to steps," · "a visual record of the entire contract." (2026-11-24)'
+    status: PARTLY
+    exists: "L1 (one folder per pipeline request in COS, cos/pipeline/runs.eg: run, dag, steps, nodes, gates); L3 (the contract v2 drafted and booked, contract-template.js); RQ21 (the contract file rewritten at every transition, shelved, revived by L3); the gate types (PC5) and the gate record (RL_D10); COS's archetypes (cos/archetype) for whole systems"
+    gap: >-
+      A contract compartment: when a contract reaches the pipeline, COS makes its compartment from a template (a new archetype beside the system
+      ones: the work surface, the .contract, the .dag, the gates, its ledger), and its ledger starts with that first entry: every gate's id,
+      attempt, failure, fault, fix and pass, every file and every fill (L7), to the contract met. Templates in COS for a gate and a step too,
+      so they are made, not written. The visual record is the contract's own page: its DAG with each gate's state over time, replayable from the
+      ledger, the same lineage the canvas shows (L15).
+    owner_phase: NEW (reuses L1, L3, RQ21, PC5, PC8, cos/archetype)
 decisions:
   RL_D1_raid_is_the_bridge:
     status: "DECIDED 2026-11-17 by James — 'wouldn't raid be the bridge?' · 'yes but look at the nodes.'"
@@ -286,6 +297,26 @@ decisions:
       baseline: PC8 slice a, cos/pipeline/baseline.eg). Emerge uses the pipeline per word, per primitive: a step small enough that a model of
       any size can do it (the chunker, PC8 2026-11-14; PC17), with visual coding and debugging on the canvas (PC4).
 
+  RL_D10_the_gate_is_the_unit:
+    status: "DECIDED 2026-11-24 by James"
+    his: >-
+      "the gates are the intelligence system, yes. any system should be that way. each gate should generate with an id." · "also each gate could
+      have intent, run, and context. previous failure mode report, fault, the solution, the previous attemp, completely programmable, each gate can
+      build upon the last, steps can be websites, commands, entire complex gates per step." · "like raid runes the input through the pipeline,
+      removes the noise before feeding it into copilot. then creates the compartment for the workarea, for all of the context, files, and gates
+      to build from, using dag, pre-requesits, like raid collects whats needed, from nexus, the intent, all the context, whats needed, even if it
+      means nexus needs to build something new, then each gate can run a framework, command, data to a pipeline or agent, step wise
+      instructions," · "each function a step, nothing too small, no layers off limits. feedback loops. iterative loops, etc."
+    chosen: >-
+      One gate shape, in every system and at every level, each with its id from the moment it is made: intent (what it is for), run (what it
+      does: a framework, a command, a website, data to a pipeline or an agent, step-wise instructions, or a whole gate of its own), context
+      (only what it needs, the rest by reference), and its record: the previous attempt, its failure mode report, the fault, the solution. A gate
+      builds on the gates before it; loops (feedback, iteration) are gates that run again until their condition holds. RAID runs every input
+      through this: the noise taken out before Copilot sees it (L0a), the compartment made as the work area (L1), what is needed collected from
+      Nexus first and built if Nexus lacks it (L4, L6), each step a gate. No step too small and no layer off limits: a function is a step.
+    exists: "RAID's contract gates (cortex/core/raid/contract-gates.js: id, depends_on, requires, actions, pass_when, split); the pipeline's programmable gate types (PC5 slice a, cos/pipeline/gate.eg, cos/gate/types/<id>.gate); at the smallest level each function's .gap file (an id, every attempt, what refused it, the fix, the diagnosis, its contract as the gate's check, EMB8)."
+    gap: "one gate record across the three (id, intent, run, context, record), so a function's gate, a pipeline step's gate and a RAID contract's gate are read and run the same way"
+    axioms: "his framework; persistence (his 2026-11-14); §8.6 reuse (the three gates that exist become one shape, none rewritten)"
   RL_D9_brainos_moves_to_the_pipeline:
     status: "DECIDED 2026-11-24 by James — 'like BrainOS, which needs to mirgage its features to the pipeline and automation engine.'"
     chosen: "BrainOS's planned features (BX3 flow canvas, BX4 agents layer, BX5 node controls, BX6 pipeline edit, BX7 automation) land in COS's pipeline and automation engine, not in Idearium. The same direction as RL_D7 (Idearium's mapping belongs to COS). BX0a's landing in Idearium (2026-10-21) is kept as history and superseded."
