@@ -177,6 +177,20 @@ stages:
     exists: "lib/gap-field.js (the one agnostic gap-reporting entry, his 2026-08: 'Needs to stay agnostic. Gap field ... Reducing ambiguity'); intelligence/gap (hunter.js, predicate.js, ledger.js): structural gaps found and escalated"
     gap: "the field measures a request before its DAG: how many gaps, how deep, which depend on which; that measure sets how far RAID decomposes and whether a small model, Copilot or he is needed"
     owner_phase: NEW (reuses lib/gap-field.js and intelligence/gap)
+  L1b_economy_in_the_dag:
+    his: '"we need the system to be able to do what its good at. i was also thinking we introduce economy to the dag, like which step can use a small model determined by complexity, to determine how much reasoning, we could also, use the pipeline to determine what capabilites are missing from nexus to fullfill the request, and have it built in nexus using the pipeline." (2026-11-24)'
+    status: PARTLY
+    exists: >-
+      cortex/core/raid/contract-gates.js Boundaries: one row per check (agent, kind, size, ok) and budget(agent, kind), the size an agent passes
+      reliably (its passes' 75th percentile, capped below its first failure); shouldSplit splits a piece over an agent's budget or after two
+      failures. RAID's provider selector (index.js) weighs health and role confidence. Measured 2026-11-23 (EMB6, EMB7): the 3b fills a piece
+      with its structure and its examples, and fails one that asks it to choose or invent.
+    gap: >-
+      Each DAG node is priced before it runs: its complexity (L1a), how much reasoning it needs, and what each capability costs. RAID gives it
+      to the cheapest that can do it, in order: deterministic Nexus (no model), the small model, a bigger model, Copilot, him. Each outcome goes
+      back into Boundaries, so the prices are learned, not guessed. A node no capability can do is a missing capability: the pipeline makes it
+      a build request in Nexus (L6, PC3), and the request waits on it as a node of its DAG.
+    owner_phase: NEW (reuses contract-gates.js Boundaries and shouldSplit; L6 for the missing capability)
   L2a_the_dag_from_primitives:
     his: '"dag from decomposing the request into primitives, principles, or variable" · "The dag, prereq and the test file creates the expected outputs. Filenames. Intent. Context. Conditions for the request to be completed." · "the primitives are the boundaries for the structure. Anything that can''t be changed without changing the shape of the structure." (2026-11-23)'
     status: PARTLY
