@@ -15,7 +15,7 @@ const path = require('path');
 
 const DEFAULTS = Object.freeze({
   outbound: { enabled: false,
-    tunnel: { enabled: false, provider: 'cloudflare', token: '', systems: ['orchestrator'] },
+    tunnel: { enabled: false, provider: 'cloudflare', token: '', hostname: '', systems: ['orchestrator'] },
     rendezvous: { enabled: false, url: '', deviceName: '', allowedDevices: [] } },
   inbound: { enabled: false,
     mapping: { enabled: false, protocols: ['upnp', 'pcp', 'natpmp'], ports: [], leaseSeconds: 3600 },
@@ -38,7 +38,7 @@ const SYS = /^[a-z][a-z0-9-]{0,40}$/;
 
 // every leaf path and its rule: what a patch may set
 const RULES = {
-  'outbound.enabled': 'bool', 'outbound.tunnel.enabled': 'bool', 'outbound.tunnel.provider': ['cloudflare', 'ngrok'], 'outbound.tunnel.token': 'secret', 'outbound.tunnel.systems': 'systems',
+  'outbound.enabled': 'bool', 'outbound.tunnel.enabled': 'bool', 'outbound.tunnel.provider': ['cloudflare', 'ngrok'], 'outbound.tunnel.token': 'secret', 'outbound.tunnel.hostname': 'domain', 'outbound.tunnel.systems': 'systems',
   'outbound.rendezvous.enabled': 'bool', 'outbound.rendezvous.url': 'url', 'outbound.rendezvous.deviceName': 'name', 'outbound.rendezvous.allowedDevices': 'names',
   'inbound.enabled': 'bool', 'inbound.mapping.enabled': 'bool', 'inbound.mapping.protocols': 'protocols', 'inbound.mapping.ports': 'ports', 'inbound.mapping.leaseSeconds': [60, 86400],
   'inbound.ddns.enabled': 'bool', 'inbound.ddns.provider': ['duckdns', 'cloudflare'], 'inbound.ddns.domain': 'domain', 'inbound.ddns.token': 'secret', 'inbound.ddns.intervalSeconds': [60, 86400],
@@ -106,4 +106,4 @@ function patch(p, { by = null } = {}) {
   return { ok: true, settings: view(), changed };
 }
 
-module.exports = { load, view, patch, gate, DEFAULTS, REACH, RULES, MODULE_ID: 'cos.manager.network-settings', VERSION: '1.0.0' };
+module.exports = { load, view, patch, gate, DEFAULTS, REACH, RULES, SECRETS, MODULE_ID: 'cos.manager.network-settings', VERSION: '1.0.0' };

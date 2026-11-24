@@ -38,6 +38,10 @@ spec:
         description: "Only a person (or a rule RAID approved) changes network settings; an agent is refused."
         type: hard
         enforced_by: [GATE-NET-PERSON]
+      - id: NET-004
+        description: "A tunnel is started and stopped by a person or a rule, only while its gate is open; the ledger says that a tunnel is up, never where (whoever has the address reaches the system). A download of cloudflared is refused unless its checksum is published and matches."
+        type: hard
+        enforced_by: [GATE-NET-TUNNEL]
 
   schemas:
 
@@ -45,7 +49,7 @@ spec:
       name: NetworkSettings
       description: "Every network setting; each engine off by default."
       fields:
-        outbound:     "{ enabled: false, tunnel: { enabled, provider: cloudflare|ngrok, token (secret), systems: string[] }, rendezvous: { enabled, url, deviceName, allowedDevices: string[] } }"
+        outbound:     "{ enabled: false, tunnel: { enabled, provider: cloudflare|ngrok, token (secret), hostname (a domain or empty: the address of a named tunnel), systems: string[] }, rendezvous: { enabled, url, deviceName, allowedDevices: string[] } }"
         inbound:      "{ enabled: false, mapping: { enabled, protocols: (upnp|pcp|natpmp)[], ports: { external, internal, system }[], leaseSeconds 60–86400 }, ddns: { enabled, provider: duckdns|cloudflare, domain, token (secret), intervalSeconds 60–86400 }, ssh: { enabled, port 1–65535, keysOnly: true (fixed), allowedKeys: string[] } }"
         tls:          "{ requiredInbound: true (fixed), certPath, keyPath }"
         compartments: "{ <system>: { network: on|off|throttled, bytesPerSec: number|null } }"
@@ -94,7 +98,7 @@ spec:
       uuid: nexus-cos-network-routes-v1-0000-2026-1102-001
       path: cos/manager/server.js
       phase: CA3_network_settings
-      description: "GET /api/cos/network → { settings (secrets as set/not set), gates: { engine: { ok, why } } }; PATCH /api/cos/network { patch, by }; rows `cos network`, `cos network set <path> <value>`."
+      description: "GET /api/cos/network → { settings (secrets as set/not set), gates: { engine: { ok, why } } }; PATCH /api/cos/network { patch, by }; rows `cos network`, `cos network set <path> <value>` (a token is typed on the page, never in a command line), `cos tunnel [status|start|stop|install]`. CA3b adds GET /api/cos/network/tunnel, POST /api/cos/network/tunnel { action: start|stop, by }, POST /api/cos/network/tunnel/install { by }."
       deps: [{ name: network-settings }]
       schema_refs: [NetworkSettings]
       exports: ["GET /api/cos/network", "PATCH /api/cos/network"]
@@ -133,16 +137,90 @@ spec:
       error_paths: ["the settings unreadable → closed, said"]
       acceptance: ["ddns not spawned while closed; spawned once opened"]
 
+    - id: MOD-NET-TUNNEL
+      name: network-tunnel
+      uuid: nexus-cos-network-tunnel-v1-0000-2026-1103-001
+      path: cos/manager/tunnel.js
+      phase: CA3b_cloudflared_tunnel
+      description: >-
+        James, 2026-11-03: "can you get cloudflared working in cos. the settings in the network settings. i want to have it connect to a cloudflared url and
+        popup on the screen with a qr code and the link under it". Start in the Network page runs cloudflared: a quick tunnel (no token) is one
+        `cloudflared tunnel --url http://127.0.0.1:<port>` per system in outbound.tunnel.systems, the port read from COS's supervisor, the
+        *.trycloudflare.com address read from cloudflared's output (never cloudflared's own api.trycloudflare.com, named in its errors); a named tunnel (a
+        token) is one `cloudflared tunnel run` with the token in the child's environment, never its command line, and the address is outbound.tunnel.hostname.
+        A tunnel that dies is restarted (at most 10 an hour, backoff 1/3/8 s) and its new address shown; then it says it gave up.
+      deps: [{ name: network-settings }, { name: network-cloudflared }]
+      schema_refs: [NetworkSettings]
+      exports: ["createTunnel({ sup, settings, cfd, spawn, log, note, now, policy }) → { status(), start({ by }), stop({ by }), dispose(), setInstaller(), installer() }", "readUrl(text)"]
+      gate_pipeline: ["GATE-CA3-040: by a person or a rule (an agent 403)", "GATE-CA3-041: gate('tunnel') open, else 409 saying which switches", "GATE-CA3-042: the program found, else 409 needs cloudflared"]
+      behavioral_contracts: ["the token is never on a command line or in a status", "the ledger says that a tunnel is up, never its address", "stop kills every process it started; the manager's exit does too"]
+      error_paths: ["no address in 30 s → failed, with cloudflared's last words", "exits before an address → failed, with its last words", "10 restarts in an hour → gave up, said"]
+      acceptance: ["a fake cloudflared: the right --url, the address across split chunks, no token in a quick tunnel; a died tunnel shows its new address; a named tunnel shows his hostname"]
+
+    - id: MOD-NET-CFD-BIN
+      name: network-cloudflared
+      uuid: nexus-cos-network-cloudflared-v1-0000-2026-1103-001
+      path: cos/manager/cloudflared.js
+      phase: CA3b_cloudflared_tunnel
+      description: >-
+        find() says where cloudflared is (COS_CLOUDFLARED, COS's own folder, PATH, the Windows installer's folder, Homebrew) or where it looked. install() downloads
+        the release asset for this machine from github.com/cloudflare/cloudflared, checks its SHA-256 against the one the release notes publish (none, or a
+        different one → refused, nothing kept), closes the file before renaming it, and runs --version once. The limit, said: the checksum comes from the same host
+        as the file, so it proves the download whole, not that GitHub or Cloudflare is trustworthy. macOS ships a .tgz, not unpacked here: it says `brew install`.
+      deps: []
+      exports: ["find(deps) → { found, path?, from?, searched[] }", "assetFor(platform, arch)", "parseChecksums(text)", "createInstaller(deps) → { install({ force }), status() }"]
+      gate_pipeline: ["GATE-CA3-050: the route refuses unless the tunnel's gate is open: the download reaches github.com"]
+      behavioral_contracts: ["a failed install leaves nothing half-made and an existing install untouched", "everything impure is injected, so a test runs it dry"]
+      error_paths: ["the API rate-limited → the release page is read instead", "a missing or wrong checksum → refused, the partial file removed"]
+      acceptance: ["a fake GitHub: installs and runs --version; a wrong or missing checksum refused with nothing kept; the API limit falls back to the page"]
+
+    - id: MOD-NET-QR
+      name: network-qr
+      uuid: nexus-cos-network-qr-v1-0000-2026-1103-001
+      path: cos/ui/core/qr.js
+      phase: CA3b_cloudflared_tunnel
+      description: >-
+        A QR code from text with no dependency: byte mode, error correction M, versions 1–10 (up to 213 bytes; a tunnel address is about 55). Longer text is
+        refused, never cut. svg() is always black on white, in any theme. Runs in the browser (window.COSQR) and in node. Decoded back to the exact text by OpenCV for
+        versions 1–10 (every block layout and the version-information blocks of 7 and up) when it was checked.
+      deps: []
+      exports: ["COSQR.matrix(text) → { size, version, mask, modules }", "COSQR.svg(text, { quiet, dark, light, label })"]
+      behavioral_contracts: ["the same text gives the same code", "UTF-8 is counted in bytes"]
+      error_paths: ["more than 213 bytes → throws, the address was not cut"]
+      acceptance: ["finder, timing and format structure; golden matrices; an over-long address refused"]
+
+    - id: MOD-NET-TUNNEL-PAGE
+      name: network-tunnel-page
+      uuid: nexus-cos-network-tunnel-page-v1-0000-2026-1103-001
+      path: cos/ui/network/page.js
+      phase: CA3b_cloudflared_tunnel
+      description: >-
+        The Network page's tunnel panel: its state, the gate's verdict, where cloudflared is (with a Download button and its progress when it is not), Start and Stop.
+        Start asks first and says who can then reach what. When an address comes up a popup shows its code with the link under it, and a warning that the link
+        is access; Escape or the backdrop closes it; Show QR code brings it back; a restart's new address shows it again. Also the Compartments section: each
+        declared system's network switch (on, off, throttled) and limit in KB/s, saved as compartments.<system>.network and bytesPerSec (recorded; nothing enforces
+        them yet).
+      deps: [{ name: network-routes }, { name: network-qr }]
+      schema_refs: [NetworkSettings]
+      exports: ["#/network"]
+      gate_pipeline: ["GATE-CA3-060: confirm before Start", "GATE-CA3-061: Start is off while the gate is closed, cloudflared is missing, or there are unsaved changes, and says which"]
+      behavioral_contracts: ["a token is typed to replace it or cleared with Clear, never shown", "the code in the popup is the code of the link under it"]
+      error_paths: ["a refused Start is shown with its reason", "the manager silent → said"]
+      acceptance: ["in Clear Glass: Start → the popup with the link under the code; Escape closes it and Show QR code brings it back; Stop"]
+
   events:
     network:
       - "versionium cos.network { changed paths, by } (secrets redacted)"
+      - "ledger network: tunnel starting / up for <system> / stopped, cloudflared download and install (no address, no token)"
 
   enforcement:
     gates:
       - { id: GATE-NET-OFF-BY-DEFAULT, name: off-by-default, severity: fatal, check: "defaults close every gate", on_failure: "suite red" }
       - { id: GATE-NET-SECRETS, name: secrets, severity: fatal, check: "no read returns a token", on_failure: "suite red" }
       - { id: GATE-NET-PERSON, name: person, severity: fatal, check: "an agent's patch is refused", on_failure: "suite red" }
+      - { id: GATE-NET-TUNNEL, name: tunnel, severity: fatal, check: "an agent's start or download is refused; a closed gate refuses both; no address or token reaches the ledger", on_failure: "suite red" }
 
   tests:
     - "tests/modules/test-substrate-spec.test.js — compiles"
     - "tests/modules/test-cos-network.test.js — each module's acceptance"
+    - "tests/modules/test-cos-tunnel.test.js — CF-01..CF-13: MOD-NET-TUNNEL, MOD-NET-CFD-BIN, MOD-NET-QR, MOD-NET-TUNNEL-PAGE, the CLI rows"

@@ -28,6 +28,8 @@ const TABLE = [
   ['add', 'add <name> <folder> [cmd=node] [args=server.js] [port=<n>] [health=/health]', 'add a system: a proposal, taken by you'],
   ['disk', 'disk <system> [make] [state] | disk verify <file>', 'a system\'s disks (its spec as metadata, its files in one compressed file); make one, with its data if you say state; verify one'],
   ['disks', 'disks', 'every disk COS holds'],
+  ['network', 'network | network set <path> <value>', 'the network settings and each engine\'s gate; set one (true, false, a number, text, or a,b,c for a list). Tokens are typed on the Network page, not here'],
+  ['tunnel', 'tunnel [status|start|stop|install]', 'the cloudflared tunnel: its state and addresses; start or stop it; fetch cloudflared (the gate must be open)'],
   // 0.60.517 — James, 2026-11-13: "also all pipelines in nexus need to be here." Every .pipeline file in Nexus imported into the engine, now
   // GR0 (2026-11-13) — his "find them.": every graph in Nexus, read from the tree
   ['census', 'census graph [--md]', 'every graph Nexus keeps: its store, what its edges rest on, the files that write and read it, its rows on this machine\'s data; --md prints the atlas page'],
@@ -71,13 +73,13 @@ function reachBy(sup) {
   });
 }
 
-function createCli({ restartCos = null, sup, resources = null, config = null, notices = null, proposals = null, addSystem = null, usage = null, disks = null, vdisks = null, pipelineSync = null, graphCensus = null, locationOf = null, reach = reachBy(sup), wakeMs = 25000 } = {}) {
+function createCli({ restartCos = null, sup, resources = null, config = null, notices = null, proposals = null, addSystem = null, usage = null, disks = null, vdisks = null, pipelineSync = null, graphCensus = null, locationOf = null, network = null, tunnel = null, reach = reachBy(sup), wakeMs = 25000 } = {}) {
   async function run(line, { by = 'person' } = {}) {
     // 0.60.517 — "cos <verb>" typed in COS's own console is the verb (his 2026-11-13 `cos pipeline-sync` answered "no verb cos")
     let [verb, ...a] = split(line); if (verb === 'cos' && a.length) verb = a.shift(); const L = [];
     if (!verb) return { ok: true, lines: [] };
     const acts = ['start', 'stop', 'restart', 'boot', 'take', 'drop', 'add', 'request'];   // PC13: a request is his   // and `disk <system> make` (below)
-    if (/^agent:/.test(String(by)) && (acts.includes(verb) || (verb === 'disk' && a[1] === 'make') || (verb === 'vdisk' && /^(make|refresh|snapshot|revert|drop)$/.test(a[1] || '')) || (verb === 'config' && a.length > 1) || (verb === 'notices' && a[0] === 'read')))
+    if (/^agent:/.test(String(by)) && (acts.includes(verb) || (verb === 'disk' && a[1] === 'make') || (verb === 'vdisk' && /^(make|refresh|snapshot|revert|drop)$/.test(a[1] || '')) || (verb === 'config' && a.length > 1) || (verb === 'network' && a[0] === 'set') || (verb === 'tunnel' && /^(start|stop|install)$/.test(a[0] || '')) || (verb === 'notices' && a[0] === 'read')))
       return { ok: false, lines: [`an agent proposes; ${verb} is a person's act (POST /api/cos/proposals)`] };
     const need = (n, usage) => { if (a.length < n) throw Object.assign(new Error(`usage: ${usage}`), { code: 400 }); };
     if (verb.startsWith('@')) { a.unshift(verb); verb = 'ask'; }   // CH1: "@ollama what is …" is `ask @ollama what is …`
@@ -140,6 +142,36 @@ function createCli({ restartCos = null, sup, resources = null, config = null, no
             if (!rows.length) continue; L.push(`— ${gl}`);
             for (const [k, s] of rows) L.push(`  ${pad(k, 20)}${pad(s.value === null ? '—' : s.unit === 'size' && typeof s.value === 'number' ? `${s.value} MB` : s.unit === 'cpu' && s.value != null ? `${s.value}%` : typeof s.value === 'object' ? JSON.stringify(s.value) : s.value, 18)}${pad(s.from, 11)}${s.how.state || ''}${s.how.when ? ` · ${s.how.when}` : ''}`);
           }
+          break;
+        }
+        case 'network': {
+          if (!network) throw new Error('no network settings in this manager');
+          if (a[0] === 'set') {
+            need(3, row[1]); const [, path, ...rest] = a; const raw = rest.join(' ');
+            if (network.SECRETS && network.SECRETS.includes(path)) throw Object.assign(new Error(`${path} is a token: type it on the Network page, so it is not left in a command history`), { code: 400 });
+            const rule = network.RULES[path]; const list = ['systems', 'names', 'protocols', 'keys'].includes(rule);
+            const val = raw === 'true' ? true : raw === 'false' ? false : /^-?\d+$/.test(raw) ? Number(raw) : /^[[{]/.test(raw) ? JSON.parse(raw) : list ? raw.split(',').map(x => x.trim()).filter(Boolean) : raw === 'none' ? '' : raw;
+            const patch = {}; let x = patch; const ks = path.split('.'); ks.slice(0, -1).forEach(k => { x = x[k] = {}; }); x[ks[ks.length - 1]] = val;
+            const r = network.patch(patch, { by }); if (!r.ok) throw Object.assign(new Error(r.error), { code: r.code });
+            sup.note('network', `network settings changed: ${path} (by ${by})`, { by }); L.push(`${path} set`);
+          }
+          const v = network.view();
+          for (const e of Object.keys(network.REACH)) { const g = network.gate(e); L.push(`${pad(e, 8)}${pad(g.ok ? 'open' : 'closed', 8)}${g.ok ? '' : g.why}`); }
+          L.push(`tunnel  ${v.outbound.tunnel.provider}, ${v.outbound.tunnel.token.set ? 'named (token set)' : 'quick'}${v.outbound.tunnel.hostname ? `, ${v.outbound.tunnel.hostname}` : ''}, systems: ${v.outbound.tunnel.systems.join(', ') || '—'}`);
+          break;
+        }
+        case 'tunnel': {
+          if (!tunnel) throw new Error('no tunnel in this manager');
+          const op = a[0] || 'status';
+          if (op === 'start' || op === 'stop') { const r = tunnel[op]({ by }); if (!r.ok) throw Object.assign(new Error(r.error), { code: r.code }); }
+          else if (op === 'install') {
+            const g = network.gate('tunnel'); if (!g.ok) throw new Error(g.why);
+            sup.note('network', `cloudflared download started by ${by}`, { by }); const r = await tunnel.installer().install({ force: a[1] === 'force' });
+            if (!r.ok) throw new Error(r.error); L.push(`cloudflared ${r.action}${r.version ? ` ${r.version}` : ''} — ${r.path}`);
+          } else if (op !== 'status') throw Object.assign(new Error(`usage: ${row[1]}`), { code: 400 });
+          const st = tunnel.status(); L.push(`${st.state} · ${st.mode} · ${st.provider} · ${st.binary.found ? `cloudflared at ${st.binary.path}` : 'cloudflared not found (tunnel install)'}`);
+          if (!st.gate.ok) L.push(st.gate.why);
+          for (const t of st.tunnels) L.push(`  ${pad(t.system || 'named', 16)}${pad(t.state, 12)}${t.url || t.error || ''}`);
           break;
         }
         case 'vdisk': {

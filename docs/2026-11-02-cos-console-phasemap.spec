@@ -606,3 +606,13 @@ phases_addendum_2026_11_22_storage:
     reading: "the coder's, to confirm: Eravos (the canvas app, eravos.exe) imported as a system of COS, its canvas opened from COS's UI, as the pipeline canvas already uses its SDK (IF-ERAVOS-SDK)."
     does: "Eravos becomes a COS system: imported, supervised and opened from COS's UI."
     proof: "Eravos starts and stops from COS and opens in its window"
+
+# ADDENDUM 2026-11-24 (0.60.647) — SC22 built: the tunnel from his 2026-11-03 zip landed. James, 2026-11-24: "also that qr zip i uploaded can you impliment that into the network settings? so i can connect remotely?" · 2026-11-03: "can you get cloudflared working in cos. the settings in the network settings. i want to have it connect to a cloudflared url and popup on the screen with a qr code and the link under it"
+# Placed whole (unchanged in main since 2026-11-03): cos/manager/tunnel.js, cloudflared.js, network-settings.js (6 lines), cos/ui/core/qr.js,
+# cos/ui/network (the Cloudflare tunnel section and its QR popup), cos/spec/network.spec (MOD-NET-TUNNEL), test-cos-tunnel. Merged by their own
+# lines only: server.js (the tunnel, its three routes, closed with the manager), cli.js (the network and tunnel commands, an agent may not set
+# the network or open the tunnel), contract.json (the routes, on the network page). Found: the zip's tests ran a .js fake program, which Windows
+# cannot start (EFTYPE): a script stand-in is now run by Node (cloudflared.js runnable), the real cloudflared as itself; CF-09 installs and runs
+# the Linux build, so it is skipped on Windows, said. test-cos-tunnel 10 passed, 1 skipped, CF-11 (the page in Clear Glass's test engine) not
+# run: that engine does not start on this machine. Checked by hand: the Network page renders on a throwaway COS, no console errors; cloudflared
+# found on his machine. Not checked: Start (it would open a public address) and the QR popup live. Off until he turns outbound reach on.

@@ -59,7 +59,16 @@ function createServer(sup, opts = {}) {
   // DK6–DK8 0.60.383 — James, 2026-11-03: "It needs to be a virtual disk. For the virtual envirements for qumu also. Like it holds all the data,
   // snapshots, system state." Each system's qcow2: its metadata, files and data in one ext4, its snapshots inside the same file
   const vdisks = require('../disk/vdisk.js').createVDisks({ root, disks });
-  const cli = require('./cli.js').createCli({ restartCos: (x) => (typeof opts.restartCos === 'function' ? opts.restartCos(x) : { ok: false, error: 'this manager was not started to restart itself' }), sup, resources, config, notices, proposals, addSystem, usage, disks, vdisks, pipelineSync: (o) => syncPipelines(o), graphCensus: (o) => pipeline.graphCensus(o), locationOf: (name) => _locationOf(name) });
+  // CA3b (cos/spec/network.spec MOD-NET-TUNNEL, MOD-NET-CFD-BIN) — James, 2026-11-03: "can you get cloudflared working in cos. the settings in the
+  // network settings. i want to have it connect to a cloudflared url and popup on the screen with a qr code and the link under it". The ledger says that a
+  // tunnel is up, never where: whoever has the address reaches the system, so any address in a message is hidden before it is written.
+  const NET = require('./network-settings.js'); const cfd = require('./cloudflared.js');
+  const hide = (t) => String(t).replace(/https:\/\/[a-z0-9-]+\.trycloudflare\.com/gi, 'https://<address>');
+  const netNote = (t) => { try { sup.note('network', hide(t), { by: 'rule:tunnel' }); } catch (_) { /* the ledger said it could not */ } };
+  const tunnel = require('./tunnel.js').createTunnel({ sup, settings: NET, cfd, log: netNote, note: netNote });
+  tunnel.setInstaller(cfd.createInstaller({}));
+  process.once('exit', () => tunnel.dispose());
+  const cli = require('./cli.js').createCli({ restartCos: (x) => (typeof opts.restartCos === 'function' ? opts.restartCos(x) : { ok: false, error: 'this manager was not started to restart itself' }), sup, resources, config, notices, proposals, addSystem, usage, disks, vdisks, pipelineSync: (o) => syncPipelines(o), graphCensus: (o) => pipeline.graphCensus(o), locationOf: (name) => _locationOf(name), network: NET, tunnel });
   sup.on('ledger', (entry) => { try { notices.fromLedger(entry); } catch (_) {} });
   const checkNotice = () => { try { notices.fromNotice(require('../../lib/nexus-update.js').notice({ root })); } catch (_) {} };
   const noticeTick = setInterval(checkNotice, 10 * 60 * 1000); if (noticeTick.unref) noticeTick.unref(); setTimeout(checkNotice, 2000).unref();
@@ -202,6 +211,22 @@ function createServer(sup, opts = {}) {
       // CA3 (cos/spec/network.spec MOD-NET-ROUTES) — James: "Gate behind settings to open. Make a full detailed settings for network."
       if (p === '/api/cos/network' && m === 'GET') { const N = require('./network-settings.js'); return send(res, 200, { ok: true, settings: N.view(), gates: Object.fromEntries(Object.keys(N.REACH).map(e => [e, N.gate(e)])) }); }
       if (p === '/api/cos/network' && m === 'PATCH') { const N = require('./network-settings.js'); const r = N.patch(body.patch, { by: body.by }); if (r.ok) sup.note('network', `network settings changed: ${r.changed.map(c => c.path).join(', ')}`, { by: body.by }); return send(res, r.ok ? 200 : r.code, r.ok ? { ...r, gates: Object.fromEntries(Object.keys(N.REACH).map(e => [e, N.gate(e)])) } : r); }
+      // CA3b — the cloudflared tunnel: its state and addresses; start / stop (a person's or a rule's, NET-003); fetch cloudflared (the same gate: it reaches out)
+      if (p === '/api/cos/network/tunnel' && m === 'GET') return send(res, 200, tunnel.status());
+      if (p === '/api/cos/network/tunnel' && m === 'POST') {
+        if (body.action !== 'start' && body.action !== 'stop') return send(res, 400, { ok: false, error: 'action is "start" or "stop"' });
+        const r = tunnel[body.action]({ by: body.by }); return send(res, r.ok ? 200 : r.code, r);
+      }
+      if (p === '/api/cos/network/tunnel/install' && m === 'POST') {
+        const by = String(body.by || '');
+        if (!/^(person|rule:[\w.-]+|agent:[\w.-]+)$/.test(by)) return send(res, 400, { ok: false, error: 'say who acts: { "by": "person" | "rule:<id>" }' });
+        if (/^agent:/.test(by)) return send(res, 403, { ok: false, error: 'fetching a program from the internet is a person\'s act; an agent proposes (NET-003)' });
+        const g = NET.gate('tunnel'); if (!g.ok) return send(res, 409, { ok: false, error: g.why, needs: 'settings' });
+        if (tunnel.status().install.running) return send(res, 409, { ok: false, error: 'an install is already running' });
+        netNote(`cloudflared download started by ${by}`);
+        tunnel.installer().install({ force: body.force === true }).then((r) => netNote(r.ok ? `cloudflared ${r.action}${r.version ? ` ${r.version}` : ''}` : `cloudflared install failed: ${r.error}`));
+        return send(res, 202, { ok: true, started: true, install: tunnel.status().install });
+      }
       if (m === 'GET' && p === '/api/cos/policy') return send(res, 200, { ok: true, policy: sup.policy(), defaults: sup.DEFAULTS });   // MG18: the defaults too, so a page can say each value's layer
       // MG18 — the contract, the stream, usage, logs, proposals
       if (m === 'GET' && p === '/api/cos/contract') { try { return send(res, 200, { ok: true, contract: JSON.parse(require('fs').readFileSync(CONTRACT, 'utf8')) }); } catch (e) { return send(res, 500, { ok: false, error: `the contract is unreadable: ${e.message}` }); } }
@@ -557,6 +582,7 @@ function createServer(sup, opts = {}) {
     } catch (e) { return send(res, /no system/.test(e.message) ? 404 : 500, { ok: false, error: e.message }); }
   });
   srvRef.server = server;   // PC5: a gate's call to 'cos' reaches this manager on its own port
+  server.on('close', () => tunnel.dispose()); server.tunnel = tunnel;   // a tunnel never outlives the manager that opened it
   return server;
 }
 
@@ -635,7 +661,7 @@ if (require.main === module) {
           const r = await D.install(root); sup.note('deps', r.ok ? `dependencies installed in ${Math.round(r.ms / 1000)} s` : `npm install failed (exit ${r.code}): ${String(r.tail).trim().split('\n').slice(-3).join(' ').slice(0, 300)} — booting anyway`, { by: 'boot' }); } }
       const r = await sup.boot({ by: 'boot', ...(only ? { set: only } : {}) }); console.log(`[cos] booted ${r.started.length}, skipped ${r.skipped.length}`);
     }
-    const bye = () => { try { duties && duties.stop(); } catch (_) {} sup.shutdown({ by: 'boot' }); srv.close(); if (ui) ui.close(); setTimeout(() => process.exit(0), 500).unref(); };
+    const bye = () => { try { duties && duties.stop(); } catch (_) {} try { srv.tunnel.dispose(); } catch (_) {} sup.shutdown({ by: 'boot' }); srv.close(); if (ui) ui.close(); setTimeout(() => process.exit(0), 500).unref(); };
     process.on('SIGINT', bye); process.on('SIGTERM', bye);
   }).catch((e) => { console.error(`[cos] ${e.message}`); process.exit(1); });
 }

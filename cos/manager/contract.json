@@ -427,6 +427,25 @@
     },
     {
       "method": "GET",
+      "path": "/api/cos/network/tunnel",
+      "out": "{ state: off|starting|up|partial|failed, gate, provider, mode: quick|named, systems, binary: { found, path?, searched[] }, install: { running, phase, pct, message }, tunnels: [{ key, system, origin, state, url, error, restarts }] } \u2014 CA3b"
+    },
+    {
+      "method": "POST",
+      "path": "/api/cos/network/tunnel",
+      "in": "{ action: start|stop, by }",
+      "personAct": true,
+      "out": "{ ok, status } | 400 | 403 for an agent | 409 saying why it did not start (gate closed, cloudflared missing) \u2014 CA3b"
+    },
+    {
+      "method": "POST",
+      "path": "/api/cos/network/tunnel/install",
+      "in": "{ by, force? }",
+      "personAct": true,
+      "out": "202 { started, install } \u2014 progress on GET /api/cos/network/tunnel; 403 for an agent; 409 while the gate is closed \u2014 CA3b"
+    },
+    {
+      "method": "GET",
       "path": "/api/cos/console",
       "out": "{ lines: [{ system, ts, stream, line }], systems } \u2014 every system's last lines (limit, default 500, max 5000; ?system= one), merged in time order (SC11)"
     },
@@ -1147,7 +1166,10 @@
       "phase": "CA3_network_settings",
       "routes": [
         "GET /api/cos/network",
-        "PATCH /api/cos/network"
+        "PATCH /api/cos/network",
+        "GET /api/cos/network/tunnel",
+        "POST /api/cos/network/tunnel",
+        "POST /api/cos/network/tunnel/install"
       ],
       "listens": [],
       "emits": [],

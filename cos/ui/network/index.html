@@ -1,7 +1,8 @@
 <!doctype html>
 <!-- cos/ui/network/index.html — COS's Network page (CA3, 0.60.379). Spec: cos/spec/network.spec MOD-NET-PAGE.
      James, 2026-11-02: "both but extensive settings for all of this." · "Gate behind settings to open. Make a full detailed settings for network."
-     Every read and write is COS's own door: GET / PATCH /api/cos/network. Everything is off until he opens it. -->
+     Every read and write is COS's own door: GET / PATCH /api/cos/network. Everything is off until he opens it.
+     2026-11-03 (MOD-NET-TUNNEL, MOD-NET-QR) — James: "i want to have it connect to a cloudflared url and popup on the screen with a qr code and the link under it" -->
 <html lang="en" data-theme="nexus" data-accent="cycle">
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Network · COS</title>
@@ -19,8 +20,11 @@
   </header>
   <div id="nw-msg" class="nw-msg" role="status"></div>
   <section class="panel"><h2>Gates <span class="nw-hint">what may start right now</span></h2><div id="nw-gates" class="nw-gates">reading…</div></section>
+  <section class="panel nw-sec" id="nw-tunnel-panel"><h2>Cloudflare tunnel <span class="nw-hint">open a system from your phone: Start, then scan</span></h2><div id="nw-tunnel-body" data-tunnel>reading…</div></section>
   <main id="nw-sections"></main>
+  <section class="panel nw-sec"><h2>Compartments <span class="nw-hint">each system's own network switch and limit</span></h2><div id="nw-comps" class="nw-comps">reading…</div></section>
   <script src="../core/core.js"></script>
+  <script src="../core/qr.js"></script>
   <script src="page.js"></script>
 </body>
 </html>

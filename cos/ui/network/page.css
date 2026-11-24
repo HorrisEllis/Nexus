@@ -13,3 +13,34 @@
 .nw-msg:empty { display: none; } .nw-msg { margin: 8px 0; padding: 8px 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,.12); }
 .nw-msg.bad { border-color: #f87171; color: #f87171; } .nw-msg.ok { border-color: #34d399; color: #34d399; }
 @media (max-width: 640px) { .nw-row { grid-template-columns: 1fr; } .nw-row .nw-help { grid-column: 1; } }
+
+/* the tunnel panel (MOD-NET-TUNNEL) */
+#nw-tunnel-body { display: grid; gap: 8px; }
+.nw-thead { display: flex; align-items: center; gap: 10px; font-weight: 600; }
+.nw-tstate { padding: 2px 10px; border-radius: 999px; border: 1px solid rgba(255,255,255,.18); font: 12px ui-monospace, monospace; }
+.nw-tstate.up { border-color: #34d399; color: #34d399; } .nw-tstate.starting { border-color: #fbbf24; color: #fbbf24; } .nw-tstate.partial { border-color: #fbbf24; color: #fbbf24; } .nw-tstate.failed { border-color: #f87171; color: #f87171; }
+.nw-tline { font-size: 13px; opacity: .85; } .nw-tline.closed { opacity: .7; } .nw-tline.ok { color: #34d399; opacity: 1; }
+.nw-tbtns { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; } .nw-twhy { font-size: 12px; opacity: .6; }
+.nw-tmsg:empty { display: none; } .nw-tmsg { font-size: 13px; padding: 6px 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,.12); }
+#nw-tunnel-body progress { width: 100%; max-width: 520px; }
+.nw-tlist { display: grid; gap: 6px; }
+.nw-trow { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; padding: 8px 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,.08); }
+.nw-tname { font-weight: 600; min-width: 110px; } .nw-tst { font: 12px ui-monospace, monospace; opacity: .65; }
+.nw-trow a { font: 13px ui-monospace, monospace; word-break: break-all; } .nw-terr { color: #f87171; font-size: 12px; }
+.nw-secret { display: flex; gap: 8px; align-items: center; } .nw-secret input { flex: 1; }
+/* compartments */
+.nw-comps { display: grid; gap: 4px; } .nw-comps > .nw-help { font-size: 12px; opacity: .6; margin-bottom: 6px; }
+.nw-crow { display: grid; grid-template-columns: minmax(140px, 1fr) 140px 200px; gap: 8px 16px; align-items: center; padding: 6px 0; border-top: 1px solid rgba(255,255,255,.06); }
+.nw-chead { font-size: 12px; opacity: .6; border-top: 0; } .nw-cname { font: 13px ui-monospace, monospace; }
+/* the QR popup (MOD-NET-QR): the code is always black on white, in any theme, because a phone's scanner wants it so */
+.nw-qr { position: fixed; inset: 0; z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 16px; background: rgba(0,0,0,.62); backdrop-filter: blur(3px); }
+.nw-qr-panel { position: relative; max-width: min(92vw, 760px); max-height: 92vh; overflow: auto; padding: 22px 24px 18px; border-radius: 14px; background: var(--nx-panel, #14181d); color: var(--nx-text, #e6edf3); border: 1px solid rgba(255,255,255,.14); box-shadow: 0 24px 80px rgba(0,0,0,.55); text-align: center; }
+.nw-qr-panel h2 { margin: 0 28px 14px; font-size: 16px; }
+.nw-qr-x { position: absolute; top: 8px; right: 10px; width: 32px; height: 32px; padding: 0; font-size: 22px; line-height: 1; border-radius: 8px; }
+.nw-qr-cards { display: flex; flex-wrap: wrap; justify-content: center; gap: 22px; }
+.nw-qr-card { display: flex; flex-direction: column; align-items: center; gap: 10px; max-width: 420px; }
+.nw-qr-sys { font-weight: 600; }
+.nw-qr-code { width: 264px; height: 264px; padding: 0; background: #fff; border-radius: 8px; overflow: hidden; } .nw-qr-code svg { display: block; width: 100%; height: 100%; }
+.nw-qr-link { font: 13px ui-monospace, monospace; overflow-wrap: anywhere; text-align: center; }
+.nw-qr-warn { margin: 16px 0 0; font-size: 12px; opacity: .65; }
+@media (max-width: 640px) { .nw-crow { grid-template-columns: 1fr 1fr; } .nw-crow .nw-cname { grid-column: 1 / -1; } .nw-chead { display: none; } .nw-qr-code { width: 232px; height: 232px; } }
