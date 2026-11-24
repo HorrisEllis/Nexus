@@ -84,13 +84,16 @@ async function endState({ ph, plan, src, mapText }) {
   const fns = (src.exports || []).filter((e) => !/^_/.test(e.name || '')).map((e) => ({ ...e, signature: sigOf(e) })).filter((e) => e.signature), names = new Set(fns.map((e) => e.name)), already = TF.examplesFrom(mapText, PHASE);
   if (!fns.length) { row('refused', { note: 'the plan gives no function signatures to write examples for' }); return 1; }
   const quote = (l) => `      - '${l.replace(/'/g, "''")}'`, TRIES = Math.max(1, Number(arg('tries', 4)) || 4);
+  // the start of a function's code, from its own file (no model)
+  function srcOf(nm) { const i = code.search(new RegExp(`(?:function\\s*\\*?\\s*${nm}\\s*\\(|\\b${nm}\\s*[:=]\\s*(?:async\\s+)?(?:function\\s*)?\\()`)); return i < 0 ? '' : code.slice(i, i + 900); }
   for (let n = rec.answers.length + 1; n <= TRIES && live().length < 3; n++) {
     const lessons = rec.answers.flatMap((a) => a.refused || []).slice(-8);
-    // the start of the code of a function that keeps refusing goes into the next prompt (its own file, read; no model)
+    // the start of the code of a function that keeps refusing goes into the next prompt
     const stuck = [...new Set(lessons.filter((x) => /^(the code refused|says nothing new)/.test(x.why)).map((x) => (/^(\w+)/.exec(x.line) || [])[1]))].filter((x) => names.has(x)).slice(0, 2);
-    const srcOf = (nm) => { const i = code.search(new RegExp(`(?:function\\s*\\*?\\s*${nm}\\s*\\(|\\b${nm}\\s*[:=]\\s*(?:async\\s+)?(?:function\\s*)?\\()`)); return i < 0 ? '' : code.slice(i, i + 900); };
     const prompt = [`Phase ${PHASE}, file ${src.path}.`, `What it must do: ${String(ph.does || '').trim()}`, `How it is proven: ${String(ph.proof || '').trim()}`,
       'Its functions:', ...fns.map((e) => '  ' + e.signature + (e.does ? ' — ' + e.does : '')), '',
+      // upstream, the good kind of copying: calls the code already accepted, each with what it answered
+      ...(recorded && live().length ? ['Calls the code already accepted (write different ones in the same style):', ...live().slice(-3).map((x) => '  ' + x.line.replace(/\s*==.*$/, '').slice(0, 300)), ''] : []),
       ...(recorded ? ['Write 3 to 6 calls of these functions that show what the phase must do, one per line, exactly in this form and nothing else:', '  name(args)',
         'The code already exists: Nexus runs each call and records what it returns. Choose arguments the code accepts, each call showing something different.']
         : ['Write 3 to 6 examples of what these functions return, one per line, exactly in this form and nothing else:', '  name(args) == expected']),
@@ -109,8 +112,25 @@ async function endState({ ph, plan, src, mapText }) {
       return out; };
     const lines = recorded ? callsIn(a.said) : a.said.split(/\r?\n/).map((l) => l.trim().replace(/^[-*\d.)\s]+(?=\w)/, '').replace(/^[`'"]+|[`'"]+$/g, '').replace(/;\s*$/, '').trim())
       .filter((l) => (recorded ? /^\w+\s*\(.*\)$/.test(l) : /\)\s*==/.test(l))).map((l) => (recorded ? l.replace(/\s*==.*$/, '') : l));
-    for (let line of lines) {
-      const why = (() => {
+    for (const l0 of lines) {
+      const { why, line } = judge(l0);
+      if (why) a.refused.push({ line, why }); else { a.kept.push(line); rec.examples.push({ line, by: LADDER[0], answer: n, method: rec.method, status: 'waiting' }); }
+    }
+    save(); row('end-state', { note: `answer ${n} (${rec.method}): ${a.kept.length} kept, ${a.refused.length} refused; ${live().length} waiting for his yes`, kept: a.kept, refused: a.refused, file });
+    // the split (RAID's rule, cortex/core/raid/contract-gates.js shouldSplit: after two failures, smaller pieces): a function whose calls failed
+    // twice splits into its required parameters, one saved piece each, then composes back into one call that is judged like any other
+    if (recorded && live().length < 3) for (const nm of fns.map((e) => e.name)) {
+      const fails = rec.answers.flatMap((x) => x.refused || []).filter((x) => (/^(\w+)/.exec(x.line) || [])[1] === nm && /^(the code refused|says nothing new)/.test(x.why)).length;
+      const sp = (rec.splits = rec.splits || {})[nm] = rec.splits[nm] || { pieces: [], composed: [] };
+      if (fails >= 2 && live().filter((x) => x.line.startsWith(nm + '(')).length < 2 && sp.composed.length < 3) await splitCall(fns.find((e) => e.name === nm), sp, n);
+    }
+  }
+  return live().length >= 3 ? 0 : 1;
+
+  // one call, judged: the code answers it (recorded) and its line passes test-first's own checks → { why: null, line } kept, or { why, line }
+  function judge(l0) {
+    let line = l0;
+    const why = (() => {
         const nm = (/^(\w+)\s*\(/.exec(line) || [])[1]; if (!names.has(nm)) return `${nm || 'it'} is not one of the planned functions`;
         if (recorded) {
           try { new vm.Script(`(${line})`); } catch (e) { return 'does not parse: ' + e.message; }
@@ -124,11 +144,54 @@ async function endState({ ph, plan, src, mapText }) {
         if ([...rec.examples.map((x) => x.line), ...already].some((x) => x === line)) return 'already kept';
         const t = TF.fromExamples({ plan, testPath: 'x.test.js', examples: [...rec.examples.map((x) => x.line), line] }); const c = TF.contradictions(t || '');
         return c.length ? 'contradicts a kept line: ' + c[0] : null; })();
-      if (why) a.refused.push({ line, why }); else { a.kept.push(line); rec.examples.push({ line, by: LADDER[0], answer: n, method: rec.method, status: 'waiting' }); }
-    }
-    save(); row('end-state', { note: `answer ${n} (${rec.method}): ${a.kept.length} kept, ${a.refused.length} refused; ${live().length} waiting for his yes`, kept: a.kept, refused: a.refused, file });
+    return { why, line };
   }
-  return live().length >= 3 ? 0 : 1;
+
+  // a stuck call, split: each required parameter is one piece the 3b writes alone; a piece passes when the code, called with the pieces so
+  // far, answers something it has not answered before. Upstream: the piece's prompt opens with the shape the code named in its refusal.
+  async function splitCall(fn, sp, n) {
+    const inner = (/\((.*)\)/.exec(fn.signature) || [])[1] || '', params = []; let d = 0, cur = '';
+    for (const c of inner) { if ('([{'.includes(c)) d++; if (')]}'.includes(c)) d--; if (c === ',' && d === 0) { params.push(cur.trim()); cur = ''; } else cur += c; } if (cur.trim()) params.push(cur.trim());
+    const need = params.filter((p) => !/=/.test(p) && !/^\.\.\./.test(p)).map((p) => p.replace(/[{}\[\]\s]/g, '') || p); if (!need.length) return;
+    const reasons = rec.answers.flatMap((x) => x.refused || []).filter((x) => x.line.startsWith(fn.name + '(')).map((x) => x.why);
+    const shape = (reasons.map((w) => /must be (\{[^"]*?\]\s*\}|\{[^"]*?\}|\[[^"]*?\]|[a-z ]+?)(?:"|,|$)/i.exec(w)).find(Boolean) || [])[1] || null;
+    const seen = new Set(live().filter((x) => x.line.startsWith(fn.name + '(')).map(saysOf)), body = srcOf(fn.name), helpers = [...new Set((body.match(/\b_\w+(?=\s*\()/g) || []))].slice(0, 2).map(srcOf).filter(Boolean);
+    const values = [];
+    for (const p of need) {
+      const have = sp.pieces.find((x) => x.param === p && x.status === 'passed' && !sp.composed.includes(x.value)); if (have) { values.push(have.value); continue; }
+      let got = null;
+      for (let t = 1; t <= 3 && !got; t++) {
+        const before = sp.pieces.filter((x) => x.param === p && x.status !== 'passed').slice(-3);
+        const prompt = [...(shape && p === need[0] ? [`${p} must be ${shape}  (the code's own words)`, ''] : []),
+          `One piece of a call to ${fn.signature}: write only the value of the parameter ${p}.`, `What the phase must show: ${String(ph.proof || ph.does || '').trim().slice(0, 600)}`,
+          ...(values.length ? [`The parameters before it are already written: ${values.join(', ')}`] : []), '',
+          // only the check, never the function's body: a small model copies the lines it is shown (2026-11-23: it answered with walk's own "{ id: chain.id, … }")
+          ...(helpers.length ? ['The code that checks it:', ...helpers.map((h) => h.slice(0, 600)), ''] : []),
+          ...(before.length ? ['Values already refused (do not repeat them):', ...before.map((x) => `  ${x.value.slice(0, 80)}  -> ${x.why}`), ''] : []),
+          ...(sp.composed.length ? ['Values already used (write a different one):', ...sp.composed.map((v) => '  ' + v.slice(0, 80)), ''] : []),
+          `Answer with the value only: one literal (object, array, string, number), no name, no "=", no comment, no code fence.`].join('\n');
+        let s; try { s = String(await ask(prompt, LADDER[0], `end-state:${PHASE}:${fn.name}.${p}`) || ''); } catch (e) { row('end-state-failed', { note: e.message }); return; }
+        s = s.replace(/```\w*\n?|```/g, '').replace(/^\s*(?:const|let|var)?\s*\w+\s*[:=]\s*/, '').trim();
+        const st = s.search(/[{["'\d-]|true|false|null/); let v = st < 0 ? s : s.slice(st);
+        if (/^[{[]/.test(v)) { let k = 0, q = null, i = 0; for (; i < v.length; i++) { const c = v[i]; if (q) { if (c === '\\') i++; else if (c === q) q = null; continue; } if (c === '"' || c === "'" || c === '`') q = c; else if ('{['.includes(c)) k++; else if ('}]'.includes(c) && --k === 0) break; } v = v.slice(0, i + 1); } else v = v.split('\n')[0].replace(/[;,]\s*$/, '');
+        v = v.replace(/\s*\n\s*/g, ' ').trim();
+        const piece = { param: p, value: v, by: LADDER[0], answer: n, try: t, at: new Date().toISOString(), status: 'refused', why: '' };
+        sp.pieces.push(piece); save();   // saved before it is checked
+        try { new vm.Script(`(${v})`); } catch (e) { piece.why = 'does not parse: ' + e.message; save(); continue; }
+        const r = runCall(mod, `${fn.name}(${[...values, v].join(', ')})`);
+        if (r.err && / is not defined$/.test(r.err)) piece.why = `it uses a name (${r.err.replace(/ is not defined$/, '')}) instead of data: write the data itself`;
+        else if (r.err) piece.why = 'the code refused it: ' + r.err; else if (r.undef) piece.why = 'the code returns nothing';
+        else if (seen.has(gist(r.json || ''))) piece.why = 'the code answers as before: ' + String(r.json).slice(0, 140);
+        else { piece.status = 'passed'; piece.why = 'the code answers something new: ' + String(r.json).slice(0, 140); got = v; }
+        save(); row('end-state-piece', { note: `${fn.name}.${p}, try ${t}: ${piece.status} — ${piece.why.slice(0, 160)}`, piece });
+      }
+      if (!got) return; values.push(got);
+    }
+    const { why, line } = judge(`${fn.name}(${values.join(', ')})`); sp.composed.push(values[0]);
+    if (why) row('end-state-composed', { note: `${fn.name}: the pieces composed, refused — ${why.slice(0, 160)}` });
+    else { rec.examples.push({ line, by: LADDER[0], answer: n, method: rec.method, split: true, status: 'waiting' }); row('end-state-composed', { note: `${fn.name}: the pieces composed into a kept line` }); }
+    save();
+  }
 }
 
 (async () => {

@@ -186,6 +186,14 @@ phases:
   EMB6_the_end_state_first:
     status: OPEN
     depends_on: [EMB3_the_autocorrect]
+    expanded_2026_11_23_record: 'his: "Yes, record from code". Where the file exists the 3b writes only the calls; the code answers; a refusal and the stuck function''s code (and the private helpers it calls) are the next try''s lesson.'
+    expanded_2026_11_23_split: >-
+      His words: "yes dynamic chunking. using the agent tools like decomposition. like idearium. just do everything you can to get the 3b capable
+      of coding emerge, injecting things up stream, nexus has the tools". RAID's own splitter (cortex/core/raid/contract-gates.js shouldSplit:
+      split after two failures, never into the same pieces, bounded depth) has no route COS may call, so its rule is applied in the COS builder:
+      a function whose calls fail twice splits into its required parameters, one piece each, each a saved piece checked by running the code
+      (a piece passes when the code answers something it has not answered before). The pieces compose back into one call, checked as any other.
+      Upstream: a piece's prompt opens with the shape the code itself named in its refusal (for example "chain must be { id, steps:[...] }").
     james: '"Every step can be broken down using end state first and a dag." (2026-11-23) · asked who writes each phase''s end state (the 3b with his approval, or the coder), he chose: "The 3b, I approve" (2026-11-23)'
     found: "2026-11-23, measured before any splitter run: lib/build-queue.js gives 289 buildable phases and none has examples, so the COS builder (plan, then test from examples, then the rung) can take none of them. The missing rung is the first: the end state."
     files: [cos/build/emerge-build.js, cos/manager/server.js, cos/manager/contract.json, cos/ui/lab, idearium/cli/route-commands.js]

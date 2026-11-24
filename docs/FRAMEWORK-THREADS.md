@@ -557,6 +557,14 @@ by the focus.
   way: lessons that repeat the wrong call get copied, so they are now cut short and given once per reason. Answers that differ only in what
   they echo back were counted as new (3 lines, rechecked and kept on disk as nothing-new). Grade: Failed. Bias: the coder wrote the checks
   and judged them.
+- **EMB6, the split (2026-11-23, his: "yes dynamic chunking … injecting things up stream"):** RAID's rule (split after two failures) applied
+  in the COS builder. A stuck call splits into its required parameters, one saved piece each. The calls the code already accepted are shown as
+  the style to follow. A piece's prompt opens with the shape the code named. GWK1, answers 17 to 23, 21 pieces: **0 passed.** The 3b copies
+  whatever is in view, in order: a line of `walk`'s own body (`{ id: chain.id, … }`), then the refusal it was told about, written back as
+  the value. Only the check, not the body, is shown now, and a value that uses a name is refused in plain words. Neither moved it. The
+  finding, three times over: **the 3b copies the text in its prompt.** So the next lever is a frame, where copying is the right move.
+  Nexus writes the data's skeleton from the shape the code names (`{ id: "…", steps: [ … ] }`), and the 3b fills only the holes.
+  Grade: Failed (open). Bias: the coder chose every prompt.
 
 ## T16 — "a continuous data stream to inject what we need into the model upstream", registered and measured 2026-11-23
 
