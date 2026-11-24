@@ -548,6 +548,15 @@ by the focus.
   and most GW1 lines return their input unchanged. Nexus's checks (form, a planned function, parses, no contradiction) cannot see meaning.
   Grade: Failed (meaning). Bias: the coder chose the existing code as the reference. That code may not meet the phase either.
   Reproduce: `node cos/build/emerge-build.js --map <map> --phase <id> --end-state`, then `node ../nexus-build-data/es-vs-code.js <id>…`.
+- **EMB6, answers recorded from the code (2026-11-23, his: "Yes, record from code"):** the 3b writes only the calls. Nexus runs the existing
+  code on each in a throwaway folder and keeps the answer only if a second run agrees. A refused call, with the code's reason, is the next
+  try's lesson. From answer 9 on, the 3b also saw the start of the stuck function and the private helpers it calls. Same prediction, same
+  three phases. **Failed: 1 of 3.** GW1 got 11 lines whose answers are real, from its first answer. Most of them show the "nothing set up yet"
+  path (`{"verified":[]}`, "needs gate gate1 (not a gate)"), so they are shallow. GWK1 got 1 in 16 answers: every call passed a list where
+  the code wants `{ id, steps:[...] }`, even after `_validate`, the line that says so, was in its prompt. OS1 has no functions. Found on the
+  way: lessons that repeat the wrong call get copied, so they are now cut short and given once per reason. Answers that differ only in what
+  they echo back were counted as new (3 lines, rechecked and kept on disk as nothing-new). Grade: Failed. Bias: the coder wrote the checks
+  and judged them.
 
 ## T16 — "a continuous data stream to inject what we need into the model upstream", registered and measured 2026-11-23
 

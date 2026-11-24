@@ -49,46 +49,86 @@ async function ask(prompt, model, gap) {
 }
 
 // EMB6, the end state first. James, 2026-11-23: "Every step can be broken down using end state first and a dag." · asked who writes it: "The 3b, I approve"
-// --end-state: the 3b writes the phase's examples from its own words; each answer is saved before it is checked; the checks are test-first's own
-// (examplesFrom, fromExamples, contradictions) plus "a planned function" and "it parses". Checked lines wait for his yes in the Lab; nothing enters the map here.
+// · on the first run (0 of 25 guessed answers agreed with the code that exists), asked whether answers come from running that code: "Yes, record from code"
+// --end-state: where the phase's file exists, the 3b writes only the calls (inputs); Nexus runs the existing code on each, in a throwaway folder, and
+// records what it returns as the expected value, then runs the whole line again as a test (kept only if it agrees: no clock, no randomness).
+// A call the code refuses, or one that says nothing a kept line has not, goes back to the 3b with what the code said: the next try's lesson.
+// Where no file exists yet, the 3b writes the whole line (call == expected). Every answer is saved before it is checked; the form checks are
+// test-first's own (examplesFrom, fromExamples, contradictions). Kept lines wait for his yes in the Lab; nothing enters the map here.
 const END_STATE = !!arg('end-state'), ES_DIR = path.join(ROOT, 'cos', 'data', 'build', 'end-state');
+function runCall(mod, line, want) {   // one child per call, cwd a throwaway folder; prints one JSON line
+  const k = want === undefined ? line.length : line.search(/\)\s*==/), call = line.slice(0, want === undefined ? line.length : k + 1);
+  const js = `const assert=require('assert');const m=require(${JSON.stringify(mod)});Object.assign(globalThis,m);const out=(o)=>process.stdout.write('\\n@@'+JSON.stringify(o));
+Promise.resolve().then(()=>(${call})).then((a)=>{${want === undefined ? "out(a===undefined?{undef:true}:{v:a,json:JSON.stringify(a)})" : `try{assert.deepStrictEqual(a,(${want}));out({agrees:true})}catch(e){out({agrees:false})}`}},(e)=>out({err:String(e&&e.message||e).slice(0,300)}));`;
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'es-run-')), o = spawnSync(process.execPath, ['-e', js], { cwd: tmp, encoding: 'utf8', timeout: 15000 });
+  const last = String(o.stdout || '').split('\n@@').pop(); try { return JSON.parse(last); } catch (_) { return { err: o.error ? 'did not finish in 15 s' : String(o.stderr || 'no answer').trim().split('\n').slice(-1)[0].slice(0, 300) }; }
+}
 async function endState({ ph, plan, src, mapText }) {
-  const TF = require(path.join(ROOT, 'lib', 'test-first.js')), vm = require('vm'), file = path.join(ES_DIR, PHASE + '.json');
+  const TF = require(path.join(ROOT, 'lib', 'test-first.js')), vm = require('vm'), file = path.join(ES_DIR, PHASE + '.json'), mod = path.join(ROOT, src.path);
   fs.mkdirSync(ES_DIR, { recursive: true });
-  const rec = fs.existsSync(file) ? JSON.parse(fs.readFileSync(file, 'utf8')) : { map: MAP, phase: PHASE, file: src.path, examples: [], answers: [] };
+  const recorded = fs.existsSync(mod) && /\.c?js$/.test(src.path) && !runCall(mod, 'Object.keys(m)').err;   // the code exists and loads: its answers are recorded
+  let rec = fs.existsSync(file) ? JSON.parse(fs.readFileSync(file, 'utf8')) : null;
+  if (rec && rec.method !== (recorded ? 'recorded' : 'guessed')) { fs.renameSync(file, file.replace(/\.json$/, `.${rec.method || 'guessed'}-${Date.now().toString(36)}.json`)); rec = null; }   // kept, never deleted
+  rec = rec || { map: MAP, phase: PHASE, file: src.path, method: recorded ? 'recorded' : 'guessed', examples: [], answers: [] };
   const save = () => fs.writeFileSync(file, JSON.stringify(rec, null, 1));
-  if (rec.examples.length >= 3) { row('end-state-kept', { note: `${rec.examples.length} examples already on disk; no model asked`, file }); return 0; }
+  // what an answer says: its top-level plain fields (status, reason, ok, why…); two answers that say the same are one example, whatever else they echo
+  const gist = (json) => { let v; try { v = JSON.parse(json); } catch (_) { return json; } if (!v || typeof v !== 'object' || Array.isArray(v)) return json;
+    const s = Object.keys(v).sort().filter((k) => v[k] === null || typeof v[k] !== 'object').map((k) => [k, v[k]]); return s.length ? JSON.stringify(s) : json; };
+  const saysOf = (x) => gist(String(x.line).replace(/^.*?\)\s*==\s*/, '')), live = () => rec.examples.filter((x) => x.status === 'waiting' || x.status === 'accepted');
+  if (recorded) { const seen = new Set(); for (const x of rec.examples) { if (x.status !== 'waiting') continue; const g = saysOf(x); if (seen.has(g)) { x.status = 'nothing-new'; x.why = 'says what an earlier kept line says (checked again 2026-11-23)'; } else seen.add(g); } save(); }
+  if (live().length >= 3) { row('end-state-kept', { note: `${live().length} examples already on disk; no model asked`, file }); return 0; }
   // a plan read from a file that exists names its exports only: each function's parameters are read from that same file (no model)
-  const code = (() => { try { return fs.readFileSync(path.join(ROOT, src.path), 'utf8'); } catch (_) { return ''; } })();
+  const code = (() => { try { return fs.readFileSync(mod, 'utf8'); } catch (_) { return ''; } })();
   const sigOf = (e) => { if (/\(/.test(e.signature || '')) return e.signature; const n = String(e.name || '').replace(/[^\w$]/g, '');
     const m = n && new RegExp(`(?:function\\s*\\*?\\s*${n}|\\b${n}\\s*[:=]\\s*(?:async\\s+)?(?:function\\s*)?|^\\s*(?:async\\s+)?${n})\\s*\\(([^)]*)\\)`, 'm').exec(code); return m ? `${n}(${m[1].replace(/\s+/g, ' ').trim()})` : null; };
   const fns = (src.exports || []).filter((e) => !/^_/.test(e.name || '')).map((e) => ({ ...e, signature: sigOf(e) })).filter((e) => e.signature), names = new Set(fns.map((e) => e.name)), already = TF.examplesFrom(mapText, PHASE);
   if (!fns.length) { row('refused', { note: 'the plan gives no function signatures to write examples for' }); return 1; }
-  const quote = (l) => `      - '${l.replace(/'/g, "''")}'`;
-  for (let n = rec.answers.length + 1; n <= 3 && rec.examples.length < 3; n++) {
-    const refusedLast = (rec.answers[rec.answers.length - 1] || {}).refused || [];
+  const quote = (l) => `      - '${l.replace(/'/g, "''")}'`, TRIES = Math.max(1, Number(arg('tries', 4)) || 4);
+  for (let n = rec.answers.length + 1; n <= TRIES && live().length < 3; n++) {
+    const lessons = rec.answers.flatMap((a) => a.refused || []).slice(-8);
+    // the start of the code of a function that keeps refusing goes into the next prompt (its own file, read; no model)
+    const stuck = [...new Set(lessons.filter((x) => /^(the code refused|says nothing new)/.test(x.why)).map((x) => (/^(\w+)/.exec(x.line) || [])[1]))].filter((x) => names.has(x)).slice(0, 2);
+    const srcOf = (nm) => { const i = code.search(new RegExp(`(?:function\\s*\\*?\\s*${nm}\\s*\\(|\\b${nm}\\s*[:=]\\s*(?:async\\s+)?(?:function\\s*)?\\()`)); return i < 0 ? '' : code.slice(i, i + 900); };
     const prompt = [`Phase ${PHASE}, file ${src.path}.`, `What it must do: ${String(ph.does || '').trim()}`, `How it is proven: ${String(ph.proof || '').trim()}`,
       'Its functions:', ...fns.map((e) => '  ' + e.signature + (e.does ? ' — ' + e.does : '')), '',
-      'Write 3 to 6 examples of what these functions return, one per line, exactly in this form and nothing else:', '  name(args) == expected',
-      'Arguments and expected values are plain literals: numbers, true/false/null, strings in double quotes, arrays, objects. No variables, no functions, no comments, no code fence.',
+      ...(recorded ? ['Write 3 to 6 calls of these functions that show what the phase must do, one per line, exactly in this form and nothing else:', '  name(args)',
+        'The code already exists: Nexus runs each call and records what it returns. Choose arguments the code accepts, each call showing something different.']
+        : ['Write 3 to 6 examples of what these functions return, one per line, exactly in this form and nothing else:', '  name(args) == expected']),
+      'Arguments are plain literals: numbers, true/false/null, strings in double quotes, arrays, objects' + (recorded ? '; a parameter that is a hook may be a short arrow function.' : '.') + ' No variables, no comments, no code fence.',
       'Only call the functions listed. Never write the same call twice.',
-      ...(refusedLast.length ? ['', 'Your last lines were refused; do not repeat them:', ...refusedLast.map((x) => `  ${x.line}  (${x.why})`)] : [])].join('\n');
+      ...(lessons.length ? ['', 'Earlier calls and what happened (learn from them, do not repeat them):', ...[...new Map(lessons.map((x) => [x.why, x])).values()].map((x) => `  ${x.line.length > 70 ? x.line.slice(0, 60) + ' …)' : x.line}  -> ${x.why}`)] : []),   // one line per distinct reason, the call cut short: a small model copies what it is shown
+      ...(recorded && stuck.length ? ['', 'The start of the code of the functions that keep refusing, so you can see what shape they accept:', ...stuck.flatMap((nm) => { const s = srcOf(nm), helpers = [...new Set((s.match(/\b_\w+(?=\s*\()/g) || []))].filter((h) => h !== nm).slice(0, 2);   // its edges: the private helpers it calls, one level
+          return ['--- ' + nm + '\n' + s, ...helpers.map((h) => srcOf(h)).filter(Boolean).map((h) => '--- (it calls)\n' + h.slice(0, 600))]; })] : [])].join('\n');
     let said; try { said = await ask(prompt, LADDER[0], 'end-state:' + PHASE); } catch (e) { row('end-state-failed', { note: e.message }); return 1; }
     const a = { n, at: new Date().toISOString(), model: LADDER[0], promptChars: prompt.length, said: String(said || ''), kept: [], refused: [] }; rec.answers.push(a); save();   // saved before it is checked
-    const lines = a.said.split(/\r?\n/).map((l) => l.trim().replace(/^[-*\d.)\s]+(?=\w)/, '').replace(/^[`'"]+|[`'"]+$/g, '').trim()).filter((l) => /\)\s*==/.test(l));
-    for (const line of lines) {
+    // calls are read by matching brackets, so a call written over several lines is still one call
+    const callsIn = (s) => { const out = [], re = new RegExp(`\\b(${[...names].join('|')})\\s*\\(`, 'g'); let m;
+      while ((m = re.exec(s))) { let d = 0, q = null, i = m.index + m[0].length - 1;
+        for (; i < s.length; i++) { const c = s[i]; if (q) { if (c === '\\') i++; else if (c === q) q = null; continue; } if (c === '"' || c === "'" || c === '`') q = c; else if (c === '(') d++; else if (c === ')' && --d === 0) break; }
+        if (d === 0 && i < s.length) { out.push(s.slice(m.index, i + 1).replace(/\s*\n\s*/g, ' ')); re.lastIndex = i + 1; } else break; }
+      return out; };
+    const lines = recorded ? callsIn(a.said) : a.said.split(/\r?\n/).map((l) => l.trim().replace(/^[-*\d.)\s]+(?=\w)/, '').replace(/^[`'"]+|[`'"]+$/g, '').replace(/;\s*$/, '').trim())
+      .filter((l) => (recorded ? /^\w+\s*\(.*\)$/.test(l) : /\)\s*==/.test(l))).map((l) => (recorded ? l.replace(/\s*==.*$/, '') : l));
+    for (let line of lines) {
       const why = (() => {
-        if (!TF.examplesFrom(`  ${PHASE}:\n    examples:\n${quote(line)}\n`, PHASE).length) return 'not in the form name(args) == expected';
         const nm = (/^(\w+)\s*\(/.exec(line) || [])[1]; if (!names.has(nm)) return `${nm || 'it'} is not one of the planned functions`;
+        if (recorded) {
+          try { new vm.Script(`(${line})`); } catch (e) { return 'does not parse: ' + e.message; }
+          const r = runCall(mod, line); if (r.err) return 'the code refused it: ' + r.err; if (r.undef) return 'the code returns nothing (undefined)';
+          if (r.json === undefined || r.json.length > 600) return 'its answer is too large to read (' + String(r.json || '').length + ' chars)';
+          if ([...live(), ...already.map((l2) => ({ line: l2 }))].some((x) => saysOf(x) === gist(r.json))) return 'says nothing new: the code answers ' + r.json.slice(0, 160) + ', as a kept call already shows';
+          line = `${line} == ${r.json}`; if (!runCall(mod, line, r.json).agrees) return 'its answer changes from run to run';
+        }
+        if (!TF.examplesFrom(`  ${PHASE}:\n    examples:\n${quote(line)}\n`, PHASE).length) return 'not in the form name(args) == expected';
         const k = line.search(/\)\s*==/); try { new vm.Script(`(${line.slice(0, k + 1)}, ${line.slice(k + 1).replace(/^\s*==\s*/, '')})`); } catch (e) { return 'does not parse: ' + e.message; }
-        if ([...rec.examples, ...already].some((x) => x === line)) return 'already kept';
+        if ([...rec.examples.map((x) => x.line), ...already].some((x) => x === line)) return 'already kept';
         const t = TF.fromExamples({ plan, testPath: 'x.test.js', examples: [...rec.examples.map((x) => x.line), line] }); const c = TF.contradictions(t || '');
         return c.length ? 'contradicts a kept line: ' + c[0] : null; })();
-      if (why) a.refused.push({ line, why }); else { a.kept.push(line); rec.examples.push({ line, by: LADDER[0], answer: n, status: 'waiting' }); }
+      if (why) a.refused.push({ line, why }); else { a.kept.push(line); rec.examples.push({ line, by: LADDER[0], answer: n, method: rec.method, status: 'waiting' }); }
     }
-    save(); row('end-state', { note: `answer ${n}: ${a.kept.length} kept, ${a.refused.length} refused; ${rec.examples.length} waiting for his yes`, kept: a.kept, refused: a.refused, file });
+    save(); row('end-state', { note: `answer ${n} (${rec.method}): ${a.kept.length} kept, ${a.refused.length} refused; ${live().length} waiting for his yes`, kept: a.kept, refused: a.refused, file });
   }
-  return rec.examples.length >= 3 ? 0 : 1;
+  return live().length >= 3 ? 0 : 1;
 }
 
 (async () => {
