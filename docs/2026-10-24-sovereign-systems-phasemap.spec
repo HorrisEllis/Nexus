@@ -28,7 +28,9 @@ status: "SV0 DONE 0.60.244; the rest OPEN"
 # to be sovereign first?"). So CS12–CS21 come before DB6, and DB6 before CS4.
 phases_b:
   CS12_the_mover_is_proven:
-    status: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
+    # roadmap edit 2026-11-22: LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my hea -> IN PROGRESS 2026-11-22.
+    status_previous: "LATER — an idea, shelved 2026-11-07 (his: 'Those are all top of my head ideas'; the door is one idea, docs/FRAMEWORK-THREADS.md T8; picked up by the system that owns it: each system its own door, docs/2026-11-07-phases-are-ideas-phasemap.spec PIC0); was: OPEN"
+    status: "IN PROGRESS 2026-11-22."
     depends_on: []
     files: [lib/architecture-apply.js, tests/modules/test-architecture-apply.test.js, tests/modules/run-all.js]
     does: >-

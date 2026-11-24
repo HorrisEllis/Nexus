@@ -104,7 +104,9 @@ phases:
 
   BX1_census:
     layer: foundation
-    status: PLANNED
+    # roadmap edit 2026-11-20: PLANNED -> IN PROGRESS 2026-11-20.
+    status_previous: "PLANNED"
+    status: "IN PROGRESS 2026-11-20."
     depends_on: [BX0a_where_it_lands]
     files: [docs/brainos-feature-census.md]
     spec: docs/brainos-in-idearium.spec

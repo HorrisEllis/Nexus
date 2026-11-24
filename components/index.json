@@ -16,6 +16,22 @@
      "createdAt": "2026-11-11T09:13:25.724Z"
     }
    }
+  },
+  "nexus-idearium.idearium.lib.autocorrect": {
+   "id": "nexus-idearium.idearium.lib.autocorrect",
+   "project": "nexus-idearium",
+   "path": "idearium/lib/autocorrect.eg",
+   "latest": "1.0.0",
+   "versions": {
+    "1.0.0": {
+     "sha256": "ae6d6316a591384d1a1d851515c87f4d752d5a6f52364f94dbd51df94c024a09",
+     "file": "autocorrect.eg",
+     "deps": 0,
+     "unresolved": 0,
+     "createdAt": "2026-11-21T19:20:40.600Z",
+     "tested": "verified"
+    }
+   }
   }
  },
  "byContract": {
@@ -25,5 +41,5 @@
   ]
  },
  "byPrompt": {},
- "updatedAt": 1794390161497
+ "updatedAt": 1795288840605
 }
