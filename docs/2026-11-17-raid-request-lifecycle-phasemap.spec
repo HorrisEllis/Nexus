@@ -299,6 +299,18 @@ decisions:
 
   RL_D10_the_gate_is_the_unit:
     status: "DECIDED 2026-11-24 by James"
+    expanded_2026_11_24_context_by_id: >-
+      His words: "also works backwards from the end-state. each gate only needs the context it needs, requests from the workarea compartment,
+      context id, in relation to the dag and pre-req? like raid builds an index?" · "the smallest amount of works that don't change the meaning,
+      brevity or semantic density. also semantic flexibility? like adapt to the models grammer, or lexicon? like meet in the middle?" (2026-11-24).
+      Read, the coder's, to confirm: (1) the DAG is walked back from the end state: what the end state needs names what each gate before it
+      must give. (2) RAID builds an index of the contract compartment's work area, each piece of context with an id; a gate holds only its own
+      ids, by its place in the DAG and its prerequisites, and asks the work area for one by id when it needs it. (3) What a gate hands a model is
+      the fewest words that keep the meaning: dense, not cut. (4) The words meet the model in the middle: Nexus learns the grammar and words each
+      model uses (its habits, its refusals) and says what it needs in those words, while the compiler and the contract keep the meaning fixed.
+      Measured the same day, before this was written: the small gate brief (replace_all 1,591 characters, from up to 6,390) passed first try
+      where the long one failed 11 of 11; a card line that used the model's habit (starts_with as a call) against Emerge's own grammar (a word
+      between two values) blocked every try until it was fixed.
     his: >-
       "the gates are the intelligence system, yes. any system should be that way. each gate should generate with an id." · "also each gate could
       have intent, run, and context. previous failure mode report, fault, the solution, the previous attemp, completely programmable, each gate can
