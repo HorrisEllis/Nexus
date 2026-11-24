@@ -1,0 +1,48 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SC23_open_nexus_to_the_outside_with_a_key:fda7290943c5a34a
+type: graph
+id: phase:SC23_open_nexus_to_the_outside_with_a_key:fda7290943c5a34a
+context: dependency graph of phase SC23_open_nexus_to_the_outside_with_a_key
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1795533535958
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795533535958
+lastSeenAt: 1795533535958
+fingerprint: null
+payload:
+  for: SC23_open_nexus_to_the_outside_with_a_key
+  kind: phase
+  repo: null
+  hash: fda7290943c5a34a
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-11-02-cos-console-phasemap.spec::SC22_remote_connections_and_the_tunnel
+    dependents: []
+    upstream:
+      - docs/2026-11-02-cos-console-phasemap.spec::SC22_remote_connections_and_the_tunnel
+      - docs/2026-11-02-cos-console-phasemap.spec::SC2_configuration_per_system
+      - docs/2026-11-02-cos-console-phasemap.spec::SC_D1_units_and_what_the_os_enforces
+      - docs/2026-11-02-cos-console-phasemap.spec::SC_D2_where_the_configuration_lives
+      - docs/2026-11-02-cos-console-phasemap.spec::SC_D3_ports_are_announced_not_guessed
+    downstream: []
+    blockedBy:
+      - docs/2026-11-02-cos-console-phasemap.spec::SC22_remote_connections_and_the_tunnel
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 3 · blocked by SC22_remote_connections_and_the_tunnel
+      - 'depends on (1): SC22_remote_connections_and_the_tunnel · all upstream 5'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-11-02-cos-console-phasemap.spec::SC22_remote_connections_and_the_tunnel
+        kind: declared

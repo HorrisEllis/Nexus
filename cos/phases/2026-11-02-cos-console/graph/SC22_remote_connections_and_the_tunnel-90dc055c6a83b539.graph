@@ -1,0 +1,220 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SC22_remote_connections_and_the_tunnel:90dc055c6a83b539
+type: graph
+id: phase:SC22_remote_connections_and_the_tunnel:90dc055c6a83b539
+context: dependency graph of phase SC22_remote_connections_and_the_tunnel
+intent: null
+summary: 22 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1795533535955
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795533535955
+lastSeenAt: 1795533535955
+fingerprint: null
+payload:
+  for: SC22_remote_connections_and_the_tunnel
+  kind: phase
+  repo: null
+  hash: 90dc055c6a83b539
+  nodes:
+    - path: cos/manager/cli.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/manager/cloudflared.js
+      role: changes
+      exists: false
+      system: cos
+    - path: cos/manager/contract.json
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/manager/network-settings.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/manager/server.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/manager/tunnel.js
+      role: changes
+      exists: false
+      system: cos
+    - path: cos/spec/network.spec
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/ui/core/qr.js
+      role: changes
+      exists: false
+      system: cos
+    - path: tests/modules/test-cos-tunnel.test.js
+      role: changes
+      exists: false
+      system: null
+    - path: cos/services/anonymous/nexus.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/manager/add-system.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/autopilot-door.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/deploy.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/hub.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/notices.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/proposals.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/resources.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/supervisor.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/system-config.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/updates.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/usage.js
+      role: uses
+      exists: true
+      system: cos
+    - path: lib/versionium-record.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: cos/manager/network-settings.js
+      to: lib/versionium-record.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/supervisor.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/proposals.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/usage.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/autopilot-door.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/resources.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/updates.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/notices.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/system-config.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/add-system.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/deploy.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/hub.js
+      kind: requires
+    - from: cos/services/anonymous/nexus.js
+      to: cos/manager/network-settings.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-11-02-cos-console-phasemap.spec::SC2_configuration_per_system
+    dependents:
+      - docs/2026-11-02-cos-console-phasemap.spec::SC23_open_nexus_to_the_outside_with_a_key
+    upstream:
+      - docs/2026-11-02-cos-console-phasemap.spec::SC2_configuration_per_system
+      - docs/2026-11-02-cos-console-phasemap.spec::SC_D1_units_and_what_the_os_enforces
+      - docs/2026-11-02-cos-console-phasemap.spec::SC_D2_where_the_configuration_lives
+      - docs/2026-11-02-cos-console-phasemap.spec::SC_D3_ports_are_announced_not_guessed
+    downstream:
+      - docs/2026-11-02-cos-console-phasemap.spec::SC23_open_nexus_to_the_outside_with_a_key
+    blockedBy: []
+    unlocks:
+      - docs/2026-11-02-cos-console-phasemap.spec::SC23_open_nexus_to_the_outside_with_a_key
+    conflicts:
+      - with: docs/2026-11-02-cos-console-phasemap.spec::SC14_each_system_opens_in_its_own_window
+        files:
+          - cos/manager/contract.json
+      - with: docs/2026-11-02-cos-console-phasemap.spec::SC15_nexus_cli_in_the_console
+        files:
+          - cos/manager/cli.js
+      - with: docs/2026-11-02-cos-console-phasemap.spec::SC9_the_zip_dropzone_updater
+        files:
+          - cos/manager/server.js
+      - with: docs/2026-11-02-cos-console-phasemap.spec::SC10_the_zip_history
+        files:
+          - cos/manager/server.js
+      - with: docs/2026-11-02-cos-console-phasemap.spec::SC19_storage_the_drives_and_what_fills_them
+        files:
+          - cos/manager/server.js
+          - cos/manager/contract.json
+          - cos/ui/core/qr.js
+          - cos/manager/network-settings.js
+      - with: docs/2026-11-02-cos-console-phasemap.spec::SC20_every_location_a_setting
+        files:
+          - cos/manager/server.js
+      - with: docs/2026-11-02-cos-console-phasemap.spec::SC21_controlled_access_to_both_drives
+        files:
+          - cos/manager/server.js
+          - cos/manager/contract.json
+      - with: docs/2026-11-02-cos-console-phasemap.spec::SC24_the_compartment_builder
+        files:
+          - cos/manager/server.js
+      - with: docs/2026-11-02-cos-console-phasemap.spec::SC25_stacks_from_the_engines
+        files:
+          - cos/manager/server.js
+    dangling: []
+    lines:
+      - layer 2 · ready
+      - 'depends on (1): SC2_configuration_per_system · all upstream 4'
+      - >-
+        needed by (1): SC23_open_nexus_to_the_outside_with_a_key · finishing it unlocks
+        SC23_open_nexus_to_the_outside_with_a_key
+      - >-
+        same files as SC14_each_system_opens_in_its_own_window with no order between them:
+        cos/manager/contract.json
+      - 'same files as SC15_nexus_cli_in_the_console with no order between them: cos/manager/cli.js'
+      - 'same files as SC9_the_zip_dropzone_updater with no order between them: cos/manager/server.js'
+      - 'same files as SC10_the_zip_history with no order between them: cos/manager/server.js'
+      - >-
+        same files as SC19_storage_the_drives_and_what_fills_them with no order between them:
+        cos/manager/server.js, cos/manager/contract.json, cos/ui/core/qr.js,
+        cos/manager/network-settings.js
+      - … and 4 more phases sharing its files without an order
+    edges:
+      - from: docs/2026-11-02-cos-console-phasemap.spec::SC2_configuration_per_system
+        kind: declared

@@ -7,11 +7,11 @@ intent: null
 summary: 14 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1795359271890
+exported_at: 1795533535924
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1795359271890
-lastSeenAt: 1795359271890
+firstSeenAt: 1795533535924
+lastSeenAt: 1795533535924
 fingerprint: null
 payload:
   for: SC14_each_system_opens_in_its_own_window
@@ -138,6 +138,9 @@ payload:
       - with: docs/2026-11-02-cos-console-phasemap.spec::SC15_nexus_cli_in_the_console
         files:
           - cos/ui/console/page.js
+      - with: docs/2026-11-02-cos-console-phasemap.spec::SC22_remote_connections_and_the_tunnel
+        files:
+          - cos/manager/contract.json
     dangling: []
     lines:
       - layer 5 · ready
@@ -148,6 +151,9 @@ payload:
       - >-
         same files as SC15_nexus_cli_in_the_console with no order between them:
         cos/ui/console/page.js
+      - >-
+        same files as SC22_remote_connections_and_the_tunnel with no order between them:
+        cos/manager/contract.json
     edges:
       - from: docs/2026-11-02-cos-console-phasemap.spec::SC11_the_console_tab
         kind: declared

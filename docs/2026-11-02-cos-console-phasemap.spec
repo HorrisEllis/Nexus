@@ -548,3 +548,61 @@ phases_addendum_2026_11_22_storage:
     proof_a: "eg test storage.test.eg; the routes on a real manager: a deleted code file found and restored; an agent refused; the tab on live data in the browser"
     axioms_a: "§8.6 (update, backup, service door reused), §5.15 (the exe's settings through its door), §1.2 (a held tool says why), §0.3 (repair restores, backup copies, nothing is deleted), §17.13 (the judgment in Emerge; the door runs the OS commands)"
 # ADDENDUM 2026-11-22 (0.60.634) — SC19 slice a: the live deploy showed only D: (the service is not told COS_APP_ROOT); the system drive is always read.
+
+  # ── ADDENDUM 2026-11-24 — his asks for COS's systems, network and compartments. Read the same day: SC2 (settings per system) and SC4 (add a
+  # system) are built (0.60.380); the anonymous servers' 30 engines are in cos/services/anonymous; COS has network-settings.js, network.spec and
+  # cos/ui/network. His cloudflared zip is the 2026-11-03 tunnel work (tunnel.js, cloudflared.js, the QR popup cos/ui/core/qr.js, network.spec's
+  # MOD-NET-TUNNEL, test-cos-tunnel) that never reached main; its server.js, contract.json and cli.js are older than main's (merged, never copied).
+  # Order (his 2026-11-23): the pipeline first; these wait behind it unless he moves one up.
+  SC22_remote_connections_and_the_tunnel:
+    status: OPEN
+    depends_on: [SC2_configuration_per_system]
+    james: '"i want cos to have system specific settings. network settings for remote connections through cos ui. I want to be able to add new systems, a full compartment builder from the templates, shcmeas, architypes, blueprints. Cos settings in the network for the nexus uri. also a list of command bundles, with the ability to add more." · "i really want this for the systems i can deploy using those engines as options for compartments, improving the network features in cos ui, and each compartment.. like i want to be able to deploy a lamp stack, or wampp stack, or any combination of the engines, like as tools for modular. i want to be able to import eravos into cos ui. also i want to be able to open nexus to the outside world. like using the remote connection. using this. like something i can give to chatgpt. and connect to the console." (2026-11-24, with D:\Backups\Downloads\cos-cloudflared-tunnel-files.zip and anonymousservers-nexus-4-12.zip)'
+    files: [cos/manager/tunnel.js, cos/manager/cloudflared.js, cos/manager/network-settings.js, cos/spec/network.spec, cos/ui/network, cos/ui/core/qr.js, cos/manager/server.js, cos/manager/contract.json, cos/manager/cli.js, tests/modules/test-cos-tunnel.test.js]
+    does: >-
+      The 2026-11-03 tunnel lands: from the zip, merged into today's COS (its server.js, contract.json and cli.js only by the lines the tunnel
+      adds). Network settings per system and for COS: which systems are reachable from outside, through a quick or a named Cloudflare tunnel,
+      the address shown with its QR code; the nexus:// address (AC14) set here. Nothing is reachable from outside until he turns it on.
+    proof: "test-cos-tunnel passes on main; Start in the Network page shows a working address and QR code; Stop closes it; off by default"
+  SC23_open_nexus_to_the_outside_with_a_key:
+    status: OPEN
+    depends_on: [SC22_remote_connections_and_the_tunnel]
+    james: '"also i want to be able to open nexus to the outside world. like using the remote connection. using this. like something i can give to chatgpt. and connect to the console." (2026-11-24)'
+    reading: "the coder's, to confirm: a remote console door for an outside agent (ChatGPT): every request carries a key he issues and can revoke; a key says what it may do (read, run a command, never more than its list); every call goes to RAID as an input and is logged; the console's commands are reached only through their command rows, never a shell."
+    does: >-
+      Opening Nexus to the internet is opening his machine. So the door is narrow: through the tunnel, one route, a key per caller made and
+      revoked in COS's Network page, read-only unless he grants commands one bundle at a time, every call a RAID input with who asked.
+    proof: "without a key every request is refused; a read-only key cannot run a command; a revoked key stops at once; each call is in the ledger"
+  SC24_the_compartment_builder:
+    status: OPEN
+    depends_on: [SC4_add_a_system]
+    james: '"i want cos to have system specific settings. network settings for remote connections through cos ui. I want to be able to add new systems, a full compartment builder from the templates, shcmeas, architypes, blueprints. Cos settings in the network for the nexus uri. also a list of command bundles, with the ability to add more." · "i really want this for the systems i can deploy using those engines as options for compartments, improving the network features in cos ui, and each compartment.. like i want to be able to deploy a lamp stack, or wampp stack, or any combination of the engines, like as tools for modular. i want to be able to import eravos into cos ui. also i want to be able to open nexus to the outside world. like using the remote connection. using this. like something i can give to chatgpt. and connect to the console." (2026-11-24, with D:\Backups\Downloads\cos-cloudflared-tunnel-files.zip and anonymousservers-nexus-4-12.zip)'
+    files: [cos/archetype/genesis-catalog.js, idearium/spec-engine/templates/genesis.spec, idearium/spec-engine/templates/system/schemas, cos/manager/server.js, cos/ui]
+    does: >-
+      Add a system as a full compartment, built from what Nexus already has: the genesis template and catalog, the system schemas
+      (component, hook, capability, command, bundle ...), the archetypes and blueprints. Choose, name, check against the schemas, lay out, and
+      the new system appears in COS's list with its own settings (SC2). Preview first.
+    proof: "a system made in the builder starts under COS and passes its own contract check"
+  SC25_stacks_from_the_engines:
+    status: OPEN
+    depends_on: [SC24_the_compartment_builder]
+    james: '"like i want to be able to deploy a lamp stack, or wampp stack, or any combination of the engines, like as tools for modular." (2026-11-24)'
+    files: [cos/services/anonymous, cos/manager/server.js, cos/ui]
+    does: >-
+      The anonymous servers' engines (web, database, DNS, proxy, mail, FTP, firewall, auth ...) become pieces a compartment can take: a stack
+      is a saved combination (LAMP, WAMP, any mix), deployed into one compartment, each engine its own settings.
+    proof: "a LAMP stack deployed into a compartment serves a page and talks to its database; removing it leaves nothing running"
+  SC26_command_bundles:
+    status: OPEN
+    depends_on: [SC2_configuration_per_system]
+    james: '"also a list of command bundles, with the ability to add more." (2026-11-24)'
+    files: [idearium/cli/route-commands.js, idearium/spec-engine/templates/system/schemas/schema.bundle, cos/ui]
+    does: "A page listing each system's command bundle (its own, AXIOMS 5.16), what each command does, and adding one: a bundle is a node file checked against schema.bundle."
+    proof: "every system's bundle listed; a bundle added in the page shows up in that system's commands"
+  SC27_eravos_in_cos:
+    status: OPEN
+    depends_on: [SC24_the_compartment_builder]
+    james: '"i want to be able to import eravos into cos ui." (2026-11-24)'
+    reading: "the coder's, to confirm: Eravos (the canvas app, eravos.exe) imported as a system of COS, its canvas opened from COS's UI, as the pipeline canvas already uses its SDK (IF-ERAVOS-SDK)."
+    does: "Eravos becomes a COS system: imported, supervised and opened from COS's UI."
+    proof: "Eravos starts and stops from COS and opens in its window"

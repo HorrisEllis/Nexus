@@ -1,0 +1,223 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SC26_command_bundles:d41a23f1cb7cdf36
+type: graph
+id: phase:SC26_command_bundles:d41a23f1cb7cdf36
+context: dependency graph of phase SC26_command_bundles
+intent: null
+summary: 22 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1795533535966
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795533535966
+lastSeenAt: 1795533535966
+fingerprint: null
+payload:
+  for: SC26_command_bundles
+  kind: phase
+  repo: null
+  hash: d41a23f1cb7cdf36
+  nodes:
+    - path: idearium/cli/route-commands.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: diagnostic/tests/causality.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/cli/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: tests/modules/test-cg-agent-doors.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-cos-compartment-template.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-drawbridge-registry.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-eros-hooks.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-nexus-update.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-node-registry-system.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-release-deliver.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-sovereign-systems.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-system-boundary.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/core/raid/contract-adapters.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/contract-gates.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: lib/agent-tools/tools/nexus/recall.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/architecture-migrate.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/git-pr.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-client.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-read.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/node-export.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/resource-monitor.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-gates.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: lib/node-export.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-adapters.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: lib/architecture-migrate.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: lib/git-pr.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: lib/resource-monitor.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: lib/agent-tools/tools/nexus/recall.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: lib/nexus-read.js
+      kind: requires
+    - from: idearium/cli/route-commands.js
+      to: lib/nexus-client.js
+      kind: requires
+    - from: diagnostic/tests/causality.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: idearium/cli/index.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-cg-agent-doors.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-cos-compartment-template.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-drawbridge-registry.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-eros-hooks.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-nexus-update.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-node-registry-system.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-release-deliver.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-sovereign-systems.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-system-boundary.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+  crossings:
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-gates.js
+      fromSystem: idearium
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: idearium/cli/route-commands.js
+      to: cortex/core/raid/contract-adapters.js
+      fromSystem: idearium
+      toSystem: cortex
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-11-02-cos-console-phasemap.spec::SC2_configuration_per_system
+    dependents: []
+    upstream:
+      - docs/2026-11-02-cos-console-phasemap.spec::SC2_configuration_per_system
+      - docs/2026-11-02-cos-console-phasemap.spec::SC_D1_units_and_what_the_os_enforces
+      - docs/2026-11-02-cos-console-phasemap.spec::SC_D2_where_the_configuration_lives
+      - docs/2026-11-02-cos-console-phasemap.spec::SC_D3_ports_are_announced_not_guessed
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts:
+      - with: docs/2026-11-02-cos-console-phasemap.spec::SC19_storage_the_drives_and_what_fills_them
+        files:
+          - idearium/cli/route-commands.js
+      - with: docs/2026-11-02-cos-console-phasemap.spec::SC24_the_compartment_builder
+        files:
+          - cos/ui
+      - with: docs/2026-11-02-cos-console-phasemap.spec::SC25_stacks_from_the_engines
+        files:
+          - cos/ui
+    dangling: []
+    lines:
+      - layer 2 · ready
+      - 'depends on (1): SC2_configuration_per_system · all upstream 4'
+      - 'needed by (0): —'
+      - >-
+        same files as SC19_storage_the_drives_and_what_fills_them with no order between them:
+        idearium/cli/route-commands.js
+      - 'same files as SC24_the_compartment_builder with no order between them: cos/ui'
+      - 'same files as SC25_stacks_from_the_engines with no order between them: cos/ui'
+    edges:
+      - from: docs/2026-11-02-cos-console-phasemap.spec::SC2_configuration_per_system
+        kind: declared

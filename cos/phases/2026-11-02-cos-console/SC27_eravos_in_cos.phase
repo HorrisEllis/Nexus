@@ -1,0 +1,27 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-02-cos-console-phasemap.spec::SC27_eravos_in_cos
+type: phase
+id: docs_2026-11-02-cos-console-phasemap.spec::SC27_eravos_in_cos
+context: pipeline phase SC27_eravos_in_cos of docs/2026-11-02-cos-console-phasemap.spec
+intent: null
+summary: SC27_eravos_in_cos (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1795533535968
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795533535968
+lastSeenAt: 1795533535968
+fingerprint: null
+payload:
+  id: SC27_eravos_in_cos
+  map: docs/2026-11-02-cos-console-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files: []
+  depends_on:
+    - SC24_the_compartment_builder
+  blocks: []
+  spec: null
+  graph: e364e4851e156956

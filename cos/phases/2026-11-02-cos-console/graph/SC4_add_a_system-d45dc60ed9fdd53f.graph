@@ -7,11 +7,11 @@ intent: null
 summary: 17 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1795359271832
+exported_at: 1795533535870
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1795359271832
-lastSeenAt: 1795359271832
+firstSeenAt: 1795533535870
+lastSeenAt: 1795533535870
 fingerprint: null
 payload:
   for: SC4_add_a_system
@@ -132,6 +132,7 @@ payload:
       - docs/2026-11-02-cos-console-phasemap.spec::SC_D4_adding_a_system_is_a_proposal
     dependents:
       - docs/2026-11-02-cos-console-phasemap.spec::SC5_the_console_ui
+      - docs/2026-11-02-cos-console-phasemap.spec::SC24_the_compartment_builder
     upstream:
       - docs/2026-11-02-cos-console-phasemap.spec::SC_D4_adding_a_system_is_a_proposal
     downstream:
@@ -143,6 +144,9 @@ payload:
       - docs/2026-11-02-cos-console-phasemap.spec::SC19_storage_the_drives_and_what_fills_them
       - docs/2026-11-02-cos-console-phasemap.spec::SC20_every_location_a_setting
       - docs/2026-11-02-cos-console-phasemap.spec::SC21_controlled_access_to_both_drives
+      - docs/2026-11-02-cos-console-phasemap.spec::SC24_the_compartment_builder
+      - docs/2026-11-02-cos-console-phasemap.spec::SC25_stacks_from_the_engines
+      - docs/2026-11-02-cos-console-phasemap.spec::SC27_eravos_in_cos
       - docs/2026-11-02-cos-console-phasemap.spec::SC5_the_console_ui
       - docs/2026-11-02-cos-console-phasemap.spec::SC7_the_updates_section
       - docs/2026-11-02-cos-console-phasemap.spec::SC8_the_specs_at_full_depth
@@ -150,14 +154,15 @@ payload:
     blockedBy: []
     unlocks:
       - docs/2026-11-02-cos-console-phasemap.spec::SC5_the_console_ui
+      - docs/2026-11-02-cos-console-phasemap.spec::SC24_the_compartment_builder
     conflicts: []
     dangling: []
     lines:
       - layer 1
       - 'depends on (1): SC_D4_adding_a_system_is_a_proposal'
       - >-
-        needed by (1): SC5_the_console_ui · all downstream 12 · finishing it unlocks
-        SC5_the_console_ui
+        needed by (2): SC5_the_console_ui, SC24_the_compartment_builder · all downstream 15 ·
+        finishing it unlocks SC5_the_console_ui, SC24_the_compartment_builder
     edges:
       - from: docs/2026-11-02-cos-console-phasemap.spec::SC_D4_adding_a_system_is_a_proposal
         kind: declared

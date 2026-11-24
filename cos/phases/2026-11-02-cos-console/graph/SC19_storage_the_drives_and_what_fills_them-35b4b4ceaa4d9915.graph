@@ -1,0 +1,309 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SC19_storage_the_drives_and_what_fills_them:35b4b4ceaa4d9915
+type: graph
+id: phase:SC19_storage_the_drives_and_what_fills_them:35b4b4ceaa4d9915
+context: dependency graph of phase SC19_storage_the_drives_and_what_fills_them
+intent: null
+summary: 36 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1795533535947
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795533535947
+lastSeenAt: 1795533535947
+fingerprint: null
+payload:
+  for: SC19_storage_the_drives_and_what_fills_them
+  kind: phase
+  repo: null
+  hash: 35b4b4ceaa4d9915
+  nodes:
+    - path: cos/manager/contract.json
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/manager/network-settings.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/manager/server.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/pipeline/cli.eg
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/pipeline/index.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/sovereign/storage.eg
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/sovereign/test/storage.test.eg
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/ui/core/qr.js
+      role: changes
+      exists: false
+      system: cos
+    - path: cos/ui/storage/index.html
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/ui/storage/page.css
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/ui/storage/page.js
+      role: changes
+      exists: true
+      system: cos
+    - path: idearium/cli/route-commands.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: diagnostic/tests/causality.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/cli/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: tests/modules/test-cg-agent-doors.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-cos-compartment-template.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-drawbridge-registry.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-eros-hooks.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-nexus-update.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-node-registry-system.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-release-deliver.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-sovereign-systems.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-system-boundary.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cos/manager/add-system.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/autopilot-door.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/deploy.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/hub.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/notices.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/proposals.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/resources.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/supervisor.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/system-config.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/updates.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/usage.js
+      role: uses
+      exists: true
+      system: cos
+    - path: lib/prevention.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: cos/pipeline/index.js
+      to: lib/prevention.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/supervisor.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/proposals.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/usage.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/autopilot-door.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/resources.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/updates.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/notices.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/system-config.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/add-system.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/deploy.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/hub.js
+      kind: requires
+    - from: diagnostic/tests/causality.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: idearium/cli/index.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-cg-agent-doors.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-cos-compartment-template.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-drawbridge-registry.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-eros-hooks.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-nexus-update.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-node-registry-system.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-release-deliver.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-sovereign-systems.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-system-boundary.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 7
+    deps:
+      - docs/2026-11-02-cos-console-phasemap.spec::SC7_the_updates_section
+    dependents:
+      - docs/2026-11-02-cos-console-phasemap.spec::SC20_every_location_a_setting
+      - docs/2026-11-02-cos-console-phasemap.spec::SC21_controlled_access_to_both_drives
+    upstream:
+      - docs/2026-11-02-cos-console-phasemap.spec::SC11_the_console_tab
+      - docs/2026-11-02-cos-console-phasemap.spec::SC14_each_system_opens_in_its_own_window
+      - docs/2026-11-02-cos-console-phasemap.spec::SC1_the_bell
+      - docs/2026-11-02-cos-console-phasemap.spec::SC2_configuration_per_system
+      - docs/2026-11-02-cos-console-phasemap.spec::SC3_system_command_line
+      - docs/2026-11-02-cos-console-phasemap.spec::SC4_add_a_system
+      - docs/2026-11-02-cos-console-phasemap.spec::SC5_the_console_ui
+      - docs/2026-11-02-cos-console-phasemap.spec::SC7_the_updates_section
+      - docs/2026-11-02-cos-console-phasemap.spec::SC_D1_units_and_what_the_os_enforces
+      - docs/2026-11-02-cos-console-phasemap.spec::SC_D2_where_the_configuration_lives
+      - docs/2026-11-02-cos-console-phasemap.spec::SC_D3_ports_are_announced_not_guessed
+      - docs/2026-11-02-cos-console-phasemap.spec::SC_D4_adding_a_system_is_a_proposal
+      - docs/2026-11-02-cos-console-phasemap.spec::SC_D5_cos_has_its_own_command_line
+    downstream:
+      - docs/2026-11-02-cos-console-phasemap.spec::SC20_every_location_a_setting
+      - docs/2026-11-02-cos-console-phasemap.spec::SC21_controlled_access_to_both_drives
+    blockedBy: []
+    unlocks:
+      - docs/2026-11-02-cos-console-phasemap.spec::SC20_every_location_a_setting
+      - docs/2026-11-02-cos-console-phasemap.spec::SC21_controlled_access_to_both_drives
+    conflicts:
+      - with: docs/2026-11-02-cos-console-phasemap.spec::SC9_the_zip_dropzone_updater
+        files:
+          - cos/manager/server.js
+      - with: docs/2026-11-02-cos-console-phasemap.spec::SC10_the_zip_history
+        files:
+          - cos/manager/server.js
+      - with: docs/2026-11-02-cos-console-phasemap.spec::SC22_remote_connections_and_the_tunnel
+        files:
+          - cos/manager/server.js
+          - cos/manager/contract.json
+          - cos/ui/core/qr.js
+          - cos/manager/network-settings.js
+      - with: docs/2026-11-02-cos-console-phasemap.spec::SC24_the_compartment_builder
+        files:
+          - cos/manager/server.js
+      - with: docs/2026-11-02-cos-console-phasemap.spec::SC25_stacks_from_the_engines
+        files:
+          - cos/manager/server.js
+      - with: docs/2026-11-02-cos-console-phasemap.spec::SC26_command_bundles
+        files:
+          - idearium/cli/route-commands.js
+    dangling: []
+    lines:
+      - layer 7 · ready
+      - 'depends on (1): SC7_the_updates_section · all upstream 13'
+      - >-
+        needed by (2): SC20_every_location_a_setting, SC21_controlled_access_to_both_drives ·
+        finishing it unlocks SC20_every_location_a_setting, SC21_controlled_access_to_both_drives
+      - 'same files as SC9_the_zip_dropzone_updater with no order between them: cos/manager/server.js'
+      - 'same files as SC10_the_zip_history with no order between them: cos/manager/server.js'
+      - >-
+        same files as SC22_remote_connections_and_the_tunnel with no order between them:
+        cos/manager/server.js, cos/manager/contract.json, cos/ui/core/qr.js,
+        cos/manager/network-settings.js
+      - 'same files as SC24_the_compartment_builder with no order between them: cos/manager/server.js'
+      - 'same files as SC25_stacks_from_the_engines with no order between them: cos/manager/server.js'
+      - … and 1 more phases sharing its files without an order
+    edges:
+      - from: docs/2026-11-02-cos-console-phasemap.spec::SC7_the_updates_section
+        kind: declared

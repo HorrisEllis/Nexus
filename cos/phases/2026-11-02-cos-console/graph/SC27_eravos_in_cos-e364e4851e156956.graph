@@ -1,0 +1,46 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SC27_eravos_in_cos:e364e4851e156956
+type: graph
+id: phase:SC27_eravos_in_cos:e364e4851e156956
+context: dependency graph of phase SC27_eravos_in_cos
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1795533535968
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795533535968
+lastSeenAt: 1795533535968
+fingerprint: null
+payload:
+  for: SC27_eravos_in_cos
+  kind: phase
+  repo: null
+  hash: e364e4851e156956
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-11-02-cos-console-phasemap.spec::SC24_the_compartment_builder
+    dependents: []
+    upstream:
+      - docs/2026-11-02-cos-console-phasemap.spec::SC24_the_compartment_builder
+      - docs/2026-11-02-cos-console-phasemap.spec::SC4_add_a_system
+      - docs/2026-11-02-cos-console-phasemap.spec::SC_D4_adding_a_system_is_a_proposal
+    downstream: []
+    blockedBy:
+      - docs/2026-11-02-cos-console-phasemap.spec::SC24_the_compartment_builder
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 3 · blocked by SC24_the_compartment_builder
+      - 'depends on (1): SC24_the_compartment_builder · all upstream 3'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-11-02-cos-console-phasemap.spec::SC24_the_compartment_builder
+        kind: declared
