@@ -625,3 +625,10 @@ by the focus.
   is gated by its own contract; the gate's own fault was found and fixed; retries vary. What it shows: the 3b cannot write even a one-line
   rule it is handed, so his own order is the next lever, not a better prompt: Nexus first (a component Nexus already has, before any model,
   his RL_D3), then the economy (a stuck piece goes to a bigger model, his L1b). Grade: Failed. Bias: the coder chose the fixture and the fixes.
+- **EMB8, run 7, small gate briefs (2026-11-24, his: "aren't the gates for each function supposed to reduce that? like gates only hold what is absolutely needed"):**
+  replace_all's brief went from 4,519 to 6,390 characters down to 1,591 (its own function, its examples as Emerge values, only the card lines
+  its examples call for, the functions already written as signatures). From nothing, on the 3b alone: **replace_all passed its contract on the
+  first try** (it had failed every one of 11 tries with the long brief), then fix_equal (3 tries) and fix_logic (4), each run against its own
+  examples. Held at fix_bang (6 tries, an Emerge syntax error). Found on the way: COS had put the Ollama system to sleep and a job in flight was
+  lost with it; the builder now wakes it through COS and asks again. Grade: the registered prediction still open (3 of 13 so far); the effect of
+  the small brief on replace_all: 1 of 1 first try against 0 of 11. Bias: one run, the coder built the brief. Run: ../nexus-build-data/emb8-rebuild7.
