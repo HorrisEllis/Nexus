@@ -36,6 +36,17 @@ const path = require('path');
 const { execFile } = require('child_process');
 
 const MODULE_ID = 'idearium.lib.emerge-rung';
+// EMB4 (2026-11-23) — James: "torrents in a magnet link. The pieces always save." Every answer is first repaired by autocorrect (EMB3, written by the
+// 3b, idearium/lib/autocorrect.eg): a habit with exactly one fix never costs a try. Absent or failing, the rung goes on without it.
+let _ac;
+function _autocorrect() {
+  if (_ac !== undefined) return _ac;
+  try { const { createRuntime } = require('../../_emerge/lang/runtime.js'); const m = require('./autocorrect.eg.cjs')(createRuntime({ file: 'autocorrect.eg', loadModule: (abs, r) => require(abs.replace(/\.eg$/, '.cjs'))(r) }));
+    _ac = (b) => { const r = m.autocorrect(String(b)); return { body: String(r.body), fixes: Array.from(r.fixes || []).map(String) }; }; } catch (_) { _ac = null; }
+  return _ac;
+}
+// a parameter assigned in a body: copy it once and use the copy (Emerge's parameters are read-only), outside quoted text only
+const _unParam = (b, n) => '  var ' + n + '_v = ' + n + '\n' + String(b).split(/("(?:[^"\\\n]|\\.)*")/).map((x, i) => (i % 2 ? x : x.replace(new RegExp('\\b' + n + '\\b', 'g'), n + '_v'))).join('');
 // the one piece of Emerge a model needs to write a brick (its syntax, kept small); from Emerge's own bench card (bench/chunks.js), with modules
 const CARD = `You write Emerge (.eg). Syntax you may use:
 fn name(a: num, b: list): map { ... }      fn name(x: num): bool = <expression>
@@ -263,6 +274,9 @@ function createRung({ root = path.resolve(__dirname, '..', '..'), ask, expect, m
     const names = exports.map(e => (typeof e === 'string' ? e : e.name)).filter(Boolean);
     const tries = []; const gapFiles = []; let feedback = null, source = null;
     // 0.60.607 skeleton first: Nexus writes the structure, the agent fills one body at a time (gaps.eg), Emerge's compiler gates each
+    // EMB4: the torrent knows each piece's shape. An export planned by name only (its file is already built) takes its parameters from its piece on disk
+    if (tasksDir && skeleton !== false && !skeletonOf(exports)) { const disk = gapStore(taskDirOf(tasksDir, contract, f), f, { contract });
+      exports = exports.map(e => { const nm = typeof e === 'string' ? e : e && e.name; if (typeof e !== 'string' && paramsOf(e)) return e; const rec = disk && nm ? disk.read(nm) : null; return rec && Array.isArray(rec.params) ? { name: nm, params: rec.params, does: rec.does || '', signature: rec.signature || '' } : e; }); }
     let skel = skeleton === false ? null : skeletonOf(exports);
     if (skel) {
       const G = _gapsEg(); const does = Object.fromEntries(skel.fns.map(x => [x.name, x.does + ' ' + x.signature]));
@@ -275,10 +289,16 @@ function createRung({ root = path.resolve(__dirname, '..', '..'), ask, expect, m
       // fill" · "so each problem with filling the gap becomes the next gap, in the link." A held gap gets the gap that stops it linked in just
       // before it (gaps.eg struggle, link, guard); the helper is filled first, then the held gap is tried again with the helper to call.
       let chain = o.order.slice(); const depth = {}; const recs = {}; const rungOf = {};
+      // EMB4: the torrent. Every piece passed on disk in this phase's folder is taken as it is, helpers included, and never asked again; only what is missing is made.
+      if (store) { try { const pre = require('../../lib/node-export.js').fileIdOf(f + '#'), extra = [];
+        for (const fn of fs.readdirSync(store.dir).filter(x => x.startsWith(pre) && x.endsWith('.gap'))) { const nm = fn.slice(pre.length, -4); if (skel.fns.some(x => x.name === nm)) continue; const rec = store.read(nm); if (rec && rec.status === 'passed' && rec.body && Array.isArray(rec.params)) extra.push({ name: nm, params: rec.params, does: rec.does || '', signature: rec.signature || '' }); }
+        if (extra.length) { skel = skeletonOf([...extra, ...skel.fns.map(x => ({ name: x.name, params: x.params, does: x.does, signature: x.signature }))]); chain = extra.map(x => x.name).concat(chain); } } catch (_) { /* no folder yet: nothing kept */ } }
+      if (store) { const kept = []; for (const x of skel.fns) { const rec = store.read(x.name); if (rec && rec.status === 'passed' && rec.body) { filled[x.name] = rec.body; recs[x.name] = rec; kept.push(x.name); if (!Array.isArray(rec.params)) { rec.params = x.params; rec.signature = rec.signature || x.signature; rec.does = rec.does || x.does; store.write(x.name, rec); } } }
+        if (kept.length) { tries.push({ n: 0, stage: 'resume', why: kept.length + ' piece(s) already passed, taken from disk: ' + kept.join(', ') }); console.log('[emerge-rung] ' + f + ': ' + kept.length + ' passed piece(s) taken from disk'); } }
       // 0.60.613 — the ladder, smallest model first (his "the smaller we can get llms in ollama coding the better"; PC_D16 "ollama first"); his
       // framework per gate (his "My whole framework"): the brief of each gate carries his framework's steps for it, read from his .framework.
       const fillMethod = M('fill'), diagnoseMethod = M('diagnose'), testMethod = M('test');
-      let roundsAt = 0;
+      let roundsAt = 0, refused = {};   // this run's compiler refusals, per gap and rung; cleared when a helper changes what can compile
       for (let round = 0; ; round++) {
       while (chain.some(x => filled[x] == null) && !held) {
         const name = chain.find(x => filled[x] == null);
@@ -287,20 +307,27 @@ function createRung({ root = path.resolve(__dirname, '..', '..'), ask, expect, m
         if (!Array.isArray(rec.attempts)) rec.attempts = [];
         const r = rungOf[name] || 0; const who = L[r];
         const note = (a) => { rec.attempts.push({ n: rec.attempts.length + 1, at: new Date().toISOString(), model: who.name || model, ...a }); if (store) store.write(name, rec); };
-        let ok = false;
+        let ok = false, repeated = false;
         for (let n = 1; n <= maxTries && !ok; n++) {
           const t0 = Date.now(); let text;
           const lesson = G.lesson(rec.attempts, keep);   // a fresh chat each try, told what every earlier try at this gap met (gaps.eg)
           try { text = await who.ask(briefGap({ skel, filled, name, expectation, lesson, method: fillMethod }), { tryNo: n, gap: name, rung: r }); } catch (e) { tries.push({ n, stage: 'gap:' + name, why: 'no answer: ' + e.message, ms: Date.now() - t0, gap }); break; }
-          const body = bodyOf(text, name);
+          let body = bodyOf(text, name);
           if (!body) { note({ body: null, said: 'the reply had no body', fix: 'Reply with only the lines of the body.', ms: Date.now() - t0 }); tries.push({ n, stage: 'gap:' + name, why: 'the reply had no body', ms: Date.now() - t0, gap, model: who.name }); continue; }
+          // a body already refused: no more tries on this model, the next one up takes the gap (gaps.eg repeats)
+          const seen = refused[name + '@' + r] || (refused[name + '@' + r] = []);
+          if (r + 1 < L.length && G.repeats(seen, body)) { repeated = true; tries.push({ n, stage: 'gap:' + name, why: 'the same refused body again', ms: Date.now() - t0, gap, model: who.name }); break; }
           // 0.60.632 — a body that answers the examples instead of the rule is refused before it is compiled (gaps.eg copies_examples)
           const cx = G.copies_examples(body); if (cx.copies) { note({ body, said: cx.why, fix: cx.fix, ms: Date.now() - t0 }); tries.push({ n, stage: 'gap:' + name, why: cx.why + '\nThe fix: ' + cx.fix, ms: Date.now() - t0, gap, model: who.name }); continue; }
-          const ck = await eg('lang-check', render(skel, { ...filled, [name]: body }));
+          let ck = await eg('lang-check', render(skel, { ...filled, [name]: body }));
+          // EMB4: what the compiler refused is first given to autocorrect (the 3b's own EMB3); its repair is kept only if it compiles, or if only a parameter is left to copy
+          if (ck && !ck.ok && !ck.missing && process.env.EMERGE_RUNG_REPAIR !== '0') { const AC = _autocorrect(), acr = AC ? AC(body) : null;
+            if (acr && acr.fixes.length) { const c2 = await eg('lang-check', render(skel, { ...filled, [name]: acr.body })); if (c2.ok || /is a parameter/.test(String(c2.stderr || ''))) { body = acr.body; ck = c2; tries.push({ n, stage: 'repair:' + name, why: 'autocorrect: ' + acr.fixes.join(' '), gap, model: who.name }); } } }
+          for (let k = 0; k < 3 && ck && !ck.ok && !ck.missing && process.env.EMERGE_RUNG_REPAIR !== '0'; k++) { const pm = /"(\w+)" is a parameter/.exec(String(ck.stderr || '')); if (!pm) break; body = _unParam(body, pm[1]); tries.push({ n, stage: 'repair:' + name, why: 'parameter ' + pm[1] + ' copied to a var', gap, model: who.name }); ck = await eg('lang-check', render(skel, { ...filled, [name]: body })); }
           if (ck.missing) { tries.push({ n, stage: 'no-emerge', why: ck.stderr, ms: Date.now() - t0 }); held = 'no-emerge'; break; }
-          if (!ck.ok) { const said = firstLines(ck.stderr); const hn = String(G.fix_for(String(ck.stderr || ''), body)).trim(); note({ body, said, fix: hn, ms: Date.now() - t0 }); tries.push({ n, stage: 'gap:' + name, why: "Emerge's compiler said: " + said + (hn ? '\nThe fix: ' + hn : ''), ms: Date.now() - t0, gap, model: who.name }); continue; }
+          if (!ck.ok) { seen.push({ body }); const said = firstLines(ck.stderr); const hn = String(G.fix_for(String(ck.stderr || ''), body)).trim(); note({ body, said, fix: hn, ms: Date.now() - t0 }); tries.push({ n, stage: 'gap:' + name, why: "Emerge's compiler said: " + said + (hn ? '\nThe fix: ' + hn : ''), ms: Date.now() - t0, gap, model: who.name }); continue; }
           // his "as each gap passes, gets logged or tagged in the gate as passed and compiled"
-          filled[name] = body; ok = true; rec.status = 'passed'; rec.body = body; rec.gate = { passed: true, compiled: true, by: "Emerge's compiler (lang-check)", model: who.name || model, at: new Date().toISOString() };
+          filled[name] = body; ok = true; rec.status = 'passed'; rec.body = body; { const sf = skel.fns.find(x => x.name === name); if (sf) { rec.params = sf.params; rec.signature = rec.signature || sf.signature; rec.does = rec.does || sf.does; } } /* EMB4: a piece carries its own shape, so a later run can take it */ rec.gate = { passed: true, compiled: true, by: "Emerge's compiler (lang-check)", model: who.name || model, at: new Date().toISOString() };
           if (rec.blockedBy && rec.blockedBy.length) rec.unblockedBy = rec.blockedBy.slice();   // the learning memory: what got it past its struggle
           note({ body, said: 'passed; compiles', fix: '', ok: true, ms: Date.now() - t0 }); tries.push({ n, stage: 'gap:' + name, why: 'passed; compiles', ms: Date.now() - t0, gap, model: who.name });
         }
@@ -321,6 +348,7 @@ function createRung({ root = path.resolve(__dirname, '..', '..'), ask, expect, m
         }
         const at2 = skel.fns.findIndex(x => x.name === name); const fns = skel.fns.slice(); fns.splice(at2, 0, helper);
         skel = skeletonOf(fns.map(x => ({ name: x.name, params: x.params, does: x.does, signature: x.signature })));
+        refused = {};
         chain = G.link(chain, name, helper.name); depth[helper.name] = (depth[name] || 0) + 1;
         rec.status = 'blocked'; rec.blockedBy = (rec.blockedBy || []).concat(helper.name); if (store) store.write(name, rec);
         recs[helper.name] = { ...G.as_gap({ id: helper.name, missingVariable: 'the body of ' + helper.name, affectedConstraint: name + ' can be written (it was held: ' + (st.kinds.concat(st.missing.map(m => m + ' is not defined'))).join('; ') + ')', source: 'emerge-rung', causedBy: name }), status: 'open', attempts: [], blocks: name, struggle: st, namedBy: helper.namedBy, signature: helper.signature, does: helper.does };

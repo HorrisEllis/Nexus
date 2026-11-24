@@ -1,23 +1,23 @@
 envelope: 1
-uuid: nexus-export-graph-phase:EMB1_emerge_writes_the_brick:51f514a462f901d0
+uuid: nexus-export-graph-phase:EMB1_emerge_writes_the_brick:afc35e19ebd698d9
 type: graph
-id: phase:EMB1_emerge_writes_the_brick:51f514a462f901d0
+id: phase:EMB1_emerge_writes_the_brick:afc35e19ebd698d9
 context: dependency graph of phase EMB1_emerge_writes_the_brick
 intent: null
-summary: 31 node(s), 0 crossing(s)
+summary: 31 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1795177423371
+exported_at: 1795497761378
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1795177423371
-lastSeenAt: 1795177423371
+firstSeenAt: 1795497761378
+lastSeenAt: 1795497761378
 fingerprint: null
 payload:
   for: EMB1_emerge_writes_the_brick
   kind: phase
   repo: null
-  hash: 51f514a462f901d0
+  hash: afc35e19ebd698d9
   nodes:
     - path: idearium/api/index.js
       role: changes
@@ -95,11 +95,19 @@ payload:
       role: used-by
       exists: true
       system: null
+    - path: _emerge/lang/runtime.js
+      role: uses
+      exists: true
+      system: _emerge
     - path: idearium/config.js
       role: uses
       exists: true
       system: idearium
     - path: idearium/lib/access.cjs
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/lib/autocorrect.eg.cjs
       role: uses
       exists: true
       system: idearium
@@ -112,10 +120,6 @@ payload:
       exists: true
       system: lib
     - path: lib/economy/tokens.js
-      role: uses
-      exists: true
-      system: lib
-    - path: lib/nexus-client.js
       role: uses
       exists: true
       system: lib
@@ -135,15 +139,17 @@ payload:
       role: uses
       exists: true
       system: lib
-    - path: lib/spec-collect.js
-      role: uses
-      exists: true
-      system: lib
     - path: lib/warp-rung.js
       role: uses
       exists: true
       system: lib
   edges:
+    - from: idearium/lib/emerge-rung.cjs
+      to: _emerge/lang/runtime.js
+      kind: requires
+    - from: idearium/lib/emerge-rung.cjs
+      to: idearium/lib/autocorrect.eg.cjs
+      kind: requires
     - from: idearium/lib/emerge-rung.cjs
       to: lib/node-export.js
       kind: requires
@@ -173,12 +179,6 @@ payload:
       kind: requires
     - from: idearium/api/index.js
       to: lib/repo-agent.js
-      kind: requires
-    - from: idearium/api/index.js
-      to: lib/spec-collect.js
-      kind: requires
-    - from: idearium/api/index.js
-      to: lib/nexus-client.js
       kind: requires
     - from: idearium/cli/index.js
       to: idearium/api/index.js
@@ -216,7 +216,13 @@ payload:
     - from: tests/modules/test-undo-any-change.test.js
       to: idearium/api/index.js
       kind: requires
-  crossings: []
+  crossings:
+    - from: idearium/lib/emerge-rung.cjs
+      to: _emerge/lang/runtime.js
+      fromSystem: idearium
+      toSystem: _emerge
+      kind: system
+      known: false
   ready: true
   dag:
     layer: 3
@@ -241,6 +247,7 @@ payload:
     downstream:
       - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB2_ollama_writes_emerge_for_the_pipeline
       - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB3_the_autocorrect
+      - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB4_torrent_pieces
     blockedBy: []
     unlocks:
       - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB2_ollama_writes_emerge_for_the_pipeline
@@ -253,8 +260,9 @@ payload:
         depends on (3): VF1_verify_first, EAS2_the_language_through_the_door,
         CS0_projects_decomposed_into_components · all upstream 10
       - >-
-        needed by (2): EMB2_ollama_writes_emerge_for_the_pipeline, EMB3_the_autocorrect · finishing
-        it unlocks EMB2_ollama_writes_emerge_for_the_pipeline, EMB3_the_autocorrect
+        needed by (2): EMB2_ollama_writes_emerge_for_the_pipeline, EMB3_the_autocorrect · all
+        downstream 3 · finishing it unlocks EMB2_ollama_writes_emerge_for_the_pipeline,
+        EMB3_the_autocorrect
     edges:
       - from: docs/2026-10-19-pipeline-root-causes-phasemap.spec::VF1_verify_first
         kind: declared

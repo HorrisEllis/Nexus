@@ -13,6 +13,7 @@
  *   ER-06  the setting: routing.emerge_first prefer (default) | off — in the policy, Idearium's config, the settings screen, the command
  */
 require('../../lib/test-sandbox.js').ensure();
+process.env.EMERGE_RUNG_REPAIR = '0';   // EMB4: these tests use "!x" as a body the compiler always refuses; the repair is proved by the build itself
 const assert = require('assert'), fs = require('fs'), os = require('os'), path = require('path');
 const ROOT = path.join(__dirname, '..', '..');
 const R = require(path.join(ROOT, 'idearium/lib/emerge-rung.cjs'));

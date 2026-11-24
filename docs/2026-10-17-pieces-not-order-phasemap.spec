@@ -161,6 +161,17 @@ phases:
         d. the remaining CS11 groups (B-F) and PC12 slices (b-d) filed as pipeline requests, one per slice, built by the pipeline.
     proof: "a: a table per model from the real runs; b: the card names every primitive self.eg finds; c: a fixture phase planning one .eg with a .test.eg is built by a stand-in model through the rung (a wrong try's compiler error goes into the next try) and lands only the .eg; d: a slice built by the pipeline"
     axioms: "§17.13 (a missing capability is built into Emerge: the card from Emerge's own map), §8.6 (the rung, the benchmark and self.eg exist), his order (the pipeline builds the rest)"
+  EMB4_torrent_pieces:
+    status: OPEN
+    depends_on: [EMB3_the_autocorrect]
+    james: '"I''m not selling a model. It was supposed to be this way. Like torrents in a magnet link. The pieces always save. the torrent style way of generating. Like litterally can''t be broken own enough, is how each word in relation to its next rate you know the compiler works. It''s fine component in relation to its next. The traversal. Every step can be broken down using end state first and a dag. Like nothing too small as long as it''s persistent. Using my framework. Dynamically expanding and contracting." (2026-11-23)'
+    files: [idearium/lib/emerge-rung.cjs, idearium/lib/gaps.eg, idearium/lib/eg-build/gaps, idearium/lib/test/gaps.test.eg, idearium/lib/autocorrect.eg, cos/build/emerge-build.js, tests/modules/test-emerge-rung.test.js]
+    does: >-
+      A build is a torrent of pieces. Each piece is a gap file on disk; a passed piece is never asked again: the next run takes it and makes only what is missing.
+      Every answer is first repaired by autocorrect (EMB3, written by the 3b), so a habit with one known fix never costs a try. A piece that will not fill splits into smaller pieces (expanding); pieces that pass compose back into the one that asked for them (contracting). A repeated refusal splits, it does not climb to a bigger model.
+      Slice a (now): reuse, repair, split on repeat. Slice b: a phase split from its end state into a DAG of pieces by Nexus, each with its own examples, his framework per gate, so no hand split is needed.
+    proof: "a second run of a passed phase asks no model; a refused !x is repaired before the compiler; a repeated body links a smaller piece; slice b: a phase not split by hand builds on the 3b"
+    axioms: "§0.3 nothing lost, persistence (his 2026-11-14), §8.6 reuse, §14.4 bounded"
   EMB3_the_autocorrect:
     status: OPEN
     depends_on: [EMB1_emerge_writes_the_brick]   # the rung it is built through (BUILT); corrected 2026-11-20 from EMB2, which is open and which the module does not need
@@ -443,3 +454,8 @@ related:
 # idearium/lib/autocorrect.eg: 13 functions. 11 bodies written by huihui_ai/qwen2.5-coder-abliterate:3b through the Ollama system's job route; 2 lines (fix_code, autocorrect) taken from the plan with no model. Passed pieces were kept on disk and each run started from them. Then the COS builder (--pieces) ran them through the rung's own compile, build and expectation, and the phase's 10-example test, and landed them (--land).
 # Named, so it is not read as more than it is: the coder split the phase into these pieces and wrote their wording, the walking and list shapes, and the loop frame of fixes_in, while watching the failures. A harness repaired mechanical errors before compiling (parameters reassigned, &&, ;). It shows the 3b can write Emerge when the gaps are this small. Nexus splitting a phase by itself, on a phase not tuned by hand, is still to show.
 # The 3b's model is under the Qwen research license; this is evaluation, not a model to sell. The built runtime lands at the repo's _emerge/, where the rung's adapter points.
+# ADDENDUM 2026-11-23 (0.60.643) — EMB4 slice a built. James, 2026-11-23: "Like torrents in a magnet link. The pieces always save." · "Every step can be broken down using end state first and a dag. Like nothing too small as long as it's persistent."
+# The torrent: every piece passed on disk in a phase's folder is taken as it is, helpers included, with its own shape (params, signature), so an export planned by name only still gets its skeleton. Proof: EMB3 rebuilt with Ollama unreachable on purpose: 13 pieces taken from disk, 0 model calls, its 10 examples passed.
+# The repair: an answer the compiler refuses goes to autocorrect (EMB3, written by the 3b); the repair is kept only if it compiles, or if only a parameter is left to copy, which Nexus then copies. Proof: "if !x { return 0 } / return x + 1;" passed with no second model call. Found while building: autocorrect breaks text holding an escaped quote ("\""), which its examples never covered, so it repairs only after a refusal.
+# A repeat splits: a body refused again is not asked again; the piece goes to the split (a smaller gap linked in), and only when nothing smaller can be named does it climb. Slice b, the phase split from its end state by Nexus, is still to build.
+# The coder's own fault, kept: an inline comment swallowed the rest of the pass line (the gate) until the rung's tests caught it.

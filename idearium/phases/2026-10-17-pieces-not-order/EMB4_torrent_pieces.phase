@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-17-pieces-not-order-phasemap.spec::EMB4_torrent_pieces
+type: phase
+id: docs_2026-10-17-pieces-not-order-phasemap.spec::EMB4_torrent_pieces
+context: pipeline phase EMB4_torrent_pieces of docs/2026-10-17-pieces-not-order-phasemap.spec
+intent: null
+summary: EMB4_torrent_pieces (?) — 6 file(s)
+system: idearium
+tags: []
+exported_at: 1795497761386
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795497761386
+lastSeenAt: 1795497761386
+fingerprint: null
+payload:
+  id: EMB4_torrent_pieces
+  map: docs/2026-10-17-pieces-not-order-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/lib/emerge-rung.cjs
+    - idearium/lib/gaps.eg
+    - idearium/lib/test/gaps.test.eg
+    - idearium/lib/autocorrect.eg
+    - cos/build/emerge-build.js
+    - tests/modules/test-emerge-rung.test.js
+  depends_on:
+    - EMB3_the_autocorrect
+  blocks: []
+  spec: null
+  graph: ac1f1d7376d6af3e

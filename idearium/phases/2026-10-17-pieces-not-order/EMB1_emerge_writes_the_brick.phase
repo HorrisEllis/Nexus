@@ -7,11 +7,11 @@ intent: null
 summary: EMB1_emerge_writes_the_brick (?) — 7 file(s)
 system: idearium
 tags: []
-exported_at: 1795177245375
+exported_at: 1795497761378
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1795177245375
-lastSeenAt: 1795177245375
+firstSeenAt: 1795497761378
+lastSeenAt: 1795497761378
 fingerprint: null
 payload:
   id: EMB1_emerge_writes_the_brick
@@ -35,4 +35,4 @@ payload:
     - CS0_projects_decomposed_into_components
   blocks: []
   spec: null
-  graph: 51f514a462f901d0
+  graph: afc35e19ebd698d9

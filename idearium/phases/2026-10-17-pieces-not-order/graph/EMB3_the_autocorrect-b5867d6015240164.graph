@@ -7,11 +7,11 @@ intent: null
 summary: 4 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1795491485334
+exported_at: 1795497156019
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1795491485334
-lastSeenAt: 1795491485334
+firstSeenAt: 1795497156019
+lastSeenAt: 1795497156019
 fingerprint: null
 payload:
   for: EMB3_the_autocorrect
@@ -54,7 +54,8 @@ payload:
     layer: 4
     deps:
       - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB1_emerge_writes_the_brick
-    dependents: []
+    dependents:
+      - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB4_torrent_pieces
     upstream:
       - docs/2026-10-12-browser-providers-and-work-phasemap.spec::CS0_projects_decomposed_into_components
       - docs/2026-10-12-browser-providers-and-work-phasemap.spec::MX2_the_0_60_components_wired_in_loom
@@ -67,15 +68,17 @@ payload:
       - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D0_a_system_not_an_idearium_module
       - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D2_two_contracts_two_names
       - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D3_handlers_run_the_cli
-    downstream: []
+    downstream:
+      - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB4_torrent_pieces
     blockedBy: []
-    unlocks: []
+    unlocks:
+      - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB4_torrent_pieces
     conflicts: []
     dangling: []
     lines:
       - layer 4 · ready
       - 'depends on (1): EMB1_emerge_writes_the_brick · all upstream 11'
-      - 'needed by (0): —'
+      - 'needed by (1): EMB4_torrent_pieces · finishing it unlocks EMB4_torrent_pieces'
     edges:
       - from: docs/2026-10-17-pieces-not-order-phasemap.spec::EMB1_emerge_writes_the_brick
         kind: declared
