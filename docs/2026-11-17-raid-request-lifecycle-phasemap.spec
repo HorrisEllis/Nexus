@@ -84,7 +84,7 @@ stages:
     owner_phase: RD9 slice b; RQ21_the_contract_file_is_its_record (the .contract file rewritten at every transition), SHELVED, revived here
     gap: "the contract is not yet set as its compartment's end state (the compartment does not exist, L1)"
   L4_nexus_first_then_outward:
-    his: '"if it doens\'t know, can query cortex, the vector memory, associative lattice which is the end state for cortex, each node, database, component in the component store, each system, everything we can query" · "query nexus first, check the component store before building anything, basically check from in nexus first, then outward."'
+    his: '"if it doens''t know, can query cortex, the vector memory, associative lattice which is the end state for cortex, each node, database, component in the component store, each system, everything we can query" · "query nexus first, check the component store before building anything, basically check from in nexus first, then outward."'
     status: PARTLY
     exists: >-
       Sources that answer today, each by its own door: lib/context-sources.js (one list of context sources), lib/component-store.js
@@ -95,13 +95,13 @@ stages:
     owner_phase: RQ7_the_context_obligations (each obligation answered from Nexus's sources, evidence by reference), SHELVED, revived here
     gap: "one query order RAID walks for each DAG context node: Nexus's own stores first (component store before anything is built), then the systems, then outward (an agent, the web), then him; each answer kept as a reference with its source and hash"
   L5_no_or_i_dont_know_is_not_an_answer:
-    his: '"basically no or i dont know isn\'t a anwser."'
+    his: '"basically no or i dont know isn''t a anwser."'
     status: PARTLY
     exists: "contract-template: a required field that cannot be filled is a gap put to him, never guessed; RQ8 (the gap is a question) mapped"
     owner_phase: RQ8_the_gap_is_a_question (request spine), SHELVED, revived here
     rule: "every node of the DAG ends in one of: answered (with its source), built (L6), or a follow-up question to him (L7). 'No' and 'I don't know' are not end states."
   L6_a_missing_capability_is_built:
-    his: '"if it doesn\'t have the capability is can use idearium to build the capability."'
+    his: '"if it doesn''t have the capability is can use idearium to build the capability."'
     status: PARTLY
     exists: "idearium/pipelines/idearium-build.pipeline (what is ready, the phase covered, mapped, DAG, graph, build, closed, logged); PC3_the_build_request_step (a step becomes a build request)"
     owner_phase: PC3_the_build_request_step (docs/2026-11-08-pipeline-canvas-phasemap.spec)
@@ -119,7 +119,7 @@ stages:
     owner_phase: FMR2_every_failure_reaches_the_record (docs/2026-10-17-failure-mode-report-phasemap.spec), FM4_the_report
     gap: "each failure, fault and gap of a request is written on its contract (by reference to Cortex's record), so the request's own file says what went wrong where"
   L9_raid_decides_and_delivers:
-    his: '"raid decides what to do with each request." · "wouldn\'t raid be the bridge?"'
+    his: '"raid decides what to do with each request." · "wouldn''t raid be the bridge?"'
     status: PARTLY
     exists: "RAID decides (index.js decideForContract, router.js route, PC16); delivery is each caller's: copilot/lifeline.js _tryOllama/_tryGuardian, lib/agent-reach.js KIND, and the officiator's local-or-tab switch (0.60.552)"
     owner_phase: PC16_raid_routes_every_interaction (docs/2026-11-08-pipeline-canvas-phasemap.spec)
@@ -149,6 +149,67 @@ stages:
     exists: "intelligence (patterns, failures, reuse, CFR); the agent tools (lib/agent-tools/); Idearium's chunker (a step too big for its model becomes chunks, PC8 2026-11-14); Emerge and CIE-EG (emerge/emerge/spec/cie-eg.spec)"
     rule: "each stage hands the next only what it needs (the DAG node, its context by reference, its gate), so the model doing the work can be small and local"
 
+  # ── ADDENDUM 2026-11-24 — his flow, each part placed against what exists (read in the files the same day) ─────────────────────────────
+  # James, 2026-11-24: "Every input needs to route into raid, raid needs to route use copilot to complete tasks. Like copilot floats above,"
+  # · "Input to raids signal to noise, then signal get through to raid, then the gap field, to determine complexity of request, than raid then
+  # queries nexus, through cortex. Using the intelligence system, then uses copilot for any non-deterministic requests or anything that nexus
+  # can't reason or outsource the complexity. Creates a contract using the dag, dag from decomposing the request into primitives, principles,
+  # or variable using a Multidimential field to strip the noise. Then map to nexus using the graphs, semantic search, and any other query
+  # tool, and agent tool." · "Synthesize the overlap or redundancy to preserve context window and tokens. Then anything left that's required
+  # to understand the request, prompt the user." · "The dag, prereq and the test file creates the expected outputs. Filenames. Intent.
+  # Context. Conditions for the request to be completed." · "Think dialectical and non linear. Agnostic. Tool router."
+  L0a_signal_before_raid_commits:
+    his: '"Input to raids signal to noise, then signal get through to raid" · "a Multidimential field to strip the noise"'
+    status: PARTLY
+    exists: >-
+      Two different SNR mechanisms, not one. cortex/core/raid/snr-filter.js (raid-snr-filter.spec 1.1.0) is a known-solution pre-gate: a
+      verified invariant or fix 1.0, a crystallized pattern its confidence, an open fault loop 0.5, unknown 0.0; RAID's provider selector runs it
+      only when a faultClass is given, and an unknown is still dispatched. intelligence/topo-kernel/snr.js runs eight gates (entropy, variance,
+      consistency, fidelity, causality, pattern, implicit memory, Bayesian trust) over numeric signals with a field and value, not over words.
+    gap: >-
+      One agnostic assessment of any input, kept whole as a profile rather than one score (the coder's reading of "a multidimensional field",
+      to confirm): signal, noise, fidelity, coverage, uncertainty, complexity, dependency, resource demand, risk, novelty (reuse). Both
+      mechanisms feed it as assessors. Low signal never discards: it sends the input to more analysis, decomposition or a question.
+    owner_phase: NEW (reuses snr-filter.js and topo-kernel/snr.js; nothing rewritten)
+  L1a_complexity_from_the_gap_field:
+    his: '"then the gap field, to determine complexity of request"'
+    status: PARTLY
+    exists: "lib/gap-field.js (the one agnostic gap-reporting entry, his 2026-08: 'Needs to stay agnostic. Gap field ... Reducing ambiguity'); intelligence/gap (hunter.js, predicate.js, ledger.js): structural gaps found and escalated"
+    gap: "the field measures a request before its DAG: how many gaps, how deep, which depend on which; that measure sets how far RAID decomposes and whether a small model, Copilot or he is needed"
+    owner_phase: NEW (reuses lib/gap-field.js and intelligence/gap)
+  L2a_the_dag_from_primitives:
+    his: '"dag from decomposing the request into primitives, principles, or variable" · "The dag, prereq and the test file creates the expected outputs. Filenames. Intent. Context. Conditions for the request to be completed." · "the primitives are the boundaries for the structure. Anything that can''t be changed without changing the shape of the structure." (2026-11-23)'
+    status: PARTLY
+    exists: >-
+      contract-template.js makes each DAG node a gate (L2); contract-gates.js splits a gate after two failures and never into the same pieces;
+      intelligence/synthesis/engine.js normalizes, resolves dependencies, clusters, corroborates, ranks by centrality and leverage, and plans;
+      EMB8 (docs/2026-10-17-pieces-not-order-phasemap.spec, 0.60.645+) gives every level the same contract block: signature, examples,
+      constraints (invariant, boundary, rule, resource).
+    gap: >-
+      RAID decomposes the input itself: each node a primitive (an invariant, the shape that cannot change), a principle (the rule over it) or a
+      variable (what changes), with its prerequisite (what must be known before it starts) and its contract. The expected outputs of each node
+      come from the DAG, its prerequisites and the request's test file: file names, intent, context, conditions for done. Recording from
+      existing code (EMB6) is only for code that already exists.
+    owner_phase: RQ7 (L2) expanded; EMB8 for the contract block
+  L4a_synthesize_the_overlap:
+    his: '"Synthesize the overlap or redundancy to preserve context window and tokens. Then anything left that''s required to understand the request, prompt the user."'
+    status: PARTLY
+    exists: "cortex/core/raid/context-synthesis.js unions five query tools (recall, movement, meta-query, nexus-map, agent chat search) and loom-scan into one candidate stream; it says itself that it does not rank or dedupe. intelligence/synthesis/engine.js clusters and corroborates gaps."
+    gap: "the candidates ranked and merged per DAG node, each merged record keeping every source's claim and reference (a merge that drops a source is information lost); what is still missing after Nexus first, then outward (L4), is the only thing asked of him (L5, L7)"
+    owner_phase: RQ7 (L4) expanded
+  L9a_copilot_above_for_what_nexus_cannot_reason:
+    his: '"raid needs to route use copilot to complete tasks. Like copilot floats above" · "uses copilot for any non-deterministic requests or anything that nexus can''t reason or outsource the complexity"'
+    status: PARTLY
+    exists: "RL_D1b (his 2026-11-17): Copilot is a hat any agent RAID picks can wear. RAID decides (index.js, router.js); copilot/ assist-loop, adaptive-fulfillment."
+    reading: "the coder's, to confirm: 'floats above' and 'a hat' agree. RAID routes each DAG node to the deterministic capability first; only a node Nexus cannot settle gets an agent wearing the Copilot hat, which coordinates and may delegate deterministic work back through RAID. Copilot never changes the contract it fulfils without RAID: a change is versioned and checked against the acceptance conditions."
+    gap: "the node-level choice (deterministic, Copilot, him) made by RAID from L0a and L1a, and kept on the contract with why"
+    owner_phase: PC16 (L9) expanded
+  L15_the_pipeline_is_the_decision_tree:
+    his: '"Using the pipeline as a dicision tree. Like dynamic, like a lineage. A visual canvas. Mapping and exploring the terrain. Then we have a map we can use for debugging, visual history, etc. like the pipeline is everything." · "Maybe each step can use a command or agent tool with an intent, agent, and system. Like I can program it, add steps, basically a visual surface for adding steps to use nexus like Tasker, like BrainOS, which needs to mirgage its features to the pipeline and automation engine."'
+    status: PARTLY
+    exists: "RL_D6, RL_D8 (the pipeline programs it; programmable, observable, diagnosable); COS's pipeline runs (cos/pipeline/runs.eg: run, dag, steps, nodes, gates); the pipeline canvas map (docs/2026-11-08-pipeline-canvas-phasemap.spec PC4 the box kinds, PC8 operate); BrainOS's map (docs/2026-10-21-brainos-into-idearium-phasemap.spec): BX1 census and BX2 flow sources DONE, BX3 flow canvas, BX4 agents, BX5 node controls, BX6 pipeline edit, BX7 automation PLANNED"
+    gap: "each step a box naming its intent, its agent and its system, running one command or agent tool through RAID; he adds and wires steps on the canvas; each run kept as its lineage (which branch was taken and why), so the canvas is also the debugger and the history"
+    owner_phase: PC4, PC8 (pipeline canvas); BX3, BX6, BX7 move to COS (RL_D9)
 decisions:
   RL_D1_raid_is_the_bridge:
     status: "DECIDED 2026-11-17 by James — 'wouldn't raid be the bridge?' · 'yes but look at the nodes.'"
@@ -211,6 +272,9 @@ decisions:
       baseline: PC8 slice a, cos/pipeline/baseline.eg). Emerge uses the pipeline per word, per primitive: a step small enough that a model of
       any size can do it (the chunker, PC8 2026-11-14; PC17), with visual coding and debugging on the canvas (PC4).
 
+  RL_D9_brainos_moves_to_the_pipeline:
+    status: "DECIDED 2026-11-24 by James — 'like BrainOS, which needs to mirgage its features to the pipeline and automation engine.'"
+    chosen: "BrainOS's planned features (BX3 flow canvas, BX4 agents layer, BX5 node controls, BX6 pipeline edit, BX7 automation) land in COS's pipeline and automation engine, not in Idearium. The same direction as RL_D7 (Idearium's mapping belongs to COS). BX0a's landing in Idearium (2026-10-21) is kept as history and superseded."
 open_his:
   - "the request becomes …: the sentence ends there. What does the request become (a pipeline run, a contract, a project in Idearium)?"
   - "'and use the gates' stands alone in his message: which gates, where (the reading in L10 is the coder's: the contract's DAG gates and COS's gate types)."
@@ -226,3 +290,8 @@ order: >-
   6. L6 (PC3): a missing capability becomes an Idearium build request.
   7. L12, L13: the compartment snapshotted per gate; every record booked with Cortex.
   The pipeline can carry 2-7 once 1 is in: each is a phase Nexus builds through idearium-build, with Claude only on a failure's root cause.
+
+# ADDENDUM 2026-11-24 — his flow placed stage by stage (L0a, L1a, L2a, L4a, L9a, L15; RL_D9). Found the same day: the map did not load as
+# YAML (three \' escapes inside single-quoted words; YAML writes ''), so every tool reading it failed; fixed. Checked in the files, not assumed:
+# the two SNR mechanisms (different inputs, both kept), context-synthesis (no ranking, said in its own header), lib/gap-field.js, BrainOS's map.
+# Nothing built by this addendum.
