@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-17-pieces-not-order-phasemap.spec::EMB7_code_frames
+type: phase
+id: docs_2026-10-17-pieces-not-order-phasemap.spec::EMB7_code_frames
+context: pipeline phase EMB7_code_frames of docs/2026-10-17-pieces-not-order-phasemap.spec
+intent: null
+summary: EMB7_code_frames (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1795503379357
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795503379357
+lastSeenAt: 1795503379357
+fingerprint: null
+payload:
+  id: EMB7_code_frames
+  map: docs/2026-10-17-pieces-not-order-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - emerge/emerge/lang/cie/synth.eg
+    - emerge/emerge/cli.js
+    - idearium/lib/emerge-rung.cjs
+    - tests/modules/test-emerge-rung.test.js
+  depends_on:
+    - EMB6_the_end_state_first
+  blocks: []
+  spec: null
+  graph: f622630b97d358d5

@@ -7,11 +7,11 @@ intent: null
 summary: 29 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1795503125655
+exported_at: 1795503379355
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1795503125655
-lastSeenAt: 1795503125655
+firstSeenAt: 1795503379355
+lastSeenAt: 1795503379355
 fingerprint: null
 payload:
   for: EMB6_the_end_state_first
@@ -216,6 +216,7 @@ payload:
       - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB3_the_autocorrect
     dependents:
       - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB4_torrent_pieces
+      - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB7_code_frames
     upstream:
       - docs/2026-10-12-browser-providers-and-work-phasemap.spec::CS0_projects_decomposed_into_components
       - docs/2026-10-12-browser-providers-and-work-phasemap.spec::MX2_the_0_60_components_wired_in_loom
@@ -232,17 +233,19 @@ payload:
     downstream:
       - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB4_torrent_pieces
       - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB5_trials_start_at_raid
+      - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB7_code_frames
     blockedBy: []
     unlocks:
       - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB4_torrent_pieces
+      - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB7_code_frames
     conflicts: []
     dangling: []
     lines:
       - layer 5 · ready
       - 'depends on (1): EMB3_the_autocorrect · all upstream 12'
       - >-
-        needed by (1): EMB4_torrent_pieces · all downstream 2 · finishing it unlocks
-        EMB4_torrent_pieces
+        needed by (2): EMB4_torrent_pieces, EMB7_code_frames · all downstream 3 · finishing it
+        unlocks EMB4_torrent_pieces, EMB7_code_frames
     edges:
       - from: docs/2026-10-17-pieces-not-order-phasemap.spec::EMB3_the_autocorrect
         kind: declared

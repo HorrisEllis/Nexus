@@ -19,7 +19,7 @@ payload:
   repo:
     url: https://github.com/HorrisEllis/emerge
     commit: f02324025d60b9fe8a38e201f65770e2f13f0079
-    lockedAt: '2026-11-19'
+    lockedAt: '2026-11-24'
     path: emerge/
     note: >-
       the snapshot changes only by a new lock (scripts/emerge-lock.js --write). Since 2026-11-05 (EAS_D6, his "A": Emerge is a system in Nexus, emerge/ its
@@ -140,7 +140,7 @@ payload:
       emerge/_archive/data-nexus-export-2026-09/nodes/command/emerge.seams.command: 34fedcf07cefa3172eafcd72f3e7c7bd04dc67a2110534dccc194268a19834aa
       emerge/_archive/data-nexus-export-2026-09/nodes/command/emerge.snapshot.command: aed1c71252f5141737bc7b3956c9c346337c1720b8086cb482a30b2ea84533fd
       emerge/_archive/data-nexus-export-2026-09/nodes/system/emerge.system: 846cdd4eb42c54a89135ef72adb174018be59bb2676e016808115cbef4703e1e
-      emerge/cli.js: 883c1149123485ddac158f28ef2480c61471974be13a0d877688abf418fe348b
+      emerge/cli.js: 7bfa00927415d7ca173f96074870de11f4e8abcde9b12a69c522fdb7801d56e0
       emerge/compartment.json: 1aa9f3a7819b995bcd9ac60c07ad59ef21b80c6e97a793e55bb4b54f605d4ebe
       emerge/config.js: 89c24c8656e0f5933d6e75d73e25e1af1ebf282bdb3cf71a845b1a21b8b0ca76
       emerge/contracts/handshake.js: e00de142f7ed57b291a7e214f7e4f14451fb2045017a4811172eb3fc2246387f
@@ -185,7 +185,7 @@ payload:
       emerge/lang/cie/observe.eg: b1d48d02771e0664478610288b130c83fe6a1548f240dadee39e521b7f3748bc
       emerge/lang/cie/regex.eg: 70a31b3689ebd2f7f15e405ea9c2bb66549edfbb8f62b91fcad265382b30c6c3
       emerge/lang/cie/self.eg: 491a2cfabb3913fd194ac292ed478d0ef3335f9bdeea99b7ccf08b76ce0dee55
-      emerge/lang/cie/synth.eg: 6eb643100f1c3c8ffe4828e59f4db46f2d2e79d9bc4b322e13172a8e065ede81
+      emerge/lang/cie/synth.eg: 90a910e6950301826e50611aeec202767d6ff85ef6c084d3da0b700acf3545a6
       emerge/lang/cie/test/self.test.eg: 2267c01a3f661ca8f0c03638584a96e739863beceea5661a27515cd03bd5c532
       emerge/lang/cie/world.eg: 77508c9e9fc9c231d84c69432c8bbadde62ad2b78fc6c52da4223e434d9caa78
       emerge/lang/components.js: 68286225eccd91ff0b40880e685218c1edc2987ac19d8b1abd911d50e85204b7
@@ -349,8 +349,12 @@ payload:
       phases/2026-10-02-emerge-field-memory-build/graph/CRF1_the_axioms_as_constraints-6b50ac38551278d5.graph: 17ea2b7310d84aaf6c10a4ad43c29e087a52ac47ac744f0e4143148e90d8c126
       phases/2026-10-02-emerge-field-memory-build/graph/MR11_rewind_the_mind-253f63ad6dbcd990.graph: a93f04a7be057ae151b0302b335d6c910addc5377c995cbdcccf0c61fa7f2f4e
       phases/2026-10-02-emerge-field-memory-build/graph/_superseded/CRF1_the_axioms_as_constraints-697fc41691bf6a2f.graph: 818f006e869aecb05e669cc3a626d7ae88af7c98f81565307cc8fe378aab75c5
-      phases/2026-10-17-pieces-not-order/EMB2_ollama_writes_emerge_for_the_pipeline.phase: d90ea3e81109b3013be7b3551a18856abeb4e7b940accb5446dedb2b87bde7a1
-      phases/2026-10-17-pieces-not-order/graph/EMB2_ollama_writes_emerge_for_the_pipeline-579a25f18ba2e73f.graph: 365ed44933ef1d28b3e79172a79987821af0ff75ac35aab8f643e9547fdc3b67
+      phases/2026-10-17-pieces-not-order/EMB2_ollama_writes_emerge_for_the_pipeline.phase: b81c2e86faf8467b4ca181cdba485878c6cc011e442b83d9a0cb8282973a2586
+      phases/2026-10-17-pieces-not-order/EMB7_code_frames.phase: c5b8f599c308105645d5317040d9fe8b7adc660c260db2ad9dd6f25f3a703b33
+      phases/2026-10-17-pieces-not-order/graph/EMB2_ollama_writes_emerge_for_the_pipeline-bb1edf7c6fc5cf89.graph: 487a05a2c62d0e21e242d168c30f43bab02500c541a9717771f76b767643ef6d
+      phases/2026-10-17-pieces-not-order/graph/EMB7_code_frames-f622630b97d358d5.graph: fadfc941d3a7fc5d9bd61f1e242acaea9a2d258e65755ed646af0545a09f33ea
+      phases/2026-10-17-pieces-not-order/graph/_superseded/EMB2_ollama_writes_emerge_for_the_pipeline-1445f35f70f564f1.graph: 920c92b78fb0caa828537f03f6663736d8794848e183790904f4ba36cd1235f7
+      phases/2026-10-17-pieces-not-order/graph/_superseded/EMB2_ollama_writes_emerge_for_the_pipeline-579a25f18ba2e73f.graph: 365ed44933ef1d28b3e79172a79987821af0ff75ac35aab8f643e9547fdc3b67
       phases/2026-10-31-emerge-as-a-system/EAS4a_L0_evaluate.phase: 56625f30bc93e53c2d659c7b692e7ad13995404b13d00d466f37f805eecb4d70
       phases/2026-10-31-emerge-as-a-system/EAS4b_L1_compile.phase: 27e5dec4abb700a78548cbf346e1498219e46fa2f4abc5455a2a51d566393e92
       phases/2026-10-31-emerge-as-a-system/EAS4c_L2_build.phase: 29a37991e8d819875a2d94be3964bc85aead13afefb5612f0ef1e1d037fd439f

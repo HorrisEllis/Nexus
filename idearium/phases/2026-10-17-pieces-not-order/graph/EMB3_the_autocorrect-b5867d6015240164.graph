@@ -7,11 +7,11 @@ intent: null
 summary: 4 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1795501275676
+exported_at: 1795503379360
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1795501275676
-lastSeenAt: 1795501275676
+firstSeenAt: 1795503379360
+lastSeenAt: 1795503379360
 fingerprint: null
 payload:
   for: EMB3_the_autocorrect
@@ -73,6 +73,7 @@ payload:
       - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB4_torrent_pieces
       - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB5_trials_start_at_raid
       - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB6_the_end_state_first
+      - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB7_code_frames
     blockedBy: []
     unlocks:
       - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB6_the_end_state_first
@@ -82,7 +83,7 @@ payload:
       - layer 4
       - 'depends on (1): EMB1_emerge_writes_the_brick · all upstream 11'
       - >-
-        needed by (2): EMB4_torrent_pieces, EMB6_the_end_state_first · all downstream 3 · finishing
+        needed by (2): EMB4_torrent_pieces, EMB6_the_end_state_first · all downstream 4 · finishing
         it unlocks EMB6_the_end_state_first
     edges:
       - from: docs/2026-10-17-pieces-not-order-phasemap.spec::EMB1_emerge_writes_the_brick

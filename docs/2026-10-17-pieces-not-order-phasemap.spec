@@ -204,6 +204,21 @@ phases:
       The checked examples wait for him in the Lab. He accepts or rejects each; only accepted examples are written into the phase's map, and only then can the builder take the phase. A model never grades its own end state: his yes does.
     proof: "on the first three phases of the build queue whose words give signatures (rule fixed before the run: GW1_the_baton, GWK1_the_walker_and_chain_schema, OS1_every_run_on_one_surface), the 3b alone, no hand edit, gives at least 3 checked examples for at least 2 of the 3; each answer and check is on disk; prediction registered 2026-11-23 before the run"
     axioms: "end state first (his framework); persistence (his 2026-11-14); §8.6 reuse; Claude last (his, Nexus is for small models)"
+  EMB7_code_frames:
+    status: OPEN
+    depends_on: [EMB6_the_end_state_first]
+    james: '"Using schemas, templates, and schematics or specs. For reusable structure. That''s one thing nexus was supposed to be doing. Like anything deterministic, reusable, maintains the architecture and structure." (2026-11-23) · "Make sure you follow the claude.md. Pipeline first. Once it can begin to build nexus, from the inside out." (2026-11-23)'
+    found: "2026-11-23 (EMB6): the 3b fills structure well and invents it badly: 0 of 25 without a frame, 2 of 2 first try with one. The rung already gives the module's frame (its skeleton, 0.60.607); a body is still written free. CIE's synth.eg has rung 2, templates whose every hole is one expression, with one template (fail_fast_scan) and holes filled by hand. Emerge's lang-synth runs it, no model."
+    files: [emerge/emerge/lang/cie/synth.eg, emerge/emerge/cli.js, idearium/lib/emerge-rung.cjs, tests/modules/test-emerge-rung.test.js]
+    does: >-
+      Before a gap's body is asked for free, the 3b is given CIE's templates: the common shapes of a body, written once in Emerge (map a list,
+      keep some items, fold, find the first, change one item, refuse then compute, walk a text). It picks one and writes each hole as one
+      expression. Emerge renders it (lang-synth, the same holes give the same bytes) and its compiler checks it, as any body. A template that
+      does not fit, or does not compile, falls back to the free body, so nothing that worked before is lost. The chosen template and its holes are
+      kept in the gap's file, a piece like any other. The CLI takes structured arguments as one --json flag, so a command's array argument
+      (lang-synth's units) can be given from the command line.
+    proof: "prediction registered 2026-11-23 before the run: EMB3 (autocorrect, 13 functions) rebuilt from nothing on the 3b alone, once with templates and once without, the same ladder (3b only) and tries; with templates it takes fewer model calls to pass every gap than without. Measured from each run's gap files."
+    axioms: "§8.6 reuse (CIE's own rung 2, Emerge's own door); deterministic first; persistence (his 2026-11-14); Claude last"
   EMB3_the_autocorrect:
     # roadmap edit 2026-11-20: OPEN -> IN PROGRESS 2026-11-20.
     # 2026-11-23: IN PROGRESS -> BUILT 0.60.642 (the 3b in small pieces; its 10 examples pass; see the addenda below)

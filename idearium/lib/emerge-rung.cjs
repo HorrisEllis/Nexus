@@ -177,6 +177,34 @@ function briefGap({ skel, filled, name, expectation = null, feedback = null, les
     '\nReply with only the body of ' + name + ' (the lines that replace ___), no fn line, no explanation.'].filter(x => x !== '').join('\n');
 }
 
+// EMB7 (2026-11-23): CIE's templates (emerge/emerge/lang/cie/synth.eg rung 2) before a free body. James, 2026-11-23: "Using schemas, templates,
+// and schematics or specs. For reusable structure." The 3b picks a shape and writes each hole as one expression; Emerge renders it (lang-synth).
+const TEMPLATE_MENU = [
+  ['map_list', 'each item of a list becomes one new item', 'var out = [] / for x in OVER { out = push(out, EACH) } / return RESULT', ['over', 'each', 'result']],
+  ['filter_list', 'keep the items that pass', 'var out = [] / for x in OVER { if KEEP { out = push(out, x) } } / return RESULT', ['over', 'keep', 'result']],
+  ['fold', 'one value built up from every item', 'var acc = START / for x in OVER { acc = STEP } / return RESULT', ['start', 'over', 'step', 'result']],
+  ['find_first', 'the first item that matches, else what is missing', 'for x in OVER { if MATCH { return FOUND } } / return MISSING', ['over', 'match', 'found', 'missing']],
+  ['update_item', 'a new list with the matching items changed', 'var out = [] / for x in OVER { if MATCH { out = push(out, CHANGED) } else { out = push(out, x) } } / return RESULT', ['over', 'match', 'changed', 'result']],
+  ['guard_then', 'refuse a bad input, else compute', 'if REFUSE_WHEN { return REFUSAL } / return VALUE', ['refuse_when', 'refusal', 'value']],
+  ['scan_text', 'walk a text one character at a time (c is the character, i its position)', 'var acc = START / var i = 0 / while i < len(TEXT) { let c = slice(TEXT, i, i + 1) / acc = STEP / i += 1 } / return RESULT', ['start', 'text', 'step', 'result']],
+];
+function briefTemplate(args) {
+  const base = briefGap(args).replace(/\nReply with only the body of [^\n]*$/, '');
+  return [base, '', 'Do not write the body yourself. Choose the template whose shape fits ' + args.name + ', and write each of its holes as ONE Emerge expression.',
+    'The names a hole may use: the parameters, x (the item), acc (the running value), out (the list so far), c and i (in scan_text).', '',
+    ...TEMPLATE_MENU.map(([n, what, shape, holes]) => `${n}: ${what}\n    ${shape}\n    holes: ${holes.join(', ')}`), '',
+    'Reply exactly in this form, one hole per line, nothing else:', 'template: <name>', '<hole>: <one expression>', '…',
+    'If no template fits, reply: template: none'].join('\n');
+}
+/** the reply → { template, holes } or null: "template: fold" then "start: 0" lines */
+function templateOf(text) {
+  const lines = _q(text).replace(/```\w*/g, '').split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+  const t = (/^template\s*:\s*`?(\w+)`?/i.exec(lines.find(l => /^template\s*:/i.test(l)) || '') || [])[1];
+  const row = TEMPLATE_MENU.find(x => x[0] === t); if (!row) return null;
+  const holes = {}; for (const l of lines) { const m = /^`?(\w+)`?\s*:\s*(.+)$/.exec(l); if (m && row[3].includes(m[1].toLowerCase())) holes[m[1].toLowerCase()] = m[2].replace(/`/g, '').trim(); }
+  return row[3].every(h => holes[h]) ? { template: t, holes } : { template: t, holes, missing: row[3].filter(h => !holes[h]) };
+}
+
 // EMB2 (0.60.611): each skeleton gap is its own node file, <gapDir>/<file>#<fn>.gap (lib/node-export.js, the known type `gap`), in Idearium's
 // own data (AXIOMS §5.15: the rung is Idearium's). Every attempt is written to it as it happens (§2.1, his 2026-11-14 "stop using memory for
 // storage"), and every try is a fresh chat told gaps.eg lesson() over the gap's earlier attempts, across runs. James, 2026-11-19: "gates need
@@ -266,6 +294,14 @@ function createRung({ root = path.resolve(__dirname, '..', '..'), ask, expect, m
       try { return resolve(JSON.parse(String(stdout))); } catch (_) { return resolve({ ok: false, stderr: `${String(stderr || '').trim() || (err && err.message) || 'no answer'}` }); }
     });
   });
+  // the same door with structured arguments (EMB7): lang-synth takes { units }
+  const egJson = (cmd, obj) => new Promise((resolve) => {
+    if (!fs.existsSync(CLI)) return resolve({ ok: false, stderr: `Emerge is not here (${CLI})`, missing: true });
+    execFile(process.execPath, [CLI, cmd, '--json', JSON.stringify(obj)], { cwd: path.dirname(CLI), timeout: timeoutMs, maxBuffer: 32 * 1024 * 1024, windowsHide: true }, (err, stdout, stderr) => {
+      try { return resolve(JSON.parse(String(stdout))); } catch (_) { return resolve({ ok: false, stderr: `${String(stderr || '').trim() || (err && err.message) || 'no answer'}` }); }
+    });
+  });
+  const templTried = new Set();   // EMB7: one template try per gap per run
   const firstLines = (s, n = 8) => _q(s).split('\n').map(l => l.trim()).filter(Boolean).slice(0, n).join('\n');
 
   async function build({ file, exports = [], expectation = null, context = '', skeleton = true, contract = null } = {}) {
@@ -311,7 +347,20 @@ function createRung({ root = path.resolve(__dirname, '..', '..'), ask, expect, m
         for (let n = 1; n <= maxTries && !ok; n++) {
           const t0 = Date.now(); let text;
           const lesson = G.lesson(rec.attempts, keep);   // a fresh chat each try, told what every earlier try at this gap met (gaps.eg)
-          try { text = await who.ask(briefGap({ skel, filled, name, expectation, lesson, method: fillMethod }), { tryNo: n, gap: name, rung: r }); } catch (e) { tries.push({ n, stage: 'gap:' + name, why: 'no answer: ' + e.message, ms: Date.now() - t0, gap }); break; }
+          // EMB7: a gap's first try on the smallest model is a template (CIE rung 2): the 3b picks a shape and fills its holes, Emerge renders it;
+          // what it renders goes through every check below like any body. A template that does not fit or does not render falls back to the free body.
+          let via = null;
+          if (n === 1 && r === 0 && process.env.EMERGE_RUNG_TEMPLATES !== '0' && !templTried.has(name)) { templTried.add(name);
+            try { const said = await who.ask(briefTemplate({ skel, filled, name, expectation, lesson, method: fillMethod }), { tryNo: 0, gap: name, rung: r, template: true });
+              const tp = templateOf(said), sf = skel.fns.find(x => x.name === name);
+              if (!tp) note({ body: null, via: 'template', said: 'no template chosen (' + _q(said).split('\n')[0].slice(0, 80) + ')', fix: '', ms: Date.now() - t0 });
+              else if (tp.missing) note({ body: null, via: 'template ' + tp.template, said: 'holes left empty: ' + tp.missing.join(', '), fix: '', ms: Date.now() - t0 });
+              else { const syn = await egJson('lang-synth', { units: [{ id: name, signature: 'fn ' + name + '(' + ((sf && sf.params) || []).join(', ') + ')', derive: { form: 'template', template: tp.template, holes: tp.holes } }] });
+                const code = syn && syn.files && syn.files[name + '.eg'];
+                if (code) { text = code; via = 'template ' + tp.template; tries.push({ n, stage: 'template:' + name, why: tp.template + ' ' + JSON.stringify(tp.holes).slice(0, 200), gap, model: who.name }); }
+                else note({ body: null, via: 'template ' + tp.template, said: 'Emerge did not render it: ' + firstLines((syn && (syn.stdout + syn.stderr)) || 'no answer', 2), fix: '', ms: Date.now() - t0 }); } }
+            catch (e) { tries.push({ n, stage: 'template:' + name, why: 'no answer: ' + e.message, gap }); } }
+          if (text == null) try { text = await who.ask(briefGap({ skel, filled, name, expectation, lesson, method: fillMethod }), { tryNo: n, gap: name, rung: r }); } catch (e) { tries.push({ n, stage: 'gap:' + name, why: 'no answer: ' + e.message, ms: Date.now() - t0, gap }); break; }
           let body = bodyOf(text, name);
           if (!body) { note({ body: null, said: 'the reply had no body', fix: 'Reply with only the lines of the body.', ms: Date.now() - t0 }); tries.push({ n, stage: 'gap:' + name, why: 'the reply had no body', ms: Date.now() - t0, gap, model: who.name }); continue; }
           // a body already refused: no more tries on this model, the next one up takes the gap (gaps.eg repeats)
@@ -329,7 +378,7 @@ function createRung({ root = path.resolve(__dirname, '..', '..'), ask, expect, m
           // his "as each gap passes, gets logged or tagged in the gate as passed and compiled"
           filled[name] = body; ok = true; rec.status = 'passed'; rec.body = body; { const sf = skel.fns.find(x => x.name === name); if (sf) { rec.params = sf.params; rec.signature = rec.signature || sf.signature; rec.does = rec.does || sf.does; } } /* EMB4: a piece carries its own shape, so a later run can take it */ rec.gate = { passed: true, compiled: true, by: "Emerge's compiler (lang-check)", model: who.name || model, at: new Date().toISOString() };
           if (rec.blockedBy && rec.blockedBy.length) rec.unblockedBy = rec.blockedBy.slice();   // the learning memory: what got it past its struggle
-          note({ body, said: 'passed; compiles', fix: '', ok: true, ms: Date.now() - t0 }); tries.push({ n, stage: 'gap:' + name, why: 'passed; compiles', ms: Date.now() - t0, gap, model: who.name });
+          note({ body, said: 'passed; compiles', fix: '', ok: true, via: via || 'free body', ms: Date.now() - t0 }); tries.push({ n, stage: 'gap:' + name, why: 'passed; compiles', ms: Date.now() - t0, gap, model: who.name });
         }
         if (store && !gapFiles.includes(store.at(name))) gapFiles.push(store.at(name));
         if (ok || held) continue;
@@ -423,4 +472,4 @@ function createRung({ root = path.resolve(__dirname, '..', '..'), ask, expect, m
   return { build, eg };
 }
 
-module.exports = { MODULE_ID, VERSION: '1.3.0', CARD, brief, extract, adapter, createRung, skeletonOf, paramsOf, bodyOf, briefGap, gapStore, taskDirOf, listGaps, moduleTypeOf };
+module.exports = { MODULE_ID, VERSION: '1.4.0', CARD, brief, briefTemplate, templateOf, TEMPLATE_MENU, extract, adapter, createRung, skeletonOf, paramsOf, bodyOf, briefGap, gapStore, taskDirOf, listGaps, moduleTypeOf };

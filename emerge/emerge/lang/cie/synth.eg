@@ -79,7 +79,27 @@ let FAIL_FAST_SCAN = [
   "\}",
 ]
 
-let TEMPLATES = { fail_fast_scan: FAIL_FAST_SCAN }
+// EMB7 (2026-11-23), the common shapes of a body, so a small model fills holes instead of writing structure.
+// James, 2026-11-23: "Using schemas, templates, and schematics or specs. For reusable structure. That's one thing nexus was supposed to be
+// doing. Like anything deterministic, reusable, maintains the architecture and structure." Each hole is one expression. Names the holes may
+// use: x (the item), acc (the running value), out (the list so far), c (one character), i (its position).
+
+/** each item becomes one new item */
+let MAP_LIST = ["@head@ \{", "  var out = []", "  for x in @over@ \{", "    out = push(out, @each@)", "  \}", "  return @result@", "\}"]
+/** keep the items that pass */
+let FILTER_LIST = ["@head@ \{", "  var out = []", "  for x in @over@ \{", "    if @keep@ \{ out = push(out, x) \}", "  \}", "  return @result@", "\}"]
+/** one value built up from every item */
+let FOLD = ["@head@ \{", "  var acc = @start@", "  for x in @over@ \{", "    acc = @step@", "  \}", "  return @result@", "\}"]
+/** the first item that matches, else what is missing */
+let FIND_FIRST = ["@head@ \{", "  for x in @over@ \{", "    if @match@ \{ return @found@ \}", "  \}", "  return @missing@", "\}"]
+/** a new list with the matching items changed */
+let UPDATE_ITEM = ["@head@ \{", "  var out = []", "  for x in @over@ \{", "    if @match@ \{ out = push(out, @changed@) \} else \{ out = push(out, x) \}", "  \}", "  return @result@", "\}"]
+/** refuse a bad input, else compute */
+let GUARD_THEN = ["@head@ \{", "  if @refuse_when@ \{ return @refusal@ \}", "  return @value@", "\}"]
+/** walk a text one character at a time */
+let SCAN_TEXT = ["@head@ \{", "  var acc = @start@", "  var i = 0", "  while i < len(@text@) \{", "    let c = slice(@text@, i, i + 1)", "    acc = @step@", "    i += 1", "  \}", "  return @result@", "\}"]
+
+let TEMPLATES = { fail_fast_scan: FAIL_FAST_SCAN, map_list: MAP_LIST, filter_list: FILTER_LIST, fold: FOLD, find_first: FIND_FIRST, update_item: UPDATE_ITEM, guard_then: GUARD_THEN, scan_text: SCAN_TEXT }
 
 fn derive_template(sig, d) {
   if not has(TEMPLATES, d.template) { return { gap: "unknown template {d.template}" } }

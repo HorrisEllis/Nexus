@@ -12,6 +12,8 @@ function parse(argv) {
   for (let i = 0; i < argv.length; i++) {
     if (!argv[i].startsWith('--')) continue;
     const k = argv[i].slice(2), v = argv[i + 1] && !argv[i + 1].startsWith('--') ? argv[++i] : true;
+    // EMB7 (2026-11-23): --json '{…}' gives structured arguments (an array such as lang-synth's units), merged over the flags
+    if (k === 'json' && typeof v === 'string') { Object.assign(args, JSON.parse(v)); continue; }
     args[k] = v;
   }
   return args;

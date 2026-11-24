@@ -14,6 +14,7 @@
  */
 require('../../lib/test-sandbox.js').ensure();
 process.env.EMERGE_RUNG_REPAIR = '0';   // EMB4: these tests use "!x" as a body the compiler always refuses; the repair is proved by the build itself
+process.env.EMERGE_RUNG_TEMPLATES = '0';   // EMB7: these tests' models answer bodies; the template path has its own test (ER-13), which turns it on
 const assert = require('assert'), fs = require('fs'), os = require('os'), path = require('path');
 const ROOT = path.join(__dirname, '..', '..');
 const R = require(path.join(ROOT, 'idearium/lib/emerge-rung.cjs'));
@@ -239,6 +240,28 @@ const scripted = (replies, seen = []) => async (message, { tryNo }) => { seen.pu
     assert.deepStrictEqual(m2.wrapit('a'), { body: 'a', fixes: [] }, 'a returned map is a plain object');
     assert.strictEqual(R.moduleTypeOf(ROOT, 'idearium/lib/autocorrect.js'), 'module');
     assert.strictEqual(R.moduleTypeOf(ROOT, 'lib/x.js'), 'commonjs');
+  });
+
+  // EMB7 (2026-11-23), his "Using schemas, templates, and schematics or specs. For reusable structure."
+  await test('ER-13', 'a gap\'s first try is a template (CIE rung 2): the model picks a shape and fills its holes, Emerge renders it, the compiler checks it; no template falls back to the free body', async () => {
+    assert.deepStrictEqual(R.templateOf('template: fold\nstart: 0\nover: xs\nstep: acc + x\nresult: acc'), { template: 'fold', holes: { start: '0', over: 'xs', step: 'acc + x', result: 'acc' } });
+    assert.deepStrictEqual(R.templateOf('template: fold\nstart: 0').missing, ['over', 'step', 'result'], 'an empty hole is named');
+    assert.strictEqual(R.templateOf('template: none'), null);
+    process.env.EMERGE_RUNG_TEMPLATES = '1';
+    try {
+      const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'er13-')), asked = [];
+      const ask = async (msg) => { asked.push(/Choose the template/.test(msg) ? 'template' : 'free'); return /Choose the template/.test(msg) ? 'template: fold\nstart: 0\nover: xs\nstep: acc + x\nresult: acc' : '  return 0'; };
+      const r = await R.createRung({ root: dir, cli: path.join(ROOT, 'emerge', 'emerge', 'cli.js'), tasksDir: null, ask, expect: async () => ({ ok: true }) })
+        .build({ file: 'lib/total.js', exports: [{ name: 'total', signature: 'total(xs: list) -> num', does: 'the sum of xs' }] });
+      assert.ok(r.ok, JSON.stringify(r.tries));
+      assert.deepStrictEqual(asked, ['template'], 'one model call: the template');
+      assert.ok(/acc = acc \+ x/.test(r.source), 'the rendered fold is the body');
+      const none = [];
+      const r2 = await R.createRung({ root: dir, cli: path.join(ROOT, 'emerge', 'emerge', 'cli.js'), tasksDir: null, ask: async (msg) => { none.push(/Choose the template/.test(msg) ? 'template' : 'free'); return /Choose the template/.test(msg) ? 'template: none' : '  return x + 1'; }, expect: async () => ({ ok: true }) })
+        .build({ file: 'lib/inc.js', exports: [{ name: 'inc', signature: 'inc(x: num) -> num', does: 'x plus one' }] });
+      assert.ok(r2.ok, 'no template: the free body passes as before');
+      assert.deepStrictEqual(none, ['template', 'free']);
+    } finally { process.env.EMERGE_RUNG_TEMPLATES = '0'; }
   });
 
   console.log(`\n  ${passed} passed, ${failed} failed`);
