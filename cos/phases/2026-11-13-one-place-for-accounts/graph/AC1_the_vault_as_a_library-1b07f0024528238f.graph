@@ -7,11 +7,11 @@ intent: null
 summary: 29 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1795361652827
+exported_at: 1795479917995
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1795361652827
-lastSeenAt: 1795361652827
+firstSeenAt: 1795479917995
+lastSeenAt: 1795479917995
 fingerprint: null
 payload:
   for: AC1_the_vault_as_a_library
@@ -242,6 +242,13 @@ payload:
       - with: docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC10_profiles_the_source_of_truth
         files:
           - idearium/cli/route-commands.js
+      - with: docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC13_intent_routes_to_ids
+        files:
+          - idearium/cli/route-commands.js
+      - with: docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC14_nexus_addresses_in_the_browser
+        files:
+          - cos/manager/server.js
+          - idearium/cli/route-commands.js
     dangling: []
     lines:
       - layer 2 · blocked by AC0_what_each_piece_holds
@@ -254,6 +261,12 @@ payload:
       - >-
         same files as AC10_profiles_the_source_of_truth with no order between them:
         idearium/cli/route-commands.js
+      - >-
+        same files as AC13_intent_routes_to_ids with no order between them:
+        idearium/cli/route-commands.js
+      - >-
+        same files as AC14_nexus_addresses_in_the_browser with no order between them:
+        cos/manager/server.js, idearium/cli/route-commands.js
     edges:
       - from: docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC0_what_each_piece_holds
         kind: declared
