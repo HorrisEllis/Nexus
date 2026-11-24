@@ -35,9 +35,10 @@ const row = (state, o = {}) => { const r = { run: RUN, map: MAP, phase: PHASE, s
 const call = (method, p, body, ms = 30000) => new Promise((res, rej) => { const b = body ? JSON.stringify(body) : null;
   const q = http.request({ host: '127.0.0.1', port: OLLAMA, path: p, method, timeout: ms, headers: b ? { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(b) } : {} }, (r) => { let t = ''; r.on('data', (c) => t += c); r.on('end', () => { try { res(JSON.parse(t)); } catch (_) { res(null); } }); });
   q.on('timeout', () => { q.destroy(); rej(new Error('the Ollama system did not answer in ' + ms + ' ms')); }); q.on('error', rej); if (b) q.write(b); q.end(); });
-async function ask(prompt, model, gap) {
+// a retry is asked less deterministically (2026-11-24: at 0.1 the 3b wrote one refused body 9 times in a row): try 1 at 0.1, then 0.5, then 0.9
+async function ask(prompt, model, gap, tryNo = 1) {
   row('gap-asked', { gap, model, promptChars: prompt.length });
-  const q = await call('POST', '/api/jobs', { prompt, model, intent: 'build', meta: { source: 'cos.emerge-build', gap, phase: PHASE, run: RUN }, options: { temperature: 0.1 } });
+  const q = await call('POST', '/api/jobs', { prompt, model, intent: 'build', meta: { source: 'cos.emerge-build', gap, phase: PHASE, run: RUN }, options: { temperature: Math.min(0.9, 0.1 + 0.4 * Math.max(0, (Number(tryNo) || 1) - 1)) } });
   const id = q && (q.jobId || (q.data && q.data.jobId)); if (!id) throw new Error('the Ollama system did not take the job: ' + JSON.stringify(q).slice(0, 200));
   for (const until = Date.now() + 15 * 60000; Date.now() < until;) {
     await new Promise((r) => setTimeout(r, 3000));
@@ -117,6 +118,27 @@ async function endState({ ph, plan, src, mapText }) {
   // the start of a function's code, from its own file (no model)
   function srcOf(nm) { const i = code.search(new RegExp(`(?:function\\s*\\*?\\s*${nm}\\s*\\(|\\b${nm}\\s*[:=]\\s*(?:async\\s+)?(?:function\\s*)?\\()`)); return i < 0 ? '' : code.slice(i, i + 900); }
   const liveOf = (nm) => live().filter((x) => fnOf(x.line) === nm), need = () => (PER ? fns.filter((e) => liveOf(e.name).length < PER) : fns), done = () => (PER ? !need().length : live().length >= 3);
+  // deterministic first (2026-11-24, his "the primitives are the boundaries for the structure"): before asking the model, each function short
+  // of examples is probed at its boundaries from a call it already has: one argument at a time made empty ("" / [] / 0), or a string replaced
+  // by a value its list argument already holds. The code answers each; only an answer that says something new is kept. No model.
+  if (recorded && PER) {
+    const lit = (v) => JSON.stringify(v), probes = [];
+    for (const e of need()) {
+      for (const x of liveOf(e.name).slice(0, 2)) {
+        const head = String(x.line).replace(/\s*==[\s\S]*$/, ''), inner = head.slice(head.indexOf('(') + 1, head.lastIndexOf(')'));
+        let args; try { args = vm.runInNewContext(`[${inner}]`, {}, { timeout: 50 }); } catch (_) { continue; }
+        if (!Array.isArray(args)) continue;
+        args.forEach((a, i) => {
+          const set = (v) => probes.push(`${e.name}(${args.map((b, j) => lit(j === i ? v : b)).join(', ')})`);
+          if (typeof a === 'string') { set(''); for (const b of args) if (Array.isArray(b)) for (const el of b.slice(0, 2)) if (typeof el === 'string' && el !== a) set(el); }
+          else if (Array.isArray(a)) set([]); else if (typeof a === 'number') set(0);
+        });
+      }
+    }
+    let kept = 0;
+    for (const p of [...new Set(probes)]) { if (!need().some((e) => p.startsWith(e.name + '('))) continue; const { why, line } = judge(p); if (!why) { rec.examples.push({ line, by: 'nexus: a boundary probe', method: rec.method, status: 'waiting' }); kept++; } }
+    if (kept) { save(); row('end-state', { note: `${kept} example(s) from boundary probes (no model); ${live().length} waiting for his yes`, file }); }
+  }
   if (PER && done()) { row('end-state-kept', { note: `every function has ${PER} examples on disk; no model asked`, file }); return 0; }
   for (let n = rec.answers.length + 1; n <= TRIES && !done(); n++) {
     const lessons = rec.answers.flatMap((a) => a.refused || []).slice(-8);
@@ -266,7 +288,7 @@ async function endState({ ph, plan, src, mapText }) {
   const ER = require(path.join(ROOT, 'idearium', 'lib', 'emerge-rung.cjs')), EXT = require(path.join(ROOT, 'lib', 'expectation-tests.js'));
   const contract = `${REPO}/${MAP.split('/').pop().replace(/\.spec$/, '').replace(/[^A-Za-z0-9._-]/g, '_')}.${PHASE}`;
   const rung = ER.createRung({ root: ROOT, maxTries: 3, tasksDir: TASKS, model: LADDER[0], method: null,
-    ladder: LADDER.map((m) => ({ name: PIECES ? 'the passed pieces' : m, ask: (message, { gap } = {}) => (PIECES ? Promise.resolve(pieceBody(gap)) : ask(message, m, gap)) })), ask: (message, { gap } = {}) => (PIECES ? Promise.resolve(pieceBody(gap)) : ask(message, LADDER[0], gap)),
+    ladder: LADDER.map((m) => ({ name: PIECES ? 'the passed pieces' : m, ask: (message, { gap, tryNo } = {}) => (PIECES ? Promise.resolve(pieceBody(gap)) : ask(message, m, gap, tryNo)) })), ask: (message, { gap } = {}) => (PIECES ? Promise.resolve(pieceBody(gap)) : ask(message, LADDER[0], gap)),
     expect: async ({ files: fs2 }) => { if (!EXT.forFile(plan, src.path)) return { ok: true, why: 'no expectation test for this file' }; const r = await EXT.run({ root: ROOT, plan, path: src.path, overlays: fs2 }); return r.ok ? { ok: true, why: `its expectation passed (${r.checks || 0} checks)` } : { ok: false, why: EXT.feedback(r, src.path) }; } });
   // 5. heal, then build again (his, 2026-11-21: "It needs to be fixing it. Nexus is an autonomous system ... Have it fix gaps when it enounters
   // them, then run the pipeline again"). A held gap is diagnosed by the strongest model on the ladder from its own refused tries, and the

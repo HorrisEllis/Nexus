@@ -75,6 +75,9 @@ To replace every t in s: join(split(s, t), u). In split(s, "\\""), the odd parts
 Write the general rule. Never compare the input with the examples' own values: the test has other inputs.`;   // 0.60.632: EMB3 run 15   // 0.60.607: the two refusals DeepSeek 16b met filling rename (throw; a loop variable changed), 2026-11-19
 
 const _q = (s) => String(s == null ? '' : s);
+// equal by value, a map's key order not counted (a piece's answer against its contract, EMB8)
+const _deq = (a, b) => (a === b) || (a && b && typeof a === 'object' && typeof b === 'object' && Array.isArray(a) === Array.isArray(b)
+  && Object.keys(a).length === Object.keys(b).length && Object.keys(a).every((k) => Object.prototype.hasOwnProperty.call(b, k) && _deq(a[k], b[k])));
 function brief({ file, exports = [], expectation = null, context = '', feedback = null } = {}) {
   const names = exports.map(e => (typeof e === 'string' ? e : e.name)).filter(Boolean);
   return [
@@ -383,6 +386,21 @@ function createRung({ root = path.resolve(__dirname, '..', '..'), ask, expect, m
           // So a template that does not compile is kept on disk as what it was (tried), but never given to the next try as a body to read.
           if (!ck.ok && via) { const said = firstLines(ck.stderr, 2); note({ body: null, tried: body, via, triedSaid: said, said: 'a template did not fit this function', fix: 'write the body yourself', ms: Date.now() - t0 }); tries.push({ n, stage: 'template:' + name, why: 'did not fit: ' + said, gap, model: who.name }); n--; continue; }   // the template is an extra try: it never takes one of the free ones
           if (!ck.ok) { seen.push({ body }); const said = firstLines(ck.stderr); const hn = String(G.fix_for(String(ck.stderr || ''), body)).trim(); note({ body, said, fix: hn, ms: Date.now() - t0 }); tries.push({ n, stage: 'gap:' + name, why: "Emerge's compiler said: " + said + (hn ? '\nThe fix: ' + hn : ''), ms: Date.now() - t0, gap, model: who.name }); continue; }
+          // EMB8 (2026-11-24) — the contract is a gate, not only a hint. His "The dag should create the expectations. Create the check list."
+          // A piece that compiles is run against its own examples (Emerge runs the module so far, dependencies first, so they are filled);
+          // one that breaks an example is refused with what it gave against what the contract says (measured: add_kind compiled, and
+          // replaced the item its three examples say to add).
+          { const sf = skel.fns.find(x => x.name === name), exs = ((sf && sf.contract && sf.contract.examples) || []).slice(0, 6);
+            if (exs.length && process.env.EMERGE_RUNG_CONTRACT !== '0') {
+              const callOf = (l) => _q(l).slice(0, _q(l).search(/\)\s*==/) + 1), wantOf = (l) => _q(l).replace(/^[\s\S]*?\)\s*==\s*/, '');
+              // the example's arguments re-written as Emerge literals (2026-11-24: a recorded 'x = y;' in single quotes is JavaScript, Emerge
+              // could not parse it, and every example of the piece read as "gave nothing" whatever the body was)
+              const egCall = (l) => { const c = callOf(l), at = c.indexOf('('); try { const args = require('vm').runInNewContext(`[${c.slice(at + 1, -1)}]`, {}, { timeout: 50 }); return `${c.slice(0, at)}(${args.map((a) => JSON.stringify(a)).join(', ')})`; } catch (_) { return c; } };
+              const run = await eg('lang-run', render(skel, { ...filled, [name]: body }) + '\n' + exs.map(l => `print(json(${egCall(l)}))`).join('\n'));
+              const outs = String((run && run.stdout) || '').replace(/\r/g, '').split('\n'), same = (a, b) => { try { return _deq(JSON.parse(a), JSON.parse(b)); } catch (_) { return a === b; } };
+              const bad = exs.map((l, i) => (same(outs[i], wantOf(l)) ? null : `${callOf(l)} gave ${outs[i] === undefined || outs[i] === '' ? 'nothing' : outs[i]}, its contract says ${wantOf(l)}`)).filter(Boolean);
+              if (bad.length) { seen.push({ body }); const said = 'compiles, but breaks its contract: ' + bad.slice(0, 3).join('; ') + (run && !run.ok ? ' (' + firstLines(run.stderr, 1) + ')' : '');
+                note({ body, said, fix: 'make every example of ' + name + ' hold: write the rule they share, not one case', ms: Date.now() - t0 }); tries.push({ n, stage: 'contract:' + name, why: said, ms: Date.now() - t0, gap, model: who.name }); continue; } } }
           // his "as each gap passes, gets logged or tagged in the gate as passed and compiled"
           filled[name] = body; ok = true; rec.status = 'passed'; rec.body = body; { const sf = skel.fns.find(x => x.name === name); if (sf) { rec.params = sf.params; rec.signature = rec.signature || sf.signature; rec.does = rec.does || sf.does; } } /* EMB4: a piece carries its own shape, so a later run can take it */ rec.gate = { passed: true, compiled: true, by: "Emerge's compiler (lang-check)", model: who.name || model, at: new Date().toISOString() };
           if (rec.blockedBy && rec.blockedBy.length) rec.unblockedBy = rec.blockedBy.slice();   // the learning memory: what got it past its struggle

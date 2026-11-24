@@ -264,6 +264,20 @@ const scripted = (replies, seen = []) => async (message, { tryNo }) => { seen.pu
     } finally { process.env.EMERGE_RUNG_TEMPLATES = '0'; }
   });
 
+  // EMB8 (2026-11-24), his "The dag should create the expectations. Create the check list."
+  await test('ER-14', 'a piece is checked against its own contract: one that compiles but breaks an example is refused, with what it gave; the lesson never shows the body', async () => {
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'er14-')), bodies = ['  var out = []\n  for e in xs {\n    if e == k { out = push(out, k) } else { out = push(out, e) }\n  }\n  return out', '  if k == "" { return xs }\n  return push(xs, k)'], seen = [];
+    const ask = async (msg) => { seen.push(msg); return bodies[seen.length - 1] || bodies[1]; };
+    const contract = { examples: ['add_kind(["x"], "y") == ["x","y"]', 'add_kind(["x"], "") == ["x"]', 'add_kind([], "y") == ["y"]'] };
+    const r = await R.createRung({ root: dir, cli: path.join(ROOT, 'emerge', 'emerge', 'cli.js'), tasksDir: null, ask, expect: async () => ({ ok: true }) })
+      .build({ file: 'lib/add.js', exports: [{ name: 'add_kind', signature: 'add_kind(xs: list, k: string) -> list', does: 'k added to xs', contract }] });
+    assert.ok(r.ok, JSON.stringify(r.tries));
+    const refusal = r.tries.find(t => t.stage === 'contract:add_kind');
+    assert.ok(refusal && /add_kind\(\["x"\], "y"\) gave \["x"\], its contract says \["x","y"\]/.test(refusal.why), JSON.stringify(r.tries));
+    assert.ok(/must give exactly these[\s\S]*add_kind\(\["x"\], "y"\)/.test(seen[0]), 'the first brief carries the contract');
+    assert.ok(/breaks its contract/.test(seen[1]) && !/out = push\(out, k\)/.test(seen[1].slice(seen[1].indexOf('BEFORE YOU WRITE'))), 'the second is told what broke, never the body');
+  });
+
   console.log(`\n  ${passed} passed, ${failed} failed`);
   process.exit(failed ? 1 : 0);
 })();

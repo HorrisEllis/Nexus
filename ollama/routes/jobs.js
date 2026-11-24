@@ -59,6 +59,9 @@ async function handle(req, res, { method, url, pathname }) {
       requestId:   body.requestId   || crypto.randomUUID(),
       sessionId:   body.sessionId   || null,
       intent:      body.intent      || 'ask',
+      // 2026-11-24 (EMB8): a caller's temperature is kept (options.temperature, or temperature); without it the client's default. Measured: the
+      // COS builder's retries at 0.5 and 0.9 all ran at 0.2, and the 3b wrote one refused body 9 times in a row
+      temperature: (() => { const t = Number(body.options && body.options.temperature != null ? body.options.temperature : body.temperature); return Number.isFinite(t) && t >= 0 && t <= 2 ? t : null; })(),
       owner,                                    // RC6: who asked, shown in the activity log
       meta:        body.meta && typeof body.meta === 'object' ? body.meta : null,
       // §0.39.269 — who is remembering this exchange (lib/agent-memory.js): the job is recorded to the download

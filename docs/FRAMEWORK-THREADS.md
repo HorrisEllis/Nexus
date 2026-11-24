@@ -608,3 +608,12 @@ by the focus.
   nothing (an empty pieces folder) on the 3b alone, with each function's brief carrying its contract (up to 3 examples recorded from the
   existing code, each answering differently) and lessons that never quote a refused body: it passes its 10-example test with no hand split
   and no hand-written description. Measured by: pieces passed, model calls, the examples test, from the run's rows.
+- **EMB8, the registered rebuild, runs 1 to 4 (2026-11-24):** run 1 (contracts as hints): 13 of 13 pieces compiled on the 3b in 17 calls,
+  from nothing, where the phase had stopped at 10 of 11; the examples test failed (add_kind replaced instead of adding: its examples were shown,
+  never checked). Added: each piece is run by Emerge against its own examples before it is accepted (the contract a gate; ER-14). Run 2:
+  every piece "gave nothing" — his question ("you are checking them too right? ... not taking that as fact?") led to it: the gate itself was
+  wrong (a recorded example in JavaScript quotes that Emerge cannot parse); fixed, examples re-written as Emerge literals. Runs 3 and 4: the
+  gate now correct; replace_all held, the 3b writing one body 9 times of 9 (distinct: 1) even with the refused body no longer shown. The
+  builder's raised temperature never reached the model: the Ollama system's job route drops a caller's temperature (every job at 0.2); fixed
+  in ollama/routes/jobs.js and lib/dispatch.js, to take effect when the Ollama system restarts. Also added: boundary probes (no model) give
+  each function examples at its edges (add_kind: 3). Grade: open (prediction not yet met). Bias: the coder built the gate and judged it.
