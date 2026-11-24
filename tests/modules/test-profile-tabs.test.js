@@ -205,7 +205,7 @@ function dispatcherFor(r, { accountRouting, openProfile = null } = {}) {
     assert.ok(/openProfile \}\) \{/.test(fs.readFileSync(path.join(ROOT, 'guardian/lib/index.js'), 'utf8')), 'wireGuardianCore passes it');
     const cg = fs.readFileSync(path.join(ROOT, 'clear-glass/src/main/index.js'), 'utf8');
     assert.ok(cg.includes("'/providers/:id/profile'") && cg.includes("'/providers/:id/profiles'"), 'Clear Glass routes');
-    assert.ok(/opts\.partition \|\| `persist:ncp-\$\{providerId\}`/.test(fs.readFileSync(path.join(ROOT, 'clear-glass/src/providers/host.js'), 'utf8')), 'ProviderHost takes the profile session');
+    assert.ok(/opts\.partition \|\| \(typeof this\.jarFor === 'function' && this\.jarFor\(providerId\)\) \|\| `persist:ncp-\$\{providerId\}`/.test(fs.readFileSync(path.join(ROOT, 'clear-glass/src/providers/host.js'), 'utf8')), 'ProviderHost takes the profile session');
     const api = fs.readFileSync(path.join(ROOT, 'idearium/api/index.js'), 'utf8');
     assert.ok(api.includes("['api','accounts','profiles']"));
     const CMD = fs.readFileSync(path.join(ROOT, 'idearium/cli/route-commands.js'), 'utf8');

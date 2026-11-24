@@ -44,11 +44,11 @@ function applyCspBypass(ses, { hosts = _providerHosts } = {}) {
 
   // Strip restrictive CSP / framing headers that would block NCP userscript
   // ↔ localhost connections, or block embedding inside a Nexus frame — only where that is what is happening.
-  ses.webRequest.onHeadersReceived((details, callback) => {
-    if (!needsRewrite(details, hosts())) return callback({});
-    const headers = { ...details.responseHeaders };
+  responseHook(ses, 'csp-bypass', (details, responseHeaders) => {
+    if (!needsRewrite(details, hosts())) return null;
+    const headers = { ...responseHeaders };
     for (const k of Object.keys(headers)) if (/^(content-security-policy(-report-only)?|x-frame-options)$/i.test(k)) delete headers[k];
-    callback({ responseHeaders: headers });
+    return headers;
   });
 
   // Allow Private Network Access (http://127.0.0.1 from https://) — the request to localhost only; others untouched
@@ -83,4 +83,22 @@ function requestHook(ses, name, fn, { order = 0 } = {}) {
   return true;
 }
 
-module.exports = { applyCspBypass, needsRewrite, requestHook };
+/** AC10 c — the same for response headers: a profile's jar is shared by tabs and providers, and Electron keeps one onHeadersReceived listener per session. */
+function responseHook(ses, name, fn, { order = 0 } = {}) {
+  if (!ses || !ses.webRequest || typeof fn !== 'function') return false;
+  if (!ses.__cgResHooks) {
+    ses.__cgResHooks = new Map();
+    ses.webRequest.onHeadersReceived((details, callback) => {
+      let headers = details.responseHeaders || {}, changed = false;
+      for (const [n, { fn: h }] of [...ses.__cgResHooks].sort((a, b) => a[1].order - b[1].order)) {
+        try { const next = h(details, headers); if (next) { headers = next; changed = true; } }
+        catch (e) { console.warn(`[session-headers] response hook ${n} failed (skipped): ${e.message}`); }
+      }
+      callback(changed ? { responseHeaders: headers } : {});
+    });
+  }
+  ses.__cgResHooks.set(name, { fn, order });
+  return true;
+}
+
+module.exports = { applyCspBypass, needsRewrite, requestHook, responseHook };

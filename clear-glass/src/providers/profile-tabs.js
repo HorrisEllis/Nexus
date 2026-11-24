@@ -28,7 +28,7 @@ const PROFILE_TAB = 'profile~';   // the same prefix guardian/lib/ncp.js reads (
 const tabIdFor = (accountId) => `${PROFILE_TAB}${accountId}`;
 const partitionFor = (provider, accountId) => `persist:ncp-${provider}~${String(accountId).replace(/[^A-Za-z0-9._-]/g, '_')}`;
 
-function createProfileTabs({ providerHost, vault, options, sessionFor, getProvider = () => null, isAuthCookie = null, log = () => {} } = {}) {
+function createProfileTabs({ providerHost, vault, options, sessionFor, partitionOf = partitionFor, sitesOf = null, getProvider = () => null, isAuthCookie = null, log = () => {} } = {}) {
   if (!providerHost || !vault || !options || typeof sessionFor !== 'function') throw new Error('profile-tabs needs providerHost, vault, options and sessionFor');
   const _auth = isAuthCookie || (() => { try { return require('../cookies/session-hub').isAuthCookie; } catch (_) { return (c) => /session|auth|token/i.test(String(c && c.name)); } })();
   const _opening = new Map();   // provider:account → the open in flight (one at a time)
@@ -47,12 +47,12 @@ function createProfileTabs({ providerHost, vault, options, sessionFor, getProvid
     const known = options.resolveAccountForDispatch ? options.resolveAccountForDispatch(provider, accountId) : null;
     if (known && known.error) return { ok: false, error: known.error };
     const saved = (vault.accounts(provider) || []).find(a => a.accountId === accountId) || null;
-    const partition = partitionFor(provider, accountId), tabId = tabIdFor(accountId);
+    const partition = partitionOf(provider, accountId), tabId = tabIdFor(accountId);   // AC10 c: the account's profile jar
     const ses = sessionFor(partition);
     let restored = null;
     if (!(await _signedIn(ses, provider))) {
       if (!saved || !saved.count) return { ok: false, error: `no saved sign-in for account ${accountId} on ${provider} — sign in once as it (the Nexus panel on the ${provider} tab: "save this sign-in as")` };
-      const r = await vault.restore({ agentId: provider, accountId, ses, replace: true });
+      const r = await vault.restore({ agentId: provider, accountId, ses, ...(ses.__cgSharedJar ? { fill: true, sites: sitesOf ? sitesOf(provider) : [] } : { replace: true }) });
       if (!r.restored) return { ok: false, error: `account ${accountId}: none of its ${r.total} saved cookie(s) could be set (${(r.failed || []).slice(0, 2).join('; ')})` };
       restored = r.restored;
     }
@@ -72,7 +72,7 @@ function createProfileTabs({ providerHost, vault, options, sessionFor, getProvid
   function list(provider = null) {
     const rows = typeof providerHost.listAgentTabs === 'function' ? providerHost.listAgentTabs() : [];
     return rows.filter(r => String(r.agentId || '').startsWith(PROFILE_TAB) && (!provider || r.providerId === provider))
-      .map(r => { const accountId = String(r.agentId).slice(PROFILE_TAB.length); return { provider: r.providerId, accountId, tabId: r.agentId, partition: partitionFor(r.providerId, accountId), idleMs: r.idleMs, visible: r.visible }; });
+      .map(r => { const accountId = String(r.agentId).slice(PROFILE_TAB.length); return { provider: r.providerId, accountId, tabId: r.agentId, partition: partitionOf(r.providerId, accountId), idleMs: r.idleMs, visible: r.visible }; });
   }
   function close(provider, accountId) {
     try { if (typeof providerHost.closeAgentTab === 'function') providerHost.closeAgentTab(provider, tabIdFor(accountId)); return { ok: true }; }

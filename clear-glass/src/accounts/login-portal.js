@@ -101,7 +101,8 @@ class LoginPortal {
   loginUrl(provider) { return LOGIN_URLS[provider] || this._def(provider).url; }
   _origin(provider) { try { return new URL(this.loginUrl(provider)).origin; } catch (_) { return null; } }
   _key(provider, id) { return `${provider}:${id}`; }
-  _ses(provider, id) { return this.session.fromPartition(partitionFor(provider, id)); }
+  _part(provider, id) { return this.hub && this.hub.oneJar && this.hub.oneJar() ? this.hub.partition(provider, id) : partitionFor(provider, id); }   // AC10 c: the account's profile jar
+  _ses(provider, id) { return this.hub && this.hub.oneJar && this.hub.oneJar() ? this.hub.sessionFor(provider, id) : this.session.fromPartition(partitionFor(provider, id)); }
   // 0.60.7 — James: "its saying its not signed in to the account when it is." status() read only this account's own
   // partition (persist:mesh-<provider>-<id>); he signs in in a normal tab (the <webview> in browser.html uses the app's
   // default session) or the provider tab (persist:ncp-<provider>), which it never looked at. _elsewhere() reads those two
@@ -126,6 +127,7 @@ class LoginPortal {
   }
   async _elsewhere(provider) {
     const out = [];
+    if (this.hub && this.hub.oneJar && this.hub.oneJar()) return out;   // AC10 c: one jar, no elsewhere
     for (const s of this._elsewhereSessions(provider)) {
       try { const c = await this._siteCookies(s.ses, provider); if (c.length) out.push({ key: s.key, where: s.where, cookieCount: c.length, authCookies: c.filter(isAuthCookie).length }); }
       catch (_) { /* that session is not available: not listed */ }
@@ -161,9 +163,9 @@ class LoginPortal {
     const acc = this._account(id); const def = this._def(provider);
     const key = this._key(provider, id);
     const existing = this.portals.get(key);
-    if (existing && !existing.win.isDestroyed()) { existing.win.show(); existing.win.focus(); return { ok: true, reused: true, partition: partitionFor(provider, id) }; }
+    if (existing && !existing.win.isDestroyed()) { existing.win.show(); existing.win.focus(); return { ok: true, reused: true, partition: this._part(provider, id) }; }
 
-    const partition = partitionFor(provider, id);
+    const partition = this._part(provider, id);
     // one session per provider: another account's sign-in window on it is closed (it would sign in to the wrong account), and the
     // session is made ready for THIS account — what it holds is saved first, this account's saved sign-in put in, else cleared
     for (const [k, p] of this.portals) if (k.startsWith(`${provider}:`) && k !== key && !p.win.isDestroyed()) p.win.close();
@@ -178,7 +180,7 @@ class LoginPortal {
       width: 1100, height: 820, minWidth: 720, minHeight: 560,
       backgroundColor: '#08080d', autoHideMenuBar: true,   // the same dark base as window-frame.js (CS1)
       title: `Sign in — ${def.name} · ${acc.label}`,
-      webPreferences: { partition, contextIsolation: true, nodeIntegration: false, sandbox: true },
+      webPreferences: { ...(partition === 'default' ? {} : { partition }), contextIsolation: true, nodeIntegration: false, sandbox: true },
     });
     const url = this.loginUrl(provider);
     const entry = { win, openedAt: Date.now(), url, lastUrl: url };
@@ -251,7 +253,7 @@ class LoginPortal {
         try { await ses.cookies.set(set); } catch (_) { /* a cookie Chromium refuses is skipped; the count below says what landed */ }
       }
     }
-    const cookies = await ses.cookies.get({});
+    const cookies = ses.__cgSharedJar ? await this._siteCookies(ses, provider) : await ses.cookies.get({});   // AC10 c: only this provider's sites from a profile's jar
     if (!cookies.length) return { ok: false, error: `no cookies in ${def.name}'s session for this account — sign in first` };
 
     const provAccountId = identity && String(identity.accountId || identity.email || '').trim();
@@ -290,7 +292,7 @@ class LoginPortal {
     }
     const sess = acc.sessions?.[provider] || null;
     return {
-      ok: true, id, provider, partition: partitionFor(provider, id), sessionRunsAs: runsAs,
+      ok: true, id, provider, partition: this._part(provider, id), sessionRunsAs: runsAs,
       portalOpen: !!(portal && !portal.win.isDestroyed()), portalUrl: portal?.lastUrl || null,
       liveCookies: live, authCookies: auth,
       elsewhere: await this._elsewhere(provider).catch(() => []),
@@ -316,8 +318,10 @@ class LoginPortal {
     const as = this._as(); const runsAs = as ? as.current(provider) : null;
     let cleared = false;
     if (!runsAs || runsAs === id) {
-      await this._ses(provider, id).clearStorageData().catch(err => this.emit('accounts.portal.signout.error', { id, provider, error: err.message }));
-      if (this.hub) await this.hub.clearNormal(provider).catch(() => {});   // and the normal tabs, which mirror it
+      const jar = this._ses(provider, id);
+      if (jar.__cgSharedJar && this.hub) await this.hub.clearSites(provider, jar).catch(err => this.emit('accounts.portal.signout.error', { id, provider, error: err.message }));   // AC10 c: this provider's sites only
+      else { await jar.clearStorageData().catch(err => this.emit('accounts.portal.signout.error', { id, provider, error: err.message }));
+        if (this.hub) await this.hub.clearNormal(provider).catch(() => {}); }   // and the normal tabs, which mirror it
       cleared = true;
     }
     const vr = this.vault.deleteAccountCookies(provider, id);

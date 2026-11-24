@@ -40,7 +40,7 @@ const _siteOf = (host) => String(host || '').replace(/^\./, '').split('.').slice
 // a provider's own sign-in page (the same paths the login portal reads: src/accounts/login-portal.js LOGIN_PATH_RE), e.g. chatgpt.com/auth/login
 const SIGN_IN_PATH_RE = /\/(login|signin|sign_in|sign-in|auth|authenticate|ServiceLogin)(\/|$|\?)/i;
 
-function createAccountSwitch({ providerHost, vault, options, getProvider = () => null, sessionFor, hold = () => () => {}, log = () => {}, now = Date.now, reloadWaitMs = 20000, onCaptured = null } = {}) {
+function createAccountSwitch({ providerHost, vault, options, getProvider = () => null, sessionFor, accountJar = null, clearSites = null, hold = () => () => {}, log = () => {}, now = Date.now, reloadWaitMs = 20000, onCaptured = null } = {}) {
   if (!providerHost || !vault || !options || typeof sessionFor !== 'function') throw new Error('account-switch needs providerHost, vault, options and sessionFor');
   const _chain = new Map();   // provider -> the switch in flight (one at a time per provider)
 
@@ -54,6 +54,9 @@ function createAccountSwitch({ providerHost, vault, options, getProvider = () =>
     const r = options.resolveAccountForDispatch(provider, accountId);
     return r && !r.error ? null : ((r && r.error) || `unknown account ${accountId} for ${provider}`);
   }
+  // AC10 c: in a profile's jar an account is never swapped in; another account lives in another profile
+  const _sites = (provider) => { try { const d = getProvider(provider) || {}; return [...new Set([d.url, ...(d.hosts || []).map(h => `https://${h}`)].map(u => { try { return _siteOf(new URL(u).hostname); } catch (_) { return null; } }).filter(Boolean))]; } catch (_) { return []; } };
+  const _inThisJar = (provider, accountId) => !accountJar || accountJar(provider, accountId) === sessionFor(provider);
   function _saved(provider, accountId) { return (vault.accounts(provider) || []).find(a => a.accountId === accountId) || null; }
 
   function _windows(provider) {
@@ -82,7 +85,7 @@ function createAccountSwitch({ providerHost, vault, options, getProvider = () =>
     // sign-in), so restoring it restored "signed out". A tab with no sign-in cookie on the provider's own site is not saved.
     const auth = await _tabAuth(provider);
     if (!auth.auth) return { ok: false, signedOut: true, error: `the ${provider} tab is not signed in (no sign-in cookie on its site among ${auth.cookies}) — sign in on the page first, then save` };
-    const r = await vault.capture({ agentId: provider, accountId: acct, ses: sessionFor(provider) });
+    const r = await vault.capture({ agentId: provider, accountId: acct, ses: sessionFor(provider), sites: _sites(provider) });
     if (makeCurrent) _setCurrent(provider, acct, 'captured');
     try { options.recordSession && options.recordSession(acct, provider, { capturedAt: now(), cookieCount: r.count, sites: r.sites.slice(0, 20), via: 'provider-tab' }); } catch (_) {}
     log(`[account-switch] ${provider} — the tab's sign-in saved as ${acct}: ${r.count} cookie(s) on ${r.sites.length} site(s)`);
@@ -97,6 +100,10 @@ function createAccountSwitch({ providerHost, vault, options, getProvider = () =>
     if (bad) return { ok: false, error: bad };
     const was = current(provider);
     if (was === accountId) return { ok: true, switched: false, provider, accountId };
+    if (sessionFor(provider).__cgSharedJar) {
+      if (!_inThisJar(provider, accountId)) return { ok: false, otherProfile: true, error: `account ${accountId} runs in its own profile, not in this ${provider} tab` };
+      _setCurrent(provider, accountId, 'profile'); return { ok: true, switched: false, provider, accountId };
+    }
     const saved = _saved(provider, accountId);
     if (!saved || !saved.count) return { ok: false, error: `no saved sign-in for account ${accountId} on ${provider} — sign in once as it (the Nexus panel on the ${provider} tab: "save this sign-in as")` };
     const ses = sessionFor(provider);
@@ -156,6 +163,11 @@ function createAccountSwitch({ providerHost, vault, options, getProvider = () =>
     if (!accountId) return { ok: true, provider, action: 'skipped', why: `no ${provider} account yet — add one in Accounts & sign-in` };
     const was = current(provider);
     const tab = await _tabAuth(provider);
+    // AC10 c: the profile's jar is the truth. A saved copy is never put back over it
+    if (sessionFor(provider).__cgSharedJar) {
+      if (was !== accountId) _setCurrent(provider, accountId, 'profile');
+      return tab.auth > 0 ? { ok: true, provider, action: 'unchanged', accountId } : { ok: true, provider, action: 'unchanged', accountId, signedOut: true, why: `the ${provider} tab is signed out in its profile — sign in once there` };
+    }
     const saved = _saved(provider, accountId);
     const hasSaved = !!(saved && saved.count);
 
@@ -210,7 +222,7 @@ function createAccountSwitch({ providerHost, vault, options, getProvider = () =>
   async function signedOut(provider, accountId) {
     if (current(provider) !== accountId) return { ok: true, provider, action: 'unchanged', why: `the tab does not run as “${accountId}”` };
     // a sign-out is meant to reach the normal tabs too (the hub mirrors it): not held
-    try { await sessionFor(provider).clearStorageData({ storages: ['cookies', 'localstorage', 'indexdb', 'cachestorage', 'serviceworkers'] }); } catch (e) { return { ok: false, provider, action: 'skipped', error: e.message }; }
+    try { const j = sessionFor(provider); if (j.__cgSharedJar) { if (clearSites) await clearSites(provider, j); } else await j.clearStorageData({ storages: ['cookies', 'localstorage', 'indexdb', 'cachestorage', 'serviceworkers'] }); } catch (e) { return { ok: false, provider, action: 'skipped', error: e.message }; }
     try { st().delete(T_TAB, { id: provider }); st().flushAll(); } catch (_) {}
     const def = (() => { try { return getProvider(provider); } catch (_) { return null; } })();
     const loads = await Promise.all(_windows(provider).map(w => _reload(w, def && def.url)));
@@ -232,6 +244,7 @@ function createAccountSwitch({ providerHost, vault, options, getProvider = () =>
   async function _beginSignIn(provider, accountId, { park = false } = {}) {
     const bad = _known(provider, accountId); if (bad) return { ok: false, error: bad };
     const was = current(provider);
+    if (sessionFor(provider).__cgSharedJar && !_inThisJar(provider, accountId)) return { ok: true, switched: false, provider, accountId, parked: 0 };   // AC10 c: its own profile's jar; this tab is not touched
     // §0.60.51 — a sign-in window opens next in THIS cookie jar. The provider's own tabs are signed out in it, so reloading them
     // (below) sent each to Google's sign-in as a second flow: two pages writing Google's test cookie into one jar, and whichever
     // loaded first read back the other's ("We've detected a problem with your cookie settings"). While the window is open the
@@ -239,6 +252,7 @@ function createAccountSwitch({ providerHost, vault, options, getProvider = () =>
     if (park) { const ws = _windows(provider); _parked.set(provider, ws); await Promise.all(ws.map(w => Promise.resolve(w.loadURL('about:blank')).catch(() => {}))); }
     if (was === accountId) return { ok: true, switched: false, provider, accountId, parked: park ? (_parked.get(provider) || []).length : 0 };
     const ses = sessionFor(provider);
+    if (ses.__cgSharedJar) { _setCurrent(provider, accountId, 'signing-in'); return { ok: true, switched: false, provider, accountId, parked: park ? (_parked.get(provider) || []).length : 0 }; }   // AC10 c: nothing in the jar is cleared for a sign-in
     const tab = await _tabAuth(provider);
     try {
       if (was && tab.auth > 0) await vault.capture({ agentId: provider, accountId: was, ses });
@@ -283,7 +297,7 @@ function createAccountSwitch({ providerHost, vault, options, getProvider = () =>
     let tab = await _tabAuth(provider);
     if (tab.auth === 0) { await new Promise(r => setTimeout(r, 2000)); if (_chain.has(provider)) return { ok: true, action: 'skipped', why: 'a switch is in flight' }; tab = await _tabAuth(provider); }
     if (tab.auth > 0) {
-      const r = await vault.capture({ agentId: provider, accountId: acct, ses: sessionFor(provider) });
+      const r = await vault.capture({ agentId: provider, accountId: acct, ses: sessionFor(provider), sites: _sites(provider) });
       try { options.recordSession && options.recordSession(acct, provider, { capturedAt: now(), cookieCount: r.count, sites: r.sites.slice(0, 20), via: 'provider-session' }); } catch (_) {}
       return { ok: true, action: 'saved', accountId: acct, cookies: r.count };
     }

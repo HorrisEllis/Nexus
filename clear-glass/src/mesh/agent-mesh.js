@@ -397,7 +397,7 @@ class AgentMesh {
       // persist:ncp-<agent>, and the page itself — the <webview> — in neither: it ran in the app's default session). Now every
       // agent tab runs in the provider's ONE session (persist:ncp-<agent>), and the webview is put in it too.
       const hub = this._sessionHub();
-      const partition = hub ? hub.partition(agentKey) : `persist:ncp-${agentKey}`;
+      const part = hub ? hub.partition(agentKey, accountId) : `persist:ncp-${agentKey}`, partition = part === 'default' ? undefined : part;   // AC10 c: the account's profile jar
       // the session is signed in as one account at a time: an agent tab for another account brings it to that account first
       const as = this._acctSwitch();
       if (as && accountId) { try { switched = await as.use(agentKey, accountId, { reason: 'agent tab', reload: false }); cookiesRestored = (switched && switched.restored) || 0; } catch (_) { switched = null; } }
@@ -411,7 +411,8 @@ class AgentMesh {
     // with the account switch the session already runs as the account (above); the direct restore is only the fallback
     if (this.vault && !(switched && switched.ok)) {
       try {
-        const r = await this.vault.restore({ agentId: agentKey, accountId, ses: realSession });
+        const hub = this._sessionHub(), fill = realSession && realSession.__cgSharedJar && hub ? { fill: !(await hub._read(realSession, agentKey)).some((c) => require('../cookies/session-hub').isAuthCookie(c)), sites: [...hub.sitesFor(agentKey)] } : {};
+        const r = await this.vault.restore({ agentId: agentKey, accountId, ses: realSession, ...fill });
         cookiesRestored = r?.restored || 0;
       } catch (err) {
         this.sse.emit('mesh.vault.restore.error', { agentKey, contextId, error: err.message, ts: Date.now() });

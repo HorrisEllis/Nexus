@@ -1375,6 +1375,7 @@ async function bootstrap() {
   // §0.60.12 — James: "the logins for the agent providers needs to be all the same." Each provider tab opens signed in as the
   // provider's dispatch account from Accounts & sign-in (account-switch.sync, before the first load). It cannot fail a start:
   // host.js bounds it and loads the tab as it is if the sync errors (cookie vault locked, no account yet).
+  if (require('../cookies/session-hub').oneJarOn()) { providerHost.jarFor = (id) => sessionHub().partition(id); require('../cookies/session-hub').guardJar(session.defaultSession); }   // AC10 c
   providerHost.beforeLoad = async (providerId) => { await hubReady(providerId); return acctSwitch().sync(providerId, { reload: false }); };
   // §WIRED 2026-08-22 — James: "listens for the co-pilot response and
   // injects it into the corresponding agent chat using clearglass."
@@ -2264,6 +2265,8 @@ function acctSwitch() {
     providerHost, vault: cookieVault, options: nexusOptions,
     getProvider: (id) => { try { return require('../providers/registry').getProvider(id); } catch (_) { return null; } },
     sessionFor: (id) => sessionHub().sessionFor(id),
+    accountJar: (id, account) => sessionHub().sessionFor(id, account),   // AC10 c
+    clearSites: (id, ses) => sessionHub().clearSites(id, ses),
     hold: (id) => sessionHub().hold(id),
     log: (m) => console.log(m),
     // PW3 (0.60.186): "Save sign-in to vault" also keeps the login just typed on that provider's site, as the same account
@@ -2281,7 +2284,9 @@ function profileTabs() {
   return _profileTabs || (_profileTabs = require('../providers/profile-tabs').createProfileTabs({
     providerHost, vault: cookieVault, options: nexusOptions,
     getProvider: (id) => { try { return require('../providers/registry').getProvider(id); } catch (_) { return null; } },
-    sessionFor: (partition) => session.fromPartition(partition),
+    sessionFor: (partition) => { const H = require('../cookies/session-hub'), ses = H.jarOf(session, partition); return partition === 'default' || String(partition).startsWith('persist:profile-') ? H.guardJar(ses) : ses; },
+    partitionOf: (id, account) => sessionHub().oneJar() ? sessionHub().partition(id, account) : require('../providers/profile-tabs').partitionFor(id, account),   // AC10 c
+    sitesOf: (id) => [...sessionHub().sitesFor(id)],
     log: (m) => console.log(m),
   }));
 }
@@ -2308,6 +2313,7 @@ function sessionHub() {
     vault: cookieVault,
     dispatchAccount: (id) => { try { const r = nexusOptions.resolveAccountForDispatch(id, null); return r && !r.error ? r.accountId : null; } catch (_) { return null; } },
     onSettled: (id) => acctSwitch().settled(id),
+    profileFor: (_provider, account) => { if (!account || !nexusOptions) return 'default'; try { const r = nexusOptions.resolveProfile(account); return r && r.ok && r.profile ? r.profile.partition : 'default'; } catch (_) { return 'default'; } },   // AC10 c: the profile is the source of truth
     cleanUA: (ses) => { const ua = ses.getUserAgent(); const clean = ua.replace(/\s+Electron\/[\d.]+/gi, '').replace(/\s+(?:Node\.js|node)\/[\d.]+/gi, '').replace(/\s+clear[\s-]?glass\/[\d.]+/gi, '').trim(); if (clean !== ua) ses.setUserAgent(clean); },
     log: (m) => console.log(m),
   });

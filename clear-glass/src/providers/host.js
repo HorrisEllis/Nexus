@@ -371,10 +371,13 @@ class ProviderHost {
 
     const def = getProvider(providerId);
     // §PF1 0.60.32 — a profile tab (another account) runs in its own session; every other tab in the provider's one session
-    const partition = opts.partition || `persist:ncp-${providerId}`;
+    // AC10 c: the provider's account's profile jar ('default' is the session every normal tab uses)
+    const partition = opts.partition || (typeof this.jarFor === 'function' && this.jarFor(providerId)) || `persist:ncp-${providerId}`;
+    const inProfile = partition === 'default' || partition.startsWith('persist:profile-');
 
     // Intercept WebSocket upgrades — allow NCP SSE but strip CSP on provider pages
-    const ses = session.fromPartition(partition);
+    const ses = partition === 'default' ? session.defaultSession : session.fromPartition(partition);
+    if (inProfile) require('../cookies/session-hub').guardJar(ses);
 
     // §WIRED 2026-08-19 — found built but never called: will-download was
     // hooked nowhere in the tree. James: "guardian to listen for the
@@ -384,7 +387,7 @@ class ProviderHost {
     try {
       const downloadCapture = require('./download-capture.js');
       // 0.39.239 — the capture learns which agent tab a download came from; attach() is idempotent per session.
-      downloadCapture.attach({ session: ses, providerId, log: _log, agentIdFor: (wc) => {
+      downloadCapture.attach({ session: ses, ...(inProfile ? { providerFor: (wc) => { for (const [id, w] of this.windows) if (w && !w.isDestroyed() && w.webContents === wc) return id; for (const e of this.agentTabs.values()) if (e.win && !e.win.isDestroyed() && e.win.webContents === wc) return e.providerId; return null; } } : { providerId }), log: _log, agentIdFor: (wc) => {
         for (const e of this.agentTabs.values()) { if (e.win && !e.win.isDestroyed() && e.win.webContents === wc) return e.agentId; }
         return null;
       } });
@@ -397,12 +400,15 @@ class ProviderHost {
     // provider's own pages are touched (CSP removed, so the userscript can talk to 127.0.0.1); every other response —
     // the sign-in hosts — passes through exactly as the site sent it (callback({}) changes nothing).
     const _ownHost = (u) => { try { const h = new URL(u).hostname; return def.hosts.some(x => h === x || h.endsWith(`.${x}`)); } catch (_) { return false; } };
-    ses.webRequest.onHeadersReceived((details, callback) => {
-      if (!_ownHost(details.url)) return callback({});
-      const headers = { ...details.responseHeaders };
+    const _strip = (details, responseHeaders) => {
+      if (!_ownHost(details.url)) return null;
+      const headers = { ...responseHeaders };
       for (const k of Object.keys(headers)) if (/^content-security-policy(-report-only)?$/i.test(k)) delete headers[k];
-      callback({ responseHeaders: headers });
-    });
+      return headers;
+    };
+    // AC10 c: a shared jar's one listener is composed, so this cannot replace what its other tabs need
+    if (inProfile) require('../contexts/session-headers').responseHook(ses, `provider-csp:${providerId}`, _strip);
+    else ses.webRequest.onHeadersReceived((details, callback) => { const h = _strip(details, details.responseHeaders); callback(h ? { responseHeaders: h } : {}); });
     // …and the session says it is Chrome, not Electron: Google's sign-in refuses an embedded browser it can name. The
     // default session was scrubbed at boot (main/index.js); these partitions never were.
     try {
@@ -429,7 +435,7 @@ class ProviderHost {
       // accident of current visibility state.
       skipTaskbar: true,
       webPreferences: {
-        partition,
+        ...(partition === 'default' ? {} : { partition }),
         nodeIntegration:             false,
         contextIsolation:            true,
         webSecurity:                 true,
@@ -702,7 +708,7 @@ class ProviderHost {
       for (let attempt = 1; attempt <= 3; attempt++) {
         if (win.isDestroyed()) return { ok: false, attempts: attempt - 1, error: 'the window was closed while loading', failures };
         if (attempt === 2) {
-          try { await ses.clearStorageData({ storages: ['serviceworkers', 'cachestorage'] }); _log(`[ProviderHost] ${providerId} — cleared service workers + cache storage before retrying (cookies kept)`); } catch (_) {}
+          try { await ses.clearStorageData({ storages: ['serviceworkers', 'cachestorage'], ...(ses.__cgSharedJar ? { origin: new URL(def.url).origin } : {}) }); _log(`[ProviderHost] ${providerId} — cleared service workers + cache storage before retrying (cookies kept)`); } catch (_) {}
         }
         if (attempt > 1) await new Promise(r => setTimeout(r, attempt === 2 ? 2000 : 6000));
         let timer = null;

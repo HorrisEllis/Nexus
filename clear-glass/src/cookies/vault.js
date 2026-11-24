@@ -131,6 +131,7 @@ class CookieVault {
 
   // ── Snapshot current session cookies ────────────────────────────────
   async snapshot(agentId, ses, label = null) {
+    if (ses && ses.__cgSharedJar) return null;   // AC10 c: a profile's jar holds every site's login; it is not copied under one provider
     try {
       const cookies = await ses.cookies.get({});
       const version = this._nextVersion(agentId);
@@ -173,7 +174,7 @@ class CookieVault {
   }
 
   // ── Restore cookies into session ──────────────────────────────────────
-  async restore({ agentId, accountId, version, ses, replace = false }) {
+  async restore({ agentId, accountId, version, ses, replace = false, fill = false, sites = null }) {
     let cookies = [];
 
     if (accountId) {
@@ -185,6 +186,13 @@ class CookieVault {
     }
 
     if (!ses) return { cookies, restored: false, reason: 'no session provided' };
+    // AC10 c: a profile's jar is never overwritten by a saved copy. Only fill puts one provider's saved sign-in in, for a jar that has none, its own sites only.
+    if (ses.__cgSharedJar) {
+      if (!fill || !Array.isArray(sites) || !sites.length) return { restored: 0, total: cookies.length, failed: [], shared: true };
+      let done = 0; const bad = [], mine = cookies.filter(c => sites.includes(siteOf(c.domain)));
+      for (const cookie of mine) { try { await ses.cookies.set(cookieSetArgs(cookie)); done++; } catch (e) { if (bad.length < 10) bad.push(`${cookie.name}@${cookie.domain}: ${e.message}`); } }
+      return { restored: done, total: mine.length, failed: bad };
+    }
 
     // §0.60.2 — was: cookies.remove(url, '') (removes nothing — a name is required) and a set() without sameSite, with a
     // domain on host-only and __Host- cookies (Chromium refuses those), so an account switch kept the old identity's
@@ -214,9 +222,10 @@ class CookieVault {
    * capture({ agentId, accountId, ses }) — §0.60.2 the session's cookies, saved for that account: one encrypted row per
    * site (example.com and its subdomains), rows for sites the session no longer has removed. -> { count, sites }
    */
-  async capture({ agentId, accountId, ses }) {
+  async capture({ agentId, accountId, ses, sites = null }) {
     if (!agentId || !accountId || !ses) throw new Error('agentId, accountId and ses required');
-    const cookies = await ses.cookies.get({});
+    if (ses.__cgSharedJar && (!Array.isArray(sites) || !sites.length)) throw new Error('a profile jar is saved one provider at a time: name its sites');
+    const cookies = (await ses.cookies.get({})).filter(c => !ses.__cgSharedJar || sites.includes(siteOf(c.domain)));
     const bySite = new Map();
     for (const c of cookies) { const site = siteOf(c.domain); if (!bySite.has(site)) bySite.set(site, []); bySite.get(site).push(c); }
     for (const [site, list] of bySite) await this.save({ agentId, accountId, domain: site, cookies: list });

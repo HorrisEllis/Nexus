@@ -130,12 +130,15 @@ function _recordInIndex({ providerId, agentId, chatUrl, filename, savePath, byte
  *   download came from, or null for the shared provider window. Supplied by
  *   ProviderHost, which owns the agentId -> window map.
  */
-function attach({ session, providerId, log = console.log, agentIdFor = null } = {}) {
+function attach({ session, providerId: only, providerFor = null, log = console.log, agentIdFor = null } = {}) {
   if (!session || typeof session.on !== 'function') throw new Error('download-capture.attach needs a real Electron session');
-  if (!providerId) throw new Error('download-capture.attach needs a providerId — a drop with no author is not provenance');
+  if (!only && !providerFor) throw new Error('download-capture.attach needs a providerId — a drop with no author is not provenance');
   if (_attached.has(session)) return _attached.get(session);
 
   const handler = (event, item, webContents) => {
+    // AC10 c: in a profile's jar a person's own download is not a provider's: it is captured only from a provider's own window
+    const providerId = providerFor ? providerFor(webContents) : only;
+    if (!providerId) return;
     const filename = item.getFilename();
     // The page the download was requested FROM — this is the chat URL, and it
     // is the field that makes a drop traceable back to the exchange that
@@ -180,7 +183,7 @@ function attach({ session, providerId, log = console.log, agentIdFor = null } = 
   };
 
   session.on('will-download', handler);
-  log(`[download-capture] armed for ${providerId} → guardian :${GUARDIAN_PORT}/api/intake`);
+  log(`[download-capture] armed for ${only || 'provider windows in this profile'} → guardian :${GUARDIAN_PORT}/api/intake`);
   const handle = { detach() { try { session.removeListener('will-download', handler); } catch (_) {} _attached.delete(session); } };
   _attached.set(session, handle);
   return handle;

@@ -42,6 +42,18 @@ function siteOf(domain) {
   if (p.length <= 2) return h || '*';
   return (p[p.length - 2].length <= 3 && p[p.length - 1].length === 2 ? p.slice(-3) : p.slice(-2)).join('.');
 }
+// AC10 c — James, 2026-11-22: "Once source of truth." · 2026-11-23: "everything uses its relative profile as a source of truth". A provider's session is
+// its account's profile jar. CG_ONE_JAR=0 goes back to the old per-provider jars, which are never changed by this.
+const oneJarOn = () => process.env.CG_ONE_JAR !== '0';
+const jarOf = (session, partition) => (!partition || partition === 'default' ? session.defaultSession : session.fromPartition(partition));
+/** a profile's jar holds every site's login: nothing may clear it whole. A clear must name one origin. */
+function guardJar(ses) {
+  if (!ses || ses.__cgSharedJar) return ses;
+  ses.__cgSharedJar = true;
+  const clear = ses.clearStorageData.bind(ses);
+  ses.clearStorageData = (o = {}) => { if (o && o.origin) return clear(o); console.warn('[profiles] refused: a whole-jar clear would remove every login in this profile'); return Promise.resolve(); };
+  return ses;
+}
 const canonicalPartition = (provider) => `persist:ncp-${provider}`;
 const legacyMeshPartition = (provider, accountId) => `persist:mesh-${provider}-${accountId}`;
 const idOf = (c) => `${String(c.domain || '').toLowerCase()}|${c.path || '/'}|${c.name}`;
@@ -59,9 +71,9 @@ class SessionHub {
    * @param {Function} [d.onSettled]  (provider) => void — after the provider session's cookies stop changing
    * @param {Function} [d.cleanUA]    (ses) => void — the Chrome-not-Electron user agent, applied once per session
    */
-  constructor({ session, defFor, providers, accounts = () => [], vault = null, dispatchAccount = () => null, onSettled = null, cleanUA = null, log = () => {}, debounceMs = 1500 } = {}) {
+  constructor({ session, defFor, providers, accounts = () => [], vault = null, dispatchAccount = () => null, onSettled = null, cleanUA = null, log = () => {}, debounceMs = 1500, profileFor = null } = {}) {
     if (!session || typeof defFor !== 'function' || typeof providers !== 'function') throw new Error('SessionHub needs session, defFor and providers');
-    Object.assign(this, { session, defFor, providers, accounts, vault, dispatchAccount, onSettled, cleanUA, log, debounceMs });
+    Object.assign(this, { session, defFor, providers, accounts, vault, dispatchAccount, onSettled, cleanUA, log, debounceMs, profileFor });
     this._attached = new Map();   // provider -> { off() }
     this._echo = new Map();       // key -> expiry — a write the hub made, so its own 'changed' event is not mirrored back
     this._timers = new Map();
@@ -70,9 +82,15 @@ class SessionHub {
     this._uaDone = new WeakSet();
   }
 
-  partition(provider) { return canonicalPartition(provider); }
-  sessionFor(provider) {
-    const ses = this.session.fromPartition(canonicalPartition(provider));
+  oneJar() { return oneJarOn() && typeof this.profileFor === 'function'; }
+  /** the partition a provider's account runs in: its profile's ('default' is the session every normal tab uses) */
+  partition(provider, accountId = null) {
+    if (!this.oneJar()) return canonicalPartition(provider);
+    let id = accountId; if (!id) { try { id = this.dispatchAccount(provider); } catch (_) { id = null; } }
+    return this.profileFor(provider, id) || 'default';
+  }
+  sessionFor(provider, accountId = null) {
+    const ses = this.oneJar() ? guardJar(jarOf(this.session, this.partition(provider, accountId))) : this.session.fromPartition(canonicalPartition(provider));
     if (this.cleanUA && !this._uaDone.has(ses)) { this._uaDone.add(ses); try { this.cleanUA(ses); } catch (_) {} }
     return ses;
   }
@@ -150,6 +168,7 @@ class SessionHub {
   /** attach(provider) — start mirroring; idempotent */
   attach(provider) {
     if (this._attached.has(provider)) return false;
+    if (this.oneJar()) { this._attached.set(provider, { off() {} }); return false; }   // one jar: nothing to mirror
     const canon = this.sessionFor(provider), norm = this.normalSession();
     if (!norm || typeof canon.cookies.on !== 'function') { this._attached.set(provider, { off() {} }); return false; }
     const offs = [this._listen(provider, canon, 'canonical', norm, 'normal'), this._listen(provider, norm, 'normal', canon, 'canonical')];
@@ -172,6 +191,7 @@ class SessionHub {
    * -> { ok, provider, action: 'consolidated'|'unchanged'|'nothing'|'already-done', from?, cookies?, saved? }
    */
   async consolidate(provider, { force = false } = {}) {
+    if (this.oneJar()) return this.moveIn(provider, { force });
     if (!force && this._marker(provider)) return { ok: true, provider, action: 'already-done' };
     const canon = this.sessionFor(provider), norm = this.normalSession();
     const dispatch = (() => { try { return this.dispatchAccount(provider); } catch (_) { return null; } })();
@@ -205,6 +225,32 @@ class SessionHub {
   }
   async consolidateAll(opts = {}) { const out = []; for (const p of this.providers()) { try { out.push(await this.consolidate(p, opts)); } catch (e) { out.push({ ok: false, provider: p, error: e.message }); } } return out; }
 
+  /**
+   * moveIn(provider) — AC10 c: the profile's jar gets this provider's sign-in, once. A sign-in it already holds is left alone. If it has none, the
+   * first sign-in found in the old jars is copied in, only that provider's sites. The old jars are read and never changed.
+   */
+  async moveIn(provider, { force = false } = {}) {
+    const key = `${provider}@profile`;
+    if (!force && this._marker(key)) return { ok: true, provider, action: 'already-done' };
+    const target = this.sessionFor(provider);
+    if ((await this._read(target, provider)).some(isAuthCookie)) { this._setMarker(key, { action: 'unchanged', from: 'profile' }); return { ok: true, provider, action: 'unchanged', from: 'profile' }; }
+    const sources = [{ key: 'provider', ses: this.session.fromPartition(canonicalPartition(provider)) }];
+    const dispatch = (() => { try { return this.dispatchAccount(provider); } catch (_) { return null; } })();
+    for (const id of this._legacyIds(provider).sort((a, b) => (a === dispatch ? -1 : b === dispatch ? 1 : 0))) sources.push({ key: `mesh:${id}`, ses: this.session.fromPartition(legacyMeshPartition(provider, id)) });
+    let winner = null; for (const s of sources) { const cookies = await this._read(s.ses, provider); if (cookies.some(isAuthCookie)) { winner = { ...s, cookies }; break; } }
+    if (!winner) { this._setMarker(key, { action: 'nothing', from: null }); return { ok: true, provider, action: 'nothing', why: `no ${provider} sign-in in any jar` }; }
+    let wrote = 0; for (const c of winner.cookies) { try { await target.cookies.set(CookieVault.cookieSetArgs(c)); wrote++; } catch (_) { /* a cookie Chromium refuses is counted by what landed */ } }
+    this._setMarker(key, { action: 'consolidated', from: winner.key, cookies: winner.cookies.length, written: wrote });
+    this.log(`[session-hub] ${provider} — sign-in moved into its profile from ${winner.key} (${wrote} of ${winner.cookies.length} cookies); the old jar is unchanged`);
+    return { ok: true, provider, action: 'consolidated', from: winner.key, cookies: winner.cookies.length, written: wrote };
+  }
+  /** clearSites(provider, ses) — only this provider's sites' cookies, for a sign-out in a profile's jar */
+  async clearSites(provider, ses) {
+    let n = 0;
+    for (const c of await this._read(ses, provider)) { try { await ses.cookies.remove(urlOf(c), c.name); n++; } catch (_) {} }
+    return n;
+  }
+
   /** clearNormal(provider) — the provider's own site(s)' cookies removed from the normal tabs' session (a sign-out must reach it) */
   async clearNormal(provider) {
     const norm = this.normalSession(); if (!norm) return 0;
@@ -222,4 +268,4 @@ class SessionHub {
   }
 }
 
-module.exports = { MODULE_ID, VERSION, SessionHub, canonicalPartition, legacyMeshPartition, isAuthCookie, AUTH_COOKIE_RE, siteOf };
+module.exports = { MODULE_ID, VERSION, SessionHub, guardJar, jarOf, oneJarOn, canonicalPartition, legacyMeshPartition, isAuthCookie, AUTH_COOKIE_RE, siteOf };
