@@ -632,3 +632,10 @@ by the focus.
   examples. Held at fix_bang (6 tries, an Emerge syntax error). Found on the way: COS had put the Ollama system to sleep and a job in flight was
   lost with it; the builder now wakes it through COS and asks again. Grade: the registered prediction still open (3 of 13 so far); the effect of
   the small brief on replace_all: 1 of 1 first try against 0 of 11. Bias: one run, the coder built the brief. Run: ../nexus-build-data/emb8-rebuild7.
+- **EMB8, run 7 resumed after the card fix (2026-11-24):** the Emerge card had told the model starts_with and ends_with were calls; in Emerge
+  they are words between two values, so every try that used them could not compile (found by the contract gate; checked by hand: the call
+  form fails, `t starts_with "!"` gives true). Fixed. From the same saved pieces: fix_bang and fix_semi passed their contracts: **5 of 13
+  from nothing on the 3b alone, each checked against its own examples.** Held at fix_code (11 tries): its contract is weak, not the model:
+  one of its three examples is a prompt's own text recorded as an input by the argument split, and none shows what it does (the four fixers
+  in order), so "return t" fits most of it. What it shows: his "works backwards from the end-state": a composing function's examples must come
+  from what the module's test needs of it, not only from recorded calls. Grade: open (5 of 13). Bias: the coder fixed the card mid-run.
