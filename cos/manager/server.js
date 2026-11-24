@@ -453,6 +453,17 @@ function createServer(sup, opts = {}) {
       }
       // 2026-11-09 — a request through a pipeline, kept as files until its contract is met (cos/pipeline/runs.js): ask, list, read, resume
       if (m === 'POST' && p === '/api/cos/pipeline/requests') { if (/^agent:/.test(String(body.by || ''))) return send(res, 403, { ok: false, error: 'an agent proposes a request; running one is a person\'s or a rule\'s' }); const r = await pipeline.request({ pipeline: body.pipeline, vars: body.vars || {}, by: body.by }); return send(res, r.ok ? 200 : (r.code || 400), r); }
+      // the lab view, 2026-11-23 — James: "I have no way to look at any of this" · "i need to see pipeline" · "just need this building. not losing the meaning".
+      // One read of what COS holds: RAID's requests, the builds and each piece's outcome (cos/data/build), the issues graded in the proof, the systems.
+      if (m === 'GET' && p === '/api/cos/lab') {
+        const fsx = require('fs'), dir = path.join(root, 'cos', 'data', 'build'), builds = [];
+        for (const f of (fsx.existsSync(dir) ? fsx.readdirSync(dir) : []).filter((x) => x.endsWith('.jsonl'))) { let l = []; try { l = fsx.readFileSync(path.join(dir, f), 'utf8').trim().split('\n').map((x) => { try { return JSON.parse(x); } catch (_) { return null; } }).filter(Boolean); } catch (_) {} if (!l.length) continue;
+          const st = l.map((x) => x.state), last = l[l.length - 1], pc = [...l].reverse().find((x) => x.state === 'pieces' && Array.isArray(x.pieces));
+          builds.push({ run: f.replace(/\.jsonl$/, ''), phase: last.phase, at: l[0].ts, ms: last.ts - l[0].ts, calls: st.filter((x) => x === 'gap-asked').length, passed: st.includes('examples-passed'), landed: st.includes('landed'), end: last.state, steps: st.filter((x, i) => x !== st[i - 1]).join(' > ').slice(0, 240), pieces: pc ? pc.pieces : [] }); }
+        builds.sort((a, b) => b.at - a.at);
+        const issues = []; try { const t = fsx.readFileSync(path.join(root, 'docs', 'PROOF-OF-COMPETENCY.md'), 'utf8'), i = t.indexOf('issues and his solutions, graded'); for (const ln of (i < 0 ? '' : t.slice(i, i + 12000)).split('\n')) { const c = ln.split('|').map((x) => x.trim()); if (/^I\d+$/.test(c[1] || '')) issues.push({ id: c[1], issue: c[2], his: c[3], result: c[4], grade: (c[6] || '').replace(/\*\*/g, '').split(':')[0] }); } } catch (_) {}
+        return send(res, 200, { ok: true, at: Date.now(), requests: await pipeline.runs.list({ state: 'active' }), builds: builds.slice(0, 60), issues, systems: sup.list().map((v) => ({ name: v.name, state: v.state })) });
+      }
       if (m === 'GET' && p === '/api/cos/pipeline/requests') return send(res, 200, { ok: true, state: u.searchParams.get('state') || 'active', requests: await pipeline.runs.list({ state: u.searchParams.get('state') || 'active' }) });
       { const rm = /^\/api\/cos\/pipeline\/requests\/([\w.-]+)(\/resume)?$/.exec(p);
         if (rm && m === 'GET' && !rm[2]) { const r = await pipeline.runs.read(rm[1]); return send(res, r ? 200 : 404, r ? { ok: true, ...r } : { ok: false, error: `no request "${rm[1]}"` }); }

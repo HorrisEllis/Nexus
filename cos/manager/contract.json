@@ -528,6 +528,11 @@
     },
     {
       "method": "GET",
+      "path": "/api/cos/lab",
+      "out": "{ requests, builds: [{ run, phase, at, ms, calls, passed, landed, end, steps, pieces }], issues: [{ id, issue, his, result, grade }], systems } \u2014 the lab view: RAID's requests, each build and its pieces, the graded issues (his, 2026-11-23: \"i need to see pipeline\")"
+    },
+    {
+      "method": "GET",
       "path": "/api/cos/storage",
       "out": "{ root, cosRoot, drives, low, integrity: { missing, changed, added, dataMissing, dataChanged, dataAdded, missing_code, sample }, lock, headline, job } \u2014 SC19: is Nexus whole"
     },
@@ -1218,6 +1223,18 @@
       "about": "COS as the hub of all automation: workflows, pipelines, tasks, queues, RAID, contracts, the DAG, and the slots still waiting (agents, a DAG per input, context, gaps, hypotheses, experiments), each with its owner and the phase that wires it",
       "navBefore": "main",
       "offRail": "Off the rail 2026-11-09 \u2014 James: \"There's supposed to be one fucking tab. Why are you adding three tabs to do the same thing?\" \u00b7 \"Yeah. It should all exist in one tab.\" Its route and its routes stay (agents, the CLI, ERAVOS); its content folds into Automation (AE5)."
+    },
+    {
+      "id": "lab",
+      "title": "Lab",
+      "path": "lab/",
+      "route": "#/lab",
+      "nav": "main",
+      "built": true,
+      "phase": "EMB4_torrent_pieces",
+      "routes": [
+        "GET /api/cos/lab"
+      ]
     },
     {
       "id": "pipelines",

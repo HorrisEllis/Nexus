@@ -99,6 +99,11 @@ async function ask(prompt, model, gap) {
     row('round', { note: `round ${round} of ${ROUNDS}`, round });
     try { res = await rung.build({ file: src.path, exports: PIECES ? PIECES.map((p) => ({ name: p.name, signature: `${p.name}(${p.sig}) -> ${p.ret}`, does: p.does })) : (src.exports || []), expectation: testText, context: String(ph.does || ''), contract }); } catch (e) { res = { ok: false, why: e.message, tries: [] }; }
     row(res.ok ? 'emerge-passed' : 'emerge-held', { note: res.why, tries: (res.tries || []).length, gapFiles: res.gapFiles || [], round });
+    // the lab view (his "i need to see pipeline"): each piece's outcome kept in this build's own rows, so COS shows it without reading Idearium's files
+    try { const pre = require(path.join(ROOT, 'lib', 'node-export.js')).fileIdOf(src.path + '#'), ps = [];
+      for (const fn of (store && fs.existsSync(store.dir) ? fs.readdirSync(store.dir) : []).filter((x) => x.startsWith(pre) && x.endsWith('.gap'))) { const nm = fn.slice(pre.length, -4), r = store.read(nm); if (!r) continue; const a = Array.isArray(r.attempts) ? r.attempts : [];
+        ps.push({ name: nm, status: r.status || 'open', tries: a.length, models: [...new Set(a.map((x) => String(x.model || '').replace(/.*\//, '')).filter(Boolean))], last: String((a[a.length - 1] || {}).said || '').slice(0, 140), body: r.status === 'passed' ? String(r.body || '').slice(0, 1200) : null }); }
+      row('pieces', { note: `${ps.filter((x) => x.status === 'passed').length} of ${ps.length} pieces passed`, pieces: ps, round }); } catch (e) { row('pieces', { note: 'the pieces were not read: ' + e.message, round }); }
     if (!res.ok) { const m = /gap (\w+) did not fill/.exec(String(res.why || '')); if (round < ROUNDS && await heal(m ? m[1] : topName, res.why)) continue; process.exit(1); }
     // 6. the proof: the examples test, run against what the rung built, in a scratch copy (nothing in Nexus changes unless --land)
     T = fs.mkdtempSync(path.join(os.tmpdir(), 'cbuild-')); const put = (rel, c) => { const f = path.join(T, rel); fs.mkdirSync(path.dirname(f), { recursive: true }); fs.writeFileSync(f, c); };
