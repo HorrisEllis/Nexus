@@ -225,11 +225,17 @@ const scripted = (replies, seen = []) => async (message, { tryNo }) => { seen.pu
     fs.mkdirSync(path.join(dir, 'lib'), { recursive: true });
     const r = await R.createRung({ root: dir, cli: path.join(ROOT, 'emerge', 'emerge', 'cli.js'), tasksDir: null, ask: async () => '  return x + 1', expect: async () => ({ ok: true }) })
       .build({ file: 'lib/inc.js', exports: [{ name: 'inc', signature: 'inc(x: num) -> num', does: 'x plus one' }] });
-    assert.ok(r.ok && r.files['lib/inc.eg.cjs'] && !r.files['lib/inc.eg.js'] && /export const inc = m\.inc;/.test(r.files['lib/inc.js']), JSON.stringify(Object.keys(r.files || {})));
+    assert.ok(r.ok && r.files['lib/inc.eg.cjs'] && !r.files['lib/inc.eg.js'] && /export const inc = wrap\(m\.inc\);/.test(r.files['lib/inc.js']), JSON.stringify(Object.keys(r.files || {})));
     for (const [k, v] of Object.entries(r.files)) { fs.mkdirSync(path.dirname(path.join(dir, k)), { recursive: true }); fs.writeFileSync(path.join(dir, k), v); }
     const { pathToFileURL } = require('url');
     const m = await import(pathToFileURL(path.join(dir, 'lib', 'inc.js')).href);
     assert.strictEqual(m.inc(41), 42, 'imported by name, it runs');
+    // 0.60.633: a map an Emerge function returns reaches JavaScript plain, so deepStrictEqual against { … } holds (the cbuild run, round 2)
+    const r2 = await R.createRung({ root: dir, cli: path.join(ROOT, 'emerge', 'emerge', 'cli.js'), tasksDir: null, ask: async () => '  return { body: s, fixes: [] }', expect: async () => ({ ok: true }) })
+      .build({ file: 'lib/wrapit.js', exports: [{ name: 'wrapit', signature: 'wrapit(s: string) -> map', does: 's in a map' }] });
+    for (const [k, v] of Object.entries(r2.files)) { fs.mkdirSync(path.dirname(path.join(dir, k)), { recursive: true }); fs.writeFileSync(path.join(dir, k), v); }
+    const m2 = await import(pathToFileURL(path.join(dir, 'lib', 'wrapit.js')).href);
+    assert.deepStrictEqual(m2.wrapit('a'), { body: 'a', fixes: [] }, 'a returned map is a plain object');
     assert.strictEqual(R.moduleTypeOf(ROOT, 'idearium/lib/autocorrect.js'), 'module');
     assert.strictEqual(R.moduleTypeOf(ROOT, 'lib/x.js'), 'commonjs');
   });

@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-21-one-surface-phasemap.spec::OS10_the_translation_chain
+type: phase
+id: docs_2026-11-21-one-surface-phasemap.spec::OS10_the_translation_chain
+context: pipeline phase OS10_the_translation_chain of docs/2026-11-21-one-surface-phasemap.spec
+intent: null
+summary: OS10_the_translation_chain (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1795297064239
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795297064239
+lastSeenAt: 1795297064239
+fingerprint: null
+payload:
+  id: OS10_the_translation_chain
+  map: docs/2026-11-21-one-surface-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - copilot/assist-loop.js
+    - cos/automation/method.eg
+    - cortex/core/raid/contract-intake.js
+  depends_on:
+    - OS5_all_of_nexus_from_the_console
+    - OS2_raid_makes_the_centre_node
+  blocks: []
+  spec: null
+  graph: 47ef4b56395b10eb

@@ -86,7 +86,7 @@ let HINTS = [
   { says: "is a parameter", fix: "A parameter is read-only: build a new value in a var and return it; never change what was passed in." },
   { says: "expected end of statement, found a string", fix: "No throw: return a map with an error field instead." },
   { says: "is a let", fix: "A let cannot change: use var for anything that changes." },
-  { says: "is not defined", fix: "Use only the parameters, the other functions in this module, and the builtins len, push, get, keys, str." },
+  { says: "is not defined", fix: "Use only the parameters, the other functions in this module, and the builtins len, push, get, keys, str, split, join, slice, find_text, starts_with, ends_with." },
   { says: "is already declared", fix: "That name is taken (a parameter, or an earlier let or var): give the new value a new name, e.g. var taken = ..., never var <a parameter's name>." }
 ]
 
@@ -116,13 +116,27 @@ fn fix_for(said: string, body: string): string {
   if len(parts) >= 3 and find_text(parts[2], "is not defined") >= 0 and in_string(body, parts[1]) {
     return "Inside a string, {{ }} is read as code. For a brace in the text itself, write it twice: \"if not x {{{{ y }}}}\" is the text if not x {{ y }}."
   }
+  // the cbuild runs of 2026-11-21: 16b and 3b wrote body.replace(/!([^ ]+)/g, …) at every try; the compiler stopped at the "!" in the regex and
+  // the "!" row taught "write not x", the wrong lesson. JavaScript's replace and regex literals are named for what they are.
+  if (find_text(body, ".replace(") >= 0 or find_text(body, "(/") >= 0 or find_text(body, "/g") >= 0) {
+    return "Emerge has no .replace and no regular expressions /.../. Replace text with join(split(s, t), u), or call a function this module already has (they are written above the ___)."
+  }
   return hint(said)
 }
 
 // copies_examples(body) → { copies, why, fix }: a body that compares its input with literal text twice or more is answering the examples, not
 // writing the rule. EMB3 run 15: the 3b and the 16b wrote if e == "let x = 1" … for each example of the phase, eight times.
+// Only a whole input counts (a text of five characters or more with a space, like "let x = 1"): a rewriter comparing one token with "!" or
+// "&&" is how such code is written (the cbuild run of 2026-11-21: every try at two helpers was refused by the first version of this check).
 fn copies_examples(body: string): map {
-  let n = len(split(body, "== \"")) - 1
+  let parts = split(body, "== \"")
+  var n = 0
+  var i = 1
+  while i < len(parts) {
+    let lit = split(parts[i], "\"")[0]
+    if len(lit) >= 5 and find_text(lit, " ") >= 0 { n = n + 1 }
+    i = i + 1
+  }
   if n >= 2 { return { copies: true, why: "the body compares the input with " + str(n) + " literal texts: it answers the examples, not the rule", fix: "Write the general rule that turns any input into its output. Never test the input against the examples' own values; the test has other inputs." } }
   return { copies: false, why: "", fix: "" }
 }

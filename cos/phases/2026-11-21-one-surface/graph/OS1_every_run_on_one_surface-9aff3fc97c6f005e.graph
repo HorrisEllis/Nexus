@@ -7,11 +7,11 @@ intent: null
 summary: 15 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1795285529447
+exported_at: 1795297064215
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1795285529447
-lastSeenAt: 1795285529447
+firstSeenAt: 1795297064215
+lastSeenAt: 1795297064215
 fingerprint: null
 payload:
   for: OS1_every_run_on_one_surface
@@ -126,6 +126,8 @@ payload:
       - docs/2026-11-21-one-surface-phasemap.spec::OS5_all_of_nexus_from_the_console
     upstream: []
     downstream:
+      - docs/2026-11-21-one-surface-phasemap.spec::OS10_the_translation_chain
+      - docs/2026-11-21-one-surface-phasemap.spec::OS11_raid_reads_his_framework_tested
       - docs/2026-11-21-one-surface-phasemap.spec::OS2_raid_makes_the_centre_node
       - docs/2026-11-21-one-surface-phasemap.spec::OS3_each_step_its_method_agent_tool_or_command
       - docs/2026-11-21-one-surface-phasemap.spec::OS4_pipelines_get_triggers_schedules_conditions
@@ -145,6 +147,6 @@ payload:
       - 'depends on (0): —'
       - >-
         needed by (2): OS2_raid_makes_the_centre_node, OS5_all_of_nexus_from_the_console · all
-        downstream 8 · finishing it unlocks OS2_raid_makes_the_centre_node,
+        downstream 10 · finishing it unlocks OS2_raid_makes_the_centre_node,
         OS5_all_of_nexus_from_the_console
     edges: []

@@ -1,0 +1,274 @@
+envelope: 1
+uuid: nexus-export-graph-phase:OS10_the_translation_chain:47ef4b56395b10eb
+type: graph
+id: phase:OS10_the_translation_chain:47ef4b56395b10eb
+context: dependency graph of phase OS10_the_translation_chain
+intent: null
+summary: 27 node(s), 4 crossing(s)
+system: idearium
+tags: []
+exported_at: 1795297064239
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795297064239
+lastSeenAt: 1795297064239
+fingerprint: null
+payload:
+  for: OS10_the_translation_chain
+  kind: phase
+  repo: null
+  hash: 47ef4b56395b10eb
+  nodes:
+    - path: copilot/assist-loop.js
+      role: changes
+      exists: true
+      system: copilot
+    - path: cortex/core/raid/contract-intake.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: cos/automation/method.eg
+      role: changes
+      exists: true
+      system: cos
+    - path: cortex/boot.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/officiator.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/worker.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/self-heal/index.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: scripts/mco5-one-real-job.js
+      role: used-by
+      exists: true
+      system: null
+    - path: scripts/mco6-ic9-kill-and-restart.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/contract-intake-dependency-graph.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/contract-intake-tangible-file.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/mco19-clearglass-dispatch.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/mco4-stage-transitions.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/mco6-reconcile-on-boot.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/core/raid/contract-boundary.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/event-taxonomy.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cos/cli/commands/create.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/host/index.js
+      role: uses
+      exists: true
+      system: cos
+    - path: intelligence/cfr/ledger.js
+      role: uses
+      exists: true
+      system: intelligence
+    - path: lib/agent-intent-contract.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/compartment-engine.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/contract-repo-provision.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/meta/adversary-suite.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-self/systems.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/node-export.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: cortex/core/raid/contract-intake.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: lib/compartment-engine.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: lib/contract-repo-provision.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: intelligence/cfr/ledger.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: cortex/core/raid/event-taxonomy.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: lib/meta/adversary-suite.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: cortex/core/raid/contract-boundary.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: lib/node-export.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: lib/agent-intent-contract.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: cos/host/index.js
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: cos/cli/commands/create.js
+      kind: requires
+    - from: cortex/boot.js
+      to: cortex/core/raid/contract-intake.js
+      kind: requires
+    - from: cortex/core/raid/officiator.js
+      to: cortex/core/raid/contract-intake.js
+      kind: requires
+    - from: cortex/core/raid/worker.js
+      to: cortex/core/raid/contract-intake.js
+      kind: requires
+    - from: cortex/self-heal/index.js
+      to: cortex/core/raid/contract-intake.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: cortex/core/raid/contract-intake.js
+      kind: requires
+    - from: scripts/mco5-one-real-job.js
+      to: cortex/core/raid/contract-intake.js
+      kind: requires
+    - from: scripts/mco6-ic9-kill-and-restart.js
+      to: cortex/core/raid/contract-intake.js
+      kind: requires
+    - from: tests/modules/contract-intake-dependency-graph.test.js
+      to: cortex/core/raid/contract-intake.js
+      kind: requires
+    - from: tests/modules/contract-intake-tangible-file.test.js
+      to: cortex/core/raid/contract-intake.js
+      kind: requires
+    - from: tests/modules/mco19-clearglass-dispatch.test.js
+      to: cortex/core/raid/contract-intake.js
+      kind: requires
+    - from: tests/modules/mco4-stage-transitions.test.js
+      to: cortex/core/raid/contract-intake.js
+      kind: requires
+    - from: tests/modules/mco6-reconcile-on-boot.test.js
+      to: cortex/core/raid/contract-intake.js
+      kind: requires
+  crossings:
+    - from: cortex/core/raid/contract-intake.js
+      to: intelligence/cfr/ledger.js
+      fromSystem: cortex
+      toSystem: intelligence
+      kind: system
+      known: true
+    - from: cortex/core/raid/contract-intake.js
+      to: cos/host/index.js
+      fromSystem: cortex
+      toSystem: cos
+      kind: system
+      known: true
+    - from: cortex/core/raid/contract-intake.js
+      to: cos/cli/commands/create.js
+      fromSystem: cortex
+      toSystem: cos
+      kind: system
+      known: true
+    - from: idearium/api/index.js
+      to: cortex/core/raid/contract-intake.js
+      fromSystem: idearium
+      toSystem: cortex
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-11-21-one-surface-phasemap.spec::OS5_all_of_nexus_from_the_console
+      - docs/2026-11-21-one-surface-phasemap.spec::OS2_raid_makes_the_centre_node
+    dependents: []
+    upstream:
+      - docs/2026-11-21-one-surface-phasemap.spec::OS1_every_run_on_one_surface
+      - docs/2026-11-21-one-surface-phasemap.spec::OS2_raid_makes_the_centre_node
+      - docs/2026-11-21-one-surface-phasemap.spec::OS5_all_of_nexus_from_the_console
+    downstream: []
+    blockedBy:
+      - docs/2026-11-21-one-surface-phasemap.spec::OS5_all_of_nexus_from_the_console
+      - docs/2026-11-21-one-surface-phasemap.spec::OS2_raid_makes_the_centre_node
+    unlocks: []
+    conflicts:
+      - with: docs/2026-11-21-one-surface-phasemap.spec::OS3_each_step_its_method_agent_tool_or_command
+        files:
+          - cos/automation/method.eg
+      - with: docs/2026-11-21-one-surface-phasemap.spec::OS7_copilot_runs_nexus_from_talk
+        files:
+          - copilot/assist-loop.js
+      - with: docs/2026-11-21-one-surface-phasemap.spec::OS11_raid_reads_his_framework_tested
+        files:
+          - cortex/core/raid/contract-intake.js
+    dangling: []
+    lines:
+      - layer 2 · blocked by OS5_all_of_nexus_from_the_console, OS2_raid_makes_the_centre_node
+      - >-
+        depends on (2): OS5_all_of_nexus_from_the_console, OS2_raid_makes_the_centre_node · all
+        upstream 3
+      - 'needed by (0): —'
+      - >-
+        same files as OS3_each_step_its_method_agent_tool_or_command with no order between them:
+        cos/automation/method.eg
+      - >-
+        same files as OS7_copilot_runs_nexus_from_talk with no order between them:
+        copilot/assist-loop.js
+      - >-
+        same files as OS11_raid_reads_his_framework_tested with no order between them:
+        cortex/core/raid/contract-intake.js
+    edges:
+      - from: docs/2026-11-21-one-surface-phasemap.spec::OS5_all_of_nexus_from_the_console
+        kind: declared
+      - from: docs/2026-11-21-one-surface-phasemap.spec::OS2_raid_makes_the_centre_node
+        kind: declared

@@ -33,6 +33,80 @@ decisions:
       (a) a model as an understanding: each file, website and system has a node that says what it is, what it does and what it relates to,
       kept current by Copilot and linked to the others (a graph of Nexus: Loom's, or Cortex's index); (b) a model as the AI that works on it:
       which Ollama model handles each file, site or system, set per node; (c) a model as a data shape: each one's schema, as a node.
+  OS_D2_copilot_translates_through_his_framework_into_a_contract:
+    status: "DECIDED 2026-11-21 (his)"
+    james: >-
+      "what if we use copilot as a translation layer between the me and what i put into the cli and emerge. the interpreter would use my
+      framework for my inputs. then create a contract to send to raid then raid to emerge" · "yes, exactly."
+    chosen: >-
+      One chain, each link a record: his words → Copilot (the translation layer) → his framework, run on the input by the interpreter
+      (method.eg) → a contract (L0 the input a node, L2 its DAG, L3 its end state) → RAID → Emerge. Deterministic first, the small model last:
+      Emerge's own `eg say` turns the words it knows into Emerge with no model (each word shown with his quote); only the words it does not
+      know become gaps, and only those go to a model.
+    found: >-
+      The coder's census, 2026-11-21: `eg say` / `eg teach` / `eg words` exist in Emerge; method.eg resolves his framework per pipeline step;
+      L0 and L3 are built in part, L2 partly; there is no RAID → Emerge hop (RAID hands work to agents).
+    axioms: "§5.2 (routing through RAID), §5.13 (Emerge is behaviour), §8.6 (reuse before build), Nexus is for small models (his)"
+  OS_D3_raid_decides_with_his_framework_and_it_is_tested:
+    status: "DECIDED 2026-11-21 (his)"
+    james: '"that could also prove my framework. my framework is agnostic, wait, raid uses it for its decisions?" · "yes, exactly."'
+    found: >-
+      It does not, today. RAID decides by its router, resolve.eg, its tunables, its signal-to-noise filter and its recorded outcomes; none read
+      his framework. The slot exists: a request's compartment is spawned with a constraint frame whose `injected_frameworks` RAID passes empty
+      (cortex/core/raid/contract-intake.js:834, `injectedFrameworks: []`; lib/compartment-engine.js _assembleConstraintFrame).
+    chosen: >-
+      RAID fills `injected_frameworks` with his framework (agnostic: any .framework he names) and its decisions read it. It is proved, not
+      assumed: the same requests run with and without it (OS8's arms), what is measured is named before any run (decisions that held, gaps
+      closed, retries saved, time), the predictions are registered first (docs/FRAMEWORK-THREADS.md), and a result judged by the hands that
+      predicted it is named post-hoc.
+
+  OS_D4_copilot_administers_nexus:
+    status: "DECIDED 2026-11-21 (his)"
+    james: '"like copilot should be the system orchastrator and administrator." (2026-11-21)'
+    chosen: "Copilot orchestrates and administers Nexus: it runs the queue of gaps and the self-healing loop (OS12), through RAID (§5.2, §9.1)."
+  OS_D5_what_a_fix_may_do_alone:
+    status: "DECIDED 2026-11-21 (his): (c)"
+    readings: >-
+      (a) every fix applies on its own once its gates pass (tests, snapshot, rewind ready), and he is told after; (b) every fix waits as a
+      proposal for his yes; (c) by kind: a mechanical fix (autocorrect, a config value, a restart) applies on its own, a code or design change
+      waits for his yes.
+    james: >-
+      "(c) By kind. Mechanical fixes apply by themselves: an autocorrect, a config value, a restart. Code or design changes wait for your yes.
+      i agree. maybe has to log in a ledger, or maybe even creates a .repair node sent to raid as the return to raid, then run like a fix file or
+      diff. what do you think? versionium can backup before the repair. failure mode report, can be a node for requesting a repair to raid to
+      route?" (2026-11-21)
+    chosen: >-
+      (c), and the repair's shape is his: a failure-mode report (`failure_mode`, a registered node type) is the request, sent to RAID, which
+      routes it; the answer is a `.repair` node, the contract's return to RAID: the diff (the fix file), why it is right, the gates it passed,
+      the failure it closes, and its kind (mechanical or code/design). Versionium snapshots before it is applied; the ledger logs it; a
+      mechanical repair applies on its own, a code or design repair waits for his yes. A `.repair` that held is found first the next time the
+      same failure comes (the learning memory). `repair` is registered in the node taxonomy (type, schema, owner) before the first one is
+      stored (§10.4). The coder's view, asked for: agreed; it closes the loop as a contract does, and keeps every repair checkable and undoable.
+  OS_D6_copilot_has_the_whole_system_through_raid_and_the_pipeline:
+    status: "DECIDED 2026-11-21 (his)"
+    james: >-
+      "copilot needs to be able to have full access to the entire system, like nexus-cli, cos, all of each system, run through raid and the
+      pipeline." (2026-11-21)
+    chosen: >-
+      Copilot can reach every system's every command (nexus-cli, COS's CLI, each system's routes: OS5), never around RAID: each act goes through
+      RAID (approveTool, §5.2, §9.1) and runs as a pipeline, so each is approved, recorded and visible on the one surface.
+  OS_D7_raid_decides_by_branches_confidence_slope_and_compounding:
+    status: "DECIDED 2026-11-21 (his)"
+    james: >-
+      "raid runs through the pipeline also using the intellicgence system and my framework, can generate branches before making a decision
+      using the hypothosis generator and the confidenc escoring, adversarial runs if it is needed, then makes a decision based on slope,
+      confidence and compounding." (2026-11-21)
+    found: >-
+      The coder's census, 2026-11-21: the Intelligence system already has the pieces, none of them in RAID's decisions: patterns held as
+      hypotheses with a confidence, promoted ("crystallised") when they beat the base rate (intelligence/index.js); the adversarial faculty
+      ("probes both; contradiction between the two = gap", intelligence/adversarial.js); delta, the rate of change between ledger entries
+      (the slope; intelligence/cfr/delta.js); sigma, the deviation from baseline (cfr/sigma.js); the compounding effects engine
+      (intelligence/causal/compound.js). RAID writes to the CFR ledger (contract-intake.js) but decides by its router, resolve.eg and tunables.
+      No hypothesis generator makes branches before a decision today.
+    chosen: >-
+      RAID's decision is itself a pipeline: his framework frames the question (OS_D3); the branches are generated as hypotheses (Intelligence);
+      each is scored for confidence; an adversarial run is made when the branches disagree or the confidence is low; the decision is taken on
+      slope (delta), confidence and compounding (the compound engine), and recorded with all three, so it can be checked against what happened.
 
 phases:
   OS1_every_run_on_one_surface:
@@ -106,5 +180,51 @@ phases:
     files: []
     does: "Waits on OS_D1 (what a model per file, website and system is)."
     proof: "set when OS_D1 is answered"
-build_order: [OS1, OS3, OS4, OS5, OS6, OS2, OS7, OS8, OS9]
+  OS12_nexus_heals_and_improves_itself:
+    status: OPEN
+    depends_on: [OS6_query_everything, OS7_copilot_runs_nexus_from_talk]
+    files: [copilot/assist-loop.js, ollama/routes/stream.js, diagnostic/nexus-diagnostic.js, cortex/self-heal/failure-intake.js, lib/open-loop-taxonomy.js]
+    james: >-
+      "like copilot should be the system orchastrator and administrator. like we could have gaps feed into ollamas continous event stream and a
+      ledger for a queue to have it automatically diagnose and fix the system, pipeline, nexus, like it should be using nexus to understand
+      nexus when it needs to, building understanding and learning, and fixing and optimizing nexus using emerge and the pipeline." (2026-11-21)
+    found: >-
+      The coder's census, 2026-11-21: Ollama's standing channels (ollama/routes/stream.js, /api/stream/:id: one open conversation that keeps
+      its context, streamed live); the Diagnostic system already escalates its gaps to Ollama as background 'diagnose' work that gives way to
+      his (nexus-diagnostic.js; ollama/lib/dispatch.js BACKGROUND_INTENTS); Cortex's self-heal (failure intake, forensics, fault taxonomy,
+      escalation, reports); the open-loop taxonomy; RAID's L8 (failure modes, faults and gaps). Missing: the one queue, and the loop over it.
+    does: >-
+      Copilot is the system's orchestrator and administrator. Every gap, fault and failure mode from every system lands as a row in one queue
+      ledger (Cortex keeps the books, §L13). Copilot works the queue through Ollama's standing channel, in the background, giving way to his
+      work: it uses Nexus to understand Nexus (OS6: the nodes, components, ledgers and failure records), names the cause, and makes the fix
+      as a pipeline (code through the Emerge rung); the fix passes its gates (its tests, a Versionium snapshot before, the rewind if it
+      breaks) and lands per OS_D5. What it learned is kept as nodes (the failure mode, its cause, the fix that held), so the next one is
+      faster: optimising is the same loop on slow or wasteful paths.
+    proof: "a gap planted on purpose is queued, diagnosed from Nexus's own records, fixed through the pipeline, tested, landed per OS_D5, and its lesson found again by the next one"
+  OS13_raid_decides_as_a_pipeline:
+    status: OPEN
+    depends_on: [OS3_each_step_its_method_agent_tool_or_command, OS11_raid_reads_his_framework_tested]
+    files: [cortex/core/raid/router.js, cortex/core/raid/resolve.eg, intelligence/index.js, intelligence/adversarial.js, intelligence/cfr/delta.js, intelligence/causal/compound.js]
+    does: >-
+      OS_D7 built: a RAID decision runs as a pipeline on the one surface: frame (his framework) → branches (hypotheses) → confidence per branch →
+      adversarial run when needed → decide on slope, confidence and compounding → record all three. Each step a box he can see, change and rerun.
+    proof: "ten real RAID decisions made this way, each with its branches, scores and why on the canvas; checked later against what happened"
+  OS10_the_translation_chain:
+    status: OPEN
+    depends_on: [OS5_all_of_nexus_from_the_console, OS2_raid_makes_the_centre_node]
+    files: [copilot/assist-loop.js, cos/automation/method.eg, cortex/core/raid/contract-intake.js, emerge/emerge/lang/say]
+    does: >-
+      OS_D2 built: a sentence of his, typed in the console or said to Copilot, goes through `eg say` first (the words it knows, no model),
+      the unknown words as gaps to a small model, his framework run on the input (method.eg), and comes out a contract RAID takes; RAID's
+      result is Emerge, checked by its compiler. Each link a row, so he sees what each word became and why.
+    proof: "three requests of his, in his words, each shown word by word to Emerge through a contract RAID ran; the words no model touched counted"
+  OS11_raid_reads_his_framework_tested:
+    status: OPEN
+    depends_on: [OS8_experiments_and_trials]
+    files: [cortex/core/raid/contract-intake.js, lib/compartment-engine.js, docs/FRAMEWORK-THREADS.md]
+    does: >-
+      OS_D3 built: RAID fills a request's injected_frameworks with his framework and its decisions read it; a trial runs the same requests
+      with and without it, measures named and predictions registered before the runs.
+    proof: "one trial of real requests, two arms, the predictions registered before; the difference and its doubts written in FRAMEWORK-THREADS"
+build_order: [OS1, OS3, OS4, OS5, OS6, OS2, OS10, OS7, OS12, OS8, OS11, OS13, OS9]
 first_slice: "OS1: Activity reads RAID's queue, COS's runs, Idearium's tasks and Ollama's jobs, one list on the pipeline screen."
