@@ -7,11 +7,11 @@ intent: null
 summary: 4 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1795497156019
+exported_at: 1795499716292
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1795497156019
-lastSeenAt: 1795497156019
+firstSeenAt: 1795499716292
+lastSeenAt: 1795499716292
 fingerprint: null
 payload:
   for: EMB3_the_autocorrect
@@ -76,7 +76,7 @@ payload:
     conflicts: []
     dangling: []
     lines:
-      - layer 4 · ready
+      - layer 4
       - 'depends on (1): EMB1_emerge_writes_the_brick · all upstream 11'
       - 'needed by (1): EMB4_torrent_pieces · finishing it unlocks EMB4_torrent_pieces'
     edges:

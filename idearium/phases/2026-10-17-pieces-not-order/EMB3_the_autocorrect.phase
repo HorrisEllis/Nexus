@@ -7,18 +7,18 @@ intent: null
 summary: EMB3_the_autocorrect (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1795491485334
+exported_at: 1795499716292
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1795491485334
-lastSeenAt: 1795491485334
+firstSeenAt: 1795499716292
+lastSeenAt: 1795499716292
 fingerprint: null
 payload:
   id: EMB3_the_autocorrect
   map: docs/2026-10-17-pieces-not-order-phasemap.spec
   repo: null
   layer: null
-  status: OPEN
+  status: '"BUILT 0.60.642"'
   files:
     - idearium/lib/autocorrect.js
     - idearium/lib/test/autocorrect.test.js

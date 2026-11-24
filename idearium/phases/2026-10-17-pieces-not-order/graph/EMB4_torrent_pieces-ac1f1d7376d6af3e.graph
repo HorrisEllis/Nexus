@@ -7,11 +7,11 @@ intent: null
 summary: 13 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1795497761386
+exported_at: 1795499716289
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1795497761386
-lastSeenAt: 1795497761386
+firstSeenAt: 1795499716289
+lastSeenAt: 1795499716289
 fingerprint: null
 payload:
   for: EMB4_torrent_pieces
@@ -120,8 +120,7 @@ payload:
       - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D2_two_contracts_two_names
       - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D3_handlers_run_the_cli
     downstream: []
-    blockedBy:
-      - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB3_the_autocorrect
+    blockedBy: []
     unlocks: []
     conflicts:
       - with: docs/2026-10-17-pieces-not-order-phasemap.spec::EMB2_ollama_writes_emerge_for_the_pipeline
@@ -130,7 +129,7 @@ payload:
           - tests/modules/test-emerge-rung.test.js
     dangling: []
     lines:
-      - layer 5 · blocked by EMB3_the_autocorrect
+      - layer 5 · ready
       - 'depends on (1): EMB3_the_autocorrect · all upstream 12'
       - 'needed by (0): —'
       - >-

@@ -173,7 +173,10 @@ phases:
     proof: "a second run of a passed phase asks no model; a refused !x is repaired before the compiler; a repeated body links a smaller piece; slice b: a phase not split by hand builds on the 3b"
     axioms: "§0.3 nothing lost, persistence (his 2026-11-14), §8.6 reuse, §14.4 bounded"
   EMB3_the_autocorrect:
-    status: OPEN
+    # roadmap edit 2026-11-20: OPEN -> IN PROGRESS 2026-11-20.
+    # 2026-11-23: IN PROGRESS -> BUILT 0.60.642 (the 3b in small pieces; its 10 examples pass; see the addenda below)
+    status_previous: "IN PROGRESS 2026-11-20."
+    status: "BUILT 0.60.642"
     depends_on: [EMB1_emerge_writes_the_brick]   # the rung it is built through (BUILT); corrected 2026-11-20 from EMB2, which is open and which the module does not need
     james: '"like autocorrect" (2026-11-20) · "do it. prove it" (2026-11-20, the first real phase built by the local-model ladder through the ▶ build)'
     files: [idearium/lib/autocorrect.js, idearium/lib/test/autocorrect.test.js]
