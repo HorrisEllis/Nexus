@@ -330,6 +330,18 @@ phases_addendum_2026_11_22:
     status: OPEN
     depends_on: [AC11_accounts_per_login_per_site]
     expands: [PW1_service, AF1_active_profile_and_fill_one]
+    expanded_2026_11_24: >-
+      His words: "the autofill needs to save from the input fields, like firefox does. and hook the saved passwords in the plugin so i can autofill
+      passwords from the plugin" · "can you have it import the autofill and password from firefox also? into the plugin and autofill, and chip."
+      Found the same day: clear-glass/src/import/firefox.js (BS1, 0.60.179) imports cookies, bookmarks and the persona, not logins or form data.
+      Firefox keeps logins in logins.json, encrypted with the key in key4.db (no primary password: read with Node's own crypto, from a COPY, as
+      the cookie import does; with one, he is asked for it, never stored); addresses in autofill-profiles.json; form entries in formhistory.sqlite.
+      The import puts logins into the Password Manager plugin's vault (passwords/vault.js) under the profile, each to its site, and autofill
+      profiles into autofill/store.js; the chip under a field offers both. Saving from the input fields: the page script already captures a
+      submitted login (preload/passwords.js pw:capture, 0.60.186); to check in his Clear Glass why no offer to save showed, before anything new.
+      Also found: his only autofill profiles are two left by a test run on 2026-11-20 ("First", first@x.com, and "Second"), which is why
+      first@x.com was typed into OpenAI's sign-in; his real profile is still in .clear-glass/autofill-profiles.json (2026-10-26). Restoring it
+      and removing the test ones is his yes.
     james: '"hook in the password manager also. and the autofill chip. just like firefox" (2026-11-23)'
     files: [clear-glass/src/passwords/vault.js, clear-glass/src/passwords/service.js, clear-glass/src/main/passwords-wiring.js, clear-glass/src/autofill/suggest.js, clear-glass/src/ipc/bridge.js, clear-glass/src/preload/index.js, clear-glass/renderer/autofill-inline.js, clear-glass/renderer/autofill-inline.css, clear-glass/renderer/settings/sections/profiles.js]
     does: >-
@@ -338,6 +350,17 @@ phases_addendum_2026_11_22:
       A password is filled only on a person's click, only for the exact origin (PW-002), and never into a compartment, sandbox or agent. Guardian and agents never receive one.
     proof: "a login saved in one profile is not offered in another; a look-alike origin and a compartment are refused; an agent cannot read or trigger a password fill"
     axioms: "§5.9 sovereignty, §8.6 the vault, offer and chip reused, §10.3 one truth per kind of data"
+  AC17_firefox_userscript_fallback:
+    status: OPEN
+    depends_on: []
+    james: '"also, making a tamper script for firefox as a fallback. just needs to account for cors, and user" (2026-11-24)'
+    found: "2026-11-24: Google refuses Clear Glass's sign-in (accounts.google.com/v3/signin/rejected, recorded live), so ChatGPT cannot be signed in inside Clear Glass yet; in his own Firefox it can."
+    reading: "the coder's, to confirm: a Tampermonkey userscript for his Firefox, on chatgpt.com, doing what the ChatGPT provider userscript does in Clear Glass (take a prompt from Nexus, send it in the page, return the answer); 'cors': it reaches Nexus with GM_xmlhttpRequest and @connect 127.0.0.1, which a page's own fetch cannot; 'user': it runs only as him, in his signed-in session, never with a stored password, and Nexus sees which account answered."
+    files: [clear-glass/userscripts/, guardian/userscripts/, clear-glass/spec/]
+    does: >-
+      The ChatGPT provider keeps working when Clear Glass cannot sign in: the same userscript, packaged for Tampermonkey in Firefox, talks to
+      Nexus through the same route the provider tab uses, so RAID can route a prompt to ChatGPT in Firefox as it would to the tab in Clear Glass.
+    proof: "a prompt sent from Nexus is answered from his signed-in ChatGPT in Firefox, and the answer comes back to Nexus with the account named"
   AC16_everything_belongs_to_its_profile:
     status: OPEN
     depends_on: [AC10_profiles_the_source_of_truth, AC11_accounts_per_login_per_site]

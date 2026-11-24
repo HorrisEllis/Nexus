@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-13-one-place-for-accounts-phasemap.spec::AC17_firefox_userscript_fallback
+type: phase
+id: docs_2026-11-13-one-place-for-accounts-phasemap.spec::AC17_firefox_userscript_fallback
+context: >-
+  pipeline phase AC17_firefox_userscript_fallback of
+  docs/2026-11-13-one-place-for-accounts-phasemap.spec
+intent: null
+summary: AC17_firefox_userscript_fallback (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1795517519836
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795517519836
+lastSeenAt: 1795517519836
+fingerprint: null
+payload:
+  id: AC17_firefox_userscript_fallback
+  map: docs/2026-11-13-one-place-for-accounts-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/userscripts/
+    - guardian/userscripts/
+    - clear-glass/spec/
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 606c1fc139e89b6d

@@ -7,11 +7,11 @@ intent: null
 summary: 16 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1795485619351
+exported_at: 1795517519825
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1795485619351
-lastSeenAt: 1795485619351
+firstSeenAt: 1795517519825
+lastSeenAt: 1795517519825
 fingerprint: null
 payload:
   for: AC12_one_browser_identity_per_profile
@@ -132,6 +132,7 @@ payload:
       - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC10_profiles_the_source_of_truth
       - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC11_accounts_per_login_per_site
     downstream:
+      - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB5_trials_start_at_raid
       - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC13_intent_routes_to_ids
     blockedBy:
       - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC11_accounts_per_login_per_site
@@ -147,7 +148,7 @@ payload:
     lines:
       - layer 2 · blocked by AC11_accounts_per_login_per_site
       - 'depends on (1): AC11_accounts_per_login_per_site · all upstream 2'
-      - 'needed by (1): AC13_intent_routes_to_ids'
+      - 'needed by (1): AC13_intent_routes_to_ids · all downstream 2'
       - >-
         same files as AC15_passwords_and_autofill_chip_per_profile with no order between them:
         clear-glass/renderer/settings/sections/profiles.js

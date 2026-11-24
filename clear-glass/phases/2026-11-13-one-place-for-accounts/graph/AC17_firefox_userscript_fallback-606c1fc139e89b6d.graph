@@ -1,0 +1,39 @@
+envelope: 1
+uuid: nexus-export-graph-phase:AC17_firefox_userscript_fallback:606c1fc139e89b6d
+type: graph
+id: phase:AC17_firefox_userscript_fallback:606c1fc139e89b6d
+context: dependency graph of phase AC17_firefox_userscript_fallback
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1795517519836
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795517519836
+lastSeenAt: 1795517519836
+fingerprint: null
+payload:
+  for: AC17_firefox_userscript_fallback
+  kind: phase
+  repo: null
+  hash: 606c1fc139e89b6d
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+    edges: []
