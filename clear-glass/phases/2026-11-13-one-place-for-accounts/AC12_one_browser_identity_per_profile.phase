@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-13-one-place-for-accounts-phasemap.spec::AC12_one_browser_identity_per_profile
+type: phase
+id: docs_2026-11-13-one-place-for-accounts-phasemap.spec::AC12_one_browser_identity_per_profile
+context: >-
+  pipeline phase AC12_one_browser_identity_per_profile of
+  docs/2026-11-13-one-place-for-accounts-phasemap.spec
+intent: null
+summary: AC12_one_browser_identity_per_profile (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1795479918030
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795479918030
+lastSeenAt: 1795479918030
+fingerprint: null
+payload:
+  id: AC12_one_browser_identity_per_profile
+  map: docs/2026-11-13-one-place-for-accounts-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/src/fingerprint/engine.js
+    - clear-glass/src/contexts/manager.js
+    - clear-glass/src/net/compartment.js
+    - clear-glass/renderer/settings/sections/profiles.js
+  depends_on:
+    - AC11_accounts_per_login_per_site
+  blocks: []
+  spec: null
+  graph: e4578cc1f4b0b7bb

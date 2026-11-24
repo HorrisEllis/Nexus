@@ -283,6 +283,48 @@ phases_addendum_2026_11_22:
       profile id, and the other account lists read Clear Glass's.
     proof: "a: eg test; the store and routes on a throwaway store; c: on his machine, every signed-in provider still signed in after the move"
     axioms: "§10.3 one truth per kind of data, §5.15 one owner, §0.3 old jars kept, §8.6 his account store and per-account tabs reused"
+  AC11_accounts_per_login_per_site:
+    status: OPEN
+    depends_on: [AC10_profiles_the_source_of_truth]
+    expands: ID1_identities
+    james: '"it should be new profile. accounts are per cookie/login, which are per per site. like firefox. then we can have ids per profile, per account linked to the cookies/logins for each website. uuids that way guardian can identify where to route without needing the login or cookie info." · "just like any other browser." (2026-11-23)'
+    files: [clear-glass/src/profiles/profiles.eg, clear-glass/src/profiles/built, clear-glass/src/profiles/test/profiles.test.eg, clear-glass/src/options/store.js, clear-glass/src/ipc/bridge.js, clear-glass/renderer/settings/sections/profiles.js, clear-glass/renderer/settings/sections/accounts.js]
+    does: >-
+      A profile (uuid) is one jar. An account (uuid) is one login on one site group inside it (Google covers google.com and youtube.com), found when you sign in, never made by hand.
+      A second login on a site is a new profile. His 8 account ids are kept. If the signed-in identity changes or cannot be confirmed, the account is marked to check and is not routed to.
+    proof: "eg test; signing in on a throwaway jar makes one account per site group; the existing ids survive"
+    axioms: "§10.3 one truth per kind of data, §5.15 one owner, §8.6 reuse"
+  AC12_one_browser_identity_per_profile:
+    status: OPEN
+    depends_on: [AC11_accounts_per_login_per_site]
+    expands: TB7_human_tabs_never_spoofed
+    james: '"also the fingerprint engine with routing" (2026-11-23)'
+    files: [clear-glass/src/fingerprint/engine.js, clear-glass/src/contexts/manager.js, clear-glass/src/net/compartment.js, clear-glass/renderer/settings/sections/profiles.js]
+    does: >-
+      Everything signed in through a profile presents that profile's one browser identity, so a site never sees one login from two browsers. The default is the real browser (TB7: a person's tab is never spoofed).
+      A compartment or sandbox gets its own fingerprint from the engine, chosen per job, with no access to the profile's jar (AC_D7).
+    proof: "userAgent, userAgentData and Sec-CH-UA agree across a profile's tabs and agents; a compartment reads none of its cookies"
+    axioms: "§5.9 sovereignty, §8.6 the fingerprint engine reused"
+  AC13_intent_routes_to_ids:
+    status: OPEN
+    depends_on: [AC11_accounts_per_login_per_site, AC12_one_browser_identity_per_profile]
+    expands: ID1_identities
+    james: '"and intent routing for raid. so we can have intent based routing to accounts. like this is for the agents." (2026-11-23)'
+    files: [guardian/lib/account-routing.js, guardian/lib/profile-lanes.js, guardian/lib/dispatcher.js, clear-glass/src/main/index.js, idearium/cli/route-commands.js]
+    does: >-
+      RAID's intent, hat and repo pick a route; Guardian's existing rules answer with { profileId, accountId } and hold no cookie or password. Clear Glass runs the job there.
+      A signed-out or to-check account fails the job with the reason unless the rule names a fallback. In-place account swapping retires (hazard H1).
+    proof: "a job with an intent lands on the ruled account in its profile; Guardian's stores and logs contain no cookie or password"
+    axioms: "§5.9-§5.16 sovereignty: reached only by routes"
+  AC14_nexus_addresses_in_the_browser:
+    status: OPEN
+    depends_on: []
+    james: '"also the nexus:// for using the systems on nexus." (2026-11-23) · "this is why we need to use nexus:// for each system instead of a port" (2026-11-19)'
+    files: [clear-glass/src/main/index.js, clear-glass/renderer/browser.js, cos/manager/server.js, idearium/cli/route-commands.js]
+    does: >-
+      Typing nexus://guardian or nexus://<system>.<surface> in the address bar opens that system. Clear Glass has no such scheme today. It asks COS's existing addressOf resolver by route and hardcodes no port. Agents use the same names.
+    proof: "nexus://idearium opens Idearium in a tab; a stopped or unknown system says so in the page"
+    axioms: "§5.16 the system registry connects systems"
 # ADDENDUM 2026-11-22 (0.60.636) — AC10: James: "okay profiles are in clearglass. no coupline". The first slice started Emerge's toolchain from Emerge's folder at run time.
 # Now the rules are compiled once (eg build --standalone) into clear-glass/src/profiles/built and run in Clear Glass's own process: no other system's folder is read,
 # Emerge may be absent. Rebuild after changing profiles.eg. Other systems reach profiles only through Clear Glass's /profiles routes.

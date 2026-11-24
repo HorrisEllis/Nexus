@@ -7,11 +7,11 @@ intent: null
 summary: 29 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1795361896855
+exported_at: 1795479918025
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1795361896855
-lastSeenAt: 1795361896855
+firstSeenAt: 1795479918025
+lastSeenAt: 1795479918025
 fingerprint: null
 payload:
   for: AC10_profiles_the_source_of_truth
@@ -213,23 +213,37 @@ payload:
   dag:
     layer: 0
     deps: []
-    dependents: []
+    dependents:
+      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC11_accounts_per_login_per_site
     upstream: []
-    downstream: []
+    downstream:
+      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC11_accounts_per_login_per_site
+      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC12_one_browser_identity_per_profile
+      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC13_intent_routes_to_ids
     blockedBy: []
-    unlocks: []
+    unlocks:
+      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC11_accounts_per_login_per_site
     conflicts:
       - with: docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC1_the_vault_as_a_library
         files:
+          - idearium/cli/route-commands.js
+      - with: docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC14_nexus_addresses_in_the_browser
+        files:
+          - clear-glass/src/main/index.js
           - idearium/cli/route-commands.js
     dangling:
       - AC_D6_clear_glass_owns_it
     lines:
       - layer 0 · ready
       - 'depends on (0): —'
-      - 'needed by (0): —'
+      - >-
+        needed by (1): AC11_accounts_per_login_per_site · all downstream 3 · finishing it unlocks
+        AC11_accounts_per_login_per_site
       - 'DANGLING depends_on: AC_D6_clear_glass_owns_it'
       - >-
         same files as AC1_the_vault_as_a_library with no order between them:
         idearium/cli/route-commands.js
+      - >-
+        same files as AC14_nexus_addresses_in_the_browser with no order between them:
+        clear-glass/src/main/index.js, idearium/cli/route-commands.js
     edges: []

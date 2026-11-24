@@ -1,0 +1,35 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-13-one-place-for-accounts-phasemap.spec::AC11_accounts_per_login_per_site
+type: phase
+id: docs_2026-11-13-one-place-for-accounts-phasemap.spec::AC11_accounts_per_login_per_site
+context: >-
+  pipeline phase AC11_accounts_per_login_per_site of
+  docs/2026-11-13-one-place-for-accounts-phasemap.spec
+intent: null
+summary: AC11_accounts_per_login_per_site (?) — 6 file(s)
+system: idearium
+tags: []
+exported_at: 1795479918028
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795479918028
+lastSeenAt: 1795479918028
+fingerprint: null
+payload:
+  id: AC11_accounts_per_login_per_site
+  map: docs/2026-11-13-one-place-for-accounts-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/src/profiles/profiles.eg
+    - clear-glass/src/profiles/test/profiles.test.eg
+    - clear-glass/src/options/store.js
+    - clear-glass/src/ipc/bridge.js
+    - clear-glass/renderer/settings/sections/profiles.js
+    - clear-glass/renderer/settings/sections/accounts.js
+  depends_on:
+    - AC10_profiles_the_source_of_truth
+  blocks: []
+  spec: null
+  graph: 286e04a86972406d
