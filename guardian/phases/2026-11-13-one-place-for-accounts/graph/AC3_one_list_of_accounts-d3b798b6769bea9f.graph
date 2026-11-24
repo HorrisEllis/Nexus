@@ -7,11 +7,11 @@ intent: null
 summary: 26 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1794578166684
+exported_at: 1795479918009
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794578166684
-lastSeenAt: 1794578166684
+firstSeenAt: 1795479918009
+lastSeenAt: 1795479918009
 fingerprint: null
 payload:
   for: AC3_one_list_of_accounts
@@ -205,6 +205,9 @@ payload:
       - with: docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC8_credential_types
         files:
           - guardian/lib/provider-login.js
+      - with: docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC13_intent_routes_to_ids
+        files:
+          - guardian/lib/account-routing.js
     dangling: []
     lines:
       - layer 3 · blocked by AC1_the_vault_as_a_library
@@ -213,6 +216,9 @@ payload:
       - >-
         same files as AC8_credential_types with no order between them:
         guardian/lib/provider-login.js
+      - >-
+        same files as AC13_intent_routes_to_ids with no order between them:
+        guardian/lib/account-routing.js
     edges:
       - from: docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC1_the_vault_as_a_library
         kind: declared

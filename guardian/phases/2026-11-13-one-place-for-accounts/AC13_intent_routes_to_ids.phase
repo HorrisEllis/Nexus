@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-13-one-place-for-accounts-phasemap.spec::AC13_intent_routes_to_ids
+type: phase
+id: docs_2026-11-13-one-place-for-accounts-phasemap.spec::AC13_intent_routes_to_ids
+context: pipeline phase AC13_intent_routes_to_ids of docs/2026-11-13-one-place-for-accounts-phasemap.spec
+intent: null
+summary: AC13_intent_routes_to_ids (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1795479918033
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795479918033
+lastSeenAt: 1795479918033
+fingerprint: null
+payload:
+  id: AC13_intent_routes_to_ids
+  map: docs/2026-11-13-one-place-for-accounts-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - guardian/lib/account-routing.js
+    - guardian/lib/profile-lanes.js
+    - guardian/lib/dispatcher.js
+    - clear-glass/src/main/index.js
+    - idearium/cli/route-commands.js
+  depends_on:
+    - AC11_accounts_per_login_per_site
+    - AC12_one_browser_identity_per_profile
+  blocks: []
+  spec: null
+  graph: 24b1f3e9f7fa71ac
