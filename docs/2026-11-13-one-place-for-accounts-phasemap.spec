@@ -309,14 +309,14 @@ phases_addendum_2026_11_22:
     status: OPEN
     depends_on: [AC11_accounts_per_login_per_site, AC12_one_browser_identity_per_profile]
     expands: ID1_identities
-    james: '"and intent routing for raid. so we can have intent based routing to accounts. like this is for the agents." (2026-11-23) · "raid it the agent routing. maybe have it connect to the agent mesh" (2026-11-23)'
-    files: [cortex/boot.js, cortex/core/raid, clear-glass/src/mesh/agent-mesh.js, clear-glass/src/main/index.js, guardian/lib/provider-routing.js, guardian/lib/account-routing.js, guardian/lib/profile-lanes.js, guardian/lib/dispatcher.js, lib/agent-router.js, idearium/cli/route-commands.js]
+    james: '"and intent routing for raid. so we can have intent based routing to accounts. like this is for the agents." · "raid it the agent routing. maybe have it connect to the agent mesh" · "just don''t want coupeling. and plugins are for keeping the lines of seperation between with the gate. like anything that needs external dependancy should be a plugin" (2026-11-23)'
+    files: [clear-glass/plugins/raid-routing, clear-glass/src/mesh/agent-mesh.js, cortex/boot.js, cortex/core/raid, guardian/lib/provider-routing.js, guardian/lib/account-routing.js, guardian/lib/profile-lanes.js, guardian/lib/dispatcher.js, idearium/cli/route-commands.js]
     does: >-
-      RAID is the one agent router. Read today: Guardian and the mesh each ask /api/raid/decide, RAID answers with an agent only, its vocabulary misses most of the mesh's agents, and Guardian then picks the account by its own rules.
-      Now the mesh tells RAID, by route, which agents and accounts are available: ids, provider, signed-in state and health, never a cookie or password. RAID takes intent, hat and repo and answers { agent, profileId, accountId, why }. The mesh runs that decision in the profile; Guardian keeps its transport and its watch over a job, and asks RAID instead of choosing. Guardian's existing rules become RAID's rules, moved with nothing lost.
-      A signed-out or to-check account is not chosen; if no account fits, the job fails with the reason. In-place account swapping retires (hazard H1). Callers reach RAID only by its route, so its planned move into COS changes nothing here.
-    proof: "a job with an intent lands on the ruled account through RAID and the mesh; RAID's, Guardian's and the mesh's stores and logs contain no cookie or password; with Cortex down the job says why"
-    axioms: "§5.9-§5.16 sovereignty: reached only by routes; §10.3 one router"
+      RAID is the one agent router, and neither side knows the other. The mesh emits one gate, agent.route, with the job's intent, hat and repo and its candidates: opaque ids, provider, signed-in state and health. Never a cookie or password.
+      A Clear Glass plugin, raid-routing, is the only code that speaks to RAID. It carries that request over RAID's route, found by its nexus:// name with no port, and returns { candidate, why }. RAID's contract takes a request and a candidate list: it holds no Clear Glass code, shape or address.
+      With the plugin off or RAID down, Clear Glass still browses, and an agent job fails with the reason, or uses a route he set by hand. Guardian asks through its own connector for the same contract. Guardian's existing rules move into RAID with nothing lost. In-place account swapping retires (hazard H1).
+    proof: "delete the plugin folder: Clear Glass boots and browses. Swap RAID for a stub that honours the contract: jobs still route. No file in clear-glass/src names RAID, Cortex or a port for this. No store or log holds a cookie or password."
+    axioms: "§5.9-§5.16 sovereignty, §5.10 contracts only, §5.11 a handshake at each boundary, §5.14 every layer replaceable, AC_D8"
   AC14_nexus_addresses_in_the_browser:
     status: OPEN
     depends_on: []
@@ -369,3 +369,7 @@ phases_addendum_2026_11_22:
 # Built: site_accounts() in profiles.eg: one account per login per site group, its uuid kept on the profile, a provider's first id its existing account's. Profiles, logins and saved passwords are a part of Accounts, logins & cookies. The Per site pointers and the second set of decay controls are gone. Import lists his profiles.
 # Kept on purpose until the cookie move: each provider's + button, because a new profile cannot open tabs yet and it is the only way to add a second provider login.
 # Not built: AC11's "to check" mark when the signed-in identity changes; the one-jar move (AC10 c); AC12 to AC15. The preview's inert controls for those were not shipped.
+# ADDENDUM 2026-11-23 — AC_D8, his law for this map: "just don't want coupeling. and plugins are for keeping the lines of seperation between with the gate. like anything that needs external dependancy should be a plugin"
+# Applied to AC12 to AC15: whatever reaches outside Clear Glass (RAID, COS's addresses for nexus://, Versionium, a remote service) is a plugin behind a gate. A browser feature with no outside dependency (profiles, the jar, the chip) stays in Clear Glass.
+# Read today, not fixed by this map: clear-glass/src/mesh/agent-mesh.js requires copilot/lifeline.js, lib/agent-router.js and lib/automation/engine.js and hardcodes Cortex's and Guardian's ports; src/ipc/bridge.js requires 11 lib modules; src/options/store.js requires lib/versionium-record.js; src/storage/jaa.js requires lib/jaa-store.js, and lib/test-sandbox.js since the coder's 0.60.637.
+# The plugin host's gates use Clear Glass's fork of SISO, his mentor's. New gates must not add to it: their contract is Pillar's pillar:gate (CLAUDE.md, Ownership and credit).
