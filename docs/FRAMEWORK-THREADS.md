@@ -518,3 +518,29 @@ by the focus.
   refused body shown back repeated the same body (run 2, 3 of 3): tries did not fall. After the lesson was changed (each body once, the fix
   first), the run on the folder holding the earlier lessons got past its first refusal on try 2, and the same code from a fresh folder did not
   (3 of 3). Partial evidence that lessons on disk carry across runs; one fixture, one model, held both times.
+
+- **Evidence for T11 (2026-11-23, 0.60.642, grade C, post-hoc):** not the fixture the prediction named. On EMB3, decomposition let the 3b carry a
+  phase it could not write whole (146 tries, 0 passes → 11 of 13 bodies, the phase's 10 examples pass). The coder split it by hand, so this is a
+  signal that decomposition works, not a test of Nexus decomposing.
+
+## T15 — "torrents in a magnet link … end state first and a dag": Nexus splits a phase by itself, registered 2026-11-23, before it is built
+
+- **His words:** 2026-11-23, "Like torrents in a magnet link. The pieces always save." · "Every step can be broken down using end state first and
+  a dag. Like nothing too small as long as it's persistent. Using my framework. Dynamically expanding and contracting." · "Each step would be the
+  smallest irreducible unit, like a primitive, anything that is load bearing."
+- **What the coder did with it:** **executed** for persistence (0.60.643: 0 model calls on a rebuild); **conceptual** for the splitter.
+- **Prediction, written before the splitter exists:** given only a phase's end state and its examples, Nexus splits it (end state first, a DAG,
+  each piece split again while the 3b cannot fill it) and the 3b fills every body. Fixture, chosen by rule so the coder does not pick it: the
+  first three open phases in the build queue whose proof is an existing test. Held if at least 2 of 3 pass their test with every body by the 3b
+  and no hand split; failed otherwise. Measured by: pieces made, splits, model calls and passes, from each run's ledger.
+- **Bias named:** the coder builds the splitter and judges the runs. Grade B at best, until a run he starts reproduces it (grade A).
+- **Evidence:** open.
+
+## T16 — "a continuous data stream to inject what we need into the model upstream", registered and measured 2026-11-23
+
+- **His words:** 2026-11-23, "can't we just use a continuous data stream to inject what we need into the model upstream?"
+- **What the coder did with it:** **executed**, one form: a gate on the 3b's token stream cut a line that broke Emerge, wrote one correcting
+  comment into the answer and let it continue (nexus-build-data/stream-gate.js).
+- **Prediction (the coder's, written before the run):** more of the 4 pieces pass with the gate than without.
+- **Evidence:** **failed.** 8 of 24 with and without, 2.8 s against 1.9 s. The model also wrote Go and Python shapes the gate's list missed. The
+  stronger form, a grammar of Emerge applied while each token is chosen, is untested.

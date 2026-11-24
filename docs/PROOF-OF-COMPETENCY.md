@@ -36,6 +36,25 @@ says which part is which (docs/CLAUDE.md, "His decisions, quoted with their cont
 > TOOLKIT (now kept whole in [`innovation-toolkit-main.md`](innovation-toolkit-main.md)) traced to the code it became,
 > and the numbers as of 2026-10-31. The table just below is kept as written; its numbers are from an earlier release.
 
+## Rules of evidence (strict, from 2026-11-23)
+
+James, 2026-11-23: "log everytime there is an issue, and my solution gives the answer with demonstrated improvements. Make the proof of competency
+document as strict as possible." · "None of this is an undeniable fact that can't be scrutinized, in fact, I welcome the opportunity to adjust my models."
+
+Every entry from this date names its **grade**. An entry claims nothing above its grade.
+
+| Grade | What it needs | What it may claim |
+|---|---|---|
+| **A** | His prediction written before the run (docs/FRAMEWORK-THREADS.md), a baseline, a run **he** started or a stranger can repeat with one command, and the numbers | "his method held on this test" |
+| **B** | A prediction written before the run, a baseline and the numbers, run by the coder | "it held when run by the same hands that built it" |
+| **C** | A baseline and a measured result, but no prediction written first (post-hoc) | "it changed this number"; never "it proves his method" |
+| **D** | No measurement | "an idea, recorded"; never an improvement |
+| **Failed** | The prediction did not hold, or the change made things worse | kept, counted, never removed or reworded |
+
+Every issue is logged in the same shape: **the issue** (what broke, with its number) → **his solution** (his words, dated) → **baseline** →
+**result** → **the command to repeat it** → **grade** → **bias named** (who chose, built and judged). A result without a baseline is not an
+improvement. The coder's faults are logged too. Entries written before this date are **ungraded**: read them as C or D until regraded.
+
 ## The work, in numbers you can check
 
 | What | Number | How to check |
@@ -130,6 +149,23 @@ These are his own earlier projects, run through NEXUS's real import routes in a 
 ## Log
 
 New entries go at the top: date, his words, context, what it shows, evidence.
+
+### 2026-11-23 — issues and his solutions, graded (0.60.637 to 0.60.643)
+
+| # | The issue, measured | His solution, his words | Baseline → result | Repeat with | Grade |
+|---|---|---|---|---|---|
+| I1 | The 3b could not write one Emerge phase as one function: 146 tries, 39 different answers, 0 passes; 69% of its tries were JavaScript | "nexus is meant to make coding with small llms possible" · "torrents in a magnet link. The pieces always save" · "end state first and a dag" | 0 of 1 phase → the phase built: 11 of 13 bodies by the 3b, 2 lines from the plan, its 10 examples pass | `node cos/build/emerge-build.js --map docs/2026-10-17-pieces-not-order-phasemap.spec --phase EMB3_the_autocorrect --pieces <pieces.json>` | **C**: the coder split the phase and worded the pieces while watching it fail; the thread T11 prediction named a different fixture |
+| I2 | A rebuild asked the models again for work already done | "The pieces always save" | every run started over → 13 of 13 pieces taken from disk, 0 model calls, with Ollama unreachable on purpose | the same command with `--ollama-port 1` and no `--pieces` | **C** |
+| I3 | A refused answer cost a model call even when its fix was mechanical | "Every step can be broken down … nothing too small as long as it's persistent" | a refused `if !x … ;` → repaired by the 3b's own autocorrect, passed with no second call | `tests/modules/test-emerge-rung.test.js` (12/12) and the rung run in 0.60.643's changelog | **C** |
+| I4 | Live injection into the model's stream, to correct it as it types | "can't we just use a continuous data stream to inject what we need into the model upstream?" | 8 of 24 → 8 of 24, and slower | `node nexus-build-data/stream-gate.js` | **Failed** for that form (after the token is chosen); a grammar during the choice is untested |
+| I5 | ChatGPT's login loop, months old | "Once source of truth." · "see this needs to use my login for chatgpt." | the login page every time → he confirmed "Yes, signed in" after a login moved as its whole set of cookies | his own check in Clear Glass | **C**: the cause (a token copied without its device cookies) is read from cookie names and dates, not proved separately |
+| I6 | His 8 Clear Glass accounts wiped on 2026-11-20 | "i just clearglass to have one source of truth for cookies and accounts" | 0 accounts → 8 restored; the cause found (a test wrote to his real store) and closed | `node tests/modules/clear-glass-accounts.test.js` leaves the real store unchanged | **C** |
+
+**The coder's faults, kept:** the coder's own test run repeated I6's hole and added 11 fake accounts to his real store (removed by the restore);
+0.60.640 moved a stale ChatGPT token without checking it; an inline comment silently disabled the line that records a passed piece until the tests
+caught it; autocorrect was found to break text holding an escaped quote.
+
+**Not yet shown:** Nexus splitting a phase by itself. Registered as T15 before it is built.
 
 - **2026-10-24: "i want to use those engines for test env, web servers, etc all of them" · "this is all the networking backend for
   anything needed netwroking wise"** (0.60.235)
