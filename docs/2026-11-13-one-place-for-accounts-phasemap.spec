@@ -410,3 +410,12 @@ phases_addendum_2026_11_22:
 # chatgpt.com and openai.com cookies, and a tab on the sign-in page counts as signed out). The "authCookies: 0" in the saved records is a field the automatic save never writes, not evidence.
 # The coder's own probe made a fingerprint record for wc:30 (the driver's cookie reader opens a context of that name); the page itself kept its Chrome user agent.
 # Fix (his call): one identity per profile, the same for every tab and provider page in it, as the cookies are (his 2026-11-22: "everything uses its relative profile as a source of truth"); or no spoofing on sign-in sites.
+# CORRECTION 2026-11-24 (same day, read before any code) — the probable cause above is withdrawn. Read in the code: a person's tab is a <webview> on Electron's default session, whose UA is the
+# clean Chrome (main/index.js 1316); the Firefox persona of ctxMgr.create() lands on the window frame's own partition (persist:agent-<id>) and its spoof script on the frame, not on the page; the tab preload
+# (webview-bridge.js) applies no persona. So ChatGPT never saw Firefox from a person's tab. Also withdrawn: "signed in at 17:54" — the save guard counts _puid as a sign-in cookie, so a save proves nothing.
+# Read in his cookie database (a copy, names and dates only, Clear Glass closed): .chatgpt.com cf_clearance issued 17:54 PST was written again at 18:27 PST, one minute after the 18:26 restart, with its
+# 17:54 expiry: Clear Glass restored ChatGPT cookies from its saved copy at startup. At 00:37 PST (the next restart) auth.openai.com set its sign-in-flow cookies (oai-client-auth-info, unified_session_manifest,
+# usc_*): the provider page went to OpenAI's login as Clear Glass started. The session-token cookies (.0/.1) were set at 02:23 PST by the coder's one test load: a fresh signed-out session.
+# Reading now: the startup restore is involved (a dead or old token put back, or cookies restored in a form the site rejects); not proven. The test that settles it needs him signed in: list the jar's
+# ChatGPT cookies (names, dates), restart Clear Glass, list again, and see what the restore wrote. AC12 stays his direction (one identity per profile) but is not this fix.
+# Also 2026-11-24 ~02:33 PST: Clear Glass stopped (no process, nothing in its error folder) during the coder's read-only driver checks; cause unknown; not restarted without his yes.
