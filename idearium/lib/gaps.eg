@@ -212,7 +212,7 @@ fn lesson(attempts: list, keep: num): string {
       times[b] = 1
     }
   }
-  var out = "This gap was tried " + str(n) + " time(s) before and refused. Do NOT write any body below again. Read each fix, then write a different body.\n"
+  var out = "This gap was tried " + str(n) + " time(s) before and refused. Do NOT write the same body again. Read what refused each try and its fix, then write a different body.\n"
   var i = 0
   if len(seen) > keep { i = len(seen) - keep }
   while i < len(seen) {
@@ -223,7 +223,9 @@ fn lesson(attempts: list, keep: num): string {
     }
     let f = str(get(last, "fix", ""))
     if f != "" { out = out + "\nThe fix: " + f }
-    out = out + "\nRefused (" + str(times[b]) + " time(s)): " + str(get(last, "said", "")) + "\nThe refused body was:\n" + b + "\n"
+    // 2026-11-24 (EMB8, measured): the refused body is never shown. Shown it, the 3b wrote it back word for word, 6 tries of 6, even with
+    // the piece's own examples in front of it. What refused it and the fix say what to change.
+    out = out + "\nRefused (" + str(times[b]) + " time(s)): " + str(get(last, "said", "")) + "\n"
     i = i + 1
   }
   return out

@@ -603,3 +603,8 @@ by the focus.
 - **Run 3 (the same, with add_kind's history set aside, kept on disk):** add_kind compiled on its first try, and all 13 of 13 pieces passed Emerge's compiler on the 3b alone. The module's examples test still failed (`autocorrect("if !x { y }")` should list `"!"`): add_kind's body replaces the item instead of adding it, so it answers the shape of its one example and not the rule. One example is too few for a rule.
 - **Grade:** Failed (prediction), with a real gain: a fresh piece with its contract compiles first try where 25 tries without failed. **What it shows:** (1) a lesson that quotes a refused body poisons every later try; (2) one example per piece is not an end state; the 3b needs examples that separate the rule (at least: add new, skip present, skip empty). Next: lessons that say what was wrong without the body; 3 examples per piece chosen to differ.
 - **Bias:** the coder chose to set the history aside and judged the runs. Runs: ../nexus-build-data/emb7-ab (contract, contract2, contract3).
+
+- **EMB8, registered 2026-11-24 before the run (his: "yes, okay. continue the pipeline"):** EMB3 (autocorrect, 13 functions) rebuilt from
+  nothing (an empty pieces folder) on the 3b alone, with each function's brief carrying its contract (up to 3 examples recorded from the
+  existing code, each answering differently) and lessons that never quote a refused body: it passes its 10-example test with no hand split
+  and no hand-written description. Measured by: pieces passed, model calls, the examples test, from the run's rows.

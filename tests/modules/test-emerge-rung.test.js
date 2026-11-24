@@ -107,7 +107,7 @@ const scripted = (replies, seen = []) => async (message, { tryNo }) => { seen.pu
     assert.strictEqual(R.skeletonOf([{ name: 'f' }]), null, 'no signature: no skeleton (the whole-module loop, as before)');
     const asked = [];
     const bodies = { inc: ['  if !x { return 0 }', '  return x + 1'], twice: ['  return inc(inc(x))'] }; const n = {};
-    const ask = async (msg, { gap }) => { asked.push(gap); n[gap] = (n[gap] || 0) + 1; if (gap === 'inc' && n[gap] === 2) assert.ok(/the lesson from this gap's earlier tries[\s\S]*The fix: Emerge has no ![\s\S]*Refused[\s\S]*unexpected character[\s\S]*if !x/.test(msg), 'the compiler\'s words and the refused body fed back'); return bodies[gap][n[gap] - 1]; };
+    const ask = async (msg, { gap }) => { asked.push(gap); n[gap] = (n[gap] || 0) + 1; if (gap === 'inc' && n[gap] === 2) assert.ok(/the lesson from this gap's earlier tries[\s\S]*The fix: Emerge has no ![\s\S]*Refused[\s\S]*unexpected character/.test(msg) && !/if !x/.test(msg.slice(msg.indexOf('the lesson'))), 'the compiler\'s words and the fix fed back, never the refused body (2026-11-24, EMB8)'); return bodies[gap][n[gap] - 1]; };
     const r = await R.createRung({ root: ROOT, tasksDir: fs.mkdtempSync(path.join(os.tmpdir(), 'er07-')), indexRoot: null, ask, expect: async () => ({ ok: true, why: 'stand-in' }) }).build({ file: 'lib/twice.js', exports: ex });
     assert.ok(r.ok && r.skeleton, JSON.stringify(r.tries));
     assert.deepStrictEqual(asked, ['inc', 'inc', 'twice'], 'inc first (twice names it), the refused body asked again');
@@ -127,7 +127,7 @@ const scripted = (replies, seen = []) => async (message, { tryNo }) => { seen.pu
     let told = null;
     const run2 = await R.createRung({ root: ROOT, tasksDir: tasks, indexRoot: dir, ask: async (msg) => { if (told === null) told = msg; return '  return x + 1'; }, expect: async () => ({ ok: true }) }).build({ file: 'lib/inc.js', exports: ex, contract: C });
     assert.ok(run2.ok && run2.skeleton, JSON.stringify(run2.tries));
-    assert.ok(/tried 2 time\(s\) before[\s\S]*if !x/.test(told), 'the first chat of run 2 knows run 1\'s refusals');
+    assert.ok(/tried 2 time\(s\) before[\s\S]*unexpected character/.test(told) && !/if !x/.test(told.slice(told.indexOf('tried 2 time'))), 'the first chat of run 2 knows run 1\'s refusals, not their bodies');
     const g2 = NE.importFromFile(run2.gapFiles[0]).payload;
     assert.ok(g2.status === 'passed' && g2.gate && g2.gate.compiled && g2.attempts.length === 3 && /x \+ 1/.test(g2.body), JSON.stringify(g2));
     assert.ok(path.dirname(run2.gapFiles[0]) === path.join(tasks, 'repo1', 'map.P1'), 'the task\'s folder, named by its contract: ' + run2.gapFiles[0]);
@@ -186,7 +186,7 @@ const scripted = (replies, seen = []) => async (message, { tryNo }) => { seen.pu
                     { name: 'big', ask: async (msg) => { seenBig.push(msg); return '  return x + 1'; } }];
     const r = await R.createRung({ root: ROOT, tasksDir: tasks, indexRoot: null, maxTries: 1, ladder, expect: async () => ({ ok: true }) }).build({ file: 'lib/inc.js', exports: ex, contract: 'r/m.L' });
     assert.ok(r.ok && r.tries.some(t => t.stage === 'escalate' && /tiny → big/.test(t.why)), JSON.stringify(r.tries));
-    assert.ok(/if !x/.test(seenBig[0]), 'the bigger model is told the small one\'s refused try');
+    assert.ok(/unexpected character/.test(seenBig[0]) && !/if !x/.test(seenBig[0].slice(seenBig[0].indexOf('tried'))), 'the bigger model is told what refused the small one\'s try, not its body');
     const g = NE.importFromFile(r.gapFiles[0]).payload;
     assert.ok(g.gate.model === 'big' && g.attempts[0].model === 'tiny' && g.gate.tested, JSON.stringify(g));
     // his framework per gate: the diagnose brief carries his Sections 3 and 4 from his .framework file

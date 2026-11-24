@@ -33,12 +33,13 @@ test "a fresh chat gets the lesson: every earlier body, what refused it, its fix
   expect G.lesson([], 3) == ""
   let a = [{ body: "  a", said: "s1", fix: "" }, { body: "  b", said: "s2", fix: "f2" }, { body: "  c", said: "s3", fix: "" }, { body: "  d", said: "s4", fix: "" }]
   let l = G.lesson(a, 3)
-  expect find_text(l, "tried 4 time") >= 0 and find_text(l, "s1") < 0 and find_text(l, "  b") >= 0, l
+  expect find_text(l, "tried 4 time") >= 0 and find_text(l, "s1") < 0 and find_text(l, "s2") >= 0, l
   expect find_text(l, "The fix: f2") >= 0 and find_text(l, "s4") >= 0, l
+  expect find_text(l, "  b") < 0 and find_text(l, "  d") < 0, "2026-11-24: a refused body is never shown (the 3b copies what it is shown)"
   let same = [{ body: "  var id = 1", said: "already declared", fix: "rename it" }, { body: "  var id = 1", said: "already declared", fix: "rename it" }]
   let ls = G.lesson(same, 3)
   expect find_text(ls, "(2 time(s))") >= 0 and find_text(ls, "Do NOT write") >= 0, ls
-  expect len(split(ls, "var id = 1")) == 2, "a repeated body is shown once"
+  expect find_text(ls, "var id = 1") < 0 and find_text(ls, "rename it") >= 0, "the fix is shown, the body is not"
   expect find_text(G.hint("main.eg:13:3: error: \"id\" is already declared in this scope (line 12)"), "new name") >= 0
   expect G.lesson([{ body: "  ok", said: "filled; compiles", ok: true }], 3) == "", "a body that was accepted is no lesson"
 }
