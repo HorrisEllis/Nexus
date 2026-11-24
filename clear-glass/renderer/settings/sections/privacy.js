@@ -20,12 +20,9 @@
   section({
     id: 'privacy', group: 'Browser', icon: '\u26BF', label: 'Privacy & sites',
     keywords: 'passwords saved logins site permissions history downloads clear delete site settings per site origin camera microphone location notifications clipboard zoom adblock content blocking exceptions fingerprint user agent firefox chrome safari identity spoof',
-    blurb: 'Saved passwords, what each site is allowed to do, the identity a tab presents, and clearing history and data. Below Clear data: Site settings, then Browser fingerprint.',
+    related: ['accounts'], blurb: 'What each site is allowed to do, the identity a tab presents, and clearing history and data. Below Clear data: Site settings, then Browser fingerprint.',
     async render({ rerender }) {
-      const pw = await cg.passwords.list().catch(e => ({ error: e.message }));
       return [
-        pane({ title: 'Saved passwords', sub: 'Includes sign-ins saved for provider accounts.', flush: true, body: pw.error ? h('div', { class: 'err-box', text: pw.error }) : pw.length ? pw.map(p => row(p.username, `${p.origin} \u00B7 updated ${ago(p.updatedAt)}`,
-          btn('Delete', async () => { if (await confirmDo('Delete saved password?', `${p.username} on ${p.origin}.`, 'Delete')) { await busy(null, () => cg.passwords.delete(p.id)); rerender(); } }, 'sm danger'))) : empty('No saved passwords.') }),
         pane({ title: 'Clear data', flush: true, body: [
           row('Browsing history', 'Every tab\u2019s history.', btn('Clear history', async () => { if (await confirmDo('Clear all history?', 'This can\u2019t be undone.', 'Clear history')) await busy(null, async () => { await cg.history.clear(); toast('History cleared'); }); }, 'sm danger')),
           row('Finished downloads', 'Removes them from the list; files stay on disk.', btn('Clear list', () => busy(null, async () => { await cg.downloads.clearCompleted(); toast('Download list cleared'); }), 'sm')),

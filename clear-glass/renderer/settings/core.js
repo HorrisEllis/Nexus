@@ -176,7 +176,7 @@
   // in the rail). An old id (a bookmark #mesh, a goto('providers')) still lands: it opens the merged section at that provider or at the mesh half.
   const parts = {};
   function part(id, def) { parts[id] = def; }
-  const ALIAS = { providers: 'accounts', mesh: 'accounts' };
+  const ALIAS = { providers: 'accounts', mesh: 'accounts', profiles: 'accounts' };
 
   // §LIBRARY 0.39.241 — the Library window (renderer/library.html) runs on this
   // same runtime so it IS the Settings UI, not a copy of its look: same frame,

@@ -444,6 +444,7 @@ class IpcBridge {
       const { session } = require('electron');
       if (!into || into === 'default') return session.defaultSession;
       if (/^ncp-[\w-]{1,40}$/.test(into)) return session.fromPartition(`persist:${into}`);
+      if (/^profile-[\w-]{1,60}$/.test(into)) { const p = (this.options?.listProfiles()?.profiles || []).find((x) => x.partition === `persist:${into}`); if (p) return session.fromPartition(p.partition); throw new Error(`no profile ${into}`); }   // AC10: an import lands in the profile he chooses
       throw new Error('into must be default or ncp-<provider> (Snowflake windows never take imported cookies)');
     };
     this.app.get('/cli/firefox/profiles', _netRoute(() => ({ ok: true, ...require('../import/firefox').profiles() })));

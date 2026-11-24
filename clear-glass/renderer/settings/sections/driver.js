@@ -38,7 +38,7 @@
 
   section({
     id: 'driver', group: 'Agents', icon: '⦿', label: 'ClearDriver',
-    keywords: 'cleardriver driver automation agents drive navigate wait timeout sites allowed',
+    related: ['sites'], keywords: 'cleardriver driver automation agents drive navigate wait timeout sites allowed',
     blurb: 'How agents drive pages through ClearDriver. A site’s own choice in Site settings wins over these.',
     async render() {
       const [o, k] = await Promise.all([call(() => cg.options.get(), 'options'), call(() => cg.siteProfile.keys(), 'keys')]);
@@ -56,7 +56,6 @@
         pane({ title: 'Timeouts', sub: 'Defaults were 30 s and 10 s.', body: h('div', { class: 'grid' },
           field('Navigate (ms)', nav, 'How long a page may take to load'),
           field('Wait for an element (ms)', wait, 'How long a wait for a selector may take')) }),
-        pane({ title: 'Per site', flush: true, body: row('Site settings', 'Allow or refuse agents, and set timeouts and gates, for one site.', btn('Open', () => goto('sites'), 'sm')) }),
         await gatesPane(),
       ];
     },

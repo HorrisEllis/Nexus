@@ -112,6 +112,10 @@ fn apply(st: map, op: map): map {
     p.updatedAt = now
     return { ok: true, state: _with(st, p), profile: p }
   }
+  if kind == "site-ids" {
+    p.siteIds = get(op, "ids", {})
+    return { ok: true, state: _with(st, p), profile: p }
+  }
   if kind == "delete" {
     if id == st.defaultId { return { ok: false, why: "the default profile cannot be removed: make another the default first" } }
     for acc in p.accounts {
@@ -163,6 +167,69 @@ fn logins(p: map, is_default: any, cookies: list, passwords: list): list {
     if sites[k].signedIn or len(sites[k].passwords) > 0 { out = push(out, sites[k]) }
   }
   return out
+}
+
+/** one login can span domains: these sites are one account. A provider's group keeps the provider's existing account id. */
+fn _groups(): list = [
+  { key: "google", name: "Google", sites: ["google.com", "youtube.com"], provider: "gemini" },
+  { key: "openai", name: "OpenAI", sites: ["chatgpt.com", "openai.com"], provider: "chatgpt" },
+  { key: "claude", name: "Claude", sites: ["claude.ai", "claude.com", "anthropic.com"], provider: "claude" },
+  { key: "proton", name: "Proton", sites: ["proton.me", "protonmail.com"], provider: null },
+  { key: "meta", name: "Meta", sites: ["facebook.com", "messenger.com"], provider: null },
+  { key: "perplexity", name: "Perplexity", sites: ["perplexity.ai"], provider: "perplexity" },
+  { key: "deepseek", name: "DeepSeek", sites: ["deepseek.com"], provider: "deepseek" },
+  { key: "mistral", name: "Mistral", sites: ["mistral.ai"], provider: "mistral" },
+  { key: "grok", name: "Grok", sites: ["grok.com", "x.ai"], provider: "grok" }
+]
+
+fn _group(site: string): map {
+  for g in _groups() { if index_of(g.sites, site) >= 0 { return g } }
+  return { key: site, name: site, sites: [site], provider: null }
+}
+
+/** sites whose session-named cookie is a visitor or ad id, not a login; a saved password still shows them */
+fn _not_logins(): list = ["loopme.me", "mp3cut.net"]
+
+fn _linked(p: map, g: map, info: map): any {
+  if g.provider == null { return null }
+  for acc in p.accounts { if index_of(_provs(info, acc), g.provider) >= 0 { return acc } }
+  return null
+}
+
+/**
+ * one account per login per site group, like a browser. James Brooks, 2026-11-23: "accounts are per cookie/login, which are per per site. like firefox.
+ * then we can have ids per profile, per account linked to the cookies/logins for each website. uuids that way guardian can identify where to route without
+ * needing the login or cookie info." An id, once given, never changes; a provider's first id is its existing account's.
+ */
+fn site_accounts(p: map, list_of: list, info: map, new_ids: list): map {
+  var known = clone(get(p, "siteIds", {}))
+  var out = {}
+  var n = 0
+  for x in list_of {
+    if index_of(_not_logins(), x.site) < 0 or len(x.passwords) > 0 {
+      let g = _group(x.site)
+      if not has(out, g.key) {
+        var id = get(known, g.key, null)
+        if id == null {
+          id = _linked(p, g, info)
+          if id == null {
+            id = new_ids[n]
+            n += 1
+          }
+          known[g.key] = id
+        }
+        out[g.key] = { id: id, key: g.key, name: g.name, provider: g.provider, sites: [], signedIn: false, passwords: [] }
+      }
+      var a = clone(out[g.key])
+      a.sites = push(a.sites, x.site)
+      a.signedIn = a.signedIn or x.signedIn
+      for w in x.passwords { a.passwords = push(a.passwords, { id: w.id, username: w.username, site: x.site }) }
+      out[g.key] = a
+    }
+  }
+  var accounts = []
+  for k in sort(keys(out)) { accounts = push(accounts, out[k]) }
+  return { accounts: accounts, siteIds: known, minted: n }
 }
 
 fn resolve(st: map, account: string, wanted: any): any {

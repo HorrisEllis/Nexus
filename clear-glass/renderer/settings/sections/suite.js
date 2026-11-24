@@ -59,24 +59,6 @@
     return r;
   }
 
-  async function decaySettings(d, rerender) {
-    const on = h('input', { type: 'checkbox', checked: d.enabled });
-    const off = h('input', { type: 'number', min: 1, value: d.disableAfterDays });
-    const del = h('input', { type: 'number', min: 2, value: d.removeAfterDays });
-    const r = await modal({ title: 'Page listener decay', body: [
-      h('p', { class: 'blurb', text: 'A listener stays alive while it fires or is re-armed by the picker. When it goes quiet it fades: first switched off, then deleted. Listeners marked Keep, and ones you switched off yourself, are never deleted.' }),
-      h('label', { class: 'row', style: { padding: 0, borderTop: 0 } }, on, h('span', { text: 'Let unused listeners fade' })),
-      h('div', { class: 'grid' }, field('Switch off after (days idle)', off), field('Delete after (days idle)', del, 'Must be more than the switch-off time')),
-    ], actions: [
-      { label: 'Clean up now', run: async () => { const x = await call(() => cg.listeners.decay.run(), 'decay'); toast(`${x.disabled.length} switched off, ${x.removed.length} deleted`); return true; } },
-      { label: 'Save', primary: true, run: async () => {
-        const x = await call(() => cg.listeners.decay.set({ enabled: on.checked, disableAfterDays: +off.value, removeAfterDays: +del.value }), 'save decay');
-        if (x && x.error) throw new Error(x.error);
-        return true;
-      } }] });
-    if (r) rerender();
-  }
-
   section({
     id: 'suite', group: 'Agents', icon: '\u25CE', label: 'Agent suite',
     keywords: 'guardian plugin picker listener callto custom agent userscript download watch',
@@ -95,7 +77,7 @@
         pane({ title: 'Custom agents', sub: pickerHint, flush: true, body: guard(custom, list => list.length ? list.map(a => row(a.agentName, `${a.origin} \u00B7 in ${a.input.selector} \u00B7 out ${a.output.selector}`, chip(a.enabled ? 'enabled' : 'off', a.enabled ? 'ok' : 'plain')))
           : empty('No custom agents. Pick an input box and a response area on any chat site to add one.')) }),
 
-        pane({ title: 'Page listeners', sub: `${pickerHint} ${decayText(decay)}`, tools: decay ? btn('Decay settings', () => decaySettings(decay, rerender), 'sm') : null,
+        pane({ title: 'Page listeners', sub: `${pickerHint} ${decayText(decay)}`, tools: decay ? btn('Decay settings', () => window.CGS.goto('guardian'), 'sm') : null,
           flush: true, body: guard(listeners, list => list.length ? list.map(l => listenerRow(l, rerender))
           : empty('No page listeners.')) }),
 

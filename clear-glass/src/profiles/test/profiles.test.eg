@@ -65,3 +65,20 @@ test "logins: every signed-in site and saved password, not every site with a coo
   expect l[3].signedIn and l[3].passwords[0].username == "v" and not l[0].signedIn
   expect map(P.logins(p, false, [], pw), fn(x) = x.site) == ["proton.me"]
 }
+
+test "one account per login: a site group is one account, its id stays, a provider keeps its existing id" {
+  let p = { accounts: ["a"], siteIds: {} }
+  let info = { a: { providers: ["gemini"] } }
+  let row = fn(site) = { site: site, signedIn: true, cookies: 1, signIns: 1, passwords: [] }
+  let one = P.site_accounts(p, [row("google.com"), row("youtube.com"), row("fiverr.com"), row("mp3cut.net")], info, ["n1", "n2"])
+  expect map(one.accounts, fn(x) = x.name) == ["fiverr.com", "Google"] or map(one.accounts, fn(x) = x.name) == ["Google", "fiverr.com"]
+  expect one.siteIds.google == "a" and one.siteIds["fiverr.com"] == "n1" and one.minted == 1
+  let g = filter(one.accounts, fn(x) = x.key == "google")[0]
+  expect g.sites == ["google.com", "youtube.com"]
+  let two = P.site_accounts({ accounts: ["a"], siteIds: one.siteIds }, [row("fiverr.com")], info, ["other"])
+  expect two.accounts[0].id == "n1" and two.minted == 0
+  let kept = P.site_accounts(p, [{ site: "mp3cut.net", signedIn: false, cookies: 0, signIns: 0, passwords: [{ id: "1", username: "u" }] }], info, ["n9"])
+  expect len(kept.accounts) == 1
+  let s = P.apply(start(), { op: "site-ids", profile: "p1", ids: { google: "a" }, now: 2 }).state
+  expect s.profiles.p1.siteIds.google == "a"
+}

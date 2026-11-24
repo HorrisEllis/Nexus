@@ -8,7 +8,7 @@
  * counts what was skipped and why; it never shows a cookie's value.
  */
 (function () {
-  const { h, section, pane, row, btn, chip, field, select, toggle, toast, fail } = window.CGS;
+  const { cg, h, section, pane, row, btn, chip, field, select, toggle, toast, fail } = window.CGS;
   const BRIDGE = 'http://127.0.0.1:7702';
   async function api(path, { method = 'GET', body } = {}) {
     let res;
@@ -32,7 +32,10 @@
 
       let pick = (profiles.find(p => p.isDefault) || profiles[0]).path;
       const want = { cookies: true, bookmarks: true, persona: false };
-      const into = select(['default', 'ncp-chatgpt', 'ncp-claude', 'ncp-gemini', 'ncp-perplexity', 'ncp-deepseek'], 'default');
+      // AC10: an import lands in the profile he chooses; the provider tabs stay listed until they move onto profiles
+      const mine = await cg.profiles.list().then((l) => (l && l.profiles) || []).catch(() => []);
+      const places = [...(mine.length ? mine.map((p) => ({ value: p.partition.replace(/^persist:/, ''), label: `Profile: ${p.name}` })) : [{ value: 'default', label: 'Everyday browsing' }]), ...['chatgpt', 'claude', 'gemini', 'perplexity', 'deepseek'].map((x) => ({ value: `ncp-${x}`, label: `Provider tab: ${x}` }))];
+      const into = select(places, 'default');
       const report = h('div', { class: 'imp-report' });
       const rows = profiles.map(p => {
         const r = row(`${p.name}`, p.path, chip(p.isDefault ? 'default' : 'profile', p.isDefault ? 'ok' : ''),
@@ -51,7 +54,7 @@
           const c = r.cookies, b = r.bookmarks;
           const skipped = c ? Object.entries(c.skipped || {}).filter(([, n]) => n).map(([k, n]) => `${n} ${SKIP[k] || k}`) : [];
           report.replaceChildren(
-            c ? row('Cookies', `${c.imported} of ${c.read} imported into ${r.into === 'default' ? 'everyday browsing' : r.into}${skipped.length ? ` · skipped: ${skipped.join(', ')}` : ''}`, chip(`${c.imported}`, 'ok')) : null,
+            c ? row('Cookies', `${c.imported} of ${c.read} imported into ${(places.find((x) => x.value === r.into) || { label: r.into }).label}${skipped.length ? ` · skipped: ${skipped.join(', ')}` : ''}`, chip(`${c.imported}`, 'ok')) : null,
             b ? row('Bookmarks', `${b.added} added · ${b.existing} already there`, chip(`${b.added}`, 'ok')) : null,
             r.persona ? row('User agent', r.persona.userAgent ? 'Firefox’s user agent override applied to this window’s persona' : 'This profile has no user agent override; nothing changed', chip(r.persona.userAgent ? 'applied' : 'none', r.persona.userAgent ? 'ok' : '')) : null,
             ...(r.errors || []).map(e => h('p', { class: 'warn-box', text: e })));
@@ -64,7 +67,7 @@
         pane({ title: 'Firefox profiles', sub: 'Choose the profile to bring in. The default one is the one Firefox opens.', body: h('div', { class: 'imp-list', role: 'radiogroup' }, rows) }),
         pane({ title: 'What to bring', body: [
           row('Cookies', 'Your sign-ins come with you. Container tabs, private windows and expired cookies are skipped and counted. Snowflake windows never receive them.', toggle(want.cookies, (on) => { want.cookies = on; })),
-          row('Into', 'Everyday browsing (the session ordinary windows use), or one provider tab', into),
+          row('Into', 'One of your profiles, or one provider tab', into),
           row('Bookmarks', 'Added with the tag "firefox" and their folder; ones you already have are left alone.', toggle(want.bookmarks, (on) => { want.bookmarks = on; })),
           row('User agent', 'If the profile sets general.useragent.override, this window’s persona takes it.', toggle(want.persona, (on) => { want.persona = on; })),
           h('div', { class: 'acts imp-acts' }, run),

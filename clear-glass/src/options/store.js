@@ -479,7 +479,16 @@ class NexusOptions {
   deleteProfile(profile) { return this._profileChange({ op: 'delete', profile }); }
   linkProfileAccount(profile, account) { return this._profileChange({ op: 'link', profile, account, info: this._profileInfo() }); }
   unlinkProfileAccount(profile, account) { return this._profileChange({ op: 'unlink', profile, account }); }
-  profileLogins(p, isDefault, cookies, passwords) { try { this._profilesAsk({ op: 'none' }); return { ok: true, profile: p.id, logins: JSON.parse(JSON.stringify(_profileRules.logins(p, !!isDefault, cookies, passwords))) }; } catch (e) { return { ok: false, error: `the login list failed: ${e.message}` }; } }
+  // AC11 — James, 2026-11-23: "accounts are per cookie/login, which are per per site". The ids are kept on the profile; a new one is saved once and never changes.
+  profileLogins(p, isDefault, cookies, passwords) {
+    try {
+      this._profilesAsk({ op: 'none' });
+      const logins = JSON.parse(JSON.stringify(_profileRules.logins(p, !!isDefault, cookies, passwords)));
+      const r = JSON.parse(JSON.stringify(_profileRules.site_accounts(p, logins, this._profileInfo(), logins.map(() => randomUUID()))));
+      if (JSON.stringify(r.siteIds) !== JSON.stringify(p.siteIds || {})) { const c = this._profileChange({ op: 'site-ids', profile: p.id, ids: r.siteIds }); if (!c.ok) return c; }
+      return { ok: true, profile: p.id, logins, accounts: r.accounts };
+    } catch (e) { return { ok: false, error: `the login list failed: ${e.message}` }; }
+  }
   resolveProfile(account, wanted = null) { const l = this.listProfiles(); if (!l.ok) return l; const r = this._profilesAsk({ op: 'resolve', account, wanted }); return r.ok ? { ok: true, profile: r.profile } : { ok: false, error: r.why }; }
 
   /**

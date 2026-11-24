@@ -2,3 +2,6 @@
 body[data-area="import"] .imp-profile { cursor: pointer; border-radius: var(--r-m); border: 1px solid transparent; }
 body[data-area="import"] .imp-profile[aria-checked="true"] { border-color: var(--cyan); background: rgba(0,245,255,.05); }
 body[data-area="import"] .imp-acts { display: flex; justify-content: flex-end; padding-top: 6px; }
+body[data-area="import"] .imp-profile .what { flex: 1 1 auto; min-width: 0; }
+body[data-area="import"] .imp-profile .what .d { overflow-wrap: anywhere; }
+body[data-area="import"] .imp-profile > :not(.what) { flex: 0 0 auto; }

@@ -23,7 +23,7 @@
 
   section({
     id: 'guardian', group: 'Agents', icon: '⛨', label: 'Guardian',
-    keywords: 'guardian listeners listen capture chats ledger decay pages',
+    related: ['sites', 'suite'], keywords: 'guardian listeners listen capture chats ledger decay pages',
     blurb: 'What Clear Glass does for Guardian: page listeners, chat capture, and how long an unused listener lasts. A site’s own choice in Site settings wins.',
     async render() {
       const o = await call(() => cg.options.get(), 'options');
@@ -45,8 +45,8 @@
           row('Unused listeners decay', null, decay),
           row('Switch off after (days)', null, off),
           row('Remove after (days)', null, rm),
+          row('Clean up now', 'Apply these to every listener.', btn('Clean up', async () => { const x = await call(() => cg.listeners.decay.run(), 'decay'); toast(`${(x.disabled || []).length} switched off, ${(x.removed || []).length} deleted`); }, 'sm')),
         ] }),
-        pane({ title: 'Per site', flush: true, body: row('Site settings', 'Turn listeners or capture off, or on, for one site.', btn('Open', () => goto('sites'), 'sm'), chip('wins over these', 'plain')) }),
       ];
     },
   });

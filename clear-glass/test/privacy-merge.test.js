@@ -17,7 +17,7 @@ const wait = (ms) => new Promise(r => setTimeout(r, ms));
   const rail = [...w.document.querySelectorAll('.rail-item')].map(b => b.textContent);
   t('PM-01 the rail has one entry, "Privacy & sites", and none for the two merged parts', rail.some(x => /Privacy & sites/.test(x)) && !rail.some(x => /Site settings|Browser fingerprint/.test(x)), rail.join('|'));
   t('PM-02 an old #sites link opens the merged page', /Privacy & sites/.test(main.querySelector('h1').textContent), main.querySelector('h1').textContent);
-  t('PM-03 all three parts are on the page, in order: passwords, then sites, then fingerprint', ['Saved passwords', 'Defaults', 'No tabs open'].every(s => txt.includes(s)) && txt.indexOf('Saved passwords') < txt.indexOf('Defaults'), txt.slice(0, 120));
+  t('PM-03 clear data, sites and fingerprint are on the page; saved passwords moved to Accounts, logins & cookies (AC11)', ['Clear data', 'Defaults', 'No tabs open'].every(s => txt.includes(s)) && txt.indexOf('Clear data') < txt.indexOf('Defaults') && !txt.includes('Saved passwords'), txt.slice(0, 120));
   t('PM-04 the "Open Site settings" pointer pane is gone (it linked the same data)', !/Open Site settings/.test(txt));
   t('PM-05 each part keeps its stylesheet scope', w.document.body.dataset.areas.split(' ').sort().join() === 'fingerprint,privacy,sites' && !!main.querySelector('[data-anchor="sites"]') && !!main.querySelector('[data-anchor="fingerprint"]'), w.document.body.dataset.areas);
   console.log(`${pass} passed, ${fail} failed`); process.exit(fail ? 1 : 0);

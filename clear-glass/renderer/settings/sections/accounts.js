@@ -198,9 +198,9 @@
   }
 
   section({
-    id: 'accounts', group: 'Accounts & agents', icon: '\u25C8', label: 'Providers & accounts',
-    keywords: 'login portal app password cookie vault account id default provider session tab ncp userscript guardian autostart deploy mesh spawn route pipeline feedback queue health jobs nodes diagnose transform',
-    blurb: 'One place for each provider: its accounts and sign-in, its Guardian tab, and below them the agent mesh \u2014 what is running, trial dispatches, routes between agents and jobs. Every account has its own id and its own isolated session; the provider tab always runs as the provider\u2019s default (starred) account.',
+    id: 'accounts', group: 'Accounts & agents', icon: '\u25C8', label: 'Accounts, logins & cookies',
+    keywords: 'profiles profile logins passwords saved cookies jar login portal app password cookie vault account id default provider session tab ncp userscript guardian autostart deploy mesh spawn route pipeline feedback queue health jobs nodes diagnose transform',
+    blurb: 'Your profiles, every login, saved passwords and cookies. Below them, each provider: its accounts and sign-in, its Guardian tab, and the agent mesh \u2014 what is running, trial dispatches, routes between agents and jobs. Every account has its own id and its own isolated session; the provider tab always runs as the provider\u2019s default (starred) account.',
     async render({ tools, rerender }) {
       window.CGS.loadAreaCss('providers'); window.CGS.loadAreaCss('mesh');   // 0.60.54 CS2: the parts' own stylesheets
       const PT = await window.CGS.parts.providers.load().catch(() => null);
@@ -211,7 +211,6 @@
         cg.vault.status().catch(() => ({})),
         cg.providers.list().catch(() => []),
       ]);
-      tools.append(btn('New account', () => newAccount(null, providers, rerender, accounts.length), 'primary'));
 
       const statusNodes = [];
       let poll = null;
@@ -239,6 +238,10 @@
         h('div', { class: 'd', text: sealed
           ? 'New saves use a random key protected by Windows DPAPI / the OS keychain. Older records are still readable and move to the new key the next time they\u2019re saved.'
           : `Cookie vault: ${(vaultKey.cookies && vaultKey.cookies.reason) || 'unknown'}. Password vault: ${(vaultKey.passwords && vaultKey.passwords.reason) || 'unknown'}.` }))));
+
+      // AC11: profiles and every login first, then the providers
+      try { out.push(...await window.CGS.parts.profiles.panes({ rerender })); } catch (e) { out.push(pane({ title: 'Profiles', body: h('div', { class: 'err-box' }, h('span', { text: e.message })) })); }
+      out.push(h('h2', { class: 'half-title', 'data-anchor': 'providers', text: 'Providers' }));
 
       const statuses = new Map();
       await Promise.all(providers.flatMap(p => accounts.filter(a => a.agentKeys.includes(p.id)).map(async a => {
