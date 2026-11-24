@@ -79,7 +79,14 @@ function withContracts(exports) {
 const END_STATE = !!arg('end-state'), ES_DIR = path.join(ROOT, 'cos', 'data', 'build', 'end-state');
 function runCall(mod, line, want) {   // one child per call, cwd a throwaway folder; prints one JSON line
   const k = want === undefined ? line.length : line.search(/\)\s*==/), call = line.slice(0, want === undefined ? line.length : k + 1);
-  const js = `const assert=require('assert');const m=require(${JSON.stringify(mod)});Object.assign(globalThis,m);const out=(o)=>process.stdout.write('\\n@@'+JSON.stringify(o));
+  // an Emerge build (<file>.eg.cjs) exports a loader, not its functions: it is loaded the way its adapter loads it, with Emerge's runtime
+  // (the nearest _emerge/lang/runtime.js above it), and its values made plain (2026-11-24: required bare, every call was "not defined")
+  const rt = (() => { for (let d = path.dirname(mod); d !== path.dirname(d); d = path.dirname(d)) { const f = path.join(d, '_emerge', 'lang', 'runtime.js'); if (fs.existsSync(f)) return f; } return null; })();
+  const js = `const assert=require('assert');let m=require(${JSON.stringify(mod)});
+if(typeof m==='function'&&${JSON.stringify(!!rt)}){const {createRuntime}=require(${JSON.stringify(rt || '')});m=m(createRuntime({file:${JSON.stringify(path.basename(mod).replace(/\.cjs$/, ''))},loadModule:(abs,r)=>require(abs.replace(/\\.eg$/,'.cjs'))(r)}));}
+const plain=(v)=>Array.isArray(v)?v.map(plain):(v&&typeof v==='object'&&!(v instanceof Date)?Object.fromEntries(Object.entries(v).map(([k,x])=>[k,plain(x)])):v);
+for(const k of Object.keys(m||{})){const f=m[k];globalThis[k]=typeof f==='function'?(...a)=>plain(f(...a)):plain(f);}
+const out=(o)=>process.stdout.write('\\n@@'+JSON.stringify(o));
 Promise.resolve().then(()=>(${call})).then((a)=>{${want === undefined ? "out(a===undefined?{undef:true}:{v:a,json:JSON.stringify(a)})" : `try{assert.deepStrictEqual(a,(${want}));out({agrees:true})}catch(e){out({agrees:false})}`}},(e)=>out({err:String(e&&e.message||e).slice(0,300)}));`;
   const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'es-run-')), o = spawnSync(process.execPath, ['-e', js], { cwd: tmp, encoding: 'utf8', timeout: 15000 });
   const last = String(o.stdout || '').split('\n@@').pop(); try { return JSON.parse(last); } catch (_) { return { err: o.error ? 'did not finish in 15 s' : String(o.stderr || 'no answer').trim().split('\n').slice(-1)[0].slice(0, 300) }; }
@@ -177,7 +184,8 @@ async function endState({ ph, plan, src, mapText }) {
   async function splitCall(fn, sp, n) {
     const inner = (/\((.*)\)/.exec(fn.signature) || [])[1] || '', params = []; let d = 0, cur = '';
     for (const c of inner) { if ('([{'.includes(c)) d++; if (')]}'.includes(c)) d--; if (c === ',' && d === 0) { params.push(cur.trim()); cur = ''; } else cur += c; } if (cur.trim()) params.push(cur.trim());
-    const need = params.filter((p) => !/=/.test(p) && !/^\.\.\./.test(p)).map((p) => p.replace(/[{}\[\]\s]/g, '') || p); if (!need.length) return;
+    // a parameter's name only: "body: any" is body (2026-11-24: the type was read as part of the name, "body:any")
+    const need = params.filter((p) => !/=/.test(p) && !/^\.\.\./.test(p)).map((p) => p.replace(/:.*$/, '').replace(/[{}\[\]\s]/g, '') || p); if (!need.length) return;
     const reasons = rec.answers.flatMap((x) => x.refused || []).filter((x) => x.line.startsWith(fn.name + '(')).map((x) => x.why);
     const shape = (reasons.map((w) => /must be (\{[^"]*?\]\s*\}|\{[^"]*?\}|\[[^"]*?\]|[a-z ]+?)(?:"|,|$)/i.exec(w)).find(Boolean) || [])[1] || null;
     const seen = new Set(live().filter((x) => x.line.startsWith(fn.name + '(')).map(saysOf)), body = srcOf(fn.name), helpers = [...new Set((body.match(/\b_\w+(?=\s*\()/g) || []))].slice(0, 2).map(srcOf).filter(Boolean);

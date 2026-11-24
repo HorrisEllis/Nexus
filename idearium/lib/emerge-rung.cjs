@@ -333,7 +333,7 @@ function createRung({ root = path.resolve(__dirname, '..', '..'), ask, expect, m
       // EMB4: the torrent. Every piece passed on disk in this phase's folder is taken as it is, helpers included, and never asked again; only what is missing is made.
       if (store) { try { const pre = require('../../lib/node-export.js').fileIdOf(f + '#'), extra = [];
         for (const fn of fs.readdirSync(store.dir).filter(x => x.startsWith(pre) && x.endsWith('.gap'))) { const nm = fn.slice(pre.length, -4); if (skel.fns.some(x => x.name === nm)) continue; const rec = store.read(nm); if (rec && rec.status === 'passed' && rec.body && Array.isArray(rec.params)) extra.push({ name: nm, params: rec.params, does: rec.does || '', signature: rec.signature || '' }); }
-        if (extra.length) { skel = skeletonOf([...extra, ...skel.fns.map(x => ({ name: x.name, params: x.params, does: x.does, signature: x.signature }))]); chain = extra.map(x => x.name).concat(chain); } } catch (_) { /* no folder yet: nothing kept */ } }
+        if (extra.length) { skel = skeletonOf([...extra, ...skel.fns.map(x => ({ name: x.name, params: x.params, does: x.does, signature: x.signature, contract: x.contract || null }))]); chain = extra.map(x => x.name).concat(chain); } } catch (_) { /* no folder yet: nothing kept */ } }
       if (store) { const kept = []; for (const x of skel.fns) { const rec = store.read(x.name); if (rec && rec.status === 'passed' && rec.body) { filled[x.name] = rec.body; recs[x.name] = rec; kept.push(x.name); if (!Array.isArray(rec.params)) { rec.params = x.params; rec.signature = rec.signature || x.signature; rec.does = rec.does || x.does; store.write(x.name, rec); } } }
         if (kept.length) { tries.push({ n: 0, stage: 'resume', why: kept.length + ' piece(s) already passed, taken from disk: ' + kept.join(', ') }); console.log('[emerge-rung] ' + f + ': ' + kept.length + ' passed piece(s) taken from disk'); } }
       // 0.60.613 — the ladder, smallest model first (his "the smaller we can get llms in ollama coding the better"; PC_D16 "ollama first"); his
@@ -404,7 +404,7 @@ function createRung({ root = path.resolve(__dirname, '..', '..'), ask, expect, m
           rec.status = 'held'; if (store) store.write(name, rec); held = 'gap ' + name + ' did not fill on any rung' + (g.ok ? ', and no gap in between could be named' : '; ' + g.why); break;
         }
         const at2 = skel.fns.findIndex(x => x.name === name); const fns = skel.fns.slice(); fns.splice(at2, 0, helper);
-        skel = skeletonOf(fns.map(x => ({ name: x.name, params: x.params, does: x.does, signature: x.signature })));
+        skel = skeletonOf(fns.map(x => ({ name: x.name, params: x.params, does: x.does, signature: x.signature, contract: x.contract || null })));
         refused = {};
         chain = G.link(chain, name, helper.name); depth[helper.name] = (depth[name] || 0) + 1;
         rec.status = 'blocked'; rec.blockedBy = (rec.blockedBy || []).concat(helper.name); if (store) store.write(name, rec);

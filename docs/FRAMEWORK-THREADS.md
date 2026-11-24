@@ -595,3 +595,11 @@ by the focus.
 - **Prediction (the coder's, written before the run):** more of the 4 pieces pass with the gate than without.
 - **Evidence:** **failed.** 8 of 24 with and without, 2.8 s against 1.9 s. The model also wrote Go and Python shapes the gate's list missed. The
   stronger form, a grammar of Emerge applied while each token is chosen, is untested.
+
+## EMB8 measured, the contract per piece (2026-11-24, his: "yes like constraints, need to be acknowledged also. my framework does all of this. at every level across any domain")
+
+- **Registered prediction:** add_kind (EMB3), the one piece the 3b could not fill from its name, passes on the 3b once its brief carries its own recorded examples, with no hand-written description.
+- **Run 1 and 2 (the registered fixture, add_kind's saved history of 22 refused tries kept):** failed, 0 of 6. Every try was word for word the same refused body (`value: v`): the lesson shown before each try quotes the refused body, and the 3b copies it, contract or not. Found on the way: two skeleton rebuilds in the rung dropped the contract (fixed), and the recorder loaded an Emerge build bare (fixed: loaded with its runtime, as its adapter does).
+- **Run 3 (the same, with add_kind's history set aside, kept on disk):** add_kind compiled on its first try, and all 13 of 13 pieces passed Emerge's compiler on the 3b alone. The module's examples test still failed (`autocorrect("if !x { y }")` should list `"!"`): add_kind's body replaces the item instead of adding it, so it answers the shape of its one example and not the rule. One example is too few for a rule.
+- **Grade:** Failed (prediction), with a real gain: a fresh piece with its contract compiles first try where 25 tries without failed. **What it shows:** (1) a lesson that quotes a refused body poisons every later try; (2) one example per piece is not an end state; the 3b needs examples that separate the rule (at least: add new, skip present, skip empty). Next: lessons that say what was wrong without the body; 3 examples per piece chosen to differ.
+- **Bias:** the coder chose to set the history aside and judged the runs. Runs: ../nexus-build-data/emb7-ab (contract, contract2, contract3).
