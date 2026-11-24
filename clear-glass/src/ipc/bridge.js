@@ -454,10 +454,13 @@ class IpcBridge {
       const want = String(b.profile || '').trim();
       const prof = !want ? (profiles.find(p => p.isDefault) || profiles[0]) : profiles.find(p => p.name === want || p.path === want) || (require('fs').existsSync(want) ? { name: require('path').basename(want), path: want } : null);
       if (!prof) return { ok: false, error: want ? `no Firefox profile "${want}"` : 'no Firefox profile found on this machine' };
-      const rep = await FX.run({ profile: prof, cookies: b.cookies !== false, bookmarks: !!b.bookmarks, persona: !!b.persona, into: b.into || 'default',
-        session: b.cookies !== false ? _ffSession(b.into) : null, store: this.bookmarks, fingerprint: this.fp, agentId: b.agentId || 'default' });
-      try { require('../core/bus').emit('import.firefox.done', { profile: rep.profile, cookies: rep.cookies && rep.cookies.imported, bookmarks: rep.bookmarks && rep.bookmarks.added }); } catch (_) {}
-      return { ok: rep.errors.length === 0 || !!(rep.cookies || rep.bookmarks || rep.persona), ...rep };
+      // BS1 expanded 2026-11-24: passwords (into the Password Manager plugin's vault), history, addresses (into autofill); the primary password,
+      // when Firefox has one, is used for this call only and never kept or returned
+      const rep = await FX.run({ profile: prof, cookies: b.cookies !== false, bookmarks: !!b.bookmarks, persona: !!b.persona, passwords: !!b.passwords, history: !!b.history, addresses: !!b.addresses,
+        primary: typeof b.primary === 'string' ? b.primary : '', into: b.into || 'default',
+        session: b.cookies !== false ? _ffSession(b.into) : null, store: this.bookmarks, fingerprint: this.fp, vault: this.passwordVault, historyStore: this.history, autofill: this.autofillStore, agentId: b.agentId || 'default' });
+      try { require('../core/bus').emit('import.firefox.done', { profile: rep.profile, cookies: rep.cookies && rep.cookies.imported, bookmarks: rep.bookmarks && rep.bookmarks.added, passwords: rep.passwords && rep.passwords.imported, history: rep.history && rep.history.added, addresses: rep.addresses && rep.addresses.imported }); } catch (_) {}
+      return { ok: rep.errors.length === 0 || !!(rep.cookies || rep.bookmarks || rep.persona || rep.passwords || rep.history || rep.addresses), ...rep };
     }));
     // CD5 (0.60.179) — the compartment's download manager, magnets, the kill rung and the qBittorrent hand-off
     this.app.get('/cli/net/quarantine',           _netRoute(() => ({ ok: true, items: _quarantine().list(), onDisconnect: _net().policy().compartmentOnDisconnect || 'kill_tabs', kills: _net().killSwitch ? _net().killSwitch.records() : [] })));

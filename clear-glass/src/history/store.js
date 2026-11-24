@@ -68,6 +68,25 @@ class HistoryStore {
     return entry;
   }
 
+  /**
+   * importEntries([{url, title, ts, agentId}]) — visits from another browser (BS1, 2026-11-24, his "importing all of it from firefox"),
+   * each with its OWN date, merged by date with what is here; a visit already here (same url, same time) is not added twice. The cap
+   * still holds: the oldest visits, from either side, drop first. → { added, already, dropped }
+   */
+  importEntries(rows = []) {
+    const seen = new Set(this.entries.map(e => `${e.url}|${e.ts}`)); let added = 0, already = 0;
+    for (const r of rows) {
+      if (!r || !r.url || !Number.isFinite(r.ts)) continue;
+      if (seen.has(`${r.url}|${r.ts}`)) { already++; continue; }
+      seen.add(`${r.url}|${r.ts}`); added++;
+      this.entries.push({ id: require('crypto').randomUUID(), url: r.url, title: r.title || null, agentId: r.agentId || null, ts: r.ts, from: 'firefox' });
+    }
+    this.entries.sort((a, b) => b.ts - a.ts);
+    const dropped = Math.max(0, this.entries.length - MAX_ENTRIES); if (dropped) this.entries.length = MAX_ENTRIES;
+    if (added) this._persist();
+    return { added, already, dropped };
+  }
+
   list({ agentId, limit, since, query } = {}) {
     let out = this.entries;
     if (agentId) out = out.filter(e => e.agentId === agentId);

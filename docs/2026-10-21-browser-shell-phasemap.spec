@@ -46,6 +46,21 @@ phases:
 
   BS1_firefox_import:
     layer: library
+    expanded_2026_11_24_everything: >-
+      His words, of the Import page's "Saved passwords stay in Firefox ... reading them is not built. History is not imported either.": "this needs
+      to be built, importing all of it from firefox." · "can you have it import the autofill and password from firefox also? into the plugin and
+      autofill, and chip." (2026-11-24). Added to the importer, each read from a COPY of Firefox's file (a running Firefox is never touched), each
+      value never logged or returned:
+        passwords   logins.json, decrypted with the key in key4.db (PBES2: PBKDF2-SHA256 + AES-256-CBC, and the older 3DES form), into the Password
+                    Manager plugin's vault (passwords/vault.js save), so the chip offers them; a Firefox primary password is asked for, never kept;
+                    a wrong one is said, nothing half-imported
+        history     places.sqlite visits (url, title, the visit's own date), the newest first, into history/store.js with their own dates; a visit
+                    already there is not added twice
+        addresses   autofill-profiles.json addresses (the same WHATWG field names) into autofill/store.js as profiles; saved cards stay in Firefox
+                    (encrypted with the OS key), said
+      Each is a switch on the Import page like Cookies and Bookmarks, counted in the results. Found the same day: the results end with a stray
+      "null" (the persona line when User agent is off); fixed with it.
+    files_2026_11_24: [clear-glass/src/import/firefox.js, clear-glass/src/history/store.js, clear-glass/src/ipc/bridge.js, clear-glass/renderer/settings/sections/import.js, tests/modules/test-browser-shell.test.js]
     status: DONE 0.60.179
     depends_on: [BS0_cookie_target]
     files: [clear-glass/src/import/firefox.js]

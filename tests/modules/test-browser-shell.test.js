@@ -124,6 +124,52 @@ console.log('\ntest-browser-shell — Firefox import, the window rebuilt like Fi
     assert.deepStrictEqual(FX.toElectron({ host: '', name: 'x' }), { skip: 'bad' });
   });
 
+  // BS1 expanded 2026-11-24 — James: "this needs to be built, importing all of it from firefox." A Firefox-shaped key4.db and logins.json are
+  // built here with Node's crypto (PBES2: PBKDF2-SHA256 + AES-256-CBC, as Firefox writes them), with two keys, so a login must find its own.
+  await test('BST-24', 'passwords (key4.db, the login\'s own key), a primary password asked for, history with its dates, addresses; no value in a report', async () => {
+    const crypto = require('crypto'), { DatabaseSync } = require('node:sqlite');
+    const len = (n) => (n < 128 ? Buffer.from([n]) : (() => { const b = []; while (n) { b.unshift(n & 255); n >>= 8; } return Buffer.from([0x80 | b.length, ...b]); })());
+    const der = (tag, c) => Buffer.concat([Buffer.from([tag]), len(c.length), c]), seq = (...k) => der(0x30, Buffer.concat(k)), oct = (b) => der(0x04, b);
+    const int = (n) => der(0x02, Buffer.from([n])), oid = (s) => { const p = s.split('.').map(Number), out = [p[0] * 40 + p[1]]; for (const v of p.slice(2)) { const b = [v & 127]; let x = v >> 7; while (x) { b.unshift((x & 127) | 128); x >>= 7; } out.push(...b); } return der(0x06, Buffer.from(out)); };
+    const pbes2 = (plain, salt, pw = '') => { const hp = crypto.createHash('sha1').update(Buffer.concat([salt, Buffer.from(pw)])).digest(), es = crypto.randomBytes(32), iv = crypto.randomBytes(14);
+      const c = crypto.createCipheriv('aes-256-cbc', crypto.pbkdf2Sync(hp, es, 1, 32, 'sha256'), Buffer.concat([Buffer.from([4, 14]), iv]));
+      return seq(seq(oid(FX.OID.PBES2), seq(seq(oid(FX.OID.PBKDF2), seq(oct(es), int(1), int(32), seq(oid('1.2.840.113549.2.9')))), seq(oid(FX.OID.AES256), oct(iv)))), oct(Buffer.concat([c.update(plain), c.final()]))); };
+    const profile = (pw) => { const d = fs.mkdtempSync(path.join(os.tmpdir(), 'bst20-')), salt = crypto.randomBytes(20), oldKey = crypto.randomBytes(24), key = crypto.randomBytes(32), oldId = crypto.randomBytes(16), id = crypto.randomBytes(16);
+      const db = new DatabaseSync(path.join(d, 'key4.db')); db.exec('CREATE TABLE metaData (id TEXT, item1 BLOB, item2 BLOB); CREATE TABLE nssPrivate (a11 BLOB, a102 BLOB);');
+      db.prepare('INSERT INTO metaData VALUES (?, ?, ?)').run('password', salt, pbes2(Buffer.from('password-check\x02\x02'), salt, pw));
+      db.prepare('INSERT INTO nssPrivate VALUES (?, ?)').run(pbes2(oldKey, salt, pw), oldId); db.prepare('INSERT INTO nssPrivate VALUES (?, ?)').run(pbes2(key, salt, pw), id); db.close();
+      const enc = (s) => { const iv = crypto.randomBytes(16), c = crypto.createCipheriv('aes-256-cbc', key, iv); return seq(oct(id), seq(oid(FX.OID.AES256), oct(iv)), oct(Buffer.concat([c.update(s, 'utf8'), c.final()]))).toString('base64'); };
+      fs.writeFileSync(path.join(d, 'logins.json'), JSON.stringify({ logins: [{ hostname: 'https://chatgpt.com', encryptedUsername: enc('me@example.org'), encryptedPassword: enc('PW-SECRET-1') },
+        { hostname: 'https://already.example', encryptedUsername: enc('kept'), encryptedPassword: enc('PW-SECRET-2') }, { hostname: 'https://nouser.example', encryptedUsername: enc(''), encryptedPassword: enc('PW-SECRET-3') }] }));
+      const pl = new DatabaseSync(path.join(d, 'places.sqlite')); pl.exec('CREATE TABLE moz_places (id INTEGER, url TEXT, title TEXT); CREATE TABLE moz_historyvisits (id INTEGER, place_id INTEGER, visit_date INTEGER);');
+      pl.prepare('INSERT INTO moz_places VALUES (1, ?, ?)').run('https://a.example/', 'A'); pl.prepare('INSERT INTO moz_places VALUES (2, ?, ?)').run('place:sort=8', 'a query');
+      pl.prepare('INSERT INTO moz_historyvisits VALUES (1, 1, ?)').run(1700000000000000); pl.prepare('INSERT INTO moz_historyvisits VALUES (2, 1, ?)').run(1700000100000000); pl.prepare('INSERT INTO moz_historyvisits VALUES (3, 2, ?)').run(1700000200000000); pl.close();
+      fs.writeFileSync(path.join(d, 'autofill-profiles.json'), JSON.stringify({ addresses: [{ 'given-name': 'Ada', 'family-name': 'Lovelace', email: 'ada@example.org', 'postal-code': '12345', timesUsed: 3 }, { deleted: true }], creditCards: [{ 'cc-number-encrypted': 'x' }] }));
+      return d; };
+    const d = profile('');
+    const logins = FX.readLogins(d);
+    assert.deepStrictEqual(logins.map(l => [l.origin, l.username, l.password]), [['https://chatgpt.com', 'me@example.org', 'PW-SECRET-1'], ['https://already.example', 'kept', 'PW-SECRET-2'], ['https://nouser.example', '', 'PW-SECRET-3']], 'each login found its own key among two');
+    const saved = []; const vault = { list: () => [{ origin: 'https://already.example', username: 'kept' }], save: (o, u, p) => saved.push([o, u, p]) };
+    const histRows = []; const hist = { importEntries: (rows) => { histRows.push(...rows); return { added: rows.length, already: 0, dropped: 0 }; } };
+    const af = []; const autofill = { listProfiles: () => [], createProfile: (p) => { af.push(p); return { id: 'x' }; } };
+    const rep = await FX.run({ profile: { name: 'p', path: d }, cookies: false, passwords: true, history: true, addresses: true, vault, historyStore: hist, autofill });
+    assert.deepStrictEqual(rep.passwords, { found: 3, imported: 1, already: 1, unreadable: 0, noUsername: 1 }, JSON.stringify(rep.passwords));
+    assert.deepStrictEqual(saved, [['https://chatgpt.com', 'me@example.org', 'PW-SECRET-1']], 'into the vault; the one already there left as it is');
+    assert.ok(!JSON.stringify(rep).includes('PW-SECRET') && !JSON.stringify(rep).includes('me@example.org'), 'no password or username in the report');
+    assert.deepStrictEqual(histRows.map(r => [r.url, r.ts]), [['https://a.example/', 1700000100000], ['https://a.example/', 1700000000000]], 'visits newest first, their own dates (µs → ms), no place: queries');
+    assert.deepStrictEqual([rep.addresses.imported, rep.addresses.cardsLeftInFirefox, af[0].label, af[0].fields.name, af[0].fields.email], [1, 1, 'Ada Lovelace (Firefox)', 'Ada Lovelace', 'ada@example.org']);
+    const locked = profile('pp');
+    assert.throws(() => FX.readLogins(locked), (e) => e.code === 'primary' && /primary password/.test(e.message));
+    assert.throws(() => FX.readLogins(locked, { primary: 'wrong' }), /not this Firefox profile's primary password/);
+    assert.strictEqual(FX.readLogins(locked, { primary: 'pp' })[0].password, 'PW-SECRET-1', 'with its primary password it opens');
+    const r2 = await FX.run({ profile: { name: 'p', path: locked }, cookies: false, passwords: true, vault });
+    assert.ok(r2.needsPrimary && r2.passwords === null, 'a profile with a primary password says so; nothing half-imported');
+    const HS = require(path.join(ROOT, 'clear-glass', 'src', 'history', 'store.js')); const H = new (HS.HistoryStore || HS)(); H._persist = () => {};
+    H.entries = [{ id: '1', url: 'https://a.example/', ts: 1700000100000 }];
+    assert.deepStrictEqual(H.importEntries([{ url: 'https://a.example/', ts: 1700000100000 }, { url: 'https://b.example/', ts: 1600000000000 }]), { added: 1, already: 1, dropped: 0 });
+    assert.deepStrictEqual(H.entries.map(e => e.url), ['https://a.example/', 'https://b.example/'], 'merged by date');
+  });
+
   await test('BST-03', 'the window: every 0.60.178 id kept; no inline script; Settings\' palette then shell.css; old file archived', () => {
     const ids = (f) => new Set([...fs.readFileSync(f, 'utf8').matchAll(/\sid="([^"]+)"/g)].map(m => m[1]));
     const old = ids(path.join(ROOT, '_archive/clear-glass/renderer/browser-0.60.178.html'));
