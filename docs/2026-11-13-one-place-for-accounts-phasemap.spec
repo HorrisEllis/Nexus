@@ -419,3 +419,10 @@ phases_addendum_2026_11_22:
 # Reading now: the startup restore is involved (a dead or old token put back, or cookies restored in a form the site rejects); not proven. The test that settles it needs him signed in: list the jar's
 # ChatGPT cookies (names, dates), restart Clear Glass, list again, and see what the restore wrote. AC12 stays his direction (one identity per profile) but is not this fix.
 # Also 2026-11-24 ~02:33 PST: Clear Glass stopped (no process, nothing in its error folder) during the coder's read-only driver checks; cause unknown; not restarted without his yes.
+# FOUND 2026-11-24 (PST 02:43, recorded live while he signed in; his: "tried it. see should load the homepage. not the login screen."): the loop is Google refusing Clear Glass.
+# Page wc:6: auth.openai.com email steps, then "Continue with Google" -> accounts.google.com/v3/signin/accountchooser -> 2 s later /v3/signin/rejected ("Couldn't sign you in. This browser or
+# app may not be secure"), Try again -> the chooser -> back to auth.openai.com/log-in-or-create-account. Nothing in Clear Glass reloads it: Google says no. contexts/google-signin.js (2026-10-16) is on
+# every session and page (Firefox UA and no client hints on Google sign-in hosts; Firefox 157, the right version for the date) and Google refuses anyway. Not yet checked, the likeliest signal left:
+# the TLS handshake is still Chromium's while the page says Firefox; Clear Glass's TLS layer (cg-tls-helper, TLS3) gives a Firefox handshake to agent personas only, not to the default session.
+# The earlier readings today (fingerprint per tab; the startup restore) are superseded by this. The 23 Nov sign-in worked because 0.60.641 moved an existing login in (no Google sign-in in Clear Glass).
+# His asks the same message: "the autofill needs to save from the input fields, like firefox does. and hook the saved passwords in the plugin so i can autofill passwords from the plugin" (to map: PW).
