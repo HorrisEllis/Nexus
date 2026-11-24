@@ -1,0 +1,248 @@
+envelope: 1
+uuid: nexus-export-graph-phase:EMB6_the_end_state_first:54eb6f554b3148c6
+type: graph
+id: phase:EMB6_the_end_state_first:54eb6f554b3148c6
+context: dependency graph of phase EMB6_the_end_state_first
+intent: null
+summary: 29 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1795503125655
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795503125655
+lastSeenAt: 1795503125655
+fingerprint: null
+payload:
+  for: EMB6_the_end_state_first
+  kind: phase
+  repo: null
+  hash: 54eb6f554b3148c6
+  nodes:
+    - path: cos/build/emerge-build.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/manager/contract.json
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/manager/server.js
+      role: changes
+      exists: true
+      system: cos
+    - path: idearium/cli/route-commands.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: lib/node-schemas.js
+      role: changes
+      exists: true
+      system: lib
+    - path: copilot/lib/inject-config.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: cortex/tools/table-materializer.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: diagnostic/tests/causality.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: guardian/lib/node-registry.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/cli/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: intelligence/lib/domain-nodes.js
+      role: used-by
+      exists: true
+      system: intelligence
+    - path: lib/node-registry.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/test-cg-agent-doors.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-cos-compartment-template.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/node-export-idea-tagged-query.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/node-schemas-split.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cos/manager/add-system.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/autopilot-door.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/deploy.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/hub.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/notices.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/proposals.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/resources.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/supervisor.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/system-config.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/updates.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/usage.js
+      role: uses
+      exists: true
+      system: cos
+    - path: lib/node-export.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/node-schemas.js
+      to: lib/node-export.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/supervisor.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/proposals.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/usage.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/autopilot-door.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/resources.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/updates.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/notices.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/system-config.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/add-system.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/deploy.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/hub.js
+      kind: requires
+    - from: copilot/lib/inject-config.js
+      to: lib/node-schemas.js
+      kind: requires
+    - from: cortex/tools/table-materializer.js
+      to: lib/node-schemas.js
+      kind: requires
+    - from: guardian/lib/node-registry.js
+      to: lib/node-schemas.js
+      kind: requires
+    - from: intelligence/lib/domain-nodes.js
+      to: lib/node-schemas.js
+      kind: requires
+    - from: lib/node-registry.js
+      to: lib/node-schemas.js
+      kind: requires
+    - from: tests/node-export-idea-tagged-query.test.js
+      to: lib/node-schemas.js
+      kind: requires
+    - from: tests/node-schemas-split.test.js
+      to: lib/node-schemas.js
+      kind: requires
+    - from: diagnostic/tests/causality.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: idearium/cli/index.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-cg-agent-doors.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+    - from: tests/modules/test-cos-compartment-template.test.js
+      to: idearium/cli/route-commands.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 5
+    deps:
+      - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB3_the_autocorrect
+    dependents:
+      - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB4_torrent_pieces
+    upstream:
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::CS0_projects_decomposed_into_components
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::MX2_the_0_60_components_wired_in_loom
+      - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB1_emerge_writes_the_brick
+      - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB3_the_autocorrect
+      - docs/2026-10-19-pipeline-root-causes-phasemap.spec::RC4_agent_file_names_guarded
+      - docs/2026-10-19-pipeline-root-causes-phasemap.spec::VF1_verify_first
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS1_the_skeleton_in_emerge
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS1a_the_boundary_reads_code_not_text
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS2_the_language_through_the_door
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D0_a_system_not_an_idearium_module
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D2_two_contracts_two_names
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D3_handlers_run_the_cli
+    downstream:
+      - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB4_torrent_pieces
+      - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB5_trials_start_at_raid
+    blockedBy: []
+    unlocks:
+      - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB4_torrent_pieces
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 5 · ready
+      - 'depends on (1): EMB3_the_autocorrect · all upstream 12'
+      - >-
+        needed by (1): EMB4_torrent_pieces · all downstream 2 · finishing it unlocks
+        EMB4_torrent_pieces
+    edges:
+      - from: docs/2026-10-17-pieces-not-order-phasemap.spec::EMB3_the_autocorrect
+        kind: declared

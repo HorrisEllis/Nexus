@@ -186,6 +186,7 @@ phases:
   EMB6_the_end_state_first:
     status: OPEN
     depends_on: [EMB3_the_autocorrect]
+    expanded_2026_11_23_frames: 'his: "Using schemas, templates, and schematics or specs. For reusable structure. That''s one thing nexus was supposed to be doing. Like anything deterministic, reusable, maintains the architecture and structure." A parameter with a schema (named beside it in its file, or a node type of its name) gets lib/node-schemas.js frame(type): the structure from the schema, holes for the 3b. Measured: 0 of 25 without, 2 of 2 first try with.'
     expanded_2026_11_23_record: 'his: "Yes, record from code". Where the file exists the 3b writes only the calls; the code answers; a refusal and the stuck function''s code (and the private helpers it calls) are the next try''s lesson.'
     expanded_2026_11_23_split: >-
       His words: "yes dynamic chunking. using the agent tools like decomposition. like idearium. just do everything you can to get the 3b capable
@@ -196,7 +197,7 @@ phases:
       Upstream: a piece's prompt opens with the shape the code itself named in its refusal (for example "chain must be { id, steps:[...] }").
     james: '"Every step can be broken down using end state first and a dag." (2026-11-23) · asked who writes each phase''s end state (the 3b with his approval, or the coder), he chose: "The 3b, I approve" (2026-11-23)'
     found: "2026-11-23, measured before any splitter run: lib/build-queue.js gives 289 buildable phases and none has examples, so the COS builder (plan, then test from examples, then the rung) can take none of them. The missing rung is the first: the end state."
-    files: [cos/build/emerge-build.js, cos/manager/server.js, cos/manager/contract.json, cos/ui/lab, idearium/cli/route-commands.js]
+    files: [cos/build/emerge-build.js, lib/node-schemas.js, cos/manager/server.js, cos/manager/contract.json, cos/ui/lab, idearium/cli/route-commands.js]
     does: >-
       Before any code, a phase gets its end state: examples, each 'call(args) == expected', the form lib/test-first.js already turns into a test with no model.
       The 3b writes them from the phase's own words (does, proof) and the signatures its plan gives; nothing else is in its prompt. Every answer is saved first (a piece on disk), then checked by what Nexus already has: test-first's examplesFrom keeps only well-formed lines, each call must be a planned export, fromExamples must give a test that parses, and contradictions() refuses a call expected two ways.

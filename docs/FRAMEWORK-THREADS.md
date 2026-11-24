@@ -565,6 +565,16 @@ by the focus.
   finding, three times over: **the 3b copies the text in its prompt.** So the next lever is a frame, where copying is the right move.
   Nexus writes the data's skeleton from the shape the code names (`{ id: "…", steps: [ … ] }`), and the 3b fills only the holes.
   Grade: Failed (open). Bias: the coder chose every prompt.
+- **EMB6, frames from schemas (2026-11-23, his: "Using schemas, templates, and schematics or specs. For reusable structure. That's one thing
+  nexus was supposed to be doing."):** lib/node-schemas.js `frame(type)` writes any schema as a template with numbered holes. It is
+  deterministic, and 77 of Nexus's 79 schemas give one. The walker's own header names `schema.step_chain` beside its `chain` parameter, so
+  the stuck piece got that frame, and the 3b only filled the holes. **Without a frame: 0 passed in 25 answers and 21 pieces. With the frame:
+  2 of 2 passed on the first try.** The walker accepted the chain and went on to "waiting on ask-step-1" and "What is the weather today?".
+  The prediction (at least 3 examples for at least 2 of the 3 phases, the 3b alone, no hand edit) **held: GW1 11, GWK1 3, OS1 0.** Grade: B
+  (the coder built the frame and judged the runs; two runs on one phase are small; a run he starts would make it A). What it shows: the
+  3b fills structure well and invents it badly. Next: frames before the first try, not after two failures, and frames for Emerge code.
+  Reproduce: `node cos/build/emerge-build.js --map docs/2026-10-26-gate-walker-programmable-surface-phasemap.spec --phase
+  GWK1_the_walker_and_chain_schema --end-state --tries 28` (from scratch: move cos/data/build/end-state/GWK1_*.json aside first).
 
 ## T16 — "a continuous data stream to inject what we need into the model upstream", registered and measured 2026-11-23
 

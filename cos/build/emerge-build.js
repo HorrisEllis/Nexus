@@ -122,7 +122,7 @@ async function endState({ ph, plan, src, mapText }) {
     if (recorded && live().length < 3) for (const nm of fns.map((e) => e.name)) {
       const fails = rec.answers.flatMap((x) => x.refused || []).filter((x) => (/^(\w+)/.exec(x.line) || [])[1] === nm && /^(the code refused|says nothing new)/.test(x.why)).length;
       const sp = (rec.splits = rec.splits || {})[nm] = rec.splits[nm] || { pieces: [], composed: [] };
-      if (fails >= 2 && live().filter((x) => x.line.startsWith(nm + '(')).length < 2 && sp.composed.length < 3) await splitCall(fns.find((e) => e.name === nm), sp, n);
+      if (fails >= 2 && live().filter((x) => x.line.startsWith(nm + '(')).length < 3 && sp.composed.length < 3) await splitCall(fns.find((e) => e.name === nm), sp, n);
     }
   }
   return live().length >= 3 ? 0 : 1;
@@ -162,7 +162,22 @@ async function endState({ ph, plan, src, mapText }) {
       let got = null;
       for (let t = 1; t <= 3 && !got; t++) {
         const before = sp.pieces.filter((x) => x.param === p && x.status !== 'passed').slice(-3);
-        const prompt = [...(shape && p === need[0] ? [`${p} must be ${shape}  (the code's own words)`, ''] : []),
+        // a schema for this parameter (named beside it in the file's own header, "chain : … (schema.step_chain)", or a node type of the
+        // same name) gives a frame: the structure written by Nexus from the schema, the 3b fills only the holes (his: "Using schemas,
+        // templates, and schematics or specs. For reusable structure.")
+        const NS = require(path.join(ROOT, 'lib', 'node-schemas.js')), named = new RegExp(`\\b${p}\\s*:[^\\n]*\\(schema\\.(\\w+)\\)`).exec(code), stype = named ? named[1] : (NS.get(p) ? p : null);
+        const fr = stype && NS.frame(stype, { items: 3 });
+        if (fr && fr.holes.length) {
+          const fields = [...new Map(fr.holes.map((h) => [h.path.replace(/\[\d+\]/, '[]'), h])).values()];
+          const fprompt = [`Fill this template: it is the parameter ${p} of ${fn.signature}, written from its schema (schema.${stype}).`,
+            'Copy it exactly and replace each "__n__", quotes included, with a value. Keep every other character.', '', fr.text, '', 'What goes in each hole:',
+            ...fields.map((h) => `  ${h.path.replace(/\[\d+\]/, '[each]')}: ${h.choices ? 'one of ' + h.choices.join(', ') : h.about || 'a value'}`), '',
+            `What the phase must show: ${String(ph.proof || ph.does || '').trim().slice(0, 500)}`,
+            ...(before.length ? ['', 'Earlier fillings and what the code said:', ...before.map((x) => `  -> ${x.why}`)] : []),
+            ...(sp.composed.length ? ['', 'A filling was already used; write a different one.'] : []), '', 'Answer with the filled template only.'].join('\n');
+          var framePrompt = fprompt;   // eslint-disable-line no-var
+        } else framePrompt = null;
+        const prompt = framePrompt || [...(shape && p === need[0] ? [`${p} must be ${shape}  (the code's own words)`, ''] : []),
           `One piece of a call to ${fn.signature}: write only the value of the parameter ${p}.`, `What the phase must show: ${String(ph.proof || ph.does || '').trim().slice(0, 600)}`,
           ...(values.length ? [`The parameters before it are already written: ${values.join(', ')}`] : []), '',
           // only the check, never the function's body: a small model copies the lines it is shown (2026-11-23: it answered with walk's own "{ id: chain.id, … }")
@@ -177,6 +192,7 @@ async function endState({ ph, plan, src, mapText }) {
         v = v.replace(/\s*\n\s*/g, ' ').trim();
         const piece = { param: p, value: v, by: LADDER[0], answer: n, try: t, at: new Date().toISOString(), status: 'refused', why: '' };
         sp.pieces.push(piece); save();   // saved before it is checked
+        if (framePrompt) { piece.frame = stype; const left = v.match(/__\d+__/g); if (left) { piece.why = `holes left unfilled: ${[...new Set(left)].slice(0, 6).join(', ')}`; save(); continue; } }
         try { new vm.Script(`(${v})`); } catch (e) { piece.why = 'does not parse: ' + e.message; save(); continue; }
         const r = runCall(mod, `${fn.name}(${[...values, v].join(', ')})`);
         if (r.err && / is not defined$/.test(r.err)) piece.why = `it uses a name (${r.err.replace(/ is not defined$/, '')}) instead of data: write the data itself`;

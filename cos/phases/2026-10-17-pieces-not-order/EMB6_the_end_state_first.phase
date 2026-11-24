@@ -4,14 +4,14 @@ type: phase
 id: docs_2026-10-17-pieces-not-order-phasemap.spec::EMB6_the_end_state_first
 context: pipeline phase EMB6_the_end_state_first of docs/2026-10-17-pieces-not-order-phasemap.spec
 intent: null
-summary: EMB6_the_end_state_first (?) — 4 file(s)
+summary: EMB6_the_end_state_first (?) — 5 file(s)
 system: idearium
 tags: []
-exported_at: 1795501275674
+exported_at: 1795503125655
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1795501275674
-lastSeenAt: 1795501275674
+firstSeenAt: 1795503125655
+lastSeenAt: 1795503125655
 fingerprint: null
 payload:
   id: EMB6_the_end_state_first
@@ -21,6 +21,7 @@ payload:
   status: OPEN
   files:
     - cos/build/emerge-build.js
+    - lib/node-schemas.js
     - cos/manager/server.js
     - cos/manager/contract.json
     - idearium/cli/route-commands.js
@@ -28,4 +29,4 @@ payload:
     - EMB3_the_autocorrect
   blocks: []
   spec: null
-  graph: 69d26a91cb27b250
+  graph: 54eb6f554b3148c6
