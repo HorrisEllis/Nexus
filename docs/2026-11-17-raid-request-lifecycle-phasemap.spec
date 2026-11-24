@@ -299,6 +299,11 @@ decisions:
 
   RL_D10_the_gate_is_the_unit:
     status: "DECIDED 2026-11-24 by James"
+    expanded_2026_11_24_gap_is_an_end_state: >-
+      His words: "each gap or bug, can become the end-state dynamically, with the same decomposition proceedure." (2026-11-24). A gap or a bug
+      found by any gate is not a dead end: it becomes an end state of its own, a contract with its own DAG, decomposed the same way (back from
+      what done looks like, each piece a gate), and the gate that found it waits on it as a node. The rung's split already does this for a
+      function (a stuck body links a helper, EMB4); this makes it the rule for every gap at every level.
     expanded_2026_11_24_context_by_id: >-
       His words: "also works backwards from the end-state. each gate only needs the context it needs, requests from the workarea compartment,
       context id, in relation to the dag and pre-req? like raid builds an index?" · "the smallest amount of works that don't change the meaning,
