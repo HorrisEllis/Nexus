@@ -617,3 +617,11 @@ by the focus.
   builder's raised temperature never reached the model: the Ollama system's job route drops a caller's temperature (every job at 0.2); fixed
   in ollama/routes/jobs.js and lib/dispatch.js, to take effect when the Ollama system restarts. Also added: boundary probes (no model) give
   each function examples at its edges (add_kind: 3). Grade: open (prediction not yet met). Bias: the coder built the gate and judged it.
+- **EMB8, run 5, the registered rebuild with every fix live (2026-11-24, after his "Yes, deploy and rerun"):** the Ollama system now keeps a
+  job's temperature (checked: two runs at 1.2 gave two different words). From nothing, on the 3b alone: replace_all held after 9 tries, 6 of
+  them different, each refused by its contract (one returned the text as a list of characters). The card's own recipe for it
+  (join(split(s, t), u)) was in every prompt. Splitting the stuck piece into a helper was refused by the module guard: 13 gaps, the limit is 8
+  (§14.4). **The registered prediction failed: EMB3 does not build itself from nothing on the 3b alone.** What now works, checked: each piece
+  is gated by its own contract; the gate's own fault was found and fixed; retries vary. What it shows: the 3b cannot write even a one-line
+  rule it is handed, so his own order is the next lever, not a better prompt: Nexus first (a component Nexus already has, before any model,
+  his RL_D3), then the economy (a stuck piece goes to a bigger model, his L1b). Grade: Failed. Bias: the coder chose the fixture and the fixes.
