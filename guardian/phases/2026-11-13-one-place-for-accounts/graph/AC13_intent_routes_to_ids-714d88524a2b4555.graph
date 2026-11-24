@@ -1,0 +1,273 @@
+envelope: 1
+uuid: nexus-export-graph-phase:AC13_intent_routes_to_ids:714d88524a2b4555
+type: graph
+id: phase:AC13_intent_routes_to_ids:714d88524a2b4555
+context: dependency graph of phase AC13_intent_routes_to_ids
+intent: null
+summary: 33 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1795484249298
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795484249298
+lastSeenAt: 1795484249298
+fingerprint: null
+payload:
+  for: AC13_intent_routes_to_ids
+  kind: phase
+  repo: null
+  hash: 714d88524a2b4555
+  nodes:
+    - path: clear-glass/src/main/index.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/mesh/agent-mesh.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: cortex/boot.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: guardian/lib/account-routing.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: guardian/lib/dispatcher.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: guardian/lib/profile-lanes.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: guardian/lib/provider-routing.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: idearium/cli/route-commands.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: lib/agent-router.js
+      role: changes
+      exists: true
+      system: lib
+    - path: clear-glass/src/driver/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/ipc/bridge.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.pre-userscripts.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: cortex/cortex-service.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/server.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: guardian/ask.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: guardian/lib/index.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: tests/modules/agent-mesh-drainer.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/agent-mesh-hostile.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/clear-glass-accounts.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/cortex-sse-broadcast.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-dispatcher-deepseek-ncp.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/config.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/core/raid/index.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/push-recall.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/hooks/index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/lean-mode.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/migrate-ledger-per-system.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nerve/index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus/nexus-bus.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/pulse.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/version.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: cortex/boot.js
+      to: lib/data-home.js
+      kind: requires
+    - from: cortex/boot.js
+      to: cortex/config.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/version.js
+      kind: requires
+    - from: cortex/boot.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/pulse.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/nexus/nexus-bus.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/lean-mode.js
+      kind: requires
+    - from: cortex/boot.js
+      to: cortex/push-recall.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/migrate-ledger-per-system.js
+      kind: requires
+    - from: cortex/boot.js
+      to: cortex/core/raid/index.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/nerve/index.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/hooks/index.js
+      kind: requires
+    - from: cortex/cortex-service.js
+      to: cortex/boot.js
+      kind: requires
+    - from: cortex/server.js
+      to: cortex/boot.js
+      kind: requires
+    - from: tests/modules/cortex-sse-broadcast.test.js
+      to: cortex/boot.js
+      kind: requires
+    - from: clear-glass/src/main/index.pre-userscripts.js
+      to: clear-glass/src/mesh/agent-mesh.js
+      kind: requires
+    - from: tests/modules/agent-mesh-drainer.test.js
+      to: clear-glass/src/mesh/agent-mesh.js
+      kind: requires
+    - from: tests/modules/agent-mesh-hostile.test.js
+      to: clear-glass/src/mesh/agent-mesh.js
+      kind: requires
+    - from: tests/modules/clear-glass-accounts.test.js
+      to: clear-glass/src/mesh/agent-mesh.js
+      kind: requires
+    - from: clear-glass/src/driver/index.js
+      to: clear-glass/src/main/index.js
+      kind: requires
+    - from: clear-glass/src/ipc/bridge.js
+      to: clear-glass/src/main/index.js
+      kind: requires
+    - from: guardian/lib/index.js
+      to: guardian/lib/provider-routing.js
+      kind: requires
+    - from: tests/modules/test-dispatcher-deepseek-ncp.js
+      to: guardian/lib/provider-routing.js
+      kind: requires
+    - from: guardian/ask.js
+      to: guardian/lib/account-routing.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC11_accounts_per_login_per_site
+      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC12_one_browser_identity_per_profile
+    dependents:
+      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC14_nexus_addresses_in_the_browser
+    upstream:
+      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC10_profiles_the_source_of_truth
+      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC11_accounts_per_login_per_site
+      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC12_one_browser_identity_per_profile
+    downstream:
+      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC14_nexus_addresses_in_the_browser
+    blockedBy:
+      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC11_accounts_per_login_per_site
+      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC12_one_browser_identity_per_profile
+    unlocks:
+      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC14_nexus_addresses_in_the_browser
+    conflicts:
+      - with: docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC1_the_vault_as_a_library
+        files:
+          - idearium/cli/route-commands.js
+      - with: docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC3_one_list_of_accounts
+        files:
+          - guardian/lib/account-routing.js
+    dangling: []
+    lines:
+      - layer 3 · blocked by AC11_accounts_per_login_per_site, AC12_one_browser_identity_per_profile
+      - >-
+        depends on (2): AC11_accounts_per_login_per_site, AC12_one_browser_identity_per_profile ·
+        all upstream 3
+      - >-
+        needed by (1): AC14_nexus_addresses_in_the_browser · finishing it unlocks
+        AC14_nexus_addresses_in_the_browser
+      - >-
+        same files as AC1_the_vault_as_a_library with no order between them:
+        idearium/cli/route-commands.js
+      - >-
+        same files as AC3_one_list_of_accounts with no order between them:
+        guardian/lib/account-routing.js
+    edges:
+      - from: docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC11_accounts_per_login_per_site
+        kind: declared
+      - from: docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC12_one_browser_identity_per_profile
+        kind: declared

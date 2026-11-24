@@ -309,13 +309,14 @@ phases_addendum_2026_11_22:
     status: OPEN
     depends_on: [AC11_accounts_per_login_per_site, AC12_one_browser_identity_per_profile]
     expands: ID1_identities
-    james: '"and intent routing for raid. so we can have intent based routing to accounts. like this is for the agents." (2026-11-23)'
-    files: [guardian/lib/account-routing.js, guardian/lib/profile-lanes.js, guardian/lib/dispatcher.js, clear-glass/src/main/index.js, idearium/cli/route-commands.js]
+    james: '"and intent routing for raid. so we can have intent based routing to accounts. like this is for the agents." (2026-11-23) · "raid it the agent routing. maybe have it connect to the agent mesh" (2026-11-23)'
+    files: [cortex/boot.js, cortex/core/raid, clear-glass/src/mesh/agent-mesh.js, clear-glass/src/main/index.js, guardian/lib/provider-routing.js, guardian/lib/account-routing.js, guardian/lib/profile-lanes.js, guardian/lib/dispatcher.js, lib/agent-router.js, idearium/cli/route-commands.js]
     does: >-
-      RAID's intent, hat and repo pick a route; Guardian's existing rules answer with { profileId, accountId } and hold no cookie or password. Clear Glass runs the job there.
-      A signed-out or to-check account fails the job with the reason unless the rule names a fallback. In-place account swapping retires (hazard H1).
-    proof: "a job with an intent lands on the ruled account in its profile; Guardian's stores and logs contain no cookie or password"
-    axioms: "§5.9-§5.16 sovereignty: reached only by routes"
+      RAID is the one agent router. Read today: Guardian and the mesh each ask /api/raid/decide, RAID answers with an agent only, its vocabulary misses most of the mesh's agents, and Guardian then picks the account by its own rules.
+      Now the mesh tells RAID, by route, which agents and accounts are available: ids, provider, signed-in state and health, never a cookie or password. RAID takes intent, hat and repo and answers { agent, profileId, accountId, why }. The mesh runs that decision in the profile; Guardian keeps its transport and its watch over a job, and asks RAID instead of choosing. Guardian's existing rules become RAID's rules, moved with nothing lost.
+      A signed-out or to-check account is not chosen; if no account fits, the job fails with the reason. In-place account swapping retires (hazard H1). Callers reach RAID only by its route, so its planned move into COS changes nothing here.
+    proof: "a job with an intent lands on the ruled account through RAID and the mesh; RAID's, Guardian's and the mesh's stores and logs contain no cookie or password; with Cortex down the job says why"
+    axioms: "§5.9-§5.16 sovereignty: reached only by routes; §10.3 one router"
   AC14_nexus_addresses_in_the_browser:
     status: OPEN
     depends_on: []
