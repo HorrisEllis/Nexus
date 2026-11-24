@@ -55,6 +55,20 @@ async function ask(prompt, model, gap) {
 // A call the code refuses, or one that says nothing a kept line has not, goes back to the 3b with what the code said: the next try's lesson.
 // Where no file exists yet, the 3b writes the whole line (call == expected). Every answer is saved before it is checked; the form checks are
 // test-first's own (examplesFrom, fromExamples, contradictions). Kept lines wait for his yes in the Lab; nothing enters the map here.
+// A plan read from a file that exists names its exports only. Each export's parameters (never its body) are read from that file, or from its
+// Emerge twin (<file>.eg, where the .js is only the adapter), so the rung can write the skeleton (EMB6, then EMB7: without it the rung fell back
+// to the whole module at once and no template was ever asked). Deterministic, no model.
+function withParams(srcPath, exports) {
+  const read = (p) => { try { return fs.readFileSync(path.join(ROOT, p), 'utf8'); } catch (_) { return ''; } };
+  const js = read(srcPath), eg = read(srcPath.replace(/\.[cm]?js$/, '.eg'));
+  return exports.map((e) => {
+    if (/\(/.test(e.signature || '')) return e; const n = String(e.name || '').replace(/[^\w$]/g, ''); if (!n) return e;
+    const f = new RegExp(`^\\s*(?:pub\\s+)?fn\\s+${n}\\s*\\(([^)]*)\\)\\s*(?::\\s*(\\w+))?`, 'm').exec(eg);
+    if (f) return { ...e, signature: `${n}(${f[1].replace(/\s+/g, ' ').trim()}) -> ${f[2] || 'any'}` };
+    const m = new RegExp(`(?:function\\s*\\*?\\s*${n}|\\b${n}\\s*[:=]\\s*(?:async\\s+)?(?:function\\s*)?|^\\s*(?:async\\s+)?${n})\\s*\\(([^)]*)\\)`, 'm').exec(js);
+    return m ? { ...e, signature: `${n}(${m[1].replace(/\s+/g, ' ').trim()})` } : e;
+  });
+}
 const END_STATE = !!arg('end-state'), ES_DIR = path.join(ROOT, 'cos', 'data', 'build', 'end-state');
 function runCall(mod, line, want) {   // one child per call, cwd a throwaway folder; prints one JSON line
   const k = want === undefined ? line.length : line.search(/\)\s*==/), call = line.slice(0, want === undefined ? line.length : k + 1);
@@ -79,9 +93,7 @@ async function endState({ ph, plan, src, mapText }) {
   if (live().length >= 3) { row('end-state-kept', { note: `${live().length} examples already on disk; no model asked`, file }); return 0; }
   // a plan read from a file that exists names its exports only: each function's parameters are read from that same file (no model)
   const code = (() => { try { return fs.readFileSync(mod, 'utf8'); } catch (_) { return ''; } })();
-  const sigOf = (e) => { if (/\(/.test(e.signature || '')) return e.signature; const n = String(e.name || '').replace(/[^\w$]/g, '');
-    const m = n && new RegExp(`(?:function\\s*\\*?\\s*${n}|\\b${n}\\s*[:=]\\s*(?:async\\s+)?(?:function\\s*)?|^\\s*(?:async\\s+)?${n})\\s*\\(([^)]*)\\)`, 'm').exec(code); return m ? `${n}(${m[1].replace(/\s+/g, ' ').trim()})` : null; };
-  const fns = (src.exports || []).filter((e) => !/^_/.test(e.name || '')).map((e) => ({ ...e, signature: sigOf(e) })).filter((e) => e.signature), names = new Set(fns.map((e) => e.name)), already = TF.examplesFrom(mapText, PHASE);
+  const fns = withParams(src.path, (src.exports || []).filter((e) => !/^_/.test(e.name || ''))).filter((e) => /\(/.test(e.signature || '')), names = new Set(fns.map((e) => e.name)), already = TF.examplesFrom(mapText, PHASE);
   if (!fns.length) { row('refused', { note: 'the plan gives no function signatures to write examples for' }); return 1; }
   const quote = (l) => `      - '${l.replace(/'/g, "''")}'`, TRIES = Math.max(1, Number(arg('tries', 4)) || 4);
   // the start of a function's code, from its own file (no model)
@@ -260,7 +272,7 @@ async function endState({ ph, plan, src, mapText }) {
   let res = null, t = null, out = '', T = null;
   for (let round = 1; round <= ROUNDS; round++) {
     row('round', { note: `round ${round} of ${ROUNDS}`, round });
-    try { res = await rung.build({ file: src.path, exports: PIECES ? PIECES.map((p) => ({ name: p.name, signature: `${p.name}(${p.sig}) -> ${p.ret}`, does: p.does })) : (src.exports || []), expectation: testText, context: String(ph.does || ''), contract }); } catch (e) { res = { ok: false, why: e.message, tries: [] }; }
+    try { res = await rung.build({ file: src.path, exports: PIECES ? PIECES.map((p) => ({ name: p.name, signature: `${p.name}(${p.sig}) -> ${p.ret}`, does: p.does })) : withParams(src.path, src.exports || []), expectation: testText, context: String(ph.does || ''), contract }); } catch (e) { res = { ok: false, why: e.message, tries: [] }; }
     row(res.ok ? 'emerge-passed' : 'emerge-held', { note: res.why, tries: (res.tries || []).length, gapFiles: res.gapFiles || [], round });
     // the lab view (his "i need to see pipeline"): each piece's outcome kept in this build's own rows, so COS shows it without reading Idearium's files
     try { const pre = require(path.join(ROOT, 'lib', 'node-export.js')).fileIdOf(src.path + '#'), ps = [];

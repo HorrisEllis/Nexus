@@ -575,6 +575,17 @@ by the focus.
   3b fills structure well and invents it badly. Next: frames before the first try, not after two failures, and frames for Emerge code.
   Reproduce: `node cos/build/emerge-build.js --map docs/2026-10-26-gate-walker-programmable-surface-phasemap.spec --phase
   GWK1_the_walker_and_chain_schema --end-state --tries 28` (from scratch: move cos/data/build/end-state/GWK1_*.json aside first).
+- **EMB7, frames for Emerge code, chosen by the 3b (2026-11-23, his: "Using schemas, templates, and schematics or specs." · "Pipeline
+  first."):** CIE's rung 2 (synth.eg) got 7 common body shapes, and the rung's first try per gap became "pick a template, fill its holes".
+  Prediction (in the map before the run): EMB3 rebuilt from nothing on the 3b alone needs fewer model calls with templates than without.
+  **Failed.** The first pair never reached a template: the plan gave names without parameters, so there was no skeleton (fixed: parameters
+  from the file or its Emerge twin, never a body). Registered pair: with templates the build held at the first function after 3 calls,
+  without them 10 of 11 pieces passed in 13. The refused template body was kept as a lesson, and the 3b copied its `xs` into every free try.
+  After that fix (a template is an extra try and never a lesson), with templates: 5 of 6 in 16 calls. **0 of 6 templates fit.** Each time the
+  3b chose the list shape with `xs`, a name from the Emerge card, for functions that work on text. Found: the 3b chooses badly, as it invents
+  badly. Code templates are off by default now (EMERGE_RUNG_TEMPLATES=1 turns them on). Next: Nexus chooses, and the 3b only fills. The spec
+  names the template, as CIE intended ("every hole is one expression from the spec"). Grade: Failed. Bias: the coder chose the 7 shapes and
+  the fixture. Runs: ../nexus-build-data/emb7-ab (registered/, on2/).
 
 ## T16 — "a continuous data stream to inject what we need into the model upstream", registered and measured 2026-11-23
 

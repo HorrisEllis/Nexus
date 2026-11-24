@@ -350,7 +350,7 @@ function createRung({ root = path.resolve(__dirname, '..', '..'), ask, expect, m
           // EMB7: a gap's first try on the smallest model is a template (CIE rung 2): the 3b picks a shape and fills its holes, Emerge renders it;
           // what it renders goes through every check below like any body. A template that does not fit or does not render falls back to the free body.
           let via = null;
-          if (n === 1 && r === 0 && process.env.EMERGE_RUNG_TEMPLATES !== '0' && !templTried.has(name)) { templTried.add(name);
+          if (n === 1 && r === 0 && process.env.EMERGE_RUNG_TEMPLATES === '1' && !templTried.has(name)) { templTried.add(name);
             try { const said = await who.ask(briefTemplate({ skel, filled, name, expectation, lesson, method: fillMethod }), { tryNo: 0, gap: name, rung: r, template: true });
               const tp = templateOf(said), sf = skel.fns.find(x => x.name === name);
               if (!tp) note({ body: null, via: 'template', said: 'no template chosen (' + _q(said).split('\n')[0].slice(0, 80) + ')', fix: '', ms: Date.now() - t0 });
@@ -374,6 +374,9 @@ function createRung({ root = path.resolve(__dirname, '..', '..'), ask, expect, m
             if (acr && acr.fixes.length) { const c2 = await eg('lang-check', render(skel, { ...filled, [name]: acr.body })); if (c2.ok || /is a parameter/.test(String(c2.stderr || ''))) { body = acr.body; ck = c2; tries.push({ n, stage: 'repair:' + name, why: 'autocorrect: ' + acr.fixes.join(' '), gap, model: who.name }); } } }
           for (let k = 0; k < 3 && ck && !ck.ok && !ck.missing && process.env.EMERGE_RUNG_REPAIR !== '0'; k++) { const pm = /"(\w+)" is a parameter/.exec(String(ck.stderr || '')); if (!pm) break; body = _unParam(body, pm[1]); tries.push({ n, stage: 'repair:' + name, why: 'parameter ' + pm[1] + ' copied to a var', gap, model: who.name }); ck = await eg('lang-check', render(skel, { ...filled, [name]: body })); }
           if (ck.missing) { tries.push({ n, stage: 'no-emerge', why: ck.stderr, ms: Date.now() - t0 }); held = 'no-emerge'; break; }
+          // EMB7, measured 2026-11-23: a refused template body kept as a lesson was copied into every free try after it ("xs" three times).
+          // So a template that does not compile is kept on disk as what it was (tried), but never given to the next try as a body to read.
+          if (!ck.ok && via) { const said = firstLines(ck.stderr, 2); note({ body: null, tried: body, via, triedSaid: said, said: 'a template did not fit this function', fix: 'write the body yourself', ms: Date.now() - t0 }); tries.push({ n, stage: 'template:' + name, why: 'did not fit: ' + said, gap, model: who.name }); n--; continue; }   // the template is an extra try: it never takes one of the free ones
           if (!ck.ok) { seen.push({ body }); const said = firstLines(ck.stderr); const hn = String(G.fix_for(String(ck.stderr || ''), body)).trim(); note({ body, said, fix: hn, ms: Date.now() - t0 }); tries.push({ n, stage: 'gap:' + name, why: "Emerge's compiler said: " + said + (hn ? '\nThe fix: ' + hn : ''), ms: Date.now() - t0, gap, model: who.name }); continue; }
           // his "as each gap passes, gets logged or tagged in the gate as passed and compiled"
           filled[name] = body; ok = true; rec.status = 'passed'; rec.body = body; { const sf = skel.fns.find(x => x.name === name); if (sf) { rec.params = sf.params; rec.signature = rec.signature || sf.signature; rec.does = rec.does || sf.does; } } /* EMB4: a piece carries its own shape, so a later run can take it */ rec.gate = { passed: true, compiled: true, by: "Emerge's compiler (lang-check)", model: who.name || model, at: new Date().toISOString() };
