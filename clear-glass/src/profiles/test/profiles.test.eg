@@ -37,6 +37,12 @@ test "no account is ever left without a profile" {
   expect P.apply(two, { op: "unlink", profile: "p1", account: "b", now: 3 }).state.profiles.p1.accounts == ["a"]
   let e = P.apply(s, { op: "create", id: "p9", name: "Empty", now: 2 }).state
   expect not has(P.apply(e, { op: "delete", profile: "p9", now: 3 }).state.profiles, "p9")
+  // 2026-11-24: an account that was deleted is a stale id, not a stranded account: its profile can go (the live accounts are in info)
+  var gone = {}
+  for k in keys(INFO) { if k != "c" { gone[k] = INFO[k] } }
+  expect P.apply(s, { op: "delete", profile: "p2", info: INFO, now: 2 }).ok == false
+  expect not has(P.apply(s, { op: "delete", profile: "p2", info: gone, now: 2 }).state.profiles, "p2")
+  expect P.apply(s, { op: "unlink", profile: "p2", account: "c", info: gone, now: 2 }).state.profiles.p2.accounts == []
 }
 
 test "names are one each; renames and the default are kept" {

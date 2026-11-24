@@ -364,6 +364,14 @@ phases_addendum_2026_11_22:
   AC16_everything_belongs_to_its_profile:
     status: OPEN
     depends_on: [AC10_profiles_the_source_of_truth, AC11_accounts_per_login_per_site]
+    expanded_2026_11_24_one_profile: >-
+      His words: "should only be one profile" · "yes one profile for all of clearglass, unless i add another one, then it switched to that profile,
+      can also be per tab" · "also need a profile ui page for creating a new profile" (2026-11-24). Read: Clear Glass runs as one active
+      profile, everywhere (every window, tab, provider and import); creating a profile makes it the active one; a tab can be opened in another
+      profile (per tab, AC10's "Per tab, shared window"). A Profiles page of its own (list, create, rename, delete, which is active) replaces the
+      pane folded into Accounts (0.60.639); preview first. Done the same day: his second profile "Claude — Account 2" removed at his word (its
+      account entry deleted; its jar folder and vault copy stay on disk); found doing it: a deleted account's stale id blocked the profile's
+      removal, fixed in profiles.eg (delete and unlink are told which accounts exist). The Import page's Into lists only his profiles.
     expands: [ID3_bookmarks_carry_the_identity, TB5_site_and_account_nodes]
     james: '"yes. like everything uses its relative profile as a source of truth. each tab, bookmark, can be hooked into the account and state of the browser." (2026-11-23)'
     files: [clear-glass/src/profiles/profiles.eg, clear-glass/src/profiles/built, clear-glass/src/main/index.js, clear-glass/src/ipc/bridge.js, clear-glass/src/preload/index.js, clear-glass/src/bookmarks/store.js, clear-glass/src/history/store.js, clear-glass/src/downloads/store.js, clear-glass/src/site-settings/store.js, clear-glass/src/autofill/store.js, clear-glass/src/fingerprint/engine.js, clear-glass/src/rewind/engine.js, clear-glass/renderer/browser.js, clear-glass/renderer/browser.html]
@@ -449,3 +457,9 @@ phases_addendum_2026_11_22:
 # the TLS handshake is still Chromium's while the page says Firefox; Clear Glass's TLS layer (cg-tls-helper, TLS3) gives a Firefox handshake to agent personas only, not to the default session.
 # The earlier readings today (fingerprint per tab; the startup restore) are superseded by this. The 23 Nov sign-in worked because 0.60.641 moved an existing login in (no Google sign-in in Clear Glass).
 # His asks the same message: "the autofill needs to save from the input fields, like firefox does. and hook the saved passwords in the plugin so i can autofill passwords from the plugin" (to map: PW).
+
+# ADDENDUM 2026-11-24 (0.60.646) — one profile, and a deleted account no longer blocks a profile. James, 2026-11-24: "this needs to be built, importing all of it from firefox." · "can you have it import the autofill and password from firefox also? into the plugin and autofill, and chip." · "yes one profile for all of clearglass, unless i add another one, then it switched to that profile, can also be per tab"
+# profiles.eg: delete and unlink are told which accounts exist (the store passes info), so a deleted account's stale id is dropped, not
+# counted as stranded; test in profiles.test.eg. Done in his Clear Glass before the fix: his autofill restored (one profile, James Brooks,
+# from 2026-10-26; the two test profiles removed); "Claude — Account 2"'s account entry deleted at his word; the profile itself is removed
+# once 0.60.646 runs (the old rule still counts the stale id).

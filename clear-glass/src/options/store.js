@@ -476,9 +476,10 @@ class NexusOptions {
   createProfile(name) { this.listProfiles(); return this._profileChange({ op: 'create', id: randomUUID(), name }); }
   renameProfile(profile, name) { return this._profileChange({ op: 'rename', profile, name }); }
   setDefaultProfile(profile) { return this._profileChange({ op: 'default', profile }); }
-  deleteProfile(profile) { return this._profileChange({ op: 'delete', profile }); }
+  // 2026-11-24: delete and unlink are told which accounts still exist, so a deleted account's stale id never blocks them (profiles.eg _exists)
+  deleteProfile(profile) { return this._profileChange({ op: 'delete', profile, info: this._profileInfo() }); }
   linkProfileAccount(profile, account) { return this._profileChange({ op: 'link', profile, account, info: this._profileInfo() }); }
-  unlinkProfileAccount(profile, account) { return this._profileChange({ op: 'unlink', profile, account }); }
+  unlinkProfileAccount(profile, account) { return this._profileChange({ op: 'unlink', profile, account, info: this._profileInfo() }); }
   // AC11 — James, 2026-11-23: "accounts are per cookie/login, which are per per site". The ids are kept on the profile; a new one is saved once and never changes.
   profileLogins(p, isDefault, cookies, passwords) {
     try {

@@ -301,3 +301,11 @@ AXIOMS §4.1); "the account being used for the relative site" is the accounts si
     blocks: [MOD-BSH-BOOKMARK-ACCOUNTS]
     does: "accounts:forSite reads each account session's cookies for the site (names only); the dialog lists the accounts signed in to this site first."
     proof: test-browser-shell BST-20
+
+## ADDENDUM 2026-11-24 (0.60.646) — BS1 expanded: everything from Firefox. James, 2026-11-24: "this needs to be built, importing all of it from firefox." · "can you have it import the autofill and password from firefox also? into the plugin and autofill, and chip." · "yes one profile for all of clearglass, unless i add another one, then it switched to that profile, can also be per tab"
+Built: saved passwords (logins.json, decrypted with key4.db's keys, each login with its own key; a primary password asked for, used once,
+never kept) into the Password Manager plugin's vault, so the chip offers them; history with each visit's own date; addresses into autofill
+(saved cards stay in Firefox). The Import page (after his yes on the preview): switches for each, counts for each, the stray "null" gone,
+one Firefox profile shown (the others behind a link: his "why is there 3?"), Into lists only his Clear Glass profiles. Checked on his
+Firefox, counts only: 26 of 26 logins decrypt, 5,000 visits, 2 addresses. Test BST-24. Not checked: the Import page inside Clear Glass (the
+test engine's Clear Glass host exits on start, a separate fault); the import into his live Clear Glass (waits for the deploy).

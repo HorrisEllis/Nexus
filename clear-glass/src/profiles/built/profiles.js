@@ -5,6 +5,7 @@ module.exports = function load($) {
   $.fn("_ids", 1, v__ids);
   $.fn("_with", 2, v__with);
   $.fn("_provs", 2, v__provs);
+  $.fn("_exists", 2, v__exists);
   $.fn("clash", 3, v_clash);
   $.fn("_new", 5, v__new);
   $.fn("ensure", 4, v_ensure);
@@ -41,27 +42,41 @@ module.exports = function load($) {
     return $.ty($.call($.b["get"], [$.call($.b["get"], [v_info, v_account, $.map([])]), $.str(["providers"]), $.list([])]), "list", false, "return value of _provs");
     return $.ty(null, "list", false, "return value of _provs");
   }
+  function v__exists(v_op, v_account) {
+    v_op = $.ty(v_op, "map", false, "parameter op of _exists");
+    v_account = $.ty(v_account, "string", false, "parameter account of _exists");
+    $.at(27, F);
+    let v_info = $.call($.b["get"], [v_op, $.str(["info"]), null]);
+    $.at(28, F);
+    if ($.truth($.eq(v_info, null), "if")) {
+      $.at(28, F);
+      return $.ty(true, "bool", false, "return value of _exists");
+    }
+    $.at(29, F);
+    return $.ty($.call($.b["has"], [v_info, v_account]), "bool", false, "return value of _exists");
+    return $.ty(null, "bool", false, "return value of _exists");
+  }
   function v_clash(v_p, v_account, v_info) {
     v_p = $.ty(v_p, "map", false, "parameter p of clash");
     v_account = $.ty(v_account, "string", false, "parameter account of clash");
     v_info = $.ty(v_info, "map", false, "parameter info of clash");
-    $.at(26, F);
+    $.at(33, F);
     let v_mine = $.call(v__provs, [v_info, v_account]);
-    $.at(27, F);
+    $.at(34, F);
     for (const v_other of $.iter($.get(v_p, "accounts"), false)) {
-      $.at(28, F);
+      $.at(35, F);
       if ($.truth($.neq(v_other, v_account), "if")) {
-        $.at(29, F);
+        $.at(36, F);
         for (const v_x of $.iter($.call(v__provs, [v_info, v_other]), false)) {
-          $.at(30, F);
+          $.at(37, F);
           if ($.truth($.cmp(">=", $.call($.b["index_of"], [v_mine, v_x]), 0), "if")) {
-            $.at(30, F);
+            $.at(37, F);
             return $.ty($.map(["account", v_other, "provider", v_x]), "any", false, "return value of clash");
           }
         }
       }
     }
-    $.at(34, F);
+    $.at(41, F);
     return $.ty(null, "any", false, "return value of clash");
     return $.ty(null, "any", false, "return value of clash");
   }
@@ -71,7 +86,7 @@ module.exports = function load($) {
     v_partition = $.ty(v_partition, "string", false, "parameter partition of _new");
     v_accounts = $.ty(v_accounts, "list", false, "parameter accounts of _new");
     v_now = $.ty(v_now, "num", false, "parameter now of _new");
-    $.at(37, F);
+    $.at(44, F);
     return $.ty($.map(["id", v_id, "name", v_name, "partition", v_partition, "accounts", v_accounts, "createdAt", v_now, "updatedAt", v_now]), "map", false, "return value of _new");
     return $.ty(null, "map", false, "return value of _new");
   }
@@ -80,273 +95,273 @@ module.exports = function load($) {
     v_list_of = $.ty(v_list_of, "list", false, "parameter list_of of ensure");
     v_new_ids = $.ty(v_new_ids, "list", false, "parameter new_ids of ensure");
     v_now = $.ty(v_now, "num", false, "parameter now of ensure");
-    $.at(42, F);
+    $.at(49, F);
     let v_s = $.map(["profiles", $.call($.b["clone"], [$.call($.b["get"], [v_st, $.str(["profiles"]), $.map([])])]), "defaultId", $.call($.b["get"], [v_st, $.str(["defaultId"]), null])]);
-    $.at(43, F);
+    $.at(50, F);
     let v_n = 0;
-    $.at(44, F);
+    $.at(51, F);
     if ($.truth($.or($.eq($.get(v_s, "defaultId"), null), () => $.not($.call($.b["has"], [$.get(v_s, "profiles"), $.get(v_s, "defaultId")]))), "if")) {
-      $.at(45, F);
+      $.at(52, F);
       let v_id = $.index(v_new_ids, v_n);
-      $.at(46, F);
+      $.at(53, F);
       v_n = $.add(v_n, 1);
-      $.at(47, F);
+      $.at(54, F);
       v_s = $.call(v__with, [$.map(["profiles", $.get(v_s, "profiles"), "defaultId", v_id]), $.call(v__new, [v_id, $.str(["Default"]), $.str(["default"]), $.list([]), v_now])]);
     }
-    $.at(49, F);
+    $.at(56, F);
     let v_info = $.map([]);
-    $.at(50, F);
+    $.at(57, F);
     for (const v_a of $.iter(v_list_of, false)) {
-      $.at(50, F);
+      $.at(57, F);
       $.setIndex(v_info, $.get(v_a, "id"), $.map(["providers", $.call($.b["get"], [v_a, $.str(["providers"]), $.list([])])]));
     }
-    $.at(51, F);
+    $.at(58, F);
     let v_placed = $.map([]);
-    $.at(52, F);
+    $.at(59, F);
     for (const v_pid of $.iter($.call(v__ids, [v_s]), false)) {
-      $.at(52, F);
+      $.at(59, F);
       for (const v_acc of $.iter($.get($.index($.get(v_s, "profiles"), v_pid), "accounts"), false)) {
-        $.at(52, F);
+        $.at(59, F);
         $.setIndex(v_placed, v_acc, true);
       }
     }
-    $.at(53, F);
+    $.at(60, F);
     for (const v_a of $.iter(v_list_of, false)) {
-      $.at(54, F);
+      $.at(61, F);
       if ($.truth($.not($.call($.b["has"], [v_placed, $.get(v_a, "id")])), "if")) {
-        $.at(55, F);
+        $.at(62, F);
         let v_d = $.call($.b["clone"], [$.index($.get(v_s, "profiles"), $.get(v_s, "defaultId"))]);
-        $.at(56, F);
+        $.at(63, F);
         $.setMember(v_d, "accounts", $.call($.b["push"], [$.get(v_d, "accounts"), $.get(v_a, "id")]));
-        $.at(57, F);
+        $.at(64, F);
         if ($.truth($.eq($.call(v_clash, [v_d, $.get(v_a, "id"), v_info]), null), "if")) {
-          $.at(58, F);
+          $.at(65, F);
           $.setMember(v_d, "updatedAt", v_now);
-          $.at(59, F);
+          $.at(66, F);
           v_s = $.call(v__with, [v_s, v_d]);
         } else {
-          $.at(61, F);
+          $.at(68, F);
           let v_id = $.index(v_new_ids, v_n);
-          $.at(62, F);
+          $.at(69, F);
           v_n = $.add(v_n, 1);
-          $.at(63, F);
+          $.at(70, F);
           v_s = $.call(v__with, [v_s, $.call(v__new, [v_id, $.call($.b["get"], [v_a, $.str(["label"]), $.str(["Profile"])]), $.add($.str(["persist:profile-"]), v_id), $.list([$.get(v_a, "id")]), v_now])]);
         }
-        $.at(65, F);
+        $.at(72, F);
         $.setIndex(v_placed, $.get(v_a, "id"), true);
       }
     }
-    $.at(68, F);
+    $.at(75, F);
     return $.ty($.map(["ok", true, "state", v_s, "used", v_n]), "map", false, "return value of ensure");
     return $.ty(null, "map", false, "return value of ensure");
   }
   function v_apply(v_st, v_op) {
     v_st = $.ty(v_st, "map", false, "parameter st of apply");
     v_op = $.ty(v_op, "map", false, "parameter op of apply");
-    $.at(72, F);
+    $.at(79, F);
     let v_kind = $.call($.b["get"], [v_op, $.str(["op"]), $.str([""])]);
-    $.at(73, F);
+    $.at(80, F);
     let v_now = $.call($.b["get"], [v_op, $.str(["now"]), 0]);
-    $.at(74, F);
+    $.at(81, F);
     if ($.truth($.eq(v_kind, $.str(["ensure"])), "if")) {
-      $.at(74, F);
+      $.at(81, F);
       return $.ty($.call(v_ensure, [v_st, $.call($.b["get"], [v_op, $.str(["accounts"]), $.list([])]), $.call($.b["get"], [v_op, $.str(["ids"]), $.list([])]), v_now]), "map", false, "return value of apply");
     }
-    $.at(75, F);
+    $.at(82, F);
     if ($.truth($.eq(v_kind, $.str(["create"])), "if")) {
-      $.at(76, F);
+      $.at(83, F);
       let v_name = $.call($.b["trim"], [$.call($.b["str"], [$.call($.b["get"], [v_op, $.str(["name"]), $.str([""])])])]);
-      $.at(77, F);
+      $.at(84, F);
       if ($.truth($.eq(v_name, $.str([""])), "if")) {
-        $.at(77, F);
+        $.at(84, F);
         return $.ty($.map(["ok", false, "why", $.str(["a profile needs a name"])]), "map", false, "return value of apply");
       }
-      $.at(78, F);
+      $.at(85, F);
       for (const v_pid of $.iter($.call(v__ids, [v_st]), false)) {
-        $.at(78, F);
+        $.at(85, F);
         if ($.truth($.eq($.call($.b["lower"], [$.get($.index($.get(v_st, "profiles"), v_pid), "name")]), $.call($.b["lower"], [v_name])), "if")) {
-          $.at(78, F);
+          $.at(85, F);
           return $.ty($.map(["ok", false, "why", $.add($.str(["a profile is already named "]), v_name)]), "map", false, "return value of apply");
         }
       }
-      $.at(79, F);
+      $.at(86, F);
       let v_p = $.call(v__new, [$.get(v_op, "id"), v_name, $.add($.str(["persist:profile-"]), $.get(v_op, "id")), $.list([]), v_now]);
-      $.at(80, F);
+      $.at(87, F);
       return $.ty($.map(["ok", true, "state", $.call(v__with, [v_st, v_p]), "profile", v_p]), "map", false, "return value of apply");
     }
-    $.at(82, F);
+    $.at(89, F);
     let v_id = $.call($.b["get"], [v_op, $.str(["profile"]), $.str([""])]);
-    $.at(83, F);
+    $.at(90, F);
     if ($.truth($.not($.call($.b["has"], [$.call($.b["get"], [v_st, $.str(["profiles"]), $.map([])]), v_id])), "if")) {
-      $.at(83, F);
+      $.at(90, F);
       return $.ty($.map(["ok", false, "why", $.add($.str(["no profile "]), $.call($.b["str"], [v_id]))]), "map", false, "return value of apply");
     }
-    $.at(84, F);
+    $.at(91, F);
     let v_p = $.call($.b["clone"], [$.index($.get(v_st, "profiles"), v_id)]);
-    $.at(85, F);
+    $.at(92, F);
     if ($.truth($.eq(v_kind, $.str(["rename"])), "if")) {
-      $.at(86, F);
+      $.at(93, F);
       let v_name = $.call($.b["trim"], [$.call($.b["str"], [$.call($.b["get"], [v_op, $.str(["name"]), $.str([""])])])]);
-      $.at(87, F);
+      $.at(94, F);
       if ($.truth($.eq(v_name, $.str([""])), "if")) {
-        $.at(87, F);
+        $.at(94, F);
         return $.ty($.map(["ok", false, "why", $.str(["a profile needs a name"])]), "map", false, "return value of apply");
       }
-      $.at(88, F);
+      $.at(95, F);
       for (const v_pid of $.iter($.call(v__ids, [v_st]), false)) {
-        $.at(88, F);
+        $.at(95, F);
         if ($.truth($.and($.neq(v_pid, v_id), () => $.eq($.call($.b["lower"], [$.get($.index($.get(v_st, "profiles"), v_pid), "name")]), $.call($.b["lower"], [v_name]))), "if")) {
-          $.at(88, F);
+          $.at(95, F);
           return $.ty($.map(["ok", false, "why", $.add($.str(["a profile is already named "]), v_name)]), "map", false, "return value of apply");
         }
       }
-      $.at(89, F);
+      $.at(96, F);
       $.setMember(v_p, "name", v_name);
-      $.at(90, F);
+      $.at(97, F);
       $.setMember(v_p, "updatedAt", v_now);
-      $.at(91, F);
+      $.at(98, F);
       return $.ty($.map(["ok", true, "state", $.call(v__with, [v_st, v_p]), "profile", v_p]), "map", false, "return value of apply");
     }
-    $.at(93, F);
+    $.at(100, F);
     if ($.truth($.eq(v_kind, $.str(["default"])), "if")) {
-      $.at(93, F);
+      $.at(100, F);
       return $.ty($.map(["ok", true, "state", $.map(["profiles", $.get(v_st, "profiles"), "defaultId", v_id]), "profile", v_p]), "map", false, "return value of apply");
     }
-    $.at(94, F);
+    $.at(101, F);
     if ($.truth($.eq(v_kind, $.str(["link"])), "if")) {
-      $.at(95, F);
+      $.at(102, F);
       let v_acc = $.call($.b["str"], [$.call($.b["get"], [v_op, $.str(["account"]), $.str([""])])]);
-      $.at(96, F);
+      $.at(103, F);
       let v_info = $.call($.b["get"], [v_op, $.str(["info"]), $.map([])]);
-      $.at(97, F);
+      $.at(104, F);
       if ($.truth($.not($.call($.b["has"], [v_info, v_acc])), "if")) {
-        $.at(97, F);
+        $.at(104, F);
         return $.ty($.map(["ok", false, "why", $.add($.str(["no account "]), v_acc)]), "map", false, "return value of apply");
       }
-      $.at(98, F);
+      $.at(105, F);
       if ($.truth($.cmp(">=", $.call($.b["index_of"], [$.get(v_p, "accounts"), v_acc]), 0), "if")) {
-        $.at(98, F);
+        $.at(105, F);
         return $.ty($.map(["ok", true, "state", v_st, "profile", v_p]), "map", false, "return value of apply");
       }
-      $.at(99, F);
+      $.at(106, F);
       let v_c = $.call(v_clash, [v_p, v_acc, v_info]);
-      $.at(100, F);
+      $.at(107, F);
       if ($.truth($.neq(v_c, null), "if")) {
-        $.at(100, F);
+        $.at(107, F);
         return $.ty($.map(["ok", false, "why", $.add($.add($.add($.get(v_p, "name"), $.str([" already holds a "])), $.get(v_c, "provider")), $.str([" account: one jar holds one sign-in per site, so this account needs another profile"]))]), "map", false, "return value of apply");
       }
-      $.at(101, F);
+      $.at(108, F);
       $.setMember(v_p, "accounts", $.call($.b["push"], [$.get(v_p, "accounts"), v_acc]));
-      $.at(102, F);
+      $.at(109, F);
       $.setMember(v_p, "updatedAt", v_now);
-      $.at(103, F);
+      $.at(110, F);
       return $.ty($.map(["ok", true, "state", $.call(v__with, [v_st, v_p]), "profile", v_p]), "map", false, "return value of apply");
     }
-    $.at(105, F);
+    $.at(112, F);
     if ($.truth($.eq(v_kind, $.str(["unlink"])), "if")) {
-      $.at(106, F);
+      $.at(113, F);
       let v_acc = $.call($.b["str"], [$.call($.b["get"], [v_op, $.str(["account"]), $.str([""])])]);
-      $.at(107, F);
+      $.at(114, F);
       if ($.truth($.cmp("<", $.call($.b["index_of"], [$.get(v_p, "accounts"), v_acc]), 0), "if")) {
-        $.at(107, F);
+        $.at(114, F);
         return $.ty($.map(["ok", true, "state", v_st, "profile", v_p]), "map", false, "return value of apply");
       }
-      $.at(108, F);
+      $.at(115, F);
       let v_elsewhere = false;
-      $.at(109, F);
+      $.at(116, F);
       for (const v_pid of $.iter($.call(v__ids, [v_st]), false)) {
-        $.at(109, F);
+        $.at(116, F);
         if ($.truth($.and($.neq(v_pid, v_id), () => $.cmp(">=", $.call($.b["index_of"], [$.get($.index($.get(v_st, "profiles"), v_pid), "accounts"), v_acc]), 0)), "if")) {
-          $.at(109, F);
+          $.at(116, F);
           v_elsewhere = true;
         }
       }
-      $.at(110, F);
-      if ($.truth($.not(v_elsewhere), "if")) {
-        $.at(110, F);
+      $.at(118, F);
+      if ($.truth($.and($.not(v_elsewhere), () => $.call(v__exists, [v_op, v_acc])), "if")) {
+        $.at(118, F);
         return $.ty($.map(["ok", false, "why", $.str(["this is the account's only profile: add it to another first"])]), "map", false, "return value of apply");
       }
-      $.at(111, F);
+      $.at(119, F);
       $.setMember(v_p, "accounts", $.call($.b["filter"], [$.get(v_p, "accounts"), $.fn("anonymous", 1, function (v_x) {
-        $.at(111, F);
+        $.at(119, F);
         return $.neq(v_x, v_acc);
         return null;
       })]));
-      $.at(112, F);
-      $.setMember(v_p, "updatedAt", v_now);
-      $.at(113, F);
-      return $.ty($.map(["ok", true, "state", $.call(v__with, [v_st, v_p]), "profile", v_p]), "map", false, "return value of apply");
-    }
-    $.at(115, F);
-    if ($.truth($.eq(v_kind, $.str(["site-ids"])), "if")) {
-      $.at(116, F);
-      $.setMember(v_p, "siteIds", $.call($.b["get"], [v_op, $.str(["ids"]), $.map([])]));
-      $.at(117, F);
-      return $.ty($.map(["ok", true, "state", $.call(v__with, [v_st, v_p]), "profile", v_p]), "map", false, "return value of apply");
-    }
-    $.at(119, F);
-    if ($.truth($.eq(v_kind, $.str(["delete"])), "if")) {
       $.at(120, F);
+      $.setMember(v_p, "updatedAt", v_now);
+      $.at(121, F);
+      return $.ty($.map(["ok", true, "state", $.call(v__with, [v_st, v_p]), "profile", v_p]), "map", false, "return value of apply");
+    }
+    $.at(123, F);
+    if ($.truth($.eq(v_kind, $.str(["site-ids"])), "if")) {
+      $.at(124, F);
+      $.setMember(v_p, "siteIds", $.call($.b["get"], [v_op, $.str(["ids"]), $.map([])]));
+      $.at(125, F);
+      return $.ty($.map(["ok", true, "state", $.call(v__with, [v_st, v_p]), "profile", v_p]), "map", false, "return value of apply");
+    }
+    $.at(127, F);
+    if ($.truth($.eq(v_kind, $.str(["delete"])), "if")) {
+      $.at(128, F);
       if ($.truth($.eq(v_id, $.get(v_st, "defaultId")), "if")) {
-        $.at(120, F);
+        $.at(128, F);
         return $.ty($.map(["ok", false, "why", $.str(["the default profile cannot be removed: make another the default first"])]), "map", false, "return value of apply");
       }
-      $.at(121, F);
+      $.at(129, F);
       for (const v_acc of $.iter($.get(v_p, "accounts"), false)) {
-        $.at(122, F);
+        $.at(130, F);
         let v_elsewhere = false;
-        $.at(123, F);
+        $.at(131, F);
         for (const v_pid of $.iter($.call(v__ids, [v_st]), false)) {
-          $.at(123, F);
+          $.at(131, F);
           if ($.truth($.and($.neq(v_pid, v_id), () => $.cmp(">=", $.call($.b["index_of"], [$.get($.index($.get(v_st, "profiles"), v_pid), "accounts"), v_acc]), 0)), "if")) {
-            $.at(123, F);
+            $.at(131, F);
             v_elsewhere = true;
           }
         }
-        $.at(124, F);
-        if ($.truth($.not(v_elsewhere), "if")) {
-          $.at(124, F);
+        $.at(132, F);
+        if ($.truth($.and($.not(v_elsewhere), () => $.call(v__exists, [v_op, v_acc])), "if")) {
+          $.at(132, F);
           return $.ty($.map(["ok", false, "why", $.add($.get(v_p, "name"), $.str([" is the only profile of one of its accounts: move it first"]))]), "map", false, "return value of apply");
         }
       }
-      $.at(126, F);
+      $.at(134, F);
       let v_ps = $.map([]);
-      $.at(127, F);
+      $.at(135, F);
       for (const v_pid of $.iter($.call(v__ids, [v_st]), false)) {
-        $.at(127, F);
+        $.at(135, F);
         if ($.truth($.neq(v_pid, v_id), "if")) {
-          $.at(127, F);
+          $.at(135, F);
           $.setIndex(v_ps, v_pid, $.index($.get(v_st, "profiles"), v_pid));
         }
       }
-      $.at(128, F);
+      $.at(136, F);
       return $.ty($.map(["ok", true, "state", $.map(["profiles", v_ps, "defaultId", $.get(v_st, "defaultId")]), "profile", v_p]), "map", false, "return value of apply");
     }
-    $.at(130, F);
+    $.at(138, F);
     return $.ty($.map(["ok", false, "why", $.add($.str(["no such change: "]), $.call($.b["str"], [v_kind]))]), "map", false, "return value of apply");
     return $.ty(null, "map", false, "return value of apply");
   }
   function v_signs_in(v_name) {
     v_name = $.ty(v_name, "string", false, "parameter name of signs_in");
-    $.at(135, F);
+    $.at(143, F);
     let v_n = $.call($.b["lower"], [v_name]);
-    $.at(136, F);
+    $.at(144, F);
     for (const v_x of $.iter($.list([$.str(["csrf"]), $.str(["callback"]), $.str(["nonce"]), $.str(["consent"]), $.str(["test"]), $.str(["analytics"]), $.str(["theme"]), $.str(["locale"]), $.str(["device"]), $.str(["tracking"]), $.str(["_ga"])]), false)) {
-      $.at(136, F);
+      $.at(144, F);
       if ($.truth($.contains(v_n, v_x), "if")) {
-        $.at(136, F);
+        $.at(144, F);
         return $.ty(false, "any", false, "return value of signs_in");
       }
     }
-    $.at(137, F);
+    $.at(145, F);
     for (const v_x of $.iter($.list([$.str(["session"]), $.str(["auth"]), $.str(["token"]), $.str(["jwt"]), $.str(["login"]), $.str(["logged"]), $.str(["psid"])]), false)) {
-      $.at(137, F);
+      $.at(145, F);
       if ($.truth($.contains(v_n, v_x), "if")) {
-        $.at(137, F);
+        $.at(145, F);
         return $.ty(true, "any", false, "return value of signs_in");
       }
     }
-    $.at(138, F);
+    $.at(146, F);
     return $.ty($.cmp(">=", $.call($.b["index_of"], [$.list([$.str(["sid"]), $.str(["ssid"]), $.str(["sapisid"]), $.str(["c_user"]), $.str(["xs"]), $.str(["li_at"]), $.str(["sso"]), $.str(["_puid"])]), v_n]), 0), "any", false, "return value of signs_in");
     return $.ty(null, "any", false, "return value of signs_in");
   }
@@ -355,73 +370,73 @@ module.exports = function load($) {
     v_is_default = $.ty(v_is_default, "any", false, "parameter is_default of logins");
     v_cookies = $.ty(v_cookies, "list", false, "parameter cookies of logins");
     v_passwords = $.ty(v_passwords, "list", false, "parameter passwords of logins");
-    $.at(147, F);
+    $.at(155, F);
     let v_sites = $.map([]);
-    $.at(148, F);
+    $.at(156, F);
     for (const v_c of $.iter(v_cookies, false)) {
-      $.at(149, F);
+      $.at(157, F);
       let v_s = $.call($.b["clone"], [$.call($.b["get"], [v_sites, $.get(v_c, "site"), $.map(["site", $.get(v_c, "site"), "signedIn", false, "cookies", 0, "signIns", 0, "passwords", $.list([])])])]);
-      $.at(150, F);
+      $.at(158, F);
       $.setMember(v_s, "cookies", $.add($.get(v_s, "cookies"), 1));
-      $.at(151, F);
+      $.at(159, F);
       if ($.truth($.or($.call($.b["get"], [v_c, $.str(["auth"]), false]), () => $.call(v_signs_in, [$.call($.b["str"], [$.call($.b["get"], [v_c, $.str(["name"]), $.str([""])])])])), "if")) {
-        $.at(152, F);
+        $.at(160, F);
         $.setMember(v_s, "signedIn", true);
-        $.at(153, F);
+        $.at(161, F);
         $.setMember(v_s, "signIns", $.add($.get(v_s, "signIns"), 1));
       }
-      $.at(155, F);
+      $.at(163, F);
       $.setIndex(v_sites, $.get(v_c, "site"), v_s);
     }
-    $.at(157, F);
+    $.at(165, F);
     for (const v_w of $.iter(v_passwords, false)) {
-      $.at(158, F);
+      $.at(166, F);
       let v_acc = $.call($.b["get"], [v_w, $.str(["accountId"]), null]);
-      $.at(159, F);
+      $.at(167, F);
       if ($.truth($.or($.and($.eq(v_acc, null), () => v_is_default), () => $.and($.neq(v_acc, null), () => $.cmp(">=", $.call($.b["index_of"], [$.get(v_p, "accounts"), v_acc]), 0))), "if")) {
-        $.at(160, F);
+        $.at(168, F);
         let v_s = $.call($.b["clone"], [$.call($.b["get"], [v_sites, $.get(v_w, "site"), $.map(["site", $.get(v_w, "site"), "signedIn", false, "cookies", 0, "signIns", 0, "passwords", $.list([])])])]);
-        $.at(161, F);
+        $.at(169, F);
         $.setMember(v_s, "passwords", $.call($.b["push"], [$.get(v_s, "passwords"), $.map(["id", $.get(v_w, "id"), "username", $.get(v_w, "username")])]));
-        $.at(162, F);
+        $.at(170, F);
         $.setIndex(v_sites, $.get(v_w, "site"), v_s);
       }
     }
-    $.at(165, F);
+    $.at(173, F);
     let v_out = $.list([]);
-    $.at(166, F);
+    $.at(174, F);
     for (const v_k of $.iter($.call($.b["sort"], [$.call($.b["keys"], [v_sites])]), false)) {
-      $.at(167, F);
+      $.at(175, F);
       if ($.truth($.or($.get($.index(v_sites, v_k), "signedIn"), () => $.cmp(">", $.call($.b["len"], [$.get($.index(v_sites, v_k), "passwords")]), 0)), "if")) {
-        $.at(167, F);
+        $.at(175, F);
         v_out = $.call($.b["push"], [v_out, $.index(v_sites, v_k)]);
       }
     }
-    $.at(169, F);
+    $.at(177, F);
     return $.ty(v_out, "list", false, "return value of logins");
     return $.ty(null, "list", false, "return value of logins");
   }
   function v__groups() {
-    $.at(173, F);
+    $.at(181, F);
     return $.ty($.list([$.map(["key", $.str(["google"]), "name", $.str(["Google"]), "sites", $.list([$.str(["google.com"]), $.str(["youtube.com"])]), "provider", $.str(["gemini"])]), $.map(["key", $.str(["openai"]), "name", $.str(["OpenAI"]), "sites", $.list([$.str(["chatgpt.com"]), $.str(["openai.com"])]), "provider", $.str(["chatgpt"])]), $.map(["key", $.str(["claude"]), "name", $.str(["Claude"]), "sites", $.list([$.str(["claude.ai"]), $.str(["claude.com"]), $.str(["anthropic.com"])]), "provider", $.str(["claude"])]), $.map(["key", $.str(["proton"]), "name", $.str(["Proton"]), "sites", $.list([$.str(["proton.me"]), $.str(["protonmail.com"])]), "provider", null]), $.map(["key", $.str(["meta"]), "name", $.str(["Meta"]), "sites", $.list([$.str(["facebook.com"]), $.str(["messenger.com"])]), "provider", null]), $.map(["key", $.str(["perplexity"]), "name", $.str(["Perplexity"]), "sites", $.list([$.str(["perplexity.ai"])]), "provider", $.str(["perplexity"])]), $.map(["key", $.str(["deepseek"]), "name", $.str(["DeepSeek"]), "sites", $.list([$.str(["deepseek.com"])]), "provider", $.str(["deepseek"])]), $.map(["key", $.str(["mistral"]), "name", $.str(["Mistral"]), "sites", $.list([$.str(["mistral.ai"])]), "provider", $.str(["mistral"])]), $.map(["key", $.str(["grok"]), "name", $.str(["Grok"]), "sites", $.list([$.str(["grok.com"]), $.str(["x.ai"])]), "provider", $.str(["grok"])])]), "list", false, "return value of _groups");
     return $.ty(null, "list", false, "return value of _groups");
   }
   function v__group(v_site) {
     v_site = $.ty(v_site, "string", false, "parameter site of _group");
-    $.at(186, F);
+    $.at(194, F);
     for (const v_g of $.iter($.call(v__groups, []), false)) {
-      $.at(186, F);
+      $.at(194, F);
       if ($.truth($.cmp(">=", $.call($.b["index_of"], [$.get(v_g, "sites"), v_site]), 0), "if")) {
-        $.at(186, F);
+        $.at(194, F);
         return $.ty(v_g, "map", false, "return value of _group");
       }
     }
-    $.at(187, F);
+    $.at(195, F);
     return $.ty($.map(["key", v_site, "name", v_site, "sites", $.list([v_site]), "provider", null]), "map", false, "return value of _group");
     return $.ty(null, "map", false, "return value of _group");
   }
   function v__not_logins() {
-    $.at(191, F);
+    $.at(199, F);
     return $.ty($.list([$.str(["loopme.me"]), $.str(["mp3cut.net"])]), "list", false, "return value of _not_logins");
     return $.ty(null, "list", false, "return value of _not_logins");
   }
@@ -429,20 +444,20 @@ module.exports = function load($) {
     v_p = $.ty(v_p, "map", false, "parameter p of _linked");
     v_g = $.ty(v_g, "map", false, "parameter g of _linked");
     v_info = $.ty(v_info, "map", false, "parameter info of _linked");
-    $.at(194, F);
+    $.at(202, F);
     if ($.truth($.eq($.get(v_g, "provider"), null), "if")) {
-      $.at(194, F);
+      $.at(202, F);
       return $.ty(null, "any", false, "return value of _linked");
     }
-    $.at(195, F);
+    $.at(203, F);
     for (const v_acc of $.iter($.get(v_p, "accounts"), false)) {
-      $.at(195, F);
+      $.at(203, F);
       if ($.truth($.cmp(">=", $.call($.b["index_of"], [$.call(v__provs, [v_info, v_acc]), $.get(v_g, "provider")]), 0), "if")) {
-        $.at(195, F);
+        $.at(203, F);
         return $.ty(v_acc, "any", false, "return value of _linked");
       }
     }
-    $.at(196, F);
+    $.at(204, F);
     return $.ty(null, "any", false, "return value of _linked");
     return $.ty(null, "any", false, "return value of _linked");
   }
@@ -451,62 +466,62 @@ module.exports = function load($) {
     v_list_of = $.ty(v_list_of, "list", false, "parameter list_of of site_accounts");
     v_info = $.ty(v_info, "map", false, "parameter info of site_accounts");
     v_new_ids = $.ty(v_new_ids, "list", false, "parameter new_ids of site_accounts");
-    $.at(205, F);
+    $.at(213, F);
     let v_known = $.call($.b["clone"], [$.call($.b["get"], [v_p, $.str(["siteIds"]), $.map([])])]);
-    $.at(206, F);
+    $.at(214, F);
     let v_out = $.map([]);
-    $.at(207, F);
+    $.at(215, F);
     let v_n = 0;
-    $.at(208, F);
+    $.at(216, F);
     for (const v_x of $.iter(v_list_of, false)) {
-      $.at(209, F);
+      $.at(217, F);
       if ($.truth($.or($.cmp("<", $.call($.b["index_of"], [$.call(v__not_logins, []), $.get(v_x, "site")]), 0), () => $.cmp(">", $.call($.b["len"], [$.get(v_x, "passwords")]), 0)), "if")) {
-        $.at(210, F);
+        $.at(218, F);
         let v_g = $.call(v__group, [$.get(v_x, "site")]);
-        $.at(211, F);
+        $.at(219, F);
         if ($.truth($.not($.call($.b["has"], [v_out, $.get(v_g, "key")])), "if")) {
-          $.at(212, F);
+          $.at(220, F);
           let v_id = $.call($.b["get"], [v_known, $.get(v_g, "key"), null]);
-          $.at(213, F);
+          $.at(221, F);
           if ($.truth($.eq(v_id, null), "if")) {
-            $.at(214, F);
+            $.at(222, F);
             v_id = $.call(v__linked, [v_p, v_g, v_info]);
-            $.at(215, F);
+            $.at(223, F);
             if ($.truth($.eq(v_id, null), "if")) {
-              $.at(216, F);
+              $.at(224, F);
               v_id = $.index(v_new_ids, v_n);
-              $.at(217, F);
+              $.at(225, F);
               v_n = $.add(v_n, 1);
             }
-            $.at(219, F);
+            $.at(227, F);
             $.setIndex(v_known, $.get(v_g, "key"), v_id);
           }
-          $.at(221, F);
+          $.at(229, F);
           $.setIndex(v_out, $.get(v_g, "key"), $.map(["id", v_id, "key", $.get(v_g, "key"), "name", $.get(v_g, "name"), "provider", $.get(v_g, "provider"), "sites", $.list([]), "signedIn", false, "passwords", $.list([])]));
         }
-        $.at(223, F);
+        $.at(231, F);
         let v_a = $.call($.b["clone"], [$.index(v_out, $.get(v_g, "key"))]);
-        $.at(224, F);
+        $.at(232, F);
         $.setMember(v_a, "sites", $.call($.b["push"], [$.get(v_a, "sites"), $.get(v_x, "site")]));
-        $.at(225, F);
+        $.at(233, F);
         $.setMember(v_a, "signedIn", $.or($.get(v_a, "signedIn"), () => $.get(v_x, "signedIn")));
-        $.at(226, F);
+        $.at(234, F);
         for (const v_w of $.iter($.get(v_x, "passwords"), false)) {
-          $.at(226, F);
+          $.at(234, F);
           $.setMember(v_a, "passwords", $.call($.b["push"], [$.get(v_a, "passwords"), $.map(["id", $.get(v_w, "id"), "username", $.get(v_w, "username"), "site", $.get(v_x, "site")])]));
         }
-        $.at(227, F);
+        $.at(235, F);
         $.setIndex(v_out, $.get(v_g, "key"), v_a);
       }
     }
-    $.at(230, F);
+    $.at(238, F);
     let v_accounts = $.list([]);
-    $.at(231, F);
+    $.at(239, F);
     for (const v_k of $.iter($.call($.b["sort"], [$.call($.b["keys"], [v_out])]), false)) {
-      $.at(231, F);
+      $.at(239, F);
       v_accounts = $.call($.b["push"], [v_accounts, $.index(v_out, v_k)]);
     }
-    $.at(232, F);
+    $.at(240, F);
     return $.ty($.map(["accounts", v_accounts, "siteIds", v_known, "minted", v_n]), "map", false, "return value of site_accounts");
     return $.ty(null, "map", false, "return value of site_accounts");
   }
@@ -514,29 +529,29 @@ module.exports = function load($) {
     v_st = $.ty(v_st, "map", false, "parameter st of resolve");
     v_account = $.ty(v_account, "string", false, "parameter account of resolve");
     v_wanted = $.ty(v_wanted, "any", false, "parameter wanted of resolve");
-    $.at(236, F);
+    $.at(244, F);
     let v_ps = $.call($.b["get"], [v_st, $.str(["profiles"]), $.map([])]);
-    $.at(237, F);
+    $.at(245, F);
     if ($.truth($.and($.and($.neq(v_wanted, null), () => $.call($.b["has"], [v_ps, v_wanted])), () => $.cmp(">=", $.call($.b["index_of"], [$.get($.index(v_ps, v_wanted), "accounts"), v_account]), 0)), "if")) {
-      $.at(237, F);
+      $.at(245, F);
       return $.ty($.index(v_ps, v_wanted), "any", false, "return value of resolve");
     }
-    $.at(238, F);
+    $.at(246, F);
     let v_d = $.call($.b["get"], [v_st, $.str(["defaultId"]), null]);
-    $.at(239, F);
+    $.at(247, F);
     if ($.truth($.and($.and($.neq(v_d, null), () => $.call($.b["has"], [v_ps, v_d])), () => $.cmp(">=", $.call($.b["index_of"], [$.get($.index(v_ps, v_d), "accounts"), v_account]), 0)), "if")) {
-      $.at(239, F);
+      $.at(247, F);
       return $.ty($.index(v_ps, v_d), "any", false, "return value of resolve");
     }
-    $.at(240, F);
+    $.at(248, F);
     for (const v_pid of $.iter($.call($.b["sort"], [$.call($.b["keys"], [v_ps])]), false)) {
-      $.at(240, F);
+      $.at(248, F);
       if ($.truth($.cmp(">=", $.call($.b["index_of"], [$.get($.index(v_ps, v_pid), "accounts"), v_account]), 0), "if")) {
-        $.at(240, F);
+        $.at(248, F);
         return $.ty($.index(v_ps, v_pid), "any", false, "return value of resolve");
       }
     }
-    $.at(241, F);
+    $.at(249, F);
     return $.ty(null, "any", false, "return value of resolve");
     return $.ty(null, "any", false, "return value of resolve");
   }
@@ -544,6 +559,7 @@ module.exports = function load($) {
     "_ids": v__ids,
     "_with": v__with,
     "_provs": v__provs,
+    "_exists": v__exists,
     "clash": v_clash,
     "_new": v__new,
     "ensure": v_ensure,
@@ -559,5 +575,5 @@ module.exports = function load($) {
   });
 };
 if (require.main === module) {
-  process.exitCode = require("./_emerge/lang/runtime.js").runCompiled(module.exports, { file: F });
+  process.exitCode = require("../../../../emerge/emerge/lang/runtime.js").runCompiled(module.exports, { file: F });
 }

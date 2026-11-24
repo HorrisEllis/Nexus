@@ -22,6 +22,13 @@ fn _with(st: map, p: map): map {
 fn _provs(info: map, account: string): list = get(get(info, account, {}), "providers", [])
 
 /** the account already in this profile that holds one of this account's providers, or null */
+/** does the account still exist? The op's info lists the live accounts; an op without info (older callers) counts every id as live */
+fn _exists(op: map, account: string): bool {
+  let info = get(op, "info", null)
+  if info == null { return true }
+  return has(info, account)
+}
+
 fn clash(p: map, account: string, info: map): any {
   let mine = _provs(info, account)
   for other in p.accounts {
@@ -107,7 +114,8 @@ fn apply(st: map, op: map): map {
     if index_of(p.accounts, acc) < 0 { return { ok: true, state: st, profile: p } }
     var elsewhere = false
     for pid in _ids(st) { if pid != id and index_of(st.profiles[pid].accounts, acc) >= 0 { elsewhere = true } }
-    if not elsewhere { return { ok: false, why: "this is the account's only profile: add it to another first" } }
+    // 2026-11-24: an account that no longer exists (deleted) is not stranded; it is only a stale id to drop
+    if not elsewhere and _exists(op, acc) { return { ok: false, why: "this is the account's only profile: add it to another first" } }
     p.accounts = filter(p.accounts, fn(x) = x != acc)
     p.updatedAt = now
     return { ok: true, state: _with(st, p), profile: p }
@@ -121,7 +129,7 @@ fn apply(st: map, op: map): map {
     for acc in p.accounts {
       var elsewhere = false
       for pid in _ids(st) { if pid != id and index_of(st.profiles[pid].accounts, acc) >= 0 { elsewhere = true } }
-      if not elsewhere { return { ok: false, why: p.name + " is the only profile of one of its accounts: move it first" } }
+      if not elsewhere and _exists(op, acc) { return { ok: false, why: p.name + " is the only profile of one of its accounts: move it first" } }
     }
     var ps = {}
     for pid in _ids(st) { if pid != id { ps[pid] = st.profiles[pid] } }
