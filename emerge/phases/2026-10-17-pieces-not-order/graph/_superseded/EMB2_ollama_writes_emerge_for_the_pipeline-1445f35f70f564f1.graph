@@ -7,11 +7,11 @@ intent: null
 summary: 30 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1795177423375
+exported_at: 1795497156012
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1795177423375
-lastSeenAt: 1795177423375
+firstSeenAt: 1795497156012
+lastSeenAt: 1795497156012
 fingerprint: null
 payload:
   for: EMB2_ollama_writes_emerge_for_the_pipeline
@@ -238,12 +238,19 @@ payload:
       - with: docs/2026-10-17-pieces-not-order-phasemap.spec::PC5_control_when_he_chooses
         files:
           - idearium/api/index.js
+      - with: docs/2026-10-17-pieces-not-order-phasemap.spec::EMB4_torrent_pieces
+        files:
+          - idearium/lib/emerge-rung.cjs
+          - tests/modules/test-emerge-rung.test.js
     dangling: []
     lines:
       - layer 4 · ready
       - 'depends on (1): EMB1_emerge_writes_the_brick · all upstream 11'
       - 'needed by (0): —'
       - 'same files as PC5_control_when_he_chooses with no order between them: idearium/api/index.js'
+      - >-
+        same files as EMB4_torrent_pieces with no order between them: idearium/lib/emerge-rung.cjs,
+        tests/modules/test-emerge-rung.test.js
     edges:
       - from: docs/2026-10-17-pieces-not-order-phasemap.spec::EMB1_emerge_writes_the_brick
         kind: declared

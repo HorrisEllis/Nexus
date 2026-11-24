@@ -1,0 +1,262 @@
+envelope: 1
+uuid: nexus-export-graph-phase:EMB2_ollama_writes_emerge_for_the_pipeline:bb1edf7c6fc5cf89
+type: graph
+id: phase:EMB2_ollama_writes_emerge_for_the_pipeline:bb1edf7c6fc5cf89
+context: dependency graph of phase EMB2_ollama_writes_emerge_for_the_pipeline
+intent: null
+summary: 30 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1795497761382
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795497761382
+lastSeenAt: 1795497761382
+fingerprint: null
+payload:
+  for: EMB2_ollama_writes_emerge_for_the_pipeline
+  kind: phase
+  repo: null
+  hash: bb1edf7c6fc5cf89
+  nodes:
+    - path: emerge/bench/bench.js
+      role: changes
+      exists: true
+      system: emerge
+    - path: emerge/bench/chunks.js
+      role: changes
+      exists: true
+      system: emerge
+    - path: emerge/emerge/lang/cie/self.eg
+      role: changes
+      exists: true
+      system: emerge
+    - path: idearium/api/index.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/lib/emerge-rung.cjs
+      role: changes
+      exists: true
+      system: idearium
+    - path: tests/modules/test-emerge-rung.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: idearium/cli/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/idearium-service.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: tests/modules/idearium-build-queue-poller.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/idearium-guardian-dispatch.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/idearium-ingest-stability.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-agent-hat-agnostic.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-change-record.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-failure-modes.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-flight-data.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-projects-overview.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-repo-carve.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-undo-any-change.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: _emerge/lang/runtime.js
+      role: uses
+      exists: true
+      system: _emerge
+    - path: idearium/config.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/lib/access.cjs
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/lib/autocorrect.eg.cjs
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/lib/config.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/economy/tokens.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/node-export.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/node-index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/node-registry.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/repo-agent.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/warp-rung.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: idearium/lib/emerge-rung.cjs
+      to: _emerge/lang/runtime.js
+      kind: requires
+    - from: idearium/lib/emerge-rung.cjs
+      to: idearium/lib/autocorrect.eg.cjs
+      kind: requires
+    - from: idearium/lib/emerge-rung.cjs
+      to: lib/node-export.js
+      kind: requires
+    - from: idearium/lib/emerge-rung.cjs
+      to: lib/node-index.js
+      kind: requires
+    - from: idearium/lib/emerge-rung.cjs
+      to: lib/node-registry.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/config.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/lib/config.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/data-home.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/warp-rung.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/lib/access.cjs
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/economy/tokens.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/repo-agent.js
+      kind: requires
+    - from: idearium/cli/index.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: idearium/idearium-service.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/idearium-build-queue-poller.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/idearium-guardian-dispatch.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/idearium-ingest-stability.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/test-agent-hat-agnostic.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/test-change-record.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/test-failure-modes.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/test-flight-data.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/test-projects-overview.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/test-repo-carve.test.js
+      to: idearium/api/index.js
+      kind: requires
+    - from: tests/modules/test-undo-any-change.test.js
+      to: idearium/api/index.js
+      kind: requires
+  crossings:
+    - from: idearium/lib/emerge-rung.cjs
+      to: _emerge/lang/runtime.js
+      fromSystem: idearium
+      toSystem: _emerge
+      kind: system
+      known: false
+  ready: true
+  dag:
+    layer: 4
+    deps:
+      - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB1_emerge_writes_the_brick
+    dependents: []
+    upstream:
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::CS0_projects_decomposed_into_components
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::MX2_the_0_60_components_wired_in_loom
+      - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB1_emerge_writes_the_brick
+      - docs/2026-10-19-pipeline-root-causes-phasemap.spec::RC4_agent_file_names_guarded
+      - docs/2026-10-19-pipeline-root-causes-phasemap.spec::VF1_verify_first
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS1_the_skeleton_in_emerge
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS1a_the_boundary_reads_code_not_text
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS2_the_language_through_the_door
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D0_a_system_not_an_idearium_module
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D2_two_contracts_two_names
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D3_handlers_run_the_cli
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts:
+      - with: docs/2026-10-17-pieces-not-order-phasemap.spec::PC5_control_when_he_chooses
+        files:
+          - idearium/api/index.js
+      - with: docs/2026-10-17-pieces-not-order-phasemap.spec::EMB4_torrent_pieces
+        files:
+          - idearium/lib/emerge-rung.cjs
+          - tests/modules/test-emerge-rung.test.js
+    dangling: []
+    lines:
+      - layer 4 · ready
+      - 'depends on (1): EMB1_emerge_writes_the_brick · all upstream 11'
+      - 'needed by (0): —'
+      - 'same files as PC5_control_when_he_chooses with no order between them: idearium/api/index.js'
+      - >-
+        same files as EMB4_torrent_pieces with no order between them: idearium/lib/emerge-rung.cjs,
+        tests/modules/test-emerge-rung.test.js
+    edges:
+      - from: docs/2026-10-17-pieces-not-order-phasemap.spec::EMB1_emerge_writes_the_brick
+        kind: declared
