@@ -338,6 +338,18 @@ phases_addendum_2026_11_22:
       A password is filled only on a person's click, only for the exact origin (PW-002), and never into a compartment, sandbox or agent. Guardian and agents never receive one.
     proof: "a login saved in one profile is not offered in another; a look-alike origin and a compartment are refused; an agent cannot read or trigger a password fill"
     axioms: "§5.9 sovereignty, §8.6 the vault, offer and chip reused, §10.3 one truth per kind of data"
+  AC16_everything_belongs_to_its_profile:
+    status: OPEN
+    depends_on: [AC10_profiles_the_source_of_truth, AC11_accounts_per_login_per_site]
+    expands: [ID3_bookmarks_carry_the_identity, TB5_site_and_account_nodes]
+    james: '"yes. like everything uses its relative profile as a source of truth. each tab, bookmark, can be hooked into the account and state of the browser." (2026-11-23)'
+    files: [clear-glass/src/profiles/profiles.eg, clear-glass/src/profiles/built, clear-glass/src/main/index.js, clear-glass/src/ipc/bridge.js, clear-glass/src/preload/index.js, clear-glass/src/bookmarks/store.js, clear-glass/src/history/store.js, clear-glass/src/downloads/store.js, clear-glass/src/site-settings/store.js, clear-glass/src/autofill/store.js, clear-glass/src/fingerprint/engine.js, clear-glass/src/rewind/engine.js, clear-glass/renderer/browser.js, clear-glass/renderer/browser.html]
+    does: >-
+      Every tab carries { profileId, accountId } and loads in that profile's jar; a tab opened from it inherits them. Read today: a normal tab's page uses the default session (Default's jar), a <webview> can be given a partition when it is created, and a bookmark already stores an accountId and a state snapshot (linkState), but nothing opens it in a profile.
+      A bookmark, history row, download, site setting, autofill profile, fingerprint and rewind snapshot belongs to one profile. A row with no profileId belongs to Default, so nothing is rewritten and nothing is lost. A bookmark opens in its profile, signed in as its account, at its saved state when it has one.
+      Global, not per profile: app settings, plugins, adblock lists, connections.
+    proof: "on a throwaway userData in real Electron: two profiles hold different logins, bookmarks and history; a bookmark opens in its own profile; every row from before the change is still in Default"
+    axioms: "§10.3 one truth per kind of data, §5.15 one owner, §0.3 nothing lost, §8.6 linkState and the stores reused"
 # ADDENDUM 2026-11-22 (0.60.636) — AC10: James: "okay profiles are in clearglass. no coupline". The first slice started Emerge's toolchain from Emerge's folder at run time.
 # Now the rules are compiled once (eg build --standalone) into clear-glass/src/profiles/built and run in Clear Glass's own process: no other system's folder is read,
 # Emerge may be absent. Rebuild after changing profiles.eg. Other systems reach profiles only through Clear Glass's /profiles routes.
@@ -373,3 +385,4 @@ phases_addendum_2026_11_22:
 # Applied to AC12 to AC15: whatever reaches outside Clear Glass (RAID, COS's addresses for nexus://, Versionium, a remote service) is a plugin behind a gate. A browser feature with no outside dependency (profiles, the jar, the chip) stays in Clear Glass.
 # Read today, not fixed by this map: clear-glass/src/mesh/agent-mesh.js requires copilot/lifeline.js, lib/agent-router.js and lib/automation/engine.js and hardcodes Cortex's and Guardian's ports; src/ipc/bridge.js requires 11 lib modules; src/options/store.js requires lib/versionium-record.js; src/storage/jaa.js requires lib/jaa-store.js, and lib/test-sandbox.js since the coder's 0.60.637.
 # The plugin host's gates use Clear Glass's fork of SISO, his mentor's. New gates must not add to it: their contract is Pillar's pillar:gate (CLAUDE.md, Ownership and credit).
+# ADDENDUM 2026-11-23 — AC_D9 (OPEN, his): can one window hold tabs from different profiles (each tab marked with its profile's colour, like Firefox containers), or does each profile get its own window (like Firefox profiles)? Coder's recommendation: tabs, because agents and accounts route per tab. Both keep one source of truth per profile. The tab mark is UI: a preview comes first.

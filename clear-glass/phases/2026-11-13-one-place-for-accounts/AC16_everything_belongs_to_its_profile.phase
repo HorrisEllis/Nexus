@@ -1,0 +1,43 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-13-one-place-for-accounts-phasemap.spec::AC16_everything_belongs_to_its_profile
+type: phase
+id: docs_2026-11-13-one-place-for-accounts-phasemap.spec::AC16_everything_belongs_to_its_profile
+context: >-
+  pipeline phase AC16_everything_belongs_to_its_profile of
+  docs/2026-11-13-one-place-for-accounts-phasemap.spec
+intent: null
+summary: AC16_everything_belongs_to_its_profile (?) — 13 file(s)
+system: idearium
+tags: []
+exported_at: 1795485619364
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795485619364
+lastSeenAt: 1795485619364
+fingerprint: null
+payload:
+  id: AC16_everything_belongs_to_its_profile
+  map: docs/2026-11-13-one-place-for-accounts-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/src/profiles/profiles.eg
+    - clear-glass/src/main/index.js
+    - clear-glass/src/ipc/bridge.js
+    - clear-glass/src/preload/index.js
+    - clear-glass/src/bookmarks/store.js
+    - clear-glass/src/history/store.js
+    - clear-glass/src/downloads/store.js
+    - clear-glass/src/site-settings/store.js
+    - clear-glass/src/autofill/store.js
+    - clear-glass/src/fingerprint/engine.js
+    - clear-glass/src/rewind/engine.js
+    - clear-glass/renderer/browser.js
+    - clear-glass/renderer/browser.html
+  depends_on:
+    - AC10_profiles_the_source_of_truth
+    - AC11_accounts_per_login_per_site
+  blocks: []
+  spec: null
+  graph: 92be37a49df34a0f

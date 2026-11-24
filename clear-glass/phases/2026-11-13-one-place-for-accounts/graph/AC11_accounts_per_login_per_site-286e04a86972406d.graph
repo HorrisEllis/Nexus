@@ -7,11 +7,11 @@ intent: null
 summary: 26 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1795484496194
+exported_at: 1795485619348
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1795484496194
-lastSeenAt: 1795484496194
+firstSeenAt: 1795485619348
+lastSeenAt: 1795485619348
 fingerprint: null
 payload:
   for: AC11_accounts_per_login_per_site
@@ -194,12 +194,14 @@ payload:
       - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC12_one_browser_identity_per_profile
       - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC13_intent_routes_to_ids
       - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC15_passwords_and_autofill_chip_per_profile
+      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC16_everything_belongs_to_its_profile
     upstream:
       - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC10_profiles_the_source_of_truth
     downstream:
       - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC12_one_browser_identity_per_profile
       - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC13_intent_routes_to_ids
       - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC15_passwords_and_autofill_chip_per_profile
+      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC16_everything_belongs_to_its_profile
     blockedBy:
       - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC10_profiles_the_source_of_truth
     unlocks:
@@ -211,9 +213,10 @@ payload:
       - layer 1 · blocked by AC10_profiles_the_source_of_truth
       - 'depends on (1): AC10_profiles_the_source_of_truth'
       - >-
-        needed by (3): AC12_one_browser_identity_per_profile, AC13_intent_routes_to_ids,
-        AC15_passwords_and_autofill_chip_per_profile · finishing it unlocks
-        AC12_one_browser_identity_per_profile, AC15_passwords_and_autofill_chip_per_profile
+        needed by (4): AC12_one_browser_identity_per_profile, AC13_intent_routes_to_ids,
+        AC15_passwords_and_autofill_chip_per_profile, AC16_everything_belongs_to_its_profile ·
+        finishing it unlocks AC12_one_browser_identity_per_profile,
+        AC15_passwords_and_autofill_chip_per_profile
     edges:
       - from: docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC10_profiles_the_source_of_truth
         kind: declared

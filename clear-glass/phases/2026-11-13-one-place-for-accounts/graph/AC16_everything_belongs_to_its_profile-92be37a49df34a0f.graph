@@ -1,0 +1,289 @@
+envelope: 1
+uuid: nexus-export-graph-phase:AC16_everything_belongs_to_its_profile:92be37a49df34a0f
+type: graph
+id: phase:AC16_everything_belongs_to_its_profile:92be37a49df34a0f
+context: dependency graph of phase AC16_everything_belongs_to_its_profile
+intent: null
+summary: 37 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1795485619364
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795485619364
+lastSeenAt: 1795485619364
+fingerprint: null
+payload:
+  for: AC16_everything_belongs_to_its_profile
+  kind: phase
+  repo: null
+  hash: 92be37a49df34a0f
+  nodes:
+    - path: clear-glass/renderer/browser.html
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/renderer/browser.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/autofill/store.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/bookmarks/store.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/downloads/store.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/fingerprint/engine.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/history/store.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/ipc/bridge.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/preload/index.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/profiles/profiles.eg
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/rewind/engine.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/site-settings/store.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/driver/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.pre-userscripts.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/mesh/agent-mesh.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/passwords/vault.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/test/phase2.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: clear-glass/test/storage-jaa.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-autofill-learn-pick.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-autofill-learn-save.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-cg-agent-doors.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-cg-gig-autofill.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-one-tab-e2e.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-response-downloads.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: clear-glass/src/contexts/google-signin.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/contexts/manager.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/cookies/vault.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/core/bus.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/dom/archaeology.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/driver/index.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/driver/url-listener.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/compartment-window.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/window-frame.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/sse/server.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/tls/proxy.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: clear-glass/src/main/index.js
+      to: lib/data-home.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/main/compartment-window.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/main/window-frame.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/contexts/google-signin.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/core/bus.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/sse/server.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/tls/proxy.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/cookies/vault.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/contexts/manager.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/dom/archaeology.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/driver/index.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/driver/url-listener.js
+      kind: requires
+    - from: clear-glass/src/driver/index.js
+      to: clear-glass/src/main/index.js
+      kind: requires
+    - from: clear-glass/src/mesh/agent-mesh.js
+      to: clear-glass/src/main/index.js
+      kind: requires
+    - from: clear-glass/src/main/index.pre-userscripts.js
+      to: clear-glass/src/ipc/bridge.js
+      kind: requires
+    - from: tests/modules/test-cg-agent-doors.test.js
+      to: clear-glass/src/ipc/bridge.js
+      kind: requires
+    - from: tests/modules/test-cg-gig-autofill.test.js
+      to: clear-glass/src/ipc/bridge.js
+      kind: requires
+    - from: clear-glass/test/phase2.test.js
+      to: clear-glass/src/bookmarks/store.js
+      kind: requires
+    - from: clear-glass/test/storage-jaa.test.js
+      to: clear-glass/src/history/store.js
+      kind: requires
+    - from: tests/modules/test-one-tab-e2e.test.js
+      to: clear-glass/src/downloads/store.js
+      kind: requires
+    - from: tests/modules/test-response-downloads.test.js
+      to: clear-glass/src/downloads/store.js
+      kind: requires
+    - from: clear-glass/src/passwords/vault.js
+      to: clear-glass/src/site-settings/store.js
+      kind: requires
+    - from: tests/modules/test-autofill-learn-pick.test.js
+      to: clear-glass/src/site-settings/store.js
+      kind: requires
+    - from: tests/modules/test-autofill-learn-save.test.js
+      to: clear-glass/src/site-settings/store.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC10_profiles_the_source_of_truth
+      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC11_accounts_per_login_per_site
+    dependents: []
+    upstream:
+      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC10_profiles_the_source_of_truth
+      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC11_accounts_per_login_per_site
+    downstream: []
+    blockedBy:
+      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC10_profiles_the_source_of_truth
+      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC11_accounts_per_login_per_site
+    unlocks: []
+    conflicts:
+      - with: docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC12_one_browser_identity_per_profile
+        files:
+          - clear-glass/src/fingerprint/engine.js
+      - with: docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC14_nexus_addresses_in_the_browser
+        files:
+          - clear-glass/src/main/index.js
+          - clear-glass/renderer/browser.js
+      - with: docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC15_passwords_and_autofill_chip_per_profile
+        files:
+          - clear-glass/src/ipc/bridge.js
+          - clear-glass/src/preload/index.js
+    dangling: []
+    lines:
+      - layer 2 · blocked by AC10_profiles_the_source_of_truth, AC11_accounts_per_login_per_site
+      - 'depends on (2): AC10_profiles_the_source_of_truth, AC11_accounts_per_login_per_site'
+      - 'needed by (0): —'
+      - >-
+        same files as AC12_one_browser_identity_per_profile with no order between them:
+        clear-glass/src/fingerprint/engine.js
+      - >-
+        same files as AC14_nexus_addresses_in_the_browser with no order between them:
+        clear-glass/src/main/index.js, clear-glass/renderer/browser.js
+      - >-
+        same files as AC15_passwords_and_autofill_chip_per_profile with no order between them:
+        clear-glass/src/ipc/bridge.js, clear-glass/src/preload/index.js
+    edges:
+      - from: docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC10_profiles_the_source_of_truth
+        kind: declared
+      - from: docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC11_accounts_per_login_per_site
+        kind: declared

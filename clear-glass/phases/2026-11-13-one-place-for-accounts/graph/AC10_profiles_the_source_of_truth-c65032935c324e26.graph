@@ -7,11 +7,11 @@ intent: null
 summary: 29 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1795484496191
+exported_at: 1795485619344
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1795484496191
-lastSeenAt: 1795484496191
+firstSeenAt: 1795485619344
+lastSeenAt: 1795485619344
 fingerprint: null
 payload:
   for: AC10_profiles_the_source_of_truth
@@ -215,6 +215,7 @@ payload:
     deps: []
     dependents:
       - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC11_accounts_per_login_per_site
+      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC16_everything_belongs_to_its_profile
       - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC14_nexus_addresses_in_the_browser
     upstream: []
     downstream:
@@ -223,6 +224,7 @@ payload:
       - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC13_intent_routes_to_ids
       - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC14_nexus_addresses_in_the_browser
       - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC15_passwords_and_autofill_chip_per_profile
+      - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC16_everything_belongs_to_its_profile
     blockedBy: []
     unlocks:
       - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC11_accounts_per_login_per_site
@@ -237,9 +239,9 @@ payload:
       - layer 0 · ready
       - 'depends on (0): —'
       - >-
-        needed by (2): AC11_accounts_per_login_per_site, AC14_nexus_addresses_in_the_browser · all
-        downstream 5 · finishing it unlocks AC11_accounts_per_login_per_site,
-        AC14_nexus_addresses_in_the_browser
+        needed by (3): AC11_accounts_per_login_per_site, AC16_everything_belongs_to_its_profile,
+        AC14_nexus_addresses_in_the_browser · all downstream 6 · finishing it unlocks
+        AC11_accounts_per_login_per_site, AC14_nexus_addresses_in_the_browser
       - 'DANGLING depends_on: AC_D6_clear_glass_owns_it'
       - >-
         same files as AC1_the_vault_as_a_library with no order between them:

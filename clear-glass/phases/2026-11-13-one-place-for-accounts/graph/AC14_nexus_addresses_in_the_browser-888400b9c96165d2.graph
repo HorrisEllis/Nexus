@@ -7,11 +7,11 @@ intent: null
 summary: 29 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1795485336004
+exported_at: 1795485619357
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1795485336004
-lastSeenAt: 1795485336004
+firstSeenAt: 1795485619357
+lastSeenAt: 1795485619357
 fingerprint: null
 payload:
   for: AC14_nexus_addresses_in_the_browser
@@ -229,6 +229,10 @@ payload:
       - with: docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC13_intent_routes_to_ids
         files:
           - idearium/cli/route-commands.js
+      - with: docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC16_everything_belongs_to_its_profile
+        files:
+          - clear-glass/src/main/index.js
+          - clear-glass/renderer/browser.js
     dangling: []
     lines:
       - layer 1 · blocked by AC10_profiles_the_source_of_truth
@@ -240,6 +244,9 @@ payload:
       - >-
         same files as AC13_intent_routes_to_ids with no order between them:
         idearium/cli/route-commands.js
+      - >-
+        same files as AC16_everything_belongs_to_its_profile with no order between them:
+        clear-glass/src/main/index.js, clear-glass/renderer/browser.js
     edges:
       - from: docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC10_profiles_the_source_of_truth
         kind: inferred
