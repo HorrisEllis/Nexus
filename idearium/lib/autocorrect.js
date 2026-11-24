@@ -1,0 +1,21 @@
+// built by Emerge from autocorrect.eg (EMB1) — edit the .eg, not this file
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
+const { createRuntime } = require('../../_emerge/lang/runtime.js');
+const m = require('./autocorrect.eg.cjs')(createRuntime({ file: 'autocorrect.eg', loadModule: (abs, r) => require(abs.replace(/\.eg$/, '.cjs'))(r) }));
+const plain = (v) => Array.isArray(v) ? v.map(plain) : (v && typeof v === 'object' && !(v instanceof Date) ? Object.fromEntries(Object.entries(v).map(([k, x]) => [k, plain(x)])) : v);
+const wrap = (f) => typeof f === 'function' ? (...a) => plain(f(...a)) : plain(f);
+export const replace_all = wrap(m.replace_all);
+export const fix_equal = wrap(m.fix_equal);
+export const fix_logic = wrap(m.fix_logic);
+export const fix_bang = wrap(m.fix_bang);
+export const fix_semi = wrap(m.fix_semi);
+export const fix_code = wrap(m.fix_code);
+export const fix_outside = wrap(m.fix_outside);
+export const kind_at = wrap(m.kind_at);
+export const has_item = wrap(m.has_item);
+export const step_of = wrap(m.step_of);
+export const add_kind = wrap(m.add_kind);
+export const fixes_in = wrap(m.fixes_in);
+export const autocorrect = wrap(m.autocorrect);
+export default Object.fromEntries(Object.entries(m).map(([k, f]) => [k, wrap(f)]));

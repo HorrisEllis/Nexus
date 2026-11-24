@@ -7,11 +7,11 @@ intent: null
 summary: EMB3_the_autocorrect (?) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1795177423378
+exported_at: 1795491485334
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1795177423378
-lastSeenAt: 1795177423378
+firstSeenAt: 1795491485334
+lastSeenAt: 1795491485334
 fingerprint: null
 payload:
   id: EMB3_the_autocorrect
@@ -26,4 +26,4 @@ payload:
     - EMB1_emerge_writes_the_brick
   blocks: []
   spec: null
-  graph: 3658b4aa0ef1c195
+  graph: b5867d6015240164

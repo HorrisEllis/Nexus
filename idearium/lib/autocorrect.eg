@@ -1,0 +1,133 @@
+// replace_all(t: string, a: string, b: string) -> string — every a in t becomes b. Use join(split(t, a), b).
+fn replace_all(t: any, a: any, b: any): any {
+  return join(split(t, a), b)
+}
+
+// fix_equal(t: string) -> string — first every "!==" becomes "!=", then every "===" becomes "==". Call replace_all twice.
+fn fix_equal(t: any): any {
+  var t_v = t
+  t_v = replace_all(t_v, "!==", "!=")
+  t_v = replace_all(t_v, "===", "==")
+  return t_v
+}
+
+// fix_logic(t: string) -> string — every "&&" becomes "and", then every "||" becomes "or". Call replace_all twice.
+fn fix_logic(t: any): any {
+  return replace_all(replace_all(t, "&&", "and"), "||", "or")
+}
+
+// fix_bang(t: string) -> string — walk t with i. A "!" whose next character is not "=" becomes "not ". Every other character is kept.
+fn fix_bang(t: any): any {
+  var out = ""
+  var i = 0
+  while i < len(t) {
+  var c = t[i]
+  if c == "!" and i + 1 < len(t) and t[i + 1] != "=" {
+    out = out + "not "
+  } else {
+    out = out + c
+  }
+  i += 1
+  }
+  return out
+}
+
+// fix_semi(t: string) -> string — split t on "\n". If a line ends with ";", remove that last character. Join the lines with "\n".
+fn fix_semi(t: any): any {
+  var parts = split(t, "\n")
+  var out = []
+  var i = 0
+  while i < len(parts) {
+  var part = parts[i]
+  if part != "" and part[len(part) - 1] == ";" {
+    part = slice(part, 0, len(part) - 1)
+  }
+  out = push(out, part)
+  i += 1
+  }
+  return join(out, "\n")
+}
+
+// fix_code(t: string) -> string — return fix_semi(fix_bang(fix_logic(fix_equal(t))))
+fn fix_code(t: any): any {
+  return fix_semi(fix_bang(fix_logic(fix_equal(t))))
+}
+
+// fix_outside(t: string) -> string — parts = split(t, "\""). Build a new list: a part at an even index becomes fix_code(part), a part at an odd index stays. Return join(new list, "\"").
+fn fix_outside(t: any): any {
+  var parts = split(t, "\"")
+  var out = []
+  var i = 0
+  while i < len(parts) {
+  var part = parts[i]
+  if i % 2 == 0 {
+    out = push(out, fix_code(part))
+  } else {
+    out = push(out, part)
+  }
+  i += 1
+  }
+  return join(out, "\"")
+}
+
+// kind_at(t: string, i: num) -> string — the fix that starts at index i, else "". slice(t, i, i + 3) == "!==" gives "!==". == "===" gives "===". slice(t, i, i + 2) == "&&" gives "&&", == "||" gives "||". t[i] == "!" and slice(t, i, i + 2) != "!=" gives "!". t[i] == ";" and (i + 1 == len(t) or t[i + 1] == "\n") gives ";".
+fn kind_at(t: any, i: any): any {
+  if slice(t, i, i + 3) == "===" { return "===" }
+  if slice(t, i, i + 3) == "!==" { return "!=="}
+  if slice(t, i, i + 2) == "&&" { return "&&"}
+  if slice(t, i, i + 2) == "||" { return "||"}
+  if t[i] == "!" and slice(t, i, i + 2) != "!=" { return "!"}
+  if t[i] == ";" and (i + 1 == len(t) or t[i + 1] == "\n") { return ";"}
+  return ""
+}
+
+// has_item(xs: list, v: string) -> bool — true if any item of xs == v. Use for e in xs { if e == v { return true } } then return false.
+fn has_item(xs: any, v: any): any {
+  for e in xs { if e == v { return true } }
+  return false
+}
+
+// step_of(t: string, i: num) -> num — var k = kind_at(t, i). If k == "" return 1. Otherwise return len(k).
+fn step_of(t: any, i: any): any {
+  var k = kind_at(t, i)
+  if k == "" {
+  return 1
+  } else {
+  return len(k)
+  }
+}
+
+// add_kind(xs: list, k: string) -> list — If k == "" return xs. If has_item(xs, k) return xs. Otherwise return push(xs, k).
+fn add_kind(xs: any, k: any): any {
+  if k == "" {
+  return xs
+  }
+  if has_item(xs, k) {
+  return xs
+  }
+  return push(xs, k)
+}
+
+// fixes_in(t: string) -> list — Write only the inside of the while loop. Three cases: if t[i] is a double quote, flip quoted and add 1 to i. Else if quoted, add 1 to i. Else set out = add_kind(out, kind_at(t, i)) and add step_of(t, i) to i.
+fn fixes_in(t: any): any {
+  var out = []
+  var quoted = false
+  var i = 0
+  while i < len(t) {
+    if t[i] == "\"" {
+      quoted = not quoted
+      i += 1
+    } else if quoted {
+      i += 1
+    } else {
+      out = add_kind(out, kind_at(t, i))
+      i += step_of(t, i)
+    }
+  }
+  return out
+}
+
+// autocorrect(body: string) -> map — return { body: fix_outside(body), fixes: fixes_in(body) }
+fn autocorrect(body: any): any {
+  return { body: fix_outside(body), fixes: fixes_in(body) }
+}
