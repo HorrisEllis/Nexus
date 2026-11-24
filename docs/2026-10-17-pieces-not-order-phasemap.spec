@@ -430,3 +430,9 @@ related:
 ## ADDENDUM 0.60.632 (2026-11-21) — the Emerge rung reads the three faults of run 15
 # James, 2026-11-21: "yes. do it, end to end."
 # gaps.eg (Emerge): a name inside a string's braces gets the brace fix (Emerge reads { } in a string as code); only a CALLED name becomes a missing piece; a body that compares its input with the examples' literal texts is refused before it is compiled; the brief says both
+# ADDENDUM 2026-11-23 — EMB3, measured on the 3b alone. James: "nexus is meant to make coding with small llms possible." So a pass that needs the 30b proves the wrong thing, and climbing the ladder is not the goal.
+# Before: one function for the phase, prompts up to 8,207 characters, 146 recorded tries, 39 different bodies, no pass. 59 refusals were one "!", 61 of 72 tries at the main function used regex and methods.
+# Measured (nexus-build-data/small-proof.js, not Nexus code): the same phase split into 11 pieces, each a fresh prompt under 1,500 characters. Best run: 9 of 11 pieces in 53 s and 18 calls on the 3b, 4 mechanical repairs, 1 line taken from the plan with no model. Held at fixes_in; the phase has NOT passed. Runs varied (2 to 9 pieces).
+# What moved it, in order: (1) mechanical errors repaired by Nexus, not asked again; (2) only the shape a piece needs (walk a text, change its parts); (3) a line the plan already states is written with no model; (4) smaller pieces; (5) an edge case as an example.
+# Bias, named: the coder wrote these 11 pieces and their wording while watching the failures, on this one phase. It shows the 3b can write the pieces. It does not show Nexus can split a phase by itself, which is the next thing to build and to test on a phase not tuned by hand.
+# The uncommitted repeat guard in emerge-rung.cjs hands a repeated body to a bigger model. It is held back: the small-model path should shrink the gap instead.
