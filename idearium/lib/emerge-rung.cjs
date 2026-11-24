@@ -153,7 +153,7 @@ const MARK = (n) => '{{gap:' + n + '}}';
 function skeletonOf(exports = []) {
   const fns = [];
   for (const e of exports) { const name = typeof e === 'string' ? e : e && e.name; const ps = typeof e === 'string' ? null : paramsOf(e); if (!name || !ps) return null;
-    fns.push({ name, params: ps, does: _q(e.does || ''), signature: _q(e.signature || '') }); }
+    fns.push({ name, params: ps, does: _q(e.does || ''), signature: _q(e.signature || ''), contract: (e && e.contract) || null }); }   // EMB8: a piece carries its own contract
   if (!fns.length) return null;
   const text = fns.map(x => '// ' + (x.signature || x.name).replace(/\n/g, ' ') + (x.does ? ' — ' + x.does.replace(/\n/g, ' ') : '') + '\nfn ' + x.name + '(' + x.params.map(p => p + ': any').join(', ') + '): any {\n' + MARK(x.name) + '\n}').join('\n\n') + '\n';
   return { text, fns };
@@ -170,6 +170,11 @@ function bodyOf(text, name) {
 function briefGap({ skel, filled, name, expectation = null, feedback = null, lesson = '', method = '' }) {
   return [CARD, '', 'Nexus wrote this Emerge module. Fill ONLY the body marked ___ (in fn ' + name + '). The other functions are done or stubbed; do not change them.',
     '', render(skel, filled, name), '',
+    // EMB8 (THE_CONTRACT_JOINS_THEM, his "yes like constraints, need to be acknowledged also"): this piece's own end state, first
+    ...(() => { const c = ((skel.fns.find(x => x.name === name) || {}).contract) || null; if (!c) return [];
+      const ex = (c.examples || []).slice(0, 8), cs = (c.constraints || []).slice(0, 6);
+      return [ex.length ? name + ' must give exactly these (its contract; write the general rule, the test has other inputs):\n' + ex.map(x => '  ' + _q(x)).join('\n') : '',
+        cs.length ? 'Its constraints (each must hold):\n' + cs.map(x => '  - ' + _q(x.says || x) + (x.kind ? ' (' + x.kind + ')' : '')).join('\n') : '', ''].filter(Boolean); })(),
     method ? 'The method:\n' + method + '\n' : '',
     expectation ? 'The module must pass this test (run against its exports):\n' + _q(expectation).slice(0, 2500) : '',
     lesson ? '\nBEFORE YOU WRITE — the lesson from this gap\'s earlier tries:\n' + _q(lesson).slice(0, 3500) : '',

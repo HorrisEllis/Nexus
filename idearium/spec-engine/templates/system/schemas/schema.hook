@@ -38,3 +38,7 @@ payload:
       type: string
       required: true
       description: "http | event | direct"
+    contract:
+      type: object
+      required: false
+      description: "THE_CONTRACT_JOINS_THEM (genesis 1.6.0, applied 2026-11-23, EMB8; James: \"yes like constraints, need to be acknowledged also. my framework does all of this. at every level across any domain\"). The same block on every level (system, module, component, hook): { signature: the values it accepts, examples: ['call(args) == expected'], constraints: [{ says, kind: invariant | boundary | rule | resource, checked_by }] }. An invariant is the shape that cannot change; its depends_on are read from the wires. A hook with a contract is a piece a small model can fill; without one, it is the next thing to map."

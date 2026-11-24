@@ -7,11 +7,11 @@ intent: null
 summary: 29 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1795501275671
+exported_at: 1795506179045
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1795501275671
-lastSeenAt: 1795501275671
+firstSeenAt: 1795506179045
+lastSeenAt: 1795506179045
 fingerprint: null
 payload:
   for: EMB5_trials_start_at_raid
@@ -240,12 +240,18 @@ payload:
       - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB4_torrent_pieces
       - docs/2026-11-13-one-place-for-accounts-phasemap.spec::AC13_intent_routes_to_ids
     unlocks: []
-    conflicts: []
+    conflicts:
+      - with: docs/2026-10-17-pieces-not-order-phasemap.spec::EMB8_the_contract_at_every_level
+        files:
+          - cos/build/emerge-build.js
     dangling: []
     lines:
       - layer 7 · blocked by EMB4_torrent_pieces, AC13_intent_routes_to_ids
       - 'depends on (2): EMB4_torrent_pieces, AC13_intent_routes_to_ids · all upstream 18'
       - 'needed by (0): —'
+      - >-
+        same files as EMB8_the_contract_at_every_level with no order between them:
+        cos/build/emerge-build.js
     edges:
       - from: docs/2026-10-17-pieces-not-order-phasemap.spec::EMB4_torrent_pieces
         kind: declared

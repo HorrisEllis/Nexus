@@ -219,6 +219,22 @@ phases:
       (lang-synth's units) can be given from the command line.
     proof: "prediction registered 2026-11-23 before the run: EMB3 (autocorrect, 13 functions) rebuilt from nothing on the 3b alone, once with templates and once without, the same ladder (3b only) and tries; with templates it takes fewer model calls to pass every gap than without. Measured from each run's gap files."
     axioms: "§8.6 reuse (CIE's own rung 2, Emerge's own door); deterministic first; persistence (his 2026-11-14); Claude last"
+  EMB8_the_contract_at_every_level:
+    status: OPEN
+    depends_on: [EMB6_the_end_state_first]
+    james: '"component. like look at the component registry. like its all here. look at the architecture spec and genasis" · asked whether to apply THE_CONTRACT_JOINS_THEM (genesis 1.6.0, proposed 2026-11-14, mapped, never applied): "yes like constraints, need to be acknowledged also. my framework does all of this. at every level across any domain" · "the primitives are the boundaries for the structure. Anything that can''t be changed without changing the shape of the structure. The dag should create the expectations. Create the check list. Pre-req is for prerequisites for understanding requests before starting. Using my framework." · "Pipeline. Pipeline. Pipeline. As simple as possible." (2026-11-23)'
+    found: "2026-11-23: the 3b fills a piece well when the piece carries its own end state and copies when it does not (EMB6, EMB7: add_kind, given only its name, copied the Emerge card in every try). The component is already the agnostic block, the same at every level (genesis: 'nexus is recursive ... the same architecture on every level'; BEHAVIOR_IS_THE_COMPONENT: same input, same output). Its schema says what it is for, its capabilities, hooks and consumers, but not what it returns: THE_CONTRACT_JOINS_THEM was the missing field."
+    reading: "the coder's, to confirm: one contract block, the same on a system, a module, a component and a hook (one function, a direct in-hook): signature (the values it accepts), examples (input → output), constraints (each acknowledged: an invariant, the shape that cannot change; a boundary, a range; a rule; a resource), and its depends_on, read from the wires. A level whose contract is missing is the next thing to map; a leaf with a contract is what the 3b fills."
+    files: [idearium/spec-engine/templates/system/schemas/schema.component, idearium/spec-engine/templates/system/schemas/schema.hook, idearium/spec-engine/templates/genesis.spec, cos/build/emerge-build.js, idearium/lib/emerge-rung.cjs, tests/modules/test-emerge-rung.test.js]
+    does: >-
+      THE_CONTRACT_JOINS_THEM applied. The component and hook schemas gain one field, contract: { signature, examples, constraints }. The same
+      block at every level, so the pipeline reads any system, module, component or function one way. The pipeline walks down until every piece
+      has its contract, then the 3b fills the pieces, each brief carrying that piece's own examples and constraints, and passed pieces compose
+      back up. Where code exists, a piece's examples are recorded by running it (EMB6); otherwise they are written when that level is mapped,
+      and he approves them. First slice: the schema field; the builder records each function's examples against the built module (its Emerge
+      twin when the planned file is only an adapter); the rung gives each gap its own examples and constraints.
+    proof: "prediction registered 2026-11-23 before the run: add_kind (EMB3), the one piece the 3b could not fill from its name alone (14 refused tries, the Emerge card copied in every one), passes on the 3b once its brief carries its own recorded examples, with no hand-written description."
+    axioms: "THE_CONTRACT_JOINS_THEM, BEHAVIOR_IS_THE_COMPONENT (genesis 1.6.0, his); §8.6 reuse; deterministic first; persistence (his 2026-11-14)"
   EMB3_the_autocorrect:
     # roadmap edit 2026-11-20: OPEN -> IN PROGRESS 2026-11-20.
     # 2026-11-23: IN PROGRESS -> BUILT 0.60.642 (the 3b in small pieces; its 10 examples pass; see the addenda below)

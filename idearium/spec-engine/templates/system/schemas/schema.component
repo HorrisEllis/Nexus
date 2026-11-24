@@ -58,3 +58,7 @@ payload:
       type: object
       required: false
       description: "if applicable: { dir, store: node|vector|database|table|file, types: [node types] }"
+    contract:
+      type: object
+      required: false
+      description: "THE_CONTRACT_JOINS_THEM (genesis 1.6.0, applied 2026-11-23, EMB8; James: \"yes like constraints, need to be acknowledged also. my framework does all of this. at every level across any domain\"). The same block as each of its hooks carries: { signature, examples: ['call(args) == expected'], constraints: [{ says, kind: invariant | boundary | rule | resource, checked_by }] }. Behavior is the component (same input, same output), so its examples describe it whole."

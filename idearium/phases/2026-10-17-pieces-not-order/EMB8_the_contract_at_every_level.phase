@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-17-pieces-not-order-phasemap.spec::EMB8_the_contract_at_every_level
+type: phase
+id: docs_2026-10-17-pieces-not-order-phasemap.spec::EMB8_the_contract_at_every_level
+context: pipeline phase EMB8_the_contract_at_every_level of docs/2026-10-17-pieces-not-order-phasemap.spec
+intent: null
+summary: EMB8_the_contract_at_every_level (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1795506179053
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795506179053
+lastSeenAt: 1795506179053
+fingerprint: null
+payload:
+  id: EMB8_the_contract_at_every_level
+  map: docs/2026-10-17-pieces-not-order-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/spec-engine/templates/genesis.spec
+    - cos/build/emerge-build.js
+    - idearium/lib/emerge-rung.cjs
+    - tests/modules/test-emerge-rung.test.js
+  depends_on:
+    - EMB6_the_end_state_first
+  blocks: []
+  spec: null
+  graph: d89780f8bfb59918

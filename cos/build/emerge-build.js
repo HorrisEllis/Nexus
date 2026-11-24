@@ -69,6 +69,13 @@ function withParams(srcPath, exports) {
     return m ? { ...e, signature: `${n}(${m[1].replace(/\s+/g, ' ').trim()})` } : e;
   });
 }
+// EMB8 (THE_CONTRACT_JOINS_THEM): each export's contract, its own examples, from the phase's end-state file (EMB6, recorded from the code);
+// the rung puts them in that piece's brief. Waiting lines are used in a build that does not land; landing needs his yes on them (EMB6).
+function withContracts(exports) {
+  let rec = null; try { rec = JSON.parse(fs.readFileSync(path.join(ROOT, 'cos', 'data', 'build', 'end-state', PHASE + '.json'), 'utf8')); } catch (_) { return exports; }
+  const lines = (rec.examples || []).filter((x) => x.status === 'waiting' || x.status === 'accepted').map((x) => x.line);
+  return exports.map((e) => { const ex = lines.filter((l) => new RegExp(`^${e.name}\\s*\\(`).test(l)); return ex.length ? { ...e, contract: { ...(e.contract || {}), examples: ex } } : e; });
+}
 const END_STATE = !!arg('end-state'), ES_DIR = path.join(ROOT, 'cos', 'data', 'build', 'end-state');
 function runCall(mod, line, want) {   // one child per call, cwd a throwaway folder; prints one JSON line
   const k = want === undefined ? line.length : line.search(/\)\s*==/), call = line.slice(0, want === undefined ? line.length : k + 1);
@@ -78,7 +85,11 @@ Promise.resolve().then(()=>(${call})).then((a)=>{${want === undefined ? "out(a==
   const last = String(o.stdout || '').split('\n@@').pop(); try { return JSON.parse(last); } catch (_) { return { err: o.error ? 'did not finish in 15 s' : String(o.stderr || 'no answer').trim().split('\n').slice(-1)[0].slice(0, 300) }; }
 }
 async function endState({ ph, plan, src, mapText }) {
-  const TF = require(path.join(ROOT, 'lib', 'test-first.js')), vm = require('vm'), file = path.join(ES_DIR, PHASE + '.json'), mod = path.join(ROOT, src.path);
+  const TF = require(path.join(ROOT, 'lib', 'test-first.js')), vm = require('vm'), file = path.join(ES_DIR, PHASE + '.json'),
+    // EMB8: where the planned file is only an adapter (an ES module over an Emerge build), the built twin <file>.eg.cjs is what answers
+    mod = (() => { const tw = path.join(ROOT, src.path.replace(/\.[cm]?js$/, '.eg.cjs')); return fs.existsSync(tw) ? tw : path.join(ROOT, src.path); })();
+  // EMB8, --per-fn N: every function gets N examples of its own (its contract), not 3 for the whole phase
+  const PER = Math.max(0, Number(arg('per-fn', 0)) || 0), fnOf = (l) => (/^(\w+)\s*\(/.exec(String(l)) || [])[1];
   fs.mkdirSync(ES_DIR, { recursive: true });
   const recorded = fs.existsSync(mod) && /\.c?js$/.test(src.path) && !runCall(mod, 'Object.keys(m)').err;   // the code exists and loads: its answers are recorded
   let rec = fs.existsSync(file) ? JSON.parse(fs.readFileSync(file, 'utf8')) : null;
@@ -90,7 +101,7 @@ async function endState({ ph, plan, src, mapText }) {
     const s = Object.keys(v).sort().filter((k) => v[k] === null || typeof v[k] !== 'object').map((k) => [k, v[k]]); return s.length ? JSON.stringify(s) : json; };
   const saysOf = (x) => gist(String(x.line).replace(/^.*?\)\s*==\s*/, '')), live = () => rec.examples.filter((x) => x.status === 'waiting' || x.status === 'accepted');
   if (recorded) { const seen = new Set(); for (const x of rec.examples) { if (x.status !== 'waiting') continue; const g = saysOf(x); if (seen.has(g)) { x.status = 'nothing-new'; x.why = 'says what an earlier kept line says (checked again 2026-11-23)'; } else seen.add(g); } save(); }
-  if (live().length >= 3) { row('end-state-kept', { note: `${live().length} examples already on disk; no model asked`, file }); return 0; }
+  if (!PER && live().length >= 3) { row('end-state-kept', { note: `${live().length} examples already on disk; no model asked`, file }); return 0; }
   // a plan read from a file that exists names its exports only: each function's parameters are read from that same file (no model)
   const code = (() => { try { return fs.readFileSync(mod, 'utf8'); } catch (_) { return ''; } })();
   const fns = withParams(src.path, (src.exports || []).filter((e) => !/^_/.test(e.name || ''))).filter((e) => /\(/.test(e.signature || '')), names = new Set(fns.map((e) => e.name)), already = TF.examplesFrom(mapText, PHASE);
@@ -98,12 +109,14 @@ async function endState({ ph, plan, src, mapText }) {
   const quote = (l) => `      - '${l.replace(/'/g, "''")}'`, TRIES = Math.max(1, Number(arg('tries', 4)) || 4);
   // the start of a function's code, from its own file (no model)
   function srcOf(nm) { const i = code.search(new RegExp(`(?:function\\s*\\*?\\s*${nm}\\s*\\(|\\b${nm}\\s*[:=]\\s*(?:async\\s+)?(?:function\\s*)?\\()`)); return i < 0 ? '' : code.slice(i, i + 900); }
-  for (let n = rec.answers.length + 1; n <= TRIES && live().length < 3; n++) {
+  const liveOf = (nm) => live().filter((x) => fnOf(x.line) === nm), need = () => (PER ? fns.filter((e) => liveOf(e.name).length < PER) : fns), done = () => (PER ? !need().length : live().length >= 3);
+  if (PER && done()) { row('end-state-kept', { note: `every function has ${PER} examples on disk; no model asked`, file }); return 0; }
+  for (let n = rec.answers.length + 1; n <= TRIES && !done(); n++) {
     const lessons = rec.answers.flatMap((a) => a.refused || []).slice(-8);
     // the start of the code of a function that keeps refusing goes into the next prompt
     const stuck = [...new Set(lessons.filter((x) => /^(the code refused|says nothing new)/.test(x.why)).map((x) => (/^(\w+)/.exec(x.line) || [])[1]))].filter((x) => names.has(x)).slice(0, 2);
     const prompt = [`Phase ${PHASE}, file ${src.path}.`, `What it must do: ${String(ph.does || '').trim()}`, `How it is proven: ${String(ph.proof || '').trim()}`,
-      'Its functions:', ...fns.map((e) => '  ' + e.signature + (e.does ? ' — ' + e.does : '')), '',
+      (PER ? 'Write calls of these functions (they still need examples):' : 'Its functions:'), ...need().map((e) => '  ' + e.signature + (e.does ? ' — ' + e.does : '')), '',
       // upstream, the good kind of copying: calls the code already accepted, each with what it answered
       ...(recorded && live().length ? ['Calls the code already accepted (write different ones in the same style):', ...live().slice(-3).map((x) => '  ' + x.line.replace(/\s*==.*$/, '').slice(0, 300)), ''] : []),
       ...(recorded ? ['Write 3 to 6 calls of these functions that show what the phase must do, one per line, exactly in this form and nothing else:', '  name(args)',
@@ -131,13 +144,13 @@ async function endState({ ph, plan, src, mapText }) {
     save(); row('end-state', { note: `answer ${n} (${rec.method}): ${a.kept.length} kept, ${a.refused.length} refused; ${live().length} waiting for his yes`, kept: a.kept, refused: a.refused, file });
     // the split (RAID's rule, cortex/core/raid/contract-gates.js shouldSplit: after two failures, smaller pieces): a function whose calls failed
     // twice splits into its required parameters, one saved piece each, then composes back into one call that is judged like any other
-    if (recorded && live().length < 3) for (const nm of fns.map((e) => e.name)) {
+    if (recorded && !done()) for (const nm of need().map((e) => e.name)) {
       const fails = rec.answers.flatMap((x) => x.refused || []).filter((x) => (/^(\w+)/.exec(x.line) || [])[1] === nm && /^(the code refused|says nothing new)/.test(x.why)).length;
       const sp = (rec.splits = rec.splits || {})[nm] = rec.splits[nm] || { pieces: [], composed: [] };
       if (fails >= 2 && live().filter((x) => x.line.startsWith(nm + '(')).length < 3 && sp.composed.length < 3) await splitCall(fns.find((e) => e.name === nm), sp, n);
     }
   }
-  return live().length >= 3 ? 0 : 1;
+  return done() ? 0 : 1;
 
   // one call, judged: the code answers it (recorded) and its line passes test-first's own checks → { why: null, line } kept, or { why, line }
   function judge(l0) {
@@ -148,7 +161,7 @@ async function endState({ ph, plan, src, mapText }) {
           try { new vm.Script(`(${line})`); } catch (e) { return 'does not parse: ' + e.message; }
           const r = runCall(mod, line); if (r.err) return 'the code refused it: ' + r.err; if (r.undef) return 'the code returns nothing (undefined)';
           if (r.json === undefined || r.json.length > 600) return 'its answer is too large to read (' + String(r.json || '').length + ' chars)';
-          if ([...live(), ...already.map((l2) => ({ line: l2 }))].some((x) => saysOf(x) === gist(r.json))) return 'says nothing new: the code answers ' + r.json.slice(0, 160) + ', as a kept call already shows';
+          if ([...live(), ...already.map((l2) => ({ line: l2 }))].filter((x) => fnOf(x.line) === nm).some((x) => saysOf(x) === gist(r.json))) return 'says nothing new: the code answers ' + r.json.slice(0, 160) + ', as a kept call already shows';
           line = `${line} == ${r.json}`; if (!runCall(mod, line, r.json).agrees) return 'its answer changes from run to run';
         }
         if (!TF.examplesFrom(`  ${PHASE}:\n    examples:\n${quote(line)}\n`, PHASE).length) return 'not in the form name(args) == expected';
@@ -272,7 +285,7 @@ async function endState({ ph, plan, src, mapText }) {
   let res = null, t = null, out = '', T = null;
   for (let round = 1; round <= ROUNDS; round++) {
     row('round', { note: `round ${round} of ${ROUNDS}`, round });
-    try { res = await rung.build({ file: src.path, exports: PIECES ? PIECES.map((p) => ({ name: p.name, signature: `${p.name}(${p.sig}) -> ${p.ret}`, does: p.does })) : withParams(src.path, src.exports || []), expectation: testText, context: String(ph.does || ''), contract }); } catch (e) { res = { ok: false, why: e.message, tries: [] }; }
+    try { res = await rung.build({ file: src.path, exports: PIECES ? PIECES.map((p) => ({ name: p.name, signature: `${p.name}(${p.sig}) -> ${p.ret}`, does: p.does })) : withContracts(withParams(src.path, src.exports || [])), expectation: testText, context: String(ph.does || ''), contract }); } catch (e) { res = { ok: false, why: e.message, tries: [] }; }
     row(res.ok ? 'emerge-passed' : 'emerge-held', { note: res.why, tries: (res.tries || []).length, gapFiles: res.gapFiles || [], round });
     // the lab view (his "i need to see pipeline"): each piece's outcome kept in this build's own rows, so COS shows it without reading Idearium's files
     try { const pre = require(path.join(ROOT, 'lib', 'node-export.js')).fileIdOf(src.path + '#'), ps = [];
