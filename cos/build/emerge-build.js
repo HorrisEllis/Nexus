@@ -83,6 +83,10 @@ function withParams(srcPath, exports) {
   const usesOf = (n) => { const at = eg.search(new RegExp(`^[ \\t]*(?:pub[ \\t]+)?fn[ \\t]+${n}[ \\t]*\\(`, 'm')); if (at < 0) return [];
     const rest = eg.slice(at), nl = rest.indexOf('\n'), after = nl < 0 ? '' : rest.slice(nl + 1), end = after.search(/^[ \t]*(?:pub[ \t]+)?fn[ \t]+\w+[ \t]*\(/m), body = (end < 0 ? after : after.slice(0, end)).split('\n').filter((l) => !/^\s*\/\//.test(l)).join('\n');
     const hits = names.filter((m) => m !== n && new RegExp(`\\b${m}\\s*\\(`).test(body)); return hits.sort((a, b) => body.lastIndexOf(b + '(') - body.lastIndexOf(a + '(')); };
+  // the module's own one-line spec above each fn (written from the phase's words: "// name(t: string) -> string — what it does") is the
+  // piece's "does" when the plan gave none: Nexus reads its spec to the gate; the 3b is not left to guess from weak examples (fix_outside)
+  const specOf = (n) => { const m = new RegExp(`^[ \\t]*//[ \\t]*${n}\\([^\\n]*?\\)[^\\n]*?—[ \\t]*([^\\n]+)\\n[ \\t]*(?:pub[ \\t]+)?fn[ \\t]+${n}[ \\t]*\\(`, 'm').exec(eg); return m ? m[1].trim() : ''; };
+  exports = exports.map((e) => { const s = specOf(String(e.name || '')); return s && !e.does ? { ...e, does: s } : e; });
   exports = exports.map((e) => { const u = usesOf(String(e.name || '')); return u.length ? { ...e, does: (e.does ? String(e.does).replace(/\.?\s*$/, '. ') : '') + 'It is built from ' + u.join(', ') + ' (in that order: the first is applied first), functions of this module that already exist', uses: u } : e; });
   return exports.map((e) => {
     if (/\(/.test(e.signature || '')) return e; const n = String(e.name || '').replace(/[^\w$]/g, ''); if (!n) return e;
