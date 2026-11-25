@@ -245,7 +245,7 @@ function createSupervisor({ root, declarations = null, policy = {}, ledgerFile =
       // MG15c (2026-11-18): busy is not dead. A live pid that does not answer is still the system (a second copy could never take its port);
       // it is adopted as degraded and its health is waited for. Found running it: Idearium was refused here mid-build, a copy started, the build lost.
       if (!ok) write('adopted-busy', n, `pid ${r.pid} is alive but its health does not answer at ${d.healthUrl}: adopted as degraded (busy is not dead), its health waited for`, { by, pid: r.pid });
-      s.proc = _adopted(n, r.pid); s.pid = r.pid; s.state = ok ? 'up' : 'degraded'; if (!ok) _waitUp(s, s.proc, d); s.startedAt = r.startedAt || Date.now(); s.by = by;
+      s.proc = _adopted(n, r.pid); s.pid = r.pid; s.state = ok ? 'up' : 'degraded'; if (!ok) _waitUp(s, s.proc, d); s.startedAt = r.startedAt || Date.now(); s.by = by; s.lastActivity = Date.now();   // 2026-11-25: with no last use, an adopted on-demand system was never idled out (DeepSeek held its memory for hours)
       for (const kind of ['out', 'err']) { const f = path.join(LOGS, `${n}.${kind}.log`); let end = 0; try { end = fs.statSync(f).size; } catch (_) {} _tail(s, n, kind, f, end); }
       write('adopted', n, `adopted pid ${r.pid}, left running by manager ${node.payload.manager} (${new Date(node.at).toISOString()}): not started again`, { by, pid: r.pid }); got.push(n);
     }
