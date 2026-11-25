@@ -389,7 +389,7 @@ function createServer(sup, opts = {}) {
           if (db[2] === 'hooks') return send(res, 200, reg);
           const offered = ((reg.value && reg.value.hooks) || []).some((h) => h.name === db[3] && h.direction === 'in');
           if (!offered) return send(res, 404, { ok: false, error: `${sys} offers no in hook ${db[3]}`, hooks: (reg.value && reg.value.hooks) || [] });
-          let q = {}; try { q = JSON.parse(await new Promise((ok) => { let t = ''; req.on('data', (c) => t += c); req.on('end', () => ok(t || '{}')); })); } catch (_) { return send(res, 400, { ok: false, error: 'the query is not JSON' }); }
+          const q = body && typeof body === 'object' ? { ...body } : {};   // the body is read once, above, for every /api/cos write
           if (q.home == null) q.home = require('os').homedir().replace(/\\/g, '/');
           return send(res, 200, run(db[3], q));
         } }
