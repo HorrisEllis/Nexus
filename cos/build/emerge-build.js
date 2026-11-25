@@ -106,6 +106,16 @@ function withContracts(exports) {
   // record gave its pieces no contract, so the rung's contract gate (EMB8: each piece run in Emerge against its own examples) never ran, and a
   // body that only compiled was called passed (EMB10's served_by, wrong 16 times). The phase's own example lines are each piece's contract.
   if (!lines.length) { try { lines = require(path.join(ROOT, 'lib', 'test-first.js')).examplesFrom(fs.readFileSync(path.join(ROOT, MAP), 'utf8'), PHASE) || []; } catch (_) { lines = []; } }
+  // 2026-11-25: each piece's own sentence from its phase's does-text, when it has none: the 3b, told only a signature and examples full of JSON
+  // text, tried to parse JSON (models.data, six parse_json helpers); the phase says served_by is true when the model list (its text) names the
+  // file. The sentence runs from "name(" to where the next function's "name(" begins (a sentence may hold semicolons), or the paragraph's end.
+  try { const doc = require('js-yaml').load(fs.readFileSync(path.join(ROOT, MAP), 'utf8')), ph = ((doc.spec || doc).phases || doc.phases || {})[PHASE];
+    const t = String((ph && ph.does) || ''), names = exports.map((e) => e.name).filter(Boolean);
+    const own = (n) => { const i = t.indexOf(n + '('); if (i < 0) return ''; let j = t.length;
+      for (const m of names) { if (m === n) continue; const k = t.indexOf(m + '(', i + n.length); if (k > i && k < j) j = k; }
+      const stop = /\.\s+[A-Z]/.exec(t.slice(i)); if (stop && i + stop.index + 1 < j) j = i + stop.index + 1;
+      return t.slice(i, j).replace(/\s+/g, ' ').replace(/[;,\s]+$/, '').trim(); };
+    exports = exports.map((e) => (e.does ? e : { ...e, does: own(e.name) || e.does })); } catch (_) {}
   if (!lines.length) return exports;
   return exports.map((e) => { const ex = lines.filter((l) => new RegExp(`^${e.name}\\s*\\(`).test(l)); return ex.length ? { ...e, contract: { ...(e.contract || {}), examples: ex } } : e; });
 }

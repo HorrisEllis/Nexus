@@ -18,7 +18,10 @@ const rounds = []; let best = -1;
 for (let i = 1; i <= ROUNDS; i++) {
   spawnSync(process.execPath, [path.join(ROOT, 'cos', 'build', 'emerge-build.js'), '--map', MAP, '--phase', PHASE, '--ladder', LADDER], { cwd: ROOT, stdio: 'ignore', timeout: 3 * 3600 * 1000 });
   const run = lastRun(), rs = run ? rowsOf(run.f) : [], end = rs[rs.length - 1] || {}, pcs = ([...rs].reverse().find((r) => r.state === 'pieces') || {}).pieces || [];
-  const passed = pcs.filter((p) => p.status === 'passed').length, done = ['examples-passed', 'landed'].includes(end.state);
+  const planned = new Set((((rs.find((r) => r.state === 'planned') || {}).exports) || []).map((x) => x.name)),
+    // 2026-11-25: progress is the planned functions that hold, not every piece: helpers the model invents (six parse_json helpers for EMB10's
+    // served_by, passing on compile alone) made each round look like progress
+    passed = pcs.filter((p) => p.status === 'passed' && (!planned.size || planned.has(p.name))).length, done = ['examples-passed', 'landed'].includes(end.state);
   rounds.push({ round: i, run: run && run.f.replace(/\.jsonl$/, ''), last: end.state, passed, of: pcs.length, note: String(end.note || '').slice(0, 300) });
   console.log(`round ${i}: ${end.state} · ${passed} of ${pcs.length} pieces passed`);
   if (done) { console.log(JSON.stringify({ ok: true, phase: PHASE, rounds })); process.exit(0); }
