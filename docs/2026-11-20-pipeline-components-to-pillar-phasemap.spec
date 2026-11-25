@@ -151,3 +151,11 @@ failure_modes:
 # current step waits on a model while the Ollama system's queue has nothing for it (no job queued or running for that run) is stalled at once,
 # not after the watchdog's 20 minutes, and is resumed from its last passed gate (his 2026-11-14 persistence rule), or that step retried; said
 # on the run. Signal: the step's model expectation against GET ollama /api/jobs (its meta.source and phase).
+
+# ── ADDENDUM 2026-11-25 — the Code tab first (his words) ──
+# James, 2026-11-25: "like idearium needs to migrate a lot of its automation and pipeline tools, especialyl from the code tab to the automation
+# engine and pipeline. keep working on the pipeline, so it can fix itself. build nexus, contineu"
+# DB1 expanded: the census counts Idearium's Code tab tools first (what the Code tab runs, builds, checks and automates), each named with
+# where it lives, its callers and its Pillar status, so DB3-DB5 move them into COS's automation engine and pipeline through the drawbridge,
+# never ripped out (his 2026-11-20: "nor do I, break idearium by stripping the pipeline components out like a caveman"). Same day, his
+# order: the pipeline first, until it fixes itself (PC13 SB1-SB8, EMB9-EMB10).
