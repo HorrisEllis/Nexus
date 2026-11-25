@@ -99,8 +99,14 @@ function withParams(srcPath, exports) {
 // EMB8 (THE_CONTRACT_JOINS_THEM): each export's contract, its own examples, from the phase's end-state file (EMB6, recorded from the code);
 // the rung puts them in that piece's brief. Waiting lines are used in a build that does not land; landing needs his yes on them (EMB6).
 function withContracts(exports) {
-  let rec = null; try { rec = JSON.parse(fs.readFileSync(path.join(ROOT, 'cos', 'data', 'build', 'end-state', PHASE + '.json'), 'utf8')); } catch (_) { return exports; }
-  const lines = (rec.examples || []).filter((x) => x.status === 'waiting' || x.status === 'accepted').map((x) => x.line);
+  let lines = [];
+  try { const rec = JSON.parse(fs.readFileSync(path.join(ROOT, 'cos', 'data', 'build', 'end-state', PHASE + '.json'), 'utf8'));
+    lines = (rec.examples || []).filter((x) => x.status === 'waiting' || x.status === 'accepted').map((x) => x.line); } catch (_) {}
+  // 2026-11-25 (his: "Passed but useful?" · "you need to be checking. And then it needs to be checking its own work"): a phase with no end-state
+  // record gave its pieces no contract, so the rung's contract gate (EMB8: each piece run in Emerge against its own examples) never ran, and a
+  // body that only compiled was called passed (EMB10's served_by, wrong 16 times). The phase's own example lines are each piece's contract.
+  if (!lines.length) { try { lines = require(path.join(ROOT, 'lib', 'test-first.js')).examplesFrom(fs.readFileSync(path.join(ROOT, MAP), 'utf8'), PHASE) || []; } catch (_) { lines = []; } }
+  if (!lines.length) return exports;
   return exports.map((e) => { const ex = lines.filter((l) => new RegExp(`^${e.name}\\s*\\(`).test(l)); return ex.length ? { ...e, contract: { ...(e.contract || {}), examples: ex } } : e; });
 }
 const END_STATE = !!arg('end-state'), ES_DIR = path.join(ROOT, 'cos', 'data', 'build', 'end-state');

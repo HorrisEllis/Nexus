@@ -438,9 +438,14 @@ function createRung({ root = path.resolve(__dirname, '..', '..'), ask, expect, m
               const callOf = (l) => _q(l).slice(0, _q(l).search(/\)\s*==/) + 1), wantOf = (l) => _q(l).replace(/^[\s\S]*?\)\s*==\s*/, '');
               // the example's arguments re-written as Emerge literals (2026-11-24: a recorded 'x = y;' in single quotes is JavaScript, Emerge
               // could not parse it, and every example of the piece read as "gave nothing" whatever the body was)
-              const egCall = (l) => { const c = callOf(l), at = c.indexOf('('); try { const args = require('vm').runInNewContext(`[${c.slice(at + 1, -1)}]`, {}, { timeout: 50 }); return `${c.slice(0, at)}(${args.map((a) => JSON.stringify(a)).join(', ')})`; } catch (_) { return c; } };
+              // 2026-11-25: an Emerge literal, not JSON: a brace in a string is \{ \} (Emerge reads { as interpolation: every EMB10 example with
+              // JSON text in it failed to parse, so the gate would refuse a correct body), a map is { key: value }, a list [a, b]
+              const egLit = (v) => typeof v === 'string' ? JSON.stringify(v).replace(/[{}]/g, (m) => '\\' + m) : Array.isArray(v) ? `[${v.map(egLit).join(', ')}]`
+                : v && typeof v === 'object' ? `{ ${Object.entries(v).map(([k, x]) => `${/^[A-Za-z_]\w*$/.test(k) ? k : JSON.stringify(k)}: ${egLit(x)}`).join(', ')} }` : JSON.stringify(v);
+              const egCall = (l) => { const c = callOf(l), at = c.indexOf('('); try { const args = require('vm').runInNewContext(`[${c.slice(at + 1, -1)}]`, {}, { timeout: 50 }); return `${c.slice(0, at)}(${args.map(egLit).join(', ')})`; } catch (_) { return c; } };
               const run = await eg('lang-run', render(skel, { ...filled, [name]: body }) + '\n' + exs.map(l => `print(json(${egCall(l)}))`).join('\n'));
-              const outs = String((run && run.stdout) || '').replace(/\r/g, '').split('\n'), same = (a, b) => { try { return _deq(JSON.parse(a), JSON.parse(b)); } catch (_) { return a === b; } };
+              const outs = String((run && run.stdout) || '').replace(/\r/g, '').split('\n'), same = (a, b) => { const lit = (t) => { try { return JSON.parse(t); } catch (_) { return require('vm').runInNewContext(`(${t})`, {}, { timeout: 50 }); } };   // 2026-11-25: { text: "", done: true } is a literal, not JSON
+                try { return _deq(JSON.parse(a), lit(b)); } catch (_) { return a === b; } };
               const bad = exs.map((l, i) => (same(outs[i], wantOf(l)) ? null : `${callOf(l)} gave ${outs[i] === undefined || outs[i] === '' ? 'nothing' : outs[i]}, its contract says ${wantOf(l)}`)).filter(Boolean);
               if (bad.length) { seen.push({ body }); const said = 'compiles, but breaks its contract: ' + bad.slice(0, 3).join('; ') + (run && !run.ok ? ' (' + firstLines(run.stderr, 1) + ')' : '');
                 note({ body, said, fix: 'make every example of ' + name + ' hold: write the rule they share, not one case', ms: Date.now() - t0 }); tries.push({ n, stage: 'contract:' + name, why: said, ms: Date.now() - t0, gap, model: who.name }); continue; } } }

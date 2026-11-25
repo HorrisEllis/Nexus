@@ -602,3 +602,10 @@ related:
 # Found: none of the 289 buildable phases had examples, so the COS builder could take none. Built: --end-state in cos/build/emerge-build.js. The 3b writes a phase's calls; where the file exists the code answers them (recorded, run twice); every answer and piece is saved before it is checked; a call that fails twice splits into its parameters (RAID's rule); a parameter with a schema gets lib/node-schemas.js frame(type), and the 3b fills only its holes. Kept lines wait for his yes; nothing enters a map yet.
 # Measured (docs/FRAMEWORK-THREADS.md, T15/EMB6): guessed answers 0 of 25 agree with the code; recorded, 1 of 3 phases; with frames, 2 of 3 (GW1 11, GWK1 3, OS1 none: no functions). GWK1: 0 of 25 without a frame, 2 of 2 first try with.
 # Not done: the Lab screen to approve lines; frames before the first try; frames for Emerge code. Two schema-store tests failed before this change and still fail (a count of 31 types; one failure record's fields).
+
+# ── ADDENDUM 0.60.657 (2026-11-25) — EMB10: a piece passes only on its own examples (his "Passed but useful?") ──
+# James, 2026-11-25: "Okay you need to be checking. And then it needs to be checking its own work. Compiler is supposed to debug its own code."
+# The 3b-alone run (6ee7d3c8): 5 of 5 pieces "passed" on the compiler alone; served_by rewritten 16 times, wrong each time; the module failed its
+# examples. EMB8's contract gate existed but had no examples for EMB10 (it read only the end-state record). Now emerge-build gives each piece its
+# phase's own example lines, and the gate writes Emerge literals (braces escaped, maps and lists Emerge's). Proof: the gate replayed, 14/14 on a
+# correct module, served_by refused with its two wrong cases; test-emerge-rung 14/14, test-contract-gates 20/20.
