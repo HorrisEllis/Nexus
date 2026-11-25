@@ -666,7 +666,9 @@ built_2026_11_09_plan:
       James, 2026-11-24: "the console preview is supposed to replace the lab tab" · then "cos/ui/run-console-preview should be the automation
       tba". Read as: the run console preview (cos/ui/run-console-preview, shaped with him 2026-11-21 to 2026-11-24) becomes COS's Automation tab,
       in place of cos/ui/automation; the Lab (cos/ui/lab, EMB4, read-only lists of requests, builds and pieces) is to be replaced by it (the
-      console's Build tab shows the same, live). Whether the Lab tab is removed or kept pointing at the console is his (asked 2026-11-24).
+      console's Build tab shows the same, live). DECIDED (his, 2026-11-24): "the lab be migrated into the new automation tab. like i want to use the pipeline for almost anythiogn":
+      the Lab's views (requests, builds, pieces) move into the Automation tab as its own tabs, then the Lab tab is removed; the pipeline is the
+      one surface for almost anything (with the one-surface map, docs/2026-11-21-one-surface-phasemap.spec).
       Never stripped (§8.6): what the Automation page does today moves into the console first, then the page is replaced. Census, the coder's,
       2026-11-24: the Automation page runs, pauses, continues and retries a run; saves and exports a pipeline; reads COS's events, policy,
       boxes, pipeline sync/ready/runs/from-erv/baseline and the desktop driver's state, log, arm and disarm. The preview has none of the run
