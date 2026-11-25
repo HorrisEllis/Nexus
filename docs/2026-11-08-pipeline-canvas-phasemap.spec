@@ -1346,6 +1346,17 @@ decisions_2026_11_13_model_server:
 # The other angle, before calling HTTP a blocker (his rule, 2026-11-07): Ollama's own CLI answers detect, inventory and load without HTTP
 # (`ollama ps`, `ollama list`, `ollama run --keepalive`), all by proc_run; HTTP is needed only to serve requests and to stream a reply. Slices
 # a-c use the CLI; d needs the door; the gaps go to CIE14 (gaps found while coding).
+    decided_2026_11_24_its_home_and_engine: >-
+      DECIDED 2026-11-24 by James. Asked: its home (a system of its own / inside the Orchestrator / inside COS) and its engine (llama.cpp's
+      llama-server directly / Ollama underneath). His words: "lets get ollama replaced? into the orchastrator? like i want it to be ours." · "yes
+      yes yes/ like i want as much control over ollama as possible, hook into the rewind engine." · "its making me want to say no so we can be
+      soverein but the per model control is making me want to say fuck yes." Read as: a system of its own (supervised by COS, RAID routes to
+      it, the Orchestrator and Co-pilot call its routes), driving llama-server directly. Sovereignty kept by the axioms: an external dependency
+      is a plugin (the core emits a gate, one plugin speaks to the outside engine). Ours, in Emerge: the supervisor (models, modes, memory, the
+      queue, stopping a running job), its routes, its ledger, and the flight recorder and rewind of every call (Idearium's rewind engine and
+      flight recorder, hooked in). Backends as plugins: llama-server first (one server per model: its own parallel slots, context and memory,
+      the model files already on his PC), Ollama second, an engine of our own later. Ollama's app is no longer needed once the first plugin runs.
+      After SB1 (the proof), his order.
 expanded_2026_11_13_inference_supervisor:
   PC18_cos_runs_the_model_server:
     status: OPEN
