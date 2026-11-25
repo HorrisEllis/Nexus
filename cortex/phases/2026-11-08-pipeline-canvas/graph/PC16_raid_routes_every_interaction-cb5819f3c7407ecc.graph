@@ -7,11 +7,11 @@ intent: null
 summary: 31 node(s), 9 crossing(s)
 system: idearium
 tags: []
-exported_at: 1794940341604
+exported_at: 1795571379261
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794940341604
-lastSeenAt: 1794940341604
+firstSeenAt: 1795571379261
+lastSeenAt: 1795571379261
 fingerprint: null
 payload:
   for: PC16_raid_routes_every_interaction
@@ -283,6 +283,7 @@ payload:
       - docs/2026-11-15-the-factory-phasemap.spec::IF10_the_map_of_nexus_on_the_canvas
       - docs/2026-11-15-the-factory-phasemap.spec::IF11_agents_deployed_per_system_by_hat
       - docs/2026-11-15-the-factory-phasemap.spec::IF12_nexus_builds_itself_autonomously
+      - docs/2026-11-15-the-factory-phasemap.spec::IF18_the_visual_debugger
       - docs/2026-11-15-the-factory-phasemap.spec::IF1_idearium_asks_agents_through_the_pipeline
       - docs/2026-11-15-the-factory-phasemap.spec::IF2_the_build_as_a_pipeline
       - docs/2026-11-15-the-factory-phasemap.spec::IF3_one_gate
@@ -293,6 +294,8 @@ payload:
       - docs/2026-11-15-the-factory-phasemap.spec::IF9_everything_raid_does_through_the_pipeline
       - docs/2026-11-17-nexus-codes-itself-phasemap.spec::NX1_no_request_runs_without_its_map
       - docs/2026-11-17-nexus-codes-itself-phasemap.spec::NX2_nexus_codes_itself_toward_a_dynamic_end_state
+      - docs/2026-11-20-pipeline-components-to-pillar-phasemap.spec::DB5_the_build_runs_in_cos
+      - docs/2026-11-20-pipeline-components-to-pillar-phasemap.spec::DB6_the_dock_from_pillar
     blockedBy: []
     unlocks:
       - docs/2026-11-15-the-factory-phasemap.spec::IF1_idearium_asks_agents_through_the_pipeline
@@ -347,7 +350,7 @@ payload:
       - 'depends on (0): —'
       - >-
         needed by (2): IF1_idearium_asks_agents_through_the_pipeline,
-        NX1_no_request_runs_without_its_map · all downstream 13 · finishing it unlocks
+        NX1_no_request_runs_without_its_map · all downstream 16 · finishing it unlocks
         IF1_idearium_asks_agents_through_the_pipeline
       - >-
         DANGLING depends_on: PC_D15_raid_the_hub_of_every_interaction,

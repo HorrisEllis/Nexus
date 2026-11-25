@@ -7,11 +7,11 @@ intent: null
 summary: PC8_operate_a_pipeline (?) — 24 file(s)
 system: idearium
 tags: []
-exported_at: 1794930503461
+exported_at: 1795571379181
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794930503461
-lastSeenAt: 1794930503461
+firstSeenAt: 1795571379181
+lastSeenAt: 1795571379181
 fingerprint: null
 payload:
   id: PC8_operate_a_pipeline
@@ -51,4 +51,4 @@ payload:
     - PC5_programmable_gate_types
   blocks: []
   spec: null
-  graph: a2c7f31c3bfcce4a
+  graph: 3e64a61152e7d570

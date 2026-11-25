@@ -21,7 +21,7 @@ const { spawnSync } = require('child_process');
 const ROOT = path.resolve(__dirname, '..', '..');
 const arg = (k, d = null) => { const i = process.argv.indexOf('--' + k); return i < 0 ? d : (process.argv[i + 1] && !process.argv[i + 1].startsWith('--') ? process.argv[i + 1] : true); };
 const MAP = arg('map'), PHASE = arg('phase'), REPO = arg('repo', 'nexus-id-repo-50f0890c'), LAND = !!arg('land');
-const LADDER = String(arg('ladder', 'huihui_ai/qwen2.5-coder-abliterate:3b,deepseek-coder-v2:16b,huihui_ai/qwen3-coder-abliterated:30b')).split(',').map((s) => s.trim()).filter(Boolean);
+const LADDER = String(arg('ladder', 'huihui_ai/qwen2.5-coder-abliterate:3b,hf.co/mradermacher/DeepSeek-Coder-V2-Lite-Instruct-abliterated-i1-GGUF:Q4_K_M')).split(',').map((s) => s.trim()).filter(Boolean);
 // James, 2026-11-23: "each step builds upon the last". --pieces <file.json>: the phase's small pieces, each [{ name, sig, ret, does, body }], already written and passed: no model is asked again
 const PIECES = arg('pieces') ? JSON.parse(fs.readFileSync(arg('pieces'), 'utf8')) : null, pieceBody = (gap) => { const p = (PIECES || []).find((x) => x.name === gap); if (!p) throw new Error('no piece ' + gap); return p.body; };
 const OLLAMA = Number(arg('ollama-port', 3749)), TASKS = arg('tasks', path.join(ROOT, 'idearium', 'data', 'tasks'));
@@ -76,6 +76,14 @@ async function ask(prompt, model, gap, tryNo = 1, again = 0) {
 function withParams(srcPath, exports) {
   const read = (p) => { try { return fs.readFileSync(path.join(ROOT, p), 'utf8'); } catch (_) { return ''; } };
   const js = read(srcPath), eg = read(srcPath.replace(/\.[cm]?js$/, '.eg'));
+  // James, 2026-11-24: "3b needs to do it's pices use nexus' systems and agent tools to outsource the reasoning". What a function is made of is
+  // read by Nexus, not guessed by the 3b: the module's own functions its existing Emerge code calls, innermost first, go into its "does" line
+  // (fix_code was broken down six deep as character work; its code is fix_semi(fix_bang(fix_logic(fix_equal(t)))), four pieces that pass)
+  const names = exports.map((x) => String(x.name || '')).filter(Boolean);
+  const usesOf = (n) => { const at = eg.search(new RegExp(`^[ \\t]*(?:pub[ \\t]+)?fn[ \\t]+${n}[ \\t]*\\(`, 'm')); if (at < 0) return [];
+    const rest = eg.slice(at), nl = rest.indexOf('\n'), after = nl < 0 ? '' : rest.slice(nl + 1), end = after.search(/^[ \t]*(?:pub[ \t]+)?fn[ \t]+\w+[ \t]*\(/m), body = (end < 0 ? after : after.slice(0, end)).split('\n').filter((l) => !/^\s*\/\//.test(l)).join('\n');
+    const hits = names.filter((m) => m !== n && new RegExp(`\\b${m}\\s*\\(`).test(body)); return hits.sort((a, b) => body.lastIndexOf(b + '(') - body.lastIndexOf(a + '(')); };
+  exports = exports.map((e) => { const u = usesOf(String(e.name || '')); return u.length ? { ...e, does: (e.does ? String(e.does).replace(/\.?\s*$/, '. ') : '') + 'It is built from ' + u.join(', ') + ' (in that order: the first is applied first), functions of this module that already exist', uses: u } : e; });
   return exports.map((e) => {
     if (/\(/.test(e.signature || '')) return e; const n = String(e.name || '').replace(/[^\w$]/g, ''); if (!n) return e;
     const f = new RegExp(`^\\s*(?:pub\\s+)?fn\\s+${n}\\s*\\(([^)]*)\\)\\s*(?::\\s*(\\w+))?`, 'm').exec(eg);

@@ -606,6 +606,26 @@ phases_addendum_2026_11_22_storage:
     reading: "the coder's, to confirm: Eravos (the canvas app, eravos.exe) imported as a system of COS, its canvas opened from COS's UI, as the pipeline canvas already uses its SDK (IF-ERAVOS-SDK)."
     does: "Eravos becomes a COS system: imported, supervised and opened from COS's UI."
     proof: "Eravos starts and stops from COS and opens in its window"
+  SC28_claude_in_the_console:
+    status: OPEN
+    depends_on: [SC23_open_nexus_to_the_outside_with_a_key]
+    james: '"i want to be able to talk to you in the console. that way we have a chat ledger for each converation. like select the url when it pops up." · "im saying using this, like claude code in clearglass or hooking into this through nexus." (2026-11-24)'
+    reading: "the coder's, to confirm: two doors, as plugins (an external dependency is a plugin): (a) Claude Code's own session page (claude.ai/code, Remote Control) opened in Clear Glass from the console, its link picked up when it appears; (b) Nexus hooks into Claude Code (its hooks and its session files) so each conversation is a node with its own ledger, written as it goes and reopened from disk."
+    does: "Talking to Claude from COS's console, each conversation a chat node with its ledger; Claude Code reached through a plugin, never coupled to the core."
+    proof: "a conversation started from the console has a chat node and a ledger row per turn, and reopens after a COS restart"
+    after: "the pipeline proven end to end (his order, 2026-11-24)"
+  SC29_each_systems_own_settings:
+    status: OPEN
+    depends_on: [SC22_remote_connections_and_the_tunnel]
+    james: '"can you add to each system, the nexus:// routing uri? also the cloudflared tunnel for remote connections? also no qr code. each system has settings for this. all the node bundles like in guardian need to be added as the commands tabs. the data tab fixed. i want to open the uis for each system without needing clearglass. like the heartbeat settings. system relevant settings for each system." (2026-11-24)'
+    does: >-
+      Each system's page in COS (Systems > a system > Configuration) gains what is its own: its nexus:// routing URI; its own tunnel (start,
+      stop, address, QR) for remote connections; its heartbeat; the settings only it has, read from its interaction contract (§5.16), never
+      hardcoded. A Commands tab per system lists its command bundles (Guardian's node bundles first). The Data tab is fixed. A system's own UI
+      opens from COS without Clear Glass.
+    slices: "a: the Data tab's fault named and fixed; b: nexus:// URI per system (shown, copied); c: the tunnel and its QR per system (SC22 per system); d: the Commands tab from each system's bundles; e: open its UI from COS; f: heartbeat and its own settings from its contract"
+    proof: "on a system's page: its nexus:// URI, its tunnel with a QR, its commands, its data and its own settings, each read from that system"
+    notes: "2026-11-24, fixed in passing: the Network tab's controls had no COS style (raw browser controls); its QR popup opened below the screen inside Settings' grown frame. Also found: the COS home screen reloading with the machine at 96-97% memory (the 16b loaded by a build: about 11 GB of 16)."
 
 # ADDENDUM 2026-11-24 (0.60.647) — SC22 built: the tunnel from his 2026-11-03 zip landed. James, 2026-11-24: "also that qr zip i uploaded can you impliment that into the network settings? so i can connect remotely?" · 2026-11-03: "can you get cloudflared working in cos. the settings in the network settings. i want to have it connect to a cloudflared url and popup on the screen with a qr code and the link under it"
 # Placed whole (unchanged in main since 2026-11-03): cos/manager/tunnel.js, cloudflared.js, network-settings.js (6 lines), cos/ui/core/qr.js,

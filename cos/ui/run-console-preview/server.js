@@ -35,7 +35,16 @@ http.createServer(async (q, r) => {
     const up = ((sys && (sys.systems || sys)) || []).map((s) => ({ name: s.name, state: s.state, port: s.port }));
     const host = use && use.usage ? use.usage.host : null;
     const loaded = ((ps && ps.models) || []).map((m) => ({ name: m.name, vramMB: Math.round((m.size_vram || 0) / 1048576), sizeMB: Math.round((m.size || 0) / 1048576) }));
-    return json(r, { at: Date.now(), jobs: out, runs: rr, pipelines: pipes, systems: up, host, loaded });
+    // the build a pipeline step runs (cos/build/emerge-build.js): its own rows on disk, so nothing in the step is invisible (James, 2026-11-24:
+    // "nothing should be invisible in the pipeline. where is the outputs? or anything usefull.")
+    let build = null; try { const B = path.join(ROOT, 'cos', 'data', 'build'), f = fs.readdirSync(B).filter((x) => /^cbuild-.*\.jsonl$/.test(x)).map((x) => ({ x, t: fs.statSync(path.join(B, x)).mtimeMs })).sort((a, b) => b.t - a.t)[0];
+      if (f) { const rs = fs.readFileSync(path.join(B, f.x), 'utf8').split('\n').filter(Boolean).map((l) => { try { return JSON.parse(l); } catch (_) { return {}; } }), g = {};
+        const plan = (rs.find((x) => x.state === 'planned') || {}).exports || [];
+        for (const e of plan) g[e.name] = { name: e.name, state: 'waiting', asks: 0, model: null, note: '' };
+        for (const x of rs) if (x.gap) { const k = g[x.gap] || (g[x.gap] = { name: x.gap, state: 'waiting', asks: 0, model: null, note: '', helper: true }); if (x.state === 'gap-asked') k.asks++; k.state = x.state; if (x.model) k.model = x.model; if (x.note) k.note = head(x.note, 200); }
+        const pcs = ([...rs].reverse().find((x) => x.state === 'pieces') || {}).pieces || []; for (const p of pcs) if (g[p.name]) g[p.name].state = p.status;
+        build = { run: f.x.replace(/\.jsonl$/, ''), phase: (rs[0] || {}).phase, at: f.t, last: (rs[rs.length - 1] || {}).state, gaps: Object.values(g), rows: rs.slice(-40).map((x) => ({ t: x.ts, state: x.state, gap: x.gap || null, note: head(x.note || '', 240) })) }; } } catch (_) {}
+    return json(r, { at: Date.now(), jobs: out, runs: rr, pipelines: pipes, systems: up, host, loaded, build });
   }
   // the side panel's terminal: COS's console lines, and its command line (the same route COS's Console page uses; what is typed there is his)
   if (u.pathname === '/logs') return json(r, await get(7799, '/api/cos/console?limit=' + Math.min(800, Number(u.searchParams.get('limit')) || 300)));
@@ -82,6 +91,17 @@ http.createServer(async (q, r) => {
         for (const c of list) out.push({ system: s.name, id: c.id || c.name, name: c.name || c.id, about: c.description || c.about || '', method: c.route && c.route.method || null, path: c.route && c.route.path || null }); } catch (_) {} }
     return json(r, { components: out });
   }
+  // the Frameworks tab (2026-11-24): every .framework file outside data/, its title line; the framework step takes its file
+  if (u.pathname === '/frameworks') { const out = [];
+    const walk = (d, rel) => { let es = []; try { es = fs.readdirSync(d, { withFileTypes: true }); } catch (_) { return; }
+      for (const e of es) { if (/^(node_modules|data|\.git|_archive)$/.test(e.name)) continue; const p = path.join(d, e.name), r2 = rel ? rel + '/' + e.name : e.name;
+        if (e.isDirectory()) { if (r2.split('/').length < 4) walk(p, r2); } else if (/\.framework$/.test(e.name)) { let t = ''; try { t = fs.readFileSync(p, 'utf8'); } catch (_) {}
+          const title = (t.split(/\r?\n/).find((l) => /^#\s*\S/.test(l)) || e.name).replace(/^#\s*/, ''); out.push({ file: r2, title: head(title, 140), lines: t.split(/\r?\n/).length, steps: /schema\.process|^\s*steps:/m.test(t) }); } } };
+    walk(ROOT, ''); return json(r, { frameworks: out }); }
+  // the Templates tab (2026-11-24): Nexus's own node schemas (lib/node-schemas.js list + frame): each kind of node and what each of its fields holds
+  if (u.pathname === '/templates') { let out = []; try { const s = require(path.join(ROOT, 'lib', 'node-schemas.js'));
+      out = s.list().map((x) => { let holes = []; try { holes = (s.frame(x.type).holes || []).map((h) => ({ path: h.path, about: h.about })); } catch (_) {} return { type: x.type, status: x.status, holes }; }); } catch (e) { return json(r, { templates: [], error: e.message }); }
+    return json(r, { templates: out }); }
   if (u.pathname === '/baseline') return json(r, await get(7799, '/api/cos/pipeline/baseline?pipeline=' + encodeURIComponent(u.searchParams.get('pipeline') || ''), 30000));
   if (u.pathname === '/theme.css') { r.setHeader('Content-Type', 'text/css'); r.end(fs.readFileSync(path.join(ROOT, 'idearium', 'ui', 'css', 'nexus-theme.css'))); return; }
   r.setHeader('Content-Type', 'text/html; charset=utf-8'); r.end(fs.readFileSync(path.join(__dirname, 'index.html')));

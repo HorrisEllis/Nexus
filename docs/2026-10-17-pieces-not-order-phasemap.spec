@@ -246,6 +246,32 @@ phases:
       twin when the planned file is only an adapter); the rung gives each gap its own examples and constraints.
     proof: "prediction registered 2026-11-23 before the run: add_kind (EMB3), the one piece the 3b could not fill from its name alone (14 refused tries, the Emerge card copied in every one), passes on the 3b once its brief carries its own recorded examples, with no hand-written description."
     axioms: "THE_CONTRACT_JOINS_THEM, BEHAVIOR_IS_THE_COMPONENT (genesis 1.6.0, his); §8.6 reuse; deterministic first; persistence (his 2026-11-14)"
+  EMB9_break_down_before_climbing:
+    status: OPEN
+    depends_on: [EMB8_the_contract_at_every_level]
+    files: [idearium/lib/emerge-rung.cjs, idearium/lib/gaps.eg, lib/gap-field.js]
+    origin: >-
+      His words (2026-11-24): "yeah always break it down. i told you that. as retry logic before escalating." · "don't try a new model until its
+      been broken down as much as possible. this is going to be agnostic, so think of how huge that is." · "maybe multidimential field, that has
+      to be met. like the gap field. like before it loses its meaning. or one function per gate."
+    does: >-
+      A gap that fails is broken down on the same model before any other model is tried, as far as it can go. Slice a (built 2026-11-24): the
+      bound counts the helpers a module has linked in, not its own functions (a 13-function module was held at 8 and climbed the ladder without
+      breaking anything down), and a gap may go 4 deep, not 2. Slice b (open): the stop is a field, not a number: a piece is broken down while
+      every dimension of the field still holds for each part (it keeps its meaning: its contract, its examples, its place in the DAG), and stops at
+      one function per gate or where a further split would lose the meaning. The field is the gap field's (lib/gap-field.js), made agnostic: the
+      same test for any model, any provider, any kind of piece.
+    expanded_2026_11_24_the_3b_alone: >-
+      His words: "3b needs to do it's pices use nexus' systems and agent tools to outsource the reasoning, memory, and intelligence. if the 3b
+      fails, need to fix it. no escalation until we know its possible or not." · "i dont see any reason why breaking it down would hit a limit.
+      there isn't really an end to increments. or layers of fractals." Built: no count stops a breakdown (it stops where no new smaller piece can
+      be named, or it loops); the 3b is asked again, told the names already taken, before a piece is given up; the build runs as COS pipeline
+      "Build a phase (self-repairing)" (script build-phase.js in COS's scripts folder) on the 3b alone, each round resuming from the gap files
+      until the module passes or a round makes no progress. Open: the 3b's reasoning, memory and intelligence outsourced to Nexus (RAID's
+      context by id, the node index of gaps unstuck before, Pillar's components, the intelligence system's lessons), each a tool its gate can
+      ask; a 3b failure is a fault of the system to fix, not a reason to climb.
+    proof: "a function that failed on the 3b and climbed to the 16b in run cbuild-mwv6i9p5 (fix_equal) is broken down on the 3b first, each break shown in its .gap record, before any other model is asked"
+    axioms: "§14.4 bounded (the bound kept, counted on what is added); deterministic and cheapest first (RL_D3, his economy); persistence (each break a node on disk)"
   EMB3_the_autocorrect:
     # roadmap edit 2026-11-20: OPEN -> IN PROGRESS 2026-11-20.
     # 2026-11-23: IN PROGRESS -> BUILT 0.60.642 (the 3b in small pieces; its 10 examples pass; see the addenda below)

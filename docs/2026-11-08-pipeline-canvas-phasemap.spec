@@ -865,7 +865,31 @@ built_2026_11_09_plan:
       how far a request gets alone (EMB2's benchmarks measure it); a request it cannot finish holds with the step's own reason.
     proof: "a stand-in Idearium answering intent, add and the build pipeline's routes: words in, a phase HR1 written, the build pipeline run with phase HR1; a gap holds the run with the gap's words"
     axioms: "§8.6 (every step is a route that exists), his order (the pipeline builds his requests), USER_AUTONOMY (gaps and the final yes are his)"
-# ── ADDENDUM 2026-11-11 (0.60.483) — PC9 slice a: the desktop driver for agents (his PC_D14) ──────────────────────────────────────────────
+    expanded_2026_11_24_nexus_builds_itself: >-
+      His words (2026-11-24): "okay expand the pipeline to get nexus building itself" · "the pipeline is the end state" · "get the system
+      repairing itself. less it needs you the better." · "why a watcher? why not events per gate with the ledger per pipeline? ... state
+      detection emits a heartbeat pulse, using negative reasoning can detect its absence." Where it stands (measured 2026-11-24): COS pipeline
+      "Build a phase (self-repairing)" builds one phase on the 3b alone, round by round from its gap files, 46 of 57 pieces of EMB3 passing; no
+      module has passed end to end; his words do not yet reach it (steps 1 and 2 above are open). The slices, in order, each its own proof:
+      SB1 the proof: EMB3 passes end to end on the 3b (EMB9: a passed piece is re-checked, never re-coded; what a piece is built from is read
+        by Nexus from the code; a bigger model only at a wall, each wall a row). Proof: the module's test passes in scratch, then landed on his yes.
+      SB2 events per gate into the pipeline's ledger, and a pulse: every gate emits asked / answered / passed / refused / broken-down / climbed
+        into the run's ledger (one per pipeline); every running thing (an Ollama job, a build, a step) emits a heartbeat while it works; a
+        missing pulse is the event (negative reasoning: what should be there and is not), and the pipeline repairs or holds on it. No poller,
+        no watcher (PR6, heartbeat not polling). Depends on SB1's rows.
+      SB3 the canvas grows gap by gap: each gate event of SB2 draws a box (a gap, a helper broken down, a climb, a branch for each choice,
+        deviation, iteration, version) on the pipeline's canvas in COS's own UI, live; the console preview becomes that screen, its CLI
+        Co-pilot's, its Run real. Depends on SB2.
+      SB4 parallel 3bs: the pieces that do not depend on each other are asked at once (OLLAMA_MAX_CONCURRENT, 3 set by him 2026-11-24).
+        Depends on SB1.
+      SB5 Nexus before the model: before a piece is asked, Pillar and the node index are asked for one that exists (reuse, §8.6), and RAID
+        gives the gate its context by id (RL_D10, context_by_id): the 3b's memory and reasoning held by Nexus. Depends on SB1.
+      SB6 his words in: step 1 and 2 of this phase (intent, a phase HR<n> written from his words, his yes on its examples), then SB1's build;
+        RAID drafts the DAG of a request (L2), each node a phase this pipeline builds. Depends on SB1, SB5.
+      SB7 beyond Emerge files: a request that touches COS's UI (JS, CSS, HTML) is checked the same way (a test written first, each piece gated),
+        or the UI moves to Emerge (his "no new JS unless it replaces JS"); his to choose. Depends on SB6.
+      SB8 the walls, fixed by the pipeline: each wall (a climb, a held piece, a missing capability) becomes a request of SB6, so Nexus builds
+        what stopped it. Depends on SB6. — PC9 slice a: the desktop driver for agents (his PC_D14) ──────────────────────────────────────────────
 # James, 2026-11-11: "I’m saying for you. Like look at clearglass. Nexus nerve, cleardriver injecting coordinates into the dom."
 # Built: cos/remote-desktop/desktop-driver.js (screen, move, click, type, key, scroll; backends: Windows PowerShell user32/System.Drawing,
 # Linux xdotool/import, else refused, named). Off until he arms it (1–60 min; view-only = the screen only; only a person arms; Disarm the kill

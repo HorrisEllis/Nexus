@@ -290,7 +290,7 @@ function listGaps({ root = path.resolve(__dirname, '..', '..'), id = null, contr
     .filter(g => !status || g.status === status).sort((x, y) => String(y.at).localeCompare(String(x.at)));
 }
 
-function createRung({ root = path.resolve(__dirname, '..', '..'), ask, expect, maxTries = 3, timeoutMs = 60000, cli = null, tasksDir = path.join(root, 'idearium', 'data', 'tasks'), indexRoot = root, keep = 3, model = null, maxDepth = 2, maxGaps = 8, ladder = null, rounds = 1, method = null } = {}) {
+function createRung({ root = path.resolve(__dirname, '..', '..'), ask, expect, maxTries = 3, timeoutMs = 60000, cli = null, tasksDir = path.join(root, 'idearium', 'data', 'tasks'), indexRoot = root, keep = 3, model = null, maxDepth = 1e9, maxGaps = 1e9, ladder = null, rounds = 1, method = null } = {}) {
   if (typeof ask !== 'function' && !(ladder && ladder.length)) throw new Error('ask(message) is required: the agent that writes the Emerge');
   // the ladder, smallest first: [{ name, ask }] — the first fills every gap; a gap held on it goes to the next, told every earlier try
   const L = ladder && ladder.length ? ladder.filter(x => x && typeof x.ask === 'function') : [{ name: model, ask }];
@@ -319,9 +319,17 @@ function createRung({ root = path.resolve(__dirname, '..', '..'), ask, expect, m
       method ? 'The method:\n' + method + '\n' : '',
       'Name ONE smaller new function that, once written, makes ' + name + ' easy (it takes what it needs as parameters and returns a new value; it never changes a parameter).',
       'Reply with exactly one line:  fn <name>(<param>, <param>) — <what it returns>'].filter(x => x !== '').join('\n');
-    let text = ''; try { text = await who.ask(msg, { gap: name, diagnose: true, tryNo: 0 }); } catch (_) { return null; }
-    const m = /fn\s+([A-Za-z_][A-Za-z0-9_]*)\s*\(([^)]*)\)\s*(?::\s*\w+)?\s*(?:—|--|-|:)?\s*(.*)/.exec(_q(text));
-    if (!m || taken.has(m[1])) return null;
+    // James, 2026-11-24: "3b needs to do it's pices use nexus' systems and agent tools to outsource the complexirty, request or build what it needs
+    // to solve the problem". The same small model is asked again (up to 3 times, warmer each time) when it names nothing or a name the module
+    // already has, told the names that are taken; only then is the piece left to the ladder
+    let m = null, said = '';
+    for (let k = 1; k <= 3 && !m; k++) {
+      const again = k === 1 ? msg : msg + '\n\nThese names are taken, name a NEW one: ' + [...taken].join(', ') + (said ? '\nYou said: ' + said.split('\n')[0].slice(0, 120) : '');
+      let text = ''; try { text = await who.ask(again, { gap: name, diagnose: true, tryNo: k }); } catch (_) { break; }
+      said = _q(text); const x = /fn\s+([A-Za-z_][A-Za-z0-9_]*)\s*\(([^)]*)\)\s*(?::\s*\w+)?\s*(?:—|--|-|:)?\s*(.*)/.exec(said);
+      if (x && !taken.has(x[1]) && x[2].split(',').map(s => s.trim().split(/[:\s=]/)[0]).filter(Boolean).every(p => ID.test(p))) m = x;
+    }
+    if (!m) return null;
     const params = m[2].split(',').map(s => s.trim().split(/[:\s=]/)[0]).filter(Boolean);
     if (!params.every(p => ID.test(p))) return null;
     return { name: m[1], params, signature: m[1] + '(' + params.join(', ') + ')', does: _q(m[3]).trim().slice(0, 200) || 'what ' + name + ' needs', namedBy: (who.name || model || 'the model') + ', asked why ' + name + ' was stuck' };
@@ -442,8 +450,14 @@ function createRung({ root = path.resolve(__dirname, '..', '..'), ask, expect, m
         if (ok || held) continue;
         // understand why it is struggling, then link the gap that stops it in between (bounded: §14.4), with the same small model first
         const st = G.struggle(rec.attempts); rec.struggle = st;
-        const g = G.guard(depth[name] || 0, skel.fns.length, maxDepth, maxGaps);
-        const helper = g.ok ? await blockerFor({ name, rec, st, skel, filled, index, who, method: diagnoseMethod }) : null;
+        // James, 2026-11-24: "always break it down. i told you that. as retry logic before escalating." The bound (§14.4) counts the helpers
+        // this module has linked in, not the module's own functions: a 13-function module may still break a gap down before it climbs the ladder
+        // James, 2026-11-24: "i dont see any reason why breaking it down would hit a limit. there isn't really an end to increments. or layers of
+        // fractals." No count stops it (maxDepth and maxGaps default to no limit); it stops only where no smaller piece can be named, or the piece
+        // named is one already in this module (a loop: nothing new would come of it)
+        const g = G.guard(depth[name] || 0, Object.keys(depth).filter((k) => depth[k] > 0).length, maxDepth, maxGaps);
+        let helper = g.ok ? await blockerFor({ name, rec, st, skel, filled, index, who, method: diagnoseMethod }) : null;
+        if (helper && skel.fns.some((x) => x.name === helper.name)) helper = null;
         if (!helper) {
           if (r + 1 < L.length) {   // nothing smaller to link in: the next model up the ladder takes the gap, told every earlier try
             rungOf[name] = r + 1; rec.status = 'escalated'; if (store) store.write(name, rec);
@@ -494,11 +508,15 @@ function createRung({ root = path.resolve(__dirname, '..', '..'), ask, expect, m
         tries.push({ n: round + 1, stage: 'escalate', why: 'the test failed ' + (round + 1) + ' time(s): ' + names.join(', ') + ' → ' + ((up && up.name) || 'the next rung') });
         console.log('[emerge-rung] ' + f + ': the test failed — ' + names.join(', ') + ' escalated to ' + ((up && up.name) || 'the next rung'));
       }
-      for (const nm of names) if (recs[nm] && filled[nm] != null) {
+      // 2026-11-24 (his: "should only have to code those 11 more right?"): a function that passed its own contract's examples is re-checked by
+      // the test, never re-coded; only the ones with no examples of their own are reopened (all of them only when every one has examples)
+      const own = (nm) => { const x = skel.fns.find((y) => y.name === nm); return !!(x && x.contract && (x.contract.examples || []).length && recs[nm] && recs[nm].status === 'passed'); };
+      const reopen = names.filter((nm) => !own(nm)).length ? names.filter((nm) => !own(nm)) : names;
+      for (const nm of reopen) if (recs[nm] && filled[nm] != null) {
         recs[nm].attempts.push({ n: recs[nm].attempts.length + 1, at: new Date().toISOString(), model: recs[nm].gate && recs[nm].gate.model, body: filled[nm], said: "the module's test failed: " + _q(why).split('\n').slice(0, 3).join(' '), fix: testMethod ? testMethod.replace(/\n/g, ' ').slice(0, 400) : '' });
         recs[nm].status = 'open'; delete recs[nm].gate; filled[nm] = null; if (store) store.write(nm, recs[nm]);
       }
-      tries.push({ n: round + 1, stage: 'reopen', why: 'the test failed; reopened ' + names.join(', ') + ' with its words' });
+      tries.push({ n: round + 1, stage: 'reopen', why: 'the test failed; reopened ' + reopen.join(', ') + ' with its words' });
       console.log('[emerge-rung] ' + f + ': the test failed — reopened ' + names.join(', ') + ' (round ' + (round + 2) + ')');
       }
     }

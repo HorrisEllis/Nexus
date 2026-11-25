@@ -69,7 +69,7 @@ function run(d, name, { input = {}, timeoutMs = 60000 } = {}) {
   if (kind === 'ts') { const t = _tsx(); if (!t) return Promise.reject(new Error('TypeScript scripts need tsx (npm install in the Nexus folder)')); args = [t, file]; }
   else args = [file];
   const json = JSON.stringify(input == null ? {} : input);
-  const ms = Math.min(Math.max(parseInt(timeoutMs, 10) || 60000, 1000), 3600000);
+  const ms = Math.min(Math.max(parseInt(timeoutMs, 10) || 60000, 1000), 86400000);   // 24 h: a build step runs for hours (2026-11-24)
   return new Promise((res, rej) => {
     const t0 = Date.now();
     const child = spawn(process.execPath, args, { cwd: d, env: { ...process.env, NEXUS_STEP_INPUT: json, ELECTRON_RUN_AS_NODE: '1' }, stdio: ['pipe', 'pipe', 'pipe'], windowsHide: true });

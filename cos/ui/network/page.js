@@ -191,7 +191,11 @@
       el('p', { class: 'nw-qr-warn', text: 'Anyone who has this link can reach the system behind it, until you press Stop.' })]);
     const o = el('div', { id: 'nw-qr', class: 'nw-qr', role: 'dialog', 'aria-modal': 'true', 'aria-label': 'Tunnel address' }, [panel]);
     o.addEventListener('mousedown', (e) => { if (e.target === o) closeQR(); });
-    document.body.appendChild(o); document.addEventListener('keydown', onKey, true); x.focus();
+    // 2026-11-24 (his: "also no qr code"): inside Settings this page is a frame grown to its full height, so a centred popup sat far below the
+    // screen. It opens where he is looking: the part of this frame that is on screen, found through each frame up to the window
+    let top = 0; try { for (let w = window; w.frameElement; w = w.parent) top += w.frameElement.getBoundingClientRect().top; } catch (_) {}
+    if (window !== window.top) { const vh = (() => { try { return window.top.innerHeight; } catch (_) { return 800; } })(); o.style.alignItems = 'flex-start'; o.style.paddingTop = Math.max(16, -top + 24) + 'px'; panel.style.maxHeight = (vh - 48) + 'px'; }
+    document.body.appendChild(o); document.addEventListener('keydown', onKey, true); x.focus(); panel.scrollIntoView({ block: 'nearest' });
     for (const t of urls) seen.add(t.url);
   }
   load(); window.NETWORK = { load };

@@ -216,6 +216,14 @@ table.t tbody tr:hover td { background: rgba(255,255,255,.02); }
 .libi small { display: block; color: var(--text3); font: 10.5px/1.4 var(--sans); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .gl { display: inline-grid; place-items: center; width: 20px; height: 20px; border-radius: 5px; background: var(--b0); color: var(--sky); font-size: 11px; flex: none; }
 .lh { display: flex; align-items: center; gap: 16px; } .lh h2 { white-space: nowrap; } .lh .ct { color: var(--text3); font: 12px var(--mono); }
+/* the pick-not-type tabs (2026-11-24): cards to click, menus to pick from */
+.pcard { display: flex; flex-direction: column; gap: 6px; text-align: left; padding: 11px 12px; background: var(--nx-card, var(--bg2)); border: 1px solid var(--edge); border-radius: 8px; color: var(--text2); font: 11.5px/1.45 var(--sans); min-width: 0; }
+.pcard:not([disabled]):hover { border-color: var(--sky); background: var(--b0); cursor: pointer; }
+.pcard b { color: var(--bright); font: 500 12.5px var(--sans); display: flex; align-items: center; gap: 6px; } .pcard span { overflow: hidden; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; }
+.pcard i { font: normal 10px var(--mono); color: var(--text3); } .pcard code, .lead code { font: 10.5px var(--mono); color: var(--sky); } .pcard .gl { color: var(--sky); }
+.pg { font: 600 9.5px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--text3); margin-top: 20px; }
+.pform { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; margin-top: 14px; padding: 12px; border: 1px solid var(--edge); border-radius: 8px; background: var(--nx-card, var(--bg2)); }
+.pform label { font: 11px var(--mono); color: var(--text3); } .psel { background: var(--bg); color: var(--text); border: 1px solid var(--rim); border-radius: 5px; padding: 5px 8px; font: 12px var(--sans); max-width: 320px; }
 .lq { flex: 1; max-width: 520px; height: 32px; padding: 0 11px; border: 1px solid var(--rim); border-radius: 6px; background: var(--bg1); color: var(--bright); font: 12.5px var(--sans); outline: 0; }
 .lq:focus { border-color: var(--b2); }
 .page .lead { margin-top: 6px; color: var(--text2); font-size: 12px; } .page .lead b { color: var(--text); font-weight: 500; }
@@ -279,7 +287,7 @@ const P = 'M'; const ICONS = {
 const icon = (k) => `<svg class="i" viewBox="0 0 24 24">${ICONS[k] || ''}</svg>`;
 
 // ── state ──
-const S = { view: (v => ['console', 'vars', 'settings'].includes(v) ? 'canvas' : v)(store.get('view', 'canvas')), max: false, stack: [], phases: null, comps: null, cat: null, cmds: {}, drafts: {}, edits: {}, rev: 0, lin: {}, logs: null, cli: [], draft: '', hist: [], hi: 0, pid: store.get('pid', null), sel: null, job: null, pinned: false, all: false, follow: true, wrap: true, think: false,
+const S = { view: (v => ['console', 'vars', 'settings'].includes(v) ? 'canvas' : v)(store.get('view', 'canvas')), max: false, stack: [], phases: null, comps: null, cat: null, cmds: {}, trig: {}, drafts: {}, edits: {}, rev: 0, lin: {}, logs: null, cli: [], draft: '', hist: [], hi: 0, pid: store.get('pid', null), sel: null, job: null, pinned: false, all: false, follow: true, wrap: true, think: false,
   open: new Set(store.get('dock', ['inspector', 'activity'])), folded: new Set(store.get('folded', [])), split: store.get('split', .6), D: null, ok: 0, base: {}, vp: null, sig: '' };
 const pipe = () => S.drafts[S.pid] || (S.D && S.D.pipelines.find((p) => p.id === S.pid));
 const allPipes = () => [...(S.D ? S.D.pipelines : []), ...Object.values(S.drafts).filter((d) => !(S.D && S.D.pipelines.some((p) => p.id === d.id)))];
@@ -300,7 +308,13 @@ function fromNexus(how) { return [{ h: 'From Nexus' },
   { label: 'A system…', icon: 'chip', desc: 'A box that asks one of Nexus’s systems', run: () => setTimeout(() => menu(S.D.systems.map((s) => ({ label: s.name, dot: s.state === 'up' ? 'var(--ok)' : 'var(--amber)', hint: s.state, run: () => addStep('command', how, { label: 'Ask ' + s.name, config: { system: s.name } }) })), null, { search: true, palette: true, placeholder: 'Which system?' }), 0) },
   { label: 'Another pipeline…', icon: 'canvas', desc: 'Runs a whole pipeline as one box; double-click opens it', run: () => setTimeout(() => menu(allPipes().filter((x) => x.id !== S.pid).map((x) => ({ label: x.name, hint: x.tasks.length + ' steps', run: () => addStep('pipeline', how, { label: x.name, config: { pipeline: x.id } }) })), null, { search: true, palette: true, placeholder: 'Which pipeline?' }), 0) },
   { label: 'A phase…', icon: 'phases', desc: 'Any of the phases in the maps', run: () => setView('phases') },
-  { label: 'A component…', icon: 'components', desc: 'Any component in a system’s registry', run: () => setView('components') }]; }
+  { label: 'A component…', icon: 'components', desc: 'Any component in a system’s registry', run: () => setView('components') },
+  { label: 'A command…', icon: 'chip', desc: 'Any route a system answers', run: () => setView('cmds') },
+  { label: 'A framework…', icon: 'gate', desc: 'A .framework, run as one step', run: () => setView('fws') },
+  { label: 'An If…, picked', icon: 'more', desc: 'A value, a test, an answer, what happens next', run: () => setView('conds') },
+  { label: 'When it starts…', icon: 'play', desc: 'By hand, every N, at a time, on an event, on a web request', run: () => setView('sched') },
+  { label: 'Every kind of step…', icon: 'panel', desc: 'The whole catalogue, as cards', run: () => setView('library') },
+  { label: 'A template…', icon: 'copy', desc: 'Gate, step, contract, pipeline: what each field holds', run: () => setView('tmpls') }]; }
 // add a step: after the selected one (its followers now follow the new step), or beside it (a parallel branch: same inputs, nothing rewired)
 function addStep(type, how = 'after', preset = null) { const sel = S.sel && S.sel.id; let nid;
   edit((p) => { nid = newId(p, type); const s = stepOf(type, preset), at = sel && p.tasks.find((t) => t.id === sel), lastId = p.tasks.length ? p.tasks[p.tasks.length - 1].id : null;
@@ -420,17 +434,82 @@ function palette() {
 // ════ VIEWS (side tabs) ════
 const VIEWS = [
   { id: 'canvas', label: 'Canvas', live: () => S.D && S.D.jobs.some((j) => !bg(j) && j.status === 'running') }, { id: 'runs', label: 'Runs' },
-  { id: 'phases', label: 'Phases' }, { id: 'components', label: 'Parts', title: 'Components: every system’s registry' },
-  '-',
-  { id: 'gaps', label: 'Gaps', proposed: 'The contract’s .gap files: each open loop, its tries, its lesson, its chain.' },
-  { id: 'ladder', label: 'Ladder', proposed: 'Which rung each gap climbed (3b → 16b → 30b) and what unstuck it.' },
-  { id: 'tape', label: 'Tape', proposed: 'Replay any model call of a run without Ollama (ollama/lib/tape.js).' },
-  { id: 'flight', label: 'Flight', proposed: 'The run’s flight record: every step, its timing, its outcome.' },
-  { id: 'ledger', label: 'Ledger', proposed: 'The phase ledger and COS’s ledger rows for this run.' },
+  // James, 2026-11-24: "a lot of the tabs need to be steps or gates. not tabs. like its redundant. make it a menu for this stuff". Only the canvas
+  // and its runs are tabs; every picker below opens from the Add step menu (hidden: no tab), and the empty proposed tabs are gone
+  { id: 'phases', label: 'Phases', hidden: true }, { id: 'components', label: 'Parts', hidden: true },
+  { id: 'library', label: 'Library', hidden: true }, { id: 'conds', label: 'Conditions', hidden: true }, { id: 'sched', label: 'Schedule', hidden: true },
+  { id: 'cmds', label: 'Commands', hidden: true }, { id: 'fws', label: 'Frameworks', hidden: true }, { id: 'tmpls', label: 'Templates', hidden: true },
 ];
 const setView = (v) => { S.view = v; store.set('view', v); S.sig = ''; draw(); };
+// ════ the seven pick-not-type tabs (2026-11-24) ════
+// James, 2026-11-24: "programmable gates and steps, each system, conditions, scheduling, commands, frameworks, like all the pipeline can do but not
+// typing it all by hand but still agnostic, like tasker, brainos, highest leverage, but the easiest to use." Every list is read from what Nexus holds
+// (COS's step catalogue and its triggers and tests, each system's registry and routes, the .framework files, lib/node-schemas). Nothing is saved:
+// each pick edits this screen's draft of the pipeline, as + Add does.
+Object.assign(ICONS, {
+  library: '<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><path d="M17.5 14v7M14 17.5h7"/>',
+  systems: '<rect x="3" y="4" width="18" height="6" rx="1.5"/><rect x="3" y="14" width="18" height="6" rx="1.5"/><path d="M7 7h.01M7 17h.01"/>',
+  conds: '<path d="M6 3v6a4 4 0 0 0 4 4h8M14 9l4 4-4 4M6 21v-4"/>', sched: '<circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/>',
+  cmds: '<path d="M5 8l4 4-4 4M11 16h8"/>', fws: '<path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M12 12l8-4.5M12 12v9M12 12L4 7.5"/>',
+  tmpls: '<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/>',
+});
+const MORE = ['library', 'systems', 'conds', 'sched', 'cmds', 'fws', 'tmpls'];
+async function loadJ(k, url) { if (S[k]) return; S[k] = { loading: true }; try { S[k] = await (await fetch(url)).json(); } catch (_) { S[k] = { error: 'not answering' }; } S.sig = ''; delete $('work').dataset.v; work(); }
+const needPipe = () => { if (!pipe()) { toast('Choose a pipeline first (the menu at the top)', 'warn'); return false; } return true; };
+const pickTo = (type, preset, note) => { if (!needPipe()) return; setView('canvas'); addStep(type, 'after', preset); toast(note || 'Added to the canvas (a draft: nothing is saved)'); };
+const cardCss = 'display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px;margin-top:14px';
+const card = (attrs, h, sub, foot) => `<button class="pcard" ${attrs}><b>${h}</b><span>${sub}</span>${foot ? `<i>${foot}</i>` : ''}</button>`;
+const sel = (id, opts, v) => `<select id="${id}" class="psel">${opts.map((o) => `<option value="${esc(o.value)}" ${o.value === v ? 'selected' : ''}>${esc(o.label)}</option>`).join('')}</select>`;
+function moreView(w) {
+  const vw = S.view, page = (title, lead, body, n) => `<div class="page"><div class="lh"><h2>${title}${n != null ? ` <span class="ct">${n}</span>` : ''}</h2>${n != null ? '<input class="lq" placeholder="Find…" spellcheck="false">' : ''}</div><div class="lead">${lead}</div>${body}</div>`;
+  const bindFind = () => { const q = w.querySelector('.lq'); if (q) q.oninput = () => { const s = q.value.toLowerCase(); w.querySelectorAll('.pcard,[data-row]').forEach((c) => c.style.display = c.textContent.toLowerCase().includes(s) ? '' : 'none'); }; };
+  if (vw === 'library' || vw === 'conds' || vw === 'sched') { if (!S.cat || !S.cat.catalogue || !S.cat.catalogue.length) { w.innerHTML = '<div class="empty" style="margin:auto">Reading COS’s step catalogue…</div>'; if (!S.cat || !S.cat.loading) { S.cat = null; loadCat().then(() => { delete w.dataset.v; work(); }); } return; } }
+  if (vw === 'library') { const C = S.cat.catalogue, groups = [...new Set(C.map((c) => c.group))];
+    w.innerHTML = page('Library', 'Every kind of step and gate COS’s engine runs, from its own catalogue. <b>Click one</b>: it goes on the canvas after the selected box, and its settings open in the Inspector, as menus.',
+      groups.map((g) => `<h3 class="pg">${esc(g)}</h3><div style="${cardCss}">${C.filter((c) => c.group === g).map((c) => card(`data-ty="${esc(c.type)}"`, `<span class="gl">${esc(c.icon || '')}</span> ${esc(c.label)}`, esc(c.help || ''), (c.fields || []).length + ' settings · gives ' + esc(String(c.output || '').slice(0, 60)))).join('')}</div>`).join(''), C.length);
+    w.querySelectorAll('[data-ty]').forEach((b) => b.onclick = () => pickTo(b.dataset.ty)); return bindFind(); }
+  if (vw === 'conds') { const ops = S.cat.ops || [], p = pipe(), from = [{ value: '', label: 'a value (choose)' }, ...((p && p.tasks) || []).map((t) => ({ value: '{{steps.' + t.id + '.output}}', label: 'what “' + t.label + '” gave' })), ...Object.keys((p && p.vars) || {}).map((k) => ({ value: '{{vars.' + k + '}}', label: 'the variable ' + k }))];
+    const then = [{ value: 'next', label: 'go on to the next box' }, ...((p && p.tasks) || []).map((t) => ({ value: 'goto:' + t.id, label: 'jump to “' + t.label + '”' })), { value: 'stop', label: 'stop the pipeline' }, { value: 'break', label: 'leave the loop' }];
+    w.innerHTML = page('Conditions', 'An <b>If…</b> box, built by picking. Its values come from this pipeline’s boxes and variables; its tests are COS’s own (' + ops.length + '). Only the answer to compare against is typed, when it is a word or a number.',
+      `<div class="pform"><label>If</label>${sel('c-a', from.length > 1 ? from : [{ value: '', label: 'choose a pipeline first' }])}<label>is tested</label>${sel('c-op', ops)}<label>against</label><input id="c-b" class="psel" placeholder="a word or number" spellcheck="false"><label>then</label>${sel('c-t', then)}<label>otherwise</label>${sel('c-f', then, 'stop')}<button class="addbtn" id="c-go">+ Put it on the canvas</button></div>
+       <h3 class="pg">Its tests</h3><div style="${cardCss}">${ops.map((o) => card('data-row disabled', esc(o.label), '<code>' + esc(o.value) + '</code>')).join('')}</div>`, null);
+    $('c-go').onclick = () => { const a = $('c-a').value, op = $('c-op').value, b = $('c-b').value, t = $('c-t').value, f = $('c-f').value; if (!a) return toast('Pick what to test', 'warn');
+      pickTo('condition', { label: 'If ' + (a.match(/\{\{(?:steps\.|vars\.)?([^}.]+)/) || [, a])[1] + ' ' + ((ops.find((o) => o.value === op) || {}).label || op) + ' ' + b, config: { test: 'value', left: a, op, right: b, then: t, else: f } }); }; return; }
+  if (vw === 'sched') { const T = S.cat.trigger || {}, kinds = T.kinds || [], evs = T.events || [], p = pipe();
+    w.innerHTML = page('Schedule', esc(T.help || 'What starts the pipeline.') + ' Picked from COS’s own list of starts (' + kinds.length + ' kinds, ' + evs.length + ' events). <b>A pipeline can have several.</b>',
+      `<div class="pform"><label>Start it</label>${sel('s-k', kinds)}<span id="s-more" style="display:contents"></span><button class="addbtn" id="s-go">+ Add this start</button></div>
+       <h3 class="pg">Its starts now</h3><div id="s-now" class="lead">${p ? (S.trig[p.id] || []).map((x) => '• ' + esc(x)).join('<br>') || 'Only when Run is pressed.' : 'Choose a pipeline first.'}</div>
+       <h3 class="pg">Events it can wait for</h3><div style="${cardCss}">${evs.map((e) => card('data-row disabled', esc(e.label), e.match ? 'matches on its ' + esc(e.match) : 'no match needed')).join('')}</div>`, null);
+    const more = () => { const k = $('s-k').value; $('s-more').innerHTML = k === 'every' ? `<label>every</label>${sel('s-n', [5, 10, 15, 30, 60, 120, 360, 720, 1440].map((n) => ({ value: String(n), label: n < 60 ? n + ' minutes' : n / 60 + ' hours' })), '60')}`
+      : k === 'daily' ? `<label>at</label><input id="s-n" class="psel" type="time" value="09:00">` : k === 'cron' ? `<label>when</label>${sel('s-n', [['0 * * * *', 'at the top of every hour'], ['*/15 * * * *', 'every quarter hour'], ['0 9 * * 1-5', '9:00 on weekdays'], ['0 0 * * *', 'at midnight'], ['0 9 * * 1', 'Monday 9:00']].map(([v, l]) => ({ value: v, label: l })))}`
+      : k === 'event' ? `<label>when</label>${sel('s-n', evs)}` : k === 'webhook' ? '<label>at</label><span class="lead" style="margin:0">a web request to COS (its address shows once built)</span>' : ''; };
+    $('s-k').onchange = more; more();
+    $('s-go').onclick = () => { if (!needPipe()) return; const k = $('s-k'), n = $('s-n'); const txt = k.options[k.selectedIndex].text + (n ? ': ' + (n.options ? n.options[n.selectedIndex].text : n.value) : ''); (S.trig[pipe().id] = S.trig[pipe().id] || []).push(txt); toast('Start added to the draft'); delete w.dataset.v; work(); }; return; }
+  if (vw === 'systems') { const sy = S.D ? S.D.systems : []; if (!S.comps) { loadComps(); }
+    const n = (s) => (S.comps || []).filter((c) => c.system === s).length;
+    w.innerHTML = page('Systems', 'Each of Nexus’s systems, its state from COS, and what it offers. <b>Click one</b> to ask it as a step; its components and commands are in <b>Parts</b> and <b>Commands</b>.',
+      `<div style="${cardCss}">${sy.map((s) => card(`data-sy="${esc(s.name)}"`, `<span class="sd" style="background:${s.state === 'up' || s.state === 'running' ? 'var(--ok)' : 'var(--amber)'}"></span> ${esc(s.name)}`, esc(s.state || '') + (s.port ? ' · port ' + s.port : ''), S.comps ? n(s.name) + ' components' : '')).join('')}</div>`, sy.length);
+    w.querySelectorAll('[data-sy]').forEach((b) => b.onclick = () => pickTo('command', { label: 'Ask ' + b.dataset.sy, config: { system: b.dataset.sy } })); return bindFind(); }
+  if (vw === 'cmds') { const sy = S.D ? S.D.systems : [], cur = S.cmdSys || (sy[0] && sy[0].name); if (cur && !S.cmds[cur]) loadCmds(cur).then(() => { if (S.view === 'cmds') { delete w.dataset.v; work(); } });
+    if (!S.comps) loadComps().then(() => { if (S.view === 'cmds') { delete w.dataset.v; work(); } });
+    // its own /commands list when it answers one; else the routes in its component registry (most systems keep them only there)
+    const own = (cur && S.cmds[cur]) || [], reg = [...new Set((S.comps || []).filter((c) => c.system === cur && c.path).map((c) => c.path.split('?')[0]))].sort(), ps = own.length ? own : reg;
+    w.innerHTML = page('Commands', 'Every route a system answers (its own <code>/commands</code>). Pick the system, then <b>click a route</b>: it becomes a step that calls it.',
+      `<div class="pform"><label>System</label>${sel('m-s', sy.map((s) => ({ value: s.name, label: s.name })), cur)}</div><div style="${cardCss}">${ps.map((x) => card(`data-cm="${esc(x)}"`, '<code>' + esc(x) + '</code>', esc(cur))).join('') || '<div class="empty">Reading, or this system does not list its routes.</div>'}</div>`, ps.length);
+    $('m-s').onchange = () => { S.cmdSys = $('m-s').value; delete w.dataset.v; work(); };
+    w.querySelectorAll('[data-cm]').forEach((b) => b.onclick = () => pickTo('command', { label: b.dataset.cm, config: { system: cur, method: 'GET', endpoint: b.dataset.cm } })); return bindFind(); }
+  if (vw === 'fws') { if (!S.fw) { loadJ('fw', '/frameworks'); w.innerHTML = '<div class="empty" style="margin:auto">Reading…</div>'; return; } const F = S.fw.frameworks || [];
+    w.innerHTML = page('Frameworks', 'Every <code>.framework</code> in Nexus. <b>Click one</b>: it runs as one step, its own steps compiled into pipelines. One that only describes (no steps) is refused by COS when run, and said.',
+      `<div style="${cardCss}">${F.map((f, i) => card(`data-fw="${i}"`, esc(f.title), '<code>' + esc(f.file) + '</code>', f.lines + ' lines · ' + (f.steps ? 'declares steps' : 'describes only'))).join('')}</div>`, F.length);
+    w.querySelectorAll('[data-fw]').forEach((b) => b.onclick = () => { const f = F[+b.dataset.fw]; pickTo('framework', { label: f.title.slice(0, 40), config: { framework: f.file } }); }); return bindFind(); }
+  if (vw === 'tmpls') { if (!S.tm) { loadJ('tm', '/templates'); w.innerHTML = '<div class="empty" style="margin:auto">Reading…</div>'; return; } const T = S.tm.templates || [], first = ['gate', 'step_gate', 'contract', 'raid_contract', 'pipeline', 'workflow', 'procedure', 'process_step', 'dag', 'ledger', 'gap', 'fault', 'failure_mode'];
+    const ord = [...T].sort((a, b) => ((first.indexOf(a.type) + 1) || 99) - ((first.indexOf(b.type) + 1) || 99));
+    w.innerHTML = page('Templates', 'Every kind of node Nexus keeps, from <code>lib/node-schemas</code>: a gate, a step’s gate, a contract, a pipeline, a gap, a fault… and what each field holds. <b>Gate and step first</b>: the gate is the unit (RL_D10). Making one from here comes with the contract-compartment template; in this preview it shows the fields.',
+      `<div style="${cardCss}">${ord.map((t) => card('data-row', esc(t.type) + ` <span class="pill" style="color:${t.status === 'REAL' ? 'var(--ok)' : 'var(--amber)'}">${esc(t.status || '')}</span>`, t.holes.map((h) => '<code>' + esc(h.path) + '</code> ' + esc(String(h.about || '').slice(0, 70))).join('<br>') || 'no fields read')).join('')}</div>`, T.length);
+    return bindFind(); }
+}
 function side() {
-  $('side').innerHTML = VIEWS.map((v) => v === '-' ? '<hr>' : `<button class="stab ${S.view === v.id ? 'on' : ''}" data-v="${v.id}" title="${esc(v.proposed || v.label)}">${icon(v.id)}<span>${v.label}</span>${v.live && v.live() ? '<span class="badge"></span>' : v.proposed ? '<span class="new"></span>' : ''}</button>`).join('');
+  $('side').innerHTML = VIEWS.filter((v) => v === '-' || !v.hidden).map((v) => v === '-' ? '<hr>' : `<button class="stab ${S.view === v.id ? 'on' : ''}" data-v="${v.id}" title="${esc(v.proposed || v.label)}">${icon(v.id)}<span>${v.label}</span>${v.live && v.live() ? '<span class="badge"></span>' : v.proposed ? '<span class="new"></span>' : ''}</button>`).join('');
   $('side').querySelectorAll('[data-v]').forEach((b) => b.onclick = () => setView(b.dataset.v));
 }
 
@@ -595,6 +674,7 @@ function work() {
   const p = pipe(), w = $('work'), pc = $('code'), bottom = pc ? pc.scrollTop + pc.clientHeight >= pc.scrollHeight - 30 : true, ptop = pc ? pc.scrollTop : 0, pl = w.querySelector('.calls .list'), ltop = pl ? pl.scrollTop : 0;
   const v = VIEWS.find((x) => x.id === S.view);
   if (S.view === 'phases' || S.view === 'components') { const key = S.view + ':' + !!(S.view === 'phases' ? S.phases : S.comps); if (w.dataset.v === key) return; w.dataset.v = key; return listView(w); }
+  if (MORE.includes(S.view)) { const key = 'more:' + S.view + ':' + S.pid + ':' + S.rev; if (w.dataset.v === key) return; w.dataset.v = key; return moreView(w); }
   delete w.dataset.v;
   if (S.view === 'canvas') {
     if (!p) { w.innerHTML = '<div class="empty" style="margin:auto">Choose a pipeline from the menu at the top.</div>'; return; }
@@ -690,6 +770,14 @@ const PANELS = [
       return sec('Pipeline runs') + (rr.length ? rr.map((x) => kv(x.name || x.id, x.status + ' · ' + ago(x.at), `data-goto="${esc(x.pipelineId)}"`)).join('') : '<div class="dk-empty">None.</div>')
         + sec('Model calls') + (jj.length ? jj.map((x) => kv(jname(x), x.status + ' · ' + dur(x.ms), `data-call="${esc(x.id)}"`)).join('') : '<div class="dk-empty">None.</div>'); } },
   { id: 'context', label: 'Context', render() { const j = job(); return j ? `<div class="dk-empty">What ${esc(model(j.model))} was given · ${kfmt(j.promptChars)} chars${j.promptChars > 4000 ? ' (first 4k)' : ''}</div><div class="pre">${esc(j.prompt || '(none kept)')}</div>` : '<div class="dk-empty">Pick a model call.</div>'; } },
+  // the build inside a step (2026-11-24): each function's state live, then the build's own last rows; read from its records on disk
+  { id: 'build', label: 'Build', live: () => S.D && S.D.build && !/passed|failed|held|error|landed/.test(S.D.build.last || ''), count: () => S.D && S.D.build ? S.D.build.gaps.filter((x) => x.state === 'passed').length + '/' + S.D.build.gaps.length : '',
+    render() { const b = S.D && S.D.build; if (!b) return '<div class="dk-empty">No build has run yet.</div>';
+      const c = (s) => s === 'passed' ? 'var(--ok)' : /refused|failed|held/.test(s) ? 'var(--red, #f87171)' : s === 'gap-asked' ? 'var(--sky)' : 'var(--text3)';
+      const word = (s) => ({ 'gap-asked': 'writing…', 'gap-answered': 'checking', passed: 'passed', waiting: 'waiting' })[s] || s;
+      return `<div class="dk-empty" style="text-align:left">${esc(b.phase || '')} · <code>${esc(b.run)}</code> · now: ${esc(b.last || '')}</div>`
+        + b.gaps.map((x) => kv(`<span class="sd" style="background:${c(x.state)}"></span> ${esc(x.name)}${x.helper ? ' <i style="color:var(--violet)">broken down</i>' : ''}`, word(x.state) + ' · ' + x.asks + ' tries' + (x.model ? ' · ' + esc(String(x.model).replace(/^.*\//, '')) : ''))).join('')
+        + '<div class="pg" style="margin:12px 0 4px">Its last rows</div>' + b.rows.slice().reverse().map((x) => `<div style="font:10.5px var(--mono);color:var(--text2);padding:2px 0"><span style="color:var(--text3)">${new Date(x.t).toLocaleTimeString()}</span> ${esc(x.state)}${x.gap ? ' <b>' + esc(x.gap) + '</b>' : ''}${x.note ? ' — ' + esc(x.note) : ''}</div>`).join(''); } },
   { id: 'outputs', label: 'Outputs', count: () => S.D ? S.D.jobs.filter((x) => !bg(x) && x.status === 'complete').length || '' : '',
     render() { const o = S.D.jobs.filter((x) => !bg(x) && x.status === 'complete').slice(0, 15); return o.length ? o.map((x) => kv(jname(x), kfmt(x.chars) + ' · ' + ago(x.end), `data-call="${esc(x.id)}"`)).join('') : '<div class="dk-empty">Nothing finished in this run yet. A run’s proposals land here for you to apply.</div>'; } },
   { id: 'terminal', label: 'Terminal', count: () => S.logs ? S.logs.filter((l) => l.stream === 'err').length || '' : '', warn: true, keepFocus: true,

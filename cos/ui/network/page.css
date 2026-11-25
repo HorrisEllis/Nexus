@@ -44,3 +44,21 @@
 .nw-qr-link { font: 13px ui-monospace, monospace; overflow-wrap: anywhere; text-align: center; }
 .nw-qr-warn { margin: 16px 0 0; font-size: 12px; opacity: .65; }
 @media (max-width: 640px) { .nw-crow { grid-template-columns: 1fr 1fr; } .nw-crow .nw-cname { grid-column: 1 / -1; } .nw-chead { display: none; } .nw-qr-code { width: 232px; height: 232px; } }
+
+/* 2026-11-24 — James: "can you fix the style for the network settings real quick?" Its controls carry no class of COS's, so they showed as the
+   browser draws them; they take COS's own .btn and .input look (cos/ui/core/core.css) here */
+.cos-page button:not(.nw-qr-x) { display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 34px; padding: 0 16px; border-radius: 999px;
+  border: 1px solid var(--line); background: color-mix(in srgb, var(--nx-panel) 60%, transparent); color: var(--nx-text); font: 500 13px/1 var(--font); cursor: pointer;
+  transition: background .18s, border-color .18s, color .18s; white-space: nowrap; }
+.cos-page button:not(.nw-qr-x):hover { border-color: var(--ac-border-hi); color: var(--nx-bright); background: var(--ac-ghost); }
+.cos-page button[disabled] { opacity: .4; pointer-events: none; }
+.cos-page button.primary { border-color: var(--ac-border-hi); background: var(--ac-dim); color: var(--nx-bright); }
+.cos-page select, .cos-page input[type=text], .cos-page input[type=number], .cos-page input[type=password], .cos-page textarea { height: 36px; padding: 0 12px; border-radius: var(--r1, 8px);
+  border: 1px solid var(--line); background: color-mix(in srgb, var(--nx-ink) 70%, transparent); color: var(--nx-bright); font: 400 13px/1 var(--font); box-sizing: border-box; }
+.cos-page textarea { height: auto; padding: 8px 12px; }
+.cos-page select:focus, .cos-page input:focus, .cos-page textarea:focus { outline: none; border-color: var(--ac-border-hi); box-shadow: 0 0 0 3px var(--ac-ghost); }
+.cos-page select option { background: var(--nx-panel, #14181d); color: var(--nx-text, #e6edf3); }
+.cos-page input[type=checkbox] { width: 18px; height: 18px; accent-color: var(--ac, #60a5fa); cursor: pointer; }
+.cos-page input::placeholder, .cos-page textarea::placeholder { color: var(--nx-muted); }
+.nw-row { border-top-color: var(--line-soft); }
+.nw-qr-x { background: transparent; border: 1px solid var(--line); color: var(--nx-text); cursor: pointer; }
