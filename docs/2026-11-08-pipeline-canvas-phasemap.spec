@@ -662,6 +662,19 @@ built_2026_11_09_plan:
       through the drawbridge (DB1–DB7), never stripped; additive tabs the coder proposes, for him to choose: Gaps (the contract's .gap files),
       the ladder (which rung each gap climbed), the tape (replay a call), the flight record, the ledger. Preview first (his rule), on live data:
       cos/ui/run-console-preview/. The coder's reading, to confirm with him.
+    expanded_2026_11_24_the_console_is_the_automation_tab: >-
+      James, 2026-11-24: "the console preview is supposed to replace the lab tab" · then "cos/ui/run-console-preview should be the automation
+      tba". Read as: the run console preview (cos/ui/run-console-preview, shaped with him 2026-11-21 to 2026-11-24) becomes COS's Automation tab,
+      in place of cos/ui/automation; the Lab (cos/ui/lab, EMB4, read-only lists of requests, builds and pieces) is to be replaced by it (the
+      console's Build tab shows the same, live). Whether the Lab tab is removed or kept pointing at the console is his (asked 2026-11-24).
+      Never stripped (§8.6): what the Automation page does today moves into the console first, then the page is replaced. Census, the coder's,
+      2026-11-24: the Automation page runs, pauses, continues and retries a run; saves and exports a pipeline; reads COS's events, policy,
+      boxes, pipeline sync/ready/runs/from-erv/baseline and the desktop driver's state, log, arm and disarm. The preview has none of the run
+      controls yet and reads its data through its own preview server (cos/ui/run-console-preview/server.js: the bridge's jobs, COS's runs,
+      systems, usage, console, CLI, catalogue, Idearium's lineage and phases, components, frameworks, templates, baseline), which becomes a COS
+      route door (each answer from its owner's route, §5.16; the Ollama /api/ps read becomes the model server's), so the page asks COS only.
+      Order: the door; the run controls and the rest of the census in the console; the console served as cos/ui/automation; the Lab's tab per
+      his answer. Tested in Clear Glass (his rule), said where its driver cannot open a window on this PC.
     status: OPEN   # slice a BUILT 0.60.481 (a delta and a baseline per step; RAID's decisions as steps; the bar); slice b BUILT 0.60.484 (pause, continue, retry from a step)
     james: '"seeing, changing, managing, diagnosing, exporting, testing, agnostic." · "record each step in raids decision, dynamically building each step, as it goes. it all needs to be visable."'
     depends_on: [PC_D13_the_pipeline_works_first_then_cos_optimised, PC5_programmable_gate_types]
