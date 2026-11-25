@@ -1,0 +1,31 @@
+// inference/server.eg — our own model server, slice b: one llama-server per model, started and stopped by us (PC_D17, PC18).
+// James Brooks, 2026-11-24: "its dumb you cant set that per model, but we could right?" · "do it."
+// Each model has its own settings (his to set, additive: a key left out is the engine's own default, never a number fixed here):
+//   { port, slots (-np: requests at once), ctx (-c: context), gpu_layers (-ngl), threads (-t), slot_dir (--slot-save-path: the rewind hook) }
+// The engine is a plugin (llama-server today); these are its options, read from its own --help.
+
+/** the engine's options for one model and its settings */
+fn args_for(file: string, s: map): list {
+  var a = ["-m", file, "--host", "127.0.0.1"]
+  if has(s, "port") { a = push(push(a, "--port"), str(s.port)) }
+  if has(s, "slots") { a = push(push(a, "-np"), str(s.slots)) }
+  if has(s, "ctx") { a = push(push(a, "-c"), str(s.ctx)) }
+  if has(s, "gpu_layers") { a = push(push(a, "-ngl"), str(s.gpu_layers)) }
+  if has(s, "threads") { a = push(push(a, "-t"), str(s.threads)) }
+  if has(s, "slot_dir") { a = push(push(a, "--slot-save-path"), s.slot_dir) }
+  return a
+}
+
+/** start one model's server: { pid, args } (the pid is what stop takes) */
+fn start(engine: string, file: string, s: map): map {
+  let a = args_for(file, s)
+  return { pid: proc_start(engine, a), args: a }
+}
+
+/** ask it to stop (15), and end it (9) when it has not within ms: true when it is gone */
+fn stop(pid: num, ms: num): bool {
+  proc_signal(pid, 15)
+  if proc_wait_ms(pid, ms) != null { return true }
+  proc_signal(pid, 9)
+  return proc_wait_ms(pid, ms) != null
+}

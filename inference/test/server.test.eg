@@ -1,0 +1,15 @@
+// inference/test/server.test.eg — slice b: a model's settings become its own server's options (PC_D17). eg test inference/test/server.test.eg
+// James Brooks, 2026-11-24: "its dumb you cant set that per model, but we could right?"
+use "../server.eg" as S
+
+test "each setting becomes the engine's option; one left out is the engine's own default" {
+  expect S.args_for("m.gguf", {}) == ["-m", "m.gguf", "--host", "127.0.0.1"]
+  expect S.args_for("m.gguf", { port: 9931, slots: 3, ctx: 8192 }) == ["-m", "m.gguf", "--host", "127.0.0.1", "--port", "9931", "-np", "3", "-c", "8192"]
+  expect S.args_for("m.gguf", { gpu_layers: 99, threads: 8, slot_dir: "d/slots" }) == ["-m", "m.gguf", "--host", "127.0.0.1", "-ngl", "99", "-t", "8", "--slot-save-path", "d/slots"]
+}
+
+test "the 3b and the 16b each have their own: three slots for one, one for the other" {
+  let a = S.args_for("3b.gguf", { port: 9931, slots: 3 })
+  let b = S.args_for("16b.gguf", { port: 9932, slots: 1 })
+  expect a contains "3" and b contains "1" and a[1] == "3b.gguf" and b[1] == "16b.gguf"
+}

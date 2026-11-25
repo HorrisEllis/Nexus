@@ -200,13 +200,16 @@ const TEMPLATE_MENU = [
 // needed". Measured: replace_all's brief was 4,519 to 6,390 characters; what it needs is 169. A piece with a contract is briefed with its own
 // function and contract, the signatures (never the bodies) of the module's other functions, only the card lines its examples call for, and
 // the last refusal's reason. Everything else stays where it is.
-function cardFor(examples = []) {
-  const ex = examples.join('\n'), lines = CARD.split('\n'), pick = (re) => lines.filter((l) => re.test(l));
+// 2026-11-24: the lines are chosen by the examples AND by the piece's own spec (its "does"): fix_outside's examples are text only, so its gate
+// never got the while line nor push, which its spec ("Build a new list: a part at an even index …") needs; the 3b and the 16b wrote Python
+function cardFor(examples = [], does = '') {
+  const ex = examples.join('\n'), d = String(does || ''), lines = CARD.split('\n'), pick = (re) => lines.filter((l) => re.test(l));
   const core = pick(/^(You write Emerge|fn name\(|let x = 1|if a and b|for e in xs|return value|comparisons:|No semicolons|No throw|Never x\.value|Write the general rule)/);
-  const text = /"/.test(ex) ? pick(/^(strings:|Inside a string|Text: split|To replace every)/) : [];
-  const list = /\[/.test(ex) ? pick(/^lists:/) : [], map = /\{/.test(ex) ? pick(/^maps:/) : [];
+  const walks = /\b(index|each|every|walk|list|parts|loop|until|while|count|even|odd)\b/i.test(d) ? pick(/^while i < len/) : [];
+  const text = /"/.test(ex) || /"|\bsplit\b|\bjoin\b|\btext\b|\bstring\b/i.test(d) ? pick(/^(strings:|Inside a string|Text: split|To replace every)/) : [];
+  const list = /\[/.test(ex) || /\b(list|push|parts|index|split)\b/i.test(d) ? pick(/^lists:/) : [], map = /\{/.test(ex) || /\{\s*\w+:/.test(d) ? pick(/^maps:/) : [];
   const pattern = /\[\s*\{/.test(ex) ? lines.slice(lines.findIndex((l) => /^Loop variables/.test(l)), lines.findIndex((l) => /^Never x\.value/.test(l))) : [];
-  return [...core.slice(0, 1), ...core.slice(1), ...list, ...map, ...text, ...pattern].join('\n');
+  return [...core.slice(0, 1), ...core.slice(1), ...walks, ...list, ...map, ...text, ...pattern].join('\n');
 }
 /** an example in Emerge's own literals: the call's arguments and the expected value re-written (a recorded 'x' in single quotes is JavaScript) */
 function egLine(l) {
@@ -219,7 +222,7 @@ function briefPiece({ skel, filled, name, lesson = '' }) {
   const me = skel.fns.find((x) => x.name === name) || {}, c = me.contract || {}, ex = (c.examples || []).slice(0, 6), cs = (c.constraints || []).slice(0, 4);
   const others = skel.fns.filter((x) => x.name !== name && filled[x.name] != null).map((x) => `fn ${x.name}(${(x.params || []).join(', ')})`);   // only what exists can be called
   const last = _q(lesson).split('\n').filter((l) => /^Refused|^The fix:/.test(l)).slice(-2).join('\n');
-  return [cardFor(ex), '',
+  return [cardFor(ex, me.does), '',
     `Write the body of this one Emerge function${me.does ? ' (' + me.does + ')' : ''}:`, `fn ${name}(${(me.params || []).join(', ')}) {`, '  ___', '}', '',
     ex.length ? 'It must give exactly these (write the rule they share; other inputs are tested too):\n' + ex.map((x) => '  ' + egLine(x)).join('\n') : '',
     cs.length ? 'Constraints:\n' + cs.map((x) => '  - ' + _q(x.says || x)).join('\n') : '',
