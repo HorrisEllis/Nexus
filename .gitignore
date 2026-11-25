@@ -48,3 +48,6 @@ cortex/data/contracts/
 
 # inference (our own model server): his settings and its records are his data, never committed (2026-11-24)
 inference/data/
+
+# PC20: the model server writes its own engine declarations from its settings, with this PC's paths
+inference/inference.cos

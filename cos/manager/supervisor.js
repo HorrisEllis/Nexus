@@ -507,6 +507,19 @@ function createSupervisor({ root, declarations = null, policy = {}, ledgerFile =
     // SC4 — a system added while COS runs (its declaration just written by add-system.js): declared live, never started by this
     declare: (d) => { if (!d || !d.name) throw Object.assign(new Error('a declaration needs a name'), { code: 400 }); if (S.has(d.name)) throw Object.assign(new Error(`"${d.name}" is already declared`), { code: 409 });
       decls.push(d); add(d); write('declared', d.name, `added while COS runs: ${d.cmd || 'node'} ${(d.args || []).join(' ')}`, { by: d.addedBy || 'person' }); return view(S.get(d.name)); },
+    // PC20 (2026-11-24, his: "can you hook that into cos superviser?") — a system that declares processes of its own while COS runs (the model
+    // server: one engine per model, written from its settings) is read again: a new name is declared live; a known one that is not running takes
+    // its new declaration; a running one is never touched. Nothing starts here.
+    rescan: ({ by = 'person' } = {}) => {
+      if (declarations) return { added: [], updated: [], said: 'this supervisor was given its declarations: nothing to read' };
+      const added = [], updated = [];
+      for (const d of readDeclarations(root)) {
+        const s = S.get(d.name);
+        if (!s) { decls.push(d); add(d); write('declared', d.name, `declared by ${d.system || '?'} while COS runs: ${d.cmd || 'node'}`, { by }); added.push(d.name); continue; }
+        if (!running(s) && JSON.stringify(s.decl) !== JSON.stringify(d)) { const i = decls.indexOf(s.decl); if (i >= 0) decls[i] = d; s.decl = d; updated.push(d.name); }
+      }
+      return { added, updated };
+    },
     effective: (n) => eff(must(n).decl), commandOf: (n) => commandOf(must(n).decl), root };
   return api;
 }

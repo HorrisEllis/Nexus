@@ -39,6 +39,33 @@ fn base(home: string): map {
   return { models: ms, engine: e, defaults: S.defaults(ms, e, store) }
 }
 
+// PC20 (2026-11-24, his: "can you hook that into cos superviser?"): each model's engine is a process COS's supervisor owns (started when asked,
+// stopped when idle, restarted on a crash, stopped with COS), declared by the model server itself in its own declaration file, from its settings.
+// The file holds this PC's paths, so it is written here on each PC and never committed.
+let DECL = "inference/inference.cos"
+
+/** the process name COS knows a model's engine by */
+fn process_of(model: string): string {
+  var out = ""
+  for c in split(lower(model), "") {
+    if index_of("abcdefghijklmnopqrstuvwxyz0123456789", c) >= 0 { out = out + c } else if len(out) > 0 and not (out ends_with "-") { out = out + "-" }
+  }
+  return "model-" + out
+}
+
+/** the model server's own declaration: one engine per model that is on */
+fn declare(b: map, s: map): list {
+  var ps = []
+  for m in b.models {
+    if has(s.models, m.name) and s.models[m.name].on {
+      let ms = s.models[m.name]
+      ps = push(ps, { name: process_of(m.name), model: m.name, cmd: b.engine, args: V.args_for(m.file, ms), healthUrl: "http://127.0.0.1:" + str(ms.port) + "/health", onDemand: true, optional: true, critical: false, phase: 5 })
+    }
+  }
+  write_file(DECL, json({ type: "cos", about: "written by inference/inference.eg from its settings (PC20); this PC's paths: never committed", payload: { name: "inference", runtime: { processes: ps } } }))
+  return ps
+}
+
 component Inference {
   id = "inference.server"
   namespace = "inference"
@@ -77,7 +104,8 @@ component Inference {
       emit out answer { hook: "launch", ok: false, value: null, why: "no engine found (llama-server)" }
     } else {
       let ms = s.models[q.model]
-      emit out answer { hook: "launch", ok: true, value: { model: q.model, engine: b.engine, args: V.args_for(file, ms), port: ms.port, on: ms.on }, why: null }
+      declare(b, s)
+      emit out answer { hook: "launch", ok: true, value: { model: q.model, engine: b.engine, args: V.args_for(file, ms), port: ms.port, on: ms.on, process: process_of(q.model) }, why: null }
     }
   }
 

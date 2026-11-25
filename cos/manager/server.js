@@ -563,6 +563,8 @@ function createServer(sup, opts = {}) {
         if (r && r.ok) { sup.note('open-ui', `${name}'s UI opened in its Clear Glass compartment: ${url}`, { by: body.by || 'person', system: name }); return send(res, 200, { ok: true, system: name, url, compartment: `compartment:${name}` }); }
         return send(res, 503, { ok: false, url, error: `Clear Glass did not open it (${(r && r.error) || 'no answer'}): Clear Glass runs in your session — start it from the COS window, then open again` });
       }
+      // PC20 — read the systems' declarations again: processes a system declared since COS started (the model server's engines) are added
+      if (m === 'POST' && p === '/api/cos/systems/rescan') return send(res, 200, { ok: true, ...sup.rescan({ by: body.by || 'person' }) });
       const act = /^\/api\/cos\/systems\/([^/]+)(?:\/(start|stop|restart|touch|reset-circuit|pause|resume))?$/.exec(p);
       if (act && m === 'GET' && !act[2]) return send(res, 200, { ok: true, system: sup.get(decodeURIComponent(act[1])) });
       // MG-006: a start, stop, restart, boot or policy change is a person's act or a rule's, and says whose; touch is a request for the system

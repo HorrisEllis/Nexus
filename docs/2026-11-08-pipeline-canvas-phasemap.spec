@@ -1838,3 +1838,11 @@ phases_addendum_2026_11_24_model_server:
 # loop retried the same model until a round gained nothing. settings.eg port_of: a port from the model's name (sha256, 9931 + n mod 1000, the next
 # free on a clash); the bridge uses an answering engine only when its /v1/models names that model's file. Proof: settings test (a model keeps its
 # port when another is added); 11/11 inference tests; bridge tests pass.
+
+# ── ADDENDUM 0.60.650 (2026-11-24) — PC20 built: COS's supervisor owns the model engines ──
+# James, 2026-11-24: "can you hook that into cos superviser?" (after two leftover 3b engines held 3.8 GB and only COS's account could end them).
+# inference.eg declare(): one process per model that is on (cmd the engine, args server.eg args_for, healthUrl its port, onDemand) written to
+# inference/inference.cos (this PC's paths, gitignored), on each launch; supervisor.js rescan() + POST /api/cos/systems/rescan declare a new
+# process live (never a running one, nothing started); the bridge rescans and touches the engine's process instead of spawning it. Reuse: the
+# supervisor's declare (SC4), touch and idle reaper (on demand), restart and circuit. Proof: SV-09 (rescan adds live, starts nothing), SV-08 counts
+# the engines apart; SV-04 flaky before this (1 in 3). Open: COS's restart (his act) to run it; files_added named cos/inference/*, built as inference/.

@@ -15,8 +15,8 @@ const OLLAMA_HOST = config.OLLAMA_HOST;
 // 2026-11-24 PC25 b — the model server is the first backend; Ollama the second, used only when a model is not in the model server's store.
 // James, 2026-11-24: "migrate the bridge into the model server/" · "i just want to get back to the pipeline". Ollama's app is gone. The model
 // server (inference/) is reached only through its drawbridge, COS's /api/cos/systems/inference/hook/<hook> (§5.16): `models` lists its models,
-// `launch` says how one model's engine starts (engine, options from that model's own settings, port). This process stays running, so it starts
-// the engine (detached: an engine outlives a restart of the bridge) and talks to it in the engine's own API (llama-server, OpenAI-shaped).
+// `launch` says how one model's engine starts (engine, options from that model's own settings, port). COS's supervisor starts and stops each
+// engine (PC20, declared by the model server); this process talks to it in the engine's own API (llama-server, OpenAI-shaped).
 const COS_PORT = Number(process.env.COS_MANAGER_PORT) || 7799;
 function _cosHook(hook, q, ms = 90000) {
   return new Promise((res) => {
@@ -43,6 +43,19 @@ function _health(port, ms = 2000) {
       .on('error', () => res(false)).on('timeout', function () { this.destroy(); res(false); });
   });
 }
+// an act on COS's supervisor: 'rescan' (read the declarations again), or touch a process (start it when on demand; its idle clock again)
+function _cosAct(proc, act) {
+  return new Promise((res) => {
+    const body = JSON.stringify({ by: 'rule:model-server' });
+    const p = act === 'rescan' ? '/api/cos/systems/rescan' : `/api/cos/systems/${encodeURIComponent(proc)}/${act}`;
+    const req = http.request({ hostname: '127.0.0.1', port: COS_PORT, path: p, method: 'POST', timeout: 15000,
+      headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(body) } }, (r) => {
+      let d = ''; r.on('data', (c) => d += c); r.on('end', () => { try { res(JSON.parse(d)); } catch (_) { res(null); } });
+    });
+    req.on('error', () => res(null)).on('timeout', function () { this.destroy(); res(null); });
+    req.end(body);
+  });
+}
 // what an engine says it serves (llama-server's /v1/models names the model file); null when it does not say
 function _servedFile(port) {
   return new Promise((res) => {
@@ -62,19 +75,22 @@ async function _msPort(model) {
     if (!r || !r.ok) { console.warn(`[model-server] ${model}: no launch plan — ${(r && r.why) || 'COS did not answer'}`); return null; }
     l = { at: Date.now(), v: r.value }; _launch.set(model, l);
   }
-  const { port, engine, args } = l.v;
+  const { port, args, process: proc } = l.v;
   // 2026-11-24: an engine answering on the port is used only when it serves this model's file (a port once gave the 3b to every DeepSeek request)
   const file = String(args[args.indexOf('-m') + 1] || '').split(/[\\/]/).pop();
   if (await _health(port)) {
     const serves = await _servedFile(port);
-    if (serves == null || serves.includes(file)) return port;
+    if (serves == null || serves.includes(file)) { _cosAct(proc, 'touch'); return port; }   // in use: COS's idle clock starts again
     throw new Error(`port ${port} answers with another model (${serves.slice(0, 80)}), not "${model}" (${file}); not used`);
   }
+  // PC20 (his, 2026-11-24: "can you hook that into cos superviser?"): COS's supervisor starts the engine (the model server declared it), stops
+  // it when idle, restarts it on a crash and stops it with COS; this process never starts one of its own
   if (!_starting.has(model)) {
     _starting.set(model, (async () => {
-      console.log(`[model-server] starting ${model} on :${port}`);
-      const { spawn } = require('child_process');
-      const c = spawn(engine, args, { detached: true, stdio: 'ignore', windowsHide: true }); c.on('error', (e) => console.warn(`[model-server] ${model}: ${e.message}`)); c.unref();
+      console.log(`[model-server] asking COS to start ${proc} (${model}) on :${port}`);
+      await _cosAct(null, 'rescan');
+      const t = await _cosAct(proc, 'touch');
+      if (!t || t.ok === false) { console.warn(`[model-server] COS did not start ${proc}: ${(t && t.error) || 'no answer'}`); return false; }
       const until = Date.now() + (config.RAW_FIRST_TOKEN_MS || 180000);
       while (Date.now() < until) { await new Promise((r) => setTimeout(r, 1000)); if (await _health(port)) return true; }
       return false;

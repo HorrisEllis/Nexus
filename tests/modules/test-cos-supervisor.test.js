@@ -99,7 +99,11 @@ const mk = (declarations, extra = {}) => { const s = createSupervisor({ root: di
     const SINCE_THE_HANDOVER = ['emerge'];
     // and retired since (0.60.380 SC6, James 2026-11-02: "There shouldn't be two intelligence."): intelligence-consumer runs inside intelligence
     const RETIRED = ['intelligence-consumer'];
-    assert.strictEqual(readDeclarations(ROOT).length, 13 + SINCE_THE_HANDOVER.length - RETIRED.length);
+    // PC20 (2026-11-24): the model server declares one engine per model it finds on this PC (inference/inference.cos, written there, never
+    // committed), so those are counted apart: how many depends on the PC
+    const engines = readDeclarations(ROOT).filter(d => d.system === 'inference');
+    assert.ok(engines.every(d => d.onDemand === true && /^model-/.test(d.name)), 'every engine is on demand and named model-…');
+    assert.strictEqual(readDeclarations(ROOT).length - engines.length, 13 + SINCE_THE_HANDOVER.length - RETIRED.length);
     assert.ok(!readDeclarations(ROOT).some(d => RETIRED.includes(d.name)));
     const calls = []; const fake = { pid: 1, on() {}, stdout: null, stderr: null, kill() {} };
     const s = createSupervisor({ root: ROOT, policy: FAST, ledgerFile: path.join(dir, 'real.jsonl'), log: () => {}, freeMemPct: () => 0.9, checkHealth: async () => false, spawnFn: (c, a, o) => { calls.push({ c, a, o }); return fake; } });
@@ -109,6 +113,20 @@ const mk = (declarations, extra = {}) => { const s = createSupervisor({ root: di
     const a = calls[0].a; assert.deepStrictEqual([a[0], require('path').basename(a[1])], ['--require', 'boundary.js']);
     assert.deepStrictEqual(a.slice(2, 4), ['--expose-gc', '--max-old-space-size=512']);   // 2026-11-10 (his "Do it", Nexus fitted to 8 GB): cortex declares 512 MB, about 4x its measured idle; was the 1024 default assert.ok(/cortex[\/]server.js$/.test(a[4]), a[4]);   // DO3a (2026-11-05): COS starts Cortex's door, cortex/server.js assert.strictEqual(calls[0].o.cwd, ROOT);
     assert.strictEqual(JSON.parse(calls[0].o.env.COS_BOUNDARY).mode, 'audit');
+  });
+  await test('SV-09', 'rescan: a process a system declares while COS runs is added live, on demand; nothing starts (PC20)', () => {
+    const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'sv09-'));
+    const sys = (name, procs) => { fs.mkdirSync(path.join(tmp, name), { recursive: true }); fs.writeFileSync(path.join(tmp, name, 'compartment.json'), JSON.stringify({ name, runtime: { processes: procs } })); };
+    sys('alpha', [{ name: 'alpha', cmd: 'node', args: ['alpha/server.js'] }]);
+    const calls = []; const s = createSupervisor({ root: tmp, ledgerFile: path.join(tmp, 'ledger.jsonl'), spawnFn: (c, a, o) => { calls.push(c); return { pid: 1, on() {}, stdout: null, stderr: null, kill() {} }; } });
+    sups.push(s);
+    sys('inference', [{ name: 'model-x-3b', cmd: 'llama-server.exe', args: ['-m', 'x.gguf'], healthUrl: 'http://127.0.0.1:9942/health', onDemand: true }]);
+    const r = s.rescan({ by: 'test' });
+    assert.deepStrictEqual(r.added, ['model-x-3b']);
+    assert.strictEqual(s.get('model-x-3b').state, 'declared');
+    assert.strictEqual(calls.length, 0, 'nothing starts on a rescan');
+    assert.deepStrictEqual(s.rescan({ by: 'test' }).added, [], 'a second rescan adds nothing');
+    try { fs.rmSync(tmp, { recursive: true, force: true }); } catch (_) {}
   });
   for (const s of sups) try { s.shutdown({ by: 'test' }); } catch (_) {}
   await wait(400);
