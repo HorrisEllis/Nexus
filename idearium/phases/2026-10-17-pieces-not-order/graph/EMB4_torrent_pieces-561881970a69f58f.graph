@@ -7,11 +7,11 @@ intent: null
 summary: 13 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1795506179042
+exported_at: 1795598050186
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1795506179042
-lastSeenAt: 1795506179042
+firstSeenAt: 1795598050186
+lastSeenAt: 1795598050186
 fingerprint: null
 payload:
   for: EMB4_torrent_pieces
@@ -141,6 +141,10 @@ payload:
           - idearium/lib/emerge-rung.cjs
           - cos/build/emerge-build.js
           - tests/modules/test-emerge-rung.test.js
+      - with: docs/2026-10-17-pieces-not-order-phasemap.spec::EMB9_break_down_before_climbing
+        files:
+          - idearium/lib/emerge-rung.cjs
+          - idearium/lib/gaps.eg
     dangling: []
     lines:
       - layer 6 · blocked by EMB6_the_end_state_first
@@ -156,6 +160,9 @@ payload:
         same files as EMB8_the_contract_at_every_level with no order between them:
         idearium/lib/emerge-rung.cjs, cos/build/emerge-build.js,
         tests/modules/test-emerge-rung.test.js
+      - >-
+        same files as EMB9_break_down_before_climbing with no order between them:
+        idearium/lib/emerge-rung.cjs, idearium/lib/gaps.eg
     edges:
       - from: docs/2026-10-17-pieces-not-order-phasemap.spec::EMB3_the_autocorrect
         kind: declared

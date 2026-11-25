@@ -7,11 +7,11 @@ intent: null
 summary: 30 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1795506179040
+exported_at: 1795598050182
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1795506179040
-lastSeenAt: 1795506179040
+firstSeenAt: 1795598050182
+lastSeenAt: 1795598050182
 fingerprint: null
 payload:
   for: EMB2_ollama_writes_emerge_for_the_pipeline
@@ -256,6 +256,9 @@ payload:
         files:
           - idearium/lib/emerge-rung.cjs
           - tests/modules/test-emerge-rung.test.js
+      - with: docs/2026-10-17-pieces-not-order-phasemap.spec::EMB9_break_down_before_climbing
+        files:
+          - idearium/lib/emerge-rung.cjs
     dangling: []
     lines:
       - layer 4 · ready
@@ -271,6 +274,9 @@ payload:
       - >-
         same files as EMB8_the_contract_at_every_level with no order between them:
         idearium/lib/emerge-rung.cjs, tests/modules/test-emerge-rung.test.js
+      - >-
+        same files as EMB9_break_down_before_climbing with no order between them:
+        idearium/lib/emerge-rung.cjs
     edges:
       - from: docs/2026-10-17-pieces-not-order-phasemap.spec::EMB1_emerge_writes_the_brick
         kind: declared

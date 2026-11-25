@@ -843,8 +843,10 @@ function draw() { topbar(); side(); work(); dock(); rail(); }
 const none = () => Promise.reject(new Error('COS has no route for this yet'));
 const cosGet = async (p) => { try { return await (await fetch('/api/cos/' + p, { cache: 'no-store' })).json(); } catch (_) { return null; } };
 async function cosAct(p, said) { try { const r = await (await fetch('/api/cos/automation/' + p, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ by: 'person' }) })).json(); toast(r && r.ok !== false ? said : (r && r.error) || 'COS refused', r && r.ok !== false ? '' : 'bad'); } catch (e) { toast(e.message, 'bad'); } tick(); }
+// the Lab route reads every build on disk: once each 10 s, not each 2 s tick
+const labRead = async () => { if (S.lab0 && Date.now() - S.lab0.at < 10000) return S.lab0.v; const v = await cosGet('lab'); if (v) S.lab0 = { at: Date.now(), v }; return v || (S.lab0 && S.lab0.v); };
 async function cosData() {
-  const [runs, sys, use, pl, lab] = await Promise.all([cosGet('automation/pipeline-runs?limit=80'), cosGet('systems'), cosGet('usage'), cosGet('automation/pipelines'), cosGet('lab')]);
+  const [runs, sys, use, pl, lab] = await Promise.all([cosGet('automation/pipeline-runs?limit=80'), cosGet('systems'), cosGet('usage'), cosGet('automation/pipelines'), labRead()]);
   const cut = (v, n) => { const t = String(v == null ? '' : v); return t.length > n ? t.slice(0, n) + '…' : t; };
   const rr = ((runs && runs.runs) || []).map((x) => { const tasks = {}; for (const [k, v] of Object.entries(x.tasks || {})) tasks[k] = { status: v.status, ms: v.ms, error: v.error ? cut(v.error, 300) : null, out: v.output ? cut(typeof v.output === 'string' ? v.output : JSON.stringify(v.output), 1500) : null };
     return { id: x.id, pipelineId: x.pipelineId, name: x.pipelineName, status: x.status, at: x.startedAt, end: x.finishedAt, error: x.error ? cut(x.error, 300) : null, tasks }; });

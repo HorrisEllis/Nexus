@@ -7,11 +7,11 @@ intent: null
 summary: 4 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1795506179055
+exported_at: 1795598050203
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1795506179055
-lastSeenAt: 1795506179055
+firstSeenAt: 1795598050203
+lastSeenAt: 1795598050203
 fingerprint: null
 payload:
   for: EMB3_the_autocorrect
@@ -57,6 +57,7 @@ payload:
     dependents:
       - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB4_torrent_pieces
       - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB6_the_end_state_first
+      - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB10_the_engine_decisions_in_emerge
     upstream:
       - docs/2026-10-12-browser-providers-and-work-phasemap.spec::CS0_projects_decomposed_into_components
       - docs/2026-10-12-browser-providers-and-work-phasemap.spec::MX2_the_0_60_components_wired_in_loom
@@ -70,22 +71,26 @@ payload:
       - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D2_two_contracts_two_names
       - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D3_handlers_run_the_cli
     downstream:
+      - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB10_the_engine_decisions_in_emerge
       - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB4_torrent_pieces
       - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB5_trials_start_at_raid
       - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB6_the_end_state_first
       - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB7_code_frames
       - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB8_the_contract_at_every_level
+      - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB9_break_down_before_climbing
     blockedBy: []
     unlocks:
       - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB6_the_end_state_first
+      - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB10_the_engine_decisions_in_emerge
     conflicts: []
     dangling: []
     lines:
       - layer 4
       - 'depends on (1): EMB1_emerge_writes_the_brick · all upstream 11'
       - >-
-        needed by (2): EMB4_torrent_pieces, EMB6_the_end_state_first · all downstream 5 · finishing
-        it unlocks EMB6_the_end_state_first
+        needed by (3): EMB4_torrent_pieces, EMB6_the_end_state_first,
+        EMB10_the_engine_decisions_in_emerge · all downstream 7 · finishing it unlocks
+        EMB6_the_end_state_first, EMB10_the_engine_decisions_in_emerge
     edges:
       - from: docs/2026-10-17-pieces-not-order-phasemap.spec::EMB1_emerge_writes_the_brick
         kind: declared

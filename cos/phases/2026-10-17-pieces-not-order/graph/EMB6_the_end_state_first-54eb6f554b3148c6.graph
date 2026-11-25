@@ -7,11 +7,11 @@ intent: null
 summary: 29 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1795506179048
+exported_at: 1795598050192
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1795506179048
-lastSeenAt: 1795506179048
+firstSeenAt: 1795598050192
+lastSeenAt: 1795598050192
 fingerprint: null
 payload:
   for: EMB6_the_end_state_first
@@ -236,6 +236,7 @@ payload:
       - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB5_trials_start_at_raid
       - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB7_code_frames
       - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB8_the_contract_at_every_level
+      - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB9_break_down_before_climbing
     blockedBy: []
     unlocks:
       - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB4_torrent_pieces
@@ -248,7 +249,7 @@ payload:
       - 'depends on (1): EMB3_the_autocorrect · all upstream 12'
       - >-
         needed by (3): EMB4_torrent_pieces, EMB7_code_frames, EMB8_the_contract_at_every_level · all
-        downstream 4 · finishing it unlocks EMB4_torrent_pieces, EMB7_code_frames,
+        downstream 5 · finishing it unlocks EMB4_torrent_pieces, EMB7_code_frames,
         EMB8_the_contract_at_every_level
     edges:
       - from: docs/2026-10-17-pieces-not-order-phasemap.spec::EMB3_the_autocorrect

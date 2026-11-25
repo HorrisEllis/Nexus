@@ -7,11 +7,11 @@ intent: null
 summary: 11 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1795506179053
+exported_at: 1795598050198
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1795506179053
-lastSeenAt: 1795506179053
+firstSeenAt: 1795598050198
+lastSeenAt: 1795598050198
 fingerprint: null
 payload:
   for: EMB8_the_contract_at_every_level
@@ -97,7 +97,8 @@ payload:
     layer: 6
     deps:
       - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB6_the_end_state_first
-    dependents: []
+    dependents:
+      - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB9_break_down_before_climbing
     upstream:
       - docs/2026-10-12-browser-providers-and-work-phasemap.spec::CS0_projects_decomposed_into_components
       - docs/2026-10-12-browser-providers-and-work-phasemap.spec::MX2_the_0_60_components_wired_in_loom
@@ -112,10 +113,12 @@ payload:
       - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D0_a_system_not_an_idearium_module
       - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D2_two_contracts_two_names
       - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D3_handlers_run_the_cli
-    downstream: []
+    downstream:
+      - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB9_break_down_before_climbing
     blockedBy:
       - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB6_the_end_state_first
-    unlocks: []
+    unlocks:
+      - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB9_break_down_before_climbing
     conflicts:
       - with: docs/2026-10-17-pieces-not-order-phasemap.spec::EMB2_ollama_writes_emerge_for_the_pipeline
         files:
@@ -137,7 +140,9 @@ payload:
     lines:
       - layer 6 · blocked by EMB6_the_end_state_first
       - 'depends on (1): EMB6_the_end_state_first · all upstream 13'
-      - 'needed by (0): —'
+      - >-
+        needed by (1): EMB9_break_down_before_climbing · finishing it unlocks
+        EMB9_break_down_before_climbing
       - >-
         same files as EMB2_ollama_writes_emerge_for_the_pipeline with no order between them:
         idearium/lib/emerge-rung.cjs, tests/modules/test-emerge-rung.test.js
