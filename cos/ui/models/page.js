@@ -1,10 +1,11 @@
 'use strict';
 // cos/ui/models/page.js — COS › Settings › Model server (PC18 settings_2026_11_24, SC29), from the approved preview.
 // James, 2026-11-24: "lets get this done. i want those settings in cos ui." · "settings are for the dynamic and additive." · "Remeber no coupling".
-// Every read and save goes through the system's own door (inference/cli.eg, by COS's /api/cos/systems/inference/eg/*). A control carries its
-// setting's path (data-k, a JSON list: model names hold dots); Save sends only what he changed, kept only when it passes; a refusal is said.
+// Every read and save goes through the drawbridge (his: "also everything has to use the drawbridge"): the model server's in hooks, settings
+// and save, by COS's /api/cos/systems/inference/hook/<hook>, which sends only to a hook its registry lists. A control carries its setting's
+// path (data-k, a JSON list: model names hold dots); Save sends only what he changed, kept only when it passes; a refusal is said.
 (() => {
-  const API = '/api/cos/systems/inference/eg';
+  const HOOK = (h, q) => fetch(`/api/cos/systems/inference/hook/${h}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(q || {}) }).then((r) => r.json());
   const $ = (id) => document.getElementById(id), esc = (s) => String(s == null ? '' : s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
   const INTENTS = [['coding', 'Generating / coding'], ['spec', 'Speccing / mapping'], ['reason', 'Complex reasoning'], ['debug', 'Debugger / adversarial'], ['copilot', 'Co-pilot / orchestrator']];
   const GB = (b) => (b / 1e9).toFixed(1) + ' GB', short = (n) => String(n).replace(/^hf\.co\/[^/]+\//, '').replace(/-Instruct-abliterated-i1-GGUF/, '');
@@ -55,15 +56,15 @@
     $('ms-main').querySelectorAll('[data-serve]').forEach((el) => el.onchange = () => { const n = JSON.parse(el.dataset.serve), p = ['models', n, 'serves'], set = new Set(cur(p) || []); el.checked ? set.add(el.value) : set.delete(el.value); put(change, p, [...set]); dirty(); });
   }
   async function load() {
-    try { const r = await fetch(`${API}/settings`); const d = await r.json(); if (d.ok === false) throw new Error(d.error || 'refused'); D = d; }
+    try { const a = await HOOK('settings'); if (!a || a.ok === false) throw new Error((a && (a.why || a.error)) || 'refused'); D = a.value; }
     catch (e) { $('ms-main').innerHTML = `<div class="ms-msg bad">The model server's settings could not be read: ${esc(e.message)}</div>`; return; }
     try { const [u, l] = await Promise.all([fetch('/api/cos/usage').then((r) => r.json()), fetch('/api/cos/systems/ollama-bridge').then((r) => r.json()).catch(() => null)]); U = { host: u && u.usage && u.usage.host, loaded: [] }; } catch (_) { U = null; }
     draw(); dirty();
   }
   $('ms-save').onclick = async () => {
     $('ms-save').disabled = true;
-    try { const r = await fetch(`${API}/save`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(change) }); const d = await r.json();
-      if (!d.ok) { $('ms-msg').className = 'ms-msg bad'; $('ms-msg').innerHTML = 'Not saved: ' + (d.problems || [d.error]).map(esc).join('; '); dirty(); return; }
+    try { const a = await HOOK('save', { change });
+      if (!a || !a.ok) { $('ms-msg').className = 'ms-msg bad'; $('ms-msg').innerHTML = 'Not saved: ' + esc((a && (a.why || a.error)) || 'no answer'); dirty(); return; }
       $('ms-msg').className = 'ms-msg ok'; $('ms-msg').textContent = 'Saved.'; change = {}; await load(); }
     catch (e) { $('ms-msg').className = 'ms-msg bad'; $('ms-msg').textContent = 'Not saved: ' + e.message; dirty(); }
   };

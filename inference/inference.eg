@@ -1,0 +1,46 @@
+// inference/inference.eg — our own model server, as a component: known by its record in Emerge's component registry, reached only through
+// its in hooks (the drawbridge, AXIOMS §5.16: the component registry is also the event bus, the interaction contract and the bridge into the
+// compartment). What it offers is its hooks; there is no second list. Every answer leaves by the one out hook, answer.
+// James Brooks, 2026-11-24: "also everything has to use the drawbridge" · "is it better decoupled?" · "Remeber no coupling".
+use "./models.eg" as M
+use "./settings.eg" as S
+
+let FILE = "inference/data/settings.json"
+
+fn base(home: string): map {
+  let mine = S.overrides(FILE)
+  var store = home + "/.ollama/models"
+  if has(mine, "stores") and len(mine.stores) > 0 { store = mine.stores[0] }
+  var cands = [home + "/AppData/Local/Programs/Ollama/lib/ollama/llama-server.exe", "/usr/local/bin/llama-server", "/usr/bin/llama-server"]
+  if has(mine, "engines") and len(mine.engines) > 0 and has(mine.engines[0], "paths") { cands = mine.engines[0].paths }
+  let ms = M.models(store)
+  let e = M.engine(cands)
+  return { models: ms, engine: e, defaults: S.defaults(ms, e, store) }
+}
+
+component Inference {
+  id = "inference.server"
+  namespace = "inference"
+  version = "0.1.0"
+  intent = "our own model server: the models on this PC, each with its own engine server and settings; reached only through these hooks"
+
+  in settings(q: { home: string }) {
+    let b = base(q.home)
+    let s = S.merge(b.defaults, S.overrides(FILE))
+    emit out answer { hook: "settings", ok: true, value: { settings: s, overrides: S.overrides(FILE), models: b.models, engine: b.engine, problems: S.problems(s) }, why: null }
+  }
+
+  in save(q: { home: string, change: map }) {
+    let r = S.save(FILE, base(q.home).defaults, q.change)
+    var why = null
+    if not r.ok { why = join(r.problems, "; ") }
+    emit out answer { hook: "save", ok: r.ok, value: r, why: why }
+  }
+
+  in models(q: { home: string }) {
+    let b = base(q.home)
+    emit out answer { hook: "models", ok: true, value: { models: b.models, engine: b.engine }, why: null }
+  }
+
+  out answer: { hook: string, ok: bool, value: any, why: any }
+}

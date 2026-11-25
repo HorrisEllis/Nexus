@@ -1,34 +1,36 @@
-// inference/cli.eg — our own model server's door (as pillar/cli.eg is Pillar's): other systems reach it only here, never by its files.
-//   eg run inference/cli.eg settings <home>                 → { settings, overrides, models, engine, problems } as JSON
-//   eg run inference/cli.eg save <home> <change JSON>       → { ok, problems }: kept only when it passes
-// <home> is the user's home folder: the one fact a caller gives; where the models and the engine are is this system's own knowledge (its
-// defaults), and his settings override it (stores, engine paths). James Brooks, 2026-11-24: "i want those settings in cos ui." · "Remeber no coupling".
-use "./models.eg" as M
-use "./settings.eg" as S
+// inference/cli.eg — the model server's CLI (as pillar/cli.eg is Pillar's): eg run inference/cli.eg registry | <in hook> <query JSON>
+// It reaches the model server only through its hooks (the drawbridge, §5.16): a command sends to the in hook of the same name, the answer
+// comes back on "inference.answer". `registry` prints its record and its hooks from Emerge's component registry, components(): what a caller
+// (COS, RAID, a gate) may ask is read there, never known ahead. James Brooks, 2026-11-24: "also everything has to use the drawbridge".
+use "./inference.eg" as inference
 
-let FILE = "inference/data/settings.json"
+wire inference.Inference.answer -> "inference.answer"
+var last = null
+on "inference.answer" (a) { last = a }
+
+fn own_record(): map {
+  for c in components().components { if c.namespace == "inference" { return c } }
+  return null
+}
+
+fn hooks(): list {
+  let r = own_record()
+  var out = []
+  if r == null { return out }
+  for h in components().hooks { if h.component_id == r.id { out = push(out, { name: h.name, direction: h.direction }) } }
+  return out
+}
+
 let a = args()
-var cmd = "help"
+var cmd = "registry"
 if len(a) > 0 { cmd = a[0] }
+var q = {}
+if len(a) > 1 { q = parse_json(a[1]) }
 
-fn base(home: string): map {
-  let mine = S.overrides(FILE)
-  var store = home + "/.ollama/models"
-  if has(mine, "stores") and len(mine.stores) > 0 { store = mine.stores[0] }
-  var cands = [home + "/AppData/Local/Programs/Ollama/lib/ollama/llama-server.exe", "/usr/local/bin/llama-server", "/usr/bin/llama-server"]
-  if has(mine, "engines") and len(mine.engines) > 0 and has(mine.engines[0], "paths") { cands = mine.engines[0].paths }
-  let ms = M.models(store)
-  let e = M.engine(cands)
-  return { models: ms, engine: e, defaults: S.defaults(ms, e, store) }
-}
+if cmd == "registry" { print(json({ ok: true, hook: "registry", value: { record: own_record(), hooks: hooks() }, why: null })) }
+else if cmd == "settings" { send inference.Inference.settings { home: q.home } }
+else if cmd == "save" { send inference.Inference.save { home: q.home, change: q.change } }
+else if cmd == "models" { send inference.Inference.models { home: q.home } }
+else { print(json({ ok: false, hook: cmd, value: null, why: "no in hook " + cmd + "; ask registry for the hooks" })) }
 
-if cmd == "settings" and len(a) >= 2 {
-  let b = base(a[1])
-  let s = S.merge(b.defaults, S.overrides(FILE))
-  print(json({ settings: s, overrides: S.overrides(FILE), models: b.models, engine: b.engine, problems: S.problems(s) }))
-} else if cmd == "save" and len(a) >= 3 {
-  let b = base(a[1])
-  print(json(S.save(FILE, b.defaults, parse_json(a[2]))))
-} else {
-  print(json({ ok: false, why: "usage: settings <home> | save <home> <change JSON>" }))
-}
+if last != null { print(json(last)) }

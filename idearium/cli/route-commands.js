@@ -888,11 +888,12 @@ export const SPEC = [
     req: (a) => ({ method: 'POST', path: `/api/cos/proposals/${encodeURIComponent(a.args[1] || '')}/${a.args[0] === 'drop' ? 'drop' : 'take'}`, body: { by: 'person' } }) },
   { key: 'cos.logs', repo: false, usage: 'cos logs <system> [--limit n]', about: 'a system\'s own recent output, as COS\'s supervisor kept it (stdout and stderr, with times)',
     req: (a) => ({ method: 'GET', path: `/api/cos/systems/${encodeURIComponent(a.args[0] || '')}/logs?limit=${Number(a.flags.limit) || 100}` }) },
-  // 2026-11-24 (PC18 settings) — an Emerge system's own settings, through its own door (<system>/cli.eg), read and changed; e.g. cos settings inference
-  { key: 'cos.system.settings', repo: false, usage: 'cos settings <system>', about: 'an Emerge system\'s settings (its defaults with his changes over them, and any problem), read through its own door',
-    req: (a) => ({ method: 'GET', path: `/api/cos/systems/${encodeURIComponent(a.args[0] || '')}/eg/settings` }) },
-  { key: 'cos.system.settings.save', repo: false, personOnly: () => 'changing a system\'s settings is the person\'s: its Settings page in COS, or ask them', usage: 'cos settings-save <system> <change JSON>', about: 'keep a change to an Emerge system\'s settings; refused, with the reason, when it does not pass',
-    req: (a) => ({ method: 'POST', path: `/api/cos/systems/${encodeURIComponent(a.args[0] || '')}/eg/save`, body: (() => { try { return JSON.parse(a.args.slice(1).join(' ') || '{}'); } catch (_) { return {}; } })() }) },
+  // 2026-11-24 (PC18; his: "also everything has to use the drawbridge") — an Emerge system reached through its drawbridge: its hooks listed from its
+  // component registry, a query sent to one of its in hooks; e.g. cos hooks inference · cos hook inference settings
+  { key: 'cos.system.hooks', repo: false, usage: 'cos hooks <system>', about: 'what an Emerge system offers: its record and hooks in Emerge\'s component registry (its drawbridge)',
+    req: (a) => ({ method: 'GET', path: `/api/cos/systems/${encodeURIComponent(a.args[0] || '')}/hooks` }) },
+  { key: 'cos.system.hook', repo: false, personOnly: (a) => (a.args[1] === 'save' ? 'changing a system\'s settings is the person\'s: its page in COS, or ask them' : null), usage: 'cos hook <system> <in hook> [query JSON]', about: 'send a query to one of an Emerge system\'s in hooks; refused when its registry does not list that hook',
+    req: (a) => ({ method: 'POST', path: `/api/cos/systems/${encodeURIComponent(a.args[0] || '')}/hook/${encodeURIComponent(a.args[1] || '')}`, body: (() => { try { return JSON.parse(a.args.slice(2).join(' ') || '{}'); } catch (_) { return {}; } })() }) },
   { key: 'cos.usage', repo: false, usage: 'cos usage', about: 'each supervised system\'s memory and CPU read back from the OS, and the host\'s load and free memory against the halt floor',
     req: () => ({ method: 'GET', path: '/api/cos/usage' }) },
   { key: 'cos.policy', repo: false, usage: 'cos policy', about: 'the supervisor\'s rules (boot set, restart backoff, circuit, memory floors, idle) with their defaults',

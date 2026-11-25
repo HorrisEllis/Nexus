@@ -744,14 +744,14 @@
     },
     {
       "method": "GET",
-      "path": "/api/cos/systems/:name/eg/settings",
-      "out": "{ settings, overrides, models, engine, problems } \u2014 an Emerge system's settings through its own door (<system>/cli.eg settings <home>); PC18, SC29, 2026-11-24"
+      "path": "/api/cos/systems/:name/hooks",
+      "out": "{ ok, hook: 'registry', value: { record, hooks: [{ name, direction }] } } \u2014 an Emerge system's drawbridge (\u00a75.16): its record and hooks in Emerge's component registry, read by its own CLI; PC18, SC29, 2026-11-24"
     },
     {
       "method": "POST",
-      "path": "/api/cos/systems/:name/eg/save",
-      "body": "{ ...the change }",
-      "out": "{ ok, problems } \u2014 kept only when it passes (<system>/cli.eg save <home> <change>)"
+      "path": "/api/cos/systems/:name/hook/:hook",
+      "body": "{ ...the query; home is added when absent }",
+      "out": "{ hook, ok, value, why } \u2014 the in hook answered; refused (404) when the registry does not list it"
     }
   ],
   "door": {
@@ -1297,8 +1297,8 @@
       "built": true,
       "phase": "PC18_cos_runs_the_model_server",
       "routes": [
-        "GET /api/cos/systems/:name/eg/settings",
-        "POST /api/cos/systems/:name/eg/save",
+        "GET /api/cos/systems/:name/hooks",
+        "POST /api/cos/systems/:name/hook/:hook",
         "GET /api/cos/usage"
       ],
       "listens": [],
