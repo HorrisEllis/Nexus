@@ -86,8 +86,13 @@ let HINTS = [
   { says: "is a parameter", fix: "A parameter is read-only: build a new value in a var and return it; never change what was passed in." },
   { says: "expected end of statement, found a string", fix: "No throw: return a map with an error field instead." },
   { says: "is a let", fix: "A let cannot change: use var for anything that changes." },
-  { says: "is not defined", fix: "Use only the parameters, the other functions in this module, and the builtins len, push, get, keys, str, split, join, slice, find_text, starts_with, ends_with." },
-  { says: "is already declared", fix: "That name is taken (a parameter, or an earlier let or var): give the new value a new name, e.g. var taken = ..., never var <a parameter's name>." }
+  { says: "is not defined", fix: "Use only the parameters, the other functions in this module, and the builtins len, push, get, keys, str, split, join, slice, find_text; contains, starts_with and ends_with are words between two values (x contains y), not calls." },
+  { says: "is already declared", fix: "That name is taken (a parameter, or an earlier let or var): give the new value a new name, e.g. var taken = ..., never var <a parameter's name>." },
+  // 2026-11-25, EMB10 on the 3b alone: four helpers held (is_member, is_element, hasElement, and one named contains) because the 3b wrote
+  // contains as a call and as a function name; in Emerge it is a word between two values. His: "it needs to be checking its own work".
+  { says: "found \"contains\"", fix: "contains is a word between two values, never a call or a function name: write xs contains x (a list) or text contains part (a string), e.g. return models == \"\" or (models contains file)." },
+  { says: "found \"starts_with\"", fix: "starts_with is a word between two values, never a call: write line starts_with \"data: \"." },
+  { says: "found \"ends_with\"", fix: "ends_with is a word between two values, never a call: write name ends_with \".js\"." }
 ]
 
 fn hint(why: string): string {
@@ -171,8 +176,13 @@ fn struggle(attempts: list): map {
   return { kinds: kinds, missing: missing }
 }
 
+// Emerge's own words: no function can carry one of these names, so a helper named so can never be filled (2026-11-25: the 3b proposed a helper
+// named contains, and it was held on every rung)
+let WORDS = ["contains", "starts_with", "ends_with", "and", "or", "not", "in", "fn", "let", "var", "if", "else", "for", "while", "return", "true", "false", "null", "test", "expect", "use", "as", "component", "emit", "send", "wire", "on", "break", "continue"]
+
 fn link(order: list, before: string, add: string): list {
   if add in order { return order }
+  if add in WORDS { return order }
   var out = []
   for x in order {
     if x == before { out = push(out, add) }
