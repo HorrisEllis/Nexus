@@ -375,6 +375,18 @@ function createServer(sup, opts = {}) {
           if (buf.includes(0)) return send(res, 200, { ok: true, system: name, in: where, path: parts.join('/'), file: { name: fname, bytes: st.size, mtime: st.mtimeMs }, withheld: 'not text' });
           return send(res, 200, { ok: true, system: name, in: where, path: parts.join('/'), file: { name: fname, bytes: st.size, mtime: st.mtimeMs }, text: buf.toString('utf8'), cut: st.size > buf.length });
         } }
+      // 2026-11-24 (PC18 settings; SC29) — James: "i want those settings in cos ui." · "Remeber no coupling". A system written in Emerge opens
+      // by its own door, <system>/cli.eg (as Pillar's): COS knows nothing of its settings, it only passes the request through and the one fact
+      // any system may need, the user's home folder. Two verbs, no other: settings (read) and save (a change, kept only when it passes).
+      { const eg = /^\/api\/cos\/systems\/([a-z0-9-]+)\/eg\/(settings|save)$/.exec(p);
+        if (eg && ((eg[2] === 'settings' && m === 'GET') || (eg[2] === 'save' && m === 'POST'))) {
+          const sys = eg[1], cli = path.join(root, sys, 'cli.eg');
+          if (!require('fs').existsSync(cli)) return send(res, 404, { ok: false, error: `${sys} has no Emerge door (${sys}/cli.eg)` });
+          let change = null; if (eg[2] === 'save') { try { change = JSON.stringify(JSON.parse(await new Promise((ok) => { let t = ''; req.on('data', (c) => t += c); req.on('end', () => ok(t || '{}')); }))); } catch (_) { return send(res, 400, { ok: false, error: 'the change is not JSON' }); } }
+          const args = [path.join(root, 'emerge', 'emerge', 'lang', 'eg.js'), 'run', `${sys}/cli.eg`, eg[2], require('os').homedir().replace(/\\/g, '/'), ...(change ? [change] : [])];
+          const r = require('child_process').spawnSync(process.execPath, args, { cwd: root, encoding: 'utf8', timeout: 60000, env: { ...process.env, ELECTRON_RUN_AS_NODE: '1' } });
+          try { return send(res, 200, JSON.parse(String(r.stdout || '').trim().split('\n').pop())); } catch (_) { return send(res, 500, { ok: false, error: `${sys}/cli.eg did not answer`, said: String(r.stderr || r.stdout || '').slice(0, 400) }); }
+        } }
       { const lm = /^\/api\/cos\/systems\/([^/]+)\/location$/.exec(p);
         if (lm && m === 'GET') { const name = decodeURIComponent(lm[1]); const d = sup.declarations().find(x => x.name === name || x.system === name);
           if (!d) return send(res, 404, { ok: false, error: `no system ${name}` });

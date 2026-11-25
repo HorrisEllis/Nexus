@@ -1,0 +1,35 @@
+// inference/test/settings.test.eg — the model server's settings are his: defaults, his overrides over them, a bad value refused (PC18).
+// James Brooks, 2026-11-24: "i want those settings in cos ui." · "settings are for the dynamic and additive." eg test inference/test/settings.test.eg
+use "../settings.eg" as S
+
+let MS = [{ name: "huihui_ai/qwen2.5-coder-abliterate:3b", bytes: 1929903168 }, { name: "hf.co/x/DeepSeek-GGUF:Q4_K_M", bytes: 10367958976 }, { name: "q:30b", bytes: 18556688736 }]
+let D = S.defaults(MS, "llama-server.exe", "store")
+let FILE = "inference/test/fixtures/settings.tmp.json"
+
+test "each model starts by its size: the 3b three at once and kept, the 16b one at once and freed, the 30b off" {
+  expect D.models["huihui_ai/qwen2.5-coder-abliterate:3b"].slots == 3 and D.models["huihui_ai/qwen2.5-coder-abliterate:3b"].after == "stay loaded"
+  expect D.models["hf.co/x/DeepSeek-GGUF:Q4_K_M"].slots == 1 and D.models["hf.co/x/DeepSeek-GGUF:Q4_K_M"].after == "free its memory"
+  expect D.models["q:30b"].on == false
+  expect S.problems(D) == []
+}
+
+test "his change lies over the default, key by key; the rest stays the default" {
+  let m = S.merge(D, { models: { "q:30b": { on: true, slots: 2 } }, queue: { batch: 3 } })
+  expect m.models["q:30b"].on and m.models["q:30b"].slots == 2 and m.models["q:30b"].ctx == 8192
+  expect m.queue.batch == 3 and m.queue.retries == 2
+}
+
+test "a bad value is refused and said" {
+  let p = S.problems(S.merge(D, { models: { "q:30b": { slots: 0, port: 9931 } } }))
+  expect len(p) == 2
+  expect S.problems(S.merge(D, { models: { "q:30b": { serves: ["dreaming"] } } })) == ["q:30b: no intent called dreaming"]
+}
+
+test "a change is kept in his own file only when it passes" {
+  if path_exists(FILE) { remove_path(FILE) }
+  expect S.save(FILE, D, { queue: { batch: 0 } }).ok == false
+  expect not path_exists(FILE)
+  expect S.save(FILE, D, { queue: { batch: 2 } }).ok
+  expect S.overrides(FILE) == { queue: { batch: 2 } }
+  remove_path(FILE)
+}

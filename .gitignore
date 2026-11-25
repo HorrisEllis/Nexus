@@ -45,3 +45,6 @@ emerge/emerge/data/node-index/
 emerge/emerge/data/nodes/bundle/
 _artifacts/
 cortex/data/contracts/
+
+# inference (our own model server): his settings and its records are his data, never committed (2026-11-24)
+inference/data/

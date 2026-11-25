@@ -741,6 +741,17 @@
       "in": "{ from?, by }",
       "out": "{ request, engineRun, retryOf, alreadyMet[], again[] } \u2014 PC8 slice b (2026-11-11): a failed run retried from its request's files; from: that step and every step after it run again (cos/pipeline/runs.eg retry_of)",
       "personAct": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/cos/systems/:name/eg/settings",
+      "out": "{ settings, overrides, models, engine, problems } \u2014 an Emerge system's settings through its own door (<system>/cli.eg settings <home>); PC18, SC29, 2026-11-24"
+    },
+    {
+      "method": "POST",
+      "path": "/api/cos/systems/:name/eg/save",
+      "body": "{ ...the change }",
+      "out": "{ ok, problems } \u2014 kept only when it passes (<system>/cli.eg save <home> <change>)"
     }
   ],
   "door": {
@@ -1276,6 +1287,25 @@
       "about": "every pipeline and procedure as boxes and wires, drawn from the DAG: each box's kind, ref and gate, every fault named. Read-only: the editing canvas is ERAVOS's (PC4), shown to him as a preview first",
       "navBefore": "main",
       "offRail": "Off the rail 2026-11-09 \u2014 James: \"There's supposed to be one fucking tab. Why are you adding three tabs to do the same thing?\" \u00b7 \"Yeah. It should all exist in one tab.\" Its route and its routes stay (agents, the CLI, ERAVOS); its content folds into Automation (AE5)."
+    },
+    {
+      "id": "models",
+      "title": "Model server",
+      "path": "models/",
+      "route": "#/models",
+      "nav": "settings",
+      "built": true,
+      "phase": "PC18_cos_runs_the_model_server",
+      "routes": [
+        "GET /api/cos/systems/:name/eg/settings",
+        "POST /api/cos/systems/:name/eg/save",
+        "GET /api/cos/usage"
+      ],
+      "listens": [],
+      "emits": [],
+      "about": "our own model server: engines, each model's own settings, intent routing, modes, the queue, the ladder and walls, the recorder and rewind, the gates; memory is the resource manager's (Resources). James, 2026-11-24: \"i want those settings in cos ui.\"",
+      "tab": 5,
+      "tabTitle": "Model server"
     }
   ],
   "planned": [

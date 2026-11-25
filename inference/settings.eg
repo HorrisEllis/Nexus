@@ -1,0 +1,90 @@
+// inference/settings.eg — our own model server's settings, its own (PC18 settings_2026_11_24; SC29). James Brooks, 2026-11-24: "lets get this
+// done. i want those settings in cos ui." · "hardcoded earns its place. settings are for the dynamic and additive." · "Remeber no coupling".
+// What earns its place here: the shape and the starting values. Every value is his to change; his changes are kept apart from the defaults
+// (overrides), so a default can improve without overwriting him. Memory is NOT here: COS's resource manager accounts for this system by its
+// compartment declaration (no second manager).
+
+let INTENTS = ["coding", "spec", "reason", "debug", "copilot"]
+
+/** a model's starting settings, by its size: small ones answer several at once and stay loaded; big ones one at a time and are freed */
+fn model_defaults(name: string, bytes: num, i: num): map {
+  let big = bytes > 4000000000
+  var serves = ["coding"]
+  if big { serves = ["spec", "reason", "debug", "copilot"] }
+  var gpu = 99
+  if big { gpu = 8 }
+  var slots = 3
+  if big { slots = 1 }
+  var ctx = 4096
+  if big { ctx = 8192 }
+  var after = "stay loaded"
+  if big { after = "free its memory" }
+  return { on: bytes < 15000000000, port: 9931 + i, slots: slots, ctx: ctx, gpu_layers: gpu, threads: 8, after: after, serves: serves }
+}
+
+/** the defaults for the models found (each { name, bytes }) and the engine found */
+fn defaults(models: list, engine: string, store: string): map {
+  var ms = {}
+  var i = 0
+  for m in models {
+    ms[m.name] = model_defaults(m.name, m.bytes, i)
+    i += 1
+  }
+  return {
+    engines: [{ id: "llama-server", paths: [engine], use: "every model" }, { id: "ollama", address: "http://127.0.0.1:11434", use: "when plugin 1 cannot run the model" }],
+    stores: [store],
+    models: ms,
+    intents: { coding: { first: "", wall: "", then: "ask me" }, spec: { first: "", wall: "", then: "ask me" }, reason: { first: "", wall: "", then: "ask me" }, debug: { first: "", wall: "", then: "ask me" }, copilot: { first: "", wall: "", then: "ask me" } },
+    modes: [{ name: "3b swarm", when: "pieces waiting for the 3b", needs_mb: 2500 }, { name: "16b solo", when: "a wall in the queue", needs_mb: 11500 }],
+    queue: { first_token_s: 300, answer_s: 900, retries: 2, orphan: "stop it, free its model", batch: 1 },
+    ladder: { wall: "the breakdown exhausted", depth: "no limit", temperatures: [0.1, 0.5, 0.9], each_wall: "a row and a request to fix it" },
+    recorder: { record: true, keep_days: 30, slot_save: true, replay: true, hook: "Idearium rewind engine and flight recorder" },
+    gates: { piece: { intent: "coding", brief: "small", tries: 3 }, breakdown: { intent: "coding", brief: "small", tries: 3 }, diagnosis: { intent: "reason", brief: "medium", tries: 3 }, contract: { intent: "spec", brief: "medium", tries: 3 }, review: { intent: "debug", brief: "medium", tries: 3 } }
+  }
+}
+
+/** his overrides laid over the defaults, key by key, as deep as both are maps (a list or a value of his replaces the default's) */
+fn merge(base: any, over: any): any {
+  if type_of(base) != "map" or type_of(over) != "map" {
+    if over == null { return base }
+    return over
+  }
+  var out = {}
+  for k in keys(base) { out[k] = base[k] }
+  for k in keys(over) {
+    if has(base, k) { out[k] = merge(base[k], over[k]) } else { out[k] = over[k] }
+  }
+  return out
+}
+
+/** what is wrong with a merged settings map; [] when nothing */
+fn problems(s: map): list {
+  var out = []
+  var ports = []
+  for k in keys(s.models) {
+    let m = s.models[k]
+    if type_of(m.slots) != "num" or m.slots < 1 or m.slots > 16 { out = push(out, k + ": slots must be 1 to 16") }
+    if type_of(m.ctx) != "num" or m.ctx < 256 { out = push(out, k + ": context must be at least 256") }
+    if type_of(m.port) != "num" or m.port < 1024 or m.port > 65535 { out = push(out, k + ": port must be 1024 to 65535") }
+    if ports contains m.port { out = push(out, k + ": port " + str(m.port) + " is taken by another model") }
+    ports = push(ports, m.port)
+    for i in m.serves { if not (INTENTS contains i) { out = push(out, k + ": no intent called " + i) } }
+  }
+  if type_of(s.queue.batch) != "num" or s.queue.batch < 1 { out = push(out, "queue: pieces per call must be at least 1") }
+  return out
+}
+
+/** his overrides from their file; {} when none */
+fn overrides(file: string): map {
+  if not path_exists(file) { return {} }
+  return parse_json(read_file(file))
+}
+
+/** keep a change of his: merged into his overrides, checked against the defaults first; { ok, problems } */
+fn save(file: string, base: map, change: map): map {
+  let next = merge(overrides(file), change)
+  let p = problems(merge(base, next))
+  if len(p) > 0 { return { ok: false, problems: p } }
+  write_file(file, json(next))
+  return { ok: true, problems: [] }
+}

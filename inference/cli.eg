@@ -1,0 +1,34 @@
+// inference/cli.eg — our own model server's door (as pillar/cli.eg is Pillar's): other systems reach it only here, never by its files.
+//   eg run inference/cli.eg settings <home>                 → { settings, overrides, models, engine, problems } as JSON
+//   eg run inference/cli.eg save <home> <change JSON>       → { ok, problems }: kept only when it passes
+// <home> is the user's home folder: the one fact a caller gives; where the models and the engine are is this system's own knowledge (its
+// defaults), and his settings override it (stores, engine paths). James Brooks, 2026-11-24: "i want those settings in cos ui." · "Remeber no coupling".
+use "./models.eg" as M
+use "./settings.eg" as S
+
+let FILE = "inference/data/settings.json"
+let a = args()
+var cmd = "help"
+if len(a) > 0 { cmd = a[0] }
+
+fn base(home: string): map {
+  let mine = S.overrides(FILE)
+  var store = home + "/.ollama/models"
+  if has(mine, "stores") and len(mine.stores) > 0 { store = mine.stores[0] }
+  var cands = [home + "/AppData/Local/Programs/Ollama/lib/ollama/llama-server.exe", "/usr/local/bin/llama-server", "/usr/bin/llama-server"]
+  if has(mine, "engines") and len(mine.engines) > 0 and has(mine.engines[0], "paths") { cands = mine.engines[0].paths }
+  let ms = M.models(store)
+  let e = M.engine(cands)
+  return { models: ms, engine: e, defaults: S.defaults(ms, e, store) }
+}
+
+if cmd == "settings" and len(a) >= 2 {
+  let b = base(a[1])
+  let s = S.merge(b.defaults, S.overrides(FILE))
+  print(json({ settings: s, overrides: S.overrides(FILE), models: b.models, engine: b.engine, problems: S.problems(s) }))
+} else if cmd == "save" and len(a) >= 3 {
+  let b = base(a[1])
+  print(json(S.save(FILE, b.defaults, parse_json(a[2]))))
+} else {
+  print(json({ ok: false, why: "usage: settings <home> | save <home> <change JSON>" }))
+}
