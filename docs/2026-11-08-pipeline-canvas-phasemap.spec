@@ -1768,7 +1768,9 @@ phases_addendum_2026_11_24_model_server:
       a_where_hats_live: 'DECIDED (his): the model server''s own folder. "Yes move to the model." (§5.9: lib/ is not a home for what one system uses)'
       d_the_engine_download: >-
         DECIDED (his): llama.cpp b12716, CUDA 12.4 (llama-b12716-bin-win-cuda-12.4-x64.zip 358.6 MB and cudart-llama-bin-win-cuda-12.4-x64.zip
-        391.4 MB), sha256 checked against the release; into inference/data/engines/llama.cpp/b12716-cuda-12.4/. His words: "Download CUDA 12.4.
+        391.4 MB), sha256 checked against the release; unpacked first into inference/data/engines/llama.cpp/b12716-cuda-12.4/, then moved by his word into the old Ollama folder,
+        C:/Users/horri/AppData/Local/Programs/Ollama/lib/ollama/ ("It should be in the old ollama folder"), where models.eg already looks; the
+        model server's models hook, through COS, names it there. The zips stay in the first folder. His words: "Download CUDA 12.4.
         Not Vulkan. And don't download both yet." · "I'd keep the backend swappable: CUDA 12.4 = primary NVIDIA backend. Vulkan = fallback and
         benchmark candidate. CPU = fallback when GPU execution isn't viable. Then COS can measure actual throughput, latency, GPU utilization and
         memory pressure rather than assuming CUDA wins." · "Your GTX 1650 has only 4 GB VRAM ... You'll likely need partial GPU offloading."
