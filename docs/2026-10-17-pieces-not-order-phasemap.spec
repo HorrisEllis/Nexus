@@ -302,6 +302,38 @@ phases:
       - 'autocorrect("a && !b;") == { body: "a and not b", fixes: ["&&", "!", ";"] }'
       - 'autocorrect("say \"a && b\"") == { body: "say \"a && b\"", fixes: [] }'
     axioms: "§17.13 (in Emerge, through the rung), deterministic first (his 2026-10-13 order: a parser before any model), §8.6 (the HINTS table in gaps.eg names these refusals)"
+  EMB10_the_engine_decisions_in_emerge:
+    status: OPEN
+    depends_on: [EMB3_the_autocorrect]   # built through the same rung, the same way
+    james: '"i want everything written in emerge." · "no js" · "use the pipeline to replace it" (2026-11-24, of the JavaScript the coder added in 0.60.648-650)'
+    files: [inference/lib/engine-plan.js, inference/lib/test/engine-plan.test.js]
+    does: >-
+      A pure module, the decisions the bridge's JavaScript made about the model server's engines (0.60.648-650), so they live in Emerge and
+      the JavaScript that made them can be removed: served_by(models: string, file: string) -> bool is true when the engine's model list
+      (its /v1/models text) names the model's file, or says nothing (an empty text); next_act(s: map) -> string takes { healthy, serves, asked }
+      and says "use" (healthy and serving this model), "refuse" (healthy but another model), "start" (not healthy, COS not yet asked) or
+      "wait" (not healthy, asked); new_names(known: list, fresh: list) -> list is the names in fresh that known lacks, in fresh's order;
+      sse_text(line: string) -> map reads one line of an engine's stream: "data: [DONE]" is { text: "", done: true }; "data: {json}" gives the
+      content of choices[0].delta (empty when none) and done false; any other line is { text: "", done: false }.
+      Built by the pipeline (COS › Automation, "Build a phase (self-repairing)"), on the local models. The network calls that use these are
+      the next phase: Emerge has no HTTP yet (a capability to build into Emerge, said 2026-11-24).
+    proof: "its test, from these examples, planned first with no model; built by the pipeline with every Emerge line written by a local model"
+    examples:
+      - 'served_by("{\"data\":[{\"id\":\"C:/m/blobs/sha256-938ca13d\"}]}", "sha256-938ca13d") == true'
+      - 'served_by("{\"data\":[{\"id\":\"C:/m/blobs/sha256-938ca13d\"}]}", "sha256-84d55217") == false'
+      - 'served_by("", "sha256-84d55217") == true'
+      - 'next_act({ healthy: true, serves: true, asked: false }) == "use"'
+      - 'next_act({ healthy: true, serves: false, asked: false }) == "refuse"'
+      - 'next_act({ healthy: false, serves: false, asked: false }) == "start"'
+      - 'next_act({ healthy: false, serves: false, asked: true }) == "wait"'
+      - 'new_names(["a", "b"], ["b", "c", "d"]) == ["c", "d"]'
+      - 'new_names([], ["x"]) == ["x"]'
+      - 'new_names(["x"], ["x"]) == []'
+      - 'sse_text("data: [DONE]") == { text: "", done: true }'
+      - 'sse_text("data: {\"choices\":[{\"delta\":{\"content\":\"hi\"}}]}") == { text: "hi", done: false }'
+      - 'sse_text("data: {\"choices\":[{\"delta\":{}}]}") == { text: "", done: false }'
+      - 'sse_text(": ping") == { text: "", done: false }'
+    axioms: "§17.13 (in Emerge, through the rung; his 2026-11-24 'no js'), deterministic first (the examples are the test, no model), §8.6 (EMB3's rung and pipeline reused)"
   PC6_assembled_and_checked_whole:
     status: OPEN
     systems: [cortex]

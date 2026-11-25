@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-17-pieces-not-order-phasemap.spec::EMB10_the_engine_decisions_in_emerge
+type: phase
+id: docs_2026-10-17-pieces-not-order-phasemap.spec::EMB10_the_engine_decisions_in_emerge
+context: >-
+  pipeline phase EMB10_the_engine_decisions_in_emerge of
+  docs/2026-10-17-pieces-not-order-phasemap.spec
+intent: null
+summary: EMB10_the_engine_decisions_in_emerge (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1795598050206
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795598050206
+lastSeenAt: 1795598050206
+fingerprint: null
+payload:
+  id: EMB10_the_engine_decisions_in_emerge
+  map: docs/2026-10-17-pieces-not-order-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - inference/lib/engine-plan.js
+    - inference/lib/test/engine-plan.test.js
+  depends_on:
+    - EMB3_the_autocorrect
+  blocks: []
+  spec: null
+  graph: f124bce1cb4c6af7
