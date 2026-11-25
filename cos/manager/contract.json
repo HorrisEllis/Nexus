@@ -1262,7 +1262,8 @@
       "title": "Lab",
       "path": "lab/",
       "route": "#/lab",
-      "nav": "main",
+      "nav": "none",
+      "offRail": "Off the rail 2026-11-24 — James: \"the lab be migrated into the new automation tab. like i want to use the pipeline for almost anythiogn\": the Lab is a tab of Automation (PC8)",
       "built": true,
       "phase": "EMB4_torrent_pieces",
       "routes": [

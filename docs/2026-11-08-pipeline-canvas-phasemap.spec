@@ -1846,3 +1846,11 @@ phases_addendum_2026_11_24_model_server:
 # process live (never a running one, nothing started); the bridge rescans and touches the engine's process instead of spawning it. Reuse: the
 # supervisor's declare (SC4), touch and idle reaper (on demand), restart and circuit. Proof: SV-09 (rescan adds live, starts nothing), SV-08 counts
 # the engines apart; SV-04 flaky before this (1 in 3). Open: COS's restart (his act) to run it; files_added named cos/inference/*, built as inference/.
+
+# ── ADDENDUM 0.60.651 (2026-11-24) — PC8 slice d built: the run console is COS's Automation tab ──
+# James, 2026-11-24: "build the tab. i need to be able to use the pipeline alos" · "now the preview can strip it, no ui should have what the backend
+# doesn't. ui should float on top". cos/ui/automation/console.html, made from the preview: every read and act a COS route (automation pipelines,
+# pipeline-runs, run/pause/continue/cancel, systems, usage, lab, console, cli, catalogue); what COS has no route for is stripped (model calls, lineage,
+# baseline, retry, model change, the phase/component/command/framework/template pickers). The Automation page opens on it (Console tab); the Lab
+# is its last tab and off the rail (contract.json nav none). Decided by his words and §5.16 (the UI reaches only COS's door). Not checked in Clear
+# Glass: its driver cannot open a window on this PC (said); checked in the built-in browser instead.

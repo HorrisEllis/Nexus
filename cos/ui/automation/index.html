@@ -19,16 +19,22 @@
     <div class="actions"><label class="btn" id="ae-import-l">⇪ Import .pipeline / .erv<input type="file" id="ae-import" accept=".pipeline,.workflow,.macro,.erv" hidden></label></div>
   </header>
   <nav class="ae-tabs" id="ae-tabs" role="tablist">
-    <button class="ae-tab on" data-tab="pipelines" role="tab">Pipelines<b id="n-pipelines"></b></button>
+    <button class="ae-tab on" data-tab="console" role="tab">Console</button>
+    <button class="ae-tab" data-tab="pipelines" role="tab">Pipelines<b id="n-pipelines"></b></button>
     <button class="ae-tab" data-tab="workflows" role="tab">Workflows<b id="n-workflows"></b></button>
     <button class="ae-tab" data-tab="runs" role="tab">Runs<b id="n-runs"></b></button>
     <button class="ae-tab" data-tab="log" role="tab">Log</button>
     <button class="ae-tab" data-tab="desktop" role="tab">Desktop<b id="n-desktop"></b></button>
     <button class="ae-tab" data-tab="supervision" role="tab">Supervision</button>
+    <button class="ae-tab" data-tab="lab" role="tab">Lab</button>
   </nav>
   <div id="ae-msg" class="ae-msg" role="status"></div>
 
-  <section class="ae-pane" data-pane="pipelines">
+  <!-- PC8 (his, 2026-11-24): "cos/ui/run-console-preview should be the automation tba" · "the lab be migrated into the new automation tab" ·
+       "ui should float on top": the run console (console.html) reads and acts only through COS's routes; the Lab is its own tab here. -->
+  <section class="ae-pane" data-pane="console"><iframe src="console.html" title="The run console" style="width:100%;height:calc(100vh - 230px);min-height:560px;border:0;border-radius:12px;background:var(--nx-ink,#0b0d12)"></iframe></section>
+  <section class="ae-pane" data-pane="lab" hidden><iframe src="../lab/index.html" title="The Lab: requests, builds, pieces" style="width:100%;height:calc(100vh - 230px);min-height:560px;border:0;border-radius:12px"></iframe></section>
+  <section class="ae-pane" data-pane="pipelines" hidden>
     <div class="ae-grid">
       <section class="panel"><div class="panel-head"><h2>Pipelines</h2><button class="btn" id="ae-sync" title="Import every pipeline in Nexus now: COS's own files and each system's, by its route">Sync</button></div><div class="panel-body"><p class="muted" id="ae-sync-said"></p><div id="ae-pipes">reading…</div></div></section>
       <section class="panel"><div class="panel-head"><h2 id="ae-p-title">Pick a pipeline</h2><span class="tag" id="ae-p-tag"></span></div><div class="panel-body" id="ae-p-body"></div></section>
