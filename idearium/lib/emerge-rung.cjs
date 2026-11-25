@@ -307,7 +307,7 @@ function createRung({ root = path.resolve(__dirname, '..', '..'), ask, expect, m
     const taken = new Set(skel.fns.map(x => x.name));
     const last = [...rec.attempts].reverse().find(a => !a.ok && a.body) || {};
     for (const m of st.missing) {   // its own try called m: the piece it wanted becomes the gap
-      if (taken.has(m) || !ID.test(m)) continue;
+      if (taken.has(m) || !ID.test(m) || !_gapsEg().may_name(m)) continue;   // 2026-11-25: never a helper named after an Emerge word, a builtin, or one letter (gaps.eg)
       const call = new RegExp('\\b' + m + '\\s*\\(([^()]*)\\)').exec(_q(last.body)); const args = call ? call[1].split(',').map(s => s.trim()).filter(Boolean) : [];
       const params = args.map((a, i) => (ID.test(a) && !taken.has(a) ? a : 'arg' + (i + 1))).filter((p, i, xs) => xs.indexOf(p) === i);
       return { name: m, params, signature: m + '(' + params.join(', ') + ')', does: 'the piece ' + name + ' called and needs (named by its own try)', namedBy: 'its own try' };
@@ -330,7 +330,7 @@ function createRung({ root = path.resolve(__dirname, '..', '..'), ask, expect, m
       const again = k === 1 ? msg : msg + '\n\nThese names are taken, name a NEW one: ' + [...taken].join(', ') + (said ? '\nYou said: ' + said.split('\n')[0].slice(0, 120) : '');
       let text = ''; try { text = await who.ask(again, { gap: name, diagnose: true, tryNo: k }); } catch (_) { break; }
       said = _q(text); const x = /fn\s+([A-Za-z_][A-Za-z0-9_]*)\s*\(([^)]*)\)\s*(?::\s*\w+)?\s*(?:—|--|-|:)?\s*(.*)/.exec(said);
-      if (x && !taken.has(x[1]) && x[2].split(',').map(s => s.trim().split(/[:\s=]/)[0]).filter(Boolean).every(p => ID.test(p))) m = x;
+      if (x && !taken.has(x[1]) && _gapsEg().may_name(x[1]) && x[2].split(',').map(s => s.trim().split(/[:\s=]/)[0]).filter(Boolean).every(p => ID.test(p))) m = x;
     }
     if (!m) return null;
     const params = m[2].split(',').map(s => s.trim().split(/[:\s=]/)[0]).filter(Boolean);

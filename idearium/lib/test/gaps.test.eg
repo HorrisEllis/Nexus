@@ -106,6 +106,7 @@ test "a helper named after one of Emerge's own words is never linked in" {
   expect G.link(["served_by"], "served_by", "is_member") == ["is_member", "served_by"]
   expect G.link(["fix_methods"], "fix_methods", "push") == ["fix_methods"]
   expect G.link(["fix_methods"], "fix_methods", "t") == ["fix_methods"]
+  expect G.may_name("is_member") and not G.may_name("join") and not G.may_name("contains") and not G.may_name("t")
 }
 
 test "contains written as a call or a function name gets its own fix" {

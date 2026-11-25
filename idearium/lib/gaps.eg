@@ -184,11 +184,15 @@ let WORDS = ["contains", "starts_with", "ends_with", "and", "or", "not", "in", "
 // name is a parameter or a loop variable, never a piece (2026-11-25, EMB11 on the 3b: helpers named push and t were linked in and "passed")
 let BUILTINS = ["print", "eprint", "exit", "str", "num", "int", "floor", "sqrt", "min", "max", "len", "keys", "values", "has", "get", "slice", "range", "join", "split", "upper", "lower", "type_of", "freeze", "json", "parse_json", "random", "uid", "read_file", "write_file", "list_dir", "path_exists", "now_ms", "sleep_ms", "is_dir", "make_dir", "move_path", "remove_path", "bytes", "byte_len", "utf8", "sha256", "hex", "find_text", "repr", "push", "args", "raise", "truthy"]
 
+// may_name(n) → can a helper carry this name? Not one of Emerge's words, not a builtin, not one letter (the rung asks this before it makes a
+// helper; link asks it too)
+fn may_name(n: string): bool {
+  return not (n in WORDS) and not (n in BUILTINS) and len(n) >= 2
+}
+
 fn link(order: list, before: string, add: string): list {
   if add in order { return order }
-  if add in WORDS { return order }
-  if add in BUILTINS { return order }
-  if len(add) < 2 { return order }
+  if not may_name(add) { return order }
   var out = []
   for x in order {
     if x == before { out = push(out, add) }
