@@ -334,6 +334,29 @@ phases:
       - 'sse_text("data: {\"choices\":[{\"delta\":{}}]}") == { text: "", done: false }'
       - 'sse_text(": ping") == { text: "", done: false }'
     axioms: "§17.13 (in Emerge, through the rung; his 2026-11-24 'no js'), deterministic first (the examples are the test, no model), §8.6 (EMB3's rung and pipeline reused)"
+  EMB11_autocorrect_learns_method_words:
+    status: OPEN
+    depends_on: [EMB3_the_autocorrect]   # it extends the module the 3b built first; the feedback loop (his 2026-11-25)
+    james: '"you know why I love this idea? Because it''s a feedback loop." · "Compiler is supposed to debug its own code." (2026-11-25)'
+    files: [idearium/lib/method-words.js, idearium/lib/test/method-words.test.js]
+    does: >-
+      A pure module the autocorrect calls before the compiler sees a body. Found 2026-11-25: asked directly, the 3b wrote served_by's logic right
+      (models.contains(file) || models.is_empty()) but as method calls; Emerge writes these as words between two values. fix_methods(t: string)
+      -> string rewrites, in text outside double quotes, each method-call habit with one known Emerge form: a.contains(b) becomes a contains b,
+      a.starts_with(b) becomes a starts_with b, a.ends_with(b) becomes a ends_with b, and a.is_empty() becomes a == "". The value before the
+      dot is the word made of letters, digits, underscores and dots just before it; the argument is everything up to the matching closing
+      parenthesis. Text inside double quotes, and any other method, is left as it is. A text with none comes back unchanged.
+    proof: "its test from these examples, planned first with no model; built by the pipeline on the 3b alone; then the autocorrect calls it, and EMB10's served_by is rebuilt through it (the feedback loop: the 3b's own work fixes the 3b's own output)"
+    examples:
+      - 'fix_methods("return models.contains(file)") == "return models contains file"'
+      - 'fix_methods("models.contains(file) || models.is_empty()") == "models contains file || models == \"\""'
+      - 'fix_methods("if line.starts_with(\"data: \") { x }") == "if line starts_with \"data: \" { x }"'
+      - 'fix_methods("name.ends_with(\".js\")") == "name ends_with \".js\""'
+      - 'fix_methods("a.b.contains(c)") == "a.b contains c"'
+      - 'fix_methods("say \"x.contains(y)\"") == "say \"x.contains(y)\""'
+      - 'fix_methods("xs.push(1)") == "xs.push(1)"'
+      - 'fix_methods("let n = 1") == "let n = 1"'
+    axioms: "§17.13 (in Emerge, through the rung), §8.6 (EMB3's autocorrect extended, not replaced), his feedback loop (the 3b's own module repairs the 3b's output)"
   PC6_assembled_and_checked_whole:
     status: OPEN
     systems: [cortex]
