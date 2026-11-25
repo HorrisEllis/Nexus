@@ -205,3 +205,19 @@ runtime to install.
 ## 7. Bundle contents
 
 `SPEC.spec` (this file), `PHASEMAP.md` (phased build plan), and `README.md`.
+
+---
+
+## ADDENDUM 2026-11-25 — what Looking Glass is for (his words)
+
+James Brooks, 2026-11-25: "also looking glass is to replace electron. a framework to eventually build windows and linux, and cos applications
+out of emerge." Asked the day before whether a screen can be built with no JavaScript ("Stop using hs / Hs / Js"), he pointed at this bundle:
+"like this?"
+
+- **DECIDED (his):** Looking Glass replaces Electron in Nexus (Clear Glass and COS run on Electron today).
+- **DECIDED (his):** it is the framework Windows, Linux and COS applications are built with, and those applications are written in Emerge.
+- So an app is Emerge plus Looking Glass data (schemas, variables, element + target + action, section 2); the renderer is the native core of
+  section 4 (one exe). A screen holds no JavaScript.
+- **OPEN, his:** whether COS's Automation tab is written now as Looking Glass data and drawn first by a small renderer in COS's page until the
+  native one exists, or waits for the native renderer (asked 2026-11-24).
+- Author: James Brooks (his idea, 2026-10-13; this purpose, 2026-11-25).
