@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-17-pieces-not-order-phasemap.spec::EMB11_autocorrect_learns_method_words
+type: phase
+id: docs_2026-10-17-pieces-not-order-phasemap.spec::EMB11_autocorrect_learns_method_words
+context: >-
+  pipeline phase EMB11_autocorrect_learns_method_words of
+  docs/2026-10-17-pieces-not-order-phasemap.spec
+intent: null
+summary: EMB11_autocorrect_learns_method_words (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1795646457576
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795646457576
+lastSeenAt: 1795646457576
+fingerprint: null
+payload:
+  id: EMB11_autocorrect_learns_method_words
+  map: docs/2026-10-17-pieces-not-order-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/lib/method-words.js
+    - idearium/lib/test/method-words.test.js
+  depends_on:
+    - EMB3_the_autocorrect
+  blocks: []
+  spec: null
+  graph: 174b8508f61d3fca

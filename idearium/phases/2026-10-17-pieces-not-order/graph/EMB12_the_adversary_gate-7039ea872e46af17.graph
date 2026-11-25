@@ -1,0 +1,185 @@
+envelope: 1
+uuid: nexus-export-graph-phase:EMB12_the_adversary_gate:7039ea872e46af17
+type: graph
+id: phase:EMB12_the_adversary_gate:7039ea872e46af17
+context: dependency graph of phase EMB12_the_adversary_gate
+intent: null
+summary: 16 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1795649875086
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795649875086
+lastSeenAt: 1795649875086
+fingerprint: null
+payload:
+  for: EMB12_the_adversary_gate
+  kind: phase
+  repo: null
+  hash: 7039ea872e46af17
+  nodes:
+    - path: idearium/lib/eg-build/gaps/main.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/lib/emerge-rung.cjs
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/lib/gaps.eg
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/lib/test/gaps.test.eg
+      role: changes
+      exists: true
+      system: idearium
+    - path: lib/meta/adversary-suite.js
+      role: changes
+      exists: true
+      system: lib
+    - path: cortex/core/raid/contract-intake.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/compartment-engine.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/meta/index.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/adversary-suite.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: _emerge/lang/runtime.js
+      role: uses
+      exists: true
+      system: _emerge
+    - path: idearium/lib/autocorrect.eg.cjs
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/lib/eg-build/gaps/_emerge/lang/runtime.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: lib/node-export.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/node-index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/node-registry.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: idearium/lib/emerge-rung.cjs
+      to: _emerge/lang/runtime.js
+      kind: requires
+    - from: idearium/lib/emerge-rung.cjs
+      to: idearium/lib/autocorrect.eg.cjs
+      kind: requires
+    - from: idearium/lib/emerge-rung.cjs
+      to: lib/node-export.js
+      kind: requires
+    - from: idearium/lib/emerge-rung.cjs
+      to: lib/node-index.js
+      kind: requires
+    - from: idearium/lib/emerge-rung.cjs
+      to: lib/node-registry.js
+      kind: requires
+    - from: idearium/lib/eg-build/gaps/main.js
+      to: idearium/lib/eg-build/gaps/_emerge/lang/runtime.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/lib/emerge-rung.cjs
+      kind: requires
+    - from: cortex/core/raid/contract-intake.js
+      to: lib/meta/adversary-suite.js
+      kind: requires
+    - from: lib/compartment-engine.js
+      to: lib/meta/adversary-suite.js
+      kind: requires
+    - from: lib/meta/index.js
+      to: lib/meta/adversary-suite.js
+      kind: requires
+    - from: tests/modules/adversary-suite.test.js
+      to: lib/meta/adversary-suite.js
+      kind: requires
+  crossings:
+    - from: idearium/lib/emerge-rung.cjs
+      to: _emerge/lang/runtime.js
+      fromSystem: idearium
+      toSystem: _emerge
+      kind: system
+      known: false
+  ready: true
+  dag:
+    layer: 7
+    deps:
+      - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB8_the_contract_at_every_level
+    dependents: []
+    upstream:
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::CS0_projects_decomposed_into_components
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::MX2_the_0_60_components_wired_in_loom
+      - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB1_emerge_writes_the_brick
+      - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB3_the_autocorrect
+      - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB6_the_end_state_first
+      - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB8_the_contract_at_every_level
+      - docs/2026-10-19-pipeline-root-causes-phasemap.spec::RC4_agent_file_names_guarded
+      - docs/2026-10-19-pipeline-root-causes-phasemap.spec::VF1_verify_first
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS1_the_skeleton_in_emerge
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS1a_the_boundary_reads_code_not_text
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS2_the_language_through_the_door
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D0_a_system_not_an_idearium_module
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D2_two_contracts_two_names
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D3_handlers_run_the_cli
+    downstream: []
+    blockedBy:
+      - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB8_the_contract_at_every_level
+    unlocks: []
+    conflicts:
+      - with: docs/2026-10-17-pieces-not-order-phasemap.spec::EMB2_ollama_writes_emerge_for_the_pipeline
+        files:
+          - idearium/lib/emerge-rung.cjs
+      - with: docs/2026-10-17-pieces-not-order-phasemap.spec::EMB4_torrent_pieces
+        files:
+          - idearium/lib/emerge-rung.cjs
+          - idearium/lib/gaps.eg
+          - idearium/lib/test/gaps.test.eg
+      - with: docs/2026-10-17-pieces-not-order-phasemap.spec::EMB7_code_frames
+        files:
+          - idearium/lib/emerge-rung.cjs
+      - with: docs/2026-10-17-pieces-not-order-phasemap.spec::EMB9_break_down_before_climbing
+        files:
+          - idearium/lib/emerge-rung.cjs
+          - idearium/lib/gaps.eg
+    dangling: []
+    lines:
+      - layer 7 · blocked by EMB8_the_contract_at_every_level
+      - 'depends on (1): EMB8_the_contract_at_every_level · all upstream 14'
+      - 'needed by (0): —'
+      - >-
+        same files as EMB2_ollama_writes_emerge_for_the_pipeline with no order between them:
+        idearium/lib/emerge-rung.cjs
+      - >-
+        same files as EMB4_torrent_pieces with no order between them: idearium/lib/emerge-rung.cjs,
+        idearium/lib/gaps.eg, idearium/lib/test/gaps.test.eg
+      - 'same files as EMB7_code_frames with no order between them: idearium/lib/emerge-rung.cjs'
+      - >-
+        same files as EMB9_break_down_before_climbing with no order between them:
+        idearium/lib/emerge-rung.cjs, idearium/lib/gaps.eg
+    edges:
+      - from: docs/2026-10-17-pieces-not-order-phasemap.spec::EMB8_the_contract_at_every_level
+        kind: declared

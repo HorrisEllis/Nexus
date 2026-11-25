@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-17-pieces-not-order-phasemap.spec::EMB12_the_adversary_gate
+type: phase
+id: docs_2026-10-17-pieces-not-order-phasemap.spec::EMB12_the_adversary_gate
+context: pipeline phase EMB12_the_adversary_gate of docs/2026-10-17-pieces-not-order-phasemap.spec
+intent: null
+summary: EMB12_the_adversary_gate (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1795649875086
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795649875086
+lastSeenAt: 1795649875086
+fingerprint: null
+payload:
+  id: EMB12_the_adversary_gate
+  map: docs/2026-10-17-pieces-not-order-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/lib/emerge-rung.cjs
+    - idearium/lib/gaps.eg
+    - idearium/lib/eg-build/gaps/main.js
+    - idearium/lib/test/gaps.test.eg
+    - lib/meta/adversary-suite.js
+  depends_on:
+    - EMB8_the_contract_at_every_level
+  blocks: []
+  spec: null
+  graph: 7039ea872e46af17

@@ -1,0 +1,259 @@
+envelope: 1
+uuid: nexus-export-graph-phase:EMB9_break_down_before_climbing:ce5943b67ca24b9e
+type: graph
+id: phase:EMB9_break_down_before_climbing:ce5943b67ca24b9e
+context: dependency graph of phase EMB9_break_down_before_climbing
+intent: null
+summary: 25 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1795649875075
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795649875075
+lastSeenAt: 1795649875075
+fingerprint: null
+payload:
+  for: EMB9_break_down_before_climbing
+  kind: phase
+  repo: null
+  hash: ce5943b67ca24b9e
+  nodes:
+    - path: idearium/lib/emerge-rung.cjs
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/lib/gaps.eg
+      role: changes
+      exists: true
+      system: idearium
+    - path: lib/gap-field.js
+      role: changes
+      exists: true
+      system: lib
+    - path: copilot/lib/lifeline-contracts.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/lib/self-model.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/lib/user-model.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/lifeline.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: copilot/tool-runtime.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: cortex/boot.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/gap-finder/index.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/self-heal/index.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/tools/table-materializer.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cos/manager/duties.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: diagnostic/nexus-diagnostic.js
+      role: used-by
+      exists: true
+      system: diagnostic
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: _emerge/lang/runtime.js
+      role: uses
+      exists: true
+      system: _emerge
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: idearium/lib/autocorrect.eg.cjs
+      role: uses
+      exists: true
+      system: idearium
+    - path: lib/diagnostic-causal.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/gap-priority.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/ledger-fanin/index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/node-export.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/node-index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/node-registry.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/resource-monitor.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: idearium/lib/emerge-rung.cjs
+      to: _emerge/lang/runtime.js
+      kind: requires
+    - from: idearium/lib/emerge-rung.cjs
+      to: idearium/lib/autocorrect.eg.cjs
+      kind: requires
+    - from: idearium/lib/emerge-rung.cjs
+      to: lib/node-export.js
+      kind: requires
+    - from: idearium/lib/emerge-rung.cjs
+      to: lib/node-index.js
+      kind: requires
+    - from: idearium/lib/emerge-rung.cjs
+      to: lib/node-registry.js
+      kind: requires
+    - from: lib/gap-field.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: lib/gap-field.js
+      to: lib/ledger-fanin/index.js
+      kind: requires
+    - from: lib/gap-field.js
+      to: lib/resource-monitor.js
+      kind: requires
+    - from: lib/gap-field.js
+      to: lib/gap-priority.js
+      kind: requires
+    - from: lib/gap-field.js
+      to: lib/diagnostic-causal.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/lib/emerge-rung.cjs
+      kind: requires
+    - from: copilot/lib/lifeline-contracts.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: copilot/lib/self-model.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: copilot/lib/user-model.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: copilot/lifeline.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: copilot/tool-runtime.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: cortex/gap-finder/index.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: cortex/self-heal/index.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: cortex/tools/table-materializer.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: cos/manager/duties.js
+      to: lib/gap-field.js
+      kind: requires
+    - from: diagnostic/nexus-diagnostic.js
+      to: lib/gap-field.js
+      kind: requires
+  crossings:
+    - from: idearium/lib/emerge-rung.cjs
+      to: _emerge/lang/runtime.js
+      fromSystem: idearium
+      toSystem: _emerge
+      kind: system
+      known: false
+    - from: lib/gap-field.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 7
+    deps:
+      - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB8_the_contract_at_every_level
+    dependents: []
+    upstream:
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::CS0_projects_decomposed_into_components
+      - docs/2026-10-12-browser-providers-and-work-phasemap.spec::MX2_the_0_60_components_wired_in_loom
+      - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB1_emerge_writes_the_brick
+      - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB3_the_autocorrect
+      - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB6_the_end_state_first
+      - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB8_the_contract_at_every_level
+      - docs/2026-10-19-pipeline-root-causes-phasemap.spec::RC4_agent_file_names_guarded
+      - docs/2026-10-19-pipeline-root-causes-phasemap.spec::VF1_verify_first
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS1_the_skeleton_in_emerge
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS1a_the_boundary_reads_code_not_text
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS2_the_language_through_the_door
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D0_a_system_not_an_idearium_module
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D2_two_contracts_two_names
+      - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D3_handlers_run_the_cli
+    downstream: []
+    blockedBy:
+      - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB8_the_contract_at_every_level
+    unlocks: []
+    conflicts:
+      - with: docs/2026-10-17-pieces-not-order-phasemap.spec::EMB2_ollama_writes_emerge_for_the_pipeline
+        files:
+          - idearium/lib/emerge-rung.cjs
+      - with: docs/2026-10-17-pieces-not-order-phasemap.spec::EMB4_torrent_pieces
+        files:
+          - idearium/lib/emerge-rung.cjs
+          - idearium/lib/gaps.eg
+      - with: docs/2026-10-17-pieces-not-order-phasemap.spec::EMB7_code_frames
+        files:
+          - idearium/lib/emerge-rung.cjs
+      - with: docs/2026-10-17-pieces-not-order-phasemap.spec::EMB12_the_adversary_gate
+        files:
+          - idearium/lib/emerge-rung.cjs
+          - idearium/lib/gaps.eg
+    dangling: []
+    lines:
+      - layer 7 · blocked by EMB8_the_contract_at_every_level
+      - 'depends on (1): EMB8_the_contract_at_every_level · all upstream 14'
+      - 'needed by (0): —'
+      - >-
+        same files as EMB2_ollama_writes_emerge_for_the_pipeline with no order between them:
+        idearium/lib/emerge-rung.cjs
+      - >-
+        same files as EMB4_torrent_pieces with no order between them: idearium/lib/emerge-rung.cjs,
+        idearium/lib/gaps.eg
+      - 'same files as EMB7_code_frames with no order between them: idearium/lib/emerge-rung.cjs'
+      - >-
+        same files as EMB12_the_adversary_gate with no order between them:
+        idearium/lib/emerge-rung.cjs, idearium/lib/gaps.eg
+    edges:
+      - from: docs/2026-10-17-pieces-not-order-phasemap.spec::EMB8_the_contract_at_every_level
+        kind: declared

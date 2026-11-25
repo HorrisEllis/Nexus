@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-10-17-pieces-not-order-phasemap.spec::EMB9_break_down_before_climbing
+type: phase
+id: docs_2026-10-17-pieces-not-order-phasemap.spec::EMB9_break_down_before_climbing
+context: pipeline phase EMB9_break_down_before_climbing of docs/2026-10-17-pieces-not-order-phasemap.spec
+intent: null
+summary: EMB9_break_down_before_climbing (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1795598050201
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795598050201
+lastSeenAt: 1795598050201
+fingerprint: null
+payload:
+  id: EMB9_break_down_before_climbing
+  map: docs/2026-10-17-pieces-not-order-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - idearium/lib/emerge-rung.cjs
+    - idearium/lib/gaps.eg
+    - lib/gap-field.js
+  depends_on:
+    - EMB8_the_contract_at_every_level
+  blocks: []
+  spec: null
+  graph: ce5943b67ca24b9e

@@ -7,11 +7,11 @@ intent: null
 summary: 4 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1795598050203
+exported_at: 1795649875078
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1795598050203
-lastSeenAt: 1795598050203
+firstSeenAt: 1795649875078
+lastSeenAt: 1795649875078
 fingerprint: null
 payload:
   for: EMB3_the_autocorrect
@@ -58,6 +58,7 @@ payload:
       - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB4_torrent_pieces
       - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB6_the_end_state_first
       - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB10_the_engine_decisions_in_emerge
+      - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB11_autocorrect_learns_method_words
     upstream:
       - docs/2026-10-12-browser-providers-and-work-phasemap.spec::CS0_projects_decomposed_into_components
       - docs/2026-10-12-browser-providers-and-work-phasemap.spec::MX2_the_0_60_components_wired_in_loom
@@ -72,6 +73,8 @@ payload:
       - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D3_handlers_run_the_cli
     downstream:
       - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB10_the_engine_decisions_in_emerge
+      - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB11_autocorrect_learns_method_words
+      - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB12_the_adversary_gate
       - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB4_torrent_pieces
       - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB5_trials_start_at_raid
       - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB6_the_end_state_first
@@ -82,15 +85,17 @@ payload:
     unlocks:
       - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB6_the_end_state_first
       - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB10_the_engine_decisions_in_emerge
+      - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB11_autocorrect_learns_method_words
     conflicts: []
     dangling: []
     lines:
       - layer 4
       - 'depends on (1): EMB1_emerge_writes_the_brick · all upstream 11'
       - >-
-        needed by (3): EMB4_torrent_pieces, EMB6_the_end_state_first,
-        EMB10_the_engine_decisions_in_emerge · all downstream 7 · finishing it unlocks
-        EMB6_the_end_state_first, EMB10_the_engine_decisions_in_emerge
+        needed by (4): EMB4_torrent_pieces, EMB6_the_end_state_first,
+        EMB10_the_engine_decisions_in_emerge, EMB11_autocorrect_learns_method_words · all downstream
+        9 · finishing it unlocks EMB6_the_end_state_first, EMB10_the_engine_decisions_in_emerge,
+        EMB11_autocorrect_learns_method_words
     edges:
       - from: docs/2026-10-17-pieces-not-order-phasemap.spec::EMB1_emerge_writes_the_brick
         kind: declared

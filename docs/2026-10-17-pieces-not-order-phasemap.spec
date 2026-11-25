@@ -357,6 +357,27 @@ phases:
       - 'fix_methods("xs.push(1)") == "xs.push(1)"'
       - 'fix_methods("let n = 1") == "let n = 1"'
     axioms: "§17.13 (in Emerge, through the rung), §8.6 (EMB3's autocorrect extended, not replaced), his feedback loop (the 3b's own module repairs the 3b's output)"
+  EMB12_the_adversary_gate:
+    status: OPEN
+    depends_on: [EMB8_the_contract_at_every_level]   # the contract gate it follows; RAID's adversary-suite it extends
+    james: '"what about using the intelligence system to debug. using it to find tension. like running the adversarial system. like another compiler. like the other one treats success as a problem. the adversarial. could even use another 3b" · "I''m not paying for tokens. more tokens wasted on unstable code than doing the work of critisizing it. thats the point of the adversarial system in raid" (2026-11-25)'
+    files: [idearium/lib/emerge-rung.cjs, idearium/lib/gaps.eg, idearium/lib/eg-build/gaps/main.js, idearium/lib/test/gaps.test.eg, lib/meta/adversary-suite.js]
+    reuse: >-
+      RAID's adversary (lib/meta/adversary-suite.js: six attack classes, syntax, logic, edge-case, state, cross-domain, stress; wired into
+      RAID's QA/QC by cortex/core/raid/contract-intake.js, whose own note says "There is no LLM-generated-code sandbox to attack yet"); the
+      rung's contract gate and its Emerge sandbox (lang-run, EMB8); Intelligence's tension (sigma, delta: how far outside the boundary, CF1);
+      gaps.eg for the lessons; the 3b's spare slots (3 per engine) for the adversary, no second engine.
+    does: >-
+      A second compiler that treats success as a problem. After a piece passes its own examples, an adversary (a second 3b, asked from the
+      piece's sentence, never its code) writes new cases in each of the suite's classes that fit it (edge cases first: empty, one, many, the
+      thing at the start, the middle, the end), each as "fn(args) == expected". Emerge runs the piece on them. A second adversary answers the
+      same cases blind. Where the two adversaries agree and the piece differs: the piece is refused with the case ("gave X, the sentence says
+      Y", an adversary's case) and the case joins its examples. Where the adversaries disagree: the sentence is ambiguous, a tension recorded
+      for him (the spec, not the piece). Where all agree: the case is kept as evidence. Every tension is measured (how many cases broke, of how
+      many) and recorded with RAID's verdict. The arbitration (agree, disagree, keep) is Emerge, in gaps.eg; the rung only asks and runs.
+      A helper is attacked the same way from its own sentence, so a body like "return method" cannot pass (F8).
+    proof: "on EMB10's pieces: a wrong served_by that passes its three examples is broken by an adversary's case; a right one survives every case; a helper whose body is 'return method' is refused; two adversaries reading the sentence differently flag the spec. Then EMB10 built through it, and Nexus runs on it (PC13's rule)."
+    axioms: "§8.6 (RAID's adversary-suite and the contract gate reused), his dialectic (thesis: the builder; antithesis: the adversary; Emerge judges; Intelligence measures the tension), §17.13 (the arbitration in Emerge)"
   PC6_assembled_and_checked_whole:
     status: OPEN
     systems: [cortex]
