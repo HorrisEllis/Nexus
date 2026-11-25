@@ -1896,3 +1896,9 @@ phases_addendum_2026_11_24_model_server:
 # mounted in COS's manager: moved, not rewritten), and its later actions joined to COS's routes (run, pause, continue, cancel, retry from a step,
 # save, duplicate, export). Change model and Open on ERAVOS stay later (no backend). The JavaScript, said: the moved server is the preview's own; the
 # manager gained one line to mount it; the page gained one helper for its acts. Needs COS's restart.
+
+# ── ADDENDUM 0.60.654 (2026-11-25) — F1's cause found and fixed: the sandbox copied every data folder ──
+# James, 2026-11-25: "okay pipeline". The hung rounds (F1) were not waiting: profiled, the build spent 98%% of its time in fs.cpSync under
+# lib/proposal-evidence.js shadow(), copying every folder named data in Nexus for the expectation test, onto C: (872 MB left). A shadow now copies a
+# data folder only when it is under 2 MB; a bigger one is an empty folder (a test still cannot write into real data). 0.7 s and 1.1 MB in COS's
+# folder. F5, found the same hour: COS resumed every interrupted run at each restart, so two copies of one build ran on the same pieces.
