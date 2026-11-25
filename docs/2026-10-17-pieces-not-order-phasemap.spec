@@ -310,7 +310,7 @@ phases:
     does: >-
       A pure module, the decisions the bridge's JavaScript made about the model server's engines (0.60.648-650), so they live in Emerge and
       the JavaScript that made them can be removed: served_by(models: string, file: string) -> bool is true when the engine's model list
-      (its /v1/models text) names the model's file, or says nothing (an empty text); next_act(s: map) -> string takes { healthy, serves, asked }
+      (its /v1/models text, read as text: never parsed) contains the file's name anywhere in it, or is empty; next_act(s: map) -> string takes { healthy, serves, asked }
       and says "use" (healthy and serving this model), "refuse" (healthy but another model), "start" (not healthy, COS not yet asked) or
       "wait" (not healthy, asked); new_names(known: list, fresh: list) -> list is the names in fresh that known lacks, in fresh's order;
       sse_text(line: string) -> map reads one line of an engine's stream: "data: [DONE]" is { text: "", done: true }; "data: {json}" gives the
@@ -609,3 +609,9 @@ related:
 # examples. EMB8's contract gate existed but had no examples for EMB10 (it read only the end-state record). Now emerge-build gives each piece its
 # phase's own example lines, and the gate writes Emerge literals (braces escaped, maps and lists Emerge's). Proof: the gate replayed, 14/14 on a
 # correct module, served_by refused with its two wrong cases; test-emerge-rung 14/14, test-contract-gates 20/20.
+
+# ── ADDENDUM 2026-11-25 — EMB10: served_by's sentence made exact (the coder's spec was vague) ──
+# James, 2026-11-25: "Useless examples build useful files. Capability proves competency, not tests passing." Found on run 4668559a: with its
+# sentence in its brief, the 3b still parsed the JSON and compared each id to the file with ==; but the id is a path (C:/m/blobs/sha256-...) and
+# the file a name (sha256-...), so even a perfect parser fails the examples. "names the model's file" was the coder's vague wording; it now says
+# what the examples hold: the text, never parsed, contains the file's name anywhere, or is empty. The behaviour, not the code (no expression given).
