@@ -1757,6 +1757,33 @@ phases_addendum_2026_11_24_model_server:
       snapshot at each PASS (a gate's snapshot setting, 0.60.628, still holds), the model's slot saved. Rewind goes back to any gate's last good
       state; replay runs a recorded request again without the model. Timelines are kept by day.
     proof: "a request run, rewound to its second gate, replayed from the tape to the same bar"
+  PC25_the_bridge_moves_into_the_model_server:
+    status: OPEN
+    layer: backend
+    james: '"migrate the bridge into the model server/" (2026-11-24, after "Yes move to the model" for hats, and with the coder''s split asked of him)'
+    depends_on: [PC19_the_model_server_downloads_its_engines_and_models]
+    files: [inference/compartment.json, inference/bridge/server.js, inference/bridge/config.js, inference/bridge/lib/ollama-client.js, inference/bridge/ollama-runtime.js, inference/bridge/lib/model-inventory.js, inference/bridge/routes/ollama-compat.js, cos/build/emerge-build.js, clear-glass/src/copilot/bridge.js, guardian/lib/dispatcher.js, idearium/agent-suite/index.js, lib/cli/nexus-repl.js, lib/cli/nexus.js, lib/hat-seed-ollama-personalities.js, lib/vector-memory.js, orchestrator/lib/autonomous-loop.js]
+    reuse: "the whole Ollama bridge (3,756 lines: jobs, dispatch, the one line of turns, the tape, idle unload, streaming, the Ollama-shaped routes), moved not rewritten; inference/server.eg start/stop for each model's llama-server; models.eg's list"
+    why: >-
+      Found 2026-11-24: Nexus's build step (cos/build/build-phase.js → emerge-build.js) reaches every model through the bridge (:3749 /api/jobs),
+      and the bridge speaks Ollama's API to :11434. With Ollama's app gone nothing answers, so the pipeline cannot ask any model anything.
+      149 files name the bridge; the move is staged so every caller keeps working at each step.
+    slices:
+      a_the_move: >-
+        ollama/ moves to inference/bridge/ (git mv, its history kept); inference/compartment.json declares its process (the bridge's server.js,
+        port 3749, health, heartbeat), ollama/compartment.json retired with it. Callers that reach the bridge by route are unchanged (same port,
+        same routes). The 12 non-test files and the tests that require its files by path are pointed at the new path (a path change, nothing
+        else); each one is a sovereignty breach named for slice c.
+      b_the_engine_swap: >-
+        The bridge's one door to a model (lib/ollama-client.js: generate, chat with tools, tags, ps) speaks llama-server: /completion and
+        /v1/chat/completions on the model's own port from the model server's settings, the model started by server.eg when it is asked for and
+        not running, /api/tags answered from models.eg. Ollama stays as a second backend plugin (PC_D17) when its server answers. The /ollama
+        compatibility route keeps Ollama's shape for clients pointed at it.
+      c_callers_on_routes: >-
+        Each system that requires the bridge's files (Clear Glass's copilot bridge, Guardian's dispatcher, Idearium's agent suite, the CLI,
+        lib/vector-memory, the Orchestrator's loop) reaches it through its routes instead, one system at a time (§5.9–§5.16); "ollama-bridge"
+        renamed where it names the model server's process.
+    proof: "a: the bridge's own tests pass from inference/bridge/, COS starts it from inference/compartment.json, :3749/health answers; b: a job on the 3b through :3749/api/jobs answers from llama-server, and one build round of build-phase.js runs on it; c: per system, its tests pass with no require of inference/bridge/"
   PC_D18_what_he_meant_2026_11_24:
     status: "OPEN — his"
     readings:

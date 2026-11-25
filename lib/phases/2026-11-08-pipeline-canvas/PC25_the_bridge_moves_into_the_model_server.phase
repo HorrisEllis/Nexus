@@ -1,0 +1,45 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-08-pipeline-canvas-phasemap.spec::PC25_the_bridge_moves_into_the_model_server
+type: phase
+id: docs_2026-11-08-pipeline-canvas-phasemap.spec::PC25_the_bridge_moves_into_the_model_server
+context: >-
+  pipeline phase PC25_the_bridge_moves_into_the_model_server of
+  docs/2026-11-08-pipeline-canvas-phasemap.spec
+intent: null
+summary: PC25_the_bridge_moves_into_the_model_server (backend) — 16 file(s)
+system: idearium
+tags: []
+exported_at: 1795588111325
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795588111325
+lastSeenAt: 1795588111325
+fingerprint: null
+payload:
+  id: PC25_the_bridge_moves_into_the_model_server
+  map: docs/2026-11-08-pipeline-canvas-phasemap.spec
+  repo: null
+  layer: backend
+  status: OPEN
+  files:
+    - inference/compartment.json
+    - inference/bridge/server.js
+    - inference/bridge/config.js
+    - inference/bridge/lib/ollama-client.js
+    - inference/bridge/ollama-runtime.js
+    - inference/bridge/lib/model-inventory.js
+    - inference/bridge/routes/ollama-compat.js
+    - cos/build/emerge-build.js
+    - clear-glass/src/copilot/bridge.js
+    - guardian/lib/dispatcher.js
+    - idearium/agent-suite/index.js
+    - lib/cli/nexus-repl.js
+    - lib/cli/nexus.js
+    - lib/hat-seed-ollama-personalities.js
+    - lib/vector-memory.js
+    - orchestrator/lib/autonomous-loop.js
+  depends_on:
+    - PC19_the_model_server_downloads_its_engines_and_models
+  blocks: []
+  spec: null
+  graph: 755c18614ef90065

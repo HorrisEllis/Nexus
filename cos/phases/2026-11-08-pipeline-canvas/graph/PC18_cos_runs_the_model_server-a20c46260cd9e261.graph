@@ -7,11 +7,11 @@ intent: null
 summary: 5 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1795583463294
+exported_at: 1795588111285
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1795583463294
-lastSeenAt: 1795583463294
+firstSeenAt: 1795588111285
+lastSeenAt: 1795588111285
 fingerprint: null
 payload:
   for: PC18_cos_runs_the_model_server
@@ -64,6 +64,7 @@ payload:
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC22_each_request_to_the_smallest_model_that_can
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC23_a_request_a_bar_of_chunks
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC24_every_request_a_timeline
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC25_the_bridge_moves_into_the_model_server
     blockedBy:
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC9_the_desktop_driver
     unlocks:
@@ -97,7 +98,7 @@ payload:
       - layer 2 · blocked by PC9_the_desktop_driver
       - 'depends on (1): PC9_the_desktop_driver · all upstream 2'
       - >-
-        needed by (1): PC19_the_model_server_downloads_its_engines_and_models · all downstream 6 ·
+        needed by (1): PC19_the_model_server_downloads_its_engines_and_models · all downstream 7 ·
         finishing it unlocks PC19_the_model_server_downloads_its_engines_and_models
       - 'DANGLING depends_on: PC_D16_ollama_first_guardian_if_needed'
       - >-

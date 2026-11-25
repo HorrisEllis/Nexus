@@ -1,0 +1,291 @@
+envelope: 1
+uuid: nexus-export-graph-phase:PC25_the_bridge_moves_into_the_model_server:755c18614ef90065
+type: graph
+id: phase:PC25_the_bridge_moves_into_the_model_server:755c18614ef90065
+context: dependency graph of phase PC25_the_bridge_moves_into_the_model_server
+intent: null
+summary: 40 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1795588111325
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795588111325
+lastSeenAt: 1795588111325
+fingerprint: null
+payload:
+  for: PC25_the_bridge_moves_into_the_model_server
+  kind: phase
+  repo: null
+  hash: 755c18614ef90065
+  nodes:
+    - path: clear-glass/src/copilot/bridge.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: cos/build/emerge-build.js
+      role: changes
+      exists: true
+      system: cos
+    - path: guardian/lib/dispatcher.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: idearium/agent-suite/index.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: inference/bridge/config.js
+      role: changes
+      exists: false
+      system: null
+    - path: inference/bridge/lib/model-inventory.js
+      role: changes
+      exists: false
+      system: null
+    - path: inference/bridge/lib/ollama-client.js
+      role: changes
+      exists: false
+      system: null
+    - path: inference/bridge/ollama-runtime.js
+      role: changes
+      exists: false
+      system: null
+    - path: inference/bridge/routes/ollama-compat.js
+      role: changes
+      exists: false
+      system: null
+    - path: inference/bridge/server.js
+      role: changes
+      exists: false
+      system: null
+    - path: inference/compartment.json
+      role: changes
+      exists: false
+      system: null
+    - path: lib/cli/nexus-repl.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/cli/nexus.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/hat-seed-ollama-personalities.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/vector-memory.js
+      role: changes
+      exists: true
+      system: lib
+    - path: orchestrator/lib/autonomous-loop.js
+      role: changes
+      exists: true
+      system: orchestrator
+    - path: clear-glass/src/main/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.pre-userscripts.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: guardian/lib/index.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: tests/copilot-bridge-direct-dispatch.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/dispatcher-ping-gate.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/dispatcher-stale-socket.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/clear-glass-agent-surface.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-cg-agent-doors.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-dispatcher-deepseek-ncp.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-guardian-mesh-client.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-guardian-stack-sim.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: clear-glass/src/copilot/chat-store.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/copilot/context-need.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/copilot/hat.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/copilot/tools.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/copilot/verbs.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/page/field.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/site-settings/readers.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: copilot/lib/nexus-ask.js
+      role: uses
+      exists: true
+      system: copilot
+    - path: lib/agent-tools/tool-guide.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/blueprint-index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/claude-code-backend.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/listener-commands.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: clear-glass/src/copilot/bridge.js
+      to: clear-glass/src/copilot/tools.js
+      kind: requires
+    - from: clear-glass/src/copilot/bridge.js
+      to: clear-glass/src/copilot/chat-store.js
+      kind: requires
+    - from: clear-glass/src/copilot/bridge.js
+      to: clear-glass/src/site-settings/readers.js
+      kind: requires
+    - from: clear-glass/src/copilot/bridge.js
+      to: clear-glass/src/copilot/context-need.js
+      kind: requires
+    - from: clear-glass/src/copilot/bridge.js
+      to: clear-glass/src/copilot/hat.js
+      kind: requires
+    - from: clear-glass/src/copilot/bridge.js
+      to: clear-glass/src/copilot/verbs.js
+      kind: requires
+    - from: clear-glass/src/copilot/bridge.js
+      to: lib/listener-commands.js
+      kind: requires
+    - from: clear-glass/src/copilot/bridge.js
+      to: copilot/lib/nexus-ask.js
+      kind: requires
+    - from: clear-glass/src/copilot/bridge.js
+      to: clear-glass/src/page/field.js
+      kind: requires
+    - from: clear-glass/src/copilot/bridge.js
+      to: lib/blueprint-index.js
+      kind: requires
+    - from: clear-glass/src/copilot/bridge.js
+      to: lib/agent-tools/tool-guide.js
+      kind: requires
+    - from: clear-glass/src/copilot/bridge.js
+      to: lib/claude-code-backend.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/copilot/bridge.js
+      kind: requires
+    - from: clear-glass/src/main/index.pre-userscripts.js
+      to: clear-glass/src/copilot/bridge.js
+      kind: requires
+    - from: tests/copilot-bridge-direct-dispatch.test.js
+      to: clear-glass/src/copilot/bridge.js
+      kind: requires
+    - from: tests/modules/clear-glass-agent-surface.test.js
+      to: clear-glass/src/copilot/bridge.js
+      kind: requires
+    - from: tests/modules/test-cg-agent-doors.test.js
+      to: clear-glass/src/copilot/bridge.js
+      kind: requires
+    - from: guardian/lib/index.js
+      to: guardian/lib/dispatcher.js
+      kind: requires
+    - from: tests/dispatcher-ping-gate.test.js
+      to: guardian/lib/dispatcher.js
+      kind: requires
+    - from: tests/dispatcher-stale-socket.test.js
+      to: guardian/lib/dispatcher.js
+      kind: requires
+    - from: tests/modules/test-dispatcher-deepseek-ncp.js
+      to: guardian/lib/dispatcher.js
+      kind: requires
+    - from: tests/modules/test-guardian-mesh-client.js
+      to: guardian/lib/dispatcher.js
+      kind: requires
+    - from: tests/modules/test-guardian-stack-sim.test.js
+      to: guardian/lib/dispatcher.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/agent-suite/index.js
+      kind: requires
+  crossings:
+    - from: clear-glass/src/copilot/bridge.js
+      to: copilot/lib/nexus-ask.js
+      fromSystem: clear-glass
+      toSystem: copilot
+      kind: system
+      known: true
+  ready: true
+  dag:
+    layer: 4
+    deps:
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC19_the_model_server_downloads_its_engines_and_models
+    dependents: []
+    upstream:
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC18_cos_runs_the_model_server
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC19_the_model_server_downloads_its_engines_and_models
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC9_the_desktop_driver
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D14_a_desktop_driver_for_agents
+    downstream: []
+    blockedBy:
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC19_the_model_server_downloads_its_engines_and_models
+    unlocks: []
+    conflicts:
+      - with: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC20_cos_runs_the_inference_system
+        files:
+          - inference/compartment.json
+    dangling: []
+    lines:
+      - layer 4 · blocked by PC19_the_model_server_downloads_its_engines_and_models
+      - 'depends on (1): PC19_the_model_server_downloads_its_engines_and_models · all upstream 4'
+      - 'needed by (0): —'
+      - >-
+        same files as PC20_cos_runs_the_inference_system with no order between them:
+        inference/compartment.json
+    edges:
+      - from: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC19_the_model_server_downloads_its_engines_and_models
+        kind: declared

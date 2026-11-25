@@ -7,11 +7,11 @@ intent: null
 summary: 3 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1795583463307
+exported_at: 1795588111299
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1795583463307
-lastSeenAt: 1795583463307
+firstSeenAt: 1795588111299
+lastSeenAt: 1795588111299
 fingerprint: null
 payload:
   for: PC20_cos_runs_the_inference_system
@@ -55,7 +55,10 @@ payload:
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC19_the_model_server_downloads_its_engines_and_models
     unlocks:
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC21_hats_and_agent_tools_on_the_model_server
-    conflicts: []
+    conflicts:
+      - with: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC25_the_bridge_moves_into_the_model_server
+        files:
+          - inference/compartment.json
     dangling: []
     lines:
       - layer 4 · blocked by PC19_the_model_server_downloads_its_engines_and_models
@@ -63,6 +66,9 @@ payload:
       - >-
         needed by (2): PC21_hats_and_agent_tools_on_the_model_server, PC24_every_request_a_timeline
         · all downstream 4 · finishing it unlocks PC21_hats_and_agent_tools_on_the_model_server
+      - >-
+        same files as PC25_the_bridge_moves_into_the_model_server with no order between them:
+        inference/compartment.json
     edges:
       - from: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC19_the_model_server_downloads_its_engines_and_models
         kind: declared

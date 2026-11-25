@@ -7,11 +7,11 @@ intent: null
 summary: 5 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1795583463303
+exported_at: 1795588111294
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1795583463303
-lastSeenAt: 1795583463303
+firstSeenAt: 1795588111294
+lastSeenAt: 1795588111294
 fingerprint: null
 payload:
   for: PC19_the_model_server_downloads_its_engines_and_models
@@ -48,6 +48,7 @@ payload:
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC18_cos_runs_the_model_server
     dependents:
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC20_cos_runs_the_inference_system
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC25_the_bridge_moves_into_the_model_server
     upstream:
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC18_cos_runs_the_model_server
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC9_the_desktop_driver
@@ -58,18 +59,21 @@ payload:
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC22_each_request_to_the_smallest_model_that_can
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC23_a_request_a_bar_of_chunks
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC24_every_request_a_timeline
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC25_the_bridge_moves_into_the_model_server
     blockedBy:
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC18_cos_runs_the_model_server
     unlocks:
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC20_cos_runs_the_inference_system
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC25_the_bridge_moves_into_the_model_server
     conflicts: []
     dangling: []
     lines:
       - layer 3 · blocked by PC18_cos_runs_the_model_server
       - 'depends on (1): PC18_cos_runs_the_model_server · all upstream 3'
       - >-
-        needed by (1): PC20_cos_runs_the_inference_system · all downstream 5 · finishing it unlocks
-        PC20_cos_runs_the_inference_system
+        needed by (2): PC20_cos_runs_the_inference_system,
+        PC25_the_bridge_moves_into_the_model_server · all downstream 6 · finishing it unlocks
+        PC20_cos_runs_the_inference_system, PC25_the_bridge_moves_into_the_model_server
     edges:
       - from: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC18_cos_runs_the_model_server
         kind: declared
