@@ -1290,6 +1290,28 @@ expanded_2026_11_13_ollama:
 #   - the fallback: "Other local, then Guardian" — no Ollama → another local server that answers (LM Studio, llama.cpp) → Guardian, each said.
 #   - the language: "Emerge only" — the lookup and the start are written in Emerge, not JavaScript (his 2026-11-07 rule, applied).
 #   - Ollama's own app: "No. Let’s build our own with emerge. Completely ours." — two readings, his to choose (PC_D17).
+    expanded_2026_11_24_scaling_by_the_queue: >-
+      His words (2026-11-24): "its dumb you cant set that per model, but we could right? like if we need the 16b, change the setting back to 1
+      or 2 depending on the queue then back when its the 3b, like dynamically scaling?" · "lets do it. you think raid?" · "integrating and
+      creating out own backend for ollama out of emerge would be nice if it ran smoother, and we had more control over it like with the rewind
+      engine or flight recorder like idearium". Found that day: the 16b (11 GB of 16) and the 3b loaded together froze his PC; a running job
+      could not be stopped. Ollama reads OLLAMA_NUM_PARALLEL and OLLAMA_MAX_LOADED_MODELS only at its start.
+      Owners (§5.9-§5.16): the Ollama system reports its queue (by model) and what is loaded, through its own routes; RAID decides the mode
+      (routing is RAID's, PC16); COS applies it, restarting the model server with that mode's settings (COS supervises processes; an act on his
+      machine is a proposal until he allows it, PC15).
+      Modes are settings, additive (his rule 2026-11-24: settings for the dynamic and additive): "3b swarm" (NUM_PARALLEL 3, MAX_LOADED 1),
+      "16b solo" (NUM_PARALLEL 1, MAX_LOADED 1), more as he adds them, each with the free memory it needs. Slices: a) the bridge: a big model is
+      asked with keep_alive 0 and free memory is checked before it loads (no restart); b) the queue by model and the jobs grouped, so the walls
+      of one model run together (his "batch and inject a bunch in one go"); c) RAID's choice of mode from the queue and the memory; d) COS
+      restarts the model server in that mode, after the running jobs finish; e) the backend in Emerge (PC_D17) with its flight recorder and
+      rewind for every model call (ollama/lib/tape.js replays calls today).
+      His words: "we could dynamically scale that up also couldn't we? hooked into the resource manager? not polling unless its to scale?" The
+      trigger is COS's resource manager (Resources, /api/cos/usage): memory pressure and the queue changing are events, and the mode changes on
+      them; nothing polls while it runs; only a switch checks, to confirm the memory is back before the next model loads. Slice a, built
+      2026-11-24: the bridge reads each model's size from Ollama (details.parameter_size), not only its tag, so a big model with no size in its
+      tag is unloaded when it answers (the 16b's tag had none: kept 30 min, his PC froze).
+      Proof: with the 16b needed by a wall, the PC does not freeze (free memory stays above the mode's floor), the 16b group runs, and the 3b
+      swarm comes back by itself.
 decisions_2026_11_13_model_server:
   PC_D17_our_own_model_server_in_emerge:
     status: "DECIDED 2026-11-13 by James: reading a, widened to an inference supervisor in Emerge, Ollama its first backend (see the addendum after)"

@@ -13,7 +13,18 @@ const { state } = require('./state.js');
 const OLLAMA_HOST = config.OLLAMA_HOST;
 // 0.60.620 — smallest first (his, 2026-11-20): a small model stays loaded (config.KEEP_ALIVE), a big one is unloaded once it answers (KEEP_ALIVE_BIG);
 // the size is read from the model's own tag (":3b", ":16b", ":30b"); a tag with no size keeps the small rule
-function _sizeB(model) { const m = /[:_-](\d+(?:\.\d+)?)b\b/i.exec(String(model || '')); return m ? parseFloat(m[1]) : null; }
+// 2026-11-24 — a tag with no size ("hf.co/…DeepSeek-Coder-V2-Lite…GGUF:Q4_K_M") was taken for a small model and kept loaded 30 min: 11 GB of his
+// 16 held next to the 3b, and his PC froze (James: "as long as my pc doesn't freeze up"). The size is now Ollama's own word for each installed
+// model (GET /api/tags, details.parameter_size), read when the bridge starts and again when a model it does not know is asked; the tag is the fallback
+const _SIZES = new Map();
+function _readSizes() {
+  try { const u = new URL(/^https?:/.test(String(OLLAMA_HOST || '')) ? OLLAMA_HOST : 'http://' + (OLLAMA_HOST || '127.0.0.1:11434'));
+    http.get({ host: u.hostname, port: u.port || 11434, path: '/api/tags', timeout: 5000 }, (r) => { let t = ''; r.on('data', (c) => t += c); r.on('end', () => { try {
+      for (const x of JSON.parse(t).models || []) { const p = /(\d+(?:\.\d+)?)\s*B/i.exec(String((x.details && x.details.parameter_size) || '')); if (p) _SIZES.set(x.name, parseFloat(p[1])); } } catch (_) {} }); })
+      .on('error', () => {}).on('timeout', function () { this.destroy(); }); } catch (_) {}
+}
+setImmediate(_readSizes);
+function _sizeB(model) { const k = String(model || ''); if (_SIZES.has(k)) return _SIZES.get(k); const m = /[:_-](\d+(?:\.\d+)?)b\b/i.exec(k); if (!m) _readSizes(); return m ? parseFloat(m[1]) : null; }
 function _keepAliveFor(model) { const b = _sizeB(model); const v = b != null && b > (config.KEEP_ALIVE_MAX_B || 4) ? config.KEEP_ALIVE_BIG : config.KEEP_ALIVE; return v != null && v !== '' ? { keep_alive: /^\d+$/.test(String(v)) ? Number(v) : v } : {}; }
 
 // 0.60.535 PC18 slice a — James, 2026-11-13: "Have it use any that's on my pc. Fallback to any other?" · 2026-11-14: "We need the highest
