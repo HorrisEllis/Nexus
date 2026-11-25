@@ -7,11 +7,31 @@ use "./settings.eg" as S
 
 let FILE = "inference/data/settings.json"
 
+// the homes to look in: the one given first, then every user folder on this machine (2026-11-24: COS runs as a Windows service, SYSTEM's
+// home has no models; his are under C:/Users/<him>). His saved store and engine paths win over all of these.
+fn homes(home: string): list {
+  var out = [home]
+  for root in ["C:/Users/", "/home/", "/Users/"] {
+    if path_exists(root) {
+      for u in list_dir(root) { if is_dir(root + u) and not (out contains root + u) { out = push(out, root + u) } }
+    }
+  }
+  return out
+}
+
 fn base(home: string): map {
   let mine = S.overrides(FILE)
   var store = home + "/.ollama/models"
+  var cands = ["/usr/local/bin/llama-server", "/usr/bin/llama-server"]
+  var found = false
+  for h in homes(home) {
+    cands = push(cands, h + "/AppData/Local/Programs/Ollama/lib/ollama/llama-server.exe")
+    if not found and len(M.models(h + "/.ollama/models")) > 0 {
+      store = h + "/.ollama/models"
+      found = true
+    }
+  }
   if has(mine, "stores") and len(mine.stores) > 0 { store = mine.stores[0] }
-  var cands = [home + "/AppData/Local/Programs/Ollama/lib/ollama/llama-server.exe", "/usr/local/bin/llama-server", "/usr/bin/llama-server"]
   if has(mine, "engines") and len(mine.engines) > 0 and has(mine.engines[0], "paths") { cands = mine.engines[0].paths }
   let ms = M.models(store)
   let e = M.engine(cands)
