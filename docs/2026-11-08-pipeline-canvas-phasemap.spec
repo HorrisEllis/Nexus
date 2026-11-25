@@ -1682,6 +1682,8 @@ phases_addendum_2026_11_13_rca:
 # no llama-server and no .gguf anywhere on D: or his user folder (6 deep). COS says "no system \"inference\" is declared (its compartment.json
 # has no runtime.process)". settings.eg already names the recorder (record, keep_days 30, slot_save, replay, hook: "Idearium rewind engine and
 # flight recorder"); nothing reads it yet. So nothing local answers today, and the order below starts with getting an engine and a model back.
+# Said: PC18's correction asked that ours be benchmarked against the Ollama path before Ollama's app was retired. The app is gone, so that
+# benchmark cannot run as written; the comparison left is against the runs already recorded on the Ollama path (EMB8's logged runs).
 # Drift, said: PC18's files_added named cos/inference/*; what was built is inference/ at the root, its own system (§5.9). Kept as built.
 # Axioms: §3.3 (map before build), §8.6 (reuse: everything below names what it stands on), §5.9–§5.16 (each system's own data and hooks; the
 # model server reached only through its drawbridge), §17.13 (Emerge, no new JS but where JS is replaced), §1.2 (each gap and fallback said).
@@ -1727,7 +1729,7 @@ phases_addendum_2026_11_24_model_server:
     james: '"What ever model can handle the request handles the request."'
     depends_on: [PC21_hats_and_agent_tools_on_the_model_server]
     files: [lib/model-door.js, lib/agent-capability-profile.js, cos/automation/ladder.eg]
-    reuse: "lib/model-door.js (the one door for which model); lib/agent-capability-profile.js (what each model has really done, measured); cos/automation/ladder.eg (the rungs); PC17's fit by memory"
+    reuse: "lib/model-door.js (the one door for which model); lib/agent-capability-profile.js (what each model has really done, measured); cos/automation/ladder.eg (the rungs); PC17's fit by memory; COS's resource manager (cos/manager/resources.js) extended with VRAM and admission, as PC18's correction of 2026-11-24 decided, never a second manager"
     does: "a request goes to the smallest local model whose measured record says it can do that kind of request, then up the ladder (a bigger local model, Guardian, Claude last), each climb said with why"
     proof: "a request the 3b has passed before stays on the 3b; one it has failed goes up one rung, said"
   PC23_a_request_a_bar_of_chunks:
@@ -1736,7 +1738,7 @@ phases_addendum_2026_11_24_model_server:
     james: '"progress bars for each request. With green chunks for compiled. Grey for gaps, and red for error, bug or missing. That way we can have non linear pipeline generation." · "cos automation engine and pipelin"'
     depends_on: [PC22_each_request_to_the_smallest_model_that_can]
     files: [cos/ui/request-bars-preview/index.html, cos/pipeline/box.eg, cos/pipeline/gate.eg, cos/ui/automation/engine.js]
-    reuse: "the request files and RAID's contract per request (0.60.464–476); a gate's PASS/FAILED; the canvas's bars (0.60.630); PC_D15's field and radial kinds"
+    reuse: "the request files and RAID's contract per request (0.60.464–476); a gate's PASS/FAILED; the canvas's bars (0.60.630); PC_D15's field and radial kinds; the run canvas preview (cos/ui/run-canvas-preview, branch cg-profiles, 98a6348ee: each gate a node, the timeline, his 'it needs to be the visual canvas. not a eye sore of a list') and the flight map (3f3e6b5aa); RL_D10 (a red chunk, a gap or bug, becomes an end state of its own, decomposed the same way)"
     does: >-
       Each request is a bar of chunks: green compiled (its gate passed), grey a gap (not done), red an error, a bug or something missing. A free
       model takes any grey chunk it fits (PC22), in any order; a red chunk goes back as a gap with its why. The bar fills wherever work lands:
@@ -1748,6 +1750,7 @@ phases_addendum_2026_11_24_model_server:
     james: '"i want the timeline working, with the steps and gates hooked into the new model server. rewind engine, snapshots, flight recorder" · "a timeline for each timeline, contract."'
     depends_on: [PC23_a_request_a_bar_of_chunks, PC20_cos_runs_the_inference_system]
     files: [inference/recorder.eg, cos/pipeline/contract.eg, cos/foundation/snapshot.js, ollama/lib/tape.js]
+    decided_by: "PC18's decided_2026_11_24_its_home_and_engine (his): the flight recorder and rewind of every call are ours, Idearium's hooked in"
     reuse: "settings.eg's recorder block; ollama/lib/tape.js (every model call a frame, a run replayed without the model), moved to the model server; llama-server's --slot-save-path (the model's own state, the rewind hook); cos/foundation/snapshot.js SnapshotEngine; GS1's checkpoint at each gate PASS; clear-glass/src/rewind/engine.js; Versionium; the flight recorder (/api/repos/<uuid>/flight/<run>)"
     does: >-
       Every chunk that changes colour is an event on its timeline, kept as files (no second store): the model call's frame, the gate's verdict, a
