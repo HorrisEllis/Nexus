@@ -1,0 +1,5 @@
+// cos/ui/inference-settings-preview/models.eg — the preview's read of the models: our own inference/models.eg, printed as JSON (reads only).
+//   eg run models.eg <model store> <engine path>
+use "../../../inference/models.eg" as M
+let a = args()
+print(json({ models: M.models(a[0]), engine: M.engine([a[1]]) }))

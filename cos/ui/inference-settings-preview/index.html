@@ -1,0 +1,110 @@
+<!doctype html>
+<!-- PREVIEW ONLY (PC18 settings_2026_11_24) — COS's settings for our own model server. James, 2026-11-24: "I want cos to have full extensive
+     settings for all of this. Then we can hook it into the gates." Live data: the models on his PC (our inference/models.eg), what is loaded,
+     free memory, the bridge's current values. Nothing is saved: every control shows what it will set once built. -->
+<html lang="en" data-theme="nexus">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Model server · COS</title>
+<link rel="stylesheet" href="/core/theme.css"><link rel="stylesheet" href="/core/core.css">
+<style>
+  body { margin: 0; background: var(--nx-ink, #0b0d12); color: var(--nx-text, #d9e1ea); font: 14px var(--font, system-ui); }
+  .wrap { display: grid; grid-template-columns: 220px 1fr; min-height: 100vh; }
+  nav { border-right: 1px solid var(--line-soft); padding: 22px 12px; position: sticky; top: 0; height: 100vh; box-sizing: border-box; }
+  nav .eyebrow { font: 500 10.5px var(--mono, monospace); letter-spacing: .14em; color: var(--nx-muted); text-transform: uppercase; padding: 0 10px; }
+  nav h1 { font-size: 18px; margin: 6px 10px 18px; color: var(--nx-bright); }
+  nav button { display: flex; justify-content: space-between; width: 100%; text-align: left; padding: 9px 12px; margin: 2px 0; border-radius: 8px; border: 1px solid transparent; background: transparent; color: var(--nx-dim); font: 13.5px var(--font); cursor: pointer; }
+  nav button:hover { color: var(--nx-bright); background: var(--ac-ghost); }
+  nav button.on { color: var(--nx-bright); background: var(--ac-ghost); border-color: var(--ac-border-hi); }
+  nav button i { font-style: normal; font: 11px var(--mono, monospace); color: var(--nx-muted); }
+  main { padding: 26px 32px 60px; max-width: 1100px; }
+  .head { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
+  .head h2 { margin: 0; font-size: 22px; color: var(--nx-bright); } .lede { color: var(--nx-dim); max-width: 760px; line-height: 1.5; margin: 6px 0 18px; }
+  .stat { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 16px; }
+  .card { background: var(--glass, rgba(255,255,255,.03)); border: 1px solid var(--line-soft); border-radius: 14px; padding: 16px 18px; margin-bottom: 14px; }
+  .card h3 { margin: 0 0 4px; font-size: 15px; color: var(--nx-bright); display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .card .sub { color: var(--nx-muted); font: 12px var(--mono, monospace); word-break: break-all; }
+  .row { display: grid; grid-template-columns: 220px 1fr; gap: 6px 18px; align-items: center; padding: 9px 0; border-top: 1px solid var(--line-soft); }
+  .row:first-of-type { border-top: 0; } .row label { font-weight: 500; } .row .help { grid-column: 2; font-size: 12px; color: var(--nx-muted); }
+  .row .ctl { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  select, input[type=text], input[type=number] { height: 34px; padding: 0 10px; border-radius: 8px; border: 1px solid var(--line); background: color-mix(in srgb, var(--nx-ink) 70%, transparent); color: var(--nx-bright); font: 13px var(--font); }
+  input[type=number] { width: 110px; } input[type=text] { min-width: 320px; } select { min-width: 220px; }
+  input[type=checkbox] { width: 18px; height: 18px; accent-color: var(--ac, #60a5fa); }
+  .pill { display: inline-flex; align-items: center; gap: 6px; height: 24px; padding: 0 10px; border-radius: 999px; border: 1px solid var(--line-soft); font: 11.5px var(--mono, monospace); color: var(--nx-dim); }
+  .pill.ok { color: #34d399; border-color: rgba(52,211,153,.4); } .pill.warn { color: #fbbf24; border-color: rgba(251,191,36,.4); }
+  .mem { height: 8px; border-radius: 99px; background: var(--line-soft); overflow: hidden; margin: 8px 0 2px; } .mem b { display: block; height: 100%; background: linear-gradient(90deg, #34d399, #fbbf24, #f87171); }
+  .note { color: var(--nx-muted); font-size: 12px; margin-top: 18px; } table { width: 100%; border-collapse: collapse; } td, th { text-align: left; padding: 8px 6px; border-top: 1px solid var(--line-soft); font-size: 13px; } th { font: 500 10.5px var(--mono, monospace); color: var(--nx-muted); text-transform: uppercase; letter-spacing: .1em; }
+  @media (max-width: 760px) { .wrap { grid-template-columns: 1fr; } nav { position: static; height: auto; } .row { grid-template-columns: 1fr; } .row .help { grid-column: 1; } input[type=text] { min-width: 0; width: 100%; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav id="nav"><div class="eyebrow">Systems · inference</div><h1>Model server</h1></nav>
+  <main id="main">reading…</main>
+</div>
+<script>
+const $ = (s) => document.querySelector(s), esc = (s) => String(s == null ? '' : s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+const GB = (b) => (b / 1e9).toFixed(1) + ' GB', short = (n) => String(n).replace(/^hf\.co\/[^/]+\//, '').replace(/-Instruct-abliterated-i1-GGUF/, '');
+const INTENTS = [['coding', 'Generating / coding'], ['spec', 'Speccing / mapping'], ['reason', 'Complex reasoning'], ['debug', 'Debugger / adversarial'], ['copilot', 'Co-pilot / orchestrator']];
+let D = null, G = 'models';
+const row = (label, ctl, help) => `<div class="row"><label>${label}</label><div class="ctl">${ctl}</div>${help ? `<div class="help">${help}</div>` : ''}</div>`;
+const num = (v, unit) => `<input type="number" value="${esc(v)}">${unit ? ` <span class="sub">${unit}</span>` : ''}`;
+const sel = (opts, v) => `<select>${opts.map((o) => `<option ${o === v ? 'selected' : ''}>${esc(o)}</option>`).join('')}</select>`;
+const chk = (on) => `<input type="checkbox" ${on ? 'checked' : ''}>`;
+const sizeB = (m) => (/:(\d+)b\b/i.exec(m.name) || [])[1] ? Number(/:(\d+)b\b/i.exec(m.name)[1]) : m.bytes > 8e9 ? 16 : 3;
+const GROUPS = {
+  engines: ['Engines', 'The engine plugins, in the order they are tried. Ours supervises; the engine only runs the model. A new engine is added here, never in code.', () => `
+    <div class="card"><h3>llama-server <span class="pill ok">plugin 1 · found</span></h3><div class="sub">${esc(D.engine || 'not found')}</div>
+      ${row('Path candidates', `<input type="text" value="${esc(D.engine)}">`, 'Tried in order; the first that exists runs. Add your own build here.')}
+      ${row('Used for', sel(['every model', 'models it can run', 'only when picked'], 'every model'))}</div>
+    <div class="card"><h3>Ollama <span class="pill">plugin 2</span></h3>${row('Address', '<input type="text" value="http://127.0.0.1:11434">')}${row('Used when', sel(['plugin 1 cannot run the model', 'never', 'always'], 'plugin 1 cannot run the model'))}</div>
+    <div class="card"><h3>Model stores</h3>${row('Read models from', `<input type="text" value="${esc(D.store)}">`, 'Where the model files are. More than one may be added.')}</div>`],
+  models: ['Models', 'One card per model found on this PC (read by our own inference/models.eg). Each has its own server and its own settings: what Ollama cannot do per model.', () => D.models.map((m, i) => { const b = sizeB(m), big = b > 4, loaded = D.loaded.includes(m.name);
+    return `<div class="card"><h3>${esc(short(m.name))} <span class="pill">${GB(m.bytes)}</span> ${loaded ? '<span class="pill warn">loaded now (Ollama)</span>' : '<span class="pill">not loaded</span>'}</h3><div class="sub">${esc(m.name)}</div>
+      ${row('On', chk(b < 30), 'Off: never started, never asked.')}
+      ${row('Port', num(9931 + i))}
+      ${row('Requests at once (slots)', num(big ? 1 : 3), 'llama-server -np. The 3b answers three gates together; the 16b one.')}
+      ${row('Context', num(big ? 8192 : 4096, 'tokens'), 'llama-server -c.')}
+      ${row('GPU layers', num(big ? 8 : 99), 'llama-server -ngl. Your card has 4 GB: the 3b fits whole; the 16b mostly on the CPU.')}
+      ${row('CPU threads', num(8))}
+      ${row('After answering', sel(['stay loaded', 'free its memory', 'stay loaded for…'], big ? 'free its memory' : 'stay loaded'))}
+      ${row('Serves', INTENTS.map(([k, l]) => `<label class="pill"><input type="checkbox" ${(!big && k === 'coding') || (big && k !== 'coding') ? 'checked' : ''}> ${l}</label>`).join(' '), 'The intents this model may be routed for (RAID routes; this is the menu it reads).')}</div>`; }).join('')],
+  intents: ['Intent routing', 'For each intent, which model, then which next if it reaches a wall. A drop-down of every installed model. RAID routes by this map.', () => { const names = D.models.map((m) => short(m.name)), small = names.find((n) => /3b/.test(n)) || names[0], big = names.find((n) => /DeepSeek/i.test(n)) || names[0];
+    return `<div class="card"><table><tr><th>Intent</th><th>First</th><th>At a wall</th><th>Then</th></tr>${INTENTS.map(([k, l]) => `<tr><td>${l}</td><td>${sel(names, k === 'coding' ? small : big)}</td><td>${sel(['(none)', ...names], k === 'coding' ? big : '(none)')}</td><td>${sel(['(none)', 'Guardian', 'Co-pilot', 'ask me'], 'ask me')}</td></tr>`).join('')}</table></div>`; }],
+  modes: ['Modes', 'A mode is which models run, with how many slots, and when it is chosen. Additive: add your own. RAID picks the mode; COS applies it on the resource manager\'s events, never by polling.', () => `
+    ${[['3b swarm', '3b × 3 slots', 'pieces waiting for the 3b', 2500], ['16b solo', '16b × 1 slot; the 3b stopped', 'a wall in the queue', 11500], ['Mixed', '3b × 2, 16b × 1', 'only when free memory allows', 14000]].map(([n, w, when, mb]) => `<div class="card"><h3>${n}</h3>${row('Runs', `<span class="pill">${w}</span>`)}${row('Chosen when', sel(['pieces waiting for the 3b', 'a wall in the queue', 'only when free memory allows', 'I pick it'], when))}${row('Needs free', num(mb, 'MB'))}</div>`).join('')}
+    <div class="card"><h3>+ Add a mode</h3><div class="sub">a name, its models and slots, when it is chosen, the memory it needs</div></div>`],
+  memory: ['Memory', 'The machine\'s memory, live. The floor is never crossed: near it, the job waits, a model is freed, or the mode changes, your choice.', () => { const used = D.totalMB - D.freeMB;
+    return `<div class="card"><h3>Now <span class="pill ${D.freeMB < 1500 ? 'warn' : 'ok'}">${D.freeMB} MB free of ${D.totalMB}</span></h3><div class="mem"><b style="width:${Math.round(used / D.totalMB * 100)}%"></b></div><div class="sub">loaded: ${esc(D.loaded.map(short).join(', ') || 'nothing')}</div></div>
+      <div class="card">${row('Floor (never below)', num(1500, 'MB free'))}${row('Near the floor', sel(['free the biggest model', 'hold the job', 'switch to a smaller mode'], 'free the biggest model'))}${row('Events from', sel(['COS resource manager', 'off'], 'COS resource manager'), 'Memory pressure is an event; nothing polls while it runs.')}</div>`; }],
+  queue: ['Queue', 'How jobs wait, time out and are stopped.', () => `<div class="card">
+    ${row('First token within', num(300, 's'), 'A model that sends nothing this long is stopped and its job asked again.')}
+    ${row('Whole answer within', num(900, 's'))}
+    ${row('Retries', num(2))}
+    ${row('A job whose run is gone', sel(['stop it, free its model', 'let it finish'], 'stop it, free its model'), 'Today a running job cannot be stopped (SB2): this is the fix.')}
+    ${row('Pieces per call (batch)', num(1), 'More than one independent piece in one call (SB4).')}
+    ${row('Bridge now', `<span class="pill">jobs at once ${esc(D.bridge.MAX_CONCURRENT)}</span><span class="pill">small stays ${esc(D.bridge.KEEP_ALIVE)}</span><span class="pill">big above ${esc(D.bridge.KEEP_ALIVE_MAX_B)}B freed</span>`)}</div>`],
+  ladder: ['Ladder and walls', 'A bigger model only at a wall. What counts as a wall is set here.', () => `<div class="card">
+    ${row('A wall is', sel(['the breakdown exhausted (no new smaller piece)', 'N refused tries', 'either'], 'the breakdown exhausted (no new smaller piece)'))}
+    ${row('Breakdown depth', sel(['no limit (stops when nothing new)', '4', '8'], 'no limit (stops when nothing new)'))}
+    ${row('Temperature per try', '<input type="text" value="0.1, 0.5, 0.9">')}
+    ${row('Each wall', sel(['a row in the build, and a request to fix it (SB8)', 'a row only'], 'a row in the build, and a request to fix it (SB8)'))}</div>`],
+  recorder: ['Recorder and rewind', 'Every call kept, so any run can be replayed or rewound without the model.', () => `<div class="card">
+    ${row('Record every call', chk(true), 'Prompt, tokens as they come, timing, the model\'s settings.')}
+    ${row('Keep for', num(30, 'days'))}
+    ${row('Engine slot save (rewind)', chk(true), 'llama-server --slot-save-path: a request\'s state saved and restored.')}
+    ${row('Replay without a model', chk(true), 'ollama/lib/tape.js today; ours next.')}
+    ${row('Hook into', sel(['Idearium rewind engine and flight recorder', 'off'], 'Idearium rewind engine and flight recorder'))}</div>`],
+  gates: ['Gates', 'Each kind of gate reads its settings from here by reference: its intent, its mode, its limits. A gate is set from COS, never from code.', () => `<div class="card"><table><tr><th>Gate</th><th>Intent</th><th>Brief</th><th>Tries</th></tr>${[['a function (Emerge piece)', 'coding', 'small (spec, contract, card)'], ['a breakdown (name a smaller piece)', 'coding', 'small'], ['a diagnosis', 'reason', 'medium'], ['a RAID contract', 'spec', 'medium'], ['a review', 'debug', 'medium']].map(([g, i, b]) => `<tr><td>${g}</td><td>${sel(INTENTS.map((x) => x[1]), INTENTS.find((x) => x[0] === i)[1])}</td><td>${sel(['small (spec, contract, card)', 'small', 'medium', 'large'], b)}</td><td>${num(3)}</td></tr>`).join('')}</table></div>`],
+};
+function draw() {
+  $('#nav').innerHTML = '<div class="eyebrow">Systems · inference</div><h1>Model server</h1>' + Object.entries(GROUPS).map(([k, [l]]) => `<button class="${k === G ? 'on' : ''}" data-g="${k}">${l}${k === 'models' ? `<i>${D.models.length}</i>` : ''}</button>`).join('');
+  $('#nav').querySelectorAll('[data-g]').forEach((b) => b.onclick = () => { G = b.dataset.g; draw(); });
+  const [t, lede, body] = GROUPS[G];
+  $('#main').innerHTML = `<div class="head"><div><h2>${t}</h2><p class="lede">${lede}</p></div><button class="btn primary" disabled title="Preview: nothing is saved">Save</button></div>
+    <div class="stat"><span class="pill ok">${D.models.length} models found</span><span class="pill ${D.engine ? 'ok' : 'warn'}">engine ${D.engine ? 'found' : 'missing'}</span><span class="pill ${D.freeMB < 1500 ? 'warn' : 'ok'}">${D.freeMB} MB free</span><span class="pill">preview · nothing saved</span></div>${body()}
+    <p class="note">Preview of PC18's settings (docs/2026-11-08-pipeline-canvas-phasemap.spec). Live: the models (our inference/models.eg), what is loaded, memory, the bridge's values. The numbers in the controls are suggested starting values, yours to change.</p>`;
+}
+fetch('/data').then((r) => r.json()).then((d) => { D = d; draw(); }).catch(() => { $('#main').textContent = 'The preview server did not answer.'; });
+</script>
+</body>
+</html>

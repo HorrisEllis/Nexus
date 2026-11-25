@@ -1357,6 +1357,23 @@ decisions_2026_11_13_model_server:
       flight recorder, hooked in). Backends as plugins: llama-server first (one server per model: its own parallel slots, context and memory,
       the model files already on his PC), Ollama second, an engine of our own later. Ollama's app is no longer needed once the first plugin runs.
       After SB1 (the proof), his order. His word the same day: "do it."
+    settings_2026_11_24: >-
+      His words (2026-11-24): "I want cos to have full extensive settings for all of this. Then we can hook it into the gates. Way too much we can
+      do with this." · his rule the same day: "hardcoded earns its place. settings are for the dynamic and additive ... anything that i would
+      have to manually change in code that should be mapped to a setting, or option." Owner: the inference system's own settings (its data, its
+      routes, §5.9), shown in COS under Systems > inference (SC29: each system's own settings, read from its contract). A gate reads them by
+      reference, never copies them. Preview first (his rule), then built. The settings, by group:
+      Engines: the backend plugins in order (llama-server, Ollama, more as added), each engine's path candidates, the model stores to read.
+      Models (one card per model found): on or off; port; slots (requests at once); context; GPU layers; threads; stays loaded or freed after
+      answering; the memory it may take; the intents it serves (generating/coding, speccing/mapping, complex reasoning, debugger/adversarial,
+      copilot/orchestrator: his intent map, a drop-down of every installed model).
+      Modes (additive): a name, the models and their slots, when it is chosen (the queue, a wall, his pick), the free memory it needs.
+      Memory: the floor never crossed, what to do near it (hold the job, free a model, switch the mode), events from COS's resource manager.
+      Queue: timeouts (first token, whole answer), retries, a job whose run is gone is stopped, batch size (pieces sent in one call).
+      Ladder and walls: per intent, the models smallest first; what counts as a wall (the breakdown exhausted); temperature per try.
+      Recorder and rewind: every call recorded (prompt, tokens as they come, timing, the model's settings); how long kept; the engine's slot
+      save for rewind; replay without a model.
+      Gates: per gate kind, its intent, mode, limits and brief size, so a gate is set from COS, not from code.
     slices_2026_11_24: >-
       The system is inference/ (a name of the coder's: his to rename). a) BUILT 2026-11-24: inference/models.eg reads the models on his PC from
       Ollama's store (manifests to GGUF blobs: name, file, bytes) and finds the engine (llama-server, the first candidate that exists);
