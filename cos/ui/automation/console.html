@@ -853,7 +853,7 @@ async function cosData() {
   const pipes = ((pl && pl.pipelines) || []).filter((p) => !p.archived).map((p) => ({ id: p.id, name: p.name, description: p.description || '', vars: p.vars || {}, settings: p.settings || {}, updatedAt: p.updatedAt, createdAt: p.createdAt || null,
     tasks: (p.tasks || []).map((t) => ({ id: t.id, label: t.label || t.id, depends_on: t.depends_on || t.dependsOn || [], step: t.step || null, gate: t.gate || null, retries: t.retries, onFail: t.onFail, when: t.when || null, method: t.method || null })) }));
   const b = ((lab && lab.builds) || []).slice().sort((x, y) => (y.at || 0) - (x.at || 0))[0];
-  const build = b ? { run: b.run, phase: b.phase, at: b.at, last: b.end || '', gaps: (b.pieces || []).map((p) => ({ name: p.name, state: p.status, asks: p.tries || 0, model: (p.models || [])[0] || null, note: cut(p.last || '', 200) })), rows: (b.steps || []).slice(-40).map((x) => ({ t: x.ts || x.at, state: x.state || x.step || '', gap: x.gap || null, note: cut(x.note || '', 240) })) } : null;
+  const build = b ? { run: b.run, phase: b.phase, at: b.at, last: b.end || '', gaps: (b.pieces || []).map((p) => ({ name: p.name, state: p.status, asks: p.tries || 0, model: (p.models || [])[0] || null, note: cut(p.last || '', 200) })), rows: String(b.steps || '').split(' > ').filter(Boolean).slice(-40).map((x) => ({ t: null, state: x, gap: null, note: '' })) } : null;
   return { at: Date.now(), jobs: [], runs: rr, pipelines: pipes, systems: ((sys && (sys.systems || sys)) || []).map((x) => ({ name: x.name, state: x.state, port: x.port })), host: use && use.usage ? use.usage.host : null, loaded: [], build };
 }
 async function tick() { try { const prev = S.D; S.D = await cosData(); S.ok = Date.now(); watch(prev, S.D); } catch (_) {}
