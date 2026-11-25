@@ -31,6 +31,7 @@ if cmd == "registry" { print(json({ ok: true, hook: "registry", value: { record:
 else if cmd == "settings" { send inference.Inference.settings { home: q.home } }
 else if cmd == "save" { send inference.Inference.save { home: q.home, change: q.change } }
 else if cmd == "models" { send inference.Inference.models { home: q.home } }
+else if cmd == "launch" { send inference.Inference.launch { home: q.home, model: q.model } }
 else { print(json({ ok: false, hook: cmd, value: null, why: "no in hook " + cmd + "; ask registry for the hooks" })) }
 
 if last != null { print(json(last)) }

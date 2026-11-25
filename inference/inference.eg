@@ -4,6 +4,7 @@
 // James Brooks, 2026-11-24: "also everything has to use the drawbridge" · "is it better decoupled?" · "Remeber no coupling".
 use "./models.eg" as M
 use "./settings.eg" as S
+use "./server.eg" as V
 
 let FILE = "inference/data/settings.json"
 
@@ -60,6 +61,24 @@ component Inference {
   in models(q: { home: string }) {
     let b = base(q.home)
     emit out answer { hook: "models", ok: true, value: { models: b.models, engine: b.engine }, why: null }
+  }
+
+  // 2026-11-24 PC25 b, his: "i just want to get back to the pipeline". How one model's engine is started: the engine, its options from the
+  // model's own settings (server.eg args_for) and its port. The model server's process (the bridge, which stays running) starts it; a hook is
+  // a short process, and an engine started from it would hold COS's call open.
+  in launch(q: { home: string, model: string }) {
+    let b = base(q.home)
+    let s = S.merge(b.defaults, S.overrides(FILE))
+    var file = ""
+    for m in b.models { if m.name == q.model { file = m.file } }
+    if file == "" or not has(s.models, q.model) {
+      emit out answer { hook: "launch", ok: false, value: null, why: "no model " + q.model + " in the model server's store" }
+    } else if b.engine == "" {
+      emit out answer { hook: "launch", ok: false, value: null, why: "no engine found (llama-server)" }
+    } else {
+      let ms = s.models[q.model]
+      emit out answer { hook: "launch", ok: true, value: { model: q.model, engine: b.engine, args: V.args_for(file, ms), port: ms.port, on: ms.on }, why: null }
+    }
   }
 
   out answer: { hook: string, ok: bool, value: any, why: any }

@@ -11,7 +11,8 @@ let MODEL_LAYER = "application/vnd.ollama.image.model"
 /** a manifest's path parts [host, namespace, model, tag] as the name the model is asked by ("huihui_ai/qwen2.5-coder-abliterate:3b") */
 fn name_of(parts: list): string {
   if len(parts) != 4 { return "" }
-  if parts[0] == "registry.ollama.ai" {
+  // 2026-11-24: Ollama's newer store names its registry "ollama.com"; both are asked by the short name the ladder uses
+  if parts[0] == "registry.ollama.ai" or parts[0] == "ollama.com" {
     if parts[1] == "library" { return parts[2] + ":" + parts[3] }
     return parts[1] + "/" + parts[2] + ":" + parts[3]
   }

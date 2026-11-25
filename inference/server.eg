@@ -9,6 +9,9 @@ fn args_for(file: string, s: map): list {
   var a = ["-m", file, "--host", "127.0.0.1"]
   if has(s, "port") { a = push(push(a, "--port"), str(s.port)) }
   if has(s, "slots") { a = push(push(a, "-np"), str(s.slots)) }
+  // 2026-11-24 (PC25 b): the slots share one context pool (-kvu), so one request may use all of ctx; without it the engine splits ctx evenly
+  // between the slots (the 3b's 4096 over 3 slots was 1,365 tokens a request, too small for a build's brief)
+  if has(s, "slots") and s.slots > 1 { a = push(a, "-kvu") }
   if has(s, "ctx") { a = push(push(a, "-c"), str(s.ctx)) }
   if has(s, "gpu_layers") { a = push(push(a, "-ngl"), str(s.gpu_layers)) }
   if has(s, "threads") { a = push(push(a, "-t"), str(s.threads)) }

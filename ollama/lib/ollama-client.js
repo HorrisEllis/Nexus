@@ -11,6 +11,108 @@ const config = require('../config.js');
 const { state } = require('./state.js');
 
 const OLLAMA_HOST = config.OLLAMA_HOST;
+
+// 2026-11-24 PC25 b — the model server is the first backend; Ollama the second, used only when a model is not in the model server's store.
+// James, 2026-11-24: "migrate the bridge into the model server/" · "i just want to get back to the pipeline". Ollama's app is gone. The model
+// server (inference/) is reached only through its drawbridge, COS's /api/cos/systems/inference/hook/<hook> (§5.16): `models` lists its models,
+// `launch` says how one model's engine starts (engine, options from that model's own settings, port). This process stays running, so it starts
+// the engine (detached: an engine outlives a restart of the bridge) and talks to it in the engine's own API (llama-server, OpenAI-shaped).
+const COS_PORT = Number(process.env.COS_MANAGER_PORT) || 7799;
+function _cosHook(hook, q, ms = 90000) {
+  return new Promise((res) => {
+    const body = JSON.stringify(q || {});
+    const req = http.request({ hostname: '127.0.0.1', port: COS_PORT, path: `/api/cos/systems/inference/hook/${hook}`, method: 'POST', timeout: ms,
+      headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(body) } }, (r) => {
+      let d = ''; r.on('data', (c) => d += c); r.on('end', () => { try { res(JSON.parse(d)); } catch (_) { res(null); } });
+    });
+    req.on('error', () => res(null)).on('timeout', function () { this.destroy(); res(null); });
+    req.end(body);
+  });
+}
+let _msList = { at: 0, names: null };
+async function _msModels() {
+  if (_msList.names && Date.now() - _msList.at < 30000) return _msList.names;
+  const r = await _cosHook('models', {});
+  const names = r && r.ok && r.value && Array.isArray(r.value.models) ? r.value.models.map((m) => m.name) : null;
+  if (names) _msList = { at: Date.now(), names };
+  return names || _msList.names;
+}
+function _health(port, ms = 2000) {
+  return new Promise((res) => {
+    http.get({ hostname: '127.0.0.1', port, path: '/health', timeout: ms }, (r) => { r.resume(); res(r.statusCode === 200); })
+      .on('error', () => res(false)).on('timeout', function () { this.destroy(); res(false); });
+  });
+}
+const _launch = new Map(), _starting = new Map();
+// the port of a model the model server holds, its engine started when it is not answering; null when the model server does not hold it
+async function _msPort(model) {
+  const names = await _msModels();
+  if (!names || !names.includes(model)) return null;
+  let l = _launch.get(model);
+  if (!l || Date.now() - l.at > 60000) {
+    const r = await _cosHook('launch', { model });
+    if (!r || !r.ok) { console.warn(`[model-server] ${model}: no launch plan — ${(r && r.why) || 'COS did not answer'}`); return null; }
+    l = { at: Date.now(), v: r.value }; _launch.set(model, l);
+  }
+  const { port, engine, args } = l.v;
+  if (await _health(port)) return port;
+  if (!_starting.has(model)) {
+    _starting.set(model, (async () => {
+      console.log(`[model-server] starting ${model} on :${port}`);
+      const { spawn } = require('child_process');
+      const c = spawn(engine, args, { detached: true, stdio: 'ignore', windowsHide: true }); c.on('error', (e) => console.warn(`[model-server] ${model}: ${e.message}`)); c.unref();
+      const until = Date.now() + (config.RAW_FIRST_TOKEN_MS || 180000);
+      while (Date.now() < until) { await new Promise((r) => setTimeout(r, 1000)); if (await _health(port)) return true; }
+      return false;
+    })().finally(() => setTimeout(() => _starting.delete(model), 0)));
+  }
+  if (await _starting.get(model)) return port;
+  throw new Error(`the model server's engine for "${model}" did not answer on :${port}`);
+}
+// one generation on a model server engine, streamed: the same result shape Ollama's path gives ({ text, thinking, done_reason, eval_count })
+function _llamaGenerate(port, model, prompt, want, options, extra, idleMs, tell) {
+  const messages = [...(extra.system ? [{ role: 'system', content: extra.system }] : []), { role: 'user', content: String(prompt || '') }];
+  const body = JSON.stringify({ model, messages, stream: true, max_tokens: want, temperature: options.temperature != null ? options.temperature : 0.2,
+    ...(options.seed != null ? { seed: options.seed } : {}), ...(options.top_p != null ? { top_p: options.top_p } : {}) });
+  return new Promise((resolve, reject) => {
+    let text = '', thinking = '', buf = '', settled = false, idle = null, first = true, finish = null, evalCount = null;
+    const total = setTimeout(() => fail(`model server generate exceeded ${Math.round(config.RAW_GENERATE_TOTAL_MS / 1000)} s in total`), config.RAW_GENERATE_TOTAL_MS);
+    const fail = (msg) => { if (settled) return; settled = true; clearTimeout(total); clearTimeout(idle); try { req.destroy(); } catch (_) {} reject(Object.assign(new Error(msg), { partial: { text, thinking } })); };
+    const ok = () => { if (settled) return; settled = true; clearTimeout(total); clearTimeout(idle); resolve({ text, thinking, done_reason: finish, eval_count: evalCount }); };
+    const arm = () => {
+      clearTimeout(idle);
+      const ms = first ? Math.max(idleMs || config.RAW_GENERATE_TIMEOUT_MS, config.RAW_FIRST_TOKEN_MS || 0) : (idleMs || config.RAW_GENERATE_TIMEOUT_MS);
+      idle = setTimeout(() => fail(`the model server sent nothing for ${ms} ms ${first ? 'before its first token' : '(idle timeout)'} — ${text.length} chars received`), ms);
+    };
+    const req = http.request({ hostname: '127.0.0.1', port, path: '/v1/chat/completions', method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(body) } }, (r) => {
+      if (r.statusCode < 200 || r.statusCode >= 300) {
+        let e = ''; r.on('data', (c) => e += c);
+        r.on('end', () => { let d = e; try { const j = JSON.parse(e); d = (j.error && (j.error.message || j.error)) || e; } catch (_) {} fail(`model server HTTP ${r.statusCode} for model "${model}": ${d}`); });
+        return;
+      }
+      r.on('data', (c) => {
+        first = false; arm(); buf += c.toString();
+        const lines = buf.split('\n'); buf = lines.pop();
+        for (const line of lines) {
+          const t = line.trim(); if (!t.startsWith('data:')) continue;
+          const p = t.slice(5).trim(); if (p === '[DONE]') return ok();
+          let o; try { o = JSON.parse(p); } catch (_) { continue; }
+          if (o.error) return fail(`model server generation error for model "${model}": ${o.error.message || o.error}`);
+          const ch = (o.choices && o.choices[0]) || {}, d = ch.delta || {};
+          if (d.content) { text += d.content; tell(d.content, 'text'); }
+          if (d.reasoning_content) { thinking += d.reasoning_content; tell(d.reasoning_content, 'thinking'); }
+          if (ch.finish_reason) finish = ch.finish_reason;
+          if (o.usage && o.usage.completion_tokens != null) evalCount = o.usage.completion_tokens;
+        }
+      });
+      r.on('end', () => ok());
+    });
+    req.on('error', (e) => fail(e.message));
+    arm();
+    req.end(body);
+  });
+}
 // 0.60.620 — smallest first (his, 2026-11-20): a small model stays loaded (config.KEEP_ALIVE), a big one is unloaded once it answers (KEEP_ALIVE_BIG);
 // the size is read from the model's own tag (":3b", ":16b", ":30b"); a tag with no size keeps the small rule
 // 2026-11-24 — a tag with no size ("hf.co/…DeepSeek-Coder-V2-Lite…GGUF:Q4_K_M") was taken for a small model and kept loaded 30 min: 11 GB of his
@@ -41,11 +143,19 @@ function pickInstalled(wanted, installed = []) {
 let _tags = { at: 0, names: null };
 function _installed() {
   if (_tags.names && Date.now() - _tags.at < 30000) return Promise.resolve(_tags.names);
+  // 2026-11-24 PC25 b: the model server's models first, then whatever an Ollama server (if one answers) lists
+  return Promise.all([_msModels(), _ollamaTags()]).then(([a, b]) => {
+    if (!a && !b) return null;
+    _tags = { at: Date.now(), names: [...new Set([...(a || []), ...(b || [])])] };
+    return _tags.names;
+  });
+}
+function _ollamaTags() {
   return new Promise(res => {
     const u = new URL(OLLAMA_HOST);
     http.get({ hostname: u.hostname, port: u.port || 11434, path: '/api/tags', timeout: config.HEALTH_CHECK_TIMEOUT_MS }, r => {
       let d = ''; r.on('data', c => d += c);
-      r.on('end', () => { try { _tags = { at: Date.now(), names: (JSON.parse(d).models || []).map(m => m.name) }; res(_tags.names); } catch (_) { res(null); } });
+      r.on('end', () => { try { res((JSON.parse(d).models || []).map(m => m.name)); } catch (_) { res(null); } });
     }).on('error', () => res(null)).on('timeout', function () { this.destroy(); res(null); });
   });
 }
@@ -58,6 +168,9 @@ async function resolveModel(wanted, caller = '') {
 }
 
 async function checkOllama() {
+  // 2026-11-24 PC25 b: online when the model server holds a model (its engines start on demand), else when an Ollama server answers
+  const ms = await _msModels().catch(() => null);
+  if (ms && ms.length) { state.ollamaOnline = true; return true; }
   return new Promise(res => {
     const u = new URL(OLLAMA_HOST);
     http.get(
@@ -154,7 +267,15 @@ function _generateOnceRaw(model, prompt, maxTokens, idleMs, caller, extra = {}) 
     if (typeof extra.onDelta === 'function') { try { if (rp.res.thinking) extra.onDelta(rp.res.thinking, 'thinking'); if (rp.res.text) extra.onDelta(rp.res.text, 'text'); } catch (_) {} }
     return Promise.resolve({ text: rp.res.text, thinking: rp.res.thinking, doneReason: rp.res.doneReason, evalCount: rp.res.evalCount });
   }
-  return new Promise((resolve, reject) => {
+  // 2026-11-24 PC25 b: a model the model server holds runs on its engine; the tape, the activity log and the result shape stay the same
+  return _msPort(model).then((port) => {
+    if (!port) return _ollamaGenerate();
+    const tell = (d, kind) => { if (typeof extra.onDelta === 'function') { try { extra.onDelta(d, kind); } catch (_) {} } };
+    return _llamaGenerate(port, model, prompt, want, options, extra, idleMs, tell).then(
+      (o) => { const out = { text: o.text, thinking: o.thinking, doneReason: o.done_reason || null, evalCount: o.eval_count || null }; done(true, null, out, o); return out; },
+      (e) => { done(false, e.message, e.partial || {}); throw e; });
+  });
+  function _ollamaGenerate() { return new Promise((resolve, reject) => {
     let text = '', thinking = '', buf = '', settled = false, idle = null;
     // §0.39.356 LS1 — each token as it arrives, to whoever wants to show the model writing (never in the way of the reply)
     const _tell = (d, kind) => { if (typeof extra.onDelta === 'function') { try { extra.onDelta(d, kind); } catch (_) {} } };
@@ -210,7 +331,7 @@ function _generateOnceRaw(model, prompt, maxTokens, idleMs, caller, extra = {}) 
     req.on('error', (e) => fail(e.message));
     arm();
     req.end(body);
-  });
+  }); }
 }
 
 // For Ollama the provider's own signal is trusted: continue on done_reason 'length' or an unclosed code fence —

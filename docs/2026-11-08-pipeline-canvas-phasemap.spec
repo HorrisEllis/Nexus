@@ -1807,3 +1807,12 @@ phases_addendum_2026_11_24_model_server:
       server, Ollama itself an engine plugin; Copilot stays its own system (a client of the model server, its hat kept there); Idearium's
       pipeline tools move to COS (his 2026-11-17 rule); agent tools go to the systems they act on, each a hook in that system's component
       registry, the model server keeping only which hooks each hat may use (§5.16).
+
+# ── ADDENDUM 0.60.648 (2026-11-24) — PC25 b built: the bridge's model calls go to our own model server ──
+# James, 2026-11-24: "migrate the bridge into the model server/" · "i just want to get back to the pipeline". ollama/lib/ollama-client.js (changed, no
+# new file, §17.13): a model the model server holds (its models hook, through COS's drawbridge, §5.16) runs on that model's llama-server, started
+# detached from the launch hook's plan (inference.eg launch: engine, server.eg args_for from the model's own settings, port) when it does not
+# answer; Ollama is the second backend (PC_D17). models.eg names "ollama.com/…" by the ladder's short name. Proof: the 3b answered through the
+# bridge's door on the GTX 1650 (61 tokens/s warm; the first request ~100 s while the engine warms); inference tests 10/10; the bridge's two failing
+# tests (reply continuation, OA-003) fail the same on main. Open: chat with tools still goes to Ollama's /api/chat; the slot split (-np divides -c:
+# the 3b's 4096 over 3 slots is 1,365 tokens a request) to set with him in COS › Settings › Model server; a full build round on the 3b.
