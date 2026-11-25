@@ -1902,3 +1902,15 @@ phases_addendum_2026_11_24_model_server:
 # lib/proposal-evidence.js shadow(), copying every folder named data in Nexus for the expectation test, onto C: (872 MB left). A shadow now copies a
 # data folder only when it is under 2 MB; a bigger one is an empty folder (a test still cannot write into real data). 0.7 s and 1.1 MB in COS's
 # folder. F5, found the same hour: COS resumed every interrupted run at each restart, so two copies of one build ran on the same pieces.
+
+# ── ADDENDUM 2026-11-25 — the build is a reusable procedure of maps, phases and specs (his words) ──
+# James, 2026-11-25, looking at the EMB10 step ("Run your script: build-phase.js"): ".phases, specs. like we have maps for this, why a js file?" ·
+# "also like i want the idearium build pipeline to be a reasuable procedure. like if i have an idea that i give copilt, then it uses the build
+# pipeline in idearium. like the entire pipeline in the canvas, editable, programmable, accessable." · "also a .spec file would be something it needs
+# to build like idearium does."
+# DECIDED (his): (a) a pipeline's steps are Nexus's own nodes (a map, a .phase, a .spec), not a script file: the step names what to build and the
+# pipeline knows how; (b) Idearium's build pipeline is one reusable procedure, every stage a step on the canvas (edit, program, open any stage);
+# (c) an idea he gives Copilot becomes a request that runs that procedure; (d) a .spec is an input it builds from, as Idearium builds from a spec.
+# Reuse, the coder's census: PC_D15 (a box can be a phase, built by the build pipeline for that phase), DB1-DB5 (the build's stages moved into
+# COS through the drawbridge, the Code tab first), PC13 (his request built by the pipeline), RAID's request lifecycle (an idea as a request).
+# Open, his: the order against F2-F5 (the pipeline healing itself).
