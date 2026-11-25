@@ -62,7 +62,14 @@ function _parseOut(stdout) {
   return String(stdout).trim();
 }
 
-function run(d, name, { input = {}, timeoutMs = 60000 } = {}) {
+// 2026-11-25 (his: "you need to fix it so cos can shut it down" · "this is meant to be autonomous"): a script's whole process tree ends on a
+// cancel or its time limit (a build step starts the build in a child of its own; ending only the step left that child copying gigabytes).
+// LIVE: owner (a pipeline run) -> its running children; stop(owner) ends them.
+const LIVE = new Map();
+function _endTree(child) { if (!child || !child.pid) return; if (process.platform === 'win32') require('child_process').execFile('taskkill', ['/PID', String(child.pid), '/T', '/F'], { windowsHide: true, timeout: 15000 }, () => {}); else { try { process.kill(-child.pid, 'SIGKILL'); } catch (_) { try { child.kill('SIGKILL'); } catch (__) {} } } }
+function stop(owner) { const set = LIVE.get(owner); if (!set) return 0; for (const c of set) _endTree(c); LIVE.delete(owner); return set.size; }
+
+function run(d, name, { input = {}, timeoutMs = 60000, owner = null } = {}) {
   const file = resolve(d, name);
   const kind = KINDS[path.extname(file).toLowerCase()];
   let args;
@@ -74,7 +81,8 @@ function run(d, name, { input = {}, timeoutMs = 60000 } = {}) {
     const t0 = Date.now();
     const child = spawn(process.execPath, args, { cwd: d, env: { ...process.env, NEXUS_STEP_INPUT: json, ELECTRON_RUN_AS_NODE: '1' }, stdio: ['pipe', 'pipe', 'pipe'], windowsHide: true });
     let stdout = '', stderr = '', done = false;
-    const to = setTimeout(() => { if (done) return; done = true; try { child.kill(); } catch (_) {} rej(new Error(`${path.basename(file)} took longer than ${Math.round(ms / 1000)} s and was stopped`)); }, ms);
+    if (owner) { if (!LIVE.has(owner)) LIVE.set(owner, new Set()); LIVE.get(owner).add(child); child.on('exit', () => { const st = LIVE.get(owner); if (st) { st.delete(child); if (!st.size) LIVE.delete(owner); } }); }
+    const to = setTimeout(() => { if (done) return; done = true; _endTree(child); rej(new Error(`${path.basename(file)} took longer than ${Math.round(ms / 1000)} s and was stopped`)); }, ms);
     child.stdout.on('data', c => { if (stdout.length < 4e6) stdout += c; });
     child.stderr.on('data', c => { if (stderr.length < 2e5) stderr += c; });
     child.on('error', e => { if (done) return; done = true; clearTimeout(to); rej(e); });
@@ -87,4 +95,4 @@ function run(d, name, { input = {}, timeoutMs = 60000 } = {}) {
   });
 }
 
-module.exports = { dir, list, resolve, run, KINDS };
+module.exports = { dir, list, resolve, run, stop, KINDS };

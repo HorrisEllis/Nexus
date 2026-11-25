@@ -1192,7 +1192,7 @@ class AutomationEngine {
     // no arbitrary expression language: a value (a template, or a live mesh value) and a fixed operator.
     // 2026-11-05 PA1 — James: "maybe add conditions for detection of elements, scripts and type scripts". His own script, in its own process.
     if (step.type === 'script') {
-      const r = await SCRIPTS.run(this.scriptsDir(), cfg.script, { input: { ..._kv(cfg.input), vars: R.ctx.vars, workflow: wf.name }, timeoutMs: cfg.timeoutMs });
+      const r = await SCRIPTS.run(this.scriptsDir(), cfg.script, { input: { ..._kv(cfg.input), vars: R.ctx.vars, workflow: wf.name }, timeoutMs: cfg.timeoutMs, owner: R.ctx.pipelineRun || (R.run && R.run.id) || null });
       return { output: r.output, note: `${cfg.script} answered in ${r.ms} ms` };
     }
     // 2026-11-05 PA2 — "autofill": the same fill as the Autofill button, through Clear Glass's door (never its files)
@@ -1217,7 +1217,7 @@ class AutomationEngine {
       return { nextStepId: passed ? (cfg.onTrue || 'next') : (cfg.onFalse || 'next'), output: passed, note: `${passed ? 'yes' : 'no'}${r && r.saw ? ` — ${r.saw}` : ''}` };
     }
     if (step.type === 'condition' && cfg.test === 'script') {
-      const r = await SCRIPTS.run(this.scriptsDir(), cfg.script, { input: { ..._kv(cfg.input), vars: R.ctx.vars, workflow: wf.name }, timeoutMs: cfg.timeoutMs });
+      const r = await SCRIPTS.run(this.scriptsDir(), cfg.script, { input: { ..._kv(cfg.input), vars: R.ctx.vars, workflow: wf.name }, timeoutMs: cfg.timeoutMs, owner: R.ctx.pipelineRun || (R.run && R.run.id) || null });
       const o = r.output; const t = typeof o === 'string' ? o.trim().toLowerCase() : o;
       const passed = !(t === false || t === null || t === '' || t === 0 || t === 'false' || t === 'no' || t === '0' || (o && typeof o === 'object' && (o.ok === false || o.pass === false || o.passed === false)));
       this._busEmit('automation.condition.evaluated', { workflowId: wf.id, stepId: step.id, test: 'script', script: cfg.script, actual: _preview(o, 200), passed, ts: Date.now() });

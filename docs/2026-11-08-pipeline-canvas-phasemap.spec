@@ -1914,3 +1914,11 @@ phases_addendum_2026_11_24_model_server:
 # Reuse, the coder's census: PC_D15 (a box can be a phase, built by the build pipeline for that phase), DB1-DB5 (the build's stages moved into
 # COS through the drawbridge, the Code tab first), PC13 (his request built by the pipeline), RAID's request lifecycle (an idea as a request).
 # Open, his: the order against F2-F5 (the pipeline healing itself).
+
+# ── ADDENDUM 0.60.655 (2026-11-25) — F2 and the orphans: COS stops what it starts ──
+# James, 2026-11-25: "you need to fix it so cos can shut it down. like that needs to be solved." · "this is meant to be autonomous." Found: after COS's
+# restarts the model engines ran with no process held by COS (state declared, pid null: DeepSeek on 10809, the 3b on 9942, an old 3b on 9931), so
+# only Task Manager could end them, and DeepSeek's memory starved the PC (0.1 GB free); cancel only flagged a run. Built: supervisor _claim (a
+# declared process answering on its port is adopted, on touch and each minute), _sweepStrays (a declared program running unheld is ended, ledger
+# stray-ended), scripts.js stop(owner) and _endTree (taskkill /T) on cancel and on the time limit. Proof owed: the supervisor tests read the PC's
+# real free memory and failed alike on old and new code at 0.4 GB free; rerun when memory is free.

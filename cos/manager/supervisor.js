@@ -400,7 +400,45 @@ function createSupervisor({ root, declarations = null, policy = {}, ledgerFile =
     later(s, P.stopGraceMs, () => { if (s.proc === p) try { p.kill('SIGKILL'); } catch (_) {} }); return view(s);
   }
   function restart(name, { by = 'person' } = {}) { const s = must(name); if (!running(s)) return start(name, { by }); _unpauseForExit(s); s.state = 'restarting'; s.by = by; try { s.proc.kill('SIGTERM'); } catch (_) {} return view(s); }
-  function touch(name) { const s = must(name); s.lastActivity = Date.now(); if (!running(s) && s.decl.onDemand && !s.circuit.open) spawnNow(name, 'rule:on-demand'); return view(s); }
+  // 2026-11-25 (his: "you need to fix it so cos can shut it down" · "this is meant to be autonomous"): a declared process already answering on its
+  // port, with no process held (started by an earlier manager, or before it was declared), is adopted, never started a second time, so COS can
+  // stop it, idle it out and count its memory. The model server's engines were found so: running, unknown to COS, unstoppable but by hand.
+  const _portOf = (d) => { try { return d.healthUrl ? Number(new URL(d.healthUrl).port) || null : null; } catch (_) { return null; } };
+  function _claim(name, by, holders = null) {
+    const s = S.get(name); if (!s || running(s)) return false;
+    const port = _portOf(s.decl); if (!port) return false;
+    const pid = holders ? holders.get(port) : _holderOf(port); if (!pid || !_alive(pid)) return false;
+    s.proc = _adopted(name, pid); s.pid = pid; s.state = 'up'; s.startedAt = s.startedAt || Date.now(); s.by = by; s.lastActivity = Date.now();
+    write('adopted', name, `pid ${pid} already answered on :${port} and no process was held: adopted, not started again`, { by, pid }); _saveState();
+    return true;
+  }
+  function touch(name) { const s = must(name); s.lastActivity = Date.now(); if (!running(s) && s.decl.onDemand && !s.circuit.open && !(OUT && _claim(name, 'rule:on-demand'))) spawnNow(name, 'rule:on-demand'); return view(s); }
+  // a program a declaration runs (not node, not Electron), running with no declaration holding it, is a stray of an earlier manager: ended, said.
+  // Only programs named by a declaration are looked at; Windows only (its process list); async, so COS never waits on it.
+  let _sweeping = false;
+  function _sweep(by = 'rule:orphans') {
+    if (_sweeping || process.platform !== 'win32') return; _sweeping = true;
+    // every listening port and its process, read once (async): the declared ones answering with no process held are adopted
+    require('child_process').execFile('netstat', ['-ano', '-p', 'TCP'], { windowsHide: true, timeout: 10000 }, (e0, ns) => {
+      const holders = new Map(); for (const l of String(ns || '').split(/\r?\n/)) { const m = /^\s*TCP\s+\S+:(\d+)\s+\S+\s+LISTENING\s+(\d+)/.exec(l); if (m) holders.set(Number(m[1]), Number(m[2])); }
+      for (const n of S.keys()) _claim(n, by, holders);
+      _sweepStrays(by);
+    });
+  }
+  function _sweepStrays(by) {
+    const exes = [...new Set([...S.values()].map((s) => String(s.decl.cmd || '')).filter((c) => /\.exe$/i.test(c) && !/node|electron/i.test(path.basename(c))))];
+    if (!exes.length) { _sweeping = false; return; }
+    const held = new Set([...S.values()].map((s) => s.proc && s.proc.pid).filter(Boolean));
+    const names = [...new Set(exes.map((c) => path.basename(c)))].map((b) => `Name='${b.replace(/'/g, '')}'`).join(' or ');
+    require('child_process').execFile('powershell', ['-NoProfile', '-NonInteractive', '-Command', `Get-CimInstance Win32_Process -Filter "${names}" | ForEach-Object { \"$($_.ProcessId)|$($_.ExecutablePath)\" }`], { windowsHide: true, timeout: 20000 }, (err, out) => {
+      _sweeping = false; if (err) return;
+      const want = new Set(exes.map((c) => path.resolve(c).toLowerCase()));
+      for (const l of String(out).split(/\r?\n/)) { const [p, exe] = l.trim().split('|'); const pid = Number(p);
+        if (!pid || held.has(pid) || !exe || !want.has(path.resolve(exe).toLowerCase())) continue;
+        write('stray-ended', null, `pid ${pid} ran ${path.basename(exe)}, which a declaration runs, but no declaration held it: ended`, { by, pid });
+        require('child_process').execFile('taskkill', ['/PID', String(pid), '/T', '/F'], { windowsHide: true, timeout: 15000 }, () => {}); }
+    });
+  }
   // ── pause / resume (CP5b, 0.60.362; cos/spec/compartment.spec MOD-CP-PAUSE) ─────────────────────────────────────────────────────────
   // James, 2026-11-01: "the entire sandbox is rewindable/pausable/…". The ledger line first (§9.2), then the OS act (suspend.js), then the OS's
   // read-back decides the state (§0.1): 'paused' only when the OS reads the tree suspended. A paused system is not idled or restarted by rule.
@@ -460,6 +498,7 @@ function createSupervisor({ root, declarations = null, policy = {}, ledgerFile =
   const reaper = setInterval(() => {   // on-demand systems idle past idleMs stop
     for (const [n, s] of S) { if (s.proc && s.proc.adopted && !_alive(s.proc.pid)) onExit(n, s.proc, null, null); for (const x of (s.tails || [])) x.read(); }   // MG15
     for (const s of S.values()) if (s.decl.onDemand && running(s) && s.state !== 'paused' && s.lastActivity && Date.now() - s.lastActivity > P.idleMs) { s.state = 'idling'; try { s.proc.kill('SIGTERM'); } catch (_) {} }
+    if (OUT) _sweep();   // 2026-11-25: orphans adopted, strays ended (not in tests' own spawn)
   }, P.idleCheckMs); if (reaper.unref) reaper.unref();
 
   // 2026-11-14 DW1 — James: "says clear glass isn't working" while Clear Glass was open on his screen. Under the Windows service a windowed system

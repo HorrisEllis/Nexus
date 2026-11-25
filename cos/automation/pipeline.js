@@ -356,7 +356,7 @@ class Pipelines {
       .filter(r => r && (!pipelineId || r.pipelineId === pipelineId)).sort((a, b) => b.startedAt - a.startedAt).slice(0, limit);
   }
   getRun(runId) { return this._active.get(runId) || (() => { try { return JSON.parse(fs.readFileSync(path.join(this.runsDir, `${runId}.json`), 'utf8')); } catch (_) { return null; } })(); }
-  cancel(runId) { const r = this._active.get(runId); if (!r) return { ok: false, status: 404, error: 'that run is not running' }; r.cancelled = 'cancelled by request'; this._wake(runId); return { ok: true }; }
+  cancel(runId) { const r = this._active.get(runId); if (!r) return { ok: false, status: 404, error: 'that run is not running' }; r.cancelled = 'cancelled by request'; let ended = 0; try { ended = require('./scripts.js').stop(runId); } catch (_) {} this._wake(runId); return { ok: true, ended }; }
   // PC8 slice b (2026-11-11), his 2026-11-10 "execute, or manage the pipeline": paused, no new step starts (a running step finishes); continued,
   // the run goes on where it was. Each is an event, so the tab and the request's files see it.
   pause(runId, { by } = {}) { const r = this._active.get(runId); if (!r) return { ok: false, status: 404, error: 'that run is not running' }; if (r.paused) return { ok: true, status: 'paused' };
@@ -430,7 +430,7 @@ class Pipelines {
           if (bad) { set(t.id, { status: 'blocked', blockedBy: run.tasks[bad].status === 'failed' ? bad : run.tasks[bad].blockedBy || bad }); changed = true; } } }
     };
     const runTask = async (t) => {
-      const scope = { tasks: Object.fromEntries((t.depends_on || []).map(d => [d, { output: outputs[d] }])) };
+      const scope = { pipelineRun: run.id, tasks: Object.fromEntries((t.depends_on || []).map(d => [d, { output: outputs[d] }])) };   // pipelineRun: a cancel ends its scripts (2026-11-25)
       // 0.60.594 — James, 2026-11-19: "any gate that has passed. Doesn't need to be run again. Reuses the same step." The step's inputs are a
       // fingerprint (its step, its gate, the run's vars, what it takes from the steps before); a step whose gate passed with the same fingerprint
       // in an earlier run is not run again: that run's node stands, its whole output read back. The decision is Emerge's (cos/automation/reuse.eg).
