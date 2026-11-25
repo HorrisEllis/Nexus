@@ -1854,3 +1854,9 @@ phases_addendum_2026_11_24_model_server:
 # baseline, retry, model change, the phase/component/command/framework/template pickers). The Automation page opens on it (Console tab); the Lab
 # is its last tab and off the rail (contract.json nav none). Decided by his words and §5.16 (the UI reaches only COS's door). Not checked in Clear
 # Glass: its driver cannot open a window on this PC (said); checked in the built-in browser instead.
+
+# ── ADDENDUM 0.60.652 (2026-11-24) — PC8 slice d: the Automation tab is the console itself ──
+# James, 2026-11-24: "Nope the whole tab." · "Fuck iframes. Build the automation tab better." cos/ui/automation/index.html is the console (a COS page:
+# core.js, COS.page); the old engine page is engine.html, from More, until workflows, the desktop driver and supervision are console panels (next).
+# Under the canvas, the build as a bar of its pieces (green passed, grey waiting, red held or failed) from /api/cos/lab: the first form of PC23's
+# bars, on data COS already has. The Lab is a console panel.

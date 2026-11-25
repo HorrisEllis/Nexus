@@ -1,0 +1,81 @@
+<!doctype html>
+<!-- cos/ui/automation/index.html — COS's Automation tab: the automation engine (AE5, 0.60.461) and the supervisor's rules (MOD-MG-UI-AUTOMATION, MG18,
+     kept as the Supervision tab). James, 2026-11-08: "just need the automation engine fully built and in the automation tab" · "cos is the
+     orchastrator" · "idearium pipeline. also has to be real .pipeline files. it must be exportable and importable." · "i need this building already."
+     Every list is read from COS's own door: /api/cos/automation/* (the engine), /api/cos/policy and /api/cos/systems (the supervisor). -->
+<html lang="en" data-theme="nexus" data-accent="cycle">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Automation engine · COS</title>
+  <link rel="stylesheet" href="../core/theme.css"><link rel="stylesheet" href="../core/core.css"><link rel="stylesheet" href="page.css"><link rel="stylesheet" href="engine.css"><link rel="stylesheet" href="canvas.css">
+</head>
+<body class="cos-page">
+  <div data-refusals></div>
+  <header class="page-head">
+    <div>
+      <span class="eyebrow">Compartment OS · automation</span>
+      <h1 class="title">Automation engine</h1>
+      <p class="lede"><a href="index.html">← Back to the pipeline console</a></p>
+      <p class="lede">What COS's engine runs, as COS's supervisor runs it: every pipeline, workflow and run. A pipeline is a real .pipeline file — export it, import one, or open it on ERAVOS's canvas. Everything here is also a command: cos automation …</p>
+    </div>
+    <div class="actions"><label class="btn" id="ae-import-l">⇪ Import .pipeline / .erv<input type="file" id="ae-import" accept=".pipeline,.workflow,.macro,.erv" hidden></label></div>
+  </header>
+  <nav class="ae-tabs" id="ae-tabs" role="tablist">
+    <button class="ae-tab on" data-tab="pipelines" role="tab">Pipelines<b id="n-pipelines"></b></button>
+    <button class="ae-tab" data-tab="workflows" role="tab">Workflows<b id="n-workflows"></b></button>
+    <button class="ae-tab" data-tab="runs" role="tab">Runs<b id="n-runs"></b></button>
+    <button class="ae-tab" data-tab="log" role="tab">Log</button>
+    <button class="ae-tab" data-tab="desktop" role="tab">Desktop<b id="n-desktop"></b></button>
+    <button class="ae-tab" data-tab="supervision" role="tab">Supervision</button>
+  </nav>
+  <div id="ae-msg" class="ae-msg" role="status"></div>
+
+  <section class="ae-pane" data-pane="pipelines">
+    <div class="ae-grid">
+      <section class="panel"><div class="panel-head"><h2>Pipelines</h2><button class="btn" id="ae-sync" title="Import every pipeline in Nexus now: COS's own files and each system's, by its route">Sync</button></div><div class="panel-body"><p class="muted" id="ae-sync-said"></p><div id="ae-pipes">reading…</div></div></section>
+      <section class="panel"><div class="panel-head"><h2 id="ae-p-title">Pick a pipeline</h2><span class="tag" id="ae-p-tag"></span></div><div class="panel-body" id="ae-p-body"></div></section>
+    </div>
+  </section>
+  <section class="ae-pane" data-pane="workflows" hidden>
+    <section class="panel"><div class="panel-head"><h2>Workflows</h2><span class="tag">COS's engine</span></div><div class="panel-body" id="ae-flows">reading…</div></section>
+  </section>
+  <section class="ae-pane" data-pane="runs" hidden>
+    <section class="panel"><div class="panel-head"><h2>Pipeline runs</h2><span class="tag">newest first</span></div><div class="panel-body" id="ae-runs">reading…</div></section>
+  </section>
+  <section class="ae-pane" data-pane="log" hidden>
+    <section class="panel"><div class="panel-head"><h2>The engine's log</h2><span class="tag">newest first</span></div><div class="panel-body" id="ae-log">reading…</div></section>
+  </section>
+
+  <!-- PC9 slice a (2026-11-11), his: "I'm saying for you. Like look at clearglass. Nexus nerve, cleardriver injecting coordinates into the dom." -->
+  <section class="ae-pane" data-pane="desktop" hidden>
+    <section class="panel"><div class="panel-head"><h2>The desktop driver</h2><span class="tag">this computer only</span></div>
+      <div class="panel-body">
+        <p class="muted">Lets Claude and Nexus's agents drive this screen the way ClearDriver drives a page: take the screen, click at x,y, type, press keys, scroll. It is off until you arm it, for the time you choose. View-only allows the screen only. Disarm stops it at once. Every act is logged below, with who asked and why; typed text is logged as its length only.</p>
+        <div class="dd-state" id="dd-state">reading…</div>
+        <div class="dd-arm">
+          <label>For <select id="dd-min"><option>5</option><option selected>15</option><option>30</option><option>60</option></select> minutes</label>
+          <label><input type="radio" name="dd-mode" value="act" checked> act</label>
+          <label><input type="radio" name="dd-mode" value="view"> view only</label>
+          <button class="btn primary" id="dd-arm">Arm</button>
+          <button class="btn danger" id="dd-disarm">Disarm</button>
+        </div>
+        <div id="dd-log" class="dd-log"></div>
+      </div></section>
+  </section>
+
+  <section class="ae-pane" data-pane="supervision" hidden>
+    <!-- the supervisor's rules (MG18, 0.60.337) and Start at boot (BT1, 0.60.399), unchanged -->
+    <div class="page-head sub"><div><h2 class="title sm">How COS supervises</h2>
+      <p class="lede">The rules the supervisor follows for every system: what boots, how a crash is retried, when it stops trying, and the memory it keeps free.</p></div>
+      <div class="actions"><button class="btn" id="revert" disabled>Revert</button><button class="btn primary" id="save" disabled>Apply changes</button></div></div>
+    <form id="form" class="groups" autocomplete="off"></form>
+    <section class="panel rise" id="boot-list">
+      <div class="panel-head"><h2>Start at boot</h2><span class="tag">each system</span></div>
+      <div class="panel-body"><p class="muted">Switch off what this machine does not need. A system that is off is skipped at the next boot, said in the ledger, and can still be started by hand from its page or the Console (<code>start &lt;name&gt;</code>).</p><div id="boot-rows" class="boot-rows"></div></div>
+    </section>
+  </section>
+  <script src="../core/core.js"></script>
+  <script src="page.js"></script>
+  <script src="canvas.js"></script>
+  <script src="engine.js"></script>
+</body>
+</html>

@@ -1,86 +1,897 @@
 <!doctype html>
-<!-- cos/ui/automation/index.html — COS's Automation tab: the automation engine (AE5, 0.60.461) and the supervisor's rules (MOD-MG-UI-AUTOMATION, MG18,
-     kept as the Supervision tab). James, 2026-11-08: "just need the automation engine fully built and in the automation tab" · "cos is the
-     orchastrator" · "idearium pipeline. also has to be real .pipeline files. it must be exportable and importable." · "i need this building already."
-     Every list is read from COS's own door: /api/cos/automation/* (the engine), /api/cos/policy and /api/cos/systems (the supervisor). -->
-<html lang="en" data-theme="nexus" data-accent="cycle">
+<html lang="en" data-theme="nexus">
 <head>
-  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Automation · COS</title>
-  <link rel="stylesheet" href="../core/theme.css"><link rel="stylesheet" href="../core/core.css"><link rel="stylesheet" href="page.css"><link rel="stylesheet" href="engine.css"><link rel="stylesheet" href="canvas.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Automation · COS</title>
+<!-- cos/ui/automation/index.html — COS's Automation tab: the pipeline console (PC8 slice d, 0.60.652). James, 2026-11-24: "cos/ui/run-console-preview should be the
+     automation tba" · "ui should float on top" · "Fuck iframes. Build the automation tab better." Every read and act is a COS route; the old engine
+     page (workflows, the desktop driver, supervision) is engine.html, from More. Made from cos/ui/run-console-preview. -->
+<link rel="stylesheet" href="../core/theme.css">
+<style>
+/* Idearium's tokens, named from its own theme file (idearium/ui/css/nexus-theme.css), as idearium/ui/index.html names them */
+:root {
+  --bg: var(--nx-ink); --bg1: var(--nx-plate); --bg2: var(--nx-panel); --panel: var(--nx-card); --edge: var(--nx-edge); --rim: var(--nx-rim); --void: var(--nx-void);
+  --b0: var(--ac-ghost); --b1: var(--ac-dim); --b2: var(--ac-border-hi); --sky: var(--ac);
+  --ok: var(--nx-ok); --amber: var(--nx-warn); --coral: var(--nx-err); --violet: var(--nx-violet);
+  --text: var(--nx-text); --text2: var(--nx-dim); --text3: var(--nx-muted); --bright: var(--nx-bright);
+  --mono: 'IBM Plex Mono', monospace; --sans: 'IBM Plex Sans', sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { background: var(--bg); color: var(--text); font: 13px var(--sans); height: 100vh; overflow: hidden; }
+button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+svg.i { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .3; } }
+.app { display: grid; height: 100vh; grid-template-rows: 44px 2px 1fr; grid-template-columns: 64px 1fr; }
+
+/* top: a picker, the run menu, the overflow menu, the live dot */
+.top { grid-column: 1 / -1; display: flex; align-items: center; gap: 8px; padding: 0 10px 0 0; background: var(--bg1); border-bottom: 1px solid var(--rim); }
+.logo { width: 64px; text-align: center; font: 600 12px var(--mono); letter-spacing: .14em; color: var(--bright); flex: none; }
+.logo span { color: var(--sky); }
+.dd { display: inline-flex; align-items: center; gap: 8px; height: 30px; padding: 0 10px; border-radius: 6px; border: 1px solid transparent; color: var(--text); font: 12.5px var(--sans); white-space: nowrap; transition: all .15s; }
+.dd:hover, .dd.open { background: rgba(255,255,255,.04); border-color: var(--rim); }
+.dd .chev { width: 12px; height: 12px; color: var(--text3); }
+.dd b { font-weight: 500; color: var(--bright); max-width: 380px; overflow: hidden; text-overflow: ellipsis; }
+.dd.primary { border-color: var(--b2); background: var(--b0); color: var(--sky); }
+.sd { width: 7px; height: 7px; border-radius: 50%; flex: none; background: var(--text3); }
+.st-running .sd, .sd.running { background: var(--amber); animation: pulse 1.2s infinite; }
+.grow { flex: 1; }
+.icon-btn { width: 30px; height: 30px; display: grid; place-items: center; border-radius: 6px; color: var(--text2); }
+.icon-btn:hover, .icon-btn.open { background: rgba(255,255,255,.05); color: var(--bright); }
+.kbd { font: 10.5px var(--mono); color: var(--text3); border: 1px solid var(--rim); border-radius: 4px; padding: 1px 5px; }
+.search-hint { display: inline-flex; align-items: center; gap: 8px; height: 30px; padding: 0 10px; border: 1px solid var(--rim); border-radius: 6px; color: var(--text3); font-size: 12px; min-width: 200px; }
+.search-hint:hover { border-color: var(--b2); color: var(--text2); }
+.progress { grid-column: 1 / -1; display: flex; background: var(--bg1); }
+.progress i { flex: 1; height: 2px; margin-right: 1px; background: var(--edge); }
+
+/* side tabs */
+.side { grid-row: 3; background: var(--bg1); border-right: 1px solid var(--rim); display: flex; flex-direction: column; align-items: stretch; padding: 6px 0; gap: 1px; overflow-y: auto; scrollbar-width: none; }
+.stab { position: relative; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 9px 0 8px; color: var(--text3); font: 500 9.5px var(--mono); letter-spacing: .04em; }
+.stab:hover { color: var(--text); background: rgba(255,255,255,.03); }
+.stab.on { color: var(--bright); background: var(--b0); }
+.stab.on::before { content: ''; position: absolute; left: 0; top: 7px; bottom: 7px; width: 2px; border-radius: 0 2px 2px 0; background: var(--sky); }
+.stab.on svg { color: var(--sky); }
+.stab .badge { position: absolute; top: 5px; right: 9px; width: 6px; height: 6px; border-radius: 50%; background: var(--amber); animation: pulse 1.2s infinite; }
+.stab .new { position: absolute; top: 6px; right: 8px; width: 5px; height: 5px; border-radius: 50%; background: var(--violet); }
+.side hr { border: 0; height: 1px; background: var(--rim); margin: 6px 12px; }
+
+/* stage */
+.stage { grid-row: 3; min-width: 0; min-height: 0; display: flex; }
+.work { flex: 1; min-width: 0; display: flex; flex-direction: column; min-height: 0; }
+.canvas-wrap { position: relative; flex: 1 1 60%; min-height: 120px; overflow: hidden;
+  background: radial-gradient(circle at 1px 1px, color-mix(in srgb, var(--rim) 70%, transparent) 1px, transparent 0) 0 0 / 22px 22px, var(--void); }
+svg.cv { width: 100%; height: 100%; display: block; cursor: grab; user-select: none; }
+svg.cv.drag { cursor: grabbing; }
+.zoom { position: absolute; left: 12px; bottom: 12px; display: flex; border: 1px solid var(--rim); border-radius: 7px; background: var(--panel); overflow: hidden; }
+.zoom button { width: 28px; height: 26px; color: var(--text2); font: 12px var(--mono); }
+.zoom button:hover { background: var(--b0); color: var(--bright); }
+.node rect.box { fill: var(--panel); stroke: var(--rim); }
+.node:hover rect.box { stroke: var(--b2); }
+.node.sel rect.box { stroke: var(--sky); stroke-width: 1.5; filter: drop-shadow(0 0 10px color-mix(in srgb, var(--sky) 35%, transparent)); }
+.node text { pointer-events: none; }
+.node .lb { font: 500 12.5px var(--sans); fill: var(--bright); }
+.node .sb { font: 10px var(--mono); fill: var(--text2); }
+.node .ty { font: 9px var(--mono); letter-spacing: .08em; fill: var(--text3); }
+.node .ds { font: 10.5px var(--sans); fill: var(--text2); }
+.node.running .stripe, .node.running .dotc { animation: pulse 1.2s infinite; }
+.wire { fill: none; stroke: var(--rim); stroke-width: 1.5; }
+.wire.done { stroke: color-mix(in srgb, var(--ok) 55%, transparent); }
+.wire.live { stroke: var(--amber); stroke-dasharray: 6 5; animation: flow 1s linear infinite; }
+@keyframes flow { to { stroke-dashoffset: -22; } }
+.gate { cursor: pointer; }
+.gate rect { fill: var(--bg1); stroke: var(--text2); stroke-width: 1.2; }
+.gate.ok rect { stroke: var(--ok); fill: color-mix(in srgb, var(--ok) 12%, var(--bg1)); }
+.gate.bad rect { stroke: var(--coral); fill: color-mix(in srgb, var(--coral) 14%, var(--bg1)); }
+.gate.sel rect { stroke: var(--sky); stroke-width: 2; }
+.gate text { font: 9.5px var(--mono); fill: var(--text3); pointer-events: none; }
+.splitter { height: 5px; flex: none; cursor: row-resize; background: var(--bg1); border-top: 1px solid var(--rim); }
+.splitter:hover { background: var(--b1); }
+
+/* console */
+.console { flex: 0 0 40%; min-height: 90px; display: grid; grid-template-columns: 250px 1fr; background: var(--bg); min-width: 0; }
+.console.full { flex: 1 1 auto; }
+.calls { border-right: 1px solid var(--edge); display: flex; flex-direction: column; min-height: 0; }
+.ph { display: flex; align-items: center; gap: 8px; height: 34px; padding: 0 10px 0 12px; border-bottom: 1px solid var(--edge); font: 600 10px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--text2); flex: none; }
+.list { overflow-y: auto; flex: 1; }
+.grp { font: 600 9px var(--mono); letter-spacing: .12em; color: var(--text3); padding: 10px 12px 4px; text-transform: uppercase; }
+.crow { display: grid; grid-template-columns: 8px 1fr auto; gap: 2px 9px; align-items: center; padding: 7px 12px; border-left: 2px solid transparent; width: 100%; text-align: left; }
+.crow:hover { background: rgba(255,255,255,.02); }
+.crow.sel { background: var(--b0); border-left-color: var(--sky); }
+.crow .sd { grid-row: span 2; }
+.crow.complete .sd { background: var(--ok); } .crow.failed .sd { background: var(--coral); }
+.crow .nm { font-size: 12px; color: var(--bright); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.crow .tm { font: 10.5px var(--mono); color: var(--text2); }
+.crow .sub { grid-column: 2 / 4; font: 10.5px var(--mono); color: var(--text3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.view { display: flex; flex-direction: column; min-width: 0; min-height: 0; }
+.vh { display: flex; align-items: center; gap: 10px; padding: 0 8px 0 12px; height: 34px; border-bottom: 1px solid var(--edge); flex: none; font: 11px var(--mono); color: var(--text2); white-space: nowrap; overflow: hidden; }
+.vh b { color: var(--bright); font-weight: 500; overflow: hidden; text-overflow: ellipsis; }
+.vh .sep { color: var(--text3); }
+.code { flex: 1; overflow: auto; background: var(--void); font: 12px/1.6 var(--mono); padding: 8px 0 30px; counter-reset: ln; }
+.code.nowrap .l { white-space: pre; }
+.l { position: relative; padding: 0 16px 0 64px; white-space: pre-wrap; word-break: break-word; min-height: 1.6em; }
+.l::before { counter-increment: ln; content: counter(ln); position: absolute; left: 0; width: 48px; text-align: right; color: var(--text3); user-select: none; }
+.l.prose { color: var(--text2); font-family: var(--sans); }
+.l.fence { color: var(--text3); }
+.caret { display: inline-block; width: 7px; height: 14px; background: var(--amber); vertical-align: -2px; animation: pulse 1s steps(1) infinite; }
+.k { color: #c792ea; } .s { color: #c3e88d; } .c { color: #5c7a8a; font-style: italic; } .n { color: #f78c6c; } .f { color: #82aaff; } .p { color: #89ddff; }
+.think { border-bottom: 1px solid var(--edge); padding: 8px 12px 8px 64px; font: 11.5px/1.55 var(--mono); color: var(--violet); max-height: 120px; overflow: auto; white-space: pre-wrap; flex: none; }
+.empty { padding: 20px 14px; color: var(--text2); font-size: 12px; line-height: 1.6; }
+.empty b { color: var(--text); font-weight: 500; display: block; }
+
+/* the dock — Idearium's #dock-col / #dock-rail, as written there */
+#dock-col { width: 0; flex: none; display: flex; flex-direction: column; gap: 8px; overflow-y: auto; font-family: var(--mono); transition: width .2s; }
+#dock-col.open { width: min(380px, 38vw); padding: 10px 8px 10px 10px; }
+#dock-col .dk-panel { flex: 0 0 auto; display: flex; flex-direction: column; max-height: 62vh; background: var(--nx-card, var(--bg2)); border: 1px solid var(--nx-rim, rgba(255,255,255,.12)); border-radius: 10px; box-shadow: 0 12px 34px rgba(0,0,0,.45); overflow: hidden; }
+#dock-col .dk-head { display: flex; align-items: center; gap: 6px; padding: 7px 9px; border-bottom: 1px solid var(--nx-rim, rgba(255,255,255,.08)); font-size: 11px; color: var(--text); cursor: default; }
+#dock-col .dk-panel.folded .dk-head { border-bottom: 0; }
+#dock-col .dk-head b { font-weight: 600; letter-spacing: .06em; text-transform: uppercase; font-size: 10.5px; }
+#dock-col .dk-grow { flex: 1; }
+#dock-col .dk-n { color: var(--text3); font-size: 10px; }
+#dock-col .dk-fold, #dock-col .dk-x { color: var(--text3); font: 12px var(--mono); padding: 0 3px; }
+#dock-col .dk-fold:hover, #dock-col .dk-x:hover { color: var(--text); }
+#dock-col .dk-body { overflow-y: auto; padding: 8px 10px; font-size: 11px; color: var(--text2); min-height: 40px; }
+#dock-col .dk-panel.folded .dk-body { display: none; }
+#dock-col .dk-sec { margin: 10px 0 4px; color: var(--text3); font-size: 10px; text-transform: uppercase; letter-spacing: .06em; }
+#dock-col .dk-sec:first-child { margin-top: 0; }
+#dock-col .dk-empty { color: var(--text3); font-size: 11px; padding: 4px 0; line-height: 1.5; }
+.kv { display: flex; justify-content: space-between; gap: 10px; padding: 5px 0; border-top: 1px solid var(--edge); }
+.kv:first-child, .dk-sec + .kv { border-top: 0; }
+.kv > span:first-child { color: var(--text2); white-space: nowrap; }
+.kv > span:last-child { color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: right; }
+.kv.row { cursor: pointer; border-radius: 4px; }
+.kv.row:hover { background: rgba(255,255,255,.03); }
+.pre { font: 11px/1.55 var(--mono); color: var(--text2); white-space: pre-wrap; word-break: break-word; background: var(--bg); border: 1px solid var(--edge); border-radius: 6px; padding: 8px 9px; max-height: 260px; overflow: auto; }
+.pre.bad { color: var(--coral); }
+#dock-rail { flex: none; display: flex; flex-direction: column; gap: 4px; justify-content: center; padding: 8px 0; background: var(--bg); border-left: 1px solid var(--edge); }
+#dock-rail .dk-tab { display: flex; flex-direction: column; align-items: center; gap: 5px; padding: 10px 5px 9px 6px; background: var(--nx-card, var(--bg2)); border: 1px solid var(--nx-rim, rgba(255,255,255,.12)); border-right: 0; border-radius: 8px 0 0 8px; color: var(--text2); font: 600 10px var(--mono); letter-spacing: .08em; cursor: pointer; box-shadow: -6px 0 18px rgba(0,0,0,.35); transition: padding-right .15s, color .15s, background .15s; }
+#dock-rail .dk-tab:hover { color: var(--text); padding-right: 9px; }
+#dock-rail .dk-tab.on { color: var(--text); background: var(--nx-card-hi, rgba(59,130,246,.18)); border-color: var(--accent, var(--sky)); }
+#dock-rail .dk-l { writing-mode: vertical-rl; transform: rotate(180deg); text-transform: uppercase; }
+#dock-rail .dk-n { writing-mode: vertical-rl; transform: rotate(180deg); color: var(--text3); font-weight: 400; }
+#dock-rail .dk-n.warn { color: var(--amber); }
+.dk-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--sky); animation: pulse 1.2s infinite; display: inline-block; }
+
+/* menus: one component for dropdowns, context menus and the palette */
+.menu { position: fixed; z-index: 1000; min-width: 220px; max-width: 380px; max-height: 70vh; overflow-y: auto; padding: 5px; background: var(--panel); border: 1px solid var(--rim); border-radius: 9px; box-shadow: 0 18px 50px rgba(0,0,0,.6); animation: pop .1s ease-out; }
+@keyframes pop { from { opacity: 0; transform: translateY(-3px); } }
+.menu .mi { display: flex; align-items: center; gap: 9px; width: 100%; padding: 6px 9px; border-radius: 5px; color: var(--text); font-size: 12.5px; text-align: left; }
+.menu .mi .lab { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.menu .mi .hint { font: 10.5px var(--mono); color: var(--text3); white-space: nowrap; }
+.menu .mi svg { color: var(--text2); }
+.menu .mi.act, .menu .mi:not([disabled]):hover { background: var(--b0); color: var(--bright); }
+.menu .mi.act svg { color: var(--sky); }
+.menu .mi[disabled] { color: var(--text3); cursor: default; }
+.menu .mi[disabled] svg { color: var(--text3); }
+.menu .mi.danger:not([disabled]) { color: var(--coral); }
+.menu .mi .lab small { display: block; white-space: normal; color: var(--text3); font-size: 11px; line-height: 1.4; margin-top: 1px; }
+.menu .mi[disabled] .lab { white-space: normal; font-size: 11px; line-height: 1.45; }
+.menu .sep { height: 1px; background: var(--rim); margin: 5px 4px; }
+.menu .mh { padding: 6px 9px 3px; font: 600 9.5px var(--mono); letter-spacing: .1em; color: var(--text3); text-transform: uppercase; }
+.menu input { width: 100%; height: 30px; margin-bottom: 4px; padding: 0 9px; border: 1px solid var(--rim); border-radius: 6px; background: var(--bg); color: var(--text); font: 12.5px var(--sans); outline: 0; }
+.menu input:focus { border-color: var(--b2); }
+.menu.palette { left: 50% !important; top: 70px !important; transform: translateX(-50%); width: 560px; max-width: 92vw; }
+.menu .none { padding: 10px; color: var(--text3); font-size: 12px; }
+
+.page { flex: 1; overflow: auto; padding: 18px 22px; }
+.page h2 { font: 500 15px var(--sans); color: var(--bright); }
+table.t { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 12px; }
+table.t th { text-align: left; font: 600 9.5px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--text3); padding: 8px 10px; border-bottom: 1px solid var(--rim); position: sticky; top: 0; background: var(--bg); }
+table.t td { padding: 8px 10px; border-bottom: 1px solid var(--edge); vertical-align: top; }
+table.t td.m { font: 11px var(--mono); color: var(--text2); }
+table.t tbody tr { cursor: default; }
+table.t tbody tr:hover td { background: rgba(255,255,255,.02); }
+.mini { display: flex; gap: 2px; }
+.mini i { width: 10px; height: 10px; border-radius: 2px; }
+.pill { display: inline-flex; align-items: center; gap: 6px; font: 500 10px var(--mono); letter-spacing: .06em; text-transform: uppercase; }
+.pill .sd { width: 6px; height: 6px; }
+.term { font: 10.5px/1.5 var(--mono); background: var(--void); border: 1px solid var(--edge); border-radius: 6px; padding: 6px 0; max-height: 320px; min-height: 120px; overflow: auto; }
+.tl { display: grid; grid-template-columns: 58px 76px 1fr; gap: 6px; padding: 0 8px; }
+.tl .tt { color: var(--text3); } .tl .ts { color: var(--sky); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } .tl .tx { color: var(--text2); white-space: pre-wrap; word-break: break-word; }
+.tl.err .tx { color: var(--coral); } .tl.cmd .tx { color: var(--bright); } .tl.reply .tx { color: var(--text); }
+.prompt { display: flex; align-items: center; gap: 6px; margin-top: 6px; height: 30px; padding: 0 8px; border: 1px solid var(--rim); border-radius: 6px; background: var(--bg); font: 11px var(--mono); color: var(--sky); }
+.prompt:focus-within { border-color: var(--b2); }
+.prompt input { flex: 1; min-width: 0; background: none; border: 0; outline: 0; color: var(--bright); font: 11.5px var(--mono); }
+.lin { display: grid; grid-template-columns: 12px 1fr; gap: 6px; padding: 5px 0; position: relative; }
+.lin .ld { width: 7px; height: 7px; border-radius: 50%; background: var(--sky); margin-top: 4px; }
+.lin::before { content: ''; position: absolute; left: 3px; top: 14px; bottom: -6px; width: 1px; background: var(--rim); }
+.lin:last-child::before { display: none; }
+.lin b { color: var(--bright); font-weight: 500; } .lin .lt { color: var(--text3); } .lin div div { color: var(--text2); margin-top: 1px; }
+.fld { margin: 0 0 9px; }
+.fl { display: block; font: 600 9.5px var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--text3); margin-bottom: 4px; }
+.fl i { color: var(--coral); font-style: normal; }
+.fh { margin-top: 4px; font: 10.5px/1.45 var(--sans); color: var(--text3); }
+#dock-col input:not([type=checkbox]), #dock-col select, #dock-col textarea, .libq { width: 100%; background: var(--bg); border: 1px solid var(--rim); border-radius: 5px; color: var(--bright); font: 11.5px var(--mono); padding: 6px 8px; outline: 0; }
+#dock-col select { appearance: none; cursor: pointer; padding-right: 24px; background-image: linear-gradient(45deg, transparent 50%, var(--text3) 50%), linear-gradient(135deg, var(--text3) 50%, transparent 50%); background-position: calc(100% - 13px) 50%, calc(100% - 9px) 50%; background-size: 4px 4px; background-repeat: no-repeat; }
+#dock-col select option, #dock-col select optgroup { background: var(--bg1); color: var(--text); }
+#dock-col textarea { resize: vertical; line-height: 1.5; }
+#dock-col input:focus, #dock-col select:focus, #dock-col textarea:focus, .libq:focus { border-color: var(--b2); box-shadow: 0 0 0 2px var(--b0); }
+.num { display: flex; align-items: center; gap: 6px; } .num input { width: 110px !important; } .num span { color: var(--text3); font-size: 10.5px; }
+.chk { display: flex; align-items: center; gap: 7px; color: var(--text); font-size: 11.5px; cursor: pointer; }
+.vrow { display: grid; grid-template-columns: 1fr 1.4fr 20px; gap: 5px; margin-bottom: 5px; align-items: center; }
+.vrow input { padding: 5px 7px !important; }
+.addrow { width: 100%; padding: 6px; border: 1px dashed var(--rim); border-radius: 5px; color: var(--text2); font: 11px var(--mono); margin-top: 2px; }
+.addrow:hover { border-color: var(--b2); color: var(--sky); background: var(--b0); }
+.libq { margin: 4px 0 2px; }
+.libi { display: grid; grid-template-columns: 24px 1fr; gap: 6px; width: 100%; text-align: left; padding: 6px 6px; border-radius: 5px; }
+.libi:hover { background: var(--b0); }
+.libi b { display: block; color: var(--bright); font: 500 12px var(--sans); }
+.libi small { display: block; color: var(--text3); font: 10.5px/1.4 var(--sans); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.gl { display: inline-grid; place-items: center; width: 20px; height: 20px; border-radius: 5px; background: var(--b0); color: var(--sky); font-size: 11px; flex: none; }
+.lh { display: flex; align-items: center; gap: 16px; } .lh h2 { white-space: nowrap; } .lh .ct { color: var(--text3); font: 12px var(--mono); }
+/* the pick-not-type tabs (2026-11-24): cards to click, menus to pick from */
+.pcard { display: flex; flex-direction: column; gap: 6px; text-align: left; padding: 11px 12px; background: var(--nx-card, var(--bg2)); border: 1px solid var(--edge); border-radius: 8px; color: var(--text2); font: 11.5px/1.45 var(--sans); min-width: 0; }
+.pcard:not([disabled]):hover { border-color: var(--sky); background: var(--b0); cursor: pointer; }
+.pcard b { color: var(--bright); font: 500 12.5px var(--sans); display: flex; align-items: center; gap: 6px; } .pcard span { overflow: hidden; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; }
+.pcard i { font: normal 10px var(--mono); color: var(--text3); } .pcard code, .lead code { font: 10.5px var(--mono); color: var(--sky); } .pcard .gl { color: var(--sky); }
+.pg { font: 600 9.5px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--text3); margin-top: 20px; }
+.pform { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; margin-top: 14px; padding: 12px; border: 1px solid var(--edge); border-radius: 8px; background: var(--nx-card, var(--bg2)); }
+.pform label { font: 11px var(--mono); color: var(--text3); } .psel { background: var(--bg); color: var(--text); border: 1px solid var(--rim); border-radius: 5px; padding: 5px 8px; font: 12px var(--sans); max-width: 320px; }
+.lq { flex: 1; max-width: 520px; height: 32px; padding: 0 11px; border: 1px solid var(--rim); border-radius: 6px; background: var(--bg1); color: var(--bright); font: 12.5px var(--sans); outline: 0; }
+.lq:focus { border-color: var(--b2); }
+.page .lead { margin-top: 6px; color: var(--text2); font-size: 12px; } .page .lead b { color: var(--text); font-weight: 500; }
+table.t .nm { font-weight: 500; color: var(--bright); } table.t .sub { margin-top: 2px; color: var(--text3); font-size: 11.5px; line-height: 1.45; max-width: 720px; }
+.addbtn { padding: 4px 10px; border: 1px solid var(--rim); border-radius: 5px; color: var(--text2); font: 11px var(--mono); white-space: nowrap; }
+.addbtn:hover { border-color: var(--b2); color: var(--sky); background: var(--b0); }
+#toasts { position: fixed; right: 50px; bottom: 16px; display: flex; flex-direction: column; gap: 6px; z-index: 1001; max-width: 380px; }
+#toasts .toast { position: static; transform: none; display: flex; align-items: center; gap: 9px; cursor: pointer; animation: pop .15s ease-out; }
+#toasts .toast .sd { background: var(--sky); } #toasts .toast.bad .sd { background: var(--coral); } #toasts .toast.ok .sd { background: var(--ok); } #toasts .toast.warn .sd { background: var(--amber); }
+#toasts .toast.bad { border-color: color-mix(in srgb, var(--coral) 40%, var(--rim)); } #toasts .toast.warn { border-color: color-mix(in srgb, var(--amber) 40%, var(--rim)); }
+.toast { position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%); padding: 8px 14px; border-radius: 7px; background: var(--panel); border: 1px solid var(--rim); color: var(--text); font-size: 12px; box-shadow: 0 10px 30px rgba(0,0,0,.5); z-index: 1001; }
+::-webkit-scrollbar { width: 9px; height: 9px; } ::-webkit-scrollbar-thumb { background: var(--rim); border-radius: 5px; border: 2px solid transparent; background-clip: padding-box; } ::-webkit-scrollbar-track { background: transparent; }
+</style>
 </head>
-<body class="cos-page">
-  <div data-refusals></div>
-  <header class="page-head">
-    <div>
-      <span class="eyebrow">Compartment OS · automation</span>
-      <h1 class="title">Automation</h1>
-      <p class="lede">What COS's engine runs, as COS's supervisor runs it: every pipeline, workflow and run. A pipeline is a real .pipeline file — export it, import one, or open it on ERAVOS's canvas. Everything here is also a command: cos automation …</p>
-    </div>
-    <div class="actions"><label class="btn" id="ae-import-l">⇪ Import .pipeline / .erv<input type="file" id="ae-import" accept=".pipeline,.workflow,.macro,.erv" hidden></label></div>
-  </header>
-  <nav class="ae-tabs" id="ae-tabs" role="tablist">
-    <button class="ae-tab on" data-tab="console" role="tab">Console</button>
-    <button class="ae-tab" data-tab="pipelines" role="tab">Pipelines<b id="n-pipelines"></b></button>
-    <button class="ae-tab" data-tab="workflows" role="tab">Workflows<b id="n-workflows"></b></button>
-    <button class="ae-tab" data-tab="runs" role="tab">Runs<b id="n-runs"></b></button>
-    <button class="ae-tab" data-tab="log" role="tab">Log</button>
-    <button class="ae-tab" data-tab="desktop" role="tab">Desktop<b id="n-desktop"></b></button>
-    <button class="ae-tab" data-tab="supervision" role="tab">Supervision</button>
-    <button class="ae-tab" data-tab="lab" role="tab">Lab</button>
-  </nav>
-  <div id="ae-msg" class="ae-msg" role="status"></div>
+<body>
+<script src="../core/core.js"></script>
+<div class="app">
+  <header class="top" id="top"></header>
+  <div class="progress" id="progress"></div>
+  <nav class="side" id="side"></nav>
+  <section class="stage"><div class="work" id="work"></div><div id="dock-col"></div><div id="dock-rail"></div></section>
+</div>
+<script>
+'use strict';
+// ════ Everything on this screen is declared once below (ICONS, VIEWS, PANELS, ACTIONS, MENUS) and drawn by a few generic renderers.
+// Menus, the context menus, the palette (Ctrl+K) and the shortcuts all read ACTIONS. Reads only: an action that would change a run says so.
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s == null ? '' : s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const dur = (ms) => ms == null ? '—' : ms < 1000 ? Math.round(ms) + ' ms' : ms < 60000 ? (ms / 1000).toFixed(1) + ' s' : ms < 3600e3 ? Math.floor(ms / 60000) + 'm ' + Math.round(ms % 60000 / 1000) + 's' : Math.floor(ms / 3600e3) + 'h ' + Math.round(ms % 3600e3 / 60000) + 'm';
+const kfmt = (n) => n == null ? '—' : n >= 1000 ? (n / 1000).toFixed(1) + 'k' : String(n);
+const ago = (t) => { if (!t) return '—'; const s = Math.round((Date.now() - t) / 1000); return s < 60 ? s + 's ago' : s < 3600 ? Math.round(s / 60) + 'm ago' : s < 86400 ? Math.round(s / 3600) + 'h ago' : Math.round(s / 86400) + 'd ago'; };
+const model = (m) => String(m || '').replace(/^huihui_ai\//, '').replace(/-abliterated?/, '');
+const bg = (j) => /probe|diagnose/.test(j.intent || '');
+const store = { get(k, d) { try { const v = localStorage.getItem('cos.pipes.' + k); return v == null ? d : JSON.parse(v); } catch (_) { return d; } }, set(k, v) { try { localStorage.setItem('cos.pipes.' + k, JSON.stringify(v)); } catch (_) {} } };
+// toasts: what needs his eye now (a system changed state, memory is low, a copy happened), stacked bottom right, gone on their own or on click
+function toast(t, kind = '', ms = 3200) { let box = document.getElementById('toasts'); if (!box) { box = document.createElement('div'); box.id = 'toasts'; document.body.appendChild(box); }
+  const e = document.createElement('div'); e.className = 'toast ' + kind; e.innerHTML = `<span class="sd"></span><span>${esc(t)}</span>`; e.onclick = () => e.remove(); box.appendChild(e); setTimeout(() => e.remove(), ms); }
+function watch(prev, D) {
+  if (!prev) { const down = D.systems.filter((s) => s.state !== 'up'); if (down.length) toast(`${down.length === 1 ? down[0].name + ' is ' + down[0].state : down.length + ' systems are not up: ' + down.map((s) => s.name).join(', ')}`, 'bad', 7000); }
+  else for (const s of D.systems) { const o = prev.systems.find((x) => x.name === s.name); if (o && o.state !== s.state) toast(`${s.name}: ${o.state} → ${s.state}`, s.state === 'up' ? 'ok' : 'bad', 6000); }
+  const h = D.host || {}; if (h.freeMemPct != null && h.freeMemPct < 12 && Date.now() - (S.memWarn || 0) > 300000) { S.memWarn = Date.now(); toast(`Memory is low: ${(h.freeMB / 1024).toFixed(1)} GB free (${h.freeMemPct}%)`, 'warn', 7000); }
+  const m = D.loaded[0], pm = prev && prev.loaded[0]; if (prev && (m && m.name) !== (pm && pm.name)) toast(m ? `Ollama loaded ${model(m.name)} (${(m.vramMB / 1024).toFixed(1)} GB)` : 'Ollama unloaded its model', '', 4000); }
+const COL = { done: 'var(--ok)', complete: 'var(--ok)', passed: 'var(--ok)', running: 'var(--amber)', failed: 'var(--coral)', cancelled: 'var(--coral)', paused: 'var(--violet)', waiting: 'var(--text2)' };
+const col = (s) => COL[s] || 'var(--text3)';
 
-  <!-- PC8 (his, 2026-11-24): "cos/ui/run-console-preview should be the automation tba" · "the lab be migrated into the new automation tab" ·
-       "ui should float on top": the run console (console.html) reads and acts only through COS's routes; the Lab is its own tab here. -->
-  <section class="ae-pane" data-pane="console"><iframe src="console.html" title="The run console" style="width:100%;height:calc(100vh - 230px);min-height:560px;border:0;border-radius:12px;background:var(--nx-ink,#0b0d12)"></iframe></section>
-  <section class="ae-pane" data-pane="lab" hidden><iframe src="../lab/index.html" title="The Lab: requests, builds, pieces" style="width:100%;height:calc(100vh - 230px);min-height:560px;border:0;border-radius:12px"></iframe></section>
-  <section class="ae-pane" data-pane="pipelines" hidden>
-    <div class="ae-grid">
-      <section class="panel"><div class="panel-head"><h2>Pipelines</h2><button class="btn" id="ae-sync" title="Import every pipeline in Nexus now: COS's own files and each system's, by its route">Sync</button></div><div class="panel-body"><p class="muted" id="ae-sync-said"></p><div id="ae-pipes">reading…</div></div></section>
-      <section class="panel"><div class="panel-head"><h2 id="ae-p-title">Pick a pipeline</h2><span class="tag" id="ae-p-tag"></span></div><div class="panel-body" id="ae-p-body"></div></section>
-    </div>
-  </section>
-  <section class="ae-pane" data-pane="workflows" hidden>
-    <section class="panel"><div class="panel-head"><h2>Workflows</h2><span class="tag">COS's engine</span></div><div class="panel-body" id="ae-flows">reading…</div></section>
-  </section>
-  <section class="ae-pane" data-pane="runs" hidden>
-    <section class="panel"><div class="panel-head"><h2>Pipeline runs</h2><span class="tag">newest first</span></div><div class="panel-body" id="ae-runs">reading…</div></section>
-  </section>
-  <section class="ae-pane" data-pane="log" hidden>
-    <section class="panel"><div class="panel-head"><h2>The engine's log</h2><span class="tag">newest first</span></div><div class="panel-body" id="ae-log">reading…</div></section>
-  </section>
+const P = 'M'; const ICONS = {
+  canvas: '<rect x="3" y="4" width="7" height="6" rx="1.5"/><rect x="14" y="14" width="7" height="6" rx="1.5"/><path d="M10 7h3a2 2 0 0 1 2 2v5"/>',
+  console: '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 9l3 3-3 3M12 15h5"/>', runs: '<path d="M4 6h16M4 12h16M4 18h10"/>',
+  vars: '<path d="M8 4c-2 0-3 1-3 3v2c0 1-1 2-2 2 1 0 2 1 2 2v2c0 2 1 3 3 3M16 4c2 0 3 1 3 3v2c0 1 1 2 2 2-1 0-2 1-2 2v2c0 2-1 3-3 3"/>',
+  settings: '<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/>',
+  gaps: '<path d="M4 7h6v4H4zM14 13h6v4h-6z"/><path d="M10 9h2a2 2 0 0 1 2 2v4"/>', ladder: '<path d="M8 3v18M16 3v18M8 7h8M8 12h8M8 17h8"/>',
+  tape: '<circle cx="7" cy="12" r="3"/><circle cx="17" cy="12" r="3"/><path d="M7 15h10"/><rect x="2" y="6" width="20" height="12" rx="2"/>', flight: '<path d="M3 12h4l3-7 4 14 3-7h4"/>',
+  ledger: '<path d="M5 4h12a2 2 0 0 1 2 2v14H7a2 2 0 0 1-2-2zM5 18a2 2 0 0 1 2-2h12"/>', play: '<path d="M7 5l12 7-12 7z"/>', pause: '<path d="M8 5v14M16 5v14"/>',
+  retry: '<path d="M4 12a8 8 0 1 0 3-6.2M4 4v5h5"/>', stop: '<rect x="6" y="6" width="12" height="12" rx="1.5"/>', chip: '<rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4"/>',
+  chev: '<path d="M6 9l6 6 6-6"/>', radial: '<circle cx="12" cy="12" r="2"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="10"/>',
+  phases: '<path d="M4 5h4v4H4zM10 10h4v4h-4zM16 15h4v4h-4zM8 7h2a2 2 0 0 1 2 2v1M14 12h2a2 2 0 0 1 2 2v1"/>', components: '<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><path d="M17.5 14v7M14 17.5h7"/>', more: '<circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/>', search: '<circle cx="11" cy="11" r="6"/><path d="M20 20l-4-4"/>',
+  inspect: '<circle cx="11" cy="11" r="6"/><path d="M20 20l-4-4M11 8v6M8 11h6"/>', copy: '<rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3"/>',
+  pin: '<path d="M12 17v5M5 17h14l-2-5V5H7v7z"/>', fit: '<path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/>', plus: '<path d="M12 5v14M5 12h14"/>', minus: '<path d="M5 12h14"/>',
+  export: '<path d="M12 3v12M7 10l5 5 5-5M5 21h14"/>', open: '<path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/>', skip: '<path d="M5 5l9 7-9 7zM18 5v14"/>',
+  panel: '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M15 4v16"/>', gate: '<path d="M12 3l9 9-9 9-9-9z"/>', model: '<path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/>',
+};
+const icon = (k) => `<svg class="i" viewBox="0 0 24 24">${ICONS[k] || ''}</svg>`;
 
-  <!-- PC9 slice a (2026-11-11), his: "I'm saying for you. Like look at clearglass. Nexus nerve, cleardriver injecting coordinates into the dom." -->
-  <section class="ae-pane" data-pane="desktop" hidden>
-    <section class="panel"><div class="panel-head"><h2>The desktop driver</h2><span class="tag">this computer only</span></div>
-      <div class="panel-body">
-        <p class="muted">Lets Claude and Nexus's agents drive this screen the way ClearDriver drives a page: take the screen, click at x,y, type, press keys, scroll. It is off until you arm it, for the time you choose. View-only allows the screen only. Disarm stops it at once. Every act is logged below, with who asked and why; typed text is logged as its length only.</p>
-        <div class="dd-state" id="dd-state">reading…</div>
-        <div class="dd-arm">
-          <label>For <select id="dd-min"><option>5</option><option selected>15</option><option>30</option><option>60</option></select> minutes</label>
-          <label><input type="radio" name="dd-mode" value="act" checked> act</label>
-          <label><input type="radio" name="dd-mode" value="view"> view only</label>
-          <button class="btn primary" id="dd-arm">Arm</button>
-          <button class="btn danger" id="dd-disarm">Disarm</button>
-        </div>
-        <div id="dd-log" class="dd-log"></div>
-      </div></section>
-  </section>
+// ── state ──
+const S = { view: (v => ['console', 'vars', 'settings'].includes(v) ? 'canvas' : v)(store.get('view', 'canvas')), max: false, stack: [], phases: null, comps: null, cat: null, cmds: {}, trig: {}, drafts: {}, edits: {}, rev: 0, lin: {}, logs: null, cli: [], draft: '', hist: [], hi: 0, pid: store.get('pid', null), sel: null, job: null, pinned: false, all: false, follow: true, wrap: true, think: false,
+  open: new Set(store.get('dock', ['inspector', 'activity'])), folded: new Set(store.get('folded', [])), split: store.get('split', .6), D: null, ok: 0, base: {}, vp: null, sig: '' };
+const pipe = () => S.drafts[S.pid] || (S.D && S.D.pipelines.find((p) => p.id === S.pid));
+const allPipes = () => [...(S.D ? S.D.pipelines : []), ...Object.values(S.drafts).filter((d) => !(S.D && S.D.pipelines.some((p) => p.id === d.id)))];
+// ── the draft: every edit changes a copy of the pipeline; Save writes it through COS once built, Discard drops it ──
+function draft() { if (!S.drafts[S.pid]) S.drafts[S.pid] = JSON.parse(JSON.stringify(S.D.pipelines.find((p) => p.id === S.pid))); return S.drafts[S.pid]; }
+function edit(fn) { const p = draft(); fn(p); S.edits[p.id] = (S.edits[p.id] || 0) + 1; S.rev++; S.sig = ''; work(); topbar(); }
+const catOf = (type) => S.cat && S.cat.catalogue.find((c) => c.type === type);
+async function loadCat() { if (S.cat) return; S.cat = { catalogue: [], loading: true }; try { const c = await (await fetch('/api/cos/automation/catalogue')).json(); S.cat = c && c.catalogue ? c : { catalogue: [] }; } catch (_) { S.cat = { catalogue: [] }; } dock(); }
+async function loadCmds(sys) { if (S.cmds[sys]) return; S.cmds[sys] = []; try { S.cmds[sys] = (await (await none()).json()).paths || []; } catch (_) {} dock(); }
+function newId(p, type) { const b = String(type).replace(/_/g, '-'); let i = 1; while (p.tasks.some((t) => t.id === b + '-' + i)) i++; return b + '-' + i; }
+function stepOf(type, preset) { const c = catOf(type), cfg = {}; for (const f of (c && c.fields) || []) if (f.default !== undefined) cfg[f.key] = f.default; return { label: (preset && preset.label) || (c ? c.label : type), step: { type, config: { ...cfg, ...((preset && preset.config) || {}) } } }; }
+// boxes from what Nexus already holds: a phase (built by the Idearium build pipeline, for that phase), a component (called through its system), a system, a pipeline
+function addPhase(x) { const bp = allPipes().find((q) => /idearium build pipeline/i.test(q.name)); if (!bp) return toast('No build pipeline in COS to build a phase with', 'bad'); addStep('pipeline', 'after', { label: x.id, config: { pipeline: bp.id, vars: { phase: x.id, map: x.map } } }); toast('Added the phase ' + x.id); }
+function addComp(x) { addStep('command', 'after', { label: x.name, config: { system: x.system, method: x.method === 'POST' ? 'POST' : 'GET', endpoint: x.path || '' } }); toast('Added ' + x.name + ' (' + x.system + ')'); }
+async function loadPhases() { if (S.phases) return; try { S.phases = (await (await none()).json()).phases || []; } catch (_) { S.phases = []; } work(); }
+async function loadComps() { if (S.comps) return; try { S.comps = (await (await none()).json()).components || []; } catch (_) { S.comps = []; } work(); }
+function fromNexus(how) { return [{ h: 'From Nexus' },
+  { label: 'A system…', icon: 'chip', desc: 'A box that asks one of Nexus’s systems', run: () => setTimeout(() => menu(S.D.systems.map((s) => ({ label: s.name, dot: s.state === 'up' ? 'var(--ok)' : 'var(--amber)', hint: s.state, run: () => addStep('command', how, { label: 'Ask ' + s.name, config: { system: s.name } }) })), null, { search: true, palette: true, placeholder: 'Which system?' }), 0) },
+  { label: 'Another pipeline…', icon: 'canvas', desc: 'Runs a whole pipeline as one box; double-click opens it', run: () => setTimeout(() => menu(allPipes().filter((x) => x.id !== S.pid).map((x) => ({ label: x.name, hint: x.tasks.length + ' steps', run: () => addStep('pipeline', how, { label: x.name, config: { pipeline: x.id } }) })), null, { search: true, palette: true, placeholder: 'Which pipeline?' }), 0) },
+  { label: 'An If…, picked', icon: 'more', desc: 'A value, a test, an answer, what happens next', run: () => setView('conds') },
+  { label: 'When it starts…', icon: 'play', desc: 'By hand, every N, at a time, on an event, on a web request', run: () => setView('sched') },
+  { label: 'Every kind of step…', icon: 'panel', desc: 'The whole catalogue, as cards', run: () => setView('library') }]; }
+// add a step: after the selected one (its followers now follow the new step), or beside it (a parallel branch: same inputs, nothing rewired)
+function addStep(type, how = 'after', preset = null) { const sel = S.sel && S.sel.id; let nid;
+  edit((p) => { nid = newId(p, type); const s = stepOf(type, preset), at = sel && p.tasks.find((t) => t.id === sel), lastId = p.tasks.length ? p.tasks[p.tasks.length - 1].id : null;
+    const deps = how === 'beside' && at ? [...(at.depends_on || [])] : at ? [at.id] : lastId ? [lastId] : [];
+    if (how === 'after' && at) for (const x of p.tasks) if ((x.depends_on || []).includes(at.id)) x.depends_on = x.depends_on.map((d) => d === at.id ? nid : d);
+    const ix = at ? p.tasks.indexOf(at) + 1 : p.tasks.length; p.tasks.splice(ix, 0, { id: nid, label: s.label, depends_on: deps, step: s.step, gate: null, retries: 0, onFail: 'stop' }); });
+  S.sel = { t: 'step', id: nid }; S.vp = null; openPanel('inspector'); }
+function delStep(id) { edit((p) => { const t = p.tasks.find((x) => x.id === id); if (!t) return; for (const x of p.tasks) if ((x.depends_on || []).includes(id)) x.depends_on = [...new Set(x.depends_on.flatMap((d) => d === id ? (t.depends_on || []) : [d]))]; p.tasks.splice(p.tasks.indexOf(t), 1); }); S.sel = null; S.vp = null; dock(); }
+function dupStep(id) { let nid; edit((p) => { const t = p.tasks.find((x) => x.id === id); if (!t) return; const c = JSON.parse(JSON.stringify(t)); nid = c.id = newId(p, (t.step && t.step.type) || 'step'); c.label = t.label + ' (copy)'; c.depends_on = [t.id];
+  for (const x of p.tasks) if ((x.depends_on || []).includes(t.id)) x.depends_on = x.depends_on.map((d) => d === t.id ? nid : d); p.tasks.splice(p.tasks.indexOf(t) + 1, 0, c); }); S.sel = { t: 'step', id: nid }; S.vp = null; dock(); }
+function catMenu(how) { if (!S.cat || !S.cat.catalogue.length) { loadCat(); return [{ label: 'Reading the step catalogue…', disabled: 'COS is answering' }]; }
+  const groups = [...new Set(S.cat.catalogue.map((c) => c.group))];
+  return [...fromNexus(how), ...groups.flatMap((g) => [{ h: g }, ...S.cat.catalogue.filter((c) => c.group === g).map((c) => ({ label: c.label, glyph: c.icon, hint: c.type, run: () => addStep(c.type, how) }))])]; }
+const runs = (id) => S.D ? S.D.runs.filter((r) => r.pipelineId === id).sort((a, b) => (b.at || 0) - (a.at || 0)) : [];
+const last = (id) => runs(id)[0] || null;
+const st = (r, id) => r && r.tasks && r.tasks[id] ? r.tasks[id].status || 'pending' : 'pending';
+const task = (id) => { const p = pipe(); return p && p.tasks.find((t) => t.id === id); };
+const kind = (t) => t.step ? t.step.type || 'step' : 'step';
+const target = (t) => { const u = t.step && t.step.config && t.step.config.url; const m = /^nexus:\/\/([a-z0-9-]+)(\/\S*)?/i.exec(String(u || '')); return m ? m[1] + (m[2] ? ' ' + m[2].replace(/^\/api/, '') : '') : (u || '—'); };
+const gtext = (g) => !g ? 'pass' : Object.entries(g).map(([k, v]) => k + ' ' + (typeof v === 'string' ? v : JSON.stringify(v))).join(' · ');
+const jname = (j) => j.gap ? 'gap · ' + j.gap : j.source ? j.source.replace(/^idearium\./, '') : (j.intent || 'call');
+const jobs = () => S.D ? S.D.jobs.filter((j) => S.all || !bg(j)).sort((a, b) => (b.at || b.queued || 0) - (a.at || a.queued || 0)) : [];
+const job = () => S.D && S.D.jobs.find((j) => j.id === S.job);
+const liveRun = () => { const p = pipe(), r = p && last(p.id); return r && /running|paused/.test(r.status) ? r : null; };
+const later = 'Acts once this screen is built (COS’s engine has it: PC8 slice b).';
 
-  <section class="ae-pane" data-pane="supervision" hidden>
-    <!-- the supervisor's rules (MG18, 0.60.337) and Start at boot (BT1, 0.60.399), unchanged -->
-    <div class="page-head sub"><div><h2 class="title sm">How COS supervises</h2>
-      <p class="lede">The rules the supervisor follows for every system: what boots, how a crash is retried, when it stops trying, and the memory it keeps free.</p></div>
-      <div class="actions"><button class="btn" id="revert" disabled>Revert</button><button class="btn primary" id="save" disabled>Apply changes</button></div></div>
-    <form id="form" class="groups" autocomplete="off"></form>
-    <section class="panel rise" id="boot-list">
-      <div class="panel-head"><h2>Start at boot</h2><span class="tag">each system</span></div>
-      <div class="panel-body"><p class="muted">Switch off what this machine does not need. A system that is off is skipped at the next boot, said in the ledger, and can still be started by hand from its page or the Console (<code>start &lt;name&gt;</code>).</p><div id="boot-rows" class="boot-rows"></div></div>
-    </section>
-  </section>
-  <script src="../core/core.js"></script>
-  <script src="page.js"></script>
-  <script src="canvas.js"></script>
-  <script src="engine.js"></script>
+// ════ ACTIONS — the one list every menu, the palette and the shortcuts read ════
+const ACTIONS = {
+  'run.start':    { label: 'Run pipeline', icon: 'play', kbd: 'R', group: 'Run', off: () => !pipe() ? 'Choose a pipeline.' : null, run: () => cosAct('pipelines/' + pipe().id + '/run', 'Started') },
+  'run.pause':    { label: 'Pause', icon: 'pause', group: 'Run', off: () => !liveRun() ? 'No run in progress.' : null, run: () => cosAct('pipeline-runs/' + liveRun().id + '/pause', 'Paused') },
+  'run.continue': { label: 'Continue', icon: 'play', group: 'Run', off: () => !liveRun() ? 'No paused run.' : null, run: () => cosAct('pipeline-runs/' + liveRun().id + '/continue', 'Continued') },
+  'run.cancel':   { label: 'Cancel run', icon: 'stop', group: 'Run', danger: true, off: () => !liveRun() ? 'No run in progress.' : null, run: () => cosAct('pipeline-runs/' + liveRun().id + '/cancel', 'Cancelled') },
+  'step.inspect': { label: 'Inspect', icon: 'inspect', kbd: 'I', group: 'Step', off: () => !S.sel ? 'Nothing selected.' : null, run: () => openPanel('inspector') },
+  'step.runTo':   { label: 'Run to here', icon: 'play', group: 'Step', off: () => later },
+  'step.skip':    { label: 'Skip this step', icon: 'skip', group: 'Step', off: () => later },
+  'step.copyId':  { label: 'Copy id', icon: 'copy', group: 'Step', off: () => !S.sel ? 'Nothing selected.' : null, run: () => copy(S.sel.id) },
+  'gate.edit':    { label: 'Edit condition…', icon: 'gate', group: 'Gate', off: () => later },
+  'view.fit':     { label: 'Fit to screen', icon: 'fit', kbd: 'F', group: 'View', run: () => fit() },
+  'view.in':      { label: 'Zoom in', icon: 'plus', kbd: '+', group: 'View', run: () => zoom(1.2) },
+  'view.out':     { label: 'Zoom out', icon: 'minus', kbd: '−', group: 'View', run: () => zoom(1 / 1.2) },
+  'view.max':     { label: () => S.max ? 'Show the canvas with the console' : 'Console full height', icon: 'console', kbd: 'C', group: 'View', run: () => { S.max = !S.max; S.sig = ''; S.vp = null; work(); } },
+  'dock.cli':     { label: 'Open the terminal (COS CLI)', icon: 'console', kbd: 'T', group: 'Panels', run: () => { openPanel('terminal'); loadLogs().then(dock); setTimeout(() => { const i = $('cliLine'); if (i) i.focus(); }, 50); } },
+  'step.add':     { label: 'Add a step…', icon: 'plus', kbd: 'A', group: 'Edit', run: () => setTimeout(() => menu(catMenu('after'), null, { search: true, palette: true, placeholder: S.sel ? 'Add a step after the selected one' : 'Add a step at the end' }), 0) },
+  'step.beside':  { label: 'Add a parallel branch…', icon: 'gate', group: 'Edit', off: () => !(S.sel && S.sel.t === 'step') ? 'Select a step first.' : null, run: () => setTimeout(() => menu(catMenu('beside'), null, { search: true, palette: true, placeholder: 'A step beside the selected one (same inputs)' }), 0) },
+  'step.if':      { label: 'Add an If… after it', icon: 'gate', group: 'Edit', off: () => !catOf('condition') ? 'No condition step in the catalogue.' : null, run: () => addStep('condition', 'after') },
+  'step.dup':     { label: 'Duplicate', icon: 'copy', kbd: 'D', group: 'Edit', off: () => !(S.sel && S.sel.t === 'step') ? 'Select a step first.' : null, run: () => dupStep(S.sel.id) },
+  'step.del':     { label: 'Delete step', icon: 'stop', kbd: 'DELETE', group: 'Edit', danger: true, off: () => !(S.sel && S.sel.t === 'step') ? 'Select a step first.' : null, run: () => delStep(S.sel.id) },
+  'gate.editIt':  { label: 'Edit gate', icon: 'gate', group: 'Edit', off: () => !S.sel ? 'Select a step or gate.' : null, run: () => { S.sel = { t: 'gate', id: S.sel.id }; S.sig = ''; work(); openPanel('inspector'); } },
+  'pipe.new':     { label: 'New pipeline', icon: 'plus', group: 'Pipeline', run: () => { const id = 'new-' + Date.now().toString(36); S.drafts[id] = { id, name: 'New pipeline', description: '', vars: {}, settings: {}, tasks: [] }; S.edits[id] = 1; choose(id); } },
+  'pipe.save':    { label: 'Save', icon: 'export', kbd: 'S', group: 'Pipeline', off: () => !S.edits[S.pid] ? 'No changes.' : 'Saving writes the .pipeline through COS (PUT /api/cos/automation/pipelines/:id) once this screen is built.' },
+  'pipe.discard': { label: 'Discard changes', icon: 'stop', group: 'Pipeline', danger: true, off: () => !S.edits[S.pid] ? 'No changes.' : null, run: () => { delete S.drafts[S.pid]; delete S.edits[S.pid]; S.sel = null; S.sig = ''; S.vp = null; if (!pipe()) S.pid = null; draw(); } },
+  'dock.vars':    { label: 'Inputs', icon: 'vars', group: 'Panels', run: () => openPanel('pipeline') },
+  'dock.pipe':    { label: 'Pipeline settings', icon: 'settings', group: 'Panels', run: () => openPanel('pipeline') },
+  'go.engine':    { label: 'Workflows, Desktop, Supervision…', icon: 'panel', group: 'Panels', run: () => { location.href = 'engine.html'; } },
+  'dock.lib':     { label: 'Step library', icon: 'canvas', group: 'Panels', run: () => { openPanel('library'); loadCat(); } },
+  'view.add':     { label: 'Add a step…', icon: 'plus', group: 'View', off: () => later },
+  'pipe.export':  { label: 'Export .pipeline', icon: 'export', group: 'Pipeline', off: () => later },
+  'pipe.erv':     { label: 'Open on ERAVOS canvas', icon: 'open', group: 'Pipeline', off: () => later },
+  'pipe.dup':     { label: 'Duplicate', icon: 'copy', group: 'Pipeline', off: () => later },
+  'pipe.copyId':  { label: 'Copy pipeline id', icon: 'copy', group: 'Pipeline', off: () => !S.pid ? 'No pipeline.' : null, run: () => copy(S.pid) },
+  'dock.all':     { label: 'Open every panel', icon: 'panel', group: 'Panels', run: () => { S.open = new Set(PANELS.map((x) => x.id)); save(); draw(); } },
+  'dock.none':    { label: 'Close every panel', icon: 'panel', group: 'Panels', run: () => { S.open.clear(); save(); draw(); } },
+};
+const copy = (t) => { try { navigator.clipboard.writeText(String(t || '')); toast('Copied'); } catch (_) { toast('Copy failed'); } };
+const save = () => { store.set('dock', [...S.open]); store.set('folded', [...S.folded]); };
+const openPanel = (id) => { S.open.add(id); S.folded.delete(id); save(); dock(); rail(); };
+const MENUS = {
+  run: ['run.start', 'run.pause', 'run.continue', '-', 'run.cancel'],
+  more: ['pipe.new', 'pipe.dup', 'pipe.export', 'pipe.erv', 'pipe.copyId', '-', 'dock.pipe', 'dock.lib', 'dock.cli', 'go.engine', '-', 'view.fit', 'view.max', 'dock.all', 'dock.none'],
+  step: ['step.inspect', 'gate.editIt', '-', 'step.add', 'step.beside', 'step.if', '-', 'step.dup', 'step.del', '-', 'step.runTo', 'step.skip', '-', 'step.copyId'],
+  gate: ['gate.editIt', '-', 'step.add', 'step.if', '-', 'step.copyId'],
+  draft: ['pipe.save', 'pipe.discard'],
+  canvas: ['step.add', 'dock.lib', '-', 'view.fit', 'view.in', 'view.out', 'view.max', '-', 'dock.pipe', 'dock.cli', '-', 'run.start'],
+};
+const lbl = (a) => typeof a.label === 'function' ? a.label() : a.label;
+
+// ════ the menu component ════
+let MENU = null;
+function closeMenu() { if (MENU) { MENU.el.remove(); if (MENU.anchor) MENU.anchor.classList.remove('open'); MENU = null; } }
+function menu(items, at, opts = {}) {
+  closeMenu(); const el = document.createElement('div'); el.className = 'menu' + (opts.palette ? ' palette' : ''); document.body.appendChild(el);
+  let q = '', act = 0;
+  const render = () => {
+    const list = opts.search ? items.filter((x) => x === '-' || x.h || (x.label + ' ' + (x.hint || '')).toLowerCase().includes(q.toLowerCase())) : items;
+    const clean = list.filter((x, i, a) => !(x === '-' && (i === 0 || a[i - 1] === '-' || i === a.length - 1)));
+    const pick = clean.filter((x) => x !== '-' && !x.h && !x.disabled); act = Math.min(act, Math.max(0, pick.length - 1));
+    el.innerHTML = (opts.search ? `<input placeholder="${esc(opts.placeholder || 'Search')}" value="${esc(q)}">` : '') + (clean.length ? clean.map((x) => x === '-' ? '<div class="sep"></div>' : x.h ? `<div class="mh">${esc(x.h)}</div>`
+      : `<button class="mi ${x.danger ? 'danger' : ''} ${pick[act] === x ? 'act' : ''}" ${x.disabled ? `disabled title="${esc(x.disabled)}"` : ''}>${x.icon ? icon(x.icon) : x.glyph ? `<span class="gl">${esc(x.glyph)}</span>` : x.dot ? `<span class="sd" style="background:${x.dot}"></span>` : ''}<span class="lab">${esc(x.label)}${x.desc ? `<small>${esc(x.desc)}</small>` : ''}</span>${x.hint ? `<span class="hint">${esc(x.hint)}</span>` : ''}</button>`).join('') : '<div class="none">Nothing matches.</div>');
+    el.querySelectorAll('.mi').forEach((b, i) => { const x = clean.filter((y) => y !== '-' && !y.h)[i]; b.onclick = () => { if (x.disabled) return; closeMenu(); x.run && x.run(); }; b.onmouseenter = () => { if (!x.disabled) { act = pick.indexOf(x); el.querySelectorAll('.mi').forEach((y) => y.classList.remove('act')); b.classList.add('act'); } }; });
+    const inp = el.querySelector('input'); if (inp) { inp.oninput = () => { q = inp.value; act = 0; render(); }; inp.focus(); inp.setSelectionRange(q.length, q.length); }
+    MENU.pick = pick; MENU.act = () => act; MENU.move = (d) => { act = (act + d + pick.length) % Math.max(1, pick.length); render(); };
+  };
+  MENU = { el, anchor: opts.anchor || null }; if (opts.anchor) opts.anchor.classList.add('open'); render();
+  if (!opts.palette) { const r = el.getBoundingClientRect(); let x = at.x, y = at.y; if (x + r.width > innerWidth - 8) x = innerWidth - r.width - 8; if (y + r.height > innerHeight - 8) y = Math.max(8, at.y - r.height - (at.h || 0)); el.style.left = x + 'px'; el.style.top = y + 'px'; }
+}
+const fromActions = (ids) => ids.map((id) => { if (id === '-') return '-'; const a = ACTIONS[id]; const off = a.off && a.off(); return { label: lbl(a), icon: a.icon, hint: a.kbd, danger: a.danger, disabled: off || (a.run ? null : later), run: a.run }; });
+const dropdown = (btn, items, opts = {}) => { if (MENU && MENU.anchor === btn) return closeMenu(); const r = btn.getBoundingClientRect(); menu(items, { x: r.left, y: r.bottom + 4, h: r.height + 8 }, { ...opts, anchor: btn }); };
+function palette() {
+  const it = [{ h: 'Views' }, ...VIEWS.map((v) => ({ label: 'Go to ' + v.label, icon: v.id, run: () => setView(v.id) })),
+    { h: 'Pipelines' }, ...(S.D ? S.D.pipelines.map((p) => ({ label: p.name, dot: col(last(p.id) && last(p.id).status), hint: p.tasks.length + ' steps', run: () => choose(p.id) })) : []),
+    { h: 'Panels' }, ...PANELS.map((x) => ({ label: (S.open.has(x.id) ? 'Close ' : 'Open ') + x.label, icon: 'panel', run: () => { S.open.has(x.id) ? S.open.delete(x.id) : S.open.add(x.id); save(); dock(); rail(); } })),
+    { h: 'Actions' }, ...fromActions(Object.keys(ACTIONS).filter((k) => !k.startsWith('dock')))];
+  menu(it, null, { search: true, palette: true, placeholder: 'Type a command, a pipeline or a view' });
+}
+
+// ════ VIEWS (side tabs) ════
+const VIEWS = [
+  { id: 'canvas', label: 'Canvas', live: () => S.D && S.D.jobs.some((j) => !bg(j) && j.status === 'running') }, { id: 'runs', label: 'Runs' },
+  // James, 2026-11-24: "a lot of the tabs need to be steps or gates. not tabs. like its redundant. make it a menu for this stuff". Only the canvas
+  // and its runs are tabs; every picker below opens from the Add step menu (hidden: no tab), and the empty proposed tabs are gone
+  { id: 'phases', label: 'Phases', hidden: true }, { id: 'components', label: 'Parts', hidden: true },
+  { id: 'library', label: 'Library', hidden: true }, { id: 'conds', label: 'Conditions', hidden: true }, { id: 'sched', label: 'Schedule', hidden: true },
+  { id: 'cmds', label: 'Commands', hidden: true }, { id: 'fws', label: 'Frameworks', hidden: true }, { id: 'tmpls', label: 'Templates', hidden: true },
+];
+const setView = (v) => { S.view = v; store.set('view', v); S.sig = ''; draw(); };
+// ════ the seven pick-not-type tabs (2026-11-24) ════
+// James, 2026-11-24: "programmable gates and steps, each system, conditions, scheduling, commands, frameworks, like all the pipeline can do but not
+// typing it all by hand but still agnostic, like tasker, brainos, highest leverage, but the easiest to use." Every list is read from what Nexus holds
+// (COS's step catalogue and its triggers and tests, each system's registry and routes, the .framework files, lib/node-schemas). Nothing is saved:
+// each pick edits this screen's draft of the pipeline, as + Add does.
+Object.assign(ICONS, {
+  library: '<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><path d="M17.5 14v7M14 17.5h7"/>',
+  systems: '<rect x="3" y="4" width="18" height="6" rx="1.5"/><rect x="3" y="14" width="18" height="6" rx="1.5"/><path d="M7 7h.01M7 17h.01"/>',
+  conds: '<path d="M6 3v6a4 4 0 0 0 4 4h8M14 9l4 4-4 4M6 21v-4"/>', sched: '<circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/>',
+  cmds: '<path d="M5 8l4 4-4 4M11 16h8"/>', fws: '<path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M12 12l8-4.5M12 12v9M12 12L4 7.5"/>',
+  tmpls: '<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/>',
+});
+const MORE = ['library', 'systems', 'conds', 'sched', 'cmds', 'fws', 'tmpls'];
+async function loadJ(k, url) { if (S[k]) return; S[k] = { loading: true }; try { S[k] = url ? await (await fetch(url)).json() : { error: 'COS has no route for this yet' }; } catch (_) { S[k] = { error: 'not answering' }; } S.sig = ''; delete $('work').dataset.v; work(); }
+const needPipe = () => { if (!pipe()) { toast('Choose a pipeline first (the menu at the top)', 'warn'); return false; } return true; };
+const pickTo = (type, preset, note) => { if (!needPipe()) return; setView('canvas'); addStep(type, 'after', preset); toast(note || 'Added to the canvas (a draft: nothing is saved)'); };
+const cardCss = 'display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px;margin-top:14px';
+const card = (attrs, h, sub, foot) => `<button class="pcard" ${attrs}><b>${h}</b><span>${sub}</span>${foot ? `<i>${foot}</i>` : ''}</button>`;
+const sel = (id, opts, v) => `<select id="${id}" class="psel">${opts.map((o) => `<option value="${esc(o.value)}" ${o.value === v ? 'selected' : ''}>${esc(o.label)}</option>`).join('')}</select>`;
+function moreView(w) {
+  const vw = S.view, page = (title, lead, body, n) => `<div class="page"><div class="lh"><h2>${title}${n != null ? ` <span class="ct">${n}</span>` : ''}</h2>${n != null ? '<input class="lq" placeholder="Find…" spellcheck="false">' : ''}</div><div class="lead">${lead}</div>${body}</div>`;
+  const bindFind = () => { const q = w.querySelector('.lq'); if (q) q.oninput = () => { const s = q.value.toLowerCase(); w.querySelectorAll('.pcard,[data-row]').forEach((c) => c.style.display = c.textContent.toLowerCase().includes(s) ? '' : 'none'); }; };
+  if (vw === 'library' || vw === 'conds' || vw === 'sched') { if (!S.cat || !S.cat.catalogue || !S.cat.catalogue.length) { w.innerHTML = '<div class="empty" style="margin:auto">Reading COS’s step catalogue…</div>'; if (!S.cat || !S.cat.loading) { S.cat = null; loadCat().then(() => { delete w.dataset.v; work(); }); } return; } }
+  if (vw === 'library') { const C = S.cat.catalogue, groups = [...new Set(C.map((c) => c.group))];
+    w.innerHTML = page('Library', 'Every kind of step and gate COS’s engine runs, from its own catalogue. <b>Click one</b>: it goes on the canvas after the selected box, and its settings open in the Inspector, as menus.',
+      groups.map((g) => `<h3 class="pg">${esc(g)}</h3><div style="${cardCss}">${C.filter((c) => c.group === g).map((c) => card(`data-ty="${esc(c.type)}"`, `<span class="gl">${esc(c.icon || '')}</span> ${esc(c.label)}`, esc(c.help || ''), (c.fields || []).length + ' settings · gives ' + esc(String(c.output || '').slice(0, 60)))).join('')}</div>`).join(''), C.length);
+    w.querySelectorAll('[data-ty]').forEach((b) => b.onclick = () => pickTo(b.dataset.ty)); return bindFind(); }
+  if (vw === 'conds') { const ops = S.cat.ops || [], p = pipe(), from = [{ value: '', label: 'a value (choose)' }, ...((p && p.tasks) || []).map((t) => ({ value: '{{steps.' + t.id + '.output}}', label: 'what “' + t.label + '” gave' })), ...Object.keys((p && p.vars) || {}).map((k) => ({ value: '{{vars.' + k + '}}', label: 'the variable ' + k }))];
+    const then = [{ value: 'next', label: 'go on to the next box' }, ...((p && p.tasks) || []).map((t) => ({ value: 'goto:' + t.id, label: 'jump to “' + t.label + '”' })), { value: 'stop', label: 'stop the pipeline' }, { value: 'break', label: 'leave the loop' }];
+    w.innerHTML = page('Conditions', 'An <b>If…</b> box, built by picking. Its values come from this pipeline’s boxes and variables; its tests are COS’s own (' + ops.length + '). Only the answer to compare against is typed, when it is a word or a number.',
+      `<div class="pform"><label>If</label>${sel('c-a', from.length > 1 ? from : [{ value: '', label: 'choose a pipeline first' }])}<label>is tested</label>${sel('c-op', ops)}<label>against</label><input id="c-b" class="psel" placeholder="a word or number" spellcheck="false"><label>then</label>${sel('c-t', then)}<label>otherwise</label>${sel('c-f', then, 'stop')}<button class="addbtn" id="c-go">+ Put it on the canvas</button></div>
+       <h3 class="pg">Its tests</h3><div style="${cardCss}">${ops.map((o) => card('data-row disabled', esc(o.label), '<code>' + esc(o.value) + '</code>')).join('')}</div>`, null);
+    $('c-go').onclick = () => { const a = $('c-a').value, op = $('c-op').value, b = $('c-b').value, t = $('c-t').value, f = $('c-f').value; if (!a) return toast('Pick what to test', 'warn');
+      pickTo('condition', { label: 'If ' + (a.match(/\{\{(?:steps\.|vars\.)?([^}.]+)/) || [, a])[1] + ' ' + ((ops.find((o) => o.value === op) || {}).label || op) + ' ' + b, config: { test: 'value', left: a, op, right: b, then: t, else: f } }); }; return; }
+  if (vw === 'sched') { const T = S.cat.trigger || {}, kinds = T.kinds || [], evs = T.events || [], p = pipe();
+    w.innerHTML = page('Schedule', esc(T.help || 'What starts the pipeline.') + ' Picked from COS’s own list of starts (' + kinds.length + ' kinds, ' + evs.length + ' events). <b>A pipeline can have several.</b>',
+      `<div class="pform"><label>Start it</label>${sel('s-k', kinds)}<span id="s-more" style="display:contents"></span><button class="addbtn" id="s-go">+ Add this start</button></div>
+       <h3 class="pg">Its starts now</h3><div id="s-now" class="lead">${p ? (S.trig[p.id] || []).map((x) => '• ' + esc(x)).join('<br>') || 'Only when Run is pressed.' : 'Choose a pipeline first.'}</div>
+       <h3 class="pg">Events it can wait for</h3><div style="${cardCss}">${evs.map((e) => card('data-row disabled', esc(e.label), e.match ? 'matches on its ' + esc(e.match) : 'no match needed')).join('')}</div>`, null);
+    const more = () => { const k = $('s-k').value; $('s-more').innerHTML = k === 'every' ? `<label>every</label>${sel('s-n', [5, 10, 15, 30, 60, 120, 360, 720, 1440].map((n) => ({ value: String(n), label: n < 60 ? n + ' minutes' : n / 60 + ' hours' })), '60')}`
+      : k === 'daily' ? `<label>at</label><input id="s-n" class="psel" type="time" value="09:00">` : k === 'cron' ? `<label>when</label>${sel('s-n', [['0 * * * *', 'at the top of every hour'], ['*/15 * * * *', 'every quarter hour'], ['0 9 * * 1-5', '9:00 on weekdays'], ['0 0 * * *', 'at midnight'], ['0 9 * * 1', 'Monday 9:00']].map(([v, l]) => ({ value: v, label: l })))}`
+      : k === 'event' ? `<label>when</label>${sel('s-n', evs)}` : k === 'webhook' ? '<label>at</label><span class="lead" style="margin:0">a web request to COS (its address shows once built)</span>' : ''; };
+    $('s-k').onchange = more; more();
+    $('s-go').onclick = () => { if (!needPipe()) return; const k = $('s-k'), n = $('s-n'); const txt = k.options[k.selectedIndex].text + (n ? ': ' + (n.options ? n.options[n.selectedIndex].text : n.value) : ''); (S.trig[pipe().id] = S.trig[pipe().id] || []).push(txt); toast('Start added to the draft'); delete w.dataset.v; work(); }; return; }
+  if (vw === 'systems') { const sy = S.D ? S.D.systems : []; if (!S.comps) { loadComps(); }
+    const n = (s) => (S.comps || []).filter((c) => c.system === s).length;
+    w.innerHTML = page('Systems', 'Each of Nexus’s systems, its state from COS, and what it offers. <b>Click one</b> to ask it as a step; its components and commands are in <b>Parts</b> and <b>Commands</b>.',
+      `<div style="${cardCss}">${sy.map((s) => card(`data-sy="${esc(s.name)}"`, `<span class="sd" style="background:${s.state === 'up' || s.state === 'running' ? 'var(--ok)' : 'var(--amber)'}"></span> ${esc(s.name)}`, esc(s.state || '') + (s.port ? ' · port ' + s.port : ''), S.comps ? n(s.name) + ' components' : '')).join('')}</div>`, sy.length);
+    w.querySelectorAll('[data-sy]').forEach((b) => b.onclick = () => pickTo('command', { label: 'Ask ' + b.dataset.sy, config: { system: b.dataset.sy } })); return bindFind(); }
+  if (vw === 'cmds') { const sy = S.D ? S.D.systems : [], cur = S.cmdSys || (sy[0] && sy[0].name); if (cur && !S.cmds[cur]) loadCmds(cur).then(() => { if (S.view === 'cmds') { delete w.dataset.v; work(); } });
+    if (!S.comps) loadComps().then(() => { if (S.view === 'cmds') { delete w.dataset.v; work(); } });
+    // its own /commands list when it answers one; else the routes in its component registry (most systems keep them only there)
+    const own = (cur && S.cmds[cur]) || [], reg = [...new Set((S.comps || []).filter((c) => c.system === cur && c.path).map((c) => c.path.split('?')[0]))].sort(), ps = own.length ? own : reg;
+    w.innerHTML = page('Commands', 'Every route a system answers (its own <code>/commands</code>). Pick the system, then <b>click a route</b>: it becomes a step that calls it.',
+      `<div class="pform"><label>System</label>${sel('m-s', sy.map((s) => ({ value: s.name, label: s.name })), cur)}</div><div style="${cardCss}">${ps.map((x) => card(`data-cm="${esc(x)}"`, '<code>' + esc(x) + '</code>', esc(cur))).join('') || '<div class="empty">Reading, or this system does not list its routes.</div>'}</div>`, ps.length);
+    $('m-s').onchange = () => { S.cmdSys = $('m-s').value; delete w.dataset.v; work(); };
+    w.querySelectorAll('[data-cm]').forEach((b) => b.onclick = () => pickTo('command', { label: b.dataset.cm, config: { system: cur, method: 'GET', endpoint: b.dataset.cm } })); return bindFind(); }
+  if (vw === 'fws') { if (!S.fw) { loadJ('fw', null); w.innerHTML = '<div class="empty" style="margin:auto">Reading…</div>'; return; } const F = S.fw.frameworks || [];
+    w.innerHTML = page('Frameworks', 'Every <code>.framework</code> in Nexus. <b>Click one</b>: it runs as one step, its own steps compiled into pipelines. One that only describes (no steps) is refused by COS when run, and said.',
+      `<div style="${cardCss}">${F.map((f, i) => card(`data-fw="${i}"`, esc(f.title), '<code>' + esc(f.file) + '</code>', f.lines + ' lines · ' + (f.steps ? 'declares steps' : 'describes only'))).join('')}</div>`, F.length);
+    w.querySelectorAll('[data-fw]').forEach((b) => b.onclick = () => { const f = F[+b.dataset.fw]; pickTo('framework', { label: f.title.slice(0, 40), config: { framework: f.file } }); }); return bindFind(); }
+  if (vw === 'tmpls') { if (!S.tm) { loadJ('tm', null); w.innerHTML = '<div class="empty" style="margin:auto">Reading…</div>'; return; } const T = S.tm.templates || [], first = ['gate', 'step_gate', 'contract', 'raid_contract', 'pipeline', 'workflow', 'procedure', 'process_step', 'dag', 'ledger', 'gap', 'fault', 'failure_mode'];
+    const ord = [...T].sort((a, b) => ((first.indexOf(a.type) + 1) || 99) - ((first.indexOf(b.type) + 1) || 99));
+    w.innerHTML = page('Templates', 'Every kind of node Nexus keeps, from <code>lib/node-schemas</code>: a gate, a step’s gate, a contract, a pipeline, a gap, a fault… and what each field holds. <b>Gate and step first</b>: the gate is the unit (RL_D10). Making one from here comes with the contract-compartment template; in this preview it shows the fields.',
+      `<div style="${cardCss}">${ord.map((t) => card('data-row', esc(t.type) + ` <span class="pill" style="color:${t.status === 'REAL' ? 'var(--ok)' : 'var(--amber)'}">${esc(t.status || '')}</span>`, t.holes.map((h) => '<code>' + esc(h.path) + '</code> ' + esc(String(h.about || '').slice(0, 70))).join('<br>') || 'no fields read')).join('')}</div>`, T.length);
+    return bindFind(); }
+}
+function side() {
+  $('side').innerHTML = VIEWS.filter((v) => v === '-' || !v.hidden).map((v) => v === '-' ? '<hr>' : `<button class="stab ${S.view === v.id ? 'on' : ''}" data-v="${v.id}" title="${esc(v.proposed || v.label)}">${icon(v.id)}<span>${v.label}</span>${v.live && v.live() ? '<span class="badge"></span>' : v.proposed ? '<span class="new"></span>' : ''}</button>`).join('');
+  $('side').querySelectorAll('[data-v]').forEach((b) => b.onclick = () => setView(b.dataset.v));
+}
+
+// ════ top ════
+function topbar() {
+  const p = pipe(), r = p && last(p.id), D = S.D, stale = Date.now() - S.ok > 6000;
+  $('top').innerHTML = `<div class="logo">C<span>O</span>S</div>
+    ${S.stack.length ? `<button class="dd" id="backBtn" title="Back to the pipeline this one sits in">‹ ${esc((allPipes().find((x) => x.id === S.stack[S.stack.length - 1]) || {}).name || 'back')}</button><span style="color:var(--text3)">/</span>` : ''}
+    <button class="dd" id="pick"><span class="sd" style="background:${col(r && r.status)}"></span><b>${esc(p ? p.name : 'Choose a pipeline')}</b><span style="color:var(--text3);font:11px var(--mono)">${r ? esc(r.status) + ' · ' + ago(r.at) : ''}</span>${icon('chev').replace('class="i"', 'class="i chev"')}</button>
+    ${p ? `<button class="dd" id="modeBtn" title="The pipeline's type">${icon(modeOf(p) === 'branching' ? 'canvas' : modeOf(p) === 'radial' ? 'radial' : 'gate')}${esc((MODES.find((m) => m[0] === modeOf(p)) || MODES[0])[1])}${icon('chev').replace('class="i"', 'class="i chev"')}</button>` : ''}
+    <button class="dd" id="addBtn">${icon('plus')}Add step${icon('chev').replace('class="i"', 'class="i chev"')}</button>
+    <button class="dd primary" id="runBtn">${icon('play')}Run${icon('chev').replace('class="i"', 'class="i chev"')}</button>
+    ${S.edits[S.pid] ? `<button class="dd" id="draftBtn" title="Your changes are a draft"><span class="sd" style="background:var(--violet)"></span>Draft · ${S.edits[S.pid]} ${S.edits[S.pid] === 1 ? 'change' : 'changes'}${icon('chev').replace('class="i"', 'class="i chev"')}</button>` : ''}
+    <div class="grow"></div>
+    <button class="search-hint" id="pal">${icon('search')}<span class="grow" style="text-align:left">Search commands</span><span class="kbd">Ctrl K</span></button>
+    <button class="icon-btn" id="sys" title="${stale ? 'Not answering' : 'Live'}"><span class="sd" style="background:${stale ? 'var(--coral)' : 'var(--ok)'};${stale ? '' : 'animation:pulse 2s infinite'}"></span></button>
+    <button class="icon-btn" id="more" title="More">${icon('more')}</button>`;
+  $('pick').onclick = (e) => dropdown(e.currentTarget, (D ? allPipes() : []).map((x) => { const lr = last(x.id); return { label: x.name, dot: col(lr && lr.status), hint: lr ? lr.status + ' · ' + ago(lr.at) : 'never run', run: () => choose(x.id) }; }) .concat(['-', { label: 'New pipeline', icon: 'plus', run: () => ACTIONS['pipe.new'].run() }]), { search: true, placeholder: 'Find a pipeline' });
+  $('runBtn').onclick = (e) => dropdown(e.currentTarget, fromActions(MENUS.run));
+  $('addBtn').onclick = (e) => { loadCat(); dropdown(e.currentTarget, catMenu('after'), { search: true, placeholder: S.sel ? 'Add after the selected step' : 'Add at the end' }); };
+  if ($('modeBtn')) $('modeBtn').onclick = (e) => dropdown(e.currentTarget, [{ h: 'Type' }, ...MODES.map(([k, l, d]) => ({ label: l, desc: d, icon: k === 'branching' ? 'canvas' : k === 'radial' ? 'radial' : 'gate', hint: modeOf(pipe()) === k ? '✓' : '', run: () => { edit((q) => { q.kind = k; }); S.vp = null; S.sig = ''; work(); } })),
+    '-', { label: 'COS’s engine runs branching today; radial and the field are drawn and saved, and their run order is the next phase.', disabled: ' ' }]);
+  if ($('backBtn')) $('backBtn').onclick = () => { const id = S.stack.pop(); choose(id, true); };
+  if ($('draftBtn')) $('draftBtn').onclick = (e) => dropdown(e.currentTarget, fromActions(MENUS.draft));
+  $('more').onclick = (e) => dropdown(e.currentTarget, fromActions(MENUS.more));
+  $('pal').onclick = palette;
+  $('sys').onclick = (e) => { if (!D) return; const h = D.host || {}, m = D.loaded[0];
+    dropdown(e.currentTarget, [{ h: stale ? 'Not answering' : 'Live · ' + new Date(D.at).toLocaleTimeString() }, { label: 'Ollama', hint: m ? model(m.name) + ' · ' + (m.vramMB / 1024).toFixed(1) + ' GB VRAM' : 'no model loaded', icon: 'model' },
+      { label: 'Memory free', hint: h.freeMB != null ? (h.freeMB / 1024).toFixed(1) + ' GB' : '—', icon: 'chip' }, { label: 'CPU', hint: h.cpuPct != null ? h.cpuPct + '%' : '—', icon: 'chip' }, '-',
+      { h: 'Systems · ' + D.systems.filter((s) => s.state === 'up').length + '/' + D.systems.length + ' up' }, ...D.systems.map((s) => ({ label: s.name, dot: s.state === 'up' ? 'var(--ok)' : s.state === 'degraded' ? 'var(--amber)' : 'var(--text3)', hint: s.state }))]); };
+  const pr = $('progress'); pr.innerHTML = p ? p.tasks.map((t) => `<i style="background:${r ? col(st(r, t.id)) : 'var(--edge)'}" title="${esc(t.label)}"></i>`).join('') : '';
+}
+function choose(id, nested) { if (!nested) S.stack = []; S.pid = id; store.set('pid', id); S.sel = null; S.vp = null; S.sig = ''; draw(); loadBase(id); }
+async function loadBase(id) { if (!id || S.base[id]) return; S.base[id] = { loading: true }; try { S.base[id] = await (await none(encodeURIComponent(id))).json() || {}; } catch (_) { S.base[id] = {}; } if (S.pid === id) { S.sig = ''; work(); dock(); } }
+
+// ════ canvas ════
+const W = 214, H = 84, GX = 96, GY = 40;
+// the three pipeline types (his, 2026-11-21): "One the constraint relation field map. Another one that starts from the center and propagates outward.
+// Then we have the normal branching one that can be used for a million things like we have logged to phase."
+const MODES = [
+  ['branching', 'Branching', 'Step by step: a step runs when the steps before it passed their gates. The one phases use.'],
+  ['radial', 'Radial', 'Starts at the centre and spreads outward: each ring runs once the ring inside it has passed.'],
+  ['field', 'Constraint field', 'Gates are the nodes: each relates the step it reads to the steps it lets through. A step runs when every gate around it holds.'],
+];
+const modeOf = (p) => (p && p.kind) || 'branching';
+// where a wire meets a box: the point on the box's edge facing (fx, fy)
+function edgeOf(b, fx, fy) { const cx = b.x + W / 2, cy = b.y + H / 2, dx = fx - cx, dy = fy - cy; if (!dx && !dy) return { x: cx, y: cy }; const k = Math.min(Math.abs((W / 2) / (dx || 1e-9)), Math.abs((H / 2) / (dy || 1e-9))); return { x: cx + dx * k, y: cy + dy * k }; }
+function layout(p) {
+  const by = Object.fromEntries(p.tasks.map((t) => [t.id, t])), lv = {}, mode = modeOf(p);
+  const L = (id, seen = new Set()) => { if (lv[id] != null) return lv[id]; if (seen.has(id)) return 0; seen.add(id); const d = ((by[id] || {}).depends_on || []).filter((x) => by[x]); return lv[id] = d.length ? 1 + Math.max(...d.map((x) => L(x, seen))) : 0; };
+  p.tasks.forEach((t) => L(t.id)); const cols = {}; p.tasks.forEach((t) => (cols[lv[t.id]] = cols[lv[t.id]] || []).push(t.id));
+  const pos = {}, gpos = {};
+  if (!p.tasks.length) return { pos, gpos, w: 400, h: 200, mode };
+  if (mode === 'branching') {
+    const nC = Object.keys(cols).length, tall = Math.max(...Object.values(cols).map((x) => x.length)), wrap = document.querySelector('.canvas-wrap');
+    const rc = wrap ? wrap.getBoundingClientRect() : { width: 1400, height: 500 }, aw = rc.width - 40, ah = rc.height - 50, band = tall * (H + GY) - GY + 70;
+    let per = nC, best = 0; for (let k = 1; k <= nC; k++) { const s = Math.min(aw / (80 + k * (W + GX) - GX), ah / (80 + Math.ceil(nC / k) * band - 70)); if (s > best + 1e-6) { best = s; per = k; } }
+    for (const [c, ids] of Object.entries(cols)) ids.forEach((id, i) => { pos[id] = { x: 40 + (c % per) * (W + GX), y: 40 + Math.floor(c / per) * band + i * (H + GY) }; gpos[id] = { x: pos[id].x + W + 22, y: pos[id].y + H / 2 }; });
+    return { pos, gpos, w: 80 + Math.min(nC, per) * (W + GX), h: 80 + Math.ceil(nC / per) * band - 70, mode };
+  }
+  const n = p.tasks.length;
+  if (mode === 'radial') {   // ring = how far from the origin; each ring rotated a little so wires do not stack
+    // a spiral out from the origin: the distance grows with the ring (√ring, so a long chain stays compact), each ring turned by the golden angle
+    for (const [l, ids] of Object.entries(cols)) ids.forEach((id, i) => { const rad = 250 * Math.sqrt(+l) * (1 + i * .35), a = (+l) * 2.4 + (i / ids.length) * 2 * Math.PI - Math.PI / 2, cx = rad * Math.cos(a), cy = rad * Math.sin(a);
+      pos[id] = { x: cx - W / 2, y: cy - H / 2 }; const len = Math.hypot(cx, cy), ux = len ? cx / len : 1, uy = len ? cy / len : 0; gpos[id] = { x: cx + ux * (W / 2 + 30), y: cy + uy * (H / 2 + 30) }; });
+  } else {   // the field: steps on the outer ring, each gate on the inner ring between the step it reads and the steps it lets through
+    const Ro = Math.max(320, n * 62), Ri = Ro * .48, ang = {};
+    p.tasks.forEach((t, i) => { const a = (i / n) * 2 * Math.PI - Math.PI / 2; ang[t.id] = a; pos[t.id] = { x: Ro * Math.cos(a) - W / 2, y: Ro * Math.sin(a) - H / 2 }; });
+    for (const t of p.tasks) { const outs = p.tasks.filter((x) => (x.depends_on || []).includes(t.id)).map((x) => ang[x.id]), all = [ang[t.id], ...outs];
+      const a = Math.atan2(all.reduce((s, v) => s + Math.sin(v), 0), all.reduce((s, v) => s + Math.cos(v), 0)); gpos[t.id] = { x: Ri * Math.cos(a), y: Ri * Math.sin(a) }; }
+  }
+  const xs = [...Object.values(pos).flatMap((q) => [q.x, q.x + W]), ...Object.values(gpos).flatMap((g) => [g.x - 60, g.x + 60])], ys = [...Object.values(pos).flatMap((q) => [q.y, q.y + H]), ...Object.values(gpos).flatMap((g) => [g.y - 20, g.y + 50])];
+  const mx = Math.min(...xs) - 40, my = Math.min(...ys) - 40; for (const q of [...Object.values(pos), ...Object.values(gpos)]) { q.x -= mx; q.y -= my; }
+  return { pos, gpos, w: Math.max(...xs) - mx + 40, h: Math.max(...ys) - my + 40, mode };
+}
+// what a box does, in plain words, from its kind and its settings
+function describe(t) { const k = kind(t), c = catOf(k), cfg = (t.step && t.step.config) || {};
+  if (k === 'command') return `Asks ${cfg.system || 'a system'}: ${cfg.method || 'GET'} ${cfg.endpoint || ''}`;
+  if (k === 'api') { const m = /^nexus:\/\/([a-z0-9-]+)(\/\S*)?/i.exec(String(cfg.url || '')); return m ? `Asks ${m[1]}: ${cfg.method || 'GET'} ${(m[2] || '').replace(/^\/api/, '').replace(/\{\{[^}]+\}\}/g, '…')}` : `Calls ${cfg.url || 'an address'}`; }
+  if (k === 'pipeline') { const q = allPipes().find((x) => x.id === cfg.pipeline || x.name === cfg.pipeline); return `Runs the pipeline “${q ? q.name : cfg.pipeline || '?'}”${cfg.vars && cfg.vars.phase ? ' for ' + cfg.vars.phase : ''}`; }
+  if (k === 'procedure') return `Follows the procedure ${cfg.procedure || '?'}`;
+  if (k === 'framework') return `Works through the framework ${cfg.framework || '?'}`;
+  if (k === 'agent') return `Asks ${cfg.agentKey || 'an agent'}: ${String(cfg.prompt || '').slice(0, 60)}`;
+  return c ? c.help : k; }
+// ── the canvas grows from the work (James, 2026-11-24: "make sure its as simple but as high leverage as possible. not deterministic, only rigid
+// static boxes"): a pipeline that builds a phase draws that build's gates under its own boxes, live. Each function of the plan is a column; a
+// piece the build broke down hangs under the gate it unblocks; colour is the gate's state, the number its tries; the gate being asked is ringed.
+function growsFrom(p) { const b = S.D && S.D.build; if (!b || !b.gates || !b.gates.length) return null;
+  const builds = (p.tasks || []).some((t) => t.step && t.step.config && /build-phase/.test(String(t.step.config.script || ''))); if (!builds) return null;
+  const asking = [...(b.rows || [])].reverse().find((r) => r.state === 'gap-asked' || r.state === 'gap-answered');
+  return { gates: b.gates, order: (b.gaps || []).filter((g) => !g.helper).map((g) => g.name), now: asking && asking.state === 'gap-asked' ? asking.gap : null, phase: b.phase }; }
+function gateTree(t) {
+  const W = 168, H = 44, GX = 18, GY = 14, by = new Map(t.gates.map((g) => [g.name, g])), kids = new Map();
+  for (const g of t.gates) if (g.blocks && by.has(g.blocks)) (kids.get(g.blocks) || kids.set(g.blocks, []).get(g.blocks)).push(g);
+  const roots = [...t.order.filter((n) => by.has(n)).map((n) => by.get(n)), ...t.gates.filter((g) => !t.order.includes(g.name) && !(g.blocks && by.has(g.blocks)))];
+  const col = (s) => s === 'passed' ? 'var(--ok)' : /held|failed/.test(s) ? 'var(--red, #f87171)' : s === 'blocked' ? 'var(--amber)' : 'var(--sky)';
+  let out = '', y0 = 420, maxY = y0; const box = (g, x, y, d) => { const c = col(g.status), now = g.name === t.now;
+    out += `<g><title>${esc(g.name)} · ${esc(g.status)} · ${g.tries} tries${g.blocks ? ' · unblocks ' + esc(g.blocks) : ''}</title><rect x="${x}" y="${y}" width="${W}" height="${H}" rx="9" fill="color-mix(in srgb, ${c} 12%, var(--bg2))" stroke="${now ? 'var(--bright)' : c}" stroke-width="${now ? 2.4 : 1.2}"${now ? ' stroke-dasharray="5 3"' : ''}/>`
+      + `<text x="${x + 10}" y="${y + 18}" fill="var(--bright)" font-size="12" font-family="var(--mono)">${esc(g.name.length > 20 ? g.name.slice(0, 19) + '…' : g.name)}</text><text x="${x + 10}" y="${y + 34}" fill="${c}" font-size="10.5" font-family="var(--mono)">${esc(now ? 'the 3b is on it' : g.status)} · ${g.tries} tries</text></g>`;
+    let yy = y + H + GY; for (const k of kids.get(g.name) || []) { out += `<path d="M${x + 14} ${y + H} V${yy + H / 2} H${x + 14 + d}" fill="none" stroke="var(--edge)" stroke-width="1.2"/>`; yy = box(k, x + 14 + d, yy, 0) ; } maxY = Math.max(maxY, yy); return yy; };
+  roots.forEach((g, i) => box(g, 20 + i * (W + GX), y0 + 28, 0));
+  const passed = t.gates.filter((g) => g.status === 'passed').length;
+  return `<text x="20" y="${y0 + 12}" fill="var(--text2)" font-size="12" font-family="var(--mono)">${esc(t.phase || '')} · ${passed} of ${t.gates.length} gates passed · grows as the build opens, breaks down and passes them</text>${out}`;
+}
+function svgOf(p) {
+  const r = last(p.id), base = (S.base[p.id] && S.base[p.id].steps) || {}, { pos, gpos, mode } = layout(p); let wires = '', gates = '', nodes = '';
+  for (const t of p.tasks) for (const d of (t.depends_on || [])) { const a = pos[d], b = pos[t.id], g = gpos[d]; if (!a || !b) continue;
+    // wires leave from the step's own gate (the engine checks a step's output after it runs: cos/automation/pipeline.js gateOpen(gate, output))
+    const sa = st(r, d), sb = st(r, t.id); let path;
+    if (mode === 'branching') { const x1 = g.x + 12, y1 = g.y, x2 = b.x, y2 = b.y + H / 2, mx = (x1 + x2) / 2;
+      path = x2 <= x1 ? `M${x1},${y1} h4 q8,0 8,8 V${a.y + H + 50} q0,8 -8,8 H${x2 - 28} q-8,0 -8,8 V${y2 - 8} q0,8 8,8 H${x2 - 2}` : `M${x1},${y1} C${mx},${y1} ${mx},${y2} ${x2 - 2},${y2}`; }
+    else { const e = edgeOf(b, g.x, g.y), qx = (g.x + e.x) / 2 + (e.y - g.y) * .12, qy = (g.y + e.y) / 2 - (e.x - g.x) * .12; path = `M${g.x},${g.y} Q${qx},${qy} ${e.x},${e.y}`; }
+    wires += `<path class="wire ${sb === 'running' ? 'live' : /done|complete|passed/.test(sa) ? 'done' : ''}" d="${path}"/>`; }
+  // each step's gate: open → the steps that follow; closed → its onFail (stop · continue · hold), the second path; retries ↻ n
+  for (const t of p.tasks) { const a = pos[t.id]; if (!a) continue;
+    const s = st(r, t.id), gx = gpos[t.id].x, gy = gpos[t.id].y, gt = gtext(t.gate), sel = S.sel && S.sel.t === 'gate' && S.sel.id === t.id, passed = /done|complete|passed/.test(s);
+    const of = t.onFail || 'stop', bc = of === 'hold' ? 'var(--violet)' : of === 'continue' ? 'var(--amber)' : 'var(--coral)', took = s === 'failed', bt = 'closed → ' + (of === 'hold' ? 'hold' : of), bw = bt.length * 5.6 + 14;
+    const e0 = edgeOf(a, gx, gy); wires += `<path class="wire ${passed ? 'done' : ''}" d="${mode === 'branching' ? `M${a.x + W},${gy} H${gx - 10}` : `M${e0.x},${e0.y} L${gx},${gy}`}"/>`;
+    gates += `<g class="gate ${took ? 'bad' : passed ? 'ok' : ''} ${sel ? 'sel' : ''}" data-gate="${esc(t.id)}"><title>Gate after “${esc(t.label)}”\nopen when ${esc(gt)}\nclosed: ${esc(of)}${t.retries ? ', after ' + t.retries + ' retries' : ''}</title>
+      <path d="M${gx},${gy + 10} v18" fill="none" stroke="${bc}" stroke-width="1.2" stroke-dasharray="${took ? '0' : '3 3'}" opacity="${took ? 1 : .55}"/>
+      <rect x="${gx - bw / 2}" y="${gy + 28}" width="${bw}" height="15" rx="7.5" fill="var(--bg1)" stroke="${bc}" stroke-width="1" opacity="${took ? 1 : .7}"/><text x="${gx}" y="${gy + 38.5}" text-anchor="middle" style="fill:${bc}">${esc(bt)}</text>
+      <rect x="${gx - 7}" y="${gy - 7}" width="14" height="14" rx="2" transform="rotate(45 ${gx} ${gy})"/><text x="${gx}" y="${gy - 13}" text-anchor="middle">${esc(gt.length > 16 ? gt.slice(0, 15) + '…' : gt)}</text>
+      ${t.retries ? `<text x="${gx + 11}" y="${gy - 6}" style="fill:var(--sky)">↻${t.retries}</text>` : ''}${t.when ? `<text x="${a.x}" y="${a.y - 6}" style="fill:var(--amber)">only when ${esc(String(typeof t.when === 'string' ? t.when : JSON.stringify(t.when)).slice(0, 30))}</text>` : ''}</g>`; }
+  for (const t of p.tasks) { const { x, y } = pos[t.id], s = st(r, t.id), tr = r && r.tasks[t.id], b = base[t.id], c = col(s), ms = tr && tr.ms != null ? tr.ms : null;
+    const pct = b && b.mean_ms > 0 && ms != null ? Math.min(100, Math.round(ms / (b.mean_ms + 2 * (b.sigma_ms || 0)) * 100)) : null, sel = S.sel && S.sel.t === 'step' && S.sel.id === t.id;
+    nodes += `<g class="node ${s} ${sel ? 'sel' : ''}" data-step="${esc(t.id)}" transform="translate(${x},${y})" style="cursor:pointer"><title>${esc(t.label)}\n${esc(describe(t))}${kind(t) === 'pipeline' ? '\nDouble-click to open it' : ''}</title>
+      <rect class="box" width="${W}" height="${H}" rx="9"/><rect class="stripe" width="3" height="${H - 18}" y="9" rx="1.5" fill="${c}"/>
+      <text class="ty" x="14" y="18">${catOf(kind(t)) ? esc(catOf(kind(t)).icon + ' ' + catOf(kind(t)).label.toUpperCase()) : esc(kind(t).toUpperCase())}${t.method ? ' · ' + esc(String(t.method).toUpperCase()) : ''}</text><circle class="dotc" cx="${W - 14}" cy="15" r="4" fill="${c}"/>
+      <text class="lb" x="14" y="37">${esc(t.label.length > 27 ? t.label.slice(0, 26) + '…' : t.label)}</text><text class="ds" x="14" y="54">${esc((d => d.length > 38 ? d.slice(0, 37) + '…' : d)(describe(t) || ''))}</text><text class="sb" x="14" y="72">${esc(s)}${ms != null ? ' · ' + dur(ms) : ''}${b && b.n ? ' · usual ' + dur(b.mean_ms) : ''}</text>
+      ${pct != null ? `<rect x="14" y="${H - 7}" width="${W - 28}" height="2" rx="1" fill="var(--edge)"/><rect x="14" y="${H - 7}" width="${(W - 28) * pct / 100}" height="2" rx="1" fill="${pct >= 100 ? 'var(--coral)' : 'var(--sky)'}"/>` : ''}</g>`; }
+  return `<g id="vp">${wires}${gates}${nodes}</g>`;
+}
+function fit() { const p = pipe(), w = document.querySelector('.canvas-wrap'); if (!p || !w) return; const L = layout(p), r = w.getBoundingClientRect(), k = Math.max(.15, Math.min(1.2, (r.width - 40) / L.w, (r.height - 30) / L.h)); S.vp = { k, x: (r.width - L.w * k) / 2, y: Math.max(10, (r.height - L.h * k) / 2) }; applyVp(); }
+function zoom(f, cx, cy) { const s = document.querySelector('svg.cv'); if (!s || !S.vp) return; const r = s.getBoundingClientRect(); cx = cx == null ? r.width / 2 : cx; cy = cy == null ? r.height / 2 : cy; const k = Math.min(2.5, Math.max(.2, S.vp.k * f)); S.vp.x = cx - (cx - S.vp.x) * k / S.vp.k; S.vp.y = cy - (cy - S.vp.y) * k / S.vp.k; S.vp.k = k; applyVp(); }
+function applyVp() { const v = $('vp'); if (v && S.vp) v.setAttribute('transform', `translate(${S.vp.x},${S.vp.y}) scale(${S.vp.k})`); }
+function select(t, id) { S.sel = id ? { t, id } : null; S.sig = ''; work(); dock(); }
+function bindCanvas() {
+  const s = document.querySelector('svg.cv'); if (!s) return; let drag = null;
+  s.onmousedown = (e) => { if (e.button || e.target.closest('.node,.gate')) return; drag = { x: e.clientX, y: e.clientY, vx: S.vp.x, vy: S.vp.y }; s.classList.add('drag'); };
+  onmousemove = (e) => { if (!drag) return; S.vp.x = drag.vx + e.clientX - drag.x; S.vp.y = drag.vy + e.clientY - drag.y; applyVp(); };
+  onmouseup = () => { drag = null; s.classList.remove('drag'); };
+  s.onwheel = (e) => { e.preventDefault(); const r = s.getBoundingClientRect(); zoom(e.deltaY < 0 ? 1.1 : 1 / 1.1, e.clientX - r.left, e.clientY - r.top); };
+  s.onclick = (e) => { const n = e.target.closest('.node'), g = e.target.closest('.gate'); if (n) select('step', n.dataset.step); else if (g) select('gate', g.dataset.gate); else if (S.sel) select(null); };
+  // a pipeline box opens into its own canvas and back (PC4: "A pipeline or procedure box opens into its own canvas and back (recursive)")
+  s.ondblclick = (e) => { const n = e.target.closest('.node'); if (n) { const t = task(n.dataset.step), cfg = (t && t.step && t.step.config) || {};
+      if (t && kind(t) === 'pipeline') { const q = allPipes().find((x) => x.id === cfg.pipeline || x.name === cfg.pipeline); if (q) { S.stack.push(S.pid); return choose(q.id, true); } toast('That pipeline is not in COS: ' + (cfg.pipeline || '?')); } }
+    if (e.target.closest('.node,.gate')) openPanel('inspector'); };
+  s.oncontextmenu = (e) => { e.preventDefault(); const n = e.target.closest('.node'), g = e.target.closest('.gate');
+    if (n) select('step', n.dataset.step); else if (g) select('gate', g.dataset.gate);
+    const t = S.sel && task(S.sel.id); menu([...(t && (n || g) ? [{ h: (g ? 'Gate · ' : '') + t.label }] : []), ...fromActions(n ? MENUS.step : g ? MENUS.gate : MENUS.canvas)], { x: e.clientX, y: e.clientY }); };
+  document.querySelectorAll('.zoom [data-a]').forEach((b) => b.onclick = () => ACTIONS[b.dataset.a].run());
+}
+
+// ════ console ════
+const KW = /^(const|let|var|function|return|if|else|for|while|of|in|new|class|extends|import|export|from|default|async|await|try|catch|throw|typeof|require|module|exports|true|false|null|undefined|this|fn|gives|takes|when|use|test|expect)$/;
+function hl(line) { let o = '', i = 0, m; const re = /(\/\/.*$|#.*$)|('(?:\\.|[^'\\])*'?|"(?:\\.|[^"\\])*"?|`(?:\\.|[^`\\])*`?)|(\b\d+(?:\.\d+)?\b)|([A-Za-z_$][\w$]*)(?=\s*\()|([A-Za-z_$][\w$]*)|([{}()[\];,.=<>+\-*/!?:&|]+)/g;
+  while ((m = re.exec(line))) { o += esc(line.slice(i, m.index)); i = re.lastIndex; o += m[1] ? `<span class="c">${esc(m[1])}</span>` : m[2] ? `<span class="s">${esc(m[2])}</span>` : m[3] ? `<span class="n">${esc(m[3])}</span>`
+    : m[4] ? `<span class="${KW.test(m[4]) ? 'k' : 'f'}">${esc(m[4])}</span>` : m[5] ? (KW.test(m[5]) ? `<span class="k">${esc(m[5])}</span>` : esc(m[5])) : `<span class="p">${esc(m[6])}</span>`; if (!m[0]) re.lastIndex++; } return o + esc(line.slice(i)); }
+function text(t, running) { const ls = String(t || '').split('\n'); let code = !/```/.test(t), h = ''; ls.forEach((ln, i) => { const c = i === ls.length - 1 && running ? '<span class="caret"></span>' : '';
+  if (/^\s*```/.test(ln)) { code = !code; h += `<div class="l fence">${esc(ln)}${c}</div>`; } else h += code ? `<div class="l">${hl(ln)}${c}</div>` : `<div class="l prose">${esc(ln)}${c}</div>`; }); return h; }
+function consoleHtml(full) {
+  const b = S.D && S.D.build, box = (inner) => `<div class="console${full ? ' full' : ''}" id="console" style="${full ? '' : `flex-basis:${Math.round((1 - S.split) * 100)}%`};display:block;overflow:auto;padding:12px 16px">${inner}</div>`;
+  if (!S.D) return box('<div class="empty">Reading…</div>');
+  if (!b) return box('<div class="empty"><b>No build yet.</b> A build a step runs shows here, piece by piece.</div>');
+  const tone = (st) => st === 'passed' ? 'var(--ok)' : /refused|failed|held|blocked/.test(st) ? 'var(--red, #f87171)' : 'var(--text3)';
+  const word = (st) => ({ passed: 'passed', waiting: 'waiting', blocked: 'blocked', held: 'held' })[st] || st;
+  const g = b.gaps, ok = g.filter((x) => x.state === 'passed').length;
+  const bar = g.length ? `<div style="display:flex;gap:3px;margin:10px 0 12px">${g.map((x) => `<span title="${esc(x.name)} · ${esc(word(x.state))}" style="flex:1;height:14px;border-radius:3px;background:${tone(x.state)};opacity:${x.state === 'passed' ? 1 : .85}"></span>`).join('')}</div>` : '';
+  const head = `<div style="font:12px var(--mono);color:var(--text2)"><b style="color:var(--bright)">${esc(b.phase || '')}</b> · <code>${esc(b.run)}</code> · now: ${esc(b.last || '')}${g.length ? ` · ${ok} of ${g.length} pieces passed` : ''}</div>`;
+  const list = g.length ? g.map((x) => `<div style="display:grid;grid-template-columns:10px 1fr auto;gap:8px;align-items:center;padding:4px 0;border-bottom:1px solid var(--edge)"><span class="sd" style="background:${tone(x.state)}"></span><span style="font-size:12px;color:var(--bright)">${esc(x.name)}</span><span style="font:11px var(--mono);color:var(--text2)">${esc(word(x.state))} · ${x.asks} tries${x.model ? ' · ' + esc(String(x.model).replace(/^.*\//, '')) : ''}</span></div>`).join('')
+    : `<div style="font:11px var(--mono);color:var(--text2)">Its steps so far: ${esc(b.rows.map((x) => x.state).join(' › '))}</div><div class="empty" style="margin-top:8px">The pieces show here once its first round ends.</div>`;
+  return box(head + bar + list);
+}
+function bindConsole() {
+  const w = $('work'), cm = (e) => { e.preventDefault(); menu(fromActions(MENUS.call), { x: e.clientX, y: e.clientY }); };
+  w.querySelectorAll('[data-job]').forEach((b) => { b.onclick = () => { S.job = b.dataset.job; S.pinned = true; draw(); }; b.oncontextmenu = (e) => { S.job = b.dataset.job; S.pinned = true; draw(); cm(e); }; });
+  const c = w.querySelector('#console'); if (c) c.oncontextmenu = (e) => { if (!e.target.closest('[data-job]')) cm(e); };
+  const b = $('callMenu'); if (b) b.onclick = (e) => dropdown(e.currentTarget, fromActions(MENUS.call));
+}
+
+// ════ the work area ════
+function work() {
+  const p = pipe(), w = $('work'), pc = $('code'), bottom = pc ? pc.scrollTop + pc.clientHeight >= pc.scrollHeight - 30 : true, ptop = pc ? pc.scrollTop : 0, pl = w.querySelector('.calls .list'), ltop = pl ? pl.scrollTop : 0;
+  const v = VIEWS.find((x) => x.id === S.view);
+  if (S.view === 'phases' || S.view === 'components') { const key = S.view + ':' + !!(S.view === 'phases' ? S.phases : S.comps); if (w.dataset.v === key) return; w.dataset.v = key; return listView(w); }
+  if (MORE.includes(S.view)) { const key = 'more:' + S.view + ':' + S.pid + ':' + S.rev; if (w.dataset.v === key) return; w.dataset.v = key; return moreView(w); }
+  delete w.dataset.v;
+  if (S.view === 'canvas') {
+    if (!p) { w.innerHTML = '<div class="empty" style="margin:auto">Choose a pipeline from the menu at the top.</div>'; return; }
+    const grows = growsFrom(p), gsig = grows ? grows.gates.map((g) => g.name + g.status + g.tries).join('|') + (grows.now || '') : '';
+    const sig = JSON.stringify([p.id, p.tasks.length, last(p.id) && last(p.id).tasks, S.sel, !!S.base[p.id] && !S.base[p.id].loading, S.max, S.rev, !!(S.cat && S.cat.catalogue.length), gsig]);
+    if (sig !== S.sig || !w.querySelector('svg.cv')) { S.sig = sig;
+      w.innerHTML = `<div class="canvas-wrap" style="${S.max ? 'display:none;' : ''}flex-basis:${Math.round(S.split * 100)}%"><svg class="cv">${svgOf(p)}${grows ? gateTree(grows) : ''}</svg><div class="zoom"><button data-a="view.out" title="Zoom out">−</button><button data-a="view.fit" title="Fit (F)">⤢</button><button data-a="view.in" title="Zoom in">+</button></div></div><div class="splitter" id="split" title="Drag to resize · double-click: console full height"></div>${consoleHtml(S.max)}`;
+      if (!S.vp) requestAnimationFrame(fit); else applyVp(); bindCanvas(); bindSplit();
+    } else { const c = $('console'); if (c) c.outerHTML = consoleHtml(false); }
+    bindConsole();
+  } else if (S.view === 'console') { w.innerHTML = consoleHtml(true); bindConsole(); }
+  else if (S.view === 'runs') { const rs = p ? runs(p.id) : [];
+    w.innerHTML = `<div class="page"><h2>Runs <span style="color:var(--text3);font:12px var(--mono)">${rs.length}</span></h2>${rs.length ? `<table class="t"><thead><tr><th>Status</th><th>Started</th><th>Took</th><th>Steps</th><th>Error</th></tr></thead><tbody>${rs.map((r) => `<tr data-run="${esc(r.id)}"><td><span class="pill" style="color:${col(r.status)}"><span class="sd" style="background:${col(r.status)}"></span>${esc(r.status)}</span></td><td class="m">${r.at ? new Date(r.at).toLocaleString() : '—'}</td><td class="m">${r.at ? dur((r.end || Date.now()) - r.at) : '—'}</td><td><div class="mini">${p.tasks.map((t) => `<i title="${esc(t.label)}: ${esc(st(r, t.id))}" style="background:${col(st(r, t.id))}"></i>`).join('')}</div></td><td class="m" style="color:var(--coral)">${esc((r.error || '').slice(0, 120))}</td></tr>`).join('')}</tbody></table>` : '<div class="empty">No runs yet.</div>'}</div>`;
+    w.querySelectorAll('[data-run]').forEach((tr) => tr.oncontextmenu = (e) => { e.preventDefault(); menu([{ label: 'Copy run id', icon: 'copy', run: () => copy(tr.dataset.run) }, { label: 'Retry this run', icon: 'retry', disabled: later }, { label: 'Open its flight record', icon: 'flight', disabled: 'Joins with the Flight view.' }], { x: e.clientX, y: e.clientY }); });
+  } else if (S.view === 'vars' || S.view === 'settings') { const e = Object.entries((p && (S.view === 'vars' ? p.vars : p.settings)) || {});
+    w.innerHTML = `<div class="page"><h2>${S.view === 'vars' ? 'Variables' : 'Settings'}</h2>${e.length ? `<table class="t"><thead><tr><th>Name</th><th>Value</th></tr></thead><tbody>${e.map(([k, x]) => `<tr><td class="m" style="color:var(--text)">${esc(k)}</td><td class="m">${esc(typeof x === 'string' ? x : JSON.stringify(x))}</td></tr>`).join('')}</tbody></table>` : '<div class="empty">None set.</div>'}</div>`;
+  } else w.innerHTML = `<div class="empty" style="margin:auto;max-width:440px;text-align:center"><b style="font-size:14px;color:var(--bright)">${esc(v.label)}</b>${esc(v.proposed)}<br><span style="color:var(--violet)">Proposed · yours to choose</span></div>`;
+  const c = $('code'); if (c) c.scrollTop = (S.follow && bottom) || !pc ? c.scrollHeight : ptop; const nl = w.querySelector('.calls .list'); if (nl) nl.scrollTop = ltop;
+}
+// the Phases and Components side tabs: everything Nexus holds, searchable, each one a box with + Add (drawn once; the search filters in place)
+function listView(w) {
+  const ph = S.view === 'phases', data = ph ? S.phases : S.comps;
+  if (!data) { w.innerHTML = '<div class="empty" style="margin:auto">Reading…</div>'; (ph ? loadPhases : loadComps)(); return; }
+  const stc = (s) => /PARTLY|IN PROGRESS/i.test(s) ? 'var(--amber)' : /DONE|BUILT|CLOSED|DECIDED/i.test(s) ? 'var(--ok)' : /OPEN/i.test(s) ? 'var(--sky)' : 'var(--text2)';
+  const body = ph ? data.map((x, i) => `<tr><td><b class="nm">${esc(x.id)}</b><div class="sub">${esc(x.does)}</div></td><td class="m">${esc(x.map.replace(/^docs\//, '').replace(/-phasemap\.spec$/, ''))}</td><td><span class="pill" style="color:${stc(x.status)}"><span class="sd" style="background:${stc(x.status)}"></span>${esc(x.status || '—')}</span></td><td><button class="addbtn" data-addi="${i}">+ Add</button></td></tr>`).join('')
+    : data.map((x, i) => `<tr><td><b class="nm">${esc(x.name)}</b><div class="sub">${esc(x.about)}</div></td><td class="m">${esc(x.system)}</td><td class="m">${esc(((x.method || '') + ' ' + (x.path || '')).trim() || '—')}</td><td><button class="addbtn" data-addi="${i}">+ Add</button></td></tr>`).join('');
+  w.innerHTML = `<div class="page"><div class="lh"><h2>${ph ? 'Phases' : 'Components'} <span class="ct">${data.length}</span></h2><input class="lq" placeholder="${ph ? 'Find a phase: its name, map, status or what it does' : 'Find a component: its name, system or route'}" spellcheck="false"></div>
+    <div class="lead">${ph ? 'Every phase in the maps. <b>+ Add</b> puts it on the canvas as a box that builds it.' : 'Every component in each system’s own registry. <b>+ Add</b> puts it on the canvas as a box that calls it.'}</div>
+    <table class="t"><thead><tr>${ph ? '<th>Phase</th><th>Map</th><th>Status</th><th></th>' : '<th>Component</th><th>System</th><th>Route</th><th></th>'}</tr></thead><tbody>${body}</tbody></table></div>`;
+  const q = w.querySelector('.lq'); q.oninput = () => { const s = q.value.toLowerCase(); w.querySelectorAll('tbody tr').forEach((tr) => tr.style.display = tr.textContent.toLowerCase().includes(s) ? '' : 'none'); };
+  w.querySelectorAll('[data-addi]').forEach((b) => b.onclick = () => { const x = data[+b.dataset.addi]; if (!pipe()) return toast('Choose a pipeline first', 'warn'); setView('canvas'); ph ? addPhase(x) : addComp(x); });
+}
+function bindSplit() { const sp = $('split'); if (!sp) return; sp.ondblclick = () => ACTIONS['view.max'].run(); sp.onmousedown = (e) => { e.preventDefault(); const r = $('work').getBoundingClientRect();
+  const mv = (ev) => { S.split = Math.min(.85, Math.max(.2, (ev.clientY - r.top) / r.height)); document.querySelector('.canvas-wrap').style.flexBasis = S.split * 100 + '%'; const c = $('console'); if (c) c.style.flexBasis = (1 - S.split) * 100 + '%'; };
+  const up = () => { removeEventListener('mousemove', mv); removeEventListener('mouseup', up); store.set('split', S.split); fit(); }; addEventListener('mousemove', mv); addEventListener('mouseup', up); }; }
+
+// ════ PANELS — Idearium's dock; each declared once, drawn by dock() ════
+const kv = (a, b, attrs = '') => `<div class="kv ${attrs ? 'row' : ''}" ${attrs}><span>${esc(a)}</span><span title="${esc(b)}">${esc(b)}</span></div>`;
+const sec = (t) => `<div class="dk-sec">${esc(t)}</div>`;
+// ── forms, generated: a step's fields come from the engine's catalogue (type, options, default, help, when) ──
+const GATES = [['', 'Always opens'], ['notEmpty', 'Output is not empty'], ['contains', 'Output contains…'], ['equals', 'Output equals…'], ['matches', 'Output matches a pattern…'], ['element', 'A page element… (Clear Glass)']];   // cos/automation/pipeline.js gateOpen
+const ONFAIL = [['stop', 'Stop the run'], ['continue', 'Go on without it'], ['hold', 'Hold the run for me']];                                                                              // pipeline.js validate: stop · continue · hold
+const gkind = (g) => !g ? '' : (GATES.find(([k]) => k && g[k] !== undefined) || [''])[0];
+const optList = (list, cur) => list.map((o) => { const v = Array.isArray(o) ? o[0] : typeof o === 'object' ? o.value : o, l = Array.isArray(o) ? o[1] : typeof o === 'object' ? (o.label || o.value) : o; return `<option value="${esc(v)}" ${String(cur ?? '') === String(v) ? 'selected' : ''}>${esc(l)}</option>`; }).join('');
+const shown = (f, cfg) => !f.when || Object.entries(f.when).every(([k, vs]) => [].concat(vs).map(String).includes(String(cfg[k] ?? '')));
+function field(f, val, path, t) {
+  const id = 'f_' + path.replace(/\W/g, '_'), v = val ?? f.default ?? '', ty = f.type || 'text'; let c;
+  if (t && t.step && t.step.type === 'pipeline' && f.key === 'pipeline') c = `<select id="${id}" data-f="${path}">${optList([['', '— choose —'], ...allPipes().map((x) => [x.id, x.name + (x.id === S.pid ? ' (this one)' : '')])], v)}</select>`;
+  else if (ty === 'select' || f.options) c = `<select id="${id}" data-f="${path}">${optList(f.options || [], v)}</select>`;
+  else if (ty === 'system') c = `<select id="${id}" data-f="${path}">${optList(S.D.systems.map((s) => [s.name, s.name + (s.state === 'up' ? '' : ' (' + s.state + ')')]), v)}</select>`;
+  else if (ty === 'branch') { const p = pipe(); c = `<select id="${id}" data-f="${path}">${optList([...(f.extra || []), ...p.tasks.filter((x) => x.id !== t.id).map((x) => [x.id, '→ ' + x.label])], v)}</select>`; }
+  else if (ty === 'code' || ty === 'json' || ty === 'textarea' || ty === 'script') c = `<textarea id="${id}" data-f="${path}" rows="4" spellcheck="false" placeholder="${esc(f.placeholder || '')}">${esc(typeof v === 'string' ? v : JSON.stringify(v, null, 1))}</textarea>`;
+  else if (ty === 'number' || ty === 'duration') c = `<div class="num"><input id="${id}" type="number" data-f="${path}" value="${esc(v)}"><span>${ty === 'duration' ? 'ms' : ''}</span></div>`;
+  else if (ty === 'checkbox' || ty === 'boolean' || ty === 'bool') c = `<label class="chk"><input id="${id}" type="checkbox" data-f="${path}" ${v ? 'checked' : ''}> ${esc(f.label || f.key)}</label>`;
+  else { let dl = ''; if (t && t.step && t.step.type === 'command' && f.key === 'endpoint') { const sys = (t.step.config || {}).system || 'guardian'; loadCmds(sys); dl = `<datalist id="dl_${id}">${(S.cmds[sys] || []).map((x) => `<option value="${esc(x)}">`).join('')}</datalist>`; }
+    c = `<input id="${id}" type="text" data-f="${path}" value="${esc(typeof v === 'string' ? v : JSON.stringify(v))}" placeholder="${esc(f.placeholder || '')}" ${dl ? `list="dl_${id}"` : ''}>${dl}`; }
+  return `<div class="fld">${ty === 'checkbox' || ty === 'boolean' || ty === 'bool' ? '' : `<label class="fl" for="${id}">${esc(f.label || f.key)}${f.required ? ' <i>*</i>' : ''}</label>`}${c}${f.help ? `<div class="fh">${esc(f.help)}</div>` : ''}</div>`;
+}
+const rows = (obj, which, hint) => `<div data-rows="${which}">${Object.entries(obj || {}).map(([k, v]) => `<div class="vrow"><input data-part="k" value="${esc(k)}" placeholder="name" spellcheck="false"><input data-part="v" value="${esc(typeof v === 'string' ? v : JSON.stringify(v))}" placeholder="value" spellcheck="false"><button class="dk-x" data-rowdel title="Remove">×</button></div>`).join('')}<button class="addrow" data-rowadd>+ ${esc(hint)}</button></div>`;
+const PANELS = [
+  { id: 'inspector', label: 'Inspector', render() { const p = pipe();
+      if (!S.cat) loadCat();
+      if (!S.sel || !p) return '<div class="dk-empty">Click a step or a gate to change it. Add steps with <b>Add step</b> at the top, the <b>Steps</b> panel, or right-click.</div>';
+      const t = task(S.sel.id); if (!t) return '<div class="dk-empty">That step is gone.</div>';
+      const r = last(p.id), tr = r && r.tasks[t.id], b = S.base[p.id] && S.base[p.id].steps && S.base[p.id].steps[t.id], cfg = (t.step && t.step.config) || {}, others = p.tasks.filter((x) => x.id !== t.id);
+      const runInfo = sec('Last run') + kv('status', tr ? tr.status : '—') + kv('took', tr && tr.ms != null ? dur(tr.ms) : '—') + (b ? kv('usual', dur(b.mean_ms) + ' ± ' + dur(b.sigma_ms) + ' over ' + b.n) : '')
+        + (tr && tr.out ? sec('Gave') + `<div class="pre">${esc(tr.out)}</div>` : '') + (tr && tr.error ? sec('Error') + `<div class="pre bad">${esc(tr.error)}</div>` : '');
+      if (S.sel.t === 'gate') { const k = gkind(t.gate), gv = k && k !== 'notEmpty' && t.gate ? t.gate[k] : '';
+        return sec('Gate after “' + t.label + '”') + `<div class="fld"><label class="fl">Opens when</label><select data-g="kind">${optList(GATES, k)}</select></div>`
+          + (k && k !== 'notEmpty' ? `<div class="fld"><label class="fl">${k === 'matches' ? 'Pattern' : k === 'element' ? 'Element (JSON)' : 'Text'}</label><input type="text" data-g="value" value="${esc(typeof gv === 'string' ? gv : JSON.stringify(gv))}" spellcheck="false"></div>` : '')
+          + `<div class="fld"><label class="fl">If it stays closed</label><select data-f="onFail">${optList(ONFAIL, t.onFail || 'stop')}</select></div>`
+          + `<div class="fld"><label class="fl">Retry the step first</label><div class="num"><input type="number" min="0" data-f="retries" value="${esc(t.retries || 0)}"><span>times</span></div></div>` + runInfo; }
+      const c = catOf(t.step && t.step.type), cats = S.cat ? S.cat.catalogue : [], groups = [...new Set(cats.map((x) => x.group))];
+      let h = `<div class="fld"><label class="fl">Name</label><input type="text" data-f="label" value="${esc(t.label)}"></div>`
+        + `<div class="fld"><label class="fl">Kind</label><select data-type>${c ? '' : `<option selected>${esc((t.step && t.step.type) || '—')}</option>`}${groups.map((g) => `<optgroup label="${esc(g)}">${cats.filter((x) => x.group === g).map((x) => `<option value="${esc(x.type)}" ${c === x ? 'selected' : ''}>${esc(x.icon + '  ' + x.label)}</option>`).join('')}</optgroup>`).join('')}</select>${c && c.help ? `<div class="fh">${esc(c.help)}${c.output ? ' Gives ' + esc(c.output) + '.' : ''}</div>` : ''}</div>`
+        + `<div class="fld"><label class="fl">Runs after</label><select data-f="after">${optList([['', '— the start —'], ...others.map((x) => [x.id, x.label])], (t.depends_on || [])[0] || '')}</select>${(t.depends_on || []).length > 1 ? `<div class="fh">Also waits on ${esc(t.depends_on.slice(1).join(', '))} (a join).</div>` : ''}</div>`;
+      if (c) { const fs = c.fields.filter((f) => shown(f, cfg)); h += fs.length ? sec('Settings') + fs.map((f) => field(f, cfg[f.key], 'cfg.' + f.key, t)).join('') : ''; }
+      else if (S.cat && S.cat.loading) h += '<div class="dk-empty">Reading the step catalogue…</div>';
+      else h += sec('Settings') + `<div class="fld"><label class="fl">Configuration (JSON)</label><textarea data-f="cfgjson" rows="6" spellcheck="false">${esc(JSON.stringify(cfg, null, 1))}</textarea><div class="fh">This kind (${esc((t.step && t.step.type) || '—')}) is not in the engine's catalogue, so its settings are shown as JSON.</div></div>`;
+      h += sec('Gate') + `<div class="kv row" data-opengate><span>${esc(gtext(t.gate))}</span><span>closed → ${esc(t.onFail || 'stop')}${t.retries ? ' · ↻' + t.retries : ''} ›</span></div>`;
+      return h + runInfo; } },
+  { id: 'library', label: 'Steps', render() { if (!S.cat || S.cat.loading) { loadCat(); return '<div class="dk-empty">Reading the step catalogue…</div>'; }
+      const cats = S.cat.catalogue, groups = [...new Set(cats.map((x) => x.group))];
+      return `<div class="dk-empty">Click to add ${S.sel ? 'after the selected step' : 'at the end'}. From COS's engine: ${cats.length} kinds.</div><input class="libq" placeholder="Filter" spellcheck="false">`
+        + groups.map((g) => `<div class="dk-sec">${esc(g)}</div>` + cats.filter((x) => x.group === g).map((x) => `<button class="libi" data-add="${esc(x.type)}" title="${esc(x.help || '')}"><span class="gl">${esc(x.icon)}</span><span><b>${esc(x.label)}</b><small>${esc(x.help || '')}</small></span></button>`).join('')).join(''); } },
+  { id: 'vars', label: 'Variables', hidden: true, count: () => { const p = pipe(); return p ? Object.keys(p.vars || {}).length || '' : ''; },
+    render() { const p = pipe(); if (!p) return '<div class="dk-empty">Choose a pipeline.</div>'; return `<div class="dk-empty">Steps read these as {{vars.<i>name</i>}}.</div>` + rows(p.vars, 'vars', 'Add a variable'); } },
+  { id: 'pipeline', label: 'Pipeline', render() { const p = pipe(); if (!p) return '<div class="dk-empty">Choose a pipeline.</div>';
+      return `<div class="fld"><label class="fl">Name</label><input type="text" data-pf="name" value="${esc(p.name || '')}"></div><div class="fld"><label class="fl">What it does</label><textarea data-pf="description" rows="3">${esc(p.description || '')}</textarea></div>`
+        + sec('Inputs') + '<div class="dk-empty">What the pipeline is given when it starts, like which phase to build. A step uses one by naming it: {{vars.phase}}. Asked for when you press Run.</div>' + rows(p.vars, 'vars', 'Add an input')
+        + sec('Settings') + rows(p.settings, 'settings', 'Add a setting') + sec('File') + kv('id', p.id) + kv('steps', p.tasks.length) + (S.edits[p.id] ? kv('draft', S.edits[p.id] + ' changes, not saved') : ''); } },
+  { id: 'activity', label: 'Activity', count: () => S.D ? S.D.jobs.filter((x) => /running|queued/.test(x.status)).length + S.D.runs.filter((x) => x.status === 'running').length || '' : '', live: () => S.D && S.D.jobs.some((x) => x.status === 'running'),
+    render() { const D = S.D, rr = D.runs.filter((x) => /running|paused/.test(x.status)), jj = D.jobs.filter((x) => /running|queued/.test(x.status));
+      return sec('Pipeline runs') + (rr.length ? rr.map((x) => kv(x.name || x.id, x.status + ' · ' + ago(x.at), `data-goto="${esc(x.pipelineId)}"`)).join('') : '<div class="dk-empty">None.</div>')
+        + sec('Model calls') + (jj.length ? jj.map((x) => kv(jname(x), x.status + ' · ' + dur(x.ms), `data-call="${esc(x.id)}"`)).join('') : '<div class="dk-empty">None.</div>'); } },
+  { id: 'build', label: 'Build', live: () => S.D && S.D.build && !/passed|failed|held|error|landed/.test(S.D.build.last || ''), count: () => S.D && S.D.build ? S.D.build.gaps.filter((x) => x.state === 'passed').length + '/' + S.D.build.gaps.length : '',
+    render() { const b = S.D && S.D.build; if (!b) return '<div class="dk-empty">No build has run yet.</div>';
+      const c = (s) => s === 'passed' ? 'var(--ok)' : /refused|failed|held/.test(s) ? 'var(--red, #f87171)' : s === 'gap-asked' ? 'var(--sky)' : 'var(--text3)';
+      const word = (s) => ({ 'gap-asked': 'writing…', 'gap-answered': 'checking', passed: 'passed', waiting: 'waiting' })[s] || s;
+      return `<div class="dk-empty" style="text-align:left">${esc(b.phase || '')} · <code>${esc(b.run)}</code> · now: ${esc(b.last || '')}</div>`
+        + b.gaps.map((x) => kv(`<span class="sd" style="background:${c(x.state)}"></span> ${esc(x.name)}${x.helper ? ' <i style="color:var(--violet)">broken down</i>' : ''}`, word(x.state) + ' · ' + x.asks + ' tries' + (x.model ? ' · ' + esc(String(x.model).replace(/^.*\//, '')) : ''))).join('')
+        + '<div class="pg" style="margin:12px 0 4px">Its last rows</div>' + b.rows.slice().reverse().map((x) => `<div style="font:10.5px var(--mono);color:var(--text2);padding:2px 0">${x.t ? `<span style="color:var(--text3)">${new Date(x.t).toLocaleTimeString()}</span> ` : ''}${esc(x.state)}${x.gap ? ' <b>' + esc(x.gap) + '</b>' : ''}${x.note ? ' — ' + esc(x.note) : ''}</div>`).join(''); } },
+  // the Lab (his, 2026-11-24: "the lab be migrated into the new automation tab"): RAID's requests, every build, its pieces, the issues; COS's Lab route
+  { id: 'lab', label: 'Lab', count: () => S.lab ? S.lab.builds.length : '',
+    render() { const L = S.lab; if (!L) return '<div class="dk-empty">Reading the Lab…</div>';
+      const ago = (t) => { if (!t) return ''; const m = Math.round((Date.now() - t) / 60000); return m < 60 ? m + ' min ago' : m < 2880 ? Math.round(m / 60) + ' h ago' : Math.round(m / 1440) + ' days ago'; };
+      const met = L.requests.filter((r) => r.phase === 'met').length, up = L.systems.filter((x) => x.state === 'up').length;
+      return kv('systems up', up + ' of ' + L.systems.length) + kv('RAID requests met', met + ' of ' + L.requests.length) + kv('builds', L.builds.length)
+        + sec('Builds') + L.builds.slice().sort((a, b) => (b.at || 0) - (a.at || 0)).slice(0, 25).map((b) => kv(esc(b.phase) + ' · ' + ago(b.at), (b.landed ? 'landed' : b.passed ? 'passed' : esc(b.end || '')) + ' · ' + b.calls + ' calls · ' + (b.pieces || []).filter((p) => p.status === 'passed').length + '/' + (b.pieces || []).length)).join('')
+        + sec('RAID requests') + L.requests.slice().sort((a, b) => (b.startedAt || 0) - (a.startedAt || 0)).slice(0, 25).map((r) => kv(esc(r.name || r.id), esc(r.phase || '') + ' · ' + ago(r.startedAt))).join('')
+        + sec('Issues and proof') + (L.issues.length ? L.issues.map((i) => kv(esc(i.id + ' · ' + i.issue), esc(i.grade || ''))).join('') : '<div class="dk-empty">None.</div>'); } },
+  { id: 'terminal', label: 'Terminal', count: () => S.logs ? S.logs.filter((l) => l.stream === 'err').length || '' : '', warn: true, keepFocus: true,
+    render() { const ls = (S.logs || []).slice(-250).concat(S.cli);
+      return `<div class="term" id="term">${ls.length ? ls.map((l) => `<div class="tl ${esc(l.stream || '')}"><span class="tt">${l.ts ? new Date(l.ts).toLocaleTimeString([], { hour12: false }) : ''}</span><span class="ts">${esc(l.system || '')}</span><span class="tx">${esc(l.line)}</span></div>`).join('') : '<div class="dk-empty">Reading COS’s console…</div>'}</div>
+        <form class="prompt" id="cliForm"><span>cos&gt;</span><input id="cliLine" autocomplete="off" spellcheck="false" placeholder="a command (help lists them)" value="${esc(S.draft)}"></form>`; } },
+  { id: 'changes', label: 'Changes', render: () => '<div class="dk-empty">Every file the run changed, with Apply, Reject, Revert: Idearium’s work surface through the drawbridge. Not read in this preview.</div>' },
+  { id: 'system', label: 'System', hidden: true, count: () => S.D ? S.D.systems.filter((s) => s.state !== 'up').length || '' : '', warn: true,
+    render() { const D = S.D; return sec('Ollama') + (D.loaded.length ? D.loaded.map((m) => kv(model(m.name), (m.vramMB / 1024).toFixed(1) + ' GB VRAM')).join('') : '<div class="dk-empty">No model loaded.</div>')
+      + sec('Systems') + D.systems.map((s) => `<div class="kv"><span>${esc(s.name)}</span><span style="color:${s.state === 'up' ? 'var(--ok)' : s.state === 'degraded' ? 'var(--amber)' : 'var(--text3)'}">${esc(s.state)}</span></div>`).join(''); } },
+];
+async function loadLogs() { if (!S.open.has('terminal')) return; try { const d = await (await fetch('/api/cos/console?limit=300')).json(); S.logs = (d && d.lines) || []; } catch (_) {} }
+async function runCli(line) { S.cli.push({ system: 'you', ts: Date.now(), stream: 'cmd', line: 'cos> ' + line }); dock();
+  let out = []; try { out = (await (await fetch('/api/cos/cli', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ line, by: 'person' }) })).json()).lines || []; } catch (e) { out = [e.message]; }
+  S.cli.push(...(out.length ? out : ['(no output)']).map((l) => ({ system: 'cos', ts: Date.now(), stream: 'reply', line: String(l) }))); S.cli = S.cli.slice(-200); dock(); }
+function dock() {
+  const col2 = $('dock-col'), keep = {}; col2.querySelectorAll('.dk-panel').forEach((x) => keep[x.dataset.p] = x.querySelector('.dk-body').scrollTop);
+  const open = PANELS.filter((x) => !x.hidden && S.open.has(x.id)); col2.className = open.length ? 'open' : '';
+  col2.innerHTML = open.map((x) => `<section class="dk-panel ${S.folded.has(x.id) ? 'folded' : ''}" data-p="${x.id}"><div class="dk-head"><button class="dk-fold">${S.folded.has(x.id) ? '▸' : '▾'}</button><b>${x.label}</b><span class="dk-grow"></span><span class="dk-n">${x.count ? x.count() : ''}</span><button class="dk-x" title="Close">×</button></div><div class="dk-body">${S.D ? x.render() : '<div class="dk-empty">Reading…</div>'}</div></section>`).join('');
+  col2.querySelectorAll('.dk-panel').forEach((el) => { const id = el.dataset.p; el.querySelector('.dk-body').scrollTop = keep[id] || 0;
+    const fold = () => { S.folded.has(id) ? S.folded.delete(id) : S.folded.add(id); save(); dock(); };
+    el.querySelector('.dk-fold').onclick = fold; el.querySelector('.dk-head').ondblclick = fold; el.querySelector('.dk-x').onclick = () => { S.open.delete(id); save(); dock(); rail(); };
+    el.querySelector('.dk-head').oncontextmenu = (e) => { e.preventDefault(); menu([{ label: S.folded.has(id) ? 'Expand' : 'Collapse', icon: 'panel', run: fold }, { label: 'Close', icon: 'stop', run: () => { S.open.delete(id); save(); dock(); rail(); } }, '-', ...fromActions(['dock.all', 'dock.none'])], { x: e.clientX, y: e.clientY }); }; });
+  col2.querySelectorAll('[data-call]').forEach((x) => x.onclick = () => { S.job = x.dataset.call; S.pinned = true; if (S.view !== 'canvas' && S.view !== 'console') S.view = 'console'; draw(); });
+  col2.querySelectorAll('[data-goto]').forEach((x) => x.onclick = () => choose(x.dataset.goto));
+  // the forms: every box writes into the draft as it changes; a choice that changes which fields show redraws the panel
+  const val = (el) => el.type === 'checkbox' ? el.checked : el.type === 'number' ? (el.value === '' ? null : Number(el.value)) : el.value;
+  col2.querySelectorAll('[data-f]').forEach((el) => { const id = S.sel && S.sel.id, pth = el.dataset.f, redraw = el.tagName === 'SELECT' || el.type === 'checkbox';
+    el.addEventListener(redraw ? 'change' : 'input', () => { const v = val(el);
+      edit((p) => { const t = p.tasks.find((x) => x.id === id); if (!t) return;
+        if (pth === 'label') t.label = v; else if (pth === 'onFail') t.onFail = v; else if (pth === 'retries') t.retries = v || 0;
+        else if (pth === 'after') t.depends_on = v ? [v, ...(t.depends_on || []).slice(1).filter((d) => d !== v)] : (t.depends_on || []).slice(1);
+        else if (pth === 'cfgjson') { try { t.step.config = JSON.parse(v); } catch (_) {} }
+        else if (pth.startsWith('cfg.')) { t.step = t.step || { type: 'log', config: {} }; t.step.config = { ...(t.step.config || {}), [pth.slice(4)]: v }; } });
+      if (redraw) dock(); }); });
+  const ty = col2.querySelector('[data-type]'); if (ty) ty.onchange = () => { const id = S.sel.id, s = stepOf(ty.value); edit((p) => { const t = p.tasks.find((x) => x.id === id); const was = catOf(t.step && t.step.type); if (!was || t.label === was.label) t.label = s.label; t.step = s.step; }); dock(); };
+  col2.querySelectorAll('[data-g]').forEach((el) => el.addEventListener(el.tagName === 'SELECT' ? 'change' : 'input', () => { const id = S.sel.id;
+    edit((p) => { const t = p.tasks.find((x) => x.id === id); if (!t) return; const k = el.dataset.g === 'kind' ? el.value : gkind(t.gate);
+      if (!k) t.gate = null; else { let v = el.dataset.g === 'value' ? el.value : (k === 'notEmpty' ? true : (t.gate && t.gate[gkind(t.gate)] !== true ? t.gate[gkind(t.gate)] : '') || ''); if (k === 'element' && typeof v === 'string') { try { v = JSON.parse(v); } catch (_) {} } t.gate = { [k]: v }; } });
+    if (el.tagName === 'SELECT') dock(); }));
+  const og = col2.querySelector('[data-opengate]'); if (og) og.onclick = () => ACTIONS['gate.editIt'].run();
+  col2.querySelectorAll('[data-pf]').forEach((el) => el.oninput = () => edit((p) => { p[el.dataset.pf] = el.value; }));
+  col2.querySelectorAll('[data-rows]').forEach((box) => { const which = box.dataset.rows;
+    const read = () => { const o = {}; box.querySelectorAll('.vrow').forEach((r) => { const k = r.querySelector('[data-part=k]').value.trim(), raw = r.querySelector('[data-part=v]').value; if (!k) return; let v = raw; if (/^\s*([\[{]|true$|false$|null$|-?\d+(\.\d+)?$)/.test(raw)) { try { v = JSON.parse(raw); } catch (_) {} } o[k] = v; }); return o; };
+    box.querySelectorAll('input').forEach((i) => i.oninput = () => edit((p) => { p[which] = read(); }));
+    box.querySelectorAll('[data-rowdel]').forEach((b) => b.onclick = () => { b.closest('.vrow').remove(); edit((p) => { p[which] = read(); }); dock(); });
+    box.querySelector('[data-rowadd]').onclick = () => { const o = read(); let n = 1; while (o['name' + n] !== undefined) n++; edit((p) => { p[which] = { ...o, ['name' + n]: '' }; }); dock(); const ins = $('dock-col').querySelectorAll(`[data-rows=${which}] [data-part=k]`); if (ins.length) { ins[ins.length - 1].focus(); ins[ins.length - 1].select(); } }; });
+  col2.querySelectorAll('[data-add]').forEach((b) => b.onclick = () => addStep(b.dataset.add, 'after'));
+  const lq = col2.querySelector('.libq'); if (lq) lq.oninput = () => { const q = lq.value.toLowerCase(); col2.querySelectorAll('.libi').forEach((b) => b.style.display = b.textContent.toLowerCase().includes(q) ? '' : 'none'); };
+  const tm = $('term'); if (tm) tm.scrollTop = tm.scrollHeight;
+  const f = $('cliForm'), inp = $('cliLine');
+  if (f) { inp.oninput = () => { S.draft = inp.value; };
+    inp.onkeydown = (e) => { if (e.key === 'ArrowUp' && S.hi > 0) { S.hi--; inp.value = S.draft = S.hist[S.hi] || ''; e.preventDefault(); } else if (e.key === 'ArrowDown' && S.hi < S.hist.length) { S.hi++; inp.value = S.draft = S.hist[S.hi] || ''; e.preventDefault(); } };
+    f.onsubmit = (e) => { e.preventDefault(); const l = inp.value.trim(); if (!l) return; S.hist.push(l); S.hi = S.hist.length; S.draft = ''; runCli(l); }; }
+}
+function rail() {
+  $('dock-rail').innerHTML = PANELS.filter((x) => !x.hidden).map((x) => { const n = x.count ? x.count() : ''; return `<button class="dk-tab ${S.open.has(x.id) ? 'on' : ''}" data-r="${x.id}">${x.live && x.live() ? '<span class="dk-dot"></span>' : ''}<span class="dk-l">${x.label}</span>${n !== '' ? `<span class="dk-n ${x.warn ? 'warn' : ''}">${n}</span>` : ''}</button>`; }).join('');
+  $('dock-rail').querySelectorAll('[data-r]').forEach((b) => { b.onclick = () => { const k = b.dataset.r; S.open.has(k) ? S.open.delete(k) : (S.open.add(k), S.folded.delete(k)); save(); dock(); rail(); };
+    b.oncontextmenu = (e) => { e.preventDefault(); menu(fromActions(['dock.all', 'dock.none']), { x: e.clientX, y: e.clientY }); }; });
+}
+
+function draw() { topbar(); side(); work(); dock(); rail(); }
+// ════ COS (his 2026-11-24: "ui should float on top"): every read and act is a COS route; nothing here that COS does not have ════
+const none = () => Promise.reject(new Error('COS has no route for this yet'));
+const cosGet = async (p) => { try { return await (await fetch('/api/cos/' + p, { cache: 'no-store' })).json(); } catch (_) { return null; } };
+async function cosAct(p, said) { try { const r = await (await fetch('/api/cos/automation/' + p, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ by: 'person' }) })).json(); toast(r && r.ok !== false ? said : (r && r.error) || 'COS refused', r && r.ok !== false ? '' : 'bad'); } catch (e) { toast(e.message, 'bad'); } tick(); }
+// the Lab route reads every build on disk: once each 10 s, not each 2 s tick
+const labRead = async () => { if (S.lab0 && Date.now() - S.lab0.at < 10000) return S.lab0.v; const v = await cosGet('lab'); if (v) S.lab0 = { at: Date.now(), v }; return v || (S.lab0 && S.lab0.v); };
+async function cosData() {
+  const [runs, sys, use, pl, lab] = await Promise.all([cosGet('automation/pipeline-runs?limit=80'), cosGet('systems'), cosGet('usage'), cosGet('automation/pipelines'), labRead()]);
+  const cut = (v, n) => { const t = String(v == null ? '' : v); return t.length > n ? t.slice(0, n) + '…' : t; };
+  const rr = ((runs && runs.runs) || []).map((x) => { const tasks = {}; for (const [k, v] of Object.entries(x.tasks || {})) tasks[k] = { status: v.status, ms: v.ms, error: v.error ? cut(v.error, 300) : null, out: v.output ? cut(typeof v.output === 'string' ? v.output : JSON.stringify(v.output), 1500) : null };
+    return { id: x.id, pipelineId: x.pipelineId, name: x.pipelineName, status: x.status, at: x.startedAt, end: x.finishedAt, error: x.error ? cut(x.error, 300) : null, tasks }; });
+  const pipes = ((pl && pl.pipelines) || []).filter((p) => !p.archived).map((p) => ({ id: p.id, name: p.name, description: p.description || '', vars: p.vars || {}, settings: p.settings || {}, updatedAt: p.updatedAt, createdAt: p.createdAt || null,
+    tasks: (p.tasks || []).map((t) => ({ id: t.id, label: t.label || t.id, depends_on: t.depends_on || t.dependsOn || [], step: t.step || null, gate: t.gate || null, retries: t.retries, onFail: t.onFail, when: t.when || null, method: t.method || null })) }));
+  const b = ((lab && lab.builds) || []).slice().sort((x, y) => (y.at || 0) - (x.at || 0))[0];
+  const build = b ? { run: b.run, phase: b.phase, at: b.at, last: b.end || '', gaps: (b.pieces || []).map((p) => ({ name: p.name, state: p.status, asks: p.tries || 0, model: (p.models || [])[0] || null, note: cut(p.last || '', 200) })), rows: String(b.steps || '').split(' > ').filter(Boolean).slice(-40).map((x) => ({ t: null, state: x, gap: null, note: '' })) } : null;
+  S.lab = lab || S.lab;
+  return { at: Date.now(), jobs: [], runs: rr, pipelines: pipes, systems: ((sys && (sys.systems || sys)) || []).map((x) => ({ name: x.name, state: x.state, port: x.port })), host: use && use.usage ? use.usage.host : null, loaded: [], build };
+}
+async function tick() { try { const prev = S.D; S.D = await cosData(); S.ok = Date.now(); watch(prev, S.D); } catch (_) {}
+  if (S.D && !pipe() && S.D.pipelines[0]) { S.pid = S.D.pipelines[0].id; loadBase(S.pid); }
+  await loadLogs();
+  if (!MENU) topbar(); side(); work();
+  const typing = document.activeElement && document.activeElement.id === 'cliLine';
+  if (typing) { const p = PANELS.find((x) => x.id === 'terminal'), tm = $('term'), tmp = document.createElement('div'); tmp.innerHTML = p.render(); tm.innerHTML = tmp.querySelector('#term').innerHTML; tm.scrollTop = tm.scrollHeight; rail(); }
+  else if (!(document.activeElement && document.activeElement.closest && document.activeElement.closest('#dock-col') && /INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)) && !(MENU && document.activeElement && document.activeElement.closest && document.activeElement.closest('.menu'))) { dock(); rail(); } }
+// keys: Ctrl K the palette; the rest from ACTIONS' kbd; menus by arrows, Enter, Escape
+addEventListener('keydown', (e) => {
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); return MENU ? closeMenu() : palette(); }
+  if (MENU) { if (e.key === 'Escape') closeMenu(); else if (e.key === 'ArrowDown') { e.preventDefault(); MENU.move(1); } else if (e.key === 'ArrowUp') { e.preventDefault(); MENU.move(-1); }
+    else if (e.key === 'Enter') { e.preventDefault(); const x = MENU.pick[MENU.act()]; closeMenu(); if (x && x.run) x.run(); } return; }
+  if (/input|textarea/i.test((e.target.tagName || ''))) return;
+  const k = e.key === '=' ? '+' : e.key === '-' ? '−' : e.key.toUpperCase(); const hit = Object.values(ACTIONS).find((a) => a.kbd === k && a.run && !(a.off && a.off())); if (hit) { e.preventDefault(); hit.run(); }
+  if (e.key === 'Escape' && S.sel) select(null);
+});
+addEventListener('mousedown', (e) => { if (MENU && !e.target.closest('.menu') && !(MENU.anchor && MENU.anchor.contains(e.target))) closeMenu(); });
+addEventListener('resize', () => { S.vp = null; S.sig = ''; work(); });
+try { COS.page('automation'); } catch (_) {}
+draw(); loadCat(); tick().then(() => S.pid && loadBase(S.pid)); setInterval(tick, 2000);
+</script>
 </body>
 </html>
