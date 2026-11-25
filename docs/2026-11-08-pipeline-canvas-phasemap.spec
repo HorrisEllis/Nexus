@@ -1874,3 +1874,18 @@ phases_addendum_2026_11_24_model_server:
 # commands; frameworks and templates have no owner route yet. So the work is COS reaching each owner's own routes (the drawbridge, §5.16).
 # OPEN, his: the language of that COS piece (COS is JavaScript today; his "Stop using ... Js" of 2026-11-24; Looking Glass and Emerge the lasting
 # form, his 2026-11-25). Until he answers, the live tab is 0.60.652's (stripped) and nothing more is changed.
+
+# ── ADDENDUM 2026-11-25 — what stops the pipeline fixing itself, found on the end-to-end runs (his order: "the pipeline is the end-game") ──
+# James, 2026-11-25: "like it should get to a point where it can build itself, and fix itself when it cant, the pipeline is the end-game" ·
+# "keep working on the pipeline, so it can fix itself. build nexus, contineu". Found, the coder's, each with its evidence:
+# - F1 a hung round has no limit and says nothing: EMB10 runs cd9b8b7a and 22c0efc7 stopped writing rows after their pieces passed (09:15:53,
+#   09:34:56) and sat; the same build in a worktree finished in seconds (examples-failed). Likely a wait with no time limit on another system
+#   (COS froze at the same time). Needs a per-round quiet limit: no new row for N minutes ends the round, said, and the pipeline retries.
+#   Interim, data only: the EMB10 step stops after 45 min and retries twice (was 6 h, no retry); the pieces are on disk, so a retry resumes.
+# - F2 Cancel does not stop a running script step: POST pipeline-runs/:id/cancel answered ok, the run stayed running (22c0efc7).
+# - F3 COS freezes while an Emerge hook runs: COS runs <system>/cli.eg with a blocking call, the bridge asks the model server's hooks about
+#   once a minute, and COS did not answer its own health for over 15 s (09:45).
+# - F4 a piece passes alone and the module fails: all 5 EMB10 pieces compiled, the module failed its 14 examples; each piece's brief carries
+#   the whole phase's does-text, not its own example lines (EMB8's per-function contract did not reach these pieces).
+# Order, the coder's reading, his to change: F1 and F2 first (a pipeline that cannot stop a hung step cannot heal), then F4, then F3. Each fix
+# in Emerge or data where it can be (his "no js"); where only JavaScript can carry it, asked first.
