@@ -1,0 +1,59 @@
+// inference/models.eg — our own model server, slice a: what models this PC has, and the engine that can run them (PC_D17, PC18).
+// James Brooks, 2026-11-24: "lets get ollama replaced? into the orchastrator? like i want it to be ours." · "yes yes yes/ like i want as much
+// control over ollama as possible, hook into the rewind engine." · on llama-server driven directly: "its making me want to say no so we can be
+// soverein but the per model control is making me want to say fuck yes."
+// Ours (sovereign, Emerge): the supervisor, its routes, its ledger, the flight recorder and rewind. The engine is a plugin: llama.cpp's
+// llama-server first (one server per model, its own slots, context and memory), Ollama second. This slice only reads: no model is loaded.
+// The model files are the ones already on his PC, in Ollama's store (manifests name a model; its model layer is a GGUF in blobs).
+
+let MODEL_LAYER = "application/vnd.ollama.image.model"
+
+/** a manifest's path parts [host, namespace, model, tag] as the name the model is asked by ("huihui_ai/qwen2.5-coder-abliterate:3b") */
+fn name_of(parts: list): string {
+  if len(parts) != 4 { return "" }
+  if parts[0] == "registry.ollama.ai" {
+    if parts[1] == "library" { return parts[2] + ":" + parts[3] }
+    return parts[1] + "/" + parts[2] + ":" + parts[3]
+  }
+  return parts[0] + "/" + parts[1] + "/" + parts[2] + ":" + parts[3]
+}
+
+/** the model layer of a manifest: its blob's file name ("sha256-…") and its size in bytes; { file: "" } when it has none */
+fn blob_of(m: map): map {
+  for l in m.layers {
+    if l.mediaType == MODEL_LAYER { return { file: join(split(l.digest, ":"), "-"), bytes: l.size } }
+  }
+  return { file: "", bytes: 0 }
+}
+
+/** every model in the store whose GGUF is on disk: { name, file, bytes } */
+fn models(store: string): list {
+  var out = []
+  let base = store + "/manifests/"
+  if not path_exists(base) { return out }
+  for h in list_dir(base) {
+    if is_dir(base + h) {
+      for ns in list_dir(base + h + "/") {
+        if is_dir(base + h + "/" + ns) {
+          for m in list_dir(base + h + "/" + ns + "/") {
+            let md = base + h + "/" + ns + "/" + m + "/"
+            if is_dir(md) {
+              for t in list_dir(md) {
+                let b = blob_of(parse_json(read_file(md + t)))
+                let f = store + "/blobs/" + b.file
+                if b.file != "" and path_exists(f) { out = push(out, { name: name_of([h, ns, m, t]), file: f, bytes: b.bytes }) }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  return out
+}
+
+/** the first engine (llama-server) that exists, from the candidates (a setting: his paths first); "" when none */
+fn engine(candidates: list): string {
+  for c in candidates { if path_exists(c) { return c } }
+  return ""
+}

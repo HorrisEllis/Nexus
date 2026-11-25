@@ -1,0 +1,34 @@
+// inference/test/models.test.eg — slice a: the models on this PC and the engine (PC_D17). eg test inference/test/models.test.eg
+// James Brooks, 2026-11-24: "like i want as much control over ollama as possible, hook into the rewind engine."
+use "../models.eg" as M
+
+let STORE = "inference/test/fixtures/store"
+
+test "a model is asked by the name Ollama gives it" {
+  expect M.name_of(["registry.ollama.ai", "huihui_ai", "qwen2.5-coder-abliterate", "3b"]) == "huihui_ai/qwen2.5-coder-abliterate:3b"
+  expect M.name_of(["registry.ollama.ai", "library", "llama3", "latest"]) == "llama3:latest"
+  expect M.name_of(["hf.co", "mradermacher", "DeepSeek-GGUF", "Q4_K_M"]) == "hf.co/mradermacher/DeepSeek-GGUF:Q4_K_M"
+  expect M.name_of(["too", "few"]) == ""
+}
+
+test "the model layer is the GGUF, found among the others" {
+  let b = M.blob_of({ layers: [{ mediaType: "application/vnd.ollama.image.license", digest: "sha256:lic", size: 1 }, { mediaType: "application/vnd.ollama.image.model", digest: "sha256:bbb", size: 10400 }] })
+  expect b.file == "sha256-bbb" and b.bytes == 10400
+  expect M.blob_of({ layers: [] }).file == ""
+}
+
+test "every model whose file is on disk; one whose file is gone is left out" {
+  let ms = M.models(STORE)
+  expect len(ms) == 2
+  var names = []
+  for m in ms { names = push(names, m.name) }
+  expect names contains "huihui_ai/qwen2.5-coder-abliterate:3b"
+  expect names contains "hf.co/mradermacher/DeepSeek-GGUF:Q4_K_M"
+  expect not (names contains "gone:latest")
+  expect len(M.models("inference/test/fixtures/none")) == 0
+}
+
+test "the engine is the first candidate that exists" {
+  expect M.engine(["inference/test/fixtures/no-such.exe", STORE + "/blobs/sha256-aaa"]) == STORE + "/blobs/sha256-aaa"
+  expect M.engine(["inference/test/fixtures/no-such.exe"]) == ""
+}

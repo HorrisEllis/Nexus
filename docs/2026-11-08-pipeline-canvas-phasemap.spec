@@ -1356,7 +1356,17 @@ decisions_2026_11_13_model_server:
       queue, stopping a running job), its routes, its ledger, and the flight recorder and rewind of every call (Idearium's rewind engine and
       flight recorder, hooked in). Backends as plugins: llama-server first (one server per model: its own parallel slots, context and memory,
       the model files already on his PC), Ollama second, an engine of our own later. Ollama's app is no longer needed once the first plugin runs.
-      After SB1 (the proof), his order.
+      After SB1 (the proof), his order. His word the same day: "do it."
+    slices_2026_11_24: >-
+      The system is inference/ (a name of the coder's: his to rename). a) BUILT 2026-11-24: inference/models.eg reads the models on his PC from
+      Ollama's store (manifests to GGUF blobs: name, file, bytes) and finds the engine (llama-server, the first candidate that exists);
+      inference/test/models.test.eg 4/4 on a fixture store; on his PC it found the 3b (1.9 GB), the 16b (10.4 GB), the 30b (18.6 GB) and
+      Ollama's llama-server.exe (llama.cpp's options: -m, --port, -np slots, -c context, -ngl GPU layers, --slot-save-path). b) start and stop one
+      llama-server per model, its slots, context and GPU layers as settings per model, free memory checked before it starts; c) its routes (the
+      OpenAI-shaped chat and completion the bridge speaks, models, load, unload, stop a request), a compartment.json so COS supervises it; d) every
+      call in its ledger and flight recorder (prompt, tokens as they come, timing, the model's settings) and rewind (replay from the record;
+      the engine's own slot save and restore); e) RAID routes to it, the bridge's ladder asks it first, Ollama the second backend plugin; f) the
+      modes (3b swarm, 16b solo) on the resource manager's events (PC18's scaling); g) Ollama's app retired, a COS proposal.
 expanded_2026_11_13_inference_supervisor:
   PC18_cos_runs_the_model_server:
     status: OPEN
