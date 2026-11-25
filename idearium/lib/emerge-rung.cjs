@@ -341,7 +341,10 @@ function createRung({ root = path.resolve(__dirname, '..', '..'), ask, expect, m
   // Emerge's door, its command line: { ok, code, stdout, stderr, files }
   const eg = (cmd, source, extra = []) => new Promise((resolve) => {
     if (!fs.existsSync(CLI)) return resolve({ ok: false, stderr: `Emerge is not here (${CLI})`, missing: true });
-    execFile(process.execPath, [CLI, cmd, '--source', source, ...extra], { cwd: path.dirname(CLI), timeout: timeoutMs, maxBuffer: 32 * 1024 * 1024, windowsHide: true }, (err, stdout, stderr) => {
+    // 2026-11-25: a long module goes by a file, not on the command line ("spawn ENAMETOOLONG" on EMB11, Windows' 32 K limit)
+    let tmp = null; if (String(source).length > 6000) { tmp = path.join(require('os').tmpdir(), `eg-src-${process.pid}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}.eg`); fs.writeFileSync(tmp, String(source)); }
+    execFile(process.execPath, [CLI, cmd, ...(tmp ? ['--source-file', tmp] : ['--source', source]), ...extra], { cwd: path.dirname(CLI), timeout: timeoutMs, maxBuffer: 32 * 1024 * 1024, windowsHide: true }, (err, stdout, stderr) => {
+      if (tmp) { try { fs.unlinkSync(tmp); } catch (_) {} }
       try { return resolve(JSON.parse(String(stdout))); } catch (_) { return resolve({ ok: false, stderr: `${String(stderr || '').trim() || (err && err.message) || 'no answer'}` }); }
     });
   });

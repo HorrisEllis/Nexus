@@ -104,6 +104,8 @@ test "JavaScript's replace and regex literals get their own fix, not the ! lesso
 test "a helper named after one of Emerge's own words is never linked in" {
   expect G.link(["served_by"], "served_by", "contains") == ["served_by"]
   expect G.link(["served_by"], "served_by", "is_member") == ["is_member", "served_by"]
+  expect G.link(["fix_methods"], "fix_methods", "push") == ["fix_methods"]
+  expect G.link(["fix_methods"], "fix_methods", "t") == ["fix_methods"]
 }
 
 test "contains written as a call or a function name gets its own fix" {

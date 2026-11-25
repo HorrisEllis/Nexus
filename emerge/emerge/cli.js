@@ -14,6 +14,9 @@ function parse(argv) {
     const k = argv[i].slice(2), v = argv[i + 1] && !argv[i + 1].startsWith('--') ? argv[++i] : true;
     // EMB7 (2026-11-23): --json '{…}' gives structured arguments (an array such as lang-synth's units), merged over the flags
     if (k === 'json' && typeof v === 'string') { Object.assign(args, JSON.parse(v)); continue; }
+    // 2026-11-25: --<name>-file <path> reads that argument from a file (a module's source passed on the command line passed Windows' length
+    // limit, "spawn ENAMETOOLONG", on EMB11's build)
+    if (k.endsWith('-file') && k.length > 5 && typeof v === 'string') { args[k.slice(0, -5)] = require('fs').readFileSync(v, 'utf8'); continue; }
     args[k] = v;
   }
   return args;

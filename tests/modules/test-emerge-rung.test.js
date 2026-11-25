@@ -88,7 +88,8 @@ const scripted = (replies, seen = []) => async (message, { tryNo }) => { seen.pu
     for (const w of ["_require('../lib/emerge-rung.cjs')", "RIp.propose({", "role: 'emerge-rung'", "CSx.markTested({", "state: 'verified'", "state: res.ok ? 'emerge-passed' : 'emerge-fell-back'", 'EXT.run({ root, plan, path: f, overlays:']) assert.ok(src.includes(w), w);
     const rung = fs.readFileSync(path.join(ROOT, 'idearium/lib/emerge-rung.cjs'), 'utf8');
     assert.ok(!/require\([^)]*['"\/]emerge\/emerge\//.test(rung) && !/require\(path\.join\([^)]*'emerge'/.test(rung), 'never requires Emerge\'s files (its system folder, emerge/emerge)');
-    assert.match(rung, /\[CLI, cmd, '--source', source/);
+    // 2026-11-25: a long module goes by --source-file (Windows' command-line limit); Emerge is still reached only by its command line
+    assert.match(rung, /\[CLI, cmd, \.\.\.\(tmp \? \['--source-file', tmp\] : \['--source', source\]\)/);
   });
 
   await test('ER-06', 'the setting: policy, config, screen, command', () => {
