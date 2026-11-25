@@ -1374,6 +1374,15 @@ decisions_2026_11_13_model_server:
       Recorder and rewind: every call recorded (prompt, tokens as they come, timing, the model's settings); how long kept; the engine's slot
       save for rewind; replay without a model.
       Gates: per gate kind, its intent, mode, limits and brief size, so a gate is set from COS, not from code.
+      Corrected 2026-11-24 (his: "Remeber no coupling", with ChatGPT's read of cos/manager/resources.js, checked in the code): COS already
+      has the resource manager (per compartment, three layers: defaults, the system's declaration, his overrides; heap at spawn; priority
+      lowered and restored under pressure, RAID-approved through lib/raid-port.js, fail-closed; a learned memory baseline; RSS watched, CPU
+      share not enforced, both said). So the Memory group is NOT a second manager: inference/ declares its needs in its compartment.json and
+      COS's resource manager accounts for it like every compartment, extended with what it lacks: VRAM (none today), a model's memory budget,
+      admission (a job waits when its model would not fit), per-inference telemetry. The manager samples on a timer (sampleMs); by his rule
+      pressure becomes an event (SB2's pulse), the timer the fallback. No coupling: inference/ never requires COS; COS supervises it by its
+      declaration; RAID approves through its port; gates reach it by its routes; the engine is a plugin. Before Ollama is retired (g), ours is
+      benchmarked against the Ollama path on the same pieces (time, passes, memory), and passes.
     slices_2026_11_24: >-
       The system is inference/ (a name of the coder's: his to rename). a) BUILT 2026-11-24: inference/models.eg reads the models on his PC from
       Ollama's store (manifests to GGUF blobs: name, file, bytes) and finds the engine (llama-server, the first candidate that exists);
