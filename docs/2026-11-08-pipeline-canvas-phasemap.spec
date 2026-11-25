@@ -888,6 +888,9 @@ built_2026_11_09_plan:
         RAID drafts the DAG of a request (L2), each node a phase this pipeline builds. Depends on SB1, SB5.
       SB7 beyond Emerge files: a request that touches COS's UI (JS, CSS, HTML) is checked the same way (a test written first, each piece gated),
         or the UI moves to Emerge (his "no new JS unless it replaces JS"); his to choose. Depends on SB6.
+      Found 2026-11-24 (for SB2): a running Ollama job cannot be stopped (the bridge's DELETE /api/jobs/:id takes only queued jobs); an
+        orphaned build's 16b job held 11 GB of 16 and the next run's 3b job waited behind it. SB2's pulse needs a stop: a job whose run is gone
+        is stopped, and its model freed.
       SB8 the walls, fixed by the pipeline: each wall (a climb, a held piece, a missing capability) becomes a request of SB6, so Nexus builds
         what stopped it. Depends on SB6. — PC9 slice a: the desktop driver for agents (his PC_D14) ──────────────────────────────────────────────
 # James, 2026-11-11: "I’m saying for you. Like look at clearglass. Nexus nerve, cleardriver injecting coordinates into the dom."
