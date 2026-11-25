@@ -43,7 +43,13 @@ http.createServer(async (q, r) => {
         for (const e of plan) g[e.name] = { name: e.name, state: 'waiting', asks: 0, model: null, note: '' };
         for (const x of rs) if (x.gap) { const k = g[x.gap] || (g[x.gap] = { name: x.gap, state: 'waiting', asks: 0, model: null, note: '', helper: true }); if (x.state === 'gap-asked') k.asks++; k.state = x.state; if (x.model) k.model = x.model; if (x.note) k.note = head(x.note, 200); }
         const pcs = ([...rs].reverse().find((x) => x.state === 'pieces') || {}).pieces || []; for (const p of pcs) if (g[p.name]) g[p.name].state = p.status;
-        build = { run: f.x.replace(/\.jsonl$/, ''), phase: (rs[0] || {}).phase, at: f.t, last: (rs[rs.length - 1] || {}).state, gaps: Object.values(g), rows: rs.slice(-40).map((x) => ({ t: x.ts, state: x.state, gap: x.gap || null, note: head(x.note || '', 240) })) }; } } catch (_) {}
+        build = { run: f.x.replace(/\.jsonl$/, ''), phase: (rs[0] || {}).phase, at: f.t, last: (rs[rs.length - 1] || {}).state, gaps: Object.values(g), rows: rs.slice(-40).map((x) => ({ t: x.ts, state: x.state, gap: x.gap || null, note: head(x.note || '', 240) })) };
+        // the canvas grows from the gates (James, 2026-11-24: "not deterministic, only rigid static boxes"): every gap file of this phase is a
+        // gate, its parent the gap it blocks (a piece broken down hangs under the one it unblocks), its state and tries its own record's
+        try { const T = path.join(ROOT, 'idearium', 'data', 'tasks'), ph = build.phase; let dir = null;
+          for (const r of fs.readdirSync(T)) { let es = []; try { es = fs.readdirSync(path.join(T, r)); } catch (_) { continue; } const d = es.find((x) => x.endsWith('.' + ph)); if (d) { dir = path.join(T, r, d); break; } }
+          if (dir) build.gates = fs.readdirSync(dir).filter((x) => x.endsWith('.gap')).map((x) => { const t = fs.readFileSync(path.join(dir, x), 'utf8');
+            return { name: x.replace(/^.*#/, '').replace(/\.gap$/, ''), status: ((/^\s*status:\s*([\w-]+)/m.exec(t) || [])[1]) || 'open', blocks: ((/^\s*blocks:\s*([\w$]+)/m.exec(t) || [])[1]) || null, tries: (t.match(/^\s*said:/gm) || []).length, at: fs.statSync(path.join(dir, x)).mtimeMs }; }); } catch (_) {} } } catch (_) {}
     return json(r, { at: Date.now(), jobs: out, runs: rr, pipelines: pipes, systems: up, host, loaded, build });
   }
   // the side panel's terminal: COS's console lines, and its command line (the same route COS's Console page uses; what is typed there is his)

@@ -594,6 +594,26 @@ function describe(t) { const k = kind(t), c = catOf(k), cfg = (t.step && t.step.
   if (k === 'framework') return `Works through the framework ${cfg.framework || '?'}`;
   if (k === 'agent') return `Asks ${cfg.agentKey || 'an agent'}: ${String(cfg.prompt || '').slice(0, 60)}`;
   return c ? c.help : k; }
+// ── the canvas grows from the work (James, 2026-11-24: "make sure its as simple but as high leverage as possible. not deterministic, only rigid
+// static boxes"): a pipeline that builds a phase draws that build's gates under its own boxes, live. Each function of the plan is a column; a
+// piece the build broke down hangs under the gate it unblocks; colour is the gate's state, the number its tries; the gate being asked is ringed.
+function growsFrom(p) { const b = S.D && S.D.build; if (!b || !b.gates || !b.gates.length) return null;
+  const builds = (p.tasks || []).some((t) => t.step && t.step.config && /build-phase/.test(String(t.step.config.script || ''))); if (!builds) return null;
+  const asking = [...(b.rows || [])].reverse().find((r) => r.state === 'gap-asked' || r.state === 'gap-answered');
+  return { gates: b.gates, order: (b.gaps || []).filter((g) => !g.helper).map((g) => g.name), now: asking && asking.state === 'gap-asked' ? asking.gap : null, phase: b.phase }; }
+function gateTree(t) {
+  const W = 168, H = 44, GX = 18, GY = 14, by = new Map(t.gates.map((g) => [g.name, g])), kids = new Map();
+  for (const g of t.gates) if (g.blocks && by.has(g.blocks)) (kids.get(g.blocks) || kids.set(g.blocks, []).get(g.blocks)).push(g);
+  const roots = [...t.order.filter((n) => by.has(n)).map((n) => by.get(n)), ...t.gates.filter((g) => !t.order.includes(g.name) && !(g.blocks && by.has(g.blocks)))];
+  const col = (s) => s === 'passed' ? 'var(--ok)' : /held|failed/.test(s) ? 'var(--red, #f87171)' : s === 'blocked' ? 'var(--amber)' : 'var(--sky)';
+  let out = '', y0 = 420, maxY = y0; const box = (g, x, y, d) => { const c = col(g.status), now = g.name === t.now;
+    out += `<g><title>${esc(g.name)} · ${esc(g.status)} · ${g.tries} tries${g.blocks ? ' · unblocks ' + esc(g.blocks) : ''}</title><rect x="${x}" y="${y}" width="${W}" height="${H}" rx="9" fill="color-mix(in srgb, ${c} 12%, var(--bg2))" stroke="${now ? 'var(--bright)' : c}" stroke-width="${now ? 2.4 : 1.2}"${now ? ' stroke-dasharray="5 3"' : ''}/>`
+      + `<text x="${x + 10}" y="${y + 18}" fill="var(--bright)" font-size="12" font-family="var(--mono)">${esc(g.name.length > 20 ? g.name.slice(0, 19) + '…' : g.name)}</text><text x="${x + 10}" y="${y + 34}" fill="${c}" font-size="10.5" font-family="var(--mono)">${esc(now ? 'the 3b is on it' : g.status)} · ${g.tries} tries</text></g>`;
+    let yy = y + H + GY; for (const k of kids.get(g.name) || []) { out += `<path d="M${x + 14} ${y + H} V${yy + H / 2} H${x + 14 + d}" fill="none" stroke="var(--edge)" stroke-width="1.2"/>`; yy = box(k, x + 14 + d, yy, 0) ; } maxY = Math.max(maxY, yy); return yy; };
+  roots.forEach((g, i) => box(g, 20 + i * (W + GX), y0 + 28, 0));
+  const passed = t.gates.filter((g) => g.status === 'passed').length;
+  return `<text x="20" y="${y0 + 12}" fill="var(--text2)" font-size="12" font-family="var(--mono)">${esc(t.phase || '')} · ${passed} of ${t.gates.length} gates passed · grows as the build opens, breaks down and passes them</text>${out}`;
+}
 function svgOf(p) {
   const r = last(p.id), base = (S.base[p.id] && S.base[p.id].steps) || {}, { pos, gpos, mode } = layout(p); let wires = '', gates = '', nodes = '';
   for (const t of p.tasks) for (const d of (t.depends_on || [])) { const a = pos[d], b = pos[t.id], g = gpos[d]; if (!a || !b) continue;
@@ -678,9 +698,10 @@ function work() {
   delete w.dataset.v;
   if (S.view === 'canvas') {
     if (!p) { w.innerHTML = '<div class="empty" style="margin:auto">Choose a pipeline from the menu at the top.</div>'; return; }
-    const sig = JSON.stringify([p.id, p.tasks.length, last(p.id) && last(p.id).tasks, S.sel, !!S.base[p.id] && !S.base[p.id].loading, S.max, S.rev, !!(S.cat && S.cat.catalogue.length)]);
+    const grows = growsFrom(p), gsig = grows ? grows.gates.map((g) => g.name + g.status + g.tries).join('|') + (grows.now || '') : '';
+    const sig = JSON.stringify([p.id, p.tasks.length, last(p.id) && last(p.id).tasks, S.sel, !!S.base[p.id] && !S.base[p.id].loading, S.max, S.rev, !!(S.cat && S.cat.catalogue.length), gsig]);
     if (sig !== S.sig || !w.querySelector('svg.cv')) { S.sig = sig;
-      w.innerHTML = `<div class="canvas-wrap" style="${S.max ? 'display:none;' : ''}flex-basis:${Math.round(S.split * 100)}%"><svg class="cv">${svgOf(p)}</svg><div class="zoom"><button data-a="view.out" title="Zoom out">−</button><button data-a="view.fit" title="Fit (F)">⤢</button><button data-a="view.in" title="Zoom in">+</button></div></div><div class="splitter" id="split" title="Drag to resize · double-click: console full height"></div>${consoleHtml(S.max)}`;
+      w.innerHTML = `<div class="canvas-wrap" style="${S.max ? 'display:none;' : ''}flex-basis:${Math.round(S.split * 100)}%"><svg class="cv">${svgOf(p)}${grows ? gateTree(grows) : ''}</svg><div class="zoom"><button data-a="view.out" title="Zoom out">−</button><button data-a="view.fit" title="Fit (F)">⤢</button><button data-a="view.in" title="Zoom in">+</button></div></div><div class="splitter" id="split" title="Drag to resize · double-click: console full height"></div>${consoleHtml(S.max)}`;
       if (!S.vp) requestAnimationFrame(fit); else applyVp(); bindCanvas(); bindSplit();
     } else { const c = $('console'); if (c) c.outerHTML = consoleHtml(false); }
     bindConsole();
