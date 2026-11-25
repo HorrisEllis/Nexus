@@ -115,7 +115,8 @@ function withContracts(exports) {
       for (const m of names) { if (m === n) continue; const k = t.indexOf(m + '(', i + n.length); if (k > i && k < j) j = k; }
       const stop = /\.\s+[A-Z]/.exec(t.slice(i)); if (stop && i + stop.index + 1 < j) j = i + stop.index + 1;
       return t.slice(i, j).replace(/\s+/g, ' ').replace(/[;,\s]+$/, '').trim(); };
-    exports = exports.map((e) => (e.does ? e : { ...e, does: own(e.name) || e.does })); } catch (_) {}
+    // its own sentence wins: the plan gives every function the whole phase paragraph as its does (found in the prompt, run 9d326b0d)
+    exports = exports.map((e) => { const o = own(e.name); return o ? { ...e, does: o } : e; }); } catch (_) {}
   if (!lines.length) return exports;
   return exports.map((e) => { const ex = lines.filter((l) => new RegExp(`^${e.name}\\s*\\(`).test(l)); return ex.length ? { ...e, contract: { ...(e.contract || {}), examples: ex } } : e; });
 }
