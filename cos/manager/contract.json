@@ -39,6 +39,21 @@
   "routes": [
     {
       "method": "GET",
+      "path": "/api/cos/view/*",
+      "out": "the Automation tab's reads (cos/ui/run-console-preview/server.js, 2026-11-25): data, logs, lineage, catalogue, commands, phases, components, frameworks, templates, baseline"
+    },
+    {
+      "method": "POST",
+      "path": "/api/cos/view/cli",
+      "out": "the Automation tab's command line: COS's own CLI, as the person"
+    },
+    {
+      "method": "POST",
+      "path": "/api/cos/automation/pipelines",
+      "out": "{ ok, pipeline }: a new pipeline from { name, description, vars, settings, tasks }"
+    },
+    {
+      "method": "GET",
       "path": "/api/cos/automation/workflows",
       "out": "{ workflows: Workflow[] } (each with nextRunAt)"
     },

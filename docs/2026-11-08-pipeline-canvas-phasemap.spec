@@ -1889,3 +1889,10 @@ phases_addendum_2026_11_24_model_server:
 #   the whole phase's does-text, not its own example lines (EMB8's per-function contract did not reach these pieces).
 # Order, the coder's reading, his to change: F1 and F2 first (a pipeline that cannot stop a hung step cannot heal), then F4, then F3. Each fix
 # in Emerge or data where it can be (his "no js"); where only JavaScript can carry it, asked first.
+
+# ── ADDENDUM 0.60.653 (2026-11-25) — PC8 slice d: the Automation tab is the preview, the same, built ──
+# James, 2026-11-25: "okay fix the automation tab. then continue the pipeline. the pipeline and emerge are vital". cos/ui/automation/index.html is
+# cos/ui/run-console-preview/index.html with 49 lines changed: its reads to /api/cos/view/* (the preview's own server.js, its handler exported and
+# mounted in COS's manager: moved, not rewritten), and its later actions joined to COS's routes (run, pause, continue, cancel, retry from a step,
+# save, duplicate, export). Change model and Open on ERAVOS stay later (no backend). The JavaScript, said: the moved server is the preview's own; the
+# manager gained one line to mount it; the page gained one helper for its acts. Needs COS's restart.

@@ -522,6 +522,9 @@ function createServer(sup, opts = {}) {
         if (rt && m === 'POST') { if (/^agent:/.test(String(body.by || ''))) return send(res, 403, { ok: false, error: 'an agent proposes; retrying is a person\'s' }); const r = await pipeline.retry(rt[1], { from: body.from || null, by: body.by }); return send(res, r.ok ? 200 : (r.code || 400), r); } }
       if (m === 'GET' && p === '/api/cos/procedures') { const r = await boxes.procedures(); return send(res, r.ok ? 200 : (r.code || 500), r); }
       if (m === 'GET' && p === '/api/cos/hub') return send(res, 200, { ok: true, ...(await hub.read()) });
+      // 2026-11-25 — the Automation tab's reads (his: "the automation build the same. not stripped. but built"): the pipeline screen's own handler
+      // (cos/ui/run-console-preview/server.js), each answer from its owner's route; read only, except /cli, which is COS's own command line
+      if (p.startsWith('/api/cos/view/')) { req.viewUrl = req.url.slice('/api/cos/view'.length); req.cosBody = body; return require('../ui/run-console-preview/server.js').handle(req, res); }
       // AE6 slice a — the automation engine's door: workflows, runs, log, pipelines, macros, triggers, webhooks (cos/automation/routes.js, 0.60.534 SW5i)
       if (p.startsWith('/api/cos/automation/')) {
         let out; try { out = await automation.handle({ method: m, url: '/automation' + req.url.slice('/api/cos/automation'.length), body, headers: req.headers, rawBody }); }

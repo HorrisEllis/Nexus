@@ -4,10 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Automation · COS</title>
-<!-- cos/ui/automation/index.html — COS's Automation tab: the pipeline console (PC8 slice d, 0.60.652). James, 2026-11-24: "cos/ui/run-console-preview should be the
-     automation tba" · "ui should float on top" · "Fuck iframes. Build the automation tab better." Every read and act is a COS route; the old engine
-     page (workflows, the desktop driver, supervision) is engine.html, from More. Made from cos/ui/run-console-preview. -->
 <link rel="stylesheet" href="../core/theme.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
 <style>
 /* Idearium's tokens, named from its own theme file (idearium/ui/css/nexus-theme.css), as idearium/ui/index.html names them */
 :root {
@@ -298,21 +296,26 @@ const allPipes = () => [...(S.D ? S.D.pipelines : []), ...Object.values(S.drafts
 function draft() { if (!S.drafts[S.pid]) S.drafts[S.pid] = JSON.parse(JSON.stringify(S.D.pipelines.find((p) => p.id === S.pid))); return S.drafts[S.pid]; }
 function edit(fn) { const p = draft(); fn(p); S.edits[p.id] = (S.edits[p.id] || 0) + 1; S.rev++; S.sig = ''; work(); topbar(); }
 const catOf = (type) => S.cat && S.cat.catalogue.find((c) => c.type === type);
-async function loadCat() { if (S.cat) return; S.cat = { catalogue: [], loading: true }; try { const c = await (await fetch('/api/cos/automation/catalogue')).json(); S.cat = c && c.catalogue ? c : { catalogue: [] }; } catch (_) { S.cat = { catalogue: [] }; } dock(); }
-async function loadCmds(sys) { if (S.cmds[sys]) return; S.cmds[sys] = []; try { S.cmds[sys] = (await (await none()).json()).paths || []; } catch (_) {} dock(); }
+async function loadCat() { if (S.cat) return; S.cat = { catalogue: [], loading: true }; try { const c = await (await fetch('/api/cos/view/catalogue')).json(); S.cat = c && c.catalogue ? c : { catalogue: [] }; } catch (_) { S.cat = { catalogue: [] }; } dock(); }
+async function loadCmds(sys) { if (S.cmds[sys]) return; S.cmds[sys] = []; try { S.cmds[sys] = (await (await fetch('/api/cos/view/commands?system=' + encodeURIComponent(sys))).json()).paths || []; } catch (_) {} dock(); }
 function newId(p, type) { const b = String(type).replace(/_/g, '-'); let i = 1; while (p.tasks.some((t) => t.id === b + '-' + i)) i++; return b + '-' + i; }
 function stepOf(type, preset) { const c = catOf(type), cfg = {}; for (const f of (c && c.fields) || []) if (f.default !== undefined) cfg[f.key] = f.default; return { label: (preset && preset.label) || (c ? c.label : type), step: { type, config: { ...cfg, ...((preset && preset.config) || {}) } } }; }
 // boxes from what Nexus already holds: a phase (built by the Idearium build pipeline, for that phase), a component (called through its system), a system, a pipeline
 function addPhase(x) { const bp = allPipes().find((q) => /idearium build pipeline/i.test(q.name)); if (!bp) return toast('No build pipeline in COS to build a phase with', 'bad'); addStep('pipeline', 'after', { label: x.id, config: { pipeline: bp.id, vars: { phase: x.id, map: x.map } } }); toast('Added the phase ' + x.id); }
 function addComp(x) { addStep('command', 'after', { label: x.name, config: { system: x.system, method: x.method === 'POST' ? 'POST' : 'GET', endpoint: x.path || '' } }); toast('Added ' + x.name + ' (' + x.system + ')'); }
-async function loadPhases() { if (S.phases) return; try { S.phases = (await (await none()).json()).phases || []; } catch (_) { S.phases = []; } work(); }
-async function loadComps() { if (S.comps) return; try { S.comps = (await (await none()).json()).components || []; } catch (_) { S.comps = []; } work(); }
+async function loadPhases() { if (S.phases) return; try { S.phases = (await (await fetch('/api/cos/view/phases')).json()).phases || []; } catch (_) { S.phases = []; } work(); }
+async function loadComps() { if (S.comps) return; try { S.comps = (await (await fetch('/api/cos/view/components')).json()).components || []; } catch (_) { S.comps = []; } work(); }
 function fromNexus(how) { return [{ h: 'From Nexus' },
   { label: 'A system…', icon: 'chip', desc: 'A box that asks one of Nexus’s systems', run: () => setTimeout(() => menu(S.D.systems.map((s) => ({ label: s.name, dot: s.state === 'up' ? 'var(--ok)' : 'var(--amber)', hint: s.state, run: () => addStep('command', how, { label: 'Ask ' + s.name, config: { system: s.name } }) })), null, { search: true, palette: true, placeholder: 'Which system?' }), 0) },
   { label: 'Another pipeline…', icon: 'canvas', desc: 'Runs a whole pipeline as one box; double-click opens it', run: () => setTimeout(() => menu(allPipes().filter((x) => x.id !== S.pid).map((x) => ({ label: x.name, hint: x.tasks.length + ' steps', run: () => addStep('pipeline', how, { label: x.name, config: { pipeline: x.id } }) })), null, { search: true, palette: true, placeholder: 'Which pipeline?' }), 0) },
+  { label: 'A phase…', icon: 'phases', desc: 'Any of the phases in the maps', run: () => setView('phases') },
+  { label: 'A component…', icon: 'components', desc: 'Any component in a system’s registry', run: () => setView('components') },
+  { label: 'A command…', icon: 'chip', desc: 'Any route a system answers', run: () => setView('cmds') },
+  { label: 'A framework…', icon: 'gate', desc: 'A .framework, run as one step', run: () => setView('fws') },
   { label: 'An If…, picked', icon: 'more', desc: 'A value, a test, an answer, what happens next', run: () => setView('conds') },
   { label: 'When it starts…', icon: 'play', desc: 'By hand, every N, at a time, on an event, on a web request', run: () => setView('sched') },
-  { label: 'Every kind of step…', icon: 'panel', desc: 'The whole catalogue, as cards', run: () => setView('library') }]; }
+  { label: 'Every kind of step…', icon: 'panel', desc: 'The whole catalogue, as cards', run: () => setView('library') },
+  { label: 'A template…', icon: 'copy', desc: 'Gate, step, contract, pipeline: what each field holds', run: () => setView('tmpls') }]; }
 // add a step: after the selected one (its followers now follow the new step), or beside it (a parallel branch: same inputs, nothing rewired)
 function addStep(type, how = 'after', preset = null) { const sel = S.sel && S.sel.id; let nid;
   edit((p) => { nid = newId(p, type); const s = stepOf(type, preset), at = sel && p.tasks.find((t) => t.id === sel), lastId = p.tasks.length ? p.tasks[p.tasks.length - 1].id : null;
@@ -341,20 +344,31 @@ const later = 'Acts once this screen is built (COS’s engine has it: PC8 slice 
 
 // ════ ACTIONS — the one list every menu, the palette and the shortcuts read ════
 const ACTIONS = {
-  'run.start':    { label: 'Run pipeline', icon: 'play', kbd: 'R', group: 'Run', off: () => !pipe() ? 'Choose a pipeline.' : null, run: () => cosAct('pipelines/' + pipe().id + '/run', 'Started') },
-  'run.pause':    { label: 'Pause', icon: 'pause', group: 'Run', off: () => !liveRun() ? 'No run in progress.' : null, run: () => cosAct('pipeline-runs/' + liveRun().id + '/pause', 'Paused') },
-  'run.continue': { label: 'Continue', icon: 'play', group: 'Run', off: () => !liveRun() ? 'No paused run.' : null, run: () => cosAct('pipeline-runs/' + liveRun().id + '/continue', 'Continued') },
-  'run.cancel':   { label: 'Cancel run', icon: 'stop', group: 'Run', danger: true, off: () => !liveRun() ? 'No run in progress.' : null, run: () => cosAct('pipeline-runs/' + liveRun().id + '/cancel', 'Cancelled') },
+  'run.start':    { label: 'Run pipeline', icon: 'play', kbd: 'R', group: 'Run', off: () => !pipe() ? 'Choose a pipeline.' : S.edits[S.pid] ? 'Save it first.' : null, run: () => cos('POST', 'automation/pipelines/' + pipe().id + '/run', { by: 'person' }, 'Started') },
+  'run.pause':    { label: 'Pause', icon: 'pause', group: 'Run', off: () => !liveRun() ? 'No run in progress.' : null, run: () => cos('POST', 'automation/pipeline-runs/' + liveRun().id + '/pause', { by: 'person' }, 'Paused') },
+  'run.continue': { label: 'Continue', icon: 'play', group: 'Run', off: () => !liveRun() ? 'No paused run.' : null, run: () => cos('POST', 'automation/pipeline-runs/' + liveRun().id + '/continue', { by: 'person' }, 'Continued') },
+  'run.retry':    { label: 'Retry from selected step', icon: 'retry', group: 'Run', off: () => !(S.sel && S.sel.t === 'step') ? 'Select a step first.' : !(pipe() && last(pipe().id)) ? 'This pipeline has not run yet.' : null, run: () => cos('POST', 'pipeline/runs/' + last(pipe().id).id + '/retry', { by: 'person', from: S.sel.id }, 'Retrying from ' + S.sel.id) },
+  'run.model':    { label: 'Change model…', icon: 'model', group: 'Run', off: () => later },
+  'run.cancel':   { label: 'Cancel run', icon: 'stop', group: 'Run', danger: true, off: () => !liveRun() ? 'No run in progress.' : null, run: () => cos('POST', 'automation/pipeline-runs/' + liveRun().id + '/cancel', { by: 'person' }, 'Cancelled') },
   'step.inspect': { label: 'Inspect', icon: 'inspect', kbd: 'I', group: 'Step', off: () => !S.sel ? 'Nothing selected.' : null, run: () => openPanel('inspector') },
   'step.runTo':   { label: 'Run to here', icon: 'play', group: 'Step', off: () => later },
   'step.skip':    { label: 'Skip this step', icon: 'skip', group: 'Step', off: () => later },
   'step.copyId':  { label: 'Copy id', icon: 'copy', group: 'Step', off: () => !S.sel ? 'Nothing selected.' : null, run: () => copy(S.sel.id) },
   'gate.edit':    { label: 'Edit condition…', icon: 'gate', group: 'Gate', off: () => later },
+  'call.pin':     { label: 'Pin this call', icon: 'pin', group: 'Call', off: () => !S.job ? 'No call.' : null, run: () => { S.pinned = true; draw(); } },
+  'call.live':    { label: 'Follow the live call', icon: 'play', group: 'Call', off: () => !S.pinned ? 'Already following.' : null, run: () => { S.pinned = false; draw(); } },
+  'call.copy':    { label: 'Copy output', icon: 'copy', group: 'Call', off: () => !job() ? 'No call.' : null, run: () => copy(job().text) },
+  'call.context': { label: 'Show what it was given', icon: 'panel', group: 'Call', off: () => !job() ? 'No call.' : null, run: () => openPanel('context') },
+  'call.replay':  { label: 'Replay on the tape', icon: 'tape', group: 'Call', off: () => 'Joins with the Tape view.' },
+  'call.all':     { label: () => S.all ? 'Hide background checks' : 'Show background checks', icon: 'console', group: 'Call', run: () => { S.all = !S.all; S.pinned = false; draw(); } },
+  'call.wrap':    { label: () => S.wrap ? 'No wrap' : 'Wrap lines', icon: 'console', group: 'Call', run: () => { S.wrap = !S.wrap; draw(); } },
+  'call.think':   { label: () => S.think ? 'Hide thinking' : 'Show thinking', icon: 'console', group: 'Call', off: () => !(job() && job().thinking) ? 'This call has no thinking.' : null, run: () => { S.think = !S.think; draw(); } },
   'view.fit':     { label: 'Fit to screen', icon: 'fit', kbd: 'F', group: 'View', run: () => fit() },
   'view.in':      { label: 'Zoom in', icon: 'plus', kbd: '+', group: 'View', run: () => zoom(1.2) },
   'view.out':     { label: 'Zoom out', icon: 'minus', kbd: '−', group: 'View', run: () => zoom(1 / 1.2) },
   'view.max':     { label: () => S.max ? 'Show the canvas with the console' : 'Console full height', icon: 'console', kbd: 'C', group: 'View', run: () => { S.max = !S.max; S.sig = ''; S.vp = null; work(); } },
   'dock.cli':     { label: 'Open the terminal (COS CLI)', icon: 'console', kbd: 'T', group: 'Panels', run: () => { openPanel('terminal'); loadLogs().then(dock); setTimeout(() => { const i = $('cliLine'); if (i) i.focus(); }, 50); } },
+  'dock.lineage': { label: 'Show provenance and lineage', icon: 'ledger', kbd: 'L', group: 'Panels', run: () => openPanel('lineage') },
   'step.add':     { label: 'Add a step…', icon: 'plus', kbd: 'A', group: 'Edit', run: () => setTimeout(() => menu(catMenu('after'), null, { search: true, palette: true, placeholder: S.sel ? 'Add a step after the selected one' : 'Add a step at the end' }), 0) },
   'step.beside':  { label: 'Add a parallel branch…', icon: 'gate', group: 'Edit', off: () => !(S.sel && S.sel.t === 'step') ? 'Select a step first.' : null, run: () => setTimeout(() => menu(catMenu('beside'), null, { search: true, palette: true, placeholder: 'A step beside the selected one (same inputs)' }), 0) },
   'step.if':      { label: 'Add an If… after it', icon: 'gate', group: 'Edit', off: () => !catOf('condition') ? 'No condition step in the catalogue.' : null, run: () => addStep('condition', 'after') },
@@ -362,16 +376,15 @@ const ACTIONS = {
   'step.del':     { label: 'Delete step', icon: 'stop', kbd: 'DELETE', group: 'Edit', danger: true, off: () => !(S.sel && S.sel.t === 'step') ? 'Select a step first.' : null, run: () => delStep(S.sel.id) },
   'gate.editIt':  { label: 'Edit gate', icon: 'gate', group: 'Edit', off: () => !S.sel ? 'Select a step or gate.' : null, run: () => { S.sel = { t: 'gate', id: S.sel.id }; S.sig = ''; work(); openPanel('inspector'); } },
   'pipe.new':     { label: 'New pipeline', icon: 'plus', group: 'Pipeline', run: () => { const id = 'new-' + Date.now().toString(36); S.drafts[id] = { id, name: 'New pipeline', description: '', vars: {}, settings: {}, tasks: [] }; S.edits[id] = 1; choose(id); } },
-  'pipe.save':    { label: 'Save', icon: 'export', kbd: 'S', group: 'Pipeline', off: () => !S.edits[S.pid] ? 'No changes.' : 'Saving writes the .pipeline through COS (PUT /api/cos/automation/pipelines/:id) once this screen is built.' },
+  'pipe.save':    { label: 'Save', icon: 'export', kbd: 'S', group: 'Pipeline', off: () => !S.edits[S.pid] ? 'No changes.' : null, run: () => savePipe() },
   'pipe.discard': { label: 'Discard changes', icon: 'stop', group: 'Pipeline', danger: true, off: () => !S.edits[S.pid] ? 'No changes.' : null, run: () => { delete S.drafts[S.pid]; delete S.edits[S.pid]; S.sel = null; S.sig = ''; S.vp = null; if (!pipe()) S.pid = null; draw(); } },
   'dock.vars':    { label: 'Inputs', icon: 'vars', group: 'Panels', run: () => openPanel('pipeline') },
   'dock.pipe':    { label: 'Pipeline settings', icon: 'settings', group: 'Panels', run: () => openPanel('pipeline') },
-  'go.engine':    { label: 'Workflows, Desktop, Supervision…', icon: 'panel', group: 'Panels', run: () => { location.href = 'engine.html'; } },
   'dock.lib':     { label: 'Step library', icon: 'canvas', group: 'Panels', run: () => { openPanel('library'); loadCat(); } },
   'view.add':     { label: 'Add a step…', icon: 'plus', group: 'View', off: () => later },
-  'pipe.export':  { label: 'Export .pipeline', icon: 'export', group: 'Pipeline', off: () => later },
+  'pipe.export':  { label: 'Export .pipeline', icon: 'export', group: 'Pipeline', off: () => !pipe() ? 'Choose a pipeline.' : null, run: () => { window.open('/api/cos/automation/pipelines/' + encodeURIComponent(pipe().id) + '/node', '_blank'); } },
   'pipe.erv':     { label: 'Open on ERAVOS canvas', icon: 'open', group: 'Pipeline', off: () => later },
-  'pipe.dup':     { label: 'Duplicate', icon: 'copy', group: 'Pipeline', off: () => later },
+  'pipe.dup':     { label: 'Duplicate', icon: 'copy', group: 'Pipeline', off: () => !pipe() ? 'Choose a pipeline.' : null, run: () => { const p = pipe(); cos('POST', 'automation/pipelines', { name: p.name + ' (copy)', description: p.description, vars: p.vars, settings: p.settings, tasks: p.tasks }, 'Duplicated'); } },
   'pipe.copyId':  { label: 'Copy pipeline id', icon: 'copy', group: 'Pipeline', off: () => !S.pid ? 'No pipeline.' : null, run: () => copy(S.pid) },
   'dock.all':     { label: 'Open every panel', icon: 'panel', group: 'Panels', run: () => { S.open = new Set(PANELS.map((x) => x.id)); save(); draw(); } },
   'dock.none':    { label: 'Close every panel', icon: 'panel', group: 'Panels', run: () => { S.open.clear(); save(); draw(); } },
@@ -380,12 +393,13 @@ const copy = (t) => { try { navigator.clipboard.writeText(String(t || '')); toas
 const save = () => { store.set('dock', [...S.open]); store.set('folded', [...S.folded]); };
 const openPanel = (id) => { S.open.add(id); S.folded.delete(id); save(); dock(); rail(); };
 const MENUS = {
-  run: ['run.start', 'run.pause', 'run.continue', '-', 'run.cancel'],
-  more: ['pipe.new', 'pipe.dup', 'pipe.export', 'pipe.erv', 'pipe.copyId', '-', 'dock.pipe', 'dock.lib', 'dock.cli', 'go.engine', '-', 'view.fit', 'view.max', 'dock.all', 'dock.none'],
-  step: ['step.inspect', 'gate.editIt', '-', 'step.add', 'step.beside', 'step.if', '-', 'step.dup', 'step.del', '-', 'step.runTo', 'step.skip', '-', 'step.copyId'],
-  gate: ['gate.editIt', '-', 'step.add', 'step.if', '-', 'step.copyId'],
+  run: ['run.start', 'run.pause', 'run.continue', '-', 'run.retry', 'run.model', '-', 'run.cancel'],
+  more: ['pipe.new', 'pipe.dup', 'pipe.export', 'pipe.erv', 'pipe.copyId', '-', 'dock.pipe', 'dock.lib', 'dock.lineage', 'dock.cli', '-', 'view.fit', 'view.max', 'dock.all', 'dock.none'],
+  step: ['step.inspect', 'gate.editIt', '-', 'step.add', 'step.beside', 'step.if', '-', 'step.dup', 'step.del', '-', 'run.retry', 'step.runTo', 'step.skip', '-', 'step.copyId'],
+  gate: ['gate.editIt', '-', 'step.add', 'step.if', '-', 'run.retry', 'step.copyId'],
   draft: ['pipe.save', 'pipe.discard'],
-  canvas: ['step.add', 'dock.lib', '-', 'view.fit', 'view.in', 'view.out', 'view.max', '-', 'dock.pipe', 'dock.cli', '-', 'run.start'],
+  canvas: ['step.add', 'dock.lib', '-', 'view.fit', 'view.in', 'view.out', 'view.max', '-', 'dock.pipe', 'dock.lineage', 'dock.cli', '-', 'run.start'],
+  call: ['call.pin', 'call.live', 'call.copy', 'call.context', 'call.replay', '-', 'call.think', 'call.wrap', 'call.all', '-', 'view.max', 'dock.cli'],
 };
 const lbl = (a) => typeof a.label === 'function' ? a.label() : a.label;
 
@@ -441,7 +455,7 @@ Object.assign(ICONS, {
   tmpls: '<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/>',
 });
 const MORE = ['library', 'systems', 'conds', 'sched', 'cmds', 'fws', 'tmpls'];
-async function loadJ(k, url) { if (S[k]) return; S[k] = { loading: true }; try { S[k] = url ? await (await fetch(url)).json() : { error: 'COS has no route for this yet' }; } catch (_) { S[k] = { error: 'not answering' }; } S.sig = ''; delete $('work').dataset.v; work(); }
+async function loadJ(k, url) { if (S[k]) return; S[k] = { loading: true }; try { S[k] = await (await fetch(url)).json(); } catch (_) { S[k] = { error: 'not answering' }; } S.sig = ''; delete $('work').dataset.v; work(); }
 const needPipe = () => { if (!pipe()) { toast('Choose a pipeline first (the menu at the top)', 'warn'); return false; } return true; };
 const pickTo = (type, preset, note) => { if (!needPipe()) return; setView('canvas'); addStep(type, 'after', preset); toast(note || 'Added to the canvas (a draft: nothing is saved)'); };
 const cardCss = 'display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px;margin-top:14px';
@@ -485,11 +499,11 @@ function moreView(w) {
       `<div class="pform"><label>System</label>${sel('m-s', sy.map((s) => ({ value: s.name, label: s.name })), cur)}</div><div style="${cardCss}">${ps.map((x) => card(`data-cm="${esc(x)}"`, '<code>' + esc(x) + '</code>', esc(cur))).join('') || '<div class="empty">Reading, or this system does not list its routes.</div>'}</div>`, ps.length);
     $('m-s').onchange = () => { S.cmdSys = $('m-s').value; delete w.dataset.v; work(); };
     w.querySelectorAll('[data-cm]').forEach((b) => b.onclick = () => pickTo('command', { label: b.dataset.cm, config: { system: cur, method: 'GET', endpoint: b.dataset.cm } })); return bindFind(); }
-  if (vw === 'fws') { if (!S.fw) { loadJ('fw', null); w.innerHTML = '<div class="empty" style="margin:auto">Reading…</div>'; return; } const F = S.fw.frameworks || [];
+  if (vw === 'fws') { if (!S.fw) { loadJ('fw', '/api/cos/view/frameworks'); w.innerHTML = '<div class="empty" style="margin:auto">Reading…</div>'; return; } const F = S.fw.frameworks || [];
     w.innerHTML = page('Frameworks', 'Every <code>.framework</code> in Nexus. <b>Click one</b>: it runs as one step, its own steps compiled into pipelines. One that only describes (no steps) is refused by COS when run, and said.',
       `<div style="${cardCss}">${F.map((f, i) => card(`data-fw="${i}"`, esc(f.title), '<code>' + esc(f.file) + '</code>', f.lines + ' lines · ' + (f.steps ? 'declares steps' : 'describes only'))).join('')}</div>`, F.length);
     w.querySelectorAll('[data-fw]').forEach((b) => b.onclick = () => { const f = F[+b.dataset.fw]; pickTo('framework', { label: f.title.slice(0, 40), config: { framework: f.file } }); }); return bindFind(); }
-  if (vw === 'tmpls') { if (!S.tm) { loadJ('tm', null); w.innerHTML = '<div class="empty" style="margin:auto">Reading…</div>'; return; } const T = S.tm.templates || [], first = ['gate', 'step_gate', 'contract', 'raid_contract', 'pipeline', 'workflow', 'procedure', 'process_step', 'dag', 'ledger', 'gap', 'fault', 'failure_mode'];
+  if (vw === 'tmpls') { if (!S.tm) { loadJ('tm', '/api/cos/view/templates'); w.innerHTML = '<div class="empty" style="margin:auto">Reading…</div>'; return; } const T = S.tm.templates || [], first = ['gate', 'step_gate', 'contract', 'raid_contract', 'pipeline', 'workflow', 'procedure', 'process_step', 'dag', 'ledger', 'gap', 'fault', 'failure_mode'];
     const ord = [...T].sort((a, b) => ((first.indexOf(a.type) + 1) || 99) - ((first.indexOf(b.type) + 1) || 99));
     w.innerHTML = page('Templates', 'Every kind of node Nexus keeps, from <code>lib/node-schemas</code>: a gate, a step’s gate, a contract, a pipeline, a gap, a fault… and what each field holds. <b>Gate and step first</b>: the gate is the unit (RL_D10). Making one from here comes with the contract-compartment template; in this preview it shows the fields.',
       `<div style="${cardCss}">${ord.map((t) => card('data-row', esc(t.type) + ` <span class="pill" style="color:${t.status === 'REAL' ? 'var(--ok)' : 'var(--amber)'}">${esc(t.status || '')}</span>`, t.holes.map((h) => '<code>' + esc(h.path) + '</code> ' + esc(String(h.about || '').slice(0, 70))).join('<br>') || 'no fields read')).join('')}</div>`, T.length);
@@ -530,7 +544,7 @@ function topbar() {
   const pr = $('progress'); pr.innerHTML = p ? p.tasks.map((t) => `<i style="background:${r ? col(st(r, t.id)) : 'var(--edge)'}" title="${esc(t.label)}"></i>`).join('') : '';
 }
 function choose(id, nested) { if (!nested) S.stack = []; S.pid = id; store.set('pid', id); S.sel = null; S.vp = null; S.sig = ''; draw(); loadBase(id); }
-async function loadBase(id) { if (!id || S.base[id]) return; S.base[id] = { loading: true }; try { S.base[id] = await (await none(encodeURIComponent(id))).json() || {}; } catch (_) { S.base[id] = {}; } if (S.pid === id) { S.sig = ''; work(); dock(); } }
+async function loadBase(id) { if (!id || S.base[id]) return; S.base[id] = { loading: true }; try { S.base[id] = await (await fetch('/api/cos/view/baseline?pipeline=' + encodeURIComponent(id))).json() || {}; } catch (_) { S.base[id] = {}; } if (S.pid === id) { S.sig = ''; work(); dock(); } }
 
 // ════ canvas ════
 const W = 214, H = 84, GX = 96, GY = 40;
@@ -658,17 +672,16 @@ function hl(line) { let o = '', i = 0, m; const re = /(\/\/.*$|#.*$)|('(?:\\.|[^
 function text(t, running) { const ls = String(t || '').split('\n'); let code = !/```/.test(t), h = ''; ls.forEach((ln, i) => { const c = i === ls.length - 1 && running ? '<span class="caret"></span>' : '';
   if (/^\s*```/.test(ln)) { code = !code; h += `<div class="l fence">${esc(ln)}${c}</div>`; } else h += code ? `<div class="l">${hl(ln)}${c}</div>` : `<div class="l prose">${esc(ln)}${c}</div>`; }); return h; }
 function consoleHtml(full) {
-  const b = S.D && S.D.build, box = (inner) => `<div class="console${full ? ' full' : ''}" id="console" style="${full ? '' : `flex-basis:${Math.round((1 - S.split) * 100)}%`};display:block;overflow:auto;padding:12px 16px">${inner}</div>`;
-  if (!S.D) return box('<div class="empty">Reading…</div>');
-  if (!b) return box('<div class="empty"><b>No build yet.</b> A build a step runs shows here, piece by piece.</div>');
-  const tone = (st) => st === 'passed' ? 'var(--ok)' : /refused|failed|held|blocked/.test(st) ? 'var(--red, #f87171)' : 'var(--text3)';
-  const word = (st) => ({ passed: 'passed', waiting: 'waiting', blocked: 'blocked', held: 'held' })[st] || st;
-  const g = b.gaps, ok = g.filter((x) => x.state === 'passed').length;
-  const bar = g.length ? `<div style="display:flex;gap:3px;margin:10px 0 12px">${g.map((x) => `<span title="${esc(x.name)} · ${esc(word(x.state))}" style="flex:1;height:14px;border-radius:3px;background:${tone(x.state)};opacity:${x.state === 'passed' ? 1 : .85}"></span>`).join('')}</div>` : '';
-  const head = `<div style="font:12px var(--mono);color:var(--text2)"><b style="color:var(--bright)">${esc(b.phase || '')}</b> · <code>${esc(b.run)}</code> · now: ${esc(b.last || '')}${g.length ? ` · ${ok} of ${g.length} pieces passed` : ''}</div>`;
-  const list = g.length ? g.map((x) => `<div style="display:grid;grid-template-columns:10px 1fr auto;gap:8px;align-items:center;padding:4px 0;border-bottom:1px solid var(--edge)"><span class="sd" style="background:${tone(x.state)}"></span><span style="font-size:12px;color:var(--bright)">${esc(x.name)}</span><span style="font:11px var(--mono);color:var(--text2)">${esc(word(x.state))} · ${x.asks} tries${x.model ? ' · ' + esc(String(x.model).replace(/^.*\//, '')) : ''}</span></div>`).join('')
-    : `<div style="font:11px var(--mono);color:var(--text2)">Its steps so far: ${esc(b.rows.map((x) => x.state).join(' › '))}</div><div class="empty" style="margin-top:8px">The pieces show here once its first round ends.</div>`;
-  return box(head + bar + list);
+  if (!S.D) return `<div class="console${full ? ' full' : ''}" id="console"><div class="empty">Reading…</div></div>`;
+  const js = jobs(); if (!(S.pinned && job())) { const j = js.find((x) => x.status === 'running') || js[0]; S.job = j ? j.id : null; } const j = job();
+  const act = js.filter((x) => /running|queued/.test(x.status)), done = js.filter((x) => !/running|queued/.test(x.status));
+  const row = (x) => `<button class="crow ${esc(x.status)} ${x.id === S.job ? 'sel' : ''}" data-job="${esc(x.id)}"><span class="sd ${x.status === 'running' ? 'running' : ''}"></span><span class="nm">${esc(jname(x))}</span><span class="tm">${x.status === 'queued' ? 'queued' : dur(x.ms)}</span><span class="sub">${esc(model(x.model))} · ${kfmt(x.chars)} chars${x.end ? ' · ' + ago(x.end) : ''}</span></button>`;
+  const list = (act.length ? `<div class="grp">Active</div>${act.map(row).join('')}` : '') + (done.length ? `<div class="grp">Finished</div>${done.slice(0, 40).map(row).join('')}` : '') || `<div class="empty"><b>No model calls yet.</b>${S.all ? '' : 'Right-click for background checks.'}</div>`;
+  const tps = j && j.ms > 0 ? (j.chars / 4 / (j.ms / 1000)).toFixed(1) : null;
+  const view = j ? `<div class="view"><div class="vh"><span class="sd ${j.status === 'running' ? 'running' : ''}" style="background:${j.status === 'running' ? '' : col(j.status)}"></span><b>${esc(jname(j))}</b><span class="sep">·</span>${esc(model(j.model))}<span class="sep">·</span>${dur(j.ms)}<span class="sep">·</span>${kfmt(j.chars)} chars${tps ? ` <span class="sep">·</span> ${tps} tok/s` : ''}${S.pinned ? ' <span class="sep">·</span> <span style="color:var(--sky)">pinned</span>' : ''}<span class="grow"></span><button class="icon-btn" id="callMenu">${icon('more')}</button></div>
+      ${S.think && j.thinking ? `<div class="think">${esc(j.thinking)}</div>` : ''}<div class="code ${S.wrap ? '' : 'nowrap'}" id="code">${j.text ? text(j.text, j.status === 'running') : `<div class="l prose">${j.status === 'queued' ? 'Waiting for Ollama…' : j.status === 'running' ? 'Loading the model…' : j.error ? '✗ ' + esc(j.error) : '(no output)'}${j.status === 'running' ? '<span class="caret"></span>' : ''}</div>`}</div></div>`
+    : '<div class="view"><div class="empty" style="margin:auto">Nothing to show.</div></div>';
+  return `<div class="console${full ? ' full' : ''}" id="console" style="${full ? '' : `flex-basis:${Math.round((1 - S.split) * 100)}%`}"><div class="calls"><div class="ph">Model calls</div><div class="list">${list}</div></div>${view}</div>`;
 }
 function bindConsole() {
   const w = $('work'), cm = (e) => { e.preventDefault(); menu(fromActions(MENUS.call), { x: e.clientX, y: e.clientY }); };
@@ -778,34 +791,43 @@ const PANELS = [
     render() { const D = S.D, rr = D.runs.filter((x) => /running|paused/.test(x.status)), jj = D.jobs.filter((x) => /running|queued/.test(x.status));
       return sec('Pipeline runs') + (rr.length ? rr.map((x) => kv(x.name || x.id, x.status + ' · ' + ago(x.at), `data-goto="${esc(x.pipelineId)}"`)).join('') : '<div class="dk-empty">None.</div>')
         + sec('Model calls') + (jj.length ? jj.map((x) => kv(jname(x), x.status + ' · ' + dur(x.ms), `data-call="${esc(x.id)}"`)).join('') : '<div class="dk-empty">None.</div>'); } },
+  { id: 'context', label: 'Context', render() { const j = job(); return j ? `<div class="dk-empty">What ${esc(model(j.model))} was given · ${kfmt(j.promptChars)} chars${j.promptChars > 4000 ? ' (first 4k)' : ''}</div><div class="pre">${esc(j.prompt || '(none kept)')}</div>` : '<div class="dk-empty">Pick a model call.</div>'; } },
+  // the build inside a step (2026-11-24): each function's state live, then the build's own last rows; read from its records on disk
   { id: 'build', label: 'Build', live: () => S.D && S.D.build && !/passed|failed|held|error|landed/.test(S.D.build.last || ''), count: () => S.D && S.D.build ? S.D.build.gaps.filter((x) => x.state === 'passed').length + '/' + S.D.build.gaps.length : '',
     render() { const b = S.D && S.D.build; if (!b) return '<div class="dk-empty">No build has run yet.</div>';
       const c = (s) => s === 'passed' ? 'var(--ok)' : /refused|failed|held/.test(s) ? 'var(--red, #f87171)' : s === 'gap-asked' ? 'var(--sky)' : 'var(--text3)';
       const word = (s) => ({ 'gap-asked': 'writing…', 'gap-answered': 'checking', passed: 'passed', waiting: 'waiting' })[s] || s;
       return `<div class="dk-empty" style="text-align:left">${esc(b.phase || '')} · <code>${esc(b.run)}</code> · now: ${esc(b.last || '')}</div>`
         + b.gaps.map((x) => kv(`<span class="sd" style="background:${c(x.state)}"></span> ${esc(x.name)}${x.helper ? ' <i style="color:var(--violet)">broken down</i>' : ''}`, word(x.state) + ' · ' + x.asks + ' tries' + (x.model ? ' · ' + esc(String(x.model).replace(/^.*\//, '')) : ''))).join('')
-        + '<div class="pg" style="margin:12px 0 4px">Its last rows</div>' + b.rows.slice().reverse().map((x) => `<div style="font:10.5px var(--mono);color:var(--text2);padding:2px 0">${x.t ? `<span style="color:var(--text3)">${new Date(x.t).toLocaleTimeString()}</span> ` : ''}${esc(x.state)}${x.gap ? ' <b>' + esc(x.gap) + '</b>' : ''}${x.note ? ' — ' + esc(x.note) : ''}</div>`).join(''); } },
-  // the Lab (his, 2026-11-24: "the lab be migrated into the new automation tab"): RAID's requests, every build, its pieces, the issues; COS's Lab route
-  { id: 'lab', label: 'Lab', count: () => S.lab ? S.lab.builds.length : '',
-    render() { const L = S.lab; if (!L) return '<div class="dk-empty">Reading the Lab…</div>';
-      const ago = (t) => { if (!t) return ''; const m = Math.round((Date.now() - t) / 60000); return m < 60 ? m + ' min ago' : m < 2880 ? Math.round(m / 60) + ' h ago' : Math.round(m / 1440) + ' days ago'; };
-      const met = L.requests.filter((r) => r.phase === 'met').length, up = L.systems.filter((x) => x.state === 'up').length;
-      return kv('systems up', up + ' of ' + L.systems.length) + kv('RAID requests met', met + ' of ' + L.requests.length) + kv('builds', L.builds.length)
-        + sec('Builds') + L.builds.slice().sort((a, b) => (b.at || 0) - (a.at || 0)).slice(0, 25).map((b) => kv(esc(b.phase) + ' · ' + ago(b.at), (b.landed ? 'landed' : b.passed ? 'passed' : esc(b.end || '')) + ' · ' + b.calls + ' calls · ' + (b.pieces || []).filter((p) => p.status === 'passed').length + '/' + (b.pieces || []).length)).join('')
-        + sec('RAID requests') + L.requests.slice().sort((a, b) => (b.startedAt || 0) - (a.startedAt || 0)).slice(0, 25).map((r) => kv(esc(r.name || r.id), esc(r.phase || '') + ' · ' + ago(r.startedAt))).join('')
-        + sec('Issues and proof') + (L.issues.length ? L.issues.map((i) => kv(esc(i.id + ' · ' + i.issue), esc(i.grade || ''))).join('') : '<div class="dk-empty">None.</div>'); } },
+        + '<div class="pg" style="margin:12px 0 4px">Its last rows</div>' + b.rows.slice().reverse().map((x) => `<div style="font:10.5px var(--mono);color:var(--text2);padding:2px 0"><span style="color:var(--text3)">${new Date(x.t).toLocaleTimeString()}</span> ${esc(x.state)}${x.gap ? ' <b>' + esc(x.gap) + '</b>' : ''}${x.note ? ' — ' + esc(x.note) : ''}</div>`).join(''); } },
+  { id: 'outputs', label: 'Outputs', count: () => S.D ? S.D.jobs.filter((x) => !bg(x) && x.status === 'complete').length || '' : '',
+    render() { const o = S.D.jobs.filter((x) => !bg(x) && x.status === 'complete').slice(0, 15); return o.length ? o.map((x) => kv(jname(x), kfmt(x.chars) + ' · ' + ago(x.end), `data-call="${esc(x.id)}"`)).join('') : '<div class="dk-empty">Nothing finished in this run yet. A run’s proposals land here for you to apply.</div>'; } },
   { id: 'terminal', label: 'Terminal', count: () => S.logs ? S.logs.filter((l) => l.stream === 'err').length || '' : '', warn: true, keepFocus: true,
     render() { const ls = (S.logs || []).slice(-250).concat(S.cli);
       return `<div class="term" id="term">${ls.length ? ls.map((l) => `<div class="tl ${esc(l.stream || '')}"><span class="tt">${l.ts ? new Date(l.ts).toLocaleTimeString([], { hour12: false }) : ''}</span><span class="ts">${esc(l.system || '')}</span><span class="tx">${esc(l.line)}</span></div>`).join('') : '<div class="dk-empty">Reading COS’s console…</div>'}</div>
         <form class="prompt" id="cliForm"><span>cos&gt;</span><input id="cliLine" autocomplete="off" spellcheck="false" placeholder="a command (help lists them)" value="${esc(S.draft)}"></form>`; } },
+  { id: 'lineage', label: 'Lineage', render() { const p = pipe(); if (!p) return '<div class="dk-empty">Choose a pipeline.</div>';
+      const v = p.vars || {}, rs = runs(p.id), L = S.lin[p.id]; if (!L) loadLin(p);
+      let h = sec('Provenance') + kv('pipeline', p.name) + (p.createdAt ? kv('made', new Date(p.createdAt).toLocaleString()) : '') + (p.updatedAt ? kv('changed', ago(p.updatedAt)) : '')
+        + (v.map ? kv('map', String(v.map).replace(/^docs\//, '')) : '') + (v.phase ? kv('phase', v.phase) : '') + (v.repo ? kv('repo', v.repo) : '')
+        + kv('runs', rs.length ? rs.length + ' · first ' + ago(rs[rs.length - 1].at) : 'none') + (p.description ? `<div class="pre" style="margin-top:6px">${esc(p.description)}</div>` : '');
+      h += sec('Idea lineage');
+      if (!L || L.loading) return h + '<div class="dk-empty">Asking Idearium…</div>';
+      if (!L.idearium) return h + '<div class="dk-empty">Idearium is not answering, so the phase’s ledger history and the repo’s lineage cannot be read. They show here when it answers.</div>';
+      const rows = (L.history && (L.history.history || L.history.rows || L.history.entries || (Array.isArray(L.history) ? L.history : []))) || [];
+      h += rows.length ? rows.slice(-20).reverse().map((x) => `<div class="lin"><span class="ld"></span><div><b>${esc(x.kind || x.event || x.action || 'entry')}</b> <span class="lt">${esc(x.version || '')} ${x.ts || x.at ? '· ' + new Date(x.ts || x.at).toLocaleDateString() : ''}</span><div>${esc(x.why || x.note || x.text || '')}</div></div></div>`).join('') : '<div class="dk-empty">No ledger rows for this phase.</div>';
+      if (L.lineage) h += sec('Repo lineage') + `<div class="pre">${esc(JSON.stringify(L.lineage, null, 1).slice(0, 3000))}</div>`;
+      return h; } },
   { id: 'changes', label: 'Changes', render: () => '<div class="dk-empty">Every file the run changed, with Apply, Reject, Revert: Idearium’s work surface through the drawbridge. Not read in this preview.</div>' },
   { id: 'system', label: 'System', hidden: true, count: () => S.D ? S.D.systems.filter((s) => s.state !== 'up').length || '' : '', warn: true,
     render() { const D = S.D; return sec('Ollama') + (D.loaded.length ? D.loaded.map((m) => kv(model(m.name), (m.vramMB / 1024).toFixed(1) + ' GB VRAM')).join('') : '<div class="dk-empty">No model loaded.</div>')
       + sec('Systems') + D.systems.map((s) => `<div class="kv"><span>${esc(s.name)}</span><span style="color:${s.state === 'up' ? 'var(--ok)' : s.state === 'degraded' ? 'var(--amber)' : 'var(--text3)'}">${esc(s.state)}</span></div>`).join(''); } },
 ];
-async function loadLogs() { if (!S.open.has('terminal')) return; try { const d = await (await fetch('/api/cos/console?limit=300')).json(); S.logs = (d && d.lines) || []; } catch (_) {} }
+async function loadLin(p) { S.lin[p.id] = { loading: true }; const v = p.vars || {};
+  try { S.lin[p.id] = await (await fetch(`/api/cos/view/lineage?phase=${encodeURIComponent(v.phase || '')}&repo=${encodeURIComponent(v.repo || '')}`)).json(); } catch (_) { S.lin[p.id] = { idearium: false }; } if (S.open.has('lineage')) dock(); }
+async function loadLogs() { if (!S.open.has('terminal')) return; try { const d = await (await fetch('/api/cos/view/logs?limit=300')).json(); S.logs = (d && d.lines) || []; } catch (_) {} }
 async function runCli(line) { S.cli.push({ system: 'you', ts: Date.now(), stream: 'cmd', line: 'cos> ' + line }); dock();
-  let out = []; try { out = (await (await fetch('/api/cos/cli', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ line, by: 'person' }) })).json()).lines || []; } catch (e) { out = [e.message]; }
+  let out = []; try { out = (await (await fetch('/api/cos/view/cli', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ line }) })).json()).lines || []; } catch (e) { out = [e.message]; }
   S.cli.push(...(out.length ? out : ['(no output)']).map((l) => ({ system: 'cos', ts: Date.now(), stream: 'reply', line: String(l) }))); S.cli = S.cli.slice(-200); dock(); }
 function dock() {
   const col2 = $('dock-col'), keep = {}; col2.querySelectorAll('.dk-panel').forEach((x) => keep[x.dataset.p] = x.querySelector('.dk-body').scrollTop);
@@ -854,25 +876,12 @@ function rail() {
 }
 
 function draw() { topbar(); side(); work(); dock(); rail(); }
-// ════ COS (his 2026-11-24: "ui should float on top"): every read and act is a COS route; nothing here that COS does not have ════
-const none = () => Promise.reject(new Error('COS has no route for this yet'));
-const cosGet = async (p) => { try { return await (await fetch('/api/cos/' + p, { cache: 'no-store' })).json(); } catch (_) { return null; } };
-async function cosAct(p, said) { try { const r = await (await fetch('/api/cos/automation/' + p, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ by: 'person' }) })).json(); toast(r && r.ok !== false ? said : (r && r.error) || 'COS refused', r && r.ok !== false ? '' : 'bad'); } catch (e) { toast(e.message, 'bad'); } tick(); }
-// the Lab route reads every build on disk: once each 10 s, not each 2 s tick
-const labRead = async () => { if (S.lab0 && Date.now() - S.lab0.at < 10000) return S.lab0.v; const v = await cosGet('lab'); if (v) S.lab0 = { at: Date.now(), v }; return v || (S.lab0 && S.lab0.v); };
-async function cosData() {
-  const [runs, sys, use, pl, lab] = await Promise.all([cosGet('automation/pipeline-runs?limit=80'), cosGet('systems'), cosGet('usage'), cosGet('automation/pipelines'), labRead()]);
-  const cut = (v, n) => { const t = String(v == null ? '' : v); return t.length > n ? t.slice(0, n) + '…' : t; };
-  const rr = ((runs && runs.runs) || []).map((x) => { const tasks = {}; for (const [k, v] of Object.entries(x.tasks || {})) tasks[k] = { status: v.status, ms: v.ms, error: v.error ? cut(v.error, 300) : null, out: v.output ? cut(typeof v.output === 'string' ? v.output : JSON.stringify(v.output), 1500) : null };
-    return { id: x.id, pipelineId: x.pipelineId, name: x.pipelineName, status: x.status, at: x.startedAt, end: x.finishedAt, error: x.error ? cut(x.error, 300) : null, tasks }; });
-  const pipes = ((pl && pl.pipelines) || []).filter((p) => !p.archived).map((p) => ({ id: p.id, name: p.name, description: p.description || '', vars: p.vars || {}, settings: p.settings || {}, updatedAt: p.updatedAt, createdAt: p.createdAt || null,
-    tasks: (p.tasks || []).map((t) => ({ id: t.id, label: t.label || t.id, depends_on: t.depends_on || t.dependsOn || [], step: t.step || null, gate: t.gate || null, retries: t.retries, onFail: t.onFail, when: t.when || null, method: t.method || null })) }));
-  const b = ((lab && lab.builds) || []).slice().sort((x, y) => (y.at || 0) - (x.at || 0))[0];
-  const build = b ? { run: b.run, phase: b.phase, at: b.at, last: b.end || '', gaps: (b.pieces || []).map((p) => ({ name: p.name, state: p.status, asks: p.tries || 0, model: (p.models || [])[0] || null, note: cut(p.last || '', 200) })), rows: String(b.steps || '').split(' > ').filter(Boolean).slice(-40).map((x) => ({ t: null, state: x, gap: null, note: '' })) } : null;
-  S.lab = lab || S.lab;
-  return { at: Date.now(), jobs: [], runs: rr, pipelines: pipes, systems: ((sys && (sys.systems || sys)) || []).map((x) => ({ name: x.name, state: x.state, port: x.port })), host: use && use.usage ? use.usage.host : null, loaded: [], build };
-}
-async function tick() { try { const prev = S.D; S.D = await cosData(); S.ok = Date.now(); watch(prev, S.D); } catch (_) {}
+// ════ COS (2026-11-25, his: "the automation build the same. not stripped. but built"): every act is a COS route ════
+async function cos(method, p, body, said) { try { const r = await fetch('/api/cos/' + p, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body || {}) }); const j = await r.json().catch(() => ({})); const ok = r.ok && j.ok !== false; toast(ok ? said : (j.error || 'COS refused (' + r.status + ')'), ok ? '' : 'bad'); tick(); return ok ? j : null; } catch (e) { toast(e.message, 'bad'); return null; } }
+async function savePipe() { const d = S.drafts[S.pid]; if (!d) return; const body = { name: d.name, description: d.description, vars: d.vars, settings: d.settings, tasks: d.tasks };
+  const isNew = /^new-/.test(d.id), j = await cos(isNew ? 'POST' : 'PUT', 'automation/pipelines' + (isNew ? '' : '/' + encodeURIComponent(d.id)), body, 'Saved');
+  if (j) { delete S.drafts[S.pid]; delete S.edits[S.pid]; if (isNew && j.pipeline) S.pid = j.pipeline.id; S.sig = ''; await tick(); draw(); } }
+async function tick() { try { const prev = S.D; S.D = await (await fetch('/api/cos/view/data', { cache: 'no-store' })).json(); S.ok = Date.now(); watch(prev, S.D); } catch (_) {}
   if (S.D && !pipe() && S.D.pipelines[0]) { S.pid = S.D.pipelines[0].id; loadBase(S.pid); }
   await loadLogs();
   if (!MENU) topbar(); side(); work();

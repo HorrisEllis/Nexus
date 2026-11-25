@@ -14,8 +14,10 @@ const tail = (s, n) => { s = String(s || ''); return s.length > n ? s.slice(-n) 
 const head = (s, n) => { s = String(s || ''); return s.length > n ? s.slice(0, n) : s; };
 let PH = null;
 const json = (r, o) => { r.setHeader('Content-Type', 'application/json'); r.end(JSON.stringify(o)); };
-http.createServer(async (q, r) => {
-  const u = new URL(q.url, 'http://x');
+// 2026-11-25 (his: "the automation build the same. not stripped. but built"): the handler is also COS's, at /api/cos/view/* (cos/manager/server.js),
+// which gives it the path under /api/cos/view (q.viewUrl) and the body it already read (q.cosBody)
+async function handle(q, r) {
+  const u = new URL(q.viewUrl || q.url, 'http://x');
   if (u.pathname === '/data') {
     const [jobs, runs, sys, use, ps, pl] = await Promise.all([get(3749, '/api/jobs'), get(7799, '/api/cos/automation/pipeline-runs?limit=80'), get(7799, '/api/cos/systems'),
       get(7799, '/api/cos/usage'), get(11434, '/api/ps'), get(7799, '/api/cos/automation/pipelines')]);
@@ -55,7 +57,7 @@ http.createServer(async (q, r) => {
   // the side panel's terminal: COS's console lines, and its command line (the same route COS's Console page uses; what is typed there is his)
   if (u.pathname === '/logs') return json(r, await get(7799, '/api/cos/console?limit=' + Math.min(800, Number(u.searchParams.get('limit')) || 300)));
   if (u.pathname === '/cli' && q.method === 'POST') {
-    let b = ''; q.on('data', (c) => b += c); await new Promise((res) => q.on('end', res));
+    let b = ''; if (q.cosBody !== undefined) b = JSON.stringify(q.cosBody || {}); else { q.on('data', (c) => b += c); await new Promise((res) => q.on('end', res)); }
     let line = ''; try { line = String(JSON.parse(b).line || ''); } catch (_) {}
     const out = await new Promise((res) => { const body = JSON.stringify({ line, by: 'person' }); const rq = http.request({ host: '127.0.0.1', port: 7799, path: '/api/cos/cli', method: 'POST', headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(body) }, timeout: 60000 },
       (rs) => { let t = ''; rs.on('data', (c) => t += c); rs.on('end', () => { try { res(JSON.parse(t)); } catch (_) { res({ lines: [t.slice(0, 2000)] }); } }); }); rq.on('timeout', () => { rq.destroy(); res({ lines: ['(COS did not answer in 60 s)'] }); }); rq.on('error', (e) => res({ lines: [e.message] })); rq.end(body); });
@@ -111,4 +113,6 @@ http.createServer(async (q, r) => {
   if (u.pathname === '/baseline') return json(r, await get(7799, '/api/cos/pipeline/baseline?pipeline=' + encodeURIComponent(u.searchParams.get('pipeline') || ''), 30000));
   if (u.pathname === '/theme.css') { r.setHeader('Content-Type', 'text/css'); r.end(fs.readFileSync(path.join(ROOT, 'idearium', 'ui', 'css', 'nexus-theme.css'))); return; }
   r.setHeader('Content-Type', 'text/html; charset=utf-8'); r.end(fs.readFileSync(path.join(__dirname, 'index.html')));
-}).listen(47125, '127.0.0.1', () => console.log('pipeline screen preview on http://127.0.0.1:47125/'));
+}
+module.exports = { handle };
+if (require.main === module) http.createServer(handle).listen(47125, '127.0.0.1', () => console.log('pipeline screen preview on http://127.0.0.1:47125/'));
