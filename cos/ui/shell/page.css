@@ -34,6 +34,10 @@ body.shell {
 .nav.systems { overflow-y: auto; padding-right: 2px; margin-right: -2px; }
 .nav.systems a { height: 34px; font-size: 13px; }
 .nav.systems a .port { margin-left: auto; font: 400 11px/1 var(--mono); color: var(--nx-muted); }
+/* 2026-11-25 (his screenshot: "the side bar is messed up"): a long name (the model server's engines) wrapped over the row below. One line,
+   cut with "…"; the full name is the row's hover title. */
+.nav.systems a > span:not(.dot):not(.port) { flex: 1 1 auto; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.nav.systems a .port { flex: none; padding-left: 8px; }
 .rail-foot { border-top: 1px solid var(--line-soft); padding-top: var(--s3); margin-top: var(--s3); display: grid; gap: var(--s2); }
 .bus-state { display: flex; align-items: center; gap: var(--s2); padding: var(--s2) var(--s3); font: 500 11.5px/1 var(--mono); color: var(--nx-dim); }
 .bus-state #bus-count { margin-left: auto; }

@@ -1860,3 +1860,17 @@ phases_addendum_2026_11_24_model_server:
 # core.js, COS.page); the old engine page is engine.html, from More, until workflows, the desktop driver and supervision are console panels (next).
 # Under the canvas, the build as a bar of its pieces (green passed, grey waiting, red held or failed) from /api/cos/lab: the first form of PC23's
 # bars, on data COS already has. The Lab is a console panel.
+
+# ── ADDENDUM 2026-11-25 — PC8 slice d, what he wants, so it is not lost (his words; the coder's mistake said) ──
+# James, 2026-11-25, after 0.60.651-652: "okay but i didn't ask you to strip it. it was critisized thoroughly. it was almost exactly how i want it" ·
+# "im saying the preview from the console preview was the exact one i wanted. not a version but identicle as possibel" · "i want the automation build
+# the same. not stripped. but built" · "like dont let it get lossed."
+# DECIDED (his): COS's Automation tab IS cos/ui/run-console-preview, identical as possible: every part it shows works, nothing removed or greyed
+# out. 0.60.651-652 got this wrong: the coder read "no ui should have what the backend doesn't" as strip, and removed model calls, lineage, the
+# baseline, retry, model change and the phase/component/command/framework/template pickers; that read is withdrawn. The rule stands the other way:
+# the BACKEND gets what the preview shows. What each part needs (the coder's census, 2026-11-25): COS has pipelines, runs, systems, the terminal and
+# run/pause/continue/cancel; COS's engine has save, new, duplicate, retry (resume with redo), ERAVOS (from-erv) and the baseline, unlisted in its
+# contract; the bridge has model calls (/api/jobs); Idearium has phases, lineage and the build's gate tree; each system has its components and
+# commands; frameworks and templates have no owner route yet. So the work is COS reaching each owner's own routes (the drawbridge, §5.16).
+# OPEN, his: the language of that COS piece (COS is JavaScript today; his "Stop using ... Js" of 2026-11-24; Looking Glass and Emerge the lasting
+# form, his 2026-11-25). Until he answers, the live tab is 0.60.652's (stripped) and nothing more is changed.
