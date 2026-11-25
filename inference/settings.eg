@@ -22,13 +22,27 @@ fn model_defaults(name: string, bytes: num, i: num): map {
   return { on: bytes < 15000000000, port: 9931 + i, slots: slots, ctx: ctx, gpu_layers: gpu, threads: 8, after: after, serves: serves }
 }
 
+/** a model's own port, from its name: the same every time, whatever other models are added or removed (2026-11-24: by place in the list,
+    adding DeepSeek moved the 3b from 9931 to 9932 while the 3b's engine still answered on 9931, so every DeepSeek request reached the 3b).
+    9931 to 10930; a port already given to another model moves to the next free one */
+fn port_of(name: string, taken: list): num {
+  let h = hex(sha256(name))
+  var n = 0
+  for k in range(0, 4) { n = n * 16 + index_of("0123456789abcdef", slice(h, k, k + 1)) }
+  var p = 9931 + n % 1000
+  while taken contains p { p = p + 1 }
+  return p
+}
+
 /** the defaults for the models found (each { name, bytes }) and the engine found */
 fn defaults(models: list, engine: string, store: string): map {
   var ms = {}
-  var i = 0
+  var taken = []
   for m in models {
-    ms[m.name] = model_defaults(m.name, m.bytes, i)
-    i += 1
+    var d = model_defaults(m.name, m.bytes, 0)
+    d.port = port_of(m.name, taken)
+    taken = push(taken, d.port)
+    ms[m.name] = d
   }
   return {
     engines: [{ id: "llama-server", paths: [engine], use: "every model" }, { id: "ollama", address: "http://127.0.0.1:11434", use: "when plugin 1 cannot run the model" }],

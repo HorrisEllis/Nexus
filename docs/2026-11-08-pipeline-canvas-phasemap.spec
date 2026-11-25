@@ -1831,3 +1831,10 @@ phases_addendum_2026_11_24_model_server:
 # bridge's door on the GTX 1650 (61 tokens/s warm; the first request ~100 s while the engine warms); inference tests 10/10; the bridge's two failing
 # tests (reply continuation, OA-003) fail the same on main. Open: chat with tools still goes to Ollama's /api/chat; the slot split (-np divides -c:
 # the 3b's 4096 over 3 slots is 1,365 tokens a request) to set with him in COS › Settings › Model server; a full build round on the 3b.
+
+# ── ADDENDUM 0.60.649 (2026-11-24) — PC25 b: a model keeps its port; the bridge checks who answers ──
+# James, 2026-11-24: "if its repairing itself. why is it stopping?" Found on the first end-to-end run on the model server: ports by place in the
+# list moved the 3b when DeepSeek arrived, and DeepSeek's port kept answering with the 3b, so every wall climbed back to the 3b and the repair
+# loop retried the same model until a round gained nothing. settings.eg port_of: a port from the model's name (sha256, 9931 + n mod 1000, the next
+# free on a clash); the bridge uses an answering engine only when its /v1/models names that model's file. Proof: settings test (a model keeps its
+# port when another is added); 11/11 inference tests; bridge tests pass.

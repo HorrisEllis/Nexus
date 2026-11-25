@@ -43,6 +43,14 @@ function _health(port, ms = 2000) {
       .on('error', () => res(false)).on('timeout', function () { this.destroy(); res(false); });
   });
 }
+// what an engine says it serves (llama-server's /v1/models names the model file); null when it does not say
+function _servedFile(port) {
+  return new Promise((res) => {
+    http.get({ hostname: '127.0.0.1', port, path: '/v1/models', timeout: 3000 }, (r) => {
+      let d = ''; r.on('data', (c) => d += c); r.on('end', () => { res(d ? d : null); });
+    }).on('error', () => res(null)).on('timeout', function () { this.destroy(); res(null); });
+  });
+}
 const _launch = new Map(), _starting = new Map();
 // the port of a model the model server holds, its engine started when it is not answering; null when the model server does not hold it
 async function _msPort(model) {
@@ -55,7 +63,13 @@ async function _msPort(model) {
     l = { at: Date.now(), v: r.value }; _launch.set(model, l);
   }
   const { port, engine, args } = l.v;
-  if (await _health(port)) return port;
+  // 2026-11-24: an engine answering on the port is used only when it serves this model's file (a port once gave the 3b to every DeepSeek request)
+  const file = String(args[args.indexOf('-m') + 1] || '').split(/[\\/]/).pop();
+  if (await _health(port)) {
+    const serves = await _servedFile(port);
+    if (serves == null || serves.includes(file)) return port;
+    throw new Error(`port ${port} answers with another model (${serves.slice(0, 80)}), not "${model}" (${file}); not used`);
+  }
   if (!_starting.has(model)) {
     _starting.set(model, (async () => {
       console.log(`[model-server] starting ${model} on :${port}`);

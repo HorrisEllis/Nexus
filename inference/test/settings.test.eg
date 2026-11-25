@@ -13,6 +13,12 @@ test "each model starts by its size: the 3b three at once and kept, the 16b one 
   expect S.problems(D) == []
 }
 
+test "a model keeps its own port when another is added (2026-11-24: DeepSeek's arrival moved the 3b's port)" {
+  let alone = S.defaults([MS[0]], "llama-server.exe", "store")
+  expect alone.models["huihui_ai/qwen2.5-coder-abliterate:3b"].port == D.models["huihui_ai/qwen2.5-coder-abliterate:3b"].port
+  expect D.models["huihui_ai/qwen2.5-coder-abliterate:3b"].port != D.models["hf.co/x/DeepSeek-GGUF:Q4_K_M"].port
+}
+
 test "his change lies over the default, key by key; the rest stays the default" {
   let m = S.merge(D, { models: { "q:30b": { on: true, slots: 2 } }, queue: { batch: 3 } })
   expect m.models["q:30b"].on and m.models["q:30b"].slots == 2 and m.models["q:30b"].ctx == 8192
@@ -20,7 +26,7 @@ test "his change lies over the default, key by key; the rest stays the default" 
 }
 
 test "a bad value is refused and said" {
-  let p = S.problems(S.merge(D, { models: { "q:30b": { slots: 0, port: 9931 } } }))
+  let p = S.problems(S.merge(D, { models: { "q:30b": { slots: 0, port: D.models["huihui_ai/qwen2.5-coder-abliterate:3b"].port } } }))
   expect len(p) == 2
   expect S.problems(S.merge(D, { models: { "q:30b": { serves: ["dreaming"] } } })) == ["q:30b: no intent called dreaming"]
 }
