@@ -19,7 +19,7 @@ payload:
   repo:
     url: https://github.com/HorrisEllis/emerge
     commit: f02324025d60b9fe8a38e201f65770e2f13f0079
-    lockedAt: '2026-11-24'
+    lockedAt: '2026-11-25'
     path: emerge/
     note: >-
       the snapshot changes only by a new lock (scripts/emerge-lock.js --write). Since 2026-11-05 (EAS_D6, his "A": Emerge is a system in Nexus, emerge/ its
@@ -140,7 +140,7 @@ payload:
       emerge/_archive/data-nexus-export-2026-09/nodes/command/emerge.seams.command: 34fedcf07cefa3172eafcd72f3e7c7bd04dc67a2110534dccc194268a19834aa
       emerge/_archive/data-nexus-export-2026-09/nodes/command/emerge.snapshot.command: aed1c71252f5141737bc7b3956c9c346337c1720b8086cb482a30b2ea84533fd
       emerge/_archive/data-nexus-export-2026-09/nodes/system/emerge.system: 846cdd4eb42c54a89135ef72adb174018be59bb2676e016808115cbef4703e1e
-      emerge/cli.js: 7bfa00927415d7ca173f96074870de11f4e8abcde9b12a69c522fdb7801d56e0
+      emerge/cli.js: 98272745c8d6735c5eefca80fdcb1fed2257497e7af14461775073fdf856fa39
       emerge/compartment.json: 1aa9f3a7819b995bcd9ac60c07ad59ef21b80c6e97a793e55bb4b54f605d4ebe
       emerge/config.js: 89c24c8656e0f5933d6e75d73e25e1af1ebf282bdb3cf71a845b1a21b8b0ca76
       emerge/contracts/handshake.js: e00de142f7ed57b291a7e214f7e4f14451fb2045017a4811172eb3fc2246387f
@@ -351,8 +351,8 @@ payload:
       phases/2026-10-02-emerge-field-memory-build/graph/_superseded/CRF1_the_axioms_as_constraints-697fc41691bf6a2f.graph: 818f006e869aecb05e669cc3a626d7ae88af7c98f81565307cc8fe378aab75c5
       phases/2026-10-17-pieces-not-order/EMB2_ollama_writes_emerge_for_the_pipeline.phase: b81c2e86faf8467b4ca181cdba485878c6cc011e442b83d9a0cb8282973a2586
       phases/2026-10-17-pieces-not-order/EMB7_code_frames.phase: c5b8f599c308105645d5317040d9fe8b7adc660c260db2ad9dd6f25f3a703b33
-      phases/2026-10-17-pieces-not-order/graph/EMB2_ollama_writes_emerge_for_the_pipeline-bb1edf7c6fc5cf89.graph: 487a05a2c62d0e21e242d168c30f43bab02500c541a9717771f76b767643ef6d
-      phases/2026-10-17-pieces-not-order/graph/EMB7_code_frames-f622630b97d358d5.graph: fadfc941d3a7fc5d9bd61f1e242acaea9a2d258e65755ed646af0545a09f33ea
+      phases/2026-10-17-pieces-not-order/graph/EMB2_ollama_writes_emerge_for_the_pipeline-bb1edf7c6fc5cf89.graph: 639b7d194627fd52bf5a91686ef10a413817ceec104ffa043cb2ccbcc73d9595
+      phases/2026-10-17-pieces-not-order/graph/EMB7_code_frames-f622630b97d358d5.graph: 8bba6d30f6b0dc682804144f05a0890506707ff4b16bb01ec60de8096f59879b
       phases/2026-10-17-pieces-not-order/graph/_superseded/EMB2_ollama_writes_emerge_for_the_pipeline-1445f35f70f564f1.graph: 920c92b78fb0caa828537f03f6663736d8794848e183790904f4ba36cd1235f7
       phases/2026-10-17-pieces-not-order/graph/_superseded/EMB2_ollama_writes_emerge_for_the_pipeline-579a25f18ba2e73f.graph: 365ed44933ef1d28b3e79172a79987821af0ff75ac35aab8f643e9547fdc3b67
       phases/2026-10-31-emerge-as-a-system/EAS4a_L0_evaluate.phase: 56625f30bc93e53c2d659c7b692e7ad13995404b13d00d466f37f805eecb4d70
