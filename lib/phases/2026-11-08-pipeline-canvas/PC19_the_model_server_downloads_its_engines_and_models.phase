@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-08-pipeline-canvas-phasemap.spec::PC19_the_model_server_downloads_its_engines_and_models
+type: phase
+id: docs_2026-11-08-pipeline-canvas-phasemap.spec::PC19_the_model_server_downloads_its_engines_and_models
+context: >-
+  pipeline phase PC19_the_model_server_downloads_its_engines_and_models of
+  docs/2026-11-08-pipeline-canvas-phasemap.spec
+intent: null
+summary: PC19_the_model_server_downloads_its_engines_and_models (backend) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1795583463303
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795583463303
+lastSeenAt: 1795583463303
+fingerprint: null
+payload:
+  id: PC19_the_model_server_downloads_its_engines_and_models
+  map: docs/2026-11-08-pipeline-canvas-phasemap.spec
+  repo: null
+  layer: backend
+  status: OPEN
+  files:
+    - inference/catalog.eg
+    - inference/downloads.eg
+    - inference/inference.eg
+    - inference/models.eg
+    - inference/test/downloads.test.eg
+  depends_on:
+    - PC18_cos_runs_the_model_server
+  blocks: []
+  spec: null
+  graph: e1058faeae888986

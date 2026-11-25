@@ -1,0 +1,68 @@
+envelope: 1
+uuid: nexus-export-graph-phase:PC20_cos_runs_the_inference_system:bfc9d06b26a39018
+type: graph
+id: phase:PC20_cos_runs_the_inference_system:bfc9d06b26a39018
+context: dependency graph of phase PC20_cos_runs_the_inference_system
+intent: null
+summary: 3 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1795583463307
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795583463307
+lastSeenAt: 1795583463307
+fingerprint: null
+payload:
+  for: PC20_cos_runs_the_inference_system
+  kind: phase
+  repo: null
+  hash: bfc9d06b26a39018
+  nodes:
+    - path: inference/compartment.json
+      role: changes
+      exists: false
+      system: null
+    - path: inference/server.eg
+      role: changes
+      exists: true
+      system: null
+    - path: inference/test/server.test.eg
+      role: changes
+      exists: true
+      system: null
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 4
+    deps:
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC19_the_model_server_downloads_its_engines_and_models
+    dependents:
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC21_hats_and_agent_tools_on_the_model_server
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC24_every_request_a_timeline
+    upstream:
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC18_cos_runs_the_model_server
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC19_the_model_server_downloads_its_engines_and_models
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC9_the_desktop_driver
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D14_a_desktop_driver_for_agents
+    downstream:
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC21_hats_and_agent_tools_on_the_model_server
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC22_each_request_to_the_smallest_model_that_can
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC23_a_request_a_bar_of_chunks
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC24_every_request_a_timeline
+    blockedBy:
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC19_the_model_server_downloads_its_engines_and_models
+    unlocks:
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC21_hats_and_agent_tools_on_the_model_server
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 4 · blocked by PC19_the_model_server_downloads_its_engines_and_models
+      - 'depends on (1): PC19_the_model_server_downloads_its_engines_and_models · all upstream 4'
+      - >-
+        needed by (2): PC21_hats_and_agent_tools_on_the_model_server, PC24_every_request_a_timeline
+        · all downstream 4 · finishing it unlocks PC21_hats_and_agent_tools_on_the_model_server
+    edges:
+      - from: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC19_the_model_server_downloads_its_engines_and_models
+        kind: declared

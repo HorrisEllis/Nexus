@@ -7,11 +7,11 @@ intent: null
 summary: 48 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1795571379180
+exported_at: 1795583463246
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1795571379180
-lastSeenAt: 1795571379180
+firstSeenAt: 1795583463246
+lastSeenAt: 1795583463246
 fingerprint: null
 payload:
   for: PC8_operate_a_pipeline
@@ -417,6 +417,9 @@ payload:
       - with: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC18_cos_runs_the_model_server
         files:
           - idearium/cli/route-commands.js
+      - with: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC23_a_request_a_bar_of_chunks
+        files:
+          - cos/ui/automation/engine.js
     dangling: []
     lines:
       - layer 15 · blocked by PC5_programmable_gate_types
@@ -448,7 +451,7 @@ payload:
       - >-
         same files as PC9_the_desktop_driver with no order between them:
         cos/ui/automation/engine.js, idearium/cli/route-commands.js, cos/manager/server.js
-      - … and 4 more phases sharing its files without an order
+      - … and 5 more phases sharing its files without an order
     edges:
       - from: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D13_the_pipeline_works_first_then_cos_optimised
         kind: declared

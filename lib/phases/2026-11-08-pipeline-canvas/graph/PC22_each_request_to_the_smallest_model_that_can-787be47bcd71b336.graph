@@ -1,0 +1,116 @@
+envelope: 1
+uuid: nexus-export-graph-phase:PC22_each_request_to_the_smallest_model_that_can:787be47bcd71b336
+type: graph
+id: phase:PC22_each_request_to_the_smallest_model_that_can:787be47bcd71b336
+context: dependency graph of phase PC22_each_request_to_the_smallest_model_that_can
+intent: null
+summary: 10 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1795583463316
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795583463316
+lastSeenAt: 1795583463316
+fingerprint: null
+payload:
+  for: PC22_each_request_to_the_smallest_model_that_can
+  kind: phase
+  repo: null
+  hash: 787be47bcd71b336
+  nodes:
+    - path: cos/automation/ladder.eg
+      role: changes
+      exists: true
+      system: cos
+    - path: lib/agent-capability-profile.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/model-door.js
+      role: changes
+      exists: true
+      system: lib
+    - path: copilot/server.js
+      role: used-by
+      exists: true
+      system: copilot
+    - path: lib/agent-tools/tools/coordination/agent-capability.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/test-guardian-stack-sim.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: lib/agent-providers.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/pipeline-routing.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/reasoning-route.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/route-eligibility.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/model-door.js
+      to: lib/pipeline-routing.js
+      kind: requires
+    - from: lib/model-door.js
+      to: lib/reasoning-route.js
+      kind: requires
+    - from: lib/model-door.js
+      to: lib/route-eligibility.js
+      kind: requires
+    - from: lib/agent-capability-profile.js
+      to: lib/agent-providers.js
+      kind: requires
+    - from: copilot/server.js
+      to: lib/model-door.js
+      kind: requires
+    - from: tests/modules/test-guardian-stack-sim.test.js
+      to: lib/model-door.js
+      kind: requires
+    - from: lib/agent-tools/tools/coordination/agent-capability.js
+      to: lib/agent-capability-profile.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 6
+    deps:
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC21_hats_and_agent_tools_on_the_model_server
+    dependents:
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC23_a_request_a_bar_of_chunks
+    upstream:
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC18_cos_runs_the_model_server
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC19_the_model_server_downloads_its_engines_and_models
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC20_cos_runs_the_inference_system
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC21_hats_and_agent_tools_on_the_model_server
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC9_the_desktop_driver
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D14_a_desktop_driver_for_agents
+    downstream:
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC23_a_request_a_bar_of_chunks
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC24_every_request_a_timeline
+    blockedBy:
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC21_hats_and_agent_tools_on_the_model_server
+    unlocks:
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC23_a_request_a_bar_of_chunks
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 6 · blocked by PC21_hats_and_agent_tools_on_the_model_server
+      - 'depends on (1): PC21_hats_and_agent_tools_on_the_model_server · all upstream 6'
+      - >-
+        needed by (1): PC23_a_request_a_bar_of_chunks · all downstream 2 · finishing it unlocks
+        PC23_a_request_a_bar_of_chunks
+    edges:
+      - from: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC21_hats_and_agent_tools_on_the_model_server
+        kind: declared

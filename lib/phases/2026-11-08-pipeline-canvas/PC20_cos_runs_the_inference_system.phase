@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-08-pipeline-canvas-phasemap.spec::PC20_cos_runs_the_inference_system
+type: phase
+id: docs_2026-11-08-pipeline-canvas-phasemap.spec::PC20_cos_runs_the_inference_system
+context: pipeline phase PC20_cos_runs_the_inference_system of docs/2026-11-08-pipeline-canvas-phasemap.spec
+intent: null
+summary: PC20_cos_runs_the_inference_system (backend) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1795583463307
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795583463307
+lastSeenAt: 1795583463307
+fingerprint: null
+payload:
+  id: PC20_cos_runs_the_inference_system
+  map: docs/2026-11-08-pipeline-canvas-phasemap.spec
+  repo: null
+  layer: backend
+  status: OPEN
+  files:
+    - inference/compartment.json
+    - inference/server.eg
+    - inference/test/server.test.eg
+  depends_on:
+    - PC19_the_model_server_downloads_its_engines_and_models
+  blocks: []
+  spec: null
+  graph: bfc9d06b26a39018

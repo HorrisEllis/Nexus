@@ -1666,3 +1666,98 @@ phases_addendum_2026_11_13_rca:
 # of radial (a ring runs when the ring inside it passed) and of the field (a step runs when every gate around it holds) in the engine
 # (cos/automation/pipeline.js); a box can be a catalogue step, a system, another pipeline (opens in place: PC4's recursion), a phase (built by
 # the build pipeline for that phase) or a component (from its system's own registry).
+
+# ── ADDENDUM 2026-11-24 (map; nothing built by it) — PC18 expanded: the model server downloads, wears hats, routes, shows a bar per request ──
+# James, 2026-11-24, after uninstalling Ollama's app: "though we just replace ollama with our own. i uninstalled ollama aplpicatino" · "It's the
+# server in cos. Model server" · "i want the timeline working, with the steps and gates hooked into the new model server. rewind engine,
+# snapshots, flight recorder" · "a timeline for each timeline, contract." · "Need to have a download manager for that. The engines. And models.
+# Now that we aren't using ollama. We need to have the model server integrated with hats; agent tools, etc. What ever we can have the 3b do. We
+# can have progress bars for each request. With green chunks for compiled. Grey for gaps, and red for error, bug or missing. That way we can
+# have non linear pipeline generation. What ever model can handle the request handles the request." · asked where each lives: "model server.
+# lib folder and cos automation engine and pipelin" (read as: downloads → the model server; hats → lib/; the bars → COS's automation engine and
+# pipeline canvas; to confirm, PC_D18).
+# Found, the coder's (checked 2026-11-24 on his PC): the model server is inference/ (Emerge: models.eg, settings.eg, server.eg, inference.eg),
+# one llama-server per model on 9931 + i, reached by COS's /api/cos/systems/inference/hook/<hook>. Removing Ollama's app took its engine
+# (AppData/Local/Programs/Ollama/lib/ollama/llama-server.exe, gone) and the model files (~/.ollama/models is 40 KB: the manifests, no blobs);
+# no llama-server and no .gguf anywhere on D: or his user folder (6 deep). COS says "no system \"inference\" is declared (its compartment.json
+# has no runtime.process)". settings.eg already names the recorder (record, keep_days 30, slot_save, replay, hook: "Idearium rewind engine and
+# flight recorder"); nothing reads it yet. So nothing local answers today, and the order below starts with getting an engine and a model back.
+# Drift, said: PC18's files_added named cos/inference/*; what was built is inference/ at the root, its own system (§5.9). Kept as built.
+# Axioms: §3.3 (map before build), §8.6 (reuse: everything below names what it stands on), §5.9–§5.16 (each system's own data and hooks; the
+# model server reached only through its drawbridge), §17.13 (Emerge, no new JS but where JS is replaced), §1.2 (each gap and fallback said).
+phases_addendum_2026_11_24_model_server:
+  PC19_the_model_server_downloads_its_engines_and_models:
+    status: OPEN
+    layer: backend
+    james: '"Need to have a download manager for that. The engines. And models. Now that we aren''t using ollama." · "model server."'
+    depends_on: [PC18_cos_runs_the_model_server]
+    files: [inference/catalog.eg, inference/downloads.eg, inference/inference.eg, inference/models.eg, inference/test/downloads.test.eg]
+    reuse: "clear-glass/src/downloads/store.js's shape (a list of downloads, each with state), read not imported (§5.9); models.eg's GGUF reading; lib/versionium-record.js for each file landed"
+    does: >-
+      The model server owns its downloads. A catalog (catalog.eg: engines, llama.cpp's server for this PC's card — CUDA on the GTX 1650, else CPU;
+      models, GGUF files by name, size and checksum, smallest first: a 3b coder before a 7b before deepseek-coder-v2:16b) and a downloader
+      (downloads.eg): each download is a node file (inference/data/downloads/<id>.download: source, bytes done, bytes total, checksum, state) so a
+      download in flight resumes from disk after a restart (his 2026-11-14 persistence law), resumes by byte range, is checked by sha256 before
+      use, and lands in the model server's own store. New in hooks: catalog, download, progress, cancel. models.eg finds the store and the
+      engine there first, Ollama's old folders last.
+    gap: "Emerge needs a fetch to a file with a byte range and a sha256 (a runtime capability, built into Emerge per §17.13, said if missing)"
+    proof: "downloads.test.eg on a stand-in server: a download stopped halfway resumes from its .download file; a wrong checksum refuses the file; then his PC: the engine and one 3b model downloaded, models() lists it"
+  PC20_cos_runs_the_inference_system:
+    status: OPEN
+    layer: backend
+    depends_on: [PC19_the_model_server_downloads_its_engines_and_models]
+    files: [inference/compartment.json, inference/server.eg, inference/test/server.test.eg]
+    reuse: "the supervisor's start, restart and circuit (PC18); runtime.process, as every system declares it"
+    does: "inference/compartment.json declares its process, so COS starts the model server, starts each model that is on (settings: on, port, slots), restarts one that crashes, and stops them with COS"
+    proof: "COS's /api/cos/systems/inference answers; the 3b's llama-server answers /health on its port; a killed one is restarted"
+  PC21_hats_and_agent_tools_on_the_model_server:
+    status: OPEN
+    layer: backend
+    james: '"We need to have the model server integrated with hats; agent tools, etc. What ever we can have the 3b do." · "lib folder"'
+    depends_on: [PC20_cos_runs_the_inference_system]
+    files: [inference/inference.eg, lib/hat-forge.js, lib/agent-tools/tool-catalog.js, lib/agent-tool-call.js, inference/test/infer.test.eg]
+    reuse: "lib/hat-forge.js (a hat: base agent + scoped tools + persona); lib/agent-tools' catalog; lib/agent-tool-call.js's parser; ollama/lib/dispatch.js's job lifecycle, moved to the model server where it is the model server's"
+    does: >-
+      A new in hook, infer { hat, request, tools }: the hat composed by the hat forge, its scoped tools offered to the local model, a tool call in
+      its reply parsed and run through the tool's own door, the answer leaving by the one out hook. Any hat on any local model.
+    proof: "a hat with one tool, on the 3b: it asks for the tool, the tool runs, the answer comes back with the tool's result in it"
+  PC22_each_request_to_the_smallest_model_that_can:
+    status: OPEN
+    layer: backend
+    james: '"What ever model can handle the request handles the request."'
+    depends_on: [PC21_hats_and_agent_tools_on_the_model_server]
+    files: [lib/model-door.js, lib/agent-capability-profile.js, cos/automation/ladder.eg]
+    reuse: "lib/model-door.js (the one door for which model); lib/agent-capability-profile.js (what each model has really done, measured); cos/automation/ladder.eg (the rungs); PC17's fit by memory"
+    does: "a request goes to the smallest local model whose measured record says it can do that kind of request, then up the ladder (a bigger local model, Guardian, Claude last), each climb said with why"
+    proof: "a request the 3b has passed before stays on the 3b; one it has failed goes up one rung, said"
+  PC23_a_request_a_bar_of_chunks:
+    status: "OPEN — preview first (his rule: never build UI without a live-data preview and his yes)"
+    layer: ui
+    james: '"progress bars for each request. With green chunks for compiled. Grey for gaps, and red for error, bug or missing. That way we can have non linear pipeline generation." · "cos automation engine and pipelin"'
+    depends_on: [PC22_each_request_to_the_smallest_model_that_can]
+    files: [cos/ui/request-bars-preview/index.html, cos/pipeline/box.eg, cos/pipeline/gate.eg, cos/ui/automation/engine.js]
+    reuse: "the request files and RAID's contract per request (0.60.464–476); a gate's PASS/FAILED; the canvas's bars (0.60.630); PC_D15's field and radial kinds"
+    does: >-
+      Each request is a bar of chunks: green compiled (its gate passed), grey a gap (not done), red an error, a bug or something missing. A free
+      model takes any grey chunk it fits (PC22), in any order; a red chunk goes back as a gap with its why. The bar fills wherever work lands:
+      non-linear generation. Shown in COS's automation engine and on the pipeline canvas.
+    proof: "the preview on a real request's chunks, shown to him; then the bars live on a run where two models fill different chunks"
+  PC24_every_request_a_timeline:
+    status: "OPEN — which timeline is his (PC_D18 b)"
+    layer: backend
+    james: '"i want the timeline working, with the steps and gates hooked into the new model server. rewind engine, snapshots, flight recorder" · "a timeline for each timeline, contract."'
+    depends_on: [PC23_a_request_a_bar_of_chunks, PC20_cos_runs_the_inference_system]
+    files: [inference/recorder.eg, cos/pipeline/contract.eg, cos/foundation/snapshot.js, ollama/lib/tape.js]
+    reuse: "settings.eg's recorder block; ollama/lib/tape.js (every model call a frame, a run replayed without the model), moved to the model server; llama-server's --slot-save-path (the model's own state, the rewind hook); cos/foundation/snapshot.js SnapshotEngine; GS1's checkpoint at each gate PASS; clear-glass/src/rewind/engine.js; Versionium; the flight recorder (/api/repos/<uuid>/flight/<run>)"
+    does: >-
+      Every chunk that changes colour is an event on its timeline, kept as files (no second store): the model call's frame, the gate's verdict, a
+      snapshot at each PASS (a gate's snapshot setting, 0.60.628, still holds), the model's slot saved. Rewind goes back to any gate's last good
+      state; replay runs a recorded request again without the model. Timelines are kept by day.
+    proof: "a request run, rewound to its second gate, replayed from the tape to the same bar"
+  PC_D18_what_he_meant_2026_11_24:
+    status: "OPEN — his"
+    readings:
+      a_where_hats_live: "(a) lib/ as he said, where hat-forge.js is today; (b) the model server's own folder. §5.9 says lib/ is not a home for what a system uses; his word and the axiom differ, so it is his"
+      b_which_timeline: "(a) one per pipeline and one per contract; (b) one per contract only, written to fulfilled; (c) timelines inside timelines: a Nexus-wide one by day holding each pipeline's and contract's own"
+      c_what_a_chunk_is: "(a) a step; (b) a file the request writes; (c) a gate check"
+      d_the_engine_download: "llama.cpp's own release (GitHub, the CUDA build for the GTX 1650), confirmed by him before the first download"

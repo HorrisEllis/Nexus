@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-08-pipeline-canvas-phasemap.spec::PC23_a_request_a_bar_of_chunks
+type: phase
+id: docs_2026-11-08-pipeline-canvas-phasemap.spec::PC23_a_request_a_bar_of_chunks
+context: pipeline phase PC23_a_request_a_bar_of_chunks of docs/2026-11-08-pipeline-canvas-phasemap.spec
+intent: null
+summary: PC23_a_request_a_bar_of_chunks (ui) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1795583463321
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795583463321
+lastSeenAt: 1795583463321
+fingerprint: null
+payload:
+  id: PC23_a_request_a_bar_of_chunks
+  map: docs/2026-11-08-pipeline-canvas-phasemap.spec
+  repo: null
+  layer: ui
+  status: '"OPEN — preview first (his rule: never build UI without a live-data preview and his yes)"'
+  files:
+    - cos/ui/request-bars-preview/index.html
+    - cos/pipeline/box.eg
+    - cos/pipeline/gate.eg
+    - cos/ui/automation/engine.js
+  depends_on:
+    - PC22_each_request_to_the_smallest_model_that_can
+  blocks: []
+  spec: null
+  graph: e97735fb22731a8f

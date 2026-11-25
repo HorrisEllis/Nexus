@@ -7,11 +7,11 @@ intent: null
 summary: 31 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1794930339847
+exported_at: 1795583463251
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1794930339847
-lastSeenAt: 1794930339847
+firstSeenAt: 1795583463251
+lastSeenAt: 1795583463251
 fingerprint: null
 payload:
   for: PC9_the_desktop_driver
@@ -230,6 +230,12 @@ payload:
     downstream:
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC10_our_own_remote_control
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC18_cos_runs_the_model_server
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC19_the_model_server_downloads_its_engines_and_models
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC20_cos_runs_the_inference_system
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC21_hats_and_agent_tools_on_the_model_server
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC22_each_request_to_the_smallest_model_that_can
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC23_a_request_a_bar_of_chunks
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC24_every_request_a_timeline
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::RCA1_cos_assistant_navigates_with_him
     blockedBy: []
     unlocks:
@@ -275,7 +281,7 @@ payload:
       - 'depends on (1): PC_D14_a_desktop_driver_for_agents'
       - >-
         needed by (2): PC10_our_own_remote_control, PC18_cos_runs_the_model_server · all downstream
-        3 · finishing it unlocks PC10_our_own_remote_control, PC18_cos_runs_the_model_server
+        9 · finishing it unlocks PC10_our_own_remote_control, PC18_cos_runs_the_model_server
       - >-
         same files as PC2_procedures_and_frameworks_as_steps with no order between them:
         cos/manager/server.js

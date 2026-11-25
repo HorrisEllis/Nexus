@@ -7,11 +7,11 @@ intent: null
 summary: 36 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1795571379142
+exported_at: 1795583463223
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1795571379142
-lastSeenAt: 1795571379142
+firstSeenAt: 1795583463223
+lastSeenAt: 1795583463223
 fingerprint: null
 payload:
   for: PC4_the_box_kinds_on_the_canvas
@@ -356,6 +356,9 @@ payload:
         files:
           - cos/pipeline/index.js
           - cos/manager/server.js
+      - with: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC23_a_request_a_bar_of_chunks
+        files:
+          - cos/pipeline/gate.eg
     dangling: []
     lines:
       - >-
@@ -378,7 +381,7 @@ payload:
       - >-
         same files as PC12_every_pipeline_in_cos with no order between them: cos/pipeline/cli.eg,
         cos/pipeline/index.js, cos/pipeline/registry.json, tests/modules/test-cos-pipeline.test.js
-      - … and 3 more phases sharing its files without an order
+      - … and 4 more phases sharing its files without an order
     edges:
       - from: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC1_one_box_shape
         kind: declared

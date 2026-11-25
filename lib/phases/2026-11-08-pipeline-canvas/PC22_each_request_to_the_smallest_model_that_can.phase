@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-08-pipeline-canvas-phasemap.spec::PC22_each_request_to_the_smallest_model_that_can
+type: phase
+id: docs_2026-11-08-pipeline-canvas-phasemap.spec::PC22_each_request_to_the_smallest_model_that_can
+context: >-
+  pipeline phase PC22_each_request_to_the_smallest_model_that_can of
+  docs/2026-11-08-pipeline-canvas-phasemap.spec
+intent: null
+summary: PC22_each_request_to_the_smallest_model_that_can (backend) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1795583463316
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795583463316
+lastSeenAt: 1795583463316
+fingerprint: null
+payload:
+  id: PC22_each_request_to_the_smallest_model_that_can
+  map: docs/2026-11-08-pipeline-canvas-phasemap.spec
+  repo: null
+  layer: backend
+  status: OPEN
+  files:
+    - lib/model-door.js
+    - lib/agent-capability-profile.js
+    - cos/automation/ladder.eg
+  depends_on:
+    - PC21_hats_and_agent_tools_on_the_model_server
+  blocks: []
+  spec: null
+  graph: 787be47bcd71b336

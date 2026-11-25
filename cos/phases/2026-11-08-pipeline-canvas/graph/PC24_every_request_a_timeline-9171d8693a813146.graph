@@ -1,0 +1,182 @@
+envelope: 1
+uuid: nexus-export-graph-phase:PC24_every_request_a_timeline:9171d8693a813146
+type: graph
+id: phase:PC24_every_request_a_timeline:9171d8693a813146
+context: dependency graph of phase PC24_every_request_a_timeline
+intent: null
+summary: 17 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1795583463327
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795583463327
+lastSeenAt: 1795583463327
+fingerprint: null
+payload:
+  for: PC24_every_request_a_timeline
+  kind: phase
+  repo: null
+  hash: 9171d8693a813146
+  nodes:
+    - path: cos/foundation/snapshot.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/pipeline/contract.eg
+      role: changes
+      exists: true
+      system: cos
+    - path: inference/recorder.eg
+      role: changes
+      exists: false
+      system: null
+    - path: ollama/lib/tape.js
+      role: changes
+      exists: true
+      system: ollama
+    - path: cortex/boot.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cos/cli/commands/snapshot.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/watchdog/actions.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: lib/agent-tools/tools/sandbox/self-repair.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: ollama/lib/ollama-client.js
+      role: used-by
+      exists: true
+      system: ollama
+    - path: ollama/ollama-runtime.js
+      role: used-by
+      exists: true
+      system: ollama
+    - path: ollama/routes/tape.js
+      role: used-by
+      exists: true
+      system: ollama
+    - path: cos/compartment/process-runner.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/foundation/axioms.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/foundation/constants.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/foundation/event-contracts.js
+      role: uses
+      exists: true
+      system: cos
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/repo-activity.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: cos/foundation/snapshot.js
+      to: cos/foundation/axioms.js
+      kind: requires
+    - from: cos/foundation/snapshot.js
+      to: cos/foundation/event-contracts.js
+      kind: requires
+    - from: cos/foundation/snapshot.js
+      to: cos/foundation/constants.js
+      kind: requires
+    - from: cos/foundation/snapshot.js
+      to: cos/compartment/process-runner.js
+      kind: requires
+    - from: ollama/lib/tape.js
+      to: lib/data-home.js
+      kind: requires
+    - from: ollama/lib/tape.js
+      to: lib/repo-activity.js
+      kind: requires
+    - from: cortex/boot.js
+      to: cos/foundation/snapshot.js
+      kind: requires
+    - from: cos/cli/commands/snapshot.js
+      to: cos/foundation/snapshot.js
+      kind: requires
+    - from: cos/watchdog/actions.js
+      to: cos/foundation/snapshot.js
+      kind: requires
+    - from: lib/agent-tools/tools/sandbox/self-repair.js
+      to: cos/foundation/snapshot.js
+      kind: requires
+    - from: ollama/lib/ollama-client.js
+      to: ollama/lib/tape.js
+      kind: requires
+    - from: ollama/ollama-runtime.js
+      to: ollama/lib/tape.js
+      kind: requires
+    - from: ollama/routes/tape.js
+      to: ollama/lib/tape.js
+      kind: requires
+  crossings:
+    - from: cortex/boot.js
+      to: cos/foundation/snapshot.js
+      fromSystem: cortex
+      toSystem: cos
+      kind: system
+      known: true
+    - from: lib/agent-tools/tools/sandbox/self-repair.js
+      to: cos/foundation/snapshot.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 8
+    deps:
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC23_a_request_a_bar_of_chunks
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC20_cos_runs_the_inference_system
+    dependents: []
+    upstream:
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC18_cos_runs_the_model_server
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC19_the_model_server_downloads_its_engines_and_models
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC20_cos_runs_the_inference_system
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC21_hats_and_agent_tools_on_the_model_server
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC22_each_request_to_the_smallest_model_that_can
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC23_a_request_a_bar_of_chunks
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC9_the_desktop_driver
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D14_a_desktop_driver_for_agents
+    downstream: []
+    blockedBy:
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC23_a_request_a_bar_of_chunks
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC20_cos_runs_the_inference_system
+    unlocks: []
+    conflicts:
+      - with: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC12_every_pipeline_in_cos
+        files:
+          - cos/pipeline/contract.eg
+    dangling: []
+    lines:
+      - layer 8 · blocked by PC23_a_request_a_bar_of_chunks, PC20_cos_runs_the_inference_system
+      - >-
+        depends on (2): PC23_a_request_a_bar_of_chunks, PC20_cos_runs_the_inference_system · all
+        upstream 8
+      - 'needed by (0): —'
+      - >-
+        same files as PC12_every_pipeline_in_cos with no order between them:
+        cos/pipeline/contract.eg
+    edges:
+      - from: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC23_a_request_a_bar_of_chunks
+        kind: declared
+      - from: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC20_cos_runs_the_inference_system
+        kind: declared

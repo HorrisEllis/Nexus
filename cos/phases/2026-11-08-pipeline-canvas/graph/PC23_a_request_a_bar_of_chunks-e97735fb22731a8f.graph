@@ -1,0 +1,84 @@
+envelope: 1
+uuid: nexus-export-graph-phase:PC23_a_request_a_bar_of_chunks:e97735fb22731a8f
+type: graph
+id: phase:PC23_a_request_a_bar_of_chunks:e97735fb22731a8f
+context: dependency graph of phase PC23_a_request_a_bar_of_chunks
+intent: null
+summary: 4 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1795583463321
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795583463321
+lastSeenAt: 1795583463321
+fingerprint: null
+payload:
+  for: PC23_a_request_a_bar_of_chunks
+  kind: phase
+  repo: null
+  hash: e97735fb22731a8f
+  nodes:
+    - path: cos/pipeline/box.eg
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/pipeline/gate.eg
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/ui/automation/engine.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/ui/request-bars-preview/index.html
+      role: changes
+      exists: false
+      system: cos
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 7
+    deps:
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC22_each_request_to_the_smallest_model_that_can
+    dependents:
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC24_every_request_a_timeline
+    upstream:
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC18_cos_runs_the_model_server
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC19_the_model_server_downloads_its_engines_and_models
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC20_cos_runs_the_inference_system
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC21_hats_and_agent_tools_on_the_model_server
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC22_each_request_to_the_smallest_model_that_can
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC9_the_desktop_driver
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D14_a_desktop_driver_for_agents
+    downstream:
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC24_every_request_a_timeline
+    blockedBy:
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC22_each_request_to_the_smallest_model_that_can
+    unlocks: []
+    conflicts:
+      - with: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC4_the_box_kinds_on_the_canvas
+        files:
+          - cos/pipeline/gate.eg
+      - with: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC8_operate_a_pipeline
+        files:
+          - cos/ui/automation/engine.js
+      - with: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC10_our_own_remote_control
+        files:
+          - cos/ui/automation/engine.js
+    dangling: []
+    lines:
+      - layer 7 · blocked by PC22_each_request_to_the_smallest_model_that_can
+      - 'depends on (1): PC22_each_request_to_the_smallest_model_that_can · all upstream 7'
+      - 'needed by (1): PC24_every_request_a_timeline'
+      - >-
+        same files as PC4_the_box_kinds_on_the_canvas with no order between them:
+        cos/pipeline/gate.eg
+      - 'same files as PC8_operate_a_pipeline with no order between them: cos/ui/automation/engine.js'
+      - >-
+        same files as PC10_our_own_remote_control with no order between them:
+        cos/ui/automation/engine.js
+    edges:
+      - from: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC22_each_request_to_the_smallest_model_that_can
+        kind: declared

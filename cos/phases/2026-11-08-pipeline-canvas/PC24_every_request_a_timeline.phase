@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-08-pipeline-canvas-phasemap.spec::PC24_every_request_a_timeline
+type: phase
+id: docs_2026-11-08-pipeline-canvas-phasemap.spec::PC24_every_request_a_timeline
+context: pipeline phase PC24_every_request_a_timeline of docs/2026-11-08-pipeline-canvas-phasemap.spec
+intent: null
+summary: PC24_every_request_a_timeline (backend) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1795583463327
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795583463327
+lastSeenAt: 1795583463327
+fingerprint: null
+payload:
+  id: PC24_every_request_a_timeline
+  map: docs/2026-11-08-pipeline-canvas-phasemap.spec
+  repo: null
+  layer: backend
+  status: '"OPEN — which timeline is his (PC_D18 b)"'
+  files:
+    - inference/recorder.eg
+    - cos/pipeline/contract.eg
+    - cos/foundation/snapshot.js
+    - ollama/lib/tape.js
+  depends_on:
+    - PC23_a_request_a_bar_of_chunks
+    - PC20_cos_runs_the_inference_system
+  blocks: []
+  spec: null
+  graph: 9171d8693a813146

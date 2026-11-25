@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-08-pipeline-canvas-phasemap.spec::PC21_hats_and_agent_tools_on_the_model_server
+type: phase
+id: docs_2026-11-08-pipeline-canvas-phasemap.spec::PC21_hats_and_agent_tools_on_the_model_server
+context: >-
+  pipeline phase PC21_hats_and_agent_tools_on_the_model_server of
+  docs/2026-11-08-pipeline-canvas-phasemap.spec
+intent: null
+summary: PC21_hats_and_agent_tools_on_the_model_server (backend) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1795583463312
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795583463312
+lastSeenAt: 1795583463312
+fingerprint: null
+payload:
+  id: PC21_hats_and_agent_tools_on_the_model_server
+  map: docs/2026-11-08-pipeline-canvas-phasemap.spec
+  repo: null
+  layer: backend
+  status: OPEN
+  files:
+    - inference/inference.eg
+    - lib/hat-forge.js
+    - lib/agent-tools/tool-catalog.js
+    - lib/agent-tool-call.js
+    - inference/test/infer.test.eg
+  depends_on:
+    - PC20_cos_runs_the_inference_system
+  blocks: []
+  spec: null
+  graph: c3dc21f92054dca5
