@@ -638,3 +638,15 @@ related:
 # sentence in its brief, the 3b still parsed the JSON and compared each id to the file with ==; but the id is a path (C:/m/blobs/sha256-...) and
 # the file a name (sha256-...), so even a perfect parser fails the examples. "names the model's file" was the coder's vague wording; it now says
 # what the examples hold: the text, never parsed, contains the file's name anywhere, or is empty. The behaviour, not the code (no expression given).
+
+# ── ADDENDUM 2026-11-25 (late) — what the 3b alone did on EMB10 and EMB11, from the records (proof owed, not given) ──
+# His rule (PC13): proven only when Nexus runs on it. Neither phase is built: EMB10 held on served_by, EMB11 on fix_methods, every run stopped by
+# itself on no progress (the planned functions that hold: 0). What the runs showed, each from its record:
+# - Asked directly, the 3b wrote served_by's logic right (models.contains(file) || models.is_empty()) in Rust; in the pipeline it built JSON parsers.
+# - Census of 281 refused tries across 8 EMB10/EMB11 piece folders: 119 compiled but broke their examples; 162 were not Emerge, about 90 of
+#   them with one mechanical fix: contains as a call or a name 39, a let reassigned 24, a parameter's name reused 14, a brace in a string 14.
+# - F7: helpers made for a piece that never passed stay in its brief and anchor the model (it reused its own dead JSON helpers).
+# - F8: a helper has no examples of its own, so it passes on compile alone (replace_method_call_result: return method); it should read
+#   compiles, not passed, until the piece that needed it passes.
+# Next, the coder's reading, his to order: (1) the mechanical fixes above in the autocorrect, ranked by this census; (2) F8; (3) his pinned
+# base model trained on Emerge, from these records (each refused try, its refusal, its fix, the right body).
