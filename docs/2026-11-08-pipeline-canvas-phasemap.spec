@@ -1922,3 +1922,13 @@ phases_addendum_2026_11_24_model_server:
 # declared process answering on its port is adopted, on touch and each minute), _sweepStrays (a declared program running unheld is ended, ledger
 # stray-ended), scripts.js stop(owner) and _endTree (taskkill /T) on cancel and on the time limit. Proof owed: the supervisor tests read the PC's
 # real free memory and failed alike on old and new code at 0.4 GB free; rerun when memory is free.
+
+# ── ADDENDUM 2026-11-25 — the proof is Nexus running on what the pipeline built: a feedback loop (his) ──
+# James, 2026-11-25: "Your having it build something real right? Useless examples build useful files. Capability proves competency, not tests
+# passing." · on the answer (land the 3b's EMB10, the bridge's engine decisions run on it, the JavaScript it replaces deleted): "you know why I love
+# this idea? Because it's a feedback loop." DECIDED (his): a piece the pipeline builds is proven only when Nexus runs on it. The loop: the model
+# writes code, Nexus runs on it, a break in real use becomes a gap with its lesson (RL_D10), the pipeline rebuilds it, Nexus runs on the better one.
+# Tests and capability become one; each failure leaves a lesson, a hint or a sharper spec, so the next build starts better (his "intelligent gates
+# that compound"); piece by piece (the engine decisions, then Idearium's Code tab tools, then the rest) Nexus is written by its own smallest model
+# and kept running by its own pipeline: the end-game he named (PC13), reached by repetition. Proof log entries need this: his words, the piece, the
+# code it replaced, and a run anyone can repeat.
