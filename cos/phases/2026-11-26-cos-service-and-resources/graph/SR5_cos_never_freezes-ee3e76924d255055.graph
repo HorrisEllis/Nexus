@@ -1,0 +1,136 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SR5_cos_never_freezes:ee3e76924d255055
+type: graph
+id: phase:SR5_cos_never_freezes:ee3e76924d255055
+context: dependency graph of phase SR5_cos_never_freezes
+intent: null
+summary: 14 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1795720111223
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795720111223
+lastSeenAt: 1795720111223
+fingerprint: null
+payload:
+  for: SR5_cos_never_freezes
+  kind: phase
+  repo: null
+  hash: ee3e76924d255055
+  nodes:
+    - path: cos/manager/server.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/manager/supervisor.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/manager/add-system.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/autopilot-door.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/deploy.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/hub.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/notices.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/proposals.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/resources.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/suspend.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/system-config.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/updates.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/usage.js
+      role: uses
+      exists: true
+      system: cos
+    - path: lib/raid-port.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: cos/manager/supervisor.js
+      to: lib/raid-port.js
+      kind: requires
+    - from: cos/manager/supervisor.js
+      to: cos/manager/suspend.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/proposals.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/usage.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/autopilot-door.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/resources.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/updates.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/notices.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/system-config.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/add-system.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/deploy.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/hub.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-11-26-cos-service-and-resources-phasemap.spec::SR1_the_supervisor_is_the_service
+    dependents: []
+    upstream:
+      - docs/2026-11-26-cos-service-and-resources-phasemap.spec::SR1_the_supervisor_is_the_service
+    downstream: []
+    blockedBy:
+      - docs/2026-11-26-cos-service-and-resources-phasemap.spec::SR1_the_supervisor_is_the_service
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · blocked by SR1_the_supervisor_is_the_service
+      - 'depends on (1): SR1_the_supervisor_is_the_service'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-11-26-cos-service-and-resources-phasemap.spec::SR1_the_supervisor_is_the_service
+        kind: inferred

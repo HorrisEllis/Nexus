@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-26-cos-service-and-resources-phasemap.spec::SR7_the_model_server_pulls_a_model
+type: phase
+id: docs_2026-11-26-cos-service-and-resources-phasemap.spec::SR7_the_model_server_pulls_a_model
+context: >-
+  pipeline phase SR7_the_model_server_pulls_a_model of
+  docs/2026-11-26-cos-service-and-resources-phasemap.spec
+intent: null
+summary: SR7_the_model_server_pulls_a_model (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1795720111229
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795720111229
+lastSeenAt: 1795720111229
+fingerprint: null
+payload:
+  id: SR7_the_model_server_pulls_a_model
+  map: docs/2026-11-26-cos-service-and-resources-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - inference/pull.eg
+    - inference/models.eg
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 81c0543e94e1ad0b

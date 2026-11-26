@@ -1,0 +1,58 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SR4_sigma_and_delta_per_engine:0123694b5b18bc3a
+type: graph
+id: phase:SR4_sigma_and_delta_per_engine:0123694b5b18bc3a
+context: dependency graph of phase SR4_sigma_and_delta_per_engine
+intent: null
+summary: 2 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1795720111221
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795720111221
+lastSeenAt: 1795720111221
+fingerprint: null
+payload:
+  for: SR4_sigma_and_delta_per_engine
+  kind: phase
+  repo: null
+  hash: 0123694b5b18bc3a
+  nodes:
+    - path: intelligence/engine-performance.eg
+      role: changes
+      exists: false
+      system: intelligence
+    - path: intelligence/test/engine-performance.test.eg
+      role: changes
+      exists: false
+      system: intelligence
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-11-26-cos-service-and-resources-phasemap.spec::SR2_engines_beneath_the_supervisor
+      - docs/2026-10-30-compartment-metrics-and-learning-loop-phasemap.spec::ML1_metric_point
+    dependents: []
+    upstream:
+      - docs/2026-10-30-compartment-metrics-and-learning-loop-phasemap.spec::ML1_metric_point
+      - docs/2026-11-26-cos-service-and-resources-phasemap.spec::SR1_the_supervisor_is_the_service
+      - docs/2026-11-26-cos-service-and-resources-phasemap.spec::SR2_engines_beneath_the_supervisor
+    downstream: []
+    blockedBy:
+      - docs/2026-11-26-cos-service-and-resources-phasemap.spec::SR2_engines_beneath_the_supervisor
+      - docs/2026-10-30-compartment-metrics-and-learning-loop-phasemap.spec::ML1_metric_point
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2 · blocked by SR2_engines_beneath_the_supervisor, ML1_metric_point
+      - 'depends on (2): SR2_engines_beneath_the_supervisor, ML1_metric_point · all upstream 3'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-11-26-cos-service-and-resources-phasemap.spec::SR2_engines_beneath_the_supervisor
+        kind: declared
+      - from: docs/2026-10-30-compartment-metrics-and-learning-loop-phasemap.spec::ML1_metric_point
+        kind: declared

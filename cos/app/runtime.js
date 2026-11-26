@@ -104,7 +104,11 @@ async function start(root, project, version, opts = {}) {
   // copy, no button. Only ports held by something that is not Nexus still stop the start, said.
   const held = await portsBusy(o.ports);
   if (held.length) {
-    const running = await whoRuns(o.statusPort);
+    // 2026-11-26 — James: "it keeps kicking me off of it ... refreshing the main page over and over". The manager was busy, not gone (119 event-loop
+    // stalls of 5-97 s in 3 hours, its own ledger): a 2 s ask missed it and the screen fell to "ports in use". While COS's own port is held, it is
+    // asked again for up to 2 minutes before anything is said (busy is not dead, MG15c).
+    let running = await whoRuns(o.statusPort);
+    for (let t0 = Date.now(); !running && held.includes(o.statusPort) && Date.now() - t0 < 120000;) running = await whoRuns(o.statusPort, 15000);
     if (running) {
       fs.writeFileSync(P.run, JSON.stringify({ pid: running.pid, project, version: running.version || version, attached: true, statusPort: o.statusPort, supervisor: 'cos', startedAt: new Date().toISOString() }, null, 2));
       return { ok: true, attached: true, pid: running.pid, version: running.version || version, supervisor: 'cos', healthyAfterMs: 0, note: `attached to the Nexus already running (pid ${running.pid || '?'}): no second copy` };

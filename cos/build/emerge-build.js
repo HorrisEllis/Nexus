@@ -515,9 +515,12 @@ async function endState({ ph, plan, src, mapText }) {
       evidence ? 'What the test said (actual against expected):\n' + String(evidence).slice(0, 1500) : '', '', 'Its last refused tries, each with what refused it:',
       ...refused.map((a, i) => `--- try ${i + 1} (${a.model || '?'}): ${a.said}\n${String(a.body || '').slice(0, 700)}`), '',
       'In five lines or fewer: why does every try fail, and what exactly must the next try do instead (which Emerge builtins or which functions of this module to use)? Plain words, no code fence.'].filter((x) => x !== '').join('\n');
-    let d; try { d = await ask(prompt, LADDER[LADDER.length - 1], 'diagnose:' + name); } catch (e) { row('heal-failed', { note: `${name}: the diagnosis was not answered (${e.message})` }); return false; }
+    // 2026-11-26 — his "what ever the 3bs can do, should be doing": the diagnosis is the smallest model's first (DeepSeek held the bridge 7 min on
+    // diagnose:move while the 3b's next piece waited); the strongest only when the ladder has nothing else
+    const DX = LADDER[0];
+    let d; try { d = await ask(prompt, DX, 'diagnose:' + name); } catch (e) { row('heal-failed', { note: `${name}: the diagnosis was not answered (${e.message})` }); return false; }
     d = String(d || '').trim().slice(0, 1200); if (!d) { row('heal-failed', { note: `${name}: an empty diagnosis` }); return false; }
-    rec.attempts = (rec.attempts || []).concat({ n: 'diagnosis', at: new Date().toISOString(), model: LADDER[LADDER.length - 1], body: '(a diagnosis, not a body)', said: `diagnosed after ${refused.length} refused tries`, fix: d, ok: false });
+    rec.attempts = (rec.attempts || []).concat({ n: 'diagnosis', at: new Date().toISOString(), model: DX, body: '(a diagnosis, not a body)', said: `diagnosed after ${refused.length} refused tries`, fix: d, ok: false });
     rec.diagnosis = { at: new Date().toISOString(), by: LADDER[LADDER.length - 1], text: d, run: RUN }; rec.status = 'open'; store.write(name, rec);
     row('repaired', { kind: 'mechanical', gap: name, note: `${name}: a diagnosis kept as its first lesson — ${d.replace(/\s+/g, ' ').slice(0, 220)}` });
     return true;

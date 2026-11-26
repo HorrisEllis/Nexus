@@ -1,0 +1,53 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SR3_dynamic_allocation:8ad3caca79ccf101
+type: graph
+id: phase:SR3_dynamic_allocation:8ad3caca79ccf101
+context: dependency graph of phase SR3_dynamic_allocation
+intent: null
+summary: 2 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1795720111219
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795720111219
+lastSeenAt: 1795720111219
+fingerprint: null
+payload:
+  for: SR3_dynamic_allocation
+  kind: phase
+  repo: null
+  hash: 8ad3caca79ccf101
+  nodes:
+    - path: cos/manager/allocate.eg
+      role: changes
+      exists: false
+      system: cos
+    - path: cos/manager/test/allocate.test.eg
+      role: changes
+      exists: false
+      system: cos
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-11-26-cos-service-and-resources-phasemap.spec::SR2_engines_beneath_the_supervisor
+    dependents: []
+    upstream:
+      - docs/2026-11-26-cos-service-and-resources-phasemap.spec::SR1_the_supervisor_is_the_service
+      - docs/2026-11-26-cos-service-and-resources-phasemap.spec::SR2_engines_beneath_the_supervisor
+    downstream: []
+    blockedBy:
+      - docs/2026-11-26-cos-service-and-resources-phasemap.spec::SR2_engines_beneath_the_supervisor
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2 · blocked by SR2_engines_beneath_the_supervisor
+      - 'depends on (1): SR2_engines_beneath_the_supervisor · all upstream 2'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-11-26-cos-service-and-resources-phasemap.spec::SR2_engines_beneath_the_supervisor
+        kind: declared

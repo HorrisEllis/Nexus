@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-26-cos-service-and-resources-phasemap.spec::SR5_cos_never_freezes
+type: phase
+id: docs_2026-11-26-cos-service-and-resources-phasemap.spec::SR5_cos_never_freezes
+context: pipeline phase SR5_cos_never_freezes of docs/2026-11-26-cos-service-and-resources-phasemap.spec
+intent: null
+summary: SR5_cos_never_freezes (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1795720111223
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795720111223
+lastSeenAt: 1795720111223
+fingerprint: null
+payload:
+  id: SR5_cos_never_freezes
+  map: docs/2026-11-26-cos-service-and-resources-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/manager/supervisor.js
+    - cos/manager/server.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: ee3e76924d255055

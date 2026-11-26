@@ -1,0 +1,101 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SR6_the_window_floats_and_stays:008921c5e7e9ecd7
+type: graph
+id: phase:SR6_the_window_floats_and_stays:008921c5e7e9ecd7
+context: dependency graph of phase SR6_the_window_floats_and_stays
+intent: null
+summary: 9 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1795720111226
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795720111226
+lastSeenAt: 1795720111226
+fingerprint: null
+payload:
+  for: SR6_the_window_floats_and_stays
+  kind: phase
+  repo: null
+  hash: 008921c5e7e9ecd7
+  nodes:
+    - path: cos/app/main.js
+      role: changes
+      exists: false
+      system: cos
+    - path: cos/app/runtime.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/app/cli.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/app/controller.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/app/shell.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/app/switch.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: tests/modules/test-cos-app-runtime.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-cos-app-switch.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-cos-app-ui.test.js
+      role: used-by
+      exists: true
+      system: null
+  edges:
+    - from: cos/app/cli.js
+      to: cos/app/runtime.js
+      kind: requires
+    - from: cos/app/controller.js
+      to: cos/app/runtime.js
+      kind: requires
+    - from: cos/app/shell.js
+      to: cos/app/runtime.js
+      kind: requires
+    - from: cos/app/switch.js
+      to: cos/app/runtime.js
+      kind: requires
+    - from: tests/modules/test-cos-app-runtime.test.js
+      to: cos/app/runtime.js
+      kind: requires
+    - from: tests/modules/test-cos-app-switch.test.js
+      to: cos/app/runtime.js
+      kind: requires
+    - from: tests/modules/test-cos-app-ui.test.js
+      to: cos/app/runtime.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-11-26-cos-service-and-resources-phasemap.spec::SR1_the_supervisor_is_the_service
+    dependents: []
+    upstream:
+      - docs/2026-11-26-cos-service-and-resources-phasemap.spec::SR1_the_supervisor_is_the_service
+    downstream: []
+    blockedBy:
+      - docs/2026-11-26-cos-service-and-resources-phasemap.spec::SR1_the_supervisor_is_the_service
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · blocked by SR1_the_supervisor_is_the_service
+      - 'depends on (1): SR1_the_supervisor_is_the_service'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-11-26-cos-service-and-resources-phasemap.spec::SR1_the_supervisor_is_the_service
+        kind: declared

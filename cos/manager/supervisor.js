@@ -254,7 +254,11 @@ function createSupervisor({ root, declarations = null, policy = {}, ledgerFile =
     const got = [];
     for (const [n, r] of Object.entries((node.payload && node.payload.systems) || {})) {
       const s = S.get(n); if (!s || s.proc || !r || !_alive(r.pid)) continue;
-      const d = eff(s.decl); let ok = true; if (d.healthUrl) { try { ok = !!(await checkHealth(d.healthUrl)); } catch (_) { ok = false; } }
+      const d = eff(s.decl); let ok = true;
+      // 2026-11-26: after his reboot Windows gave Idearium's old pid (1292) to csrss; _alive took its EPERM for life, COS adopted a system process
+      // as Idearium, held it "degraded" and never started the real one (start: already running; restart: cannot stop csrss). A saved pid is the
+      // system only while it holds the system's own port; where it does not, the system is down and starts fresh.
+      if (d.port && process.platform === 'win32') { const h = _holderOf(Number(d.port)); if (h !== r.pid) { write('adopt-refused', n, `pid ${r.pid} is alive but does not hold :${d.port} (${h ? 'pid ' + h + ' does' : 'nothing does'}): not ${n} (a pid reused after a reboot); it starts fresh`, { by, pid: r.pid }); continue; } } if (d.healthUrl) { try { ok = !!(await checkHealth(d.healthUrl)); } catch (_) { ok = false; } }
       // MG15c (2026-11-18): busy is not dead. A live pid that does not answer is still the system (a second copy could never take its port);
       // it is adopted as degraded and its health is waited for. Found running it: Idearium was refused here mid-build, a copy started, the build lost.
       if (!ok) write('adopted-busy', n, `pid ${r.pid} is alive but its health does not answer at ${d.healthUrl}: adopted as degraded (busy is not dead), its health waited for`, { by, pid: r.pid });

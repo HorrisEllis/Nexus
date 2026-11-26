@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-26-cos-service-and-resources-phasemap.spec::SR1_the_supervisor_is_the_service
+type: phase
+id: docs_2026-11-26-cos-service-and-resources-phasemap.spec::SR1_the_supervisor_is_the_service
+context: >-
+  pipeline phase SR1_the_supervisor_is_the_service of
+  docs/2026-11-26-cos-service-and-resources-phasemap.spec
+intent: null
+summary: SR1_the_supervisor_is_the_service (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1795720111210
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795720111210
+lastSeenAt: 1795720111210
+fingerprint: null
+payload:
+  id: SR1_the_supervisor_is_the_service
+  map: docs/2026-11-26-cos-service-and-resources-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/manager/service.js
+    - cos/manager/supervisor.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: e73e0bf2628f3db8

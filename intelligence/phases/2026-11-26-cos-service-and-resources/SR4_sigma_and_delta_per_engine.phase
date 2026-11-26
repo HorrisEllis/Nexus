@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-26-cos-service-and-resources-phasemap.spec::SR4_sigma_and_delta_per_engine
+type: phase
+id: docs_2026-11-26-cos-service-and-resources-phasemap.spec::SR4_sigma_and_delta_per_engine
+context: >-
+  pipeline phase SR4_sigma_and_delta_per_engine of
+  docs/2026-11-26-cos-service-and-resources-phasemap.spec
+intent: null
+summary: SR4_sigma_and_delta_per_engine (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1795720111221
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795720111221
+lastSeenAt: 1795720111221
+fingerprint: null
+payload:
+  id: SR4_sigma_and_delta_per_engine
+  map: docs/2026-11-26-cos-service-and-resources-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - intelligence/engine-performance.eg
+    - intelligence/test/engine-performance.test.eg
+  depends_on:
+    - SR2_engines_beneath_the_supervisor
+    - ML1_metric_point
+  blocks: []
+  spec: null
+  graph: 0123694b5b18bc3a

@@ -1,0 +1,87 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SR2_engines_beneath_the_supervisor:e5103c3ab59f4cfb
+type: graph
+id: phase:SR2_engines_beneath_the_supervisor:e5103c3ab59f4cfb
+context: dependency graph of phase SR2_engines_beneath_the_supervisor
+intent: null
+summary: 6 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1795720111213
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795720111213
+lastSeenAt: 1795720111213
+fingerprint: null
+payload:
+  for: SR2_engines_beneath_the_supervisor
+  kind: phase
+  repo: null
+  hash: e5103c3ab59f4cfb
+  nodes:
+    - path: cos/manager/resources.js
+      role: changes
+      exists: true
+      system: cos
+    - path: inference/server.eg
+      role: changes
+      exists: true
+      system: null
+    - path: cos/manager/server.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/manager/usage.js
+      role: uses
+      exists: true
+      system: cos
+    - path: lib/raid-port.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/versionium-record.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: cos/manager/resources.js
+      to: lib/raid-port.js
+      kind: requires
+    - from: cos/manager/resources.js
+      to: cos/manager/usage.js
+      kind: requires
+    - from: cos/manager/resources.js
+      to: lib/versionium-record.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/resources.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-11-26-cos-service-and-resources-phasemap.spec::SR1_the_supervisor_is_the_service
+    dependents:
+      - docs/2026-11-26-cos-service-and-resources-phasemap.spec::SR3_dynamic_allocation
+      - docs/2026-11-26-cos-service-and-resources-phasemap.spec::SR4_sigma_and_delta_per_engine
+    upstream:
+      - docs/2026-11-26-cos-service-and-resources-phasemap.spec::SR1_the_supervisor_is_the_service
+    downstream:
+      - docs/2026-11-26-cos-service-and-resources-phasemap.spec::SR3_dynamic_allocation
+      - docs/2026-11-26-cos-service-and-resources-phasemap.spec::SR4_sigma_and_delta_per_engine
+    blockedBy:
+      - docs/2026-11-26-cos-service-and-resources-phasemap.spec::SR1_the_supervisor_is_the_service
+    unlocks:
+      - docs/2026-11-26-cos-service-and-resources-phasemap.spec::SR3_dynamic_allocation
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · blocked by SR1_the_supervisor_is_the_service
+      - 'depends on (1): SR1_the_supervisor_is_the_service'
+      - >-
+        needed by (2): SR3_dynamic_allocation, SR4_sigma_and_delta_per_engine · finishing it unlocks
+        SR3_dynamic_allocation
+    edges:
+      - from: docs/2026-11-26-cos-service-and-resources-phasemap.spec::SR1_the_supervisor_is_the_service
+        kind: declared

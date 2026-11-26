@@ -1,0 +1,82 @@
+envelope: 1
+uuid: nexus-export-graph-phase:SR1_the_supervisor_is_the_service:e73e0bf2628f3db8
+type: graph
+id: phase:SR1_the_supervisor_is_the_service:e73e0bf2628f3db8
+context: dependency graph of phase SR1_the_supervisor_is_the_service
+intent: null
+summary: 5 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1795720111210
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795720111210
+lastSeenAt: 1795720111210
+fingerprint: null
+payload:
+  for: SR1_the_supervisor_is_the_service
+  kind: phase
+  repo: null
+  hash: e73e0bf2628f3db8
+  nodes:
+    - path: cos/manager/service.js
+      role: changes
+      exists: false
+      system: cos
+    - path: cos/manager/supervisor.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/manager/server.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/manager/suspend.js
+      role: uses
+      exists: true
+      system: cos
+    - path: lib/raid-port.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: cos/manager/supervisor.js
+      to: lib/raid-port.js
+      kind: requires
+    - from: cos/manager/supervisor.js
+      to: cos/manager/suspend.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/supervisor.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-11-26-cos-service-and-resources-phasemap.spec::SR2_engines_beneath_the_supervisor
+      - docs/2026-11-26-cos-service-and-resources-phasemap.spec::SR6_the_window_floats_and_stays
+      - docs/2026-11-26-cos-service-and-resources-phasemap.spec::SR5_cos_never_freezes
+    upstream: []
+    downstream:
+      - docs/2026-11-26-cos-service-and-resources-phasemap.spec::SR2_engines_beneath_the_supervisor
+      - docs/2026-11-26-cos-service-and-resources-phasemap.spec::SR3_dynamic_allocation
+      - docs/2026-11-26-cos-service-and-resources-phasemap.spec::SR4_sigma_and_delta_per_engine
+      - docs/2026-11-26-cos-service-and-resources-phasemap.spec::SR5_cos_never_freezes
+      - docs/2026-11-26-cos-service-and-resources-phasemap.spec::SR6_the_window_floats_and_stays
+    blockedBy: []
+    unlocks:
+      - docs/2026-11-26-cos-service-and-resources-phasemap.spec::SR2_engines_beneath_the_supervisor
+      - docs/2026-11-26-cos-service-and-resources-phasemap.spec::SR6_the_window_floats_and_stays
+      - docs/2026-11-26-cos-service-and-resources-phasemap.spec::SR5_cos_never_freezes
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0 · ready
+      - 'depends on (0): —'
+      - >-
+        needed by (3): SR2_engines_beneath_the_supervisor, SR6_the_window_floats_and_stays,
+        SR5_cos_never_freezes · all downstream 5 · finishing it unlocks
+        SR2_engines_beneath_the_supervisor, SR6_the_window_floats_and_stays, SR5_cos_never_freezes
+    edges: []
