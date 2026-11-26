@@ -295,11 +295,43 @@ fn on_event(base: string, kind: string, data: map, pipeline: any, at: num): map 
     put(f, s)
     return { ok: true, request: id, task: data.task, met: st.met }
   }
+  // 2026-11-26 (his: "Anything starts as the first step. Then everything branches from that one" · "remember this is all persistent node
+  // files. look at the phases before anything"): a step the run grew is a step node of this request like any other, with the step it grew
+  // from and why; it joins the request's conditions and the DAG, wired from what it waits on. A failed step that grew a recovery names it
+  // (recoveredBy): it is met when one of them is.
+  if kind == "automation.pipeline.grow" {
+    let t = data.task
+    let after = get(data, "dependsOn", [data.from])
+    let label = get(data, "label", t)
+    put(step_file(w.dir, t), node("step", id + "." + t, label, "waiting", { run: id, task: t, label: label, step: get(data, "step", null), after: after,
+      grownFrom: data.from, why: get(data, "why", null), recovers: get(data, "recovers", true),
+      takes: [], gives: [], took: [], gave: [], conditions: { gate: null }, status: "waiting", met: false, attempts: 0, output: null, error: null, verdicts: [], gateContext: null, gateAt: null },
+      "a step this request grew from " + str(data.from) + "; kept until its conditions are met"))
+    var r = take_file(run_file(w.dir))
+    r.payload.conditions = push(r.payload.conditions, { step: t, after: after, gate: null, grownFrom: data.from })
+    r.summary = str(len(r.payload.conditions)) + " steps · " + r.payload.phase
+    put(run_file(w.dir), r)
+    var dg = take_file(w.dir + "/dag.dag")
+    if dg != null {
+      dg.payload.boxes = push(dg.payload.boxes, { id: t, label: label, grownFrom: data.from })
+      for a in after { dg.payload.wires = push(dg.payload.wires, { from: a, to: t, carries: [] }) }
+      dg.summary = str(len(dg.payload.boxes)) + " boxes, " + str(len(dg.payload.wires)) + " wires"
+      put(w.dir + "/dag.dag", dg)
+    }
+    let pf = step_file(w.dir, data.from)
+    var ps = take_file(pf)
+    if ps != null and get(data, "recovers", true) and ps.payload.status == "failed" {
+      ps.payload.recoveredBy = push(get(ps.payload, "recoveredBy", []), t)
+      put(pf, ps)
+    }
+    return { ok: true, request: id, task: t, grown: true }
+  }
   if kind == "automation.pipeline.done" {
     // met: RAID's answer (the door asked Cortex and hands it in as raid), else COS's own steps, said
     var r = take_file(run_file(w.dir))
     let steps = map(r.payload.conditions, fn(c) = take_file(step_file(w.dir, c.step)))
-    let unmet = filter(steps, fn(s) = s == null or not s.payload.met)
+    let metIds = map(filter(steps, fn(s) = s != null and s.payload.met), fn(s) = s.payload.task)
+    let unmet = filter(steps, fn(s) = s == null or not (s.payload.met or any(get(s.payload, "recoveredBy", []), fn(x) = metIds contains x)))
     let raid = get(data, "raid", null)
     var met = len(unmet) == 0
     var why = "every step ran and its gate opened"
