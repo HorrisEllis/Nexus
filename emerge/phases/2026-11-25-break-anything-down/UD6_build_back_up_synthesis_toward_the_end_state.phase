@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-25-break-anything-down-phasemap.spec::UD6_build_back_up_synthesis_toward_the_end_state
+type: phase
+id: docs_2026-11-25-break-anything-down-phasemap.spec::UD6_build_back_up_synthesis_toward_the_end_state
+context: >-
+  pipeline phase UD6_build_back_up_synthesis_toward_the_end_state of
+  docs/2026-11-25-break-anything-down-phasemap.spec
+intent: null
+summary: UD6_build_back_up_synthesis_toward_the_end_state (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1795678201524
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795678201524
+lastSeenAt: 1795678201524
+fingerprint: null
+payload:
+  id: UD6_build_back_up_synthesis_toward_the_end_state
+  map: docs/2026-11-25-break-anything-down-phasemap.spec
+  repo: null
+  layer: null
+  status: pending
+  files: []
+  depends_on:
+    - UD3_the_decompose_step_one_branch_per_piece_down_to_
+    - UD5_invariants_across_pieces_become_components
+  blocks: []
+  spec: null
+  graph: aa6882d7d77fdbaf

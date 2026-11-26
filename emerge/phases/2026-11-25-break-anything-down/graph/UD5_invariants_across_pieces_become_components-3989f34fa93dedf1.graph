@@ -1,0 +1,55 @@
+envelope: 1
+uuid: nexus-export-graph-phase:UD5_invariants_across_pieces_become_components:3989f34fa93dedf1
+type: graph
+id: phase:UD5_invariants_across_pieces_become_components:3989f34fa93dedf1
+context: dependency graph of phase UD5_invariants_across_pieces_become_components
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1795678201521
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795678201521
+lastSeenAt: 1795678201521
+fingerprint: null
+payload:
+  for: UD5_invariants_across_pieces_become_components
+  kind: phase
+  repo: null
+  hash: 3989f34fa93dedf1
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD3_the_decompose_step_one_branch_per_piece_down_to_
+    dependents:
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD6_build_back_up_synthesis_toward_the_end_state
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD11_nexus_broken_down_into_itself
+    upstream:
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD1_the_unit_a_piece_with_its_parent_contract_gate_a
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD2_is_it_even_a_framework_problem_the_gate_before_b
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD3_the_decompose_step_one_branch_per_piece_down_to_
+    downstream:
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD11_nexus_broken_down_into_itself
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD6_build_back_up_synthesis_toward_the_end_state
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD7_cross_domain_the_same_problem_broken_down_throug
+    blockedBy:
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD3_the_decompose_step_one_branch_per_piece_down_to_
+    unlocks:
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD11_nexus_broken_down_into_itself
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 3 · blocked by UD3_the_decompose_step_one_branch_per_piece_down_to_
+      - 'depends on (1): UD3_the_decompose_step_one_branch_per_piece_down_to_ · all upstream 3'
+      - >-
+        needed by (2): UD6_build_back_up_synthesis_toward_the_end_state,
+        UD11_nexus_broken_down_into_itself · all downstream 3 · finishing it unlocks
+        UD11_nexus_broken_down_into_itself
+    edges:
+      - from: docs/2026-11-25-break-anything-down-phasemap.spec::UD3_the_decompose_step_one_branch_per_piece_down_to_
+        kind: declared

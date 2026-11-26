@@ -1,0 +1,56 @@
+envelope: 1
+uuid: nexus-export-graph-phase:UD1_the_unit_a_piece_with_its_parent_contract_gate_a:57d06db798125a46
+type: graph
+id: phase:UD1_the_unit_a_piece_with_its_parent_contract_gate_a:57d06db798125a46
+context: dependency graph of phase UD1_the_unit_a_piece_with_its_parent_contract_gate_a
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1795678201509
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795678201509
+lastSeenAt: 1795678201509
+fingerprint: null
+payload:
+  for: UD1_the_unit_a_piece_with_its_parent_contract_gate_a
+  kind: phase
+  repo: null
+  hash: 57d06db798125a46
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD2_is_it_even_a_framework_problem_the_gate_before_b
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD3_the_decompose_step_one_branch_per_piece_down_to_
+    upstream: []
+    downstream:
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD10_failure_modes_broken_down_to_their_mechanics
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD11_nexus_broken_down_into_itself
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD12_his_framework_as_step_kinds
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD2_is_it_even_a_framework_problem_the_gate_before_b
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD3_the_decompose_step_one_branch_per_piece_down_to_
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD4_anything_in_every_input_read_into_the_same_tree_
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD5_invariants_across_pieces_become_components
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD6_build_back_up_synthesis_toward_the_end_state
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD7_cross_domain_the_same_problem_broken_down_throug
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD8_every_piece_attacked_and_measured
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD9_every_coder_intervention_broken_down_into_a_capa
+    blockedBy: []
+    unlocks:
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD2_is_it_even_a_framework_problem_the_gate_before_b
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0 · ready
+      - 'depends on (0): —'
+      - >-
+        needed by (2): UD2_is_it_even_a_framework_problem_the_gate_before_b,
+        UD3_the_decompose_step_one_branch_per_piece_down_to_ · all downstream 11 · finishing it
+        unlocks UD2_is_it_even_a_framework_problem_the_gate_before_b
+    edges: []

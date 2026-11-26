@@ -1,0 +1,48 @@
+envelope: 1
+uuid: nexus-export-graph-phase:UD4_anything_in_every_input_read_into_the_same_tree_:1e90daf989506614
+type: graph
+id: phase:UD4_anything_in_every_input_read_into_the_same_tree_:1e90daf989506614
+context: dependency graph of phase UD4_anything_in_every_input_read_into_the_same_tree_
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1795678201519
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795678201519
+lastSeenAt: 1795678201519
+fingerprint: null
+payload:
+  for: UD4_anything_in_every_input_read_into_the_same_tree_
+  kind: phase
+  repo: null
+  hash: 1e90daf989506614
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD3_the_decompose_step_one_branch_per_piece_down_to_
+    dependents:
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD7_cross_domain_the_same_problem_broken_down_throug
+    upstream:
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD1_the_unit_a_piece_with_its_parent_contract_gate_a
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD2_is_it_even_a_framework_problem_the_gate_before_b
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD3_the_decompose_step_one_branch_per_piece_down_to_
+    downstream:
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD7_cross_domain_the_same_problem_broken_down_throug
+    blockedBy:
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD3_the_decompose_step_one_branch_per_piece_down_to_
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 3 · blocked by UD3_the_decompose_step_one_branch_per_piece_down_to_
+      - 'depends on (1): UD3_the_decompose_step_one_branch_per_piece_down_to_ · all upstream 3'
+      - 'needed by (1): UD7_cross_domain_the_same_problem_broken_down_throug'
+    edges:
+      - from: docs/2026-11-25-break-anything-down-phasemap.spec::UD3_the_decompose_step_one_branch_per_piece_down_to_
+        kind: declared

@@ -1,0 +1,46 @@
+envelope: 1
+uuid: nexus-export-graph-phase:UD10_failure_modes_broken_down_to_their_mechanics:922b76d1e95af064
+type: graph
+id: phase:UD10_failure_modes_broken_down_to_their_mechanics:922b76d1e95af064
+context: dependency graph of phase UD10_failure_modes_broken_down_to_their_mechanics
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1795678201532
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795678201532
+lastSeenAt: 1795678201532
+fingerprint: null
+payload:
+  for: UD10_failure_modes_broken_down_to_their_mechanics
+  kind: phase
+  repo: null
+  hash: 922b76d1e95af064
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD3_the_decompose_step_one_branch_per_piece_down_to_
+    dependents: []
+    upstream:
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD1_the_unit_a_piece_with_its_parent_contract_gate_a
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD2_is_it_even_a_framework_problem_the_gate_before_b
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD3_the_decompose_step_one_branch_per_piece_down_to_
+    downstream: []
+    blockedBy:
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD3_the_decompose_step_one_branch_per_piece_down_to_
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 3 · blocked by UD3_the_decompose_step_one_branch_per_piece_down_to_
+      - 'depends on (1): UD3_the_decompose_step_one_branch_per_piece_down_to_ · all upstream 3'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-11-25-break-anything-down-phasemap.spec::UD3_the_decompose_step_one_branch_per_piece_down_to_
+        kind: declared
