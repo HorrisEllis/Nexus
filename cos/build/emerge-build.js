@@ -380,13 +380,24 @@ async function endState({ ph, plan, src, mapText }) {
           'Every input is a number, a string, a list of numbers or strings, or a small map with named fields; never a whole tree, file or object.',
           'Say exactly what each returns (a number, true/false, a list ...), so a test can be written as one line: name(literals) == literal.',
           'One per line, exactly: name(param1, param2) — one sentence of what it returns. Only the lines.'].join('\n');
-        let found = [], said = '', m = writers[0];
+        // 2026-11-26: the gate, not the prompt (asked for plain inputs, the 3b still wrote scoreChunk(chunk, tree, tape) five times over). A
+        // function whose inputs are whole structures cannot get one literal test case; it is refused and the writer is told why.
+        const WHOLE = /^(tree|tape|node|nodes|chunk|graph|state|context|ctx|config|data|file|files|obj|object|system|module|repo|store|registry|dag|pipeline|primitive|dependency|component)s?$/i;
+        const whole = (x) => x[2].split(',').map((p) => p.trim().split(/[:\s=]/)[0]).filter(Boolean).some((p) => WHOLE.test(p));
+        let found = [], said = '', m = writers[0], why = '';
         for (let t = 0; t < writers.length && !found.length; t++) {
           m = writers[t];
-          const q = t === 0 ? base : base + '\n\nYour last answer could not be read; it began:\n' + String(said).slice(0, 300) +
-            '\nAnswer again with only lines like this one:\nscore(items, weights) — the score of each item';
+          const q = t === 0 ? base : base + '\n\n' + (why || 'Your last answer could not be read; it began:\n' + String(said).slice(0, 300)) +
+            '\nAnswer again with only lines like these:\nreach(edges, id) — how many ids can be reached from id, a number\nslope(values) — the average change between neighbours, a number';
           try { said = await ask(q, m, 'signatures', t + 1); } catch (e) { said = ''; }
-          found = readSigs(said);
+          found = readSigs(said); why = '';
+          const refused = found.filter(whole);
+          if (refused.length) {
+            found = found.filter((x) => !whole(x));
+            if (found.length < 2) { why = `These take whole structures, so no test can be written for them: ${refused.map((x) => `${x[1]}(${x[2]})`).join('; ')}. Break each into smaller functions whose inputs are numbers, strings or short lists.`;
+              row('signatures-refused', { note: `${m}: ${refused.length} function(s) take whole structures (${refused.map((x) => x[1]).join(', ')}); ${t + 1 < writers.length ? 'asked again, the reason shown, on ' + writers[t + 1] : 'no writer left'}`, model: m });
+              found = []; continue; }
+          }
           if (!found.length) { try { fs.mkdirSync(TASKS, { recursive: true }); fs.appendFileSync(path.join(TASKS, `${PHASE}.signatures.unread.txt`), `--- ${new Date().toISOString()} ${m}\n${String(said).slice(0, 4000)}\n`); } catch (_) {}
             row('signatures-unread', { note: `${m} answered ${String(said).length} characters and no line read as name(params); ${t + 1 < writers.length ? 'asked again, its answer shown, on ' + writers[t + 1] : 'no writer left'}`, model: m }); }
         }
