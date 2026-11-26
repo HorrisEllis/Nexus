@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-25-break-anything-down-phasemap.spec::UD2_is_it_even_a_framework_problem_the_gate_before_b
+type: phase
+id: docs_2026-11-25-break-anything-down-phasemap.spec::UD2_is_it_even_a_framework_problem_the_gate_before_b
+context: >-
+  pipeline phase UD2_is_it_even_a_framework_problem_the_gate_before_b of
+  docs/2026-11-25-break-anything-down-phasemap.spec
+intent: null
+summary: UD2_is_it_even_a_framework_problem_the_gate_before_b (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1795678201513
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795678201513
+lastSeenAt: 1795678201513
+fingerprint: null
+payload:
+  id: UD2_is_it_even_a_framework_problem_the_gate_before_b
+  map: docs/2026-11-25-break-anything-down-phasemap.spec
+  repo: null
+  layer: null
+  status: pending
+  files: []
+  depends_on:
+    - UD1_the_unit_a_piece_with_its_parent_contract_gate_a
+  blocks: []
+  spec: null
+  graph: a4b6435118cce1ad

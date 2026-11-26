@@ -1,0 +1,57 @@
+envelope: 1
+uuid: nexus-export-graph-phase:UD7_cross_domain_the_same_problem_broken_down_throug:19bc8d0173e1a0f1
+type: graph
+id: phase:UD7_cross_domain_the_same_problem_broken_down_throug:19bc8d0173e1a0f1
+context: dependency graph of phase UD7_cross_domain_the_same_problem_broken_down_throug
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1795678201526
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795678201526
+lastSeenAt: 1795678201526
+fingerprint: null
+payload:
+  for: UD7_cross_domain_the_same_problem_broken_down_throug
+  kind: phase
+  repo: null
+  hash: 19bc8d0173e1a0f1
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    layer: 5
+    deps:
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD4_anything_in_every_input_read_into_the_same_tree_
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD6_build_back_up_synthesis_toward_the_end_state
+    dependents: []
+    upstream:
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD1_the_unit_a_piece_with_its_parent_contract_gate_a
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD2_is_it_even_a_framework_problem_the_gate_before_b
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD3_the_decompose_step_one_branch_per_piece_down_to_
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD4_anything_in_every_input_read_into_the_same_tree_
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD5_invariants_across_pieces_become_components
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD6_build_back_up_synthesis_toward_the_end_state
+    downstream: []
+    blockedBy:
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD4_anything_in_every_input_read_into_the_same_tree_
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD6_build_back_up_synthesis_toward_the_end_state
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - >-
+        layer 5 · blocked by UD4_anything_in_every_input_read_into_the_same_tree_,
+        UD6_build_back_up_synthesis_toward_the_end_state
+      - >-
+        depends on (2): UD4_anything_in_every_input_read_into_the_same_tree_,
+        UD6_build_back_up_synthesis_toward_the_end_state · all upstream 6
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-11-25-break-anything-down-phasemap.spec::UD4_anything_in_every_input_read_into_the_same_tree_
+        kind: declared
+      - from: docs/2026-11-25-break-anything-down-phasemap.spec::UD6_build_back_up_synthesis_toward_the_end_state
+        kind: declared

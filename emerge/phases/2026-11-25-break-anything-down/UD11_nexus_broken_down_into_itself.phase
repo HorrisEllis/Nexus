@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-25-break-anything-down-phasemap.spec::UD11_nexus_broken_down_into_itself
+type: phase
+id: docs_2026-11-25-break-anything-down-phasemap.spec::UD11_nexus_broken_down_into_itself
+context: >-
+  pipeline phase UD11_nexus_broken_down_into_itself of
+  docs/2026-11-25-break-anything-down-phasemap.spec
+intent: null
+summary: UD11_nexus_broken_down_into_itself (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1795678201534
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795678201534
+lastSeenAt: 1795678201534
+fingerprint: null
+payload:
+  id: UD11_nexus_broken_down_into_itself
+  map: docs/2026-11-25-break-anything-down-phasemap.spec
+  repo: null
+  layer: null
+  status: pending
+  files: []
+  depends_on:
+    - UD5_invariants_across_pieces_become_components
+  blocks: []
+  spec: null
+  graph: 2f06790b9611f7e5

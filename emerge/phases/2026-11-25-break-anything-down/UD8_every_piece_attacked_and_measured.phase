@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-25-break-anything-down-phasemap.spec::UD8_every_piece_attacked_and_measured
+type: phase
+id: docs_2026-11-25-break-anything-down-phasemap.spec::UD8_every_piece_attacked_and_measured
+context: >-
+  pipeline phase UD8_every_piece_attacked_and_measured of
+  docs/2026-11-25-break-anything-down-phasemap.spec
+intent: null
+summary: UD8_every_piece_attacked_and_measured (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1795678201529
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795678201529
+lastSeenAt: 1795678201529
+fingerprint: null
+payload:
+  id: UD8_every_piece_attacked_and_measured
+  map: docs/2026-11-25-break-anything-down-phasemap.spec
+  repo: null
+  layer: null
+  status: pending
+  files: []
+  depends_on:
+    - UD3_the_decompose_step_one_branch_per_piece_down_to_
+  blocks: []
+  spec: null
+  graph: 58849edb140274ef

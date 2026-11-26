@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-25-break-anything-down-phasemap.spec::UD5_invariants_across_pieces_become_components
+type: phase
+id: docs_2026-11-25-break-anything-down-phasemap.spec::UD5_invariants_across_pieces_become_components
+context: >-
+  pipeline phase UD5_invariants_across_pieces_become_components of
+  docs/2026-11-25-break-anything-down-phasemap.spec
+intent: null
+summary: UD5_invariants_across_pieces_become_components (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1795678201521
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795678201521
+lastSeenAt: 1795678201521
+fingerprint: null
+payload:
+  id: UD5_invariants_across_pieces_become_components
+  map: docs/2026-11-25-break-anything-down-phasemap.spec
+  repo: null
+  layer: null
+  status: pending
+  files: []
+  depends_on:
+    - UD3_the_decompose_step_one_branch_per_piece_down_to_
+  blocks: []
+  spec: null
+  graph: 3989f34fa93dedf1
