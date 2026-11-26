@@ -128,6 +128,32 @@ const mk = (declarations, extra = {}) => { const s = createSupervisor({ root: di
     assert.deepStrictEqual(s.rescan({ by: 'test' }).added, [], 'a second rescan adds nothing');
     try { fs.rmSync(tmp, { recursive: true, force: true }); } catch (_) {}
   });
+  // PG5 (his, 2026-11-25: "everything should be routing through raid", split by harm): a fake RAID stands in for RAID's port
+  await test('SV-10', 'an idle stop waits for RAID: refused, it stays up; approved, it stops, its proof measured', async () => {
+    const asks = []; let yes = false;
+    const s = mk([decl('od', OK, { port: await port(), onDemand: true })], { opts: { raid: async (cmd, o) => { asks.push({ cmd, o }); return { approved: yes, reason: yes ? 'ok' : 'test says no' }; } } });
+    s.touch('od'); await wait(900);
+    assert.strictEqual(s.get('od').state, 'up', 'refused: still up'); assert.ok(s.ledger({ system: 'od' }).some(e => e.kind === 'raid-refused'));
+    const ask = asks.find(a => a.cmd === 'cos.idle-stop od'); assert.ok(ask, asks.map(a => a.cmd).join()); assert.ok(ask.o.proof.idleMs >= 300 && ask.o.proof.lineMs === 300, JSON.stringify(ask.o.proof));
+    yes = true; assert.ok(await until(() => s.get('od').state === 'idle', 4000), 'approved: stopped after a full idle period, ' + s.get('od').state);
+    assert.ok(asks.some(a => a.cmd === 'cos.report-wake od'), 'the wake was reported');
+  });
+  await test('SV-11', 'a restart is reported; a refused report holds the next restart, which then asks first', async () => {
+    const asks = [];
+    const s = mk([decl('cr', CRASH, { port: await port() })], { opts: { raid: async (cmd) => { asks.push(cmd); return { approved: false, reason: 'test says no' }; } } });
+    s.start('cr', { by: 'test' });
+    assert.ok(await until(() => asks.includes('cos.report-restart cr'), 3000), asks.join());
+    assert.ok(await until(() => asks.includes('cos.restart cr'), 3000), 'the next restart asked first: ' + asks.join());
+    assert.ok(await until(() => s.ledger({ system: 'cr' }).some(e => e.kind === 'raid-refused' && /restart/.test(e.why)), 2000));
+    await wait(400); const n = s.get('cr').restarts.count; await wait(600); assert.strictEqual(s.get('cr').restarts.count, n, 'refused: left down, no more restarts (' + s.ledger({ system: 'cr' }).map(e => e.kind).join(',') + ')');
+  });
+  await test('SV-12', 'Cortex, where RAID runs, is never held: its restart never asks RAID', async () => {
+    const asks = [];
+    const s = mk([decl('cortex-door', CRASH, { port: await port() })], { opts: { raid: async (cmd) => { asks.push(cmd); return { approved: false, reason: 'no' }; } } });
+    s.start('cortex-door', { by: 'test' });
+    assert.ok(await until(() => s.get('cortex-door').restarts.count >= 2, 3000), 'restarted on its own');
+    assert.strictEqual(asks.length, 0, asks.join());
+  });
   for (const s of sups) try { s.shutdown({ by: 'test' }); } catch (_) {}
   await wait(400);
   console.log(`\n  ${passed} passed, ${failed} failed\n`);

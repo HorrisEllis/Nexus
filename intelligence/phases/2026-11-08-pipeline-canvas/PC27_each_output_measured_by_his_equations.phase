@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-08-pipeline-canvas-phasemap.spec::PC27_each_output_measured_by_his_equations
+type: phase
+id: docs_2026-11-08-pipeline-canvas-phasemap.spec::PC27_each_output_measured_by_his_equations
+context: >-
+  pipeline phase PC27_each_output_measured_by_his_equations of
+  docs/2026-11-08-pipeline-canvas-phasemap.spec
+intent: null
+summary: PC27_each_output_measured_by_his_equations (backend) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1795665335690
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795665335690
+lastSeenAt: 1795665335690
+fingerprint: null
+payload:
+  id: PC27_each_output_measured_by_his_equations
+  map: docs/2026-11-08-pipeline-canvas-phasemap.spec
+  repo: null
+  layer: backend
+  status: OPEN
+  files:
+    - intelligence/equations.eg
+    - intelligence/test/equations.test.eg
+    - cos/ui/run-console-preview/server.js
+  depends_on:
+    - PC26_lineage_is_the_canvas
+  blocks: []
+  spec: null
+  graph: f7304d5d40c4eb8a

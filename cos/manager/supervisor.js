@@ -68,7 +68,7 @@ function httpOk(url, timeoutMs = 1500) {
 }
 
 function createSupervisor({ root, declarations = null, policy = {}, ledgerFile = null, spawnFn = spawn,
-  freeMemPct = () => os.freemem() / os.totalmem(), checkHealth = httpOk, log = (s) => console.log(`[cos] ${s}`), hooks = {} } = {}) {
+  freeMemPct = () => os.freemem() / os.totalmem(), checkHealth = httpOk, log = (s) => console.log(`[cos] ${s}`), hooks = {}, raid = undefined } = {}) {
   // hooks (CP6a): heapMB(decl) → his heap cap for a spawn; spawned(name, pid) after each spawn (the priority is applied there). Settable later
   // with setHooks, because resources.js is made from the supervisor it serves.
   const P = { ...DEFAULTS, ...policy, restart: { ...DEFAULTS.restart, ...(policy.restart || {}) }, circuit: { ...DEFAULTS.circuit, ...(policy.circuit || {}) } };
@@ -143,6 +143,19 @@ function createSupervisor({ root, declarations = null, policy = {}, ledgerFile =
   // a system whose process is alive and answers is adopted, not started again; COS's own restart hands over instead of stopping them. Off for a
   // test's fake spawn (policy.outlive), on for real processes.
   const OUT = P.outlive != null ? !!P.outlive : spawnFn === spawn;
+  // PG5 (his, 2026-11-25: "everything should be routing through raid" · "raid and the cos superviser", split by harm): an act that ends
+  // something waits for RAID's yes with its proof; an act that restores happens and is reported, and a refused report holds its next repeat.
+  // Cortex (where RAID runs) is never held. raid(command, { action, target, proof }) → { approved, reason }; with real processes it is RAID's
+  // port; in tests a fake is given, and with neither, acts go as before.
+  const RAID = raid !== undefined ? raid : (OUT ? (command, o) => require('../../lib/raid-port.js').approveTool('cos', command, { action: o.action, intent: { action: o.action, target: o.target }, causedBy: o.by, proof: o.proof }) : null);
+  const DECIDER = /^cortex/;   // RAID runs here: its recovery never waits for RAID
+  const raidHeld = new Map();  // system → act held by a refused report
+  const askRaid = (act, name, by, proof) => !RAID || DECIDER.test(name) ? Promise.resolve({ approved: true, reason: 'not asked' })
+    : Promise.resolve().then(() => RAID(`cos.${act} ${name}`, { action: act, target: name, by, proof: { kind: 'measured', decidedBy: 'cos/manager/supervisor.js', ...proof, at: Date.now() } }))
+      .then((r) => r || { approved: false, reason: 'no answer' }, (e) => ({ approved: false, reason: `RAID unreachable: ${e.message}` }));
+  const reportRaid = (act, name, by, proof) => { if (!RAID || DECIDER.test(name)) return;
+    askRaid('report-' + act, name, by, proof).then((r) => { if (r.approved) raidHeld.delete(name + ':' + act); else { raidHeld.set(name + ':' + act, r.reason); write('raid-held', name, `RAID did not accept the report of ${act}: ${r.reason}; its next ${act} asks first`, { by }); } }); };
+  const heldBy = (act, name) => raidHeld.get(name + ':' + act) || null;
   const LOGS = path.join(path.dirname(LEDGER), 'logs'), STATE = path.join(path.dirname(LEDGER), 'state'), LOG_MAX = 10 * 1024 * 1024;
   const _alive = (pid) => { if (!pid) return false; try { process.kill(pid, 0); return true; } catch (e) { return e.code === 'EPERM'; } };
   function lineIn(s, name, text, stream) {
@@ -247,7 +260,7 @@ function createSupervisor({ root, declarations = null, policy = {}, ledgerFile =
       if (!ok) write('adopted-busy', n, `pid ${r.pid} is alive but its health does not answer at ${d.healthUrl}: adopted as degraded (busy is not dead), its health waited for`, { by, pid: r.pid });
       s.proc = _adopted(n, r.pid); s.pid = r.pid; s.state = ok ? 'up' : 'degraded'; if (!ok) _waitUp(s, s.proc, d); s.startedAt = r.startedAt || Date.now(); s.by = by; s.lastActivity = Date.now();   // 2026-11-25: with no last use, an adopted on-demand system was never idled out (DeepSeek held its memory for hours)
       for (const kind of ['out', 'err']) { const f = path.join(LOGS, `${n}.${kind}.log`); let end = 0; try { end = fs.statSync(f).size; } catch (_) {} _tail(s, n, kind, f, end); }
-      write('adopted', n, `adopted pid ${r.pid}, left running by manager ${node.payload.manager} (${new Date(node.at).toISOString()}): not started again`, { by, pid: r.pid }); got.push(n);
+      write('adopted', n, `adopted pid ${r.pid}, left running by manager ${node.payload.manager} (${new Date(node.at).toISOString()}): not started again`, { by, pid: r.pid }); got.push(n); reportRaid('adopt', n, by, { pid: r.pid, why: `left running by the previous manager ${node.payload.manager}` });
     }
     _saveState(); return got;
   }
@@ -387,7 +400,11 @@ function createSupervisor({ root, declarations = null, policy = {}, ledgerFile =
     if (eff(s.decl).restart === 'never') { write('no-restart', name, 'its configuration says never restart on a crash (his): left down', { by: 'rule:config' }); return; }
     const delay = Math.max(s.decl.minRestartDelay || 0, s.backoffMs);
     s.backoffMs = Math.min(s.backoffMs * P.restart.factor, P.restart.backoffMs[1]); s.restarts++;
-    later(s, delay, () => { if (s.state === 'down') spawnNow(name, 'rule:restart'); });
+    // PG5: a crash restart restores, so it goes at once and is reported; a restart RAID refused before asks first this time
+    const proofR = { code, signal, restarts: s.restarts, crashesInWindow: (prune(s), s.crashes.length), why: `exited ${code == null ? 'by ' + signal : 'with ' + code}; restart ${s.restarts} after ${delay} ms` };
+    later(s, delay, () => { if (s.state !== 'down') return;
+      if (heldBy('restart', name)) { askRaid('restart', name, 'rule:restart', proofR).then((r) => { if (r.approved) { raidHeld.delete(name + ':restart'); if (s.state === 'down') spawnNow(name, 'rule:restart'); } else write('raid-refused', name, `RAID did not approve the restart: ${r.reason}; left down`, { by: 'rule:restart' }); }); return; }
+      spawnNow(name, 'rule:restart'); reportRaid('restart', name, 'rule:restart', proofR); });
   }
 
   const must = (name) => { const s = S.get(name); if (!s) throw new Error(`no system "${name}" is declared (its compartment.json has no runtime.process)`); return s; };
@@ -409,10 +426,16 @@ function createSupervisor({ root, declarations = null, policy = {}, ledgerFile =
     const port = _portOf(s.decl); if (!port) return false;
     const pid = holders ? holders.get(port) : _holderOf(port); if (!pid || !_alive(pid)) return false;
     s.proc = _adopted(name, pid); s.pid = pid; s.state = 'up'; s.startedAt = s.startedAt || Date.now(); s.by = by; s.lastActivity = Date.now();
-    write('adopted', name, `pid ${pid} already answered on :${port} and no process was held: adopted, not started again`, { by, pid }); _saveState();
+    write('adopted', name, `pid ${pid} already answered on :${port} and no process was held: adopted, not started again`, { by, pid }); _saveState(); reportRaid('adopt', name, by, { pid, port, why: `pid ${pid} answered on its declared port :${port}, held by no process` });
     return true;
   }
-  function touch(name) { const s = must(name); s.lastActivity = Date.now(); if (!running(s) && s.decl.onDemand && !s.circuit.open && !(OUT && _claim(name, 'rule:on-demand'))) spawnNow(name, 'rule:on-demand'); return view(s); }
+  function touch(name) { const s = must(name); s.lastActivity = Date.now();
+    if (!running(s) && s.decl.onDemand && !s.circuit.open && !(OUT && _claim(name, 'rule:on-demand'))) {
+      // PG5: a wake restores, so it goes at once and is reported; a wake RAID refused before asks first
+      const proofW = { why: 'a caller asked for it and it was down', onDemand: true };
+      if (heldBy('wake', name)) { if (!s.raidAsking) { s.raidAsking = true; askRaid('wake', name, 'rule:on-demand', proofW).then((r) => { s.raidAsking = false; if (r.approved) { raidHeld.delete(name + ':wake'); if (!running(s)) spawnNow(name, 'rule:on-demand'); } else write('raid-refused', name, `RAID did not approve the wake: ${r.reason}`, { by: 'rule:on-demand' }); }); } }
+      else { spawnNow(name, 'rule:on-demand'); reportRaid('wake', name, 'rule:on-demand', proofW); } }
+    return view(s); }
   // a program a declaration runs (not node, not Electron), running with no declaration holding it, is a stray of an earlier manager: ended, said.
   // Only programs named by a declaration are looked at; Windows only (its process list); async, so COS never waits on it.
   let _sweeping = false;
@@ -435,8 +458,11 @@ function createSupervisor({ root, declarations = null, policy = {}, ledgerFile =
       const want = new Set(exes.map((c) => path.resolve(c).toLowerCase()));
       for (const l of String(out).split(/\r?\n/)) { const [p, exe] = l.trim().split('|'); const pid = Number(p);
         if (!pid || held.has(pid) || !exe || !want.has(path.resolve(exe).toLowerCase())) continue;
-        write('stray-ended', null, `pid ${pid} ran ${path.basename(exe)}, which a declaration runs, but no declaration held it: ended`, { by, pid });
-        require('child_process').execFile('taskkill', ['/PID', String(pid), '/T', '/F'], { windowsHide: true, timeout: 15000 }, () => {}); }
+        // PG5: ending a stray ends something, so RAID decides, with what was found
+        askRaid('end-stray', path.basename(exe), by, { pid, exe, why: `pid ${pid} runs ${path.basename(exe)}, which a declaration runs, and no declaration holds it` }).then((r) => {
+          if (!r.approved) { write('raid-refused', null, `RAID did not approve ending stray pid ${pid} (${path.basename(exe)}): ${r.reason}`, { by, pid }); return; }
+          write('stray-ended', null, `pid ${pid} ran ${path.basename(exe)}, which a declaration runs, but no declaration held it: ended (RAID approved)`, { by, pid });
+          require('child_process').execFile('taskkill', ['/PID', String(pid), '/T', '/F'], { windowsHide: true, timeout: 15000 }, () => {}); }); }
     });
   }
   // ── pause / resume (CP5b, 0.60.362; cos/spec/compartment.spec MOD-CP-PAUSE) ─────────────────────────────────────────────────────────
@@ -497,7 +523,14 @@ function createSupervisor({ root, declarations = null, policy = {}, ledgerFile =
 
   const reaper = setInterval(() => {   // on-demand systems idle past idleMs stop
     for (const [n, s] of S) { if (s.proc && s.proc.adopted && !_alive(s.proc.pid)) onExit(n, s.proc, null, null); for (const x of (s.tails || [])) x.read(); }   // MG15
-    for (const s of S.values()) if (s.decl.onDemand && running(s) && s.state !== 'paused' && s.lastActivity && Date.now() - s.lastActivity > P.idleMs) { s.state = 'idling'; try { s.proc.kill('SIGTERM'); } catch (_) {} }
+    for (const s of S.values()) if (s.decl.onDemand && running(s) && s.state !== 'paused' && !s.raidAsking && s.lastActivity && Date.now() - s.lastActivity > P.idleMs && !(s.idleRefusedAt && Date.now() - s.idleRefusedAt < P.idleMs)) {
+      // PG5: an idle stop ends something, so RAID decides, with what was measured; refused, it stays up and is asked again after a full idle period
+      const idle = Date.now() - s.lastActivity; s.raidAsking = true;
+      askRaid('idle-stop', s.decl.name, 'rule:idle', { idleMs: idle, lineMs: P.idleMs, why: `unused ${Math.round(idle / 60000)} min, past the ${Math.round(P.idleMs / 60000)} min line` }).then((r) => {
+        s.raidAsking = false;
+        if (!r.approved) { s.idleRefusedAt = Date.now(); write('raid-refused', s.decl.name, `RAID did not approve the idle stop: ${r.reason}`, { by: 'rule:idle' }); return; }
+        if (running(s) && s.state !== 'paused' && Date.now() - s.lastActivity > P.idleMs) { s.state = 'idling'; try { s.proc.kill('SIGTERM'); } catch (_) {} }
+      }); }
     if (OUT) _sweep();   // 2026-11-25: orphans adopted, strays ended (not in tests' own spawn)
   }, P.idleCheckMs); if (reaper.unref) reaper.unref();
 

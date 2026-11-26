@@ -1,0 +1,117 @@
+envelope: 1
+uuid: nexus-export-graph-phase:PG2_raid_signal_to_noise:2cb4b8711618d7c1
+type: graph
+id: phase:PG2_raid_signal_to_noise:2cb4b8711618d7c1
+context: dependency graph of phase PG2_raid_signal_to_noise
+intent: null
+summary: 11 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1795671694072
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795671694072
+lastSeenAt: 1795671694072
+fingerprint: null
+payload:
+  for: PG2_raid_signal_to_noise
+  kind: phase
+  repo: null
+  hash: 2cb4b8711618d7c1
+  nodes:
+    - path: cortex/raid/pager.eg
+      role: changes
+      exists: false
+      system: cortex
+    - path: lib/raid-port.js
+      role: changes
+      exists: true
+      system: lib
+    - path: cortex/boot.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cos/manager/automation-door.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/manager/resources.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/manager/server.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/manager/supervisor.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: guardian/api-dispatch.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: guardian/lib/dispatcher.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: guardian/server.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: lib/nexus-self/systems.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/raid-port.js
+      to: lib/nexus-self/systems.js
+      kind: requires
+    - from: cortex/boot.js
+      to: lib/raid-port.js
+      kind: requires
+    - from: cos/manager/automation-door.js
+      to: lib/raid-port.js
+      kind: requires
+    - from: cos/manager/resources.js
+      to: lib/raid-port.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: lib/raid-port.js
+      kind: requires
+    - from: cos/manager/supervisor.js
+      to: lib/raid-port.js
+      kind: requires
+    - from: guardian/api-dispatch.js
+      to: lib/raid-port.js
+      kind: requires
+    - from: guardian/lib/dispatcher.js
+      to: lib/raid-port.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/raid-port.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-11-25-cos-pages-the-models-phasemap.spec::PG1_measure_each_engine
+    dependents:
+      - docs/2026-11-25-cos-pages-the-models-phasemap.spec::PG4_place_and_admit
+    upstream:
+      - docs/2026-11-25-cos-pages-the-models-phasemap.spec::PG1_measure_each_engine
+    downstream:
+      - docs/2026-11-25-cos-pages-the-models-phasemap.spec::PG4_place_and_admit
+    blockedBy:
+      - docs/2026-11-25-cos-pages-the-models-phasemap.spec::PG1_measure_each_engine
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · blocked by PG1_measure_each_engine
+      - 'depends on (1): PG1_measure_each_engine'
+      - 'needed by (1): PG4_place_and_admit'
+    edges:
+      - from: docs/2026-11-25-cos-pages-the-models-phasemap.spec::PG1_measure_each_engine
+        kind: declared

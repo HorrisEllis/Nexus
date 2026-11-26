@@ -1,0 +1,84 @@
+envelope: 1
+uuid: nexus-export-graph-phase:PG3_hibernate_and_wake:7e8c6fd50ff82c60
+type: graph
+id: phase:PG3_hibernate_and_wake:7e8c6fd50ff82c60
+context: dependency graph of phase PG3_hibernate_and_wake
+intent: null
+summary: 6 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1795671694074
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795671694074
+lastSeenAt: 1795671694074
+fingerprint: null
+payload:
+  for: PG3_hibernate_and_wake
+  kind: phase
+  repo: null
+  hash: 7e8c6fd50ff82c60
+  nodes:
+    - path: cos/manager/supervisor.js
+      role: changes
+      exists: true
+      system: cos
+    - path: inference/inference.eg
+      role: changes
+      exists: true
+      system: null
+    - path: inference/server.eg
+      role: changes
+      exists: true
+      system: null
+    - path: cos/manager/server.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/manager/suspend.js
+      role: uses
+      exists: true
+      system: cos
+    - path: lib/raid-port.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: cos/manager/supervisor.js
+      to: lib/raid-port.js
+      kind: requires
+    - from: cos/manager/supervisor.js
+      to: cos/manager/suspend.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/supervisor.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-11-25-cos-pages-the-models-phasemap.spec::PG1_measure_each_engine
+    dependents:
+      - docs/2026-11-25-cos-pages-the-models-phasemap.spec::PG4_place_and_admit
+      - docs/2026-11-25-cos-pages-the-models-phasemap.spec::PG5_the_supervisor_through_raid
+    upstream:
+      - docs/2026-11-25-cos-pages-the-models-phasemap.spec::PG1_measure_each_engine
+    downstream:
+      - docs/2026-11-25-cos-pages-the-models-phasemap.spec::PG4_place_and_admit
+      - docs/2026-11-25-cos-pages-the-models-phasemap.spec::PG5_the_supervisor_through_raid
+    blockedBy:
+      - docs/2026-11-25-cos-pages-the-models-phasemap.spec::PG1_measure_each_engine
+    unlocks:
+      - docs/2026-11-25-cos-pages-the-models-phasemap.spec::PG5_the_supervisor_through_raid
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · blocked by PG1_measure_each_engine
+      - 'depends on (1): PG1_measure_each_engine'
+      - >-
+        needed by (2): PG4_place_and_admit, PG5_the_supervisor_through_raid · finishing it unlocks
+        PG5_the_supervisor_through_raid
+    edges:
+      - from: docs/2026-11-25-cos-pages-the-models-phasemap.spec::PG1_measure_each_engine
+        kind: declared

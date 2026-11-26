@@ -1,0 +1,81 @@
+envelope: 1
+uuid: nexus-export-graph-phase:PG5_the_supervisor_through_raid:dcaac8e9afa136e6
+type: graph
+id: phase:PG5_the_supervisor_through_raid:dcaac8e9afa136e6
+context: dependency graph of phase PG5_the_supervisor_through_raid
+intent: null
+summary: 6 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1795671694078
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795671694078
+lastSeenAt: 1795671694078
+fingerprint: null
+payload:
+  for: PG5_the_supervisor_through_raid
+  kind: phase
+  repo: null
+  hash: dcaac8e9afa136e6
+  nodes:
+    - path: cos/manager/supervisor.js
+      role: changes
+      exists: true
+      system: cos
+    - path: tests/modules/test-cos-supervisor.test.js
+      role: changes
+      exists: true
+      system: null
+    - path: cos/manager/server.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/manager/suspend.js
+      role: uses
+      exists: true
+      system: cos
+    - path: lib/raid-port.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/test-sandbox.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: cos/manager/supervisor.js
+      to: lib/raid-port.js
+      kind: requires
+    - from: cos/manager/supervisor.js
+      to: cos/manager/suspend.js
+      kind: requires
+    - from: tests/modules/test-cos-supervisor.test.js
+      to: lib/test-sandbox.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/supervisor.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-11-25-cos-pages-the-models-phasemap.spec::PG3_hibernate_and_wake
+    dependents: []
+    upstream:
+      - docs/2026-11-25-cos-pages-the-models-phasemap.spec::PG1_measure_each_engine
+      - docs/2026-11-25-cos-pages-the-models-phasemap.spec::PG3_hibernate_and_wake
+    downstream: []
+    blockedBy:
+      - docs/2026-11-25-cos-pages-the-models-phasemap.spec::PG3_hibernate_and_wake
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2 · blocked by PG3_hibernate_and_wake
+      - 'depends on (1): PG3_hibernate_and_wake · all upstream 2'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-11-25-cos-pages-the-models-phasemap.spec::PG3_hibernate_and_wake
+        kind: inferred

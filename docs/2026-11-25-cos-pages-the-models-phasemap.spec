@@ -56,4 +56,19 @@ phases:
       choice his to override in COS › Settings › Model server. Admission: a job whose model cannot fit now waits, said, until RAID wakes room.
     proof: "DeepSeek placed with its experts in RAM runs faster than with 8 layers on the GPU (measured); a job that cannot fit waits and runs once room is made, the PC never under its floor"
 
-build_order: [PG1, PG2, PG3, PG4]
+  PG5_the_supervisor_through_raid:
+    status: OPEN
+    depends_on: []
+    files: [cos/manager/supervisor.js, tests/modules/test-cos-supervisor.test.js]
+    james: '"okay everything should be routing through raid." · "raid and the cos superviser" (2026-11-25); asked how, given RAID runs inside Cortex, which the supervisor restarts, he chose "Split by harm"'
+    does: >-
+      The supervisor's own acts go through RAID, split by harm (his choice). Acts that end something (an idle stop, ending a stray process)
+      wait for RAID's yes, carrying their measured proof (how long idle against the line; which process, on which declared program, held by
+      no one); refused, nothing is ended and the refusal is on the ledger, asked again only after a full idle period. Acts that restore (a wake
+      on demand, a crash restart, an adoption) happen at once and are reported to RAID with the same kind of proof; a report RAID refuses
+      holds the next repeat of that act on that system until RAID approves it. Cortex, where RAID runs, is never held: its restart never
+      waits for RAID. In tests (no real processes) a fake RAID is given; with none and no real processes, acts go as before.
+    axioms: "§5.9-§5.16 (COS acts, RAID decides), fail closed for harm, never for recovery of the decider itself"
+    proof: "on his PC: an idle model engine's stop shows RAID's approval with its proof on the ledger; a fake RAID that refuses leaves it running; a refused restart report holds the next restart; Cortex restarts with RAID down"
+
+build_order: [PG5, PG1, PG2, PG3, PG4]

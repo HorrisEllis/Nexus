@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-25-cos-pages-the-models-phasemap.spec::PG5_the_supervisor_through_raid
+type: phase
+id: docs_2026-11-25-cos-pages-the-models-phasemap.spec::PG5_the_supervisor_through_raid
+context: >-
+  pipeline phase PG5_the_supervisor_through_raid of
+  docs/2026-11-25-cos-pages-the-models-phasemap.spec
+intent: null
+summary: PG5_the_supervisor_through_raid (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1795671694078
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795671694078
+lastSeenAt: 1795671694078
+fingerprint: null
+payload:
+  id: PG5_the_supervisor_through_raid
+  map: docs/2026-11-25-cos-pages-the-models-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/manager/supervisor.js
+    - tests/modules/test-cos-supervisor.test.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: dcaac8e9afa136e6

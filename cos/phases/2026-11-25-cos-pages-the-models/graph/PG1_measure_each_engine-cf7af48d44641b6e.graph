@@ -7,11 +7,11 @@ intent: null
 summary: 6 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1795651817180
+exported_at: 1795671694069
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1795651817180
-lastSeenAt: 1795651817180
+firstSeenAt: 1795671694069
+lastSeenAt: 1795671694069
 fingerprint: null
 payload:
   for: PG1_measure_each_engine
@@ -69,6 +69,7 @@ payload:
       - docs/2026-11-25-cos-pages-the-models-phasemap.spec::PG2_raid_signal_to_noise
       - docs/2026-11-25-cos-pages-the-models-phasemap.spec::PG3_hibernate_and_wake
       - docs/2026-11-25-cos-pages-the-models-phasemap.spec::PG4_place_and_admit
+      - docs/2026-11-25-cos-pages-the-models-phasemap.spec::PG5_the_supervisor_through_raid
     blockedBy: []
     unlocks:
       - docs/2026-11-25-cos-pages-the-models-phasemap.spec::PG2_raid_signal_to_noise
@@ -79,6 +80,6 @@ payload:
       - layer 0 · ready
       - 'depends on (0): —'
       - >-
-        needed by (2): PG2_raid_signal_to_noise, PG3_hibernate_and_wake · all downstream 3 ·
+        needed by (2): PG2_raid_signal_to_noise, PG3_hibernate_and_wake · all downstream 4 ·
         finishing it unlocks PG2_raid_signal_to_noise, PG3_hibernate_and_wake
     edges: []
