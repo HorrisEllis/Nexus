@@ -1,0 +1,89 @@
+// cos/pipeline/backward.eg — the DAG from the end state, backwards (UD24, docs/2026-11-25-break-anything-down-phasemap.spec).
+// James Brooks, 2026-11-26: "It needs to be able to break things down. Thays the point. Build a dag From rhe end state." His framework,
+// Section 2: "Set the end-state → determine invariants → replicate conditions" · Section 7: "What is the desired outcome, and what conditions
+// must exist for it to happen?"
+// The end state is the root. Each open node is asked what must be true before it (a model proposes; inside Nexus first: a condition whose aim
+// is already met by an existing phase, component or piece is linked to it, never asked again). Each condition is a node with its gate
+// (pass_when), joined to the node it makes possible by WARP 2's causal layer (no cycle, no diamond), and is asked again until it is the unit:
+// one gate checks it and the smallest model can fill it. Built forward from the leaves, non-linearly: any node whose needs are met is ready.
+// The result is RAID's contract (cortex/core/raid/contract-template.js): the outcome the end state, the DAG its conditions, each node a gate.
+//   start(end_state, pass_when) → dag
+//   propose(dag, node_id, conditions, known) → { dag, added, reused, refused }   conditions: [{ what, pass_when?, unit? }]; known: [{ id, what }]
+//   open_of(dag) → list            the nodes still to ask (not a unit, not asked yet)
+//   ready_of(dag, met) → list      the nodes whose needs are all met and are not met themselves: what to build now
+//   as_contract_dag(dag) → list    RAID's template's dag nodes: { id, needs, pass_when, does }
+use "../../emerge/emerge/field/field.eg" as F
+use "../../emerge/emerge/field/causal.eg" as C
+
+let MAX_DEPTH = 6
+
+fn norm(s: any): string = lower(trim(str(s)))
+
+fn slug(s: string, taken: list): string {
+  var out = ""
+  for c in split(lower(s), "") {
+    if index_of("abcdefghijklmnopqrstuvwxyz0123456789", c) >= 0 { out = out + c } else if len(out) > 0 and not (out ends_with "_") { out = out + "_" }
+  }
+  if len(out) > 40 { out = slice(out, 0, 40) }
+  if out == "" { out = "condition" }
+  var id = out
+  var n = 2
+  while taken contains id { id = out + "_" + str(n); n = n + 1 }
+  return id
+}
+
+fn start(end_state: string, pass_when: any): map {
+  var nodes = {}
+  nodes["end"] = { id: "end", what: end_state, needs: [], pass_when: pass_when, unit: false, asked: false, depth: 0, reused: null }
+  return { nodes: nodes, causes: F.field({}, []) }
+}
+
+fn propose(dag: map, node_id: string, conditions: list, known: list): map {
+  var d = clone(dag)
+  var target = clone(d.nodes[node_id])
+  var added = []
+  var reused = []
+  var refused = []
+  for c in filter(conditions, fn(x) = str(get(x, "what", "")) != "") {
+    let what = str(get(c, "what", ""))
+    // inside Nexus first: a condition already met by something Nexus has is linked, never asked
+    let hit = find(known, fn(k) = norm(k.what) == norm(what))
+    var id = ""
+    if hit != null and has(d.nodes, hit.id) { id = hit.id }
+    else if hit != null {
+      id = hit.id
+      d.nodes[id] = { id: id, what: what, needs: [], pass_when: get(c, "pass_when", null), unit: true, asked: true, depth: target.depth + 1, reused: hit.id }
+      reused = push(reused, id)
+    } else {
+      let same = find(values(d.nodes), fn(n) = norm(n.what) == norm(what))
+      if same != null { id = same.id }
+      else {
+        id = slug(what, keys(d.nodes))
+        let deep = target.depth + 1 >= MAX_DEPTH
+        d.nodes[id] = { id: id, what: what, needs: [], pass_when: get(c, "pass_when", null), unit: get(c, "unit", false) == true or deep, asked: false, depth: target.depth + 1, reused: null }
+        added = push(added, id)
+      }
+    }
+    // the condition must be true before the node: it causes it (WARP 2's causal layer refuses a cycle or a diamond)
+    let r = C.cause(d.causes, id, node_id, "rule")
+    if r.verdict.admitted {
+      d.causes = r.field
+      if not (target.needs contains id) { target.needs = push(target.needs, id) }
+    } else { refused = push(refused, { what: what, why: r.verdict.why }) }
+  }
+  target.asked = true
+  d.nodes[node_id] = target
+  return { dag: d, added: added, reused: reused, refused: refused }
+}
+
+fn open_of(dag: map): list = map(filter(values(dag.nodes), fn(n) = not n.unit and not n.asked), fn(n) = n.id)
+
+fn ready_of(dag: map, met: list): list {
+  var out = []
+  for n in values(dag.nodes) {
+    if not (met contains n.id) and all(n.needs, fn(x) = met contains x) { out = push(out, n.id) }
+  }
+  return out
+}
+
+fn as_contract_dag(dag: map): list = map(values(dag.nodes), fn(n) = { id: n.id, needs: n.needs, pass_when: n.pass_when, does: n.what, type: "task" })

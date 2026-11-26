@@ -1,0 +1,40 @@
+use "../backward.eg" as B
+
+test "the end state is the root; asking it adds its conditions as nodes it needs" {
+  let d0 = B.start("EMB10 is built: served_by and next_act pass their examples", "the build's examples pass")
+  expect B.open_of(d0) == ["end"]
+  let p = B.propose(d0, "end", [{ what: "served_by passes its examples", pass_when: "served_by's examples pass", unit: true }, { what: "next_act passes its examples" }], [])
+  expect len(p.added) == 2
+  expect len(p.dag.nodes["end"].needs) == 2
+  expect B.open_of(p.dag) == ["next_act_passes_its_examples"], "a unit is not asked again; the end is asked"
+}
+
+test "inside Nexus first: a condition already met is linked, never asked" {
+  let d0 = B.start("the model server answers", null)
+  let p = B.propose(d0, "end", [{ what: "the engine is downloaded" }], [{ id: "PC19_engines", what: "The engine is downloaded" }])
+  expect p.reused == ["PC19_engines"]
+  expect p.dag.nodes["PC19_engines"].unit == true
+  expect len(B.open_of(p.dag)) == 0
+}
+
+test "a condition that would close a cycle is refused and named" {
+  let d0 = B.start("a", null)
+  let p1 = B.propose(d0, "end", [{ what: "b" }], [])
+  let p2 = B.propose(p1.dag, "b", [{ what: "c" }], [])
+  let p3 = B.propose(p2.dag, "c", [{ what: "b" }], [])
+  expect len(p3.refused) == 1
+  expect find_text(p3.refused[0].why, "cycle") >= 0
+}
+
+test "built forward from the leaves: ready is what has all its needs met" {
+  let d0 = B.start("end state", null)
+  let p1 = B.propose(d0, "end", [{ what: "x", unit: true }, { what: "y" }], [])
+  let p2 = B.propose(p1.dag, "y", [{ what: "z", unit: true }], [])
+  let r0 = B.ready_of(p2.dag, [])
+  expect r0 contains "x"
+  expect r0 contains "z"
+  expect not (r0 contains "y")
+  expect B.ready_of(p2.dag, ["x", "z"]) contains "y"
+  expect B.ready_of(p2.dag, ["x", "z", "y"]) == ["end"]
+  expect len(B.as_contract_dag(p2.dag)) == 4
+}
