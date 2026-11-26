@@ -105,7 +105,7 @@ function _llamaGenerate(port, model, prompt, want, options, extra, idleMs, tell)
   const body = JSON.stringify({ model, messages, stream: true, max_tokens: want, temperature: options.temperature != null ? options.temperature : 0.2,
     ...(options.seed != null ? { seed: options.seed } : {}), ...(options.top_p != null ? { top_p: options.top_p } : {}) });
   return new Promise((resolve, reject) => {
-    let text = '', thinking = '', buf = '', settled = false, idle = null, first = true, finish = null, evalCount = null;
+    let text = '', thinking = '', buf = '', settled = false, idle = null, first = true, finish = null, evalCount = null, looked = 0;
     const total = setTimeout(() => fail(`model server generate exceeded ${Math.round(config.RAW_GENERATE_TOTAL_MS / 1000)} s in total`), config.RAW_GENERATE_TOTAL_MS);
     const fail = (msg) => { if (settled) return; settled = true; clearTimeout(total); clearTimeout(idle); try { req.destroy(); } catch (_) {} reject(Object.assign(new Error(msg), { partial: { text, thinking } })); };
     const ok = () => { if (settled) return; settled = true; clearTimeout(total); clearTimeout(idle); resolve({ text, thinking, done_reason: finish, eval_count: evalCount }); };
@@ -130,7 +130,15 @@ function _llamaGenerate(port, model, prompt, want, options, extra, idleMs, tell)
           let o; try { o = JSON.parse(p); } catch (_) { continue; }
           if (o.error) return fail(`model server generation error for model "${model}": ${o.error.message || o.error}`);
           const ch = (o.choices && o.choices[0]) || {}, d = ch.delta || {};
-          if (d.content) { text += d.content; tell(d.content, 'text'); }
+          if (d.content) { text += d.content; tell(d.content, 'text');
+            // 2026-11-26 — James, of DeepSeek writing one line of its prompt over and over for 12 minutes (22.3k chars): "should we replace
+            // deepseek? or inject into its continious data stream". The stream is read as it comes: a line repeated 4 times in the last 3,000
+            // characters is a loop; the generation is stopped there (the request closed, so the engine stops), and the answer keeps what came
+            // before the repeats, said as done_reason "repeating". Any model, any size.
+            if (text.length - looked >= 256) { looked = text.length; const ls = text.slice(-3000).split('\n').map((s) => s.trim()).filter((s) => s.length >= 16);
+              const probe = ls.length >= 5 ? ls[ls.length - 2] : null;
+              if (probe && ls.filter((s) => s === probe).length >= 4) { const at = text.indexOf(probe); const second = text.indexOf(probe, at + probe.length);
+                text = text.slice(0, second > 0 ? second : at + probe.length).trimEnd(); finish = 'repeating'; try { req.destroy(); } catch (_) {} return ok(); } } }
           if (d.reasoning_content) { thinking += d.reasoning_content; tell(d.reasoning_content, 'thinking'); }
           if (ch.finish_reason) finish = ch.finish_reason;
           if (o.usage && o.usage.completion_tokens != null) evalCount = o.usage.completion_tokens;

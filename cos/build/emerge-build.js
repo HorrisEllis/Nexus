@@ -358,6 +358,20 @@ async function endState({ ph, plan, src, mapText }) {
       const fromSpec = exps.map((s) => /^([A-Za-z_]\w*)\s*\(([^)]*)\)/.exec(s)).filter(Boolean).map((m) => ({ name: m[1], signature: `${m[1]}(${m[2]})`, params: m[2].split(',').map((x) => x.trim().split(/[:\s]/)[0]).filter(Boolean), does: desc || String(ph.does || '') }));
       const have = codeOf(target) || ''; const fromFile = [...have.matchAll(/^fn\s+([A-Za-z_]\w*)\s*\(([^)]*)\)/gm)].map((m) => ({ name: m[1], signature: `${m[1]}(${m[2]})`, params: m[2].split(',').map((x) => x.trim().split(/[:\s]/)[0]).filter(Boolean), does: String(ph.does || '') }));
       let exports = fromSpec.length ? fromSpec : fromFile;
+      // 2026-11-26 — RQ1's examples named enqueue(list, map), take_next(list), move(map, string, string); the 3b, asked from the words, proposed
+      // enqueue(id, words), take_next(), view(), and every test failed at once. Where the phase has examples, its functions are read from them:
+      // each name and how many it takes (deterministic, no model, the examples are his and agree with themselves).
+      if (!exports.length) {
+        const exs = (() => { try { return require(path.join(ROOT, 'lib', 'test-first.js')).examplesFrom(mapText, PHASE) || []; } catch (_) { return []; } })();
+        const arity = new Map();
+        for (const e of exs.map(String)) { const m = /^\s*([A-Za-z_]\w*)\s*\(/.exec(e); if (!m) continue; let i = m[0].length, depth = 1, n = 0, any = false, q = null;
+          for (; i < e.length && depth; i++) { const c = e[i]; if (q) { if (c === '\\') i++; else if (c === q) q = null; continue; } if (c === '"' || c === "'") { q = c; any = true; continue; }
+            if ('([{'.includes(c)) { depth++; any = true; } else if (')]}'.includes(c)) depth--; else if (c === ',' && depth === 1) n++; else if (!/\s/.test(c)) any = true; }
+          if (!arity.has(m[1])) arity.set(m[1], any ? n + 1 : 0); }
+        if (arity.size) { const P = ['a', 'b', 'c', 'd', 'e', 'f'];
+          exports = [...arity].map(([name, k]) => ({ name, signature: `${name}(${P.slice(0, k).join(', ')})`, params: P.slice(0, k), does: String(ph.does || '') }));
+          row('signatures-from-examples', { note: `${target}: ${exports.map((x) => x.signature).join('; ')}, read from its ${exs.length} examples (no model)` }); }
+      }
       // 2026-11-26 — James: "i want to be able to have the pipeline build specs" · "the pipeline is worthless until that happens end to end".
       // No spec module and no file: the strongest reader proposes the functions from the phase's own words (a line each, Emerge fn shape),
       // kept beside the build (<PHASE>.signatures.json, not confirmed by James) and said as a row; the examples and the test still judge them.
