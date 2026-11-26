@@ -42,8 +42,11 @@ const COS_PORT = Number(arg('cos-port', 7799));
 const cosCall = (method, p, body) => new Promise((res) => { const b = body ? JSON.stringify(body) : null; const q = http.request({ host: '127.0.0.1', port: COS_PORT, path: p, method, timeout: 60000, headers: b ? { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(b) } : {} }, (r) => { let t = ''; r.on('data', (c) => t += c); r.on('end', () => { try { res(JSON.parse(t)); } catch (_) { res(null); } }); }); q.on('error', () => res(null)); q.on('timeout', () => { q.destroy(); res(null); }); if (b) q.write(b); q.end(); });
 async function wakeOllama() {
   if (await call('GET', '/health', null, 3000).catch(() => null)) return true;
-  // the on-demand door (touch), not start: RAID refuses a start without proof, and the bridge stayed down mid-run (EMB10 run e1968c61, 2026-11-25)
-  await cosCall('POST', '/api/cos/systems/ollama-bridge/touch', { by: 'rule:emerge-build' });
+  // through RAID, with its evidence (his, 2026-11-25: "everything should be routing through raid"): the start a rule asks for is RAID's to
+  // approve, and a start with no proof was refused, which left the bridge down mid-run (EMB10 run e1968c61); the proof is what was measured
+  const proof = { kind: 'measured', decidedBy: 'cos/build/emerge-build.js', health: 'no answer from the bridge on :3749/health within 3 s', waiting: 'a model call of this build', map: MAP, phase: PHASE, runId: RUN, why: 'the build needs the model bridge to ask its next model; it is down', at: Date.now() };
+  const r = await cosCall('POST', '/api/cos/systems/ollama-bridge/start', { by: 'rule:emerge-build', reason: proof.why, proof }).catch((e) => ({ ok: false, error: e.message }));
+  if (r && r.ok === false) row('raid-refused', { note: 'RAID did not approve waking the bridge: ' + (r.error || 'no answer') });
   for (let i = 0; i < 30; i++) { await new Promise((r) => setTimeout(r, 2000)); if (await call('GET', '/health', null, 3000).catch(() => null)) { row('ollama-woken', { note: 'the Ollama system was asleep; woken through COS' }); return true; } }
   return false;
 }
