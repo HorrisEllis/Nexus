@@ -627,6 +627,39 @@ by the focus.
   What the run taught, the point of running it on real work (his "why are you wasting it on garbage?"): four integration faults a toy could
   not show (the bridge's wake refused by RAID, the self-defeating bodies, helpers without a sentence, misread readers), all fixed in 0.60.664.
 
+## T18 — "use my framework to estimate": how close Nexus is to building itself without the coder, registered 2026-11-25 before any result
+
+- **His words:** 2026-11-25, "I want to be able to use the pipeline fully. How close could I be to not needing you anymore for nexus?" ·
+  "use my framework to estimate. using the pipeline to speed up all of this, find every way you can".
+- **What the coder did with it:** **executed** as a ranking (the coder's reading of each variable, 1 to 5, marked as the coder's):
+  Weighting = Urgency × Importance × Fidelity × Slope (Part 6; Slope read as ease, near-critical high), Leverage = Tension × Weighting
+  (Section 6, f(Slope) folded into Slope). Tension is the share of the gap a lever closes, from the record: the census of 281 refused tries
+  (162 not Emerge, 119 wrong answers, about 90 with one mechanical fix) and the coder's interventions on 2026-11-25 (four integration faults,
+  every map, every release, every change to the pipeline itself).
+
+  | lever | T | U | I | F | S | Weighting | Leverage |
+  |---|---|---|---|---|---|---|---|
+  | COS restarted, EMB10 started from Copilot, the ladder climbs live (his click) | 3 | 5 | 5 | 4 | 5 | 500 | 1500 |
+  | the mechanical fixes in the autocorrect, ranked by the census (~32% of refusals) | 4 | 4 | 4 | 4 | 4 | 256 | 1024 |
+  | an Emerge grammar applied while each token is chosen (the engine's own grammar option; 58% of refusals were not Emerge) | 5 | 4 | 5 | 3 | 3 | 180 | 900 |
+  | the coder's interventions counted per phase (the measure of "not needing you") | 2 | 4 | 4 | 5 | 5 | 400 | 800 |
+  | a phase refused at planning when a piece has no real sentence or examples | 3 | 4 | 4 | 4 | 4 | 256 | 768 |
+  | Copilot watches runs and proposes the next branch through RAID (PC29 c) | 4 | 3 | 5 | 3 | 3 | 135 | 540 |
+  | the release ritual as a pipeline (version line, changelog, ledger, tests) | 3 | 2 | 4 | 5 | 4 | 160 | 480 |
+  | the linked tests run as a step after every change (proposal-evidence) | 3 | 3 | 4 | 4 | 3 | 144 | 432 |
+  | the canvas draws grown steps live | 2 | 3 | 3 | 4 | 4 | 144 | 288 |
+  | failure modes counted to invariants become gaps.eg rules, by the pipeline (EMB11) | 4 | 3 | 5 | 2 | 2 | 60 | 240 |
+  | maps and phases written from his words as a pipeline (Idearium's spec engine) | 3 | 2 | 4 | 2 | 2 | 32 | 96 |
+
+- **Predictions (the coder's, written before; judged by the same hands, post-hoc risk named):**
+  1. With the top five levers built, EMB10 completes (served_by passes) on the 3b or by climbing, with at most 2 coder interventions.
+  2. With the grammar and the autocorrect, refusals that are not Emerge fall from 58% to under 15% of refused tries on the same phases.
+  3. With all but the last two built, running, watching, retrying and releasing a phase the models can build needs 0 coder interventions.
+  4. Nexus diagnosing its own infrastructure faults and writing its own maps is not reached by these levers: no estimate is made (no data;
+     his "Don't over-engineer a low-slope problem" read the other way: a claim with no fidelity is noise).
+  5. The coder's interventions per phase, counted from the next phase on, fall phase over phase; the first count is the baseline.
+- **Evidence:** open.
+
 ## EMB8 measured, the contract per piece (2026-11-24, his: "yes like constraints, need to be acknowledged also. my framework does all of this. at every level across any domain")
 
 - **Registered prediction:** add_kind (EMB3), the one piece the 3b could not fill from its name, passes on the 3b once its brief carries its own recorded examples, with no hand-written description.
