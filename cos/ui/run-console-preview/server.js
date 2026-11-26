@@ -43,7 +43,12 @@ async function handle(q, r) {
     const loaded = ((ps && ps.models) || []).map((m) => ({ name: m.name, vramMB: Math.round((m.size_vram || 0) / 1048576), sizeMB: Math.round((m.size || 0) / 1048576) }));
     // the build a pipeline step runs (cos/build/emerge-build.js): its own rows on disk, so nothing in the step is invisible (James, 2026-11-24:
     // "nothing should be invisible in the pipeline. where is the outputs? or anything usefull.")
-    let build = null; try { const B = path.join(ROOT, 'cos', 'data', 'build'), f = fs.readdirSync(B).filter((x) => /^cbuild-.*\.jsonl$/.test(x)).map((x) => ({ x, t: fs.statSync(path.join(B, x)).mtimeMs })).sort((a, b) => b.t - a.t)[0];
+    // 2026-11-26 (his "yes", to: the nodes come from the newest build on the machine, whichever pipeline is open): the page names its pipeline's
+    // phase and when its run started (?phase=&since=); the build shown is that phase's newest from then on, or none
+    const wantPhase = u.searchParams.get('phase') || null, since = Number(u.searchParams.get('since')) || 0, scoped = u.searchParams.has('phase') || u.searchParams.has('since');
+    const firstOf = (B, x) => { try { const fd = fs.openSync(path.join(B, x), 'r'), buf = Buffer.alloc(600), n = fs.readSync(fd, buf, 0, 600, 0); fs.closeSync(fd); return JSON.parse(buf.slice(0, n).toString('utf8').split('\n')[0]); } catch (_) { return {}; } };
+    let build = null; try { const B = path.join(ROOT, 'cos', 'data', 'build'), f = fs.readdirSync(B).filter((x) => /^cbuild-.*\.jsonl$/.test(x)).map((x) => ({ x, t: fs.statSync(path.join(B, x)).mtimeMs })).sort((a, b) => b.t - a.t)
+      .find((c) => { if (!scoped) return true; if (since && c.t < since) return false; if (!wantPhase) return true; const r0 = firstOf(B, c.x); return r0.phase === wantPhase && (!since || (r0.ts || c.t) >= since - 5000); });
       if (f) { const rs = fs.readFileSync(path.join(B, f.x), 'utf8').split('\n').filter(Boolean).map((l) => { try { return JSON.parse(l); } catch (_) { return {}; } }), g = {};
         const plan = (rs.find((x) => x.state === 'planned') || {}).exports || [];
         for (const e of plan) g[e.name] = { name: e.name, state: 'waiting', asks: 0, model: null, note: '' };

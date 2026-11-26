@@ -958,7 +958,11 @@ async function cos(method, p, body, said) { try { const r = await fetch('/api/co
 async function savePipe() { const d = S.drafts[S.pid]; if (!d) return; const body = { name: d.name, description: d.description, vars: d.vars, settings: d.settings, tasks: d.tasks };
   const isNew = /^new-/.test(d.id), j = await cos(isNew ? 'POST' : 'PUT', 'automation/pipelines' + (isNew ? '' : '/' + encodeURIComponent(d.id)), body, 'Saved');
   if (j) { delete S.drafts[S.pid]; delete S.edits[S.pid]; if (isNew && j.pipeline) S.pid = j.pipeline.id; S.sig = ''; await tick(); draw(); } }
-async function tick() { try { const prev = S.D; S.D = await (await fetch('/api/cos/view/data', { cache: 'no-store' })).json(); S.ok = Date.now(); watch(prev, S.D); } catch (_) {}
+// the build shown is the open pipeline's own: its run's phase (vars, or its build step's input) from when that run started (2026-11-26)
+function buildScope() { const p = pipe(); if (!p) return ''; const r = last(p.id), bt = (p.tasks || []).find((t) => t.step && t.step.config && /build-phase/.test(String(t.step.config.script || ''))); if (!bt) return '?phase=&since=' + Date.now();
+  const inp = bt.step.config.input || {}, ph = (r && r.vars && r.vars.phase) || (/\{\{/.test(String(inp.phase || '')) ? '' : (inp.phase || ''));
+  return `?phase=${encodeURIComponent(ph)}&since=${r && r.startedAt ? r.startedAt : Date.now()}`; }
+async function tick() { try { const prev = S.D; S.D = await (await fetch('/api/cos/view/data' + buildScope(), { cache: 'no-store' })).json(); S.ok = Date.now(); watch(prev, S.D); } catch (_) {}
   if (S.D && !pipe() && S.D.pipelines[0]) { S.pid = S.D.pipelines[0].id; loadBase(S.pid); }
   await loadLogs();
   if (!MENU) topbar(); side(); work();
