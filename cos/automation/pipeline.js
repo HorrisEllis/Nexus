@@ -407,6 +407,10 @@ class Pipelines {
   }
 
   async _drive(p, run, vars, done = {}) {
+    // PC26 slice 1 (his, 2026-11-25: "Anything starts as the first step. Then everything branches from that one, one by one from the gates" ·
+    // "Like a tree of branches ... nothing in nexus wouldn't be explicit"): the run keeps its own list of steps, so a step that finishes with
+    // branches in its output grows the run; the saved pipeline is never changed by a run
+    p = { ...p, tasks: (p.tasks || []).slice() };
     const byId = new Map(p.tasks.map(t => [t.id, t]));
     const outputs = { ...done };
     const full = new Map();   // 2026-11-09 — a task's whole output, on its done / failed event only (the run record keeps the preview)
@@ -420,7 +424,25 @@ class Pipelines {
       if (patch.gate) e.gate = { outcome: patch.gate.outcome, why: patch.gate.why || null }; if (patch.decisions) e.decision = patch.decisions[patch.decisions.length - 1];
       if (patch.held) e.held = patch.held.why; if (patch.output !== undefined && patch.status === 'done') e.output = typeof patch.output === 'string' ? patch.output.slice(0, 300) : patch.output;
       if (Object.keys(e).length < 2) return; const ev = run.tasks[id].events || (run.tasks[id].events = []); ev.push(e); if (ev.length > 200) ev.splice(0, ev.length - 200); };
-    const set = (id, patch) => { ledger(id, patch); Object.assign(run.tasks[id], patch); this._saveRun(run); this._saveStep(p, run, id, full.has(id) ? full.get(id) : outputs[id]); this._emit('automation.pipeline.task', { pipelineId: p.id, pipeline: p.name, runId: run.id, task: id, label: (p.tasks.find(t => t.id === id) || {}).label || null, status: run.tasks[id].status, attempts: run.tasks[id].attempts, ...(run.tasks[id].status === 'failed' ? { error: run.tasks[id].error } : {}), ...(run.tasks[id].gate ? { gate: run.tasks[id].gate } : {}), ...(run.tasks[id].note ? { note: run.tasks[id].note } : {}), ...(run.tasks[id].output != null ? { output: run.tasks[id].output } : {}), ...(full.has(id) ? { value: full.get(id) } : {}) }); };   // PC4/PC5 2026-11-09: what passed (a preview; value: the whole of it, for the host's files) and what its gate decided   // GF6: a failed task's label and error, for the toast
+    // a branch: { id?, label, step, depends_on? (default: the step that grew it), gate?, retries?, onFail? (default continue), why }; at most 200
+    // grown in a run; each named with its parent (grownFrom) and why, on the step's own ledger and in run.grown, saved before it runs
+    const grow = (fromId, out) => {
+      const bs = out && typeof out === 'object' && Array.isArray(out.branches) ? out.branches : null; if (!bs || !bs.length) return;
+      const grown = run.grown || (run.grown = []);
+      for (const b of bs) {
+        if (grown.length >= 200) break;
+        if (!b || typeof b !== 'object' || !b.step || typeof b.step.type !== 'string') continue;
+        let nid = String(b.id || `${fromId}.${grown.length + 1}`).replace(/[^\w.:-]/g, '_'); if (byId.has(nid)) nid = `${nid}.${grown.length + 1}`;
+        const deps = Array.isArray(b.depends_on) && b.depends_on.length ? b.depends_on.map(String).filter((d) => byId.has(d)) : [fromId];
+        const t = { id: nid, label: String(b.label || nid), depends_on: deps.length ? deps : [fromId], step: b.step, ...(b.gate ? { gate: b.gate } : {}), retries: Number(b.retries) || 0, onFail: ['stop', 'continue', 'hold'].includes(b.onFail) ? b.onFail : 'continue', grownFrom: fromId, why: b.why ? String(b.why).slice(0, 300) : null };
+        p.tasks.push(t); byId.set(nid, t);
+        run.tasks[nid] = { label: t.label, status: 'waiting', attempts: 0, grownFrom: fromId, why: t.why, events: [{ at: Date.now(), status: 'waiting', note: `grown from ${fromId}${t.why ? ': ' + t.why : ''}` }] };
+        grown.push({ id: nid, from: fromId, at: Date.now(), why: t.why });
+        this._emit('automation.pipeline.grow', { pipelineId: p.id, runId: run.id, task: nid, label: t.label, from: fromId, why: t.why });
+      }
+      this._saveRun(run);
+    };
+    const set = (id, patch) => { ledger(id, patch); Object.assign(run.tasks[id], patch); if (patch.status === 'done') grow(id, full.has(id) ? full.get(id) : outputs[id]); this._saveRun(run); this._saveStep(p, run, id, full.has(id) ? full.get(id) : outputs[id]); this._emit('automation.pipeline.task', { pipelineId: p.id, pipeline: p.name, runId: run.id, task: id, label: (p.tasks.find(t => t.id === id) || {}).label || null, status: run.tasks[id].status, attempts: run.tasks[id].attempts, ...(run.tasks[id].status === 'failed' ? { error: run.tasks[id].error } : {}), ...(run.tasks[id].gate ? { gate: run.tasks[id].gate } : {}), ...(run.tasks[id].note ? { note: run.tasks[id].note } : {}), ...(run.tasks[id].output != null ? { output: run.tasks[id].output } : {}), ...(full.has(id) ? { value: full.get(id) } : {}) }); };   // PC4/PC5 2026-11-09: what passed (a preview; value: the whole of it, for the host's files) and what its gate decided   // GF6: a failed task's label and error, for the toast
     const block = (failedId) => {
       // every task downstream of a failure is blocked, said with the task that blocked it (PL-003)
       let changed = true;

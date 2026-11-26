@@ -50,7 +50,10 @@ async function test(id, desc, fn) { try { await fn(); console.log(`  ✓ ${id} $
   // a real engine with stand-in hooks: a macro answers its name; an agent answers who it is and what it was asked
   let inFlight = 0, maxInFlight = 0; const asked = []; let flaky = 0;
   const A = new AutomationEngine({
-    runMacroFn: async ({ name }) => { if (name === 'flaky') { flaky++; return { ok: true, said: flaky < 3 ? 'not yet' : 'READY' }; } return { ok: true, macro: name, filled: 3 }; },
+    runMacroFn: async ({ name }) => { if (name === 'flaky') { flaky++; return { ok: true, said: flaky < 3 ? 'not yet' : 'READY' }; }
+      if (name === 'splits') return { ok: true, branches: [{ label: 'try again', step: { type: 'macro', config: { name: 'm' } }, why: 'refused: try again' }, { id: 'helper', label: 'a helper', step: { type: 'macro', config: { name: 'leaf' } }, why: 'split into a helper' }, { label: 'no step' }] };
+      if (name === 'leaf') return { ok: true, branches: [{ id: 'leaf-of-helper', label: 'deeper', step: { type: 'macro', config: { name: 'm' } } }] };
+      return { ok: true, macro: name, filled: 3 }; },
     askAgentFn: async ({ agentKey, prompt }) => { inFlight++; maxInFlight = Math.max(maxInFlight, inFlight); asked.push([agentKey, prompt]); await new Promise(r => setTimeout(r, 60)); inFlight--; return { text: `${agentKey}: ${prompt}` }; },
   });
   const P = new PL.Pipelines(A);
@@ -137,6 +140,21 @@ async function test(id, desc, fn) { try { await fn(); console.log(`  ✓ ${id} $
     assert.strictEqual(P.getRun(s2.runId).status, 'cancelled');
   });
 
+  // PC26 slice 1 (his, 2026-11-25: "Anything starts as the first step. Then everything branches from that one, one by one from the gates")
+  await test('PL-03d', 'a step grows the run: its branches run as steps of this run, each naming its parent; the saved pipeline is unchanged', async () => {
+    const c = P.create({ name: 'Grows', tasks: [{ id: 'first', step: macro('splits') }] });
+    assert.ok(c.ok, JSON.stringify(c));
+    const r = await P.run(c.pipeline.id, { wait: true });
+    assert.ok(r.ok, JSON.stringify(r).slice(0, 400));
+    const t = r.run.tasks;
+    assert.deepStrictEqual(Object.keys(t).sort(), ['first', 'first.1', 'helper', 'leaf-of-helper'], 'a branch with no step is not grown');
+    assert.deepStrictEqual([t['first.1'].grownFrom, t.helper.grownFrom, t['leaf-of-helper'].grownFrom], ['first', 'first', 'helper'], 'each names its parent; a branch grows branches');
+    assert.ok(Object.values(t).every(x => x.status === 'done'), JSON.stringify(t));
+    assert.strictEqual(t['first.1'].why, 'refused: try again'); assert.match(t.helper.events[0].note, /grown from first: split into a helper/);
+    assert.strictEqual(r.run.grown.length, 3);
+    assert.strictEqual(P.get(c.pipeline.id).tasks.length, 1, 'the saved pipeline keeps its one step');
+    assert.strictEqual(P.getRun(r.runId).tasks.helper.grownFrom, 'first', 'saved with the run');
+  });
   await test('PL-04', 'the door: create, validate, get with layers, run, the run read back, archive', async () => {
     const R = require(path.join(ROOT, 'lib/automation/routes.js'));
     const call = (method, url, body) => R.handle(A, { method, url, body: body || {} }, {});
