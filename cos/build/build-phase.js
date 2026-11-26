@@ -15,6 +15,36 @@ const LADDER = inp.ladder || 'huihui_ai/qwen2.5-coder-abliterate:3b,hf.co/mrader
 const lastRun = () => fs.readdirSync(BUILD).filter((f) => /^cbuild-.*\.jsonl$/.test(f)).map((f) => ({ f, t: fs.statSync(path.join(BUILD, f)).mtimeMs })).sort((a, b) => b.t - a.t)[0];
 const rowsOf = (f) => fs.readFileSync(path.join(BUILD, f), 'utf8').split('\n').filter(Boolean).map((l) => { try { return JSON.parse(l); } catch (_) { return {}; } });
 const rounds = []; let best = -1;
+// 2026-11-26 — James: "it needs to run end to end, fix itself each time and return to the original request, and retry, until it either does it
+// or figures out how." Every way a build ends unbuilt (refused, no progress, the top of the ladder) files its failure and grows one branch back
+// to the original request: the same map and phase, built again with the next way not yet tried (stronger readers, a fresh plan, the strongest
+// model). When every way is tried, the last branch figures out how: what the builder lacked is written as a phase of the builder's own map
+// through Idearium, with the evidence, so the next build has it. Each attempt is a node grown from the one before, on the canvas.
+const STRONG = 'hf.co/mradermacher/DeepSeek-Coder-V2-Lite-Instruct-abliterated-i1-GGUF:Q4_K_M,huihui_ai/qwen2.5-coder-abliterate:7b,huihui_ai/qwen2.5-coder-abliterate:3b';
+const WAYS = [
+  { id: 'strong-readers', what: 'the stronger readers write and check its examples first', input: { readers: STRONG } },
+  { id: 'fresh-plan', what: 'planned again from nothing: its functions read again, its examples asked again', input: { fresh: true } },
+  { id: 'top-model', what: 'the strongest model builds every piece', input: { ladder: STRONG.split(',')[0] } },
+];
+const backToRequest = (why, extra = {}) => {
+  const tried = [].concat(inp.tried || []), attempt = Number(inp.attempt) || 1, way = WAYS.find((w) => !tried.includes(w.id));
+  const origin = { map: MAP, phase: PHASE, rounds: inp.rounds, ...(inp.steps ? { steps: true } : {}), origLadder: inp.origLadder || LADDER, ladder: inp.origLadder || LADDER };
+  const failure = { id: `${PHASE}:failure-${attempt}`, label: `file the failure: ${PHASE}, attempt ${attempt}`, recovers: false, why: 'the evidence goes to Cortex, counted (anomaly, coincidence, invariant)',
+    step: { type: 'http', config: { method: 'POST', url: 'http://127.0.0.1:3748/api/failure-modes', failOnHttpError: false,
+      body: JSON.stringify({ faultClass: 'not-built', where: PHASE, system: 'cos/build', summary: `${PHASE} attempt ${attempt} (${tried.join(', ') || 'first way'}): ${why}`.slice(0, 600), evidence: rounds }) } } };
+  const next = way
+    ? { id: `${PHASE}:attempt-${attempt + 1}`, label: `back to the request: build ${PHASE} again (attempt ${attempt + 1}, ${way.id})`, why: `${why} → ${way.what}`,
+      step: { type: 'script', config: { script: 'build-phase.js', input: { ...origin, ...way.input, attempt: attempt + 1, tried: [...tried, way.id] }, timeoutMs: 3600000 } } }
+    : { id: `${PHASE}:how`, label: `figure out how: what the builder lacked for ${PHASE}, written as a phase`, why: `every way was tried (${tried.join(', ')}): ${why}`,
+      step: { type: 'http', config: { method: 'POST', url: 'http://127.0.0.1:4800/api/repos/nexus-id-repo-cd326725/phases/add', failOnHttpError: false,
+        body: JSON.stringify({ map: 'docs/2026-11-25-break-anything-down-phasemap.spec', prefix: 'UD', dependsOn: [],
+          title: `the builder learns what ${PHASE} needed`.slice(0, 90),
+          does: `Found by the pipeline, 2026-11-26 loop (his: "fix itself each time and return to the original request, and retry, until it either does it or figures out how"). ${PHASE} (${MAP}) was not built after ${attempt} attempts (${tried.join(', ')}). The last reason: ${why}. The builder gains what this names; then ${PHASE} is built again from its request.`.slice(0, 1800) }) } } };
+  console.log(JSON.stringify({ ok: false, phase: PHASE, why, attempt, tried, ...extra, branches: [failure, next] }));
+  process.exit(1);
+};
+const readersArg = inp.readers ? ['--readers', String(inp.readers)] : [];
+if (inp.fresh) for (const f of [`${PHASE}.examples.json`, `${PHASE}.signatures.json`]) { try { fs.unlinkSync(path.join(ROOT, 'idearium', 'data', 'tasks', f)); } catch (_) {} }
 // 2026-11-26 — the queue (his: "What ever gets the pipeline building all of this the quickest. Once that happens, nexus can build in my sleep" ·
 // "what if we build per node. then we could have all of the phase nodes build one by one. bottom up?"). Idearium's own queue of ready phases
 // (GET /api/phases/next: dependencies closed, files named, no open decision; sorted by what each unlocks) is read by route; the phases the
@@ -58,13 +88,13 @@ if (inp.steps) {
     .map((x) => ({ f: x.f, rs: rowsOf(x.f) })).filter((b) => (b.rs[0] || {}).phase === PHASE);
   const pieceStep = (name, why, deps) => ({ id: `${PHASE}:${SID(name)}`, label: `build ${name}`, why, ...(deps ? { depends_on: deps } : {}),
     step: { type: 'script', config: { script: 'build-phase.js', input: { ...inp, piece: name }, timeoutMs: 2700000 } } });
-  const run1 = (piece) => spawnSync(process.execPath, [path.join(ROOT, 'cos', 'build', 'emerge-build.js'), '--map', MAP, '--phase', PHASE, '--ladder', LADDER, ...(piece ? ['--only', piece] : []), ...(inp.adversaries ? ['--adversaries', String(inp.adversaries)] : [])], { cwd: ROOT, stdio: 'ignore', timeout: 3 * 3600 * 1000 });
+  const run1 = (piece) => spawnSync(process.execPath, [path.join(ROOT, 'cos', 'build', 'emerge-build.js'), '--map', MAP, '--phase', PHASE, '--ladder', LADDER, ...(piece ? ['--only', piece] : []), ...(inp.adversaries ? ['--adversaries', String(inp.adversaries)] : []), ...readersArg], { cwd: ROOT, stdio: 'ignore', timeout: 3 * 3600 * 1000 });
   if (!inp.piece) {
-    let b = builds()[0]; if (!b || !b.rs.some((r) => r.state === 'planned')) { run1(null); b = builds()[0]; }
+    let b = inp.fresh ? null : builds()[0]; if (!b || !b.rs.some((r) => r.state === 'planned')) { run1(null); b = builds()[0]; }
     const rs = (b && b.rs) || [];
     // the builder refused the phase (no examples, no plan): said as a failure, never a silent "done" with nothing planned (71eefa48)
     const refusedRow = rs.find((r) => r.state === 'refused');
-    if (refusedRow || !rs.some((r) => r.state === 'planned')) { console.log(JSON.stringify({ ok: false, phase: PHASE, why: refusedRow ? 'the builder refused it: ' + String(refusedRow.note || '').slice(0, 300) : 'the builder planned nothing' })); process.exit(1); }
+    if (refusedRow || !rs.some((r) => r.state === 'planned')) backToRequest(refusedRow ? 'the builder refused it: ' + String(refusedRow.note || '').slice(0, 300) : 'the builder planned nothing');
     const planned = (((rs.find((r) => r.state === 'planned') || {}).exports) || []).map((x) => x.name).filter((n) => !/^[A-Z][A-Z0-9_]*$/.test(n));   // a constant is no piece to build
     const pcs = ([...rs].reverse().find((r) => r.state === 'pieces') || {}).pieces || [], ok = new Set(pcs.filter((p) => p.status === 'passed').map((p) => p.name));
     const todo = planned.filter((n) => !ok.has(n)); let prev = null;
@@ -75,7 +105,7 @@ if (inp.steps) {
   run1(inp.piece);
   { const r0 = (builds()[0] || {}).rs || [], refusedRow = r0.find((r) => r.state === 'refused');
     // refused before any model was asked (no examples): no model can fix that, so no climb and no failure filed per piece
-    if (refusedRow) { console.log(JSON.stringify({ ok: false, phase: PHASE, piece: inp.piece, why: 'the builder refused it: ' + String(refusedRow.note || '').slice(0, 300) })); process.exit(1); } }
+    if (refusedRow) backToRequest('the builder refused it: ' + String(refusedRow.note || '').slice(0, 300), { piece: inp.piece }); }
   const rs = (builds()[0] || {}).rs || [], pcs = ([...rs].reverse().find((r) => r.state === 'pieces') || {}).pieces || [], me = pcs.find((p) => p.name === inp.piece) || {};
   if (me.status === 'passed') { console.log(JSON.stringify({ ok: true, phase: PHASE, piece: inp.piece, tries: me.tries, models: me.models })); process.exit(0); }
   const helpers = pcs.filter((p) => p.blocks === inp.piece && p.status !== 'passed').map((p) => p.name);
@@ -88,7 +118,7 @@ if (inp.steps) {
   rounds.push({ round: 1, run: null, last: me.status || 'held', passed: 0, of: 1, note: String(me.last || '').slice(0, 300) });
 } else {
 for (let i = 1; i <= ROUNDS; i++) {
-  spawnSync(process.execPath, [path.join(ROOT, 'cos', 'build', 'emerge-build.js'), '--map', MAP, '--phase', PHASE, '--ladder', LADDER, ...(inp.adversaries ? ['--adversaries', String(inp.adversaries)] : [])], { cwd: ROOT, stdio: 'ignore', timeout: 3 * 3600 * 1000 });
+  spawnSync(process.execPath, [path.join(ROOT, 'cos', 'build', 'emerge-build.js'), '--map', MAP, '--phase', PHASE, '--ladder', LADDER, ...(inp.adversaries ? ['--adversaries', String(inp.adversaries)] : []), ...readersArg], { cwd: ROOT, stdio: 'ignore', timeout: 3 * 3600 * 1000 });
   const run = lastRun(), rs = run ? rowsOf(run.f) : [], end = rs[rs.length - 1] || {}, pcs = ([...rs].reverse().find((r) => r.state === 'pieces') || {}).pieces || [];
   const planned = new Set((((rs.find((r) => r.state === 'planned') || {}).exports) || []).map((x) => x.name)),
     // 2026-11-25: progress is the planned functions that hold, not every piece: helpers the model invents (six parse_json helpers for EMB10's
@@ -108,6 +138,8 @@ if (inp.queue) return;   // the queue answers by itself, above (a module's top l
 const CLIMB = (inp.climb || 'huihui_ai/qwen2.5-coder-abliterate:3b,huihui_ai/qwen2.5-coder-abliterate:7b,hf.co/mradermacher/DeepSeek-Coder-V2-Lite-Instruct-abliterated-i1-GGUF:Q4_K_M').split(',');
 const top = LADDER.split(',').map((m) => CLIMB.indexOf(m.trim())).reduce((a, b) => Math.max(a, b), -1), next = CLIMB[top + 1] || null;
 const short = (m) => String(m).split('/').pop().replace(/[^\w.:-]/g, '');
+// at the top of the ladder: back to the original request, the next way not yet tried (2026-11-26), never a dead end
+if (!next) backToRequest(`no progress at the top of the ladder (${short(LADDER.split(',').pop())}): ${String((rounds[rounds.length - 1] || {}).last || '')} ${String((rounds[rounds.length - 1] || {}).note || '')}`.trim());
 const branches = [
   { id: `${PHASE}:failure`, label: `file the failure: ${PHASE} made no progress`, recovers: false, why: 'the evidence goes to Cortex, counted (anomaly, coincidence, invariant)',
     step: { type: 'http', config: { method: 'POST', url: 'http://127.0.0.1:3748/api/failure-modes', failOnHttpError: false,

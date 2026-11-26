@@ -403,7 +403,8 @@ async function endState({ ph, plan, src, mapText }) {
     } catch (_) {}
   }
   if (!examples.length) {
-    const three = ADVERSARIES.length >= 3 ? ADVERSARIES : ['huihui_ai/qwen2.5-coder-abliterate:3b', 'huihui_ai/llama3.2-abliterate:3b', 'huihui_ai/smallthinker-abliterated:3b'];
+    const READERS = String(arg('readers', '')).split(',').map((x) => x.trim()).filter(Boolean);   // the loop's "strong-readers" way (build-phase.js)
+    const three = READERS.length >= 3 ? READERS : ADVERSARIES.length >= 3 ? ADVERSARIES : ['huihui_ai/qwen2.5-coder-abliterate:3b', 'huihui_ai/llama3.2-abliterate:3b', 'huihui_ai/smallthinker-abliterated:3b'];
     // 2026-11-26 — James: "cheap first, as long as thats noted" · "the pipeline is worthless until that happens end to end with something real".
     // The small readers first; where they agree on nothing, the readers climb once (the strongest writes, two others check) and the climb is a row.
     const STRONG = String(arg('strong-readers', 'hf.co/mradermacher/DeepSeek-Coder-V2-Lite-Instruct-abliterated-i1-GGUF:Q4_K_M,huihui_ai/qwen2.5-coder-abliterate:7b,huihui_ai/qwen2.5-coder-abliterate:3b')).split(',').map((x) => x.trim()).filter(Boolean);
