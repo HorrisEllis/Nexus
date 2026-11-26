@@ -620,19 +620,28 @@ function gateTree(t, L, p) {
   // the phases" (PC1: a step is the one box; PC5: a gate holds what its node needs). Each piece is a gate on the line from the step that builds
   // it, one after the other; a helper's gate hangs beside the gate it unblocks. A gate shows its name and state only; clicked, the Inspector shows
   // its context (status, tries, what it unblocks, the model, its last note and what was said in it).
+  // 2026-11-26, then: "not gates, steps." · "i want the entire process visual". Each piece is a step (the pipeline's own step look: a box and the
+  // gate after it), one after the other down from the step that builds them; a helper is a step branching right from the gate of the one it
+  // unblocks. Clicked, a step or its gate shows its context in the Inspector.
   let front = '';
-  const SP = 46, x0 = A ? A.x + 107 : 40; let out = '', y = A ? A.y + 84 + 64 : 420, prevX = x0, prevY = A ? A.y + 84 : y - SP;
-  const gate = (g, x, gy, fromX, fromY) => { const c = col(g.status), now = g.name === t.now, sel = S.sel && S.sel.t === 'piece' && S.sel.id === g.name; const o = OFF[g.name]; if (o) { x += o.dx; gy += o.dy; }
-    out += `<path class="wire ${g.status === 'passed' ? 'done' : ''}" d="${x === fromX ? `M${fromX},${fromY + 9} V${gy - 9}` : `M${fromX},${fromY + 9} V${gy} H${x - 10}`}"/>`;
+  const BW = 214, BH = 62, SP = 34, IN = 250, x0 = A ? A.x : 40; let out = '', y = A ? A.y + 84 + 70 : 420, prev = A ? { x: A.x + 107, y: A.y + 84 } : null;
+  const step = (g, x, sy, from) => { const c = col(g.status), now = g.name === t.now, sel = S.sel && S.sel.t === 'piece' && S.sel.id === g.name; const o = OFF[g.name]; if (o) { x += o.dx; sy += o.dy; }
+    const gx = x + BW + 22, gy = sy + BH / 2;
+    if (from) out += `<path class="wire ${g.status === 'passed' ? 'done' : ''}" d="${from.side ? `M${from.x + 9},${from.y} H${x - 18} Q${x - 8},${from.y} ${x - 8},${from.y + 10} V${gy - 8} Q${x - 8},${gy} ${x},${gy}` : `M${from.x},${from.y + 9} V${sy}`}"/>`;
     const mk = `<g class="piece ${sel ? 'sel' : ''}" data-piece="${esc(g.name)}" style="cursor:pointer"><title>${esc(g.name)} · ${esc(g.status)} · ${g.tries} tries · click for its context</title>`
-      + `<rect x="${x - 8}" y="${gy - 8}" width="16" height="16" rx="2" transform="rotate(45 ${x} ${gy})" fill="color-mix(in srgb, ${c} 22%, var(--bg2))" stroke="${now || sel ? 'var(--bright)' : c}" stroke-width="${now || sel ? 2.2 : 1.4}"${now ? ' stroke-dasharray="4 2"' : ''}/>`
-      + `<text x="${x + 18}" y="${gy + 4}" fill="var(--text)" font-size="11.5" font-family="var(--mono)">${esc(g.name.length > 34 ? g.name.slice(0, 33) + '…' : g.name)} <tspan fill="${c}">${esc(now ? 'being built' : g.status)}</tspan></text></g>`;
+      + `<rect x="${x}" y="${sy}" width="${BW}" height="${BH}" rx="9" fill="var(--bg2)" stroke="${now || sel ? 'var(--bright)' : 'var(--edge)'}" stroke-width="${now || sel ? 1.8 : 1}"${now ? ' stroke-dasharray="5 3"' : ''}/>`
+      + `<rect x="${x}" y="${sy + 9}" width="3" height="${BH - 18}" rx="1.5" fill="${c}"/>`
+      + `<text x="${x + 14}" y="${sy + 17}" fill="var(--text2)" font-size="9.5" font-family="var(--mono)" letter-spacing=".08em">${g.blocks ? 'HELPER · ' : ''}PIECE · EMERGE</text>`
+      + `<text x="${x + 14}" y="${sy + 35}" fill="var(--bright)" font-size="12.5" font-family="var(--mono)">${esc(g.name.length > 26 ? g.name.slice(0, 25) + '…' : g.name)}</text>`
+      + `<text x="${x + 14}" y="${sy + 52}" fill="${c}" font-size="10.5" font-family="var(--mono)">${esc(now ? 'being built' : g.status)} · ${g.tries} tries</text>`
+      + `<path d="M${x + BW},${gy} H${gx - 9}" class="wire ${g.status === 'passed' ? 'done' : ''}"/>`
+      + `<rect x="${gx - 7}" y="${gy - 7}" width="14" height="14" rx="2" transform="rotate(45 ${gx} ${gy})" fill="color-mix(in srgb, ${c} 22%, var(--bg2))" stroke="${c}" stroke-width="1.3"/></g>`;
     if (now) front += mk; else out += mk;
-    let ky = gy; for (const k of kids.get(g.name) || []) { ky += SP; const kx = x + 40; gate(k, kx, ky, x, gy); }
-    return ky; };
-  for (const g of roots) { const end = gate(g, x0, y, prevX, prevY); prevX = x0; prevY = y; y = end + SP; }
+    let end = sy + BH; for (const k of kids.get(g.name) || []) { end = step(k, x + IN, end + SP - (end === sy + BH ? BH + SP : 0), { x: gx, y: gy, side: true }) - 0; }
+    return Math.max(end, sy + BH); };
+  for (const g of roots) { const end = step(g, x0, y, prev); prev = { x: x0 + BW / 2, y: y + BH - 9 }; y = end + SP; }
   const passed = t.gates.filter((g) => g.status === 'passed').length;
-  return `<text x="${x0 + 18}" y="${(A ? A.y + 84 : 400) + 34}" fill="var(--text2)" font-size="11" font-family="var(--mono)">${esc(t.phase || '')} · ${passed} of ${t.gates.length} gates passed</text>${out}${front}`;
+  return `<text x="${x0}" y="${(A ? A.y + 84 : 400) + 40}" fill="var(--text2)" font-size="11" font-family="var(--mono)">${esc(t.phase || '')} · ${passed} of ${t.gates.length} pieces passed</text>${out}${front}`;
 }
 // PC26 (his, 2026-11-25: "Anything starts as the first step. Then everything branches from that one"): the steps a run grew (each naming
 // the step it grew from) are drawn as steps of the pipeline, wired to that step, so the canvas shows the run as it really went
