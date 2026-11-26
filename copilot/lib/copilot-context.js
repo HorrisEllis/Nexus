@@ -375,11 +375,47 @@ async function _layer6_predict(eventBuffer = [], opts = {}) {
  *   timeoutMs    — per-layer timeout
  * @returns {object} { text: string, layers: object, tokensUsed: number }
  */
+// PC29 d (his, 2026-11-26: "Copilot needs to be able to search nexus. When I ask about a phase, performance, debugging ... Like I do with
+// you"): what he asked about, from Nexus's own records, each through its owner's route, read before the model answers. Found that night:
+// asked where EMB10 was, Copilot answered from general context while its build record, run and ledger were on disk. A phase named by its
+// id (EMB10, PC26, UD3) brings its ledger (Idearium), its builds (COS's lab read) and its pipeline runs (COS); each fact says where it is from.
+async function _layer9_asked(intent) {
+  const ids = [...new Set((String(intent || '').match(/\b[A-Z]{1,6}\d+[a-z]?\b/g) || []))].slice(0, 3);
+  if (!ids.length) return '  (no phase named)';
+  const out = [];
+  const lab = await _get('http://127.0.0.1:7799/api/cos/lab', 6000).catch(() => null);
+  const pls = await _get('http://127.0.0.1:7799/api/cos/automation/pipelines', 4000).catch(() => null);
+  for (const id of ids) {
+    const re = new RegExp(`^${id}(_|$)`);
+    out.push(`  ${id}:`);
+    const builds = ((lab && lab.builds) || []).filter((b) => re.test(String(b.phase || ''))).slice(0, 3);
+    for (const b of builds) {
+      const pcs = b.pieces || [], ok = pcs.filter((p) => p.status === 'passed').length, held = pcs.filter((p) => p.status === 'held');
+      out.push(`    build ${b.run} (${_ago(b.at)}, ${Math.round((b.ms || 0) / 1000)} s, ${b.calls || 0} model calls): ${b.passed ? 'passed its examples' : 'not passed'}${b.landed ? ', landed' : ''}; ${ok} of ${pcs.length} pieces passed` +
+        (held.length ? `; held: ${held.map((p) => `${p.name} after ${p.tries} tries (${_trunc(p.last || '', 20)})`).join('; ')}` : '') + '  [from COS /api/cos/lab]');
+    }
+    if (!builds.length) out.push('    no build record  [COS /api/cos/lab]');
+    const phase = builds[0] && builds[0].phase;
+    if (phase) {
+      const h = await _get(`http://127.0.0.1:4800/api/phases/ledger/history?phase=${encodeURIComponent(phase)}`, 4000).catch(() => null);
+      const hist = (h && h.history) || [];
+      for (const e of hist.slice(-4)) out.push(`    ledger ${String(e.at || '').slice(0, 10)} ${e.event}${e.version ? ' ' + e.version : ''}: ${_trunc(e.why || '', 30)}  [Idearium phase ledger]`);
+    }
+    const mine = ((pls && pls.pipelines) || []).filter((p) => (p.tasks || []).some((t) => re.test(String((((t.step || {}).config || {}).input || {}).phase || ''))));
+    for (const p of mine.slice(0, 2)) {
+      const r = await _get(`http://127.0.0.1:7799/api/cos/automation/pipeline-runs?pipelineId=${encodeURIComponent(p.id)}&limit=1`, 4000).catch(() => null);
+      const run = r && r.runs && r.runs[0];
+      out.push(`    pipeline "${p.name}": ${run ? `last run ${String(run.id).slice(0, 8)} ${run.status} ${_ago(run.startedAt)}${run.error ? ' · ' + _trunc(run.error, 25) : ''}` : 'never run'}  [COS automation]`);
+    }
+  }
+  return out.join('\n');
+}
+
 async function assemble(opts = {}) {
   const {
     eventBuffer = [],
     intent      = null,
-    layers      = [0, 1, 2, 3, 4, 5, 6, 7, 8],
+    layers      = [9, 0, 1, 2, 3, 4, 5, 6, 7, 8],   // L9 first: what he asked about, from the records
     timeoutMs   = 3000,
   } = opts;
 
@@ -393,6 +429,7 @@ async function assemble(opts = {}) {
     'L6 — Predictive Intent',
     'L7 — Clear Glass Browser',
     'L8 — Opportunities',
+    'L9 — What he asked about, from Nexus\'s own records (answer from these first, and say where each fact is from)',
   ];
 
   const runners = [
@@ -405,6 +442,7 @@ async function assemble(opts = {}) {
     () => _layer6_predict(eventBuffer, { intent }),
     () => _layer7_clearglass(),
     () => _layer8_opportunity(),
+    () => _layer9_asked(intent),
   ];
 
   // Run all layers concurrently with individual timeouts

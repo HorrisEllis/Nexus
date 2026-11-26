@@ -1954,6 +1954,17 @@ phases_addendum_2026_11_24_model_server:
       branch (a different model, a diagnosis, a smaller piece) and asks RAID with the run's evidence before starting it; what it cannot
       decide goes to him, with the readings.
     proof: "a: from Copilot, list pipelines and read EMB10's last run as its tree; b: asking Copilot \"build EMB10\" starts the EMB10 pipeline in COS; c: an unrecovered failure seen and a next branch proposed through RAID, with its evidence"
+    expanded_2026_11_26: >-
+      His, after slice b: "No \"build emb10.\" I'm not remebering that. Copilot needs to be able to search nexus. When I ask about a phase,
+      performance, debugging. Like needs to be able to figure out what I need from nexus and build what nexus cant do currently. Like I do
+      with you." Measured the same night: asked "where is EMB10 at? is it built yet and what is it stuck on?", Copilot answered from its
+      general context ("No specific details are provided about what EMB10 is stuck on", recent events, "Ollama: Not running") while the
+      answer was on disk (EMB10's ledger and map, its build record: 13 of 18 pieces, served_by held at 110 tries; its run; its failure modes).
+      d) Copilot looks before it answers: a question naming a phase, a run, a system, performance or a failure gathers Nexus's own records
+         first, deterministically (the phase's map entry and ledger, its last build record and pipeline run as a tree, its failure modes, the
+         benchmarks, the resources), and the model answers from them, naming where each fact came from; commands are never his to remember.
+      e) What Nexus cannot do goes to Idearium's His request pipeline (his words → intent → phase → build), the gap named, and Copilot says
+         what was started; the coder's interventions are its first inputs (UD9).
   PC_D18_what_he_meant_2026_11_24:
     status: "OPEN — his"
     readings:
