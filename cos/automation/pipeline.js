@@ -441,7 +441,7 @@ class Pipelines {
         const deps = (Array.isArray(b.depends_on) && b.depends_on.length ? b.depends_on.map(String).filter((d) => byId.has(d)) : (failed ? [] : [fromId])).filter((d) => !(failed && d === fromId));
         const t = { id: nid, label: String(b.label || nid), depends_on: deps, step: b.step, ...(b.gate ? { gate: b.gate } : {}), retries: Number(b.retries) || 0, onFail: ['stop', 'continue', 'hold'].includes(b.onFail) ? b.onFail : 'continue', grownFrom: fromId, why: b.why ? String(b.why).slice(0, 300) : null, recovers: b.recovers !== false };   // recovers false: it only informs (a failure filed), it is no recovery
         p.tasks.push(t); byId.set(nid, t);
-        run.tasks[nid] = { label: t.label, status: 'waiting', attempts: 0, grownFrom: fromId, why: t.why, events: [{ at: Date.now(), status: 'waiting', note: `grown from ${fromId}${t.why ? ': ' + t.why : ''}` }] };
+        run.tasks[nid] = { label: t.label, status: 'waiting', attempts: 0, grownFrom: fromId, dependsOn: t.depends_on.slice(), why: t.why, events: [{ at: Date.now(), status: 'waiting', note: `grown from ${fromId}${t.why ? ': ' + t.why : ''}` }] };
         grown.push({ id: nid, from: fromId, at: Date.now(), why: t.why });
         this._emit('automation.pipeline.grow', { pipelineId: p.id, runId: run.id, task: nid, label: t.label, from: fromId, why: t.why });
       }

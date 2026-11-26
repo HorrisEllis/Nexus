@@ -33,7 +33,7 @@ async function handle(q, r) {
     const pipes = ((pl && pl.pipelines) || []).filter((p) => !p.archived).map((p) => ({ id: p.id, name: p.name, description: p.description || '', vars: p.vars || {}, settings: p.settings || {},
       updatedAt: p.updatedAt, tasks: (p.tasks || []).map((t) => ({ id: t.id, label: t.label || t.id, depends_on: t.depends_on || t.dependsOn || [], step: t.step || null, gate: t.gate || null,
         retries: t.retries, onFail: t.onFail, when: t.when || null, method: t.method || null })), createdAt: p.createdAt || null }));
-    for (const s of rr) for (const k of Object.keys(s.tasks)) { const v = s.tasks[k] || {}; s.tasks[k] = { status: v.status, ms: v.ms, ...(v.grownFrom ? { grownFrom: v.grownFrom, label: v.label || null, why: v.why || null, recovered: !!v.recovered } : {}), error: v.error ? head(v.error, 300) : null, out: v.output ? head(typeof v.output === 'string' ? v.output : JSON.stringify(v.output), 1500) : null }; }
+    for (const s of rr) for (const k of Object.keys(s.tasks)) { const v = s.tasks[k] || {}; s.tasks[k] = { status: v.status, ms: v.ms, ...(v.grownFrom ? { grownFrom: v.grownFrom, dependsOn: v.dependsOn || null, label: v.label || null, why: v.why || null, recovered: !!v.recovered } : {}), error: v.error ? head(v.error, 300) : null, out: v.output ? head(typeof v.output === 'string' ? v.output : JSON.stringify(v.output), 1500) : null }; }
     const up = ((sys && (sys.systems || sys)) || []).map((s) => ({ name: s.name, state: s.state, port: s.port }));
     const host = use && use.usage ? use.usage.host : null;
     const loaded = ((ps && ps.models) || []).map((m) => ({ name: m.name, vramMB: Math.round((m.size_vram || 0) / 1048576), sizeMB: Math.round((m.size || 0) / 1048576) }));

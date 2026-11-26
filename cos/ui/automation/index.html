@@ -627,7 +627,7 @@ function gateTree(t, L, p) {
 // PC26 (his, 2026-11-25: "Anything starts as the first step. Then everything branches from that one"): the steps a run grew (each naming
 // the step it grew from) are drawn as steps of the pipeline, wired to that step, so the canvas shows the run as it really went
 function withGrown(p) { const r = p && last(p.id); if (!r || !r.tasks) return p; const have = new Set((p.tasks || []).map((t) => t.id)), add = [];
-  for (const [id, x] of Object.entries(r.tasks)) if (!have.has(id) && x.grownFrom) add.push({ id, label: x.label || id, depends_on: [x.grownFrom], step: { type: 'script', config: {} }, grown: true, why: x.why || null });
+  for (const [id, x] of Object.entries(r.tasks)) if (!have.has(id) && x.grownFrom) add.push({ id, label: x.label || id, depends_on: Array.isArray(x.dependsOn) && x.dependsOn.length ? x.dependsOn : [x.grownFrom],   // each on the one it builds on step: { type: 'script', config: {} }, grown: true, why: x.why || null });
   return add.length ? { ...p, tasks: [...p.tasks, ...add] } : p; }
 function svgOf(p, under = '') {   // under: drawn in the same view (pan and zoom), e.g. the build's tree under its step
   p = withGrown(p);
