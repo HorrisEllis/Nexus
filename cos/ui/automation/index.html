@@ -332,7 +332,7 @@ function catMenu(how) { if (!S.cat || !S.cat.catalogue.length) { loadCat(); retu
   return [...fromNexus(how), ...groups.flatMap((g) => [{ h: g }, ...S.cat.catalogue.filter((c) => c.group === g).map((c) => ({ label: c.label, glyph: c.icon, hint: c.type, run: () => addStep(c.type, how) }))])]; }
 const runs = (id) => S.D ? S.D.runs.filter((r) => r.pipelineId === id).sort((a, b) => (b.at || 0) - (a.at || 0)) : [];
 const last = (id) => runs(id)[0] || null;
-const st = (r, id) => { const t = r && r.tasks && r.tasks[id]; if (!t) return 'pending'; if (S.seek != null && r === last(r.pipelineId)) return seekStatus(t, S.seek) || 'pending'; return t.status || 'pending'; };   /* the player's moment, when seeking */
+const st = (r, id) => { const t = r && r.tasks && r.tasks[id]; if (!t) return 'pending'; if (S.seek != null && last(r.pipelineId) && r.id === last(r.pipelineId).id) return seekStatus(((FULL[r.id] && FULL[r.id].run && FULL[r.id].run.tasks) || {})[id] || t, S.seek) || 'pending'; return t.status || 'pending'; };   /* the player's moment, when seeking */
 const task = (id) => { const p = pipe(); return p && p.tasks.find((t) => t.id === id); };
 const kind = (t) => t.step ? t.step.type || 'step' : 'step';
 const target = (t) => { const u = t.step && t.step.config && t.step.config.url; const m = /^nexus:\/\/([a-z0-9-]+)(\/\S*)?/i.exec(String(u || '')); return m ? m[1] + (m[2] ? ' ' + m[2].replace(/^\/api/, '') : '') : (u || '—'); };
@@ -649,7 +649,7 @@ function gateTree(t, L, p) {
 // PC26 (his, 2026-11-25: "Anything starts as the first step. Then everything branches from that one"): the steps a run grew (each naming
 // the step it grew from) are drawn as steps of the pipeline, wired to that step, so the canvas shows the run as it really went
 // seeking: a node grown after the moment is not there yet
-function withGrown(p) { const q = withGrown0(p); if (S.seek == null || !q || q === p) return q; const r = last(p.id); return { ...q, tasks: q.tasks.filter((t) => (p.tasks || []).some((o) => o.id === t.id) || (((r && r.tasks[t.id] && r.tasks[t.id].events) || [])[0] || { at: 0 }).at <= S.seek) }; }
+function withGrown(p) { const q = withGrown0(p); if (S.seek == null || !q || q === p) return q; const r = last(p.id); const fr = r && FULL[r.id] && FULL[r.id].run; return { ...q, tasks: q.tasks.filter((t) => (p.tasks || []).some((o) => o.id === t.id) || (((fr && fr.tasks[t.id] && fr.tasks[t.id].events) || [])[0] || { at: 0 }).at <= S.seek) }; }
 function withGrown0(p) { if (p && p.noGrow) return p; const r = p && last(p.id); if (!r || !r.tasks) return p; const have = new Set((p.tasks || []).map((t) => t.id)), add = [];
   for (const [id, x] of Object.entries(r.tasks)) if (!have.has(id) && x.grownFrom) add.push({ id, label: x.label || id, depends_on: Array.isArray(x.dependsOn) && x.dependsOn.length ? x.dependsOn : [x.grownFrom] /* each on the one it builds on */, step: { type: 'script', config: {} }, grown: true, why: x.why || null });
   return add.length ? { ...p, tasks: [...p.tasks, ...add] } : p; }
@@ -850,7 +850,7 @@ function libraryView(w) {
 // long, what it gave or its error. "Replay from here" starts a new run through COS's resume: the nodes before this one kept, this one and every
 // one after it done again, so a replay is a new timeline beside the old one, never a change to it.
 function timelineView(w) {
-  const p = pipe(), r = p && runs(p.id).find((x) => x.id === S.timelineOf); if (!r) { S.timelineOf = null; return work(); }
+  const p = pipe(), r = p && fullRun(runs(p.id).find((x) => x.id === S.timelineOf)); if (!r) { S.timelineOf = null; return work(); }
   const first = (t) => (t.events && t.events[0] && t.events[0].at) || t.startedAt || t.at || 0;
   const ns = Object.entries(r.tasks || {}).map(([id, t]) => ({ id, ...t, t0: first(t) })).sort((a, b) => (a.t0 || Infinity) - (b.t0 || Infinity));
   const t0 = r.at || (ns[0] && ns[0].t0) || 0, live = /running|paused/.test(r.status || '');
@@ -879,10 +879,13 @@ function timelineView(w) {
 // start to now (or its end), one lane per node coloured by its state over time, a heat strip of how much happened when, a playhead. Seeking draws
 // the canvas as it was at that moment (each node's state from its own events); LIVE follows now in real time. Nothing is changed by seeking.
 const PLAY = { speeds: [1, 10, 60, 600], i: 1, timer: null };
+const FULL = {};   // run id → { at, run }: the full run (each node's events), read every few seconds while shown
+function fullRun(r) { if (!r) return r; const c = FULL[r.id]; if (!c || (Date.now() - c.at > 4000 && !c.loading)) { FULL[r.id] = { ...(c || {}), at: Date.now(), loading: true }; fetch('/api/cos/automation/pipeline-runs/' + encodeURIComponent(r.id), { cache: 'no-store' }).then((x) => x.json()).then((j) => { FULL[r.id] = { at: Date.now(), run: j.run || (j.ok !== false ? j : null) }; S.sig = ''; work(); }).catch(() => { FULL[r.id].loading = false; }); }
+  const fr = c && c.run; return fr && fr.tasks ? { ...r, tasks: Object.fromEntries(Object.entries(r.tasks || {}).concat(Object.entries(fr.tasks).filter(([k]) => !(r.tasks || {})[k])).map(([k, v]) => [k, { ...v, ...((fr.tasks || {})[k] || {}), status: v.status || ((fr.tasks || {})[k] || {}).status }])) } : r; }
 function evOf(r) { const out = []; for (const [id, t] of Object.entries((r && r.tasks) || {})) for (const e of (t.events || [])) if (e && e.at) out.push({ id, at: e.at, status: e.status, label: t.label || id }); return out.sort((a, b) => a.at - b.at); }
 function seekStatus(t, at) { const es = (t && t.events) || []; let s = null; for (const e of es) { if (e.at <= at) s = e.status; else break; } return s; }
 function playerHtml() { return '<div id="player" style="position:absolute;left:120px;right:12px;bottom:8px;background:color-mix(in srgb,var(--bg1) 92%,transparent);border:1px solid var(--edge);border-radius:10px;padding:6px 10px;font:11px var(--mono);color:var(--text2)"></div>'; }
-function drawPlayer() { const el = $('player'), p = pipe(); if (!el || !p) return; const r = last(p.id);
+function drawPlayer() { const el = $('player'), p = pipe(); if (!el || !p) return; const r = fullRun(last(p.id));
   if (!r || !r.at) { el.innerHTML = 'no run yet: press Run, and this plays it'; return; }
   const live = /running|paused/.test(r.status || ''), a = r.at, b = Math.max(r.end || Date.now(), a + 1000), now = S.seek == null ? (live ? Date.now() : b) : S.seek, x = (t) => Math.max(0, Math.min(100, (t - a) / (b - a) * 100));
   const tasks = Object.entries(r.tasks || {}).map(([id, t]) => ({ id, t, s: (t.events || [])[0] && t.events[0].at })).filter((n) => n.s).sort((m, n) => m.s - n.s);
