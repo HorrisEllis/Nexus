@@ -127,3 +127,33 @@ phases:
     depends_on: [UD3]
     does: >
       Each step is a brick RAID routes (which model, which tool) with its proof; the chunk size is dynamic: a piece is split until its size is one the chosen model has passed before (its measured pass rate per size), so the smallest model gets pieces it can do.
+
+  UD18_every_model_call_a_node:
+    status: pending
+    depends_on: [UD3]
+    does: >
+      His 2026-11-26: "any model call should be a step. it is still doing things without adding another step" · "one node is the smallest unit of each node. like each event, step, gap, chunk, brick". Each try of a piece (its prompt, its model, its answer, its verdict) is a node of the request (cos/pipeline/runs.eg steps), grown from the piece it tries; the canvas shows every call, nothing happens inside a step unseen.
+
+  UD19_the_phases_built_bottom_up_node_by_node:
+    status: pending
+    depends_on: [UD3, UD18]
+    does: >
+      His 2026-11-26: "what if we build per node. then we could have all of the phase nodes build one by one. bottom up?". One request whose first node is his request and whose last is the contract: the phase nodes (the .phase files under */phases/) in their DAG order from the bottom (depends_on), each phase a node that grows its pieces, each piece its tries; a phase is met when its proof holds, and the next above it starts.
+
+  UD20_every_nexus_system_hooked_into_the_pipeline_thro:
+    status: pending
+    depends_on: [UD3]
+    does: >
+      His 2026-11-26: "nexus systems need to be hooked into the pipeline. the pipeline is everything nexus can do, step by step" · "raid needs to connect to each drawbridge" (built: every drawbridge call RAID decides). An audit per system from its atlas and its registry: the hooks it offers (GET /api/cos/systems/<sys>/hooks), each a node kind the pipeline can run, through RAID; a system with no drawbridge yet is named as the gap, with what it does that the pipeline cannot reach.
+
+  UD21_each_piece_built_through_warp_2_behind_its_own_s:
+    status: pending
+    depends_on: [UD3, UD18]
+    does: >
+      His 2026-11-26: "look at rfr2, cfr and warp 2 specs. that was meant to make the coding more capable" · "Warp should be replaced by warp 2.0. Replace siso" · "Also no coupling remember that". WARP 2 (emerge/emerge/field/warp.eg, built 2026-11-26: the link, nothing without its cause; expectations declared first, broken ones gaps; every link through the field's constraints and the causal layer) is the path a piece takes, and each system runs its own field behind its drawbridge: a cause that crosses systems is the drawbridge call that carried it, recorded on both sides by its id; Cortex and the intelligence lattice read the whole tree, a view, never a centre. WARP 1's ideas that are his stay (the exact cache, the scored population of variants as the alternatives, the cascade cheapest first with its cost said, the axiom gate as the algebraic gates); SISO's shape (Event, Gate, Stream, a shared bus) is replaced, file by file, each proven by its own tests before the SISO call is removed.
+
+  UD22_constraints_acknowledged_before_every_decision:
+    status: pending
+    depends_on: [UD3]
+    does: >
+      His 2026-11-26: "cheap first, as long as thats noted, or break it down more, quality shouldn't come at the cost of what nexus can work around" · "maybe constraints need to be acknowledges before decisions. work with you have in the moment, or wait for the system to clear memory?". Before a decision node (a model, a fan-out, a retry), a constraints node reads what is true now (free RAM and VRAM, engines up, the queue: PG1) and writes the choice and why: go now with what fits, break the piece down more, or wait for room (RAID by signal to noise, PG2). Cheap first is always noted as cheap; quality is never lowered to fit: a piece that cannot pass on what fits waits or is broken down, never passed weaker.
