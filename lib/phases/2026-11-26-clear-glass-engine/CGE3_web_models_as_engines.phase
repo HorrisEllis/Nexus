@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-26-clear-glass-engine-phasemap.spec::CGE3_web_models_as_engines
+type: phase
+id: docs_2026-11-26-clear-glass-engine-phasemap.spec::CGE3_web_models_as_engines
+context: pipeline phase CGE3_web_models_as_engines of docs/2026-11-26-clear-glass-engine-phasemap.spec
+intent: null
+summary: CGE3_web_models_as_engines (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1795720534539
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795720534539
+lastSeenAt: 1795720534539
+fingerprint: null
+payload:
+  id: CGE3_web_models_as_engines
+  map: docs/2026-11-26-clear-glass-engine-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - inference/engines/web-chat.eg
+    - clear-glass/src/chats/ports.js
+  depends_on:
+    - CGE1_why_chatgpt_shows_the_login_page
+    - SR2_engines_beneath_the_supervisor
+  blocks: []
+  spec: null
+  graph: 8fcbdafe636bf2e0

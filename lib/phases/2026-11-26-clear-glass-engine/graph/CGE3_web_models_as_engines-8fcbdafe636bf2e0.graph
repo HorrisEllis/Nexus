@@ -1,0 +1,76 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CGE3_web_models_as_engines:8fcbdafe636bf2e0
+type: graph
+id: phase:CGE3_web_models_as_engines:8fcbdafe636bf2e0
+context: dependency graph of phase CGE3_web_models_as_engines
+intent: null
+summary: 4 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1795720534539
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795720534539
+lastSeenAt: 1795720534539
+fingerprint: null
+payload:
+  for: CGE3_web_models_as_engines
+  kind: phase
+  repo: null
+  hash: 8fcbdafe636bf2e0
+  nodes:
+    - path: clear-glass/src/chats/ports.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: inference/engines/web-chat.eg
+      role: changes
+      exists: false
+      system: null
+    - path: clear-glass/src/chats/service.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/downloads/chat-ledger.js
+      role: uses
+      exists: true
+      system: clear-glass
+  edges:
+    - from: clear-glass/src/chats/ports.js
+      to: clear-glass/src/downloads/chat-ledger.js
+      kind: requires
+    - from: clear-glass/src/chats/service.js
+      to: clear-glass/src/chats/ports.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-11-26-clear-glass-engine-phasemap.spec::CGE1_why_chatgpt_shows_the_login_page
+      - docs/2026-11-26-cos-service-and-resources-phasemap.spec::SR2_engines_beneath_the_supervisor
+    dependents: []
+    upstream:
+      - docs/2026-11-26-clear-glass-engine-phasemap.spec::CGE1_why_chatgpt_shows_the_login_page
+      - docs/2026-11-26-cos-service-and-resources-phasemap.spec::SR1_the_supervisor_is_the_service
+      - docs/2026-11-26-cos-service-and-resources-phasemap.spec::SR2_engines_beneath_the_supervisor
+    downstream: []
+    blockedBy:
+      - docs/2026-11-26-clear-glass-engine-phasemap.spec::CGE1_why_chatgpt_shows_the_login_page
+      - docs/2026-11-26-cos-service-and-resources-phasemap.spec::SR2_engines_beneath_the_supervisor
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - >-
+        layer 2 · blocked by CGE1_why_chatgpt_shows_the_login_page,
+        SR2_engines_beneath_the_supervisor
+      - >-
+        depends on (2): CGE1_why_chatgpt_shows_the_login_page, SR2_engines_beneath_the_supervisor ·
+        all upstream 3
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-11-26-clear-glass-engine-phasemap.spec::CGE1_why_chatgpt_shows_the_login_page
+        kind: declared
+      - from: docs/2026-11-26-cos-service-and-resources-phasemap.spec::SR2_engines_beneath_the_supervisor
+        kind: declared

@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-26-clear-glass-engine-phasemap.spec::CGE4_one_place_for_the_ports
+type: phase
+id: docs_2026-11-26-clear-glass-engine-phasemap.spec::CGE4_one_place_for_the_ports
+context: pipeline phase CGE4_one_place_for_the_ports of docs/2026-11-26-clear-glass-engine-phasemap.spec
+intent: null
+summary: CGE4_one_place_for_the_ports (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1795720534542
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795720534542
+lastSeenAt: 1795720534542
+fingerprint: null
+payload:
+  id: CGE4_one_place_for_the_ports
+  map: docs/2026-11-26-clear-glass-engine-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/src/settings/connections.js
+    - cos/manager/registry.js
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 53b010e8fc60f285

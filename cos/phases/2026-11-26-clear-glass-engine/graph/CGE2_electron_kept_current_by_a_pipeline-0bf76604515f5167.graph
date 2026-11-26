@@ -1,0 +1,48 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CGE2_electron_kept_current_by_a_pipeline:0bf76604515f5167
+type: graph
+id: phase:CGE2_electron_kept_current_by_a_pipeline:0bf76604515f5167
+context: dependency graph of phase CGE2_electron_kept_current_by_a_pipeline
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1795720534536
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795720534536
+lastSeenAt: 1795720534536
+fingerprint: null
+payload:
+  for: CGE2_electron_kept_current_by_a_pipeline
+  kind: phase
+  repo: null
+  hash: 0bf76604515f5167
+  nodes:
+    - path: guardian/tools/registry.json
+      role: changes
+      exists: false
+      system: guardian
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-11-26-clear-glass-engine-phasemap.spec::CGE1_why_chatgpt_shows_the_login_page
+    dependents: []
+    upstream:
+      - docs/2026-11-26-clear-glass-engine-phasemap.spec::CGE1_why_chatgpt_shows_the_login_page
+    downstream: []
+    blockedBy:
+      - docs/2026-11-26-clear-glass-engine-phasemap.spec::CGE1_why_chatgpt_shows_the_login_page
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · blocked by CGE1_why_chatgpt_shows_the_login_page
+      - 'depends on (1): CGE1_why_chatgpt_shows_the_login_page'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-11-26-clear-glass-engine-phasemap.spec::CGE1_why_chatgpt_shows_the_login_page
+        kind: declared

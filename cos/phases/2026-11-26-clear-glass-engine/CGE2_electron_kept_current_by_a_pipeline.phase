@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-26-clear-glass-engine-phasemap.spec::CGE2_electron_kept_current_by_a_pipeline
+type: phase
+id: docs_2026-11-26-clear-glass-engine-phasemap.spec::CGE2_electron_kept_current_by_a_pipeline
+context: >-
+  pipeline phase CGE2_electron_kept_current_by_a_pipeline of
+  docs/2026-11-26-clear-glass-engine-phasemap.spec
+intent: null
+summary: CGE2_electron_kept_current_by_a_pipeline (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1795720534537
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795720534537
+lastSeenAt: 1795720534537
+fingerprint: null
+payload:
+  id: CGE2_electron_kept_current_by_a_pipeline
+  map: docs/2026-11-26-clear-glass-engine-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - guardian/tools/registry.json
+  depends_on:
+    - CGE1_why_chatgpt_shows_the_login_page
+  blocks: []
+  spec: null
+  graph: 0bf76604515f5167

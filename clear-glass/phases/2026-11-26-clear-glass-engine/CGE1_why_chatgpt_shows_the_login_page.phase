@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-26-clear-glass-engine-phasemap.spec::CGE1_why_chatgpt_shows_the_login_page
+type: phase
+id: docs_2026-11-26-clear-glass-engine-phasemap.spec::CGE1_why_chatgpt_shows_the_login_page
+context: >-
+  pipeline phase CGE1_why_chatgpt_shows_the_login_page of
+  docs/2026-11-26-clear-glass-engine-phasemap.spec
+intent: null
+summary: CGE1_why_chatgpt_shows_the_login_page (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1795720534533
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795720534533
+lastSeenAt: 1795720534533
+fingerprint: null
+payload:
+  id: CGE1_why_chatgpt_shows_the_login_page
+  map: docs/2026-11-26-clear-glass-engine-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/src/contexts/fingerprint-check.eg
+    - clear-glass/src/contexts/test/fingerprint-check.test.eg
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 59d4faad01b85e27

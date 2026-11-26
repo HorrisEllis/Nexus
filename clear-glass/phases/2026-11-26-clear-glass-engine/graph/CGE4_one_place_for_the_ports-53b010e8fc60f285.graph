@@ -1,0 +1,47 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CGE4_one_place_for_the_ports:53b010e8fc60f285
+type: graph
+id: phase:CGE4_one_place_for_the_ports:53b010e8fc60f285
+context: dependency graph of phase CGE4_one_place_for_the_ports
+intent: null
+summary: 2 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1795720534542
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795720534542
+lastSeenAt: 1795720534542
+fingerprint: null
+payload:
+  for: CGE4_one_place_for_the_ports
+  kind: phase
+  repo: null
+  hash: 53b010e8fc60f285
+  nodes:
+    - path: clear-glass/src/settings/connections.js
+      role: changes
+      exists: false
+      system: clear-glass
+    - path: cos/manager/registry.js
+      role: changes
+      exists: false
+      system: cos
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+    edges: []
