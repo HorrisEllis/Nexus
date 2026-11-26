@@ -523,7 +523,9 @@ function createRung({ root = path.resolve(__dirname, '..', '..'), ask, expect, m
           // EMB12 — the adversary gate: a piece that passed its examples is attacked from its sentence; one the two adversaries agree against is
           // refused with their case; a case they read differently is a tension in the spec (kept on the gap, his to settle); a case that holds
           // joins its examples, so the next try is held to it too
-          if (process.env.EMERGE_RUNG_ADVERSARY !== '0') { const sfA = skel.fns.find(x => x.name === name);
+          // on only with its readers named (three different models, his): one model reading three times agreed on wrong answers and could refuse a
+          // correct body (measured 2026-11-25), so with none named the gate stays off unless asked for (EMERGE_RUNG_ADVERSARY=1)
+          if (process.env.EMERGE_RUNG_ADVERSARY !== '0' && ((adversaries && adversaries.length >= 3) || process.env.EMERGE_RUNG_ADVERSARY === '1')) { const sfA = skel.fns.find(x => x.name === name);
             const adv = sfA && sfA.does ? await adversaryCheck({ eg, render, skel, filled, name, body, who, sf: sfA, n, readers: adversaries && adversaries.length ? adversaries.filter((x) => x && typeof x.ask === 'function') : null }) : null;
             if (adv) {
               rec.adversary = (rec.adversary || []).concat({ at: new Date().toISOString(), cases: adv.cases, broke: adv.broke, tension: adv.tension, kept: adv.kept.length });
