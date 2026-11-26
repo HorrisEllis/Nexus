@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-08-pipeline-canvas-phasemap.spec::PC36_the_pipeline_writes_specs_never_md_any_plan_read
+type: phase
+id: docs_2026-11-08-pipeline-canvas-phasemap.spec::PC36_the_pipeline_writes_specs_never_md_any_plan_read
+context: >-
+  pipeline phase PC36_the_pipeline_writes_specs_never_md_any_plan_read of
+  docs/2026-11-08-pipeline-canvas-phasemap.spec
+intent: null
+summary: PC36_the_pipeline_writes_specs_never_md_any_plan_read (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1795727079137
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795727079137
+lastSeenAt: 1795727079137
+fingerprint: null
+payload:
+  id: PC36_the_pipeline_writes_specs_never_md_any_plan_read
+  map: docs/2026-11-08-pipeline-canvas-phasemap.spec
+  repo: null
+  layer: null
+  status: pending
+  files:
+    - idearium/repo/roadmap-import.js
+    - docs/looking-glass/PHASEMAP.md
+    - cos/pipeline/index.js
+    - lib/end-state.js
+  depends_on:
+    - PC26_lineage_is_the_canvas
+  blocks: []
+  spec: null
+  graph: 3267bcf7c774689c

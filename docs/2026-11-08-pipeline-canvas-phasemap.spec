@@ -1802,6 +1802,14 @@ phases_addendum_2026_11_24_model_server:
   PC26_lineage_is_the_canvas:
     status: OPEN
     layer: ui
+    expanded_2026_11_26_every_next_step_a_node: >-
+      His 2026-11-26: "No matter what it is. A new node for any next step. Then we can have a timeline to replay and reuse the pipeline. Then use
+      them to learn and optimize. It's the idearium pipeline, the idea pipeline." Every next step, whatever it is (a model call, a retry, a climb,
+      a failure filed, a way tried, a phase written, his choice), is a new node grown from the one before, never a change to an old one; so a
+      run is a timeline of nodes that can be replayed from any node (PC8 retry from a step) and reused whole (PC7: a met contract becomes a
+      replayable pipeline), and runs compared are what the pipeline learns and optimises from (baseline, sigma, delta; PC7 measure). It is
+      Idearium's idea pipeline: an idea, its spec, its phases, its phase nodes, each a node that breaks down the same way (UD1, expanded the same
+      day).
     james: '"looking better so far. it is supposed to show choices as branches, like lineage is meant to be a part of the canvas like branching into new steps, new paths, parrell processes" (2026-11-25, on the EMB10 run with three adversaries)'
     depends_on: [PC8_operate_a_pipeline]
     files: [cos/ui/run-console-preview/server.js, cos/ui/automation/index.html]

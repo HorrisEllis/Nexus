@@ -7,11 +7,11 @@ intent: null
 summary: 48 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1795708594251
+exported_at: 1795727078921
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1795708594251
-lastSeenAt: 1795708594251
+firstSeenAt: 1795727078921
+lastSeenAt: 1795727078921
 fingerprint: null
 payload:
   for: PC8_operate_a_pipeline
@@ -370,6 +370,9 @@ payload:
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC36_the_pipeline_writes_specs_never_md_any_plan_read
       - docs/2026-11-15-the-factory-phasemap.spec::IF18_the_visual_debugger
       - docs/2026-11-17-nexus-codes-itself-phasemap.spec::NX2_nexus_codes_itself_toward_a_dynamic_end_state
+      - docs/2026-11-26-talk-to-nexus-phasemap.spec::TN1_talk_to_copilot_on_the_canvas
+      - docs/2026-11-26-talk-to-nexus-phasemap.spec::TN2_fewer_tabs_no_dropdown
+      - docs/2026-11-26-talk-to-nexus-phasemap.spec::TN6_a_hat_per_pipeline
     blockedBy:
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC5_programmable_gate_types
     unlocks:
@@ -447,7 +450,7 @@ payload:
         needed by (7): PC12_every_pipeline_in_cos, PC13_his_request_built_by_the_pipeline,
         PC26_lineage_is_the_canvas, PC28_the_pipeline_observes_itself,
         PC30_the_library_of_pipelines_renamable_not_a_drop_do, IF18_the_visual_debugger,
-        NX2_nexus_codes_itself_toward_a_dynamic_end_state · all downstream 15 · finishing it unlocks
+        NX2_nexus_codes_itself_toward_a_dynamic_end_state · all downstream 18 · finishing it unlocks
         PC12_every_pipeline_in_cos, PC26_lineage_is_the_canvas, PC28_the_pipeline_observes_itself,
         PC30_the_library_of_pipelines_renamable_not_a_drop_do
       - >-

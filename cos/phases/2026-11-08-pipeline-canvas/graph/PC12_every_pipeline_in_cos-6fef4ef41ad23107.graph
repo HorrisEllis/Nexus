@@ -7,11 +7,11 @@ intent: null
 summary: 14 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1795583463267
+exported_at: 1795727078959
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1795583463267
-lastSeenAt: 1795583463267
+firstSeenAt: 1795727078959
+lastSeenAt: 1795727078959
 fingerprint: null
 payload:
   for: PC12_every_pipeline_in_cos
@@ -180,6 +180,9 @@ payload:
       - with: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC24_every_request_a_timeline
         files:
           - cos/pipeline/contract.eg
+      - with: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC36_the_pipeline_writes_specs_never_md_any_plan_read
+        files:
+          - cos/pipeline/index.js
     dangling: []
     lines:
       - layer 16 · blocked by PC8_operate_a_pipeline
@@ -202,7 +205,7 @@ payload:
       - >-
         same files as PC16_raid_routes_every_interaction with no order between them:
         cortex/core/raid/contract-v2-door.js, cos/pipeline/index.js
-      - … and 1 more phases sharing its files without an order
+      - … and 2 more phases sharing its files without an order
     edges:
       - from: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC8_operate_a_pipeline
         kind: declared

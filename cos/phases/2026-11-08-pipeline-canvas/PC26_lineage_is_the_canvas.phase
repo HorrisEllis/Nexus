@@ -7,11 +7,11 @@ intent: null
 summary: PC26_lineage_is_the_canvas (ui) — 2 file(s)
 system: idearium
 tags: []
-exported_at: 1795664773991
+exported_at: 1795727079066
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1795664773991
-lastSeenAt: 1795664773991
+firstSeenAt: 1795727079066
+lastSeenAt: 1795727079066
 fingerprint: null
 payload:
   id: PC26_lineage_is_the_canvas
@@ -26,4 +26,4 @@ payload:
     - PC8_operate_a_pipeline
   blocks: []
   spec: null
-  graph: 2e9fe00ee4c753e7
+  graph: f611db8ab129fcd9

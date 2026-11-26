@@ -7,11 +7,11 @@ intent: null
 summary: 7 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1795708594169
+exported_at: 1795727078847
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1795708594169
-lastSeenAt: 1795708594169
+firstSeenAt: 1795727078847
+lastSeenAt: 1795727078847
 fingerprint: null
 payload:
   for: PC1_one_box_shape
@@ -107,6 +107,9 @@ payload:
       - docs/2026-11-15-the-factory-phasemap.spec::IF12_nexus_builds_itself_autonomously
       - docs/2026-11-15-the-factory-phasemap.spec::IF18_the_visual_debugger
       - docs/2026-11-17-nexus-codes-itself-phasemap.spec::NX2_nexus_codes_itself_toward_a_dynamic_end_state
+      - docs/2026-11-26-talk-to-nexus-phasemap.spec::TN1_talk_to_copilot_on_the_canvas
+      - docs/2026-11-26-talk-to-nexus-phasemap.spec::TN2_fewer_tabs_no_dropdown
+      - docs/2026-11-26-talk-to-nexus-phasemap.spec::TN6_a_hat_per_pipeline
     blockedBy:
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D4_language
       - docs/2026-11-01-orchestration-console-phasemap.spec::OC4_deploy_to_any_system
@@ -122,7 +125,7 @@ payload:
       - >-
         needed by (6): AE9_each_tool_carries_its_dag, PC2_procedures_and_frameworks_as_steps,
         PC3_the_build_request_step, PC4_the_box_kinds_on_the_canvas, PC5_programmable_gate_types,
-        PC6_intelligence_watches_the_runs · all downstream 26 · finishing it unlocks
+        PC6_intelligence_watches_the_runs · all downstream 29 · finishing it unlocks
         AE9_each_tool_carries_its_dag
     edges:
       - from: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D0_reuse_first
