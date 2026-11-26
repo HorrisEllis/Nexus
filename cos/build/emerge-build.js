@@ -63,10 +63,13 @@ async function wakeOllama() {
   for (let i = 0; i < 30; i++) { await new Promise((r) => setTimeout(r, 2000)); if (await call('GET', '/health', null, 3000).catch(() => null)) { row('ollama-woken', { note: 'the Ollama system was asleep; woken through COS' }); return true; } }
   return false;
 }
+// 2026-11-26: a short answer is asked for with a cap (DeepSeek wrote 29,776 characters for "one line per function" and held the build 20 minutes)
+const SHORT = /(^|:)(signatures|examples)$/;
 async function ask(prompt, model, gap, tryNo = 1, again = 0) {
   row('gap-asked', { gap, model, promptChars: prompt.length });
   if (!(await wakeOllama())) throw new Error('the Ollama system is not up and COS could not wake it');
-  const q = await call('POST', '/api/jobs', { prompt, model, intent: 'build', meta: { source: 'cos.emerge-build', gap, phase: PHASE, run: RUN }, options: { temperature: Math.min(0.9, 0.1 + 0.4 * Math.max(0, (Number(tryNo) || 1) - 1)) } });
+  const capped = SHORT.test(String(gap || '')) ? { num_predict: 600, repeat_penalty: 1.15 } : {};
+  const q = await call('POST', '/api/jobs', { prompt, model, intent: 'build', meta: { source: 'cos.emerge-build', gap, phase: PHASE, run: RUN }, options: { temperature: Math.min(0.9, 0.1 + 0.4 * Math.max(0, (Number(tryNo) || 1) - 1)), ...capped } });
   const id = q && (q.jobId || (q.data && q.data.jobId)); if (!id) throw new Error('the Ollama system did not take the job: ' + JSON.stringify(q).slice(0, 200));
   let missing = 0;
   for (const until = Date.now() + 15 * 60000; Date.now() < until;) {
