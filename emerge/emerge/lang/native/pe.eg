@@ -53,10 +53,62 @@ fn idata(dll, names, rva) {
   return { blob: blob, slots: slots, iat_rva: rva + iat_off, iat_size: (n + 1) * 8 }
 }
 
-/** pe(items, entry_label, dll, imports) → bytes of a runnable .exe */
-fn pe(items, entry, dll, imports) {
+/** the .idata blob for several DLLs ([{ dll, names }]); one DLL gives the same bytes as idata(). Layout: the descriptors and the null
+ *  one · every DLL's lookup table · every DLL's address table (one run, the IAT directory) · the hint/name entries · the DLL names.
+ *  2026-11-26 — James: "Anyway you could get looking glass beginning? Emerge also needs emerge.exe": a window needs USER32 and GDI32. */
+fn idata_libs(libs, rva) {
+  let desc_size = (len(libs) + 1) * 20
+  var table = 0                              // the bytes of all the lookup tables (the address tables are the same size)
+  for lib in libs { table += (len(lib.names) + 1) * 8 }
+  let iat_base = desc_size + table
+  let hint_off = iat_base + table
+  var hints = []
+  var at = 0
+  var rvas = []                              // per DLL: its hint/name RVAs
+  for lib in libs {
+    var mine = []
+    for name in lib.names {
+      mine = push(mine, rva + hint_off + at)
+      var entry = [0, 0, bytes(name), 0]
+      var size = 2 + byte_len(name) + 1
+      if size % 2 == 1 {
+        entry = push(entry, 0)
+        size += 1
+      }
+      hints = push(hints, bytes(entry))
+      at += size
+    }
+    rvas = push(rvas, mine)
+  }
+  let hint_blob = bytes(hints)
+  var descs = []
+  var ilts = []
+  var slots = {}
+  var t_off = 0
+  var d_off = hint_off + len(hint_blob)
+  var names_blob = []
+  for i, lib in libs {
+    var thunks = []
+    for r in rvas[i] { thunks = push(thunks, x.le64(r)) }
+    thunks = push(thunks, x.le64(0))
+    ilts = push(ilts, thunks)
+    descs = push(descs, [x.le32(rva + desc_size + t_off), x.le32(0), x.le32(0), x.le32(rva + d_off), x.le32(rva + iat_base + t_off)])
+    for k, name in lib.names { slots[name] = IMAGE_BASE + rva + iat_base + t_off + k * 8 }
+    names_blob = push(names_blob, [bytes(lib.dll), 0])
+    d_off += byte_len(lib.dll) + 1
+    t_off += (len(lib.names) + 1) * 8
+  }
+  let blob = bytes([descs, pad(20), ilts, ilts, hint_blob, names_blob])
+  return { blob: blob, slots: slots, iat_rva: rva + iat_base, iat_size: table, dir_size: desc_size }
+}
+
+/** pe(items, entry_label, dll, imports) → bytes of a runnable console .exe (one DLL) */
+fn pe(items, entry, dll, imports) = pe_libs(items, entry, [{ dll: dll, names: imports }], 3)
+
+/** pe_libs(items, entry_label, [{ dll, names }], subsystem) → bytes of a runnable .exe; subsystem 3 console, 2 windows (GUI) */
+fn pe_libs(items, entry, libs, subsystem) {
   let idata_rva = SECTION_ALIGN
-  let imp = idata(dll, imports, idata_rva)
+  let imp = idata_libs(libs, idata_rva)
   let idata_len = len(imp.blob)
   let text_rva = idata_rva + align(idata_len, SECTION_ALIGN)
   let asm = x.assemble(items, IMAGE_BASE + text_rva, imp.slots)
@@ -67,7 +119,7 @@ fn pe(items, entry, dll, imports) {
   let image_size = text_rva + align(len(text), SECTION_ALIGN)
   var dirs = []
   for i in 0..16 {
-    if i == 1 { dirs = push(dirs, [x.le32(idata_rva), x.le32(40)]) }
+    if i == 1 { dirs = push(dirs, [x.le32(idata_rva), x.le32(imp.dir_size)]) }
     else if i == 12 { dirs = push(dirs, [x.le32(imp.iat_rva), x.le32(imp.iat_size)]) }
     else { dirs = push(dirs, [x.le32(0), x.le32(0)]) }
   }
@@ -79,7 +131,7 @@ fn pe(items, entry, dll, imports) {
     x.le32(text_rva + asm.labels[entry] - (IMAGE_BASE + text_rva)), x.le32(text_rva),
     x.le64(IMAGE_BASE), x.le32(SECTION_ALIGN), x.le32(FILE_ALIGN),
     x.le16(6), x.le16(0), x.le16(0), x.le16(0), x.le16(6), x.le16(0), x.le32(0),
-    x.le32(image_size), x.le32(headers_size), x.le32(0), x.le16(3), x.le16(0x8100),
+    x.le32(image_size), x.le32(headers_size), x.le32(0), x.le16(subsystem), x.le16(0x8100),
     x.le64(0x100000), x.le64(0x1000), x.le64(0x100000), x.le64(0x1000),
     x.le32(0), x.le32(16),
     dirs

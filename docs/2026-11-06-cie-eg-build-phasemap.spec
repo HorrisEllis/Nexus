@@ -633,3 +633,11 @@ James, 2026-11-13, told process control was next: "Next."
 # problem decomposition like using it for analysis, cross domain synthesis, like finding overlap, like it could represent so much on the
 # canvas/" — added to the pin: the pipeline (and its branches) as a tool for problem decomposition, analysis and cross-domain synthesis
 # (finding overlap), all of it shown on the canvas. Still pinned for after Emerge; conceptual (FRAMEWORK-THREADS: no evidence yet).
+
+# ADDENDUM 2026-11-26 — CIE12 slice a: imports from several DLLs; the first native window (Looking Glass P1)
+# James, 2026-11-26: "Anyway you could get looking glass beginning? Emerge also needs emerge.exe"
+# pe.eg gains idata_libs and pe_libs(items, entry, [{ dll, names }], subsystem): one DLL gives the same bytes as before (hello.exe rebuilt
+# byte for byte, checked with cmp). lang/native/window.eg reads window-screen.json (a title, the window, one rectangle and its colour) and
+# writes window.exe (1,536 bytes, GUI subsystem, KERNEL32 + USER32 + GDI32): on his machine it opened "Looking Glass" with the rectangle,
+# stayed up, and exited 0 when its window was closed. Open: the window is Windows' STATIC class (no callback yet: it shows its title text
+# inside); a window procedure of its own, then CIE12's PE import table for emerge.exe itself.

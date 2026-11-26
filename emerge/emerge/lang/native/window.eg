@@ -1,0 +1,65 @@
+// lang/native/window.eg — a screen kept as data becomes a native Windows program: a window and one rectangle, no JavaScript and
+// no markup in the program it writes. Run from lang/native: eg run window.eg  (writes window.exe from window-screen.json)
+// James, 2026-11-26: "Anyway you could get looking glass beginning? Emerge also needs emerge.exe" · earlier: "i am describing lookinglass"
+// · "everything in Emerge (the renderer too)". Looking Glass P1 (docs/looking-glass/roadmap-phasemap.spec: "Window + one rectangle from
+// data") and CIE12's first brick (imports from KERNEL32, USER32 and GDI32: pe.eg pe_libs). The window is Windows' own STATIC class, so no
+// callback is needed yet; it is painted each frame and the program ends when the window is closed.
+use "./x64.eg" as x
+use "./pe.eg" as pe
+
+let screen = parse_json(read_file("window-screen.json"))
+let w = screen.window
+let r = screen.rect
+let color = r.color[0] + r.color[1] * 256 + r.color[2] * 65536          // COLORREF: 0x00BBGGRR
+
+// the frame on the stack (rsp, 16-aligned after the sub): 0..31 shadow · 32..95 stack arguments · 96 MSG · 144 RECT · 160 hwnd
+// · 168 brush · 176 hdc
+fn d32(n) = x.le32(n)
+fn put_q(off, n) = [0x48, 0xC7, 0x84, 0x24] + d32(off) + d32(n)        // mov qword [rsp+off], imm32
+fn put_d(off, n) = [0xC7, 0x84, 0x24] + d32(off) + d32(n)              // mov dword [rsp+off], imm32
+fn save_rax(off) = [0x48, 0x89, 0x84, 0x24] + d32(off)                 // mov [rsp+off], rax
+fn rcx_at(off) = [0x48, 0x8B, 0x8C, 0x24] + d32(off)                   // mov rcx, [rsp+off]
+fn rdx_at(off) = [0x48, 0x8B, 0x94, 0x24] + d32(off)                   // mov rdx, [rsp+off]
+fn r8_at(off) = [0x4C, 0x8B, 0x84, 0x24] + d32(off)                    // mov r8, [rsp+off]
+fn rcx_lea(off) = [0x48, 0x8D, 0x8C, 0x24] + d32(off)                  // lea rcx, [rsp+off]
+fn rdx_lea(off) = [0x48, 0x8D, 0x94, 0x24] + d32(off)                  // lea rdx, [rsp+off]
+
+let code = [
+  { label: "start" },
+  x.sub_rsp(232),
+  [0xB9] + d32(color), x.call_rip(), { rel32: "CreateSolidBrush" }, save_rax(168),
+  [0x31, 0xC9],                                    // xor ecx, ecx        dwExStyle
+  [0x48, 0x8D, 0x15], { rel32: "cls" },            // lea rdx, [rip+cls]  "STATIC"
+  [0x4C, 0x8D, 0x05], { rel32: "title" },          // lea r8, [rip+title]
+  [0x41, 0xB9] + d32(0x10CF0000),                  // mov r9d, WS_OVERLAPPEDWINDOW | WS_VISIBLE
+  put_q(32, w.x), put_q(40, w.y), put_q(48, w.w), put_q(56, w.h),
+  put_q(64, 0), put_q(72, 0), put_q(80, 0), put_q(88, 0),
+  x.call_rip(), { rel32: "CreateWindowExA" }, save_rax(160),
+  put_d(144, r.x), put_d(148, r.y), put_d(152, r.x + r.w), put_d(156, r.y + r.h),
+  { label: "pump" },
+  rcx_lea(96), [0x31, 0xD2], [0x45, 0x31, 0xC0], [0x45, 0x31, 0xC9], put_q(32, 1),   // PeekMessageA(&msg, 0, 0, 0, PM_REMOVE)
+  x.call_rip(), { rel32: "PeekMessageA" },
+  [0x85, 0xC0], [0x0F, 0x84], { rel32: "draw" },   // test eax, eax · jz draw
+  rcx_lea(96), x.call_rip(), { rel32: "DispatchMessageA" },
+  [0xE9], { rel32: "pump" },
+  { label: "draw" },
+  rcx_at(160), x.call_rip(), { rel32: "IsWindow" },
+  [0x85, 0xC0], [0x0F, 0x84], { rel32: "done" },   // closed: the program ends
+  rcx_at(160), x.call_rip(), { rel32: "GetDC" }, save_rax(176),
+  [0x48, 0x89, 0xC1], rdx_lea(144), r8_at(168), x.call_rip(), { rel32: "FillRect" },       // FillRect(hdc, &rect, brush)
+  rcx_at(160), rdx_at(176), x.call_rip(), { rel32: "ReleaseDC" },
+  [0xB9] + d32(16), x.call_rip(), { rel32: "Sleep" },
+  [0xE9], { rel32: "pump" },
+  { label: "done" },
+  [0x31, 0xC9], x.call_rip(), { rel32: "ExitProcess" },
+  { label: "cls" }, [bytes("STATIC"), 0],
+  { label: "title" }, [bytes(screen.title), 0]
+]
+
+let libs = [
+  { dll: "KERNEL32.dll", names: ["Sleep", "ExitProcess"] },
+  { dll: "USER32.dll", names: ["CreateWindowExA", "PeekMessageA", "DispatchMessageA", "IsWindow", "GetDC", "ReleaseDC", "FillRect"] },
+  { dll: "GDI32.dll", names: ["CreateSolidBrush"] }
+]
+write_bytes("window.exe", pe.pe_libs(code, "start", libs, 2))
+print("written window.exe ({screen.title}: {w.w}x{w.h}, one rectangle {r.w}x{r.h})")

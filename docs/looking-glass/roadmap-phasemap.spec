@@ -159,3 +159,8 @@ spec:
       does: >-
         single-file release exe, installer, code signing, auto-update; Linux and macOS ports behind the thin platform layer.
       proof: "a clean machine installs and runs Looking Glass with no other software."
+
+# ADDENDUM 2026-11-26 — P1 in Emerge: a native window and one rectangle from data (James: "Anyway you could get looking glass beginning?",
+# his call the same day: "everything in Emerge (the renderer too)"). emerge/emerge/lang/native/window.eg compiles window-screen.json into
+# window.exe, no JavaScript and no markup in it. Seen on his machine 2026-11-26. Next: its own window procedure (input), then the screen's
+# elements as data (P2) drawn by the same compiler. Shared with CIE12 (docs/2026-11-06-cie-eg-build-phasemap.spec).

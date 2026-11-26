@@ -243,12 +243,15 @@ payload:
       emerge/lang/native/lower.eg: 94e7eb7a0b701b921db6bad86583ce30e243cc4af1ca7b97a969c60bc4f2aed4
       emerge/lang/native/milestone.eg: 9adeb1a116cd66794300242ce23c56affdf2bdbaa72a8aa4f6aaf1cb73af92d8
       emerge/lang/native/observe_text.eg: 4ac45757eafc17dab60d0f6a082ffd7ccedb397ffb6ef8a47d9e37677a8ff28e
-      emerge/lang/native/pe.eg: 6155fc55918e79f62f0a513a122c1ddca7ef9b37ced1b6ad31ebfc1c71e95ccd
+      emerge/lang/native/pe.eg: 4a1b6da308b7ecbcb9c14c2d66364997046907680fc4341a78269bf79a622c7b
       emerge/lang/native/prelude_text.eg: f26369aeb3715a82610a2a262db38534ba411f75a1a62f5c2879fda72089e1d0
       emerge/lang/native/primitives_text.eg: 205e254a31030398b052e077a0ea7afe9da42f377379a90dad0e6b31c89a8d81
       emerge/lang/native/regex_text.eg: 15f52c11a77a2368525c2f7fbae0a38aeb783966e5e3e3c2dde241e3c3e53ff5
       emerge/lang/native/rt.eg: 456c69faf1b57d2da5901e94c74ab8d70d756862c06bdfb3cfd27b8915c13e79
       emerge/lang/native/rt_text.eg: fc7bb90886e9a475bcd8cbc6017e9f2f1b7ec78f270c1f72ca8794c430721b9f
+      emerge/lang/native/window-screen.json: fff1220360f2056892825726fb2f682025fc7404d5d072d82e0b6316021cd560
+      emerge/lang/native/window.eg: f800bffa2169c92d1b515fec44d9877ca81b8d96eeeb935dc1267db2e53b95d8
+      emerge/lang/native/window.exe: b9e628fae0cbcb6dfcf8864c2861abf9ed31842c9f58645fbb1ab30fe0cfc3ba
       emerge/lang/native/world_text.eg: 68a7017b048a1afb572b418c124db8e688a3e7f75dc2ce03f233bec0f1fcf8b7
       emerge/lang/native/x64.eg: e0ab26508f708c05cb4c27bed288db92e9a4802c99618f52f745e5a7e6044e17
       emerge/lang/parser.js: 3e2f3348d2ffe45042c187974256aa8bcdad43b18958ca12e1341ecbec7e7634
