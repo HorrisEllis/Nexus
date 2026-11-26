@@ -499,7 +499,17 @@ async function endState({ ph, plan, src, mapText }) {
   const rung = ER.createRung({ root: ROOT, maxTries: 3, tasksDir: TASKS, model: LADDER[0], method: null,
     adversaries: PIECES ? null : ADVERSARIES.map((m) => ({ name: m, ask: (message, { gap, tryNo } = {}) => ask(message, m, (gap || '') + ':adversary', tryNo) })),
     ladder: LADDER.map((m) => ({ name: PIECES ? 'the passed pieces' : m, ask: (message, { gap, tryNo } = {}) => (PIECES ? Promise.resolve(pieceBody(gap)) : ask(message, m, gap, tryNo)) })), ask: (message, { gap } = {}) => (PIECES ? Promise.resolve(pieceBody(gap)) : ask(message, LADDER[0], gap)),
-    expect: async ({ files: fs2 }) => { if (!EXT.forFile(plan, src.path)) return { ok: true, why: 'no expectation test for this file' }; const r = await EXT.run({ root: ROOT, plan, path: src.path, overlays: fs2 }); return r.ok ? { ok: true, why: `its expectation passed (${r.checks || 0} checks)` } : { ok: false, why: EXT.feedback(r, src.path) }; } });
+    expect: async ({ file: f0, files: fs2 }) => {
+      // 2026-11-26 — RQ1's move "passed" after 38 tries as `if a.id == "r1" and a.state == "queued" { … } else { return { error } }`: the
+      // example's own values hard-coded. Deterministic, no model: a body that compares an input to a value that the examples' arguments hold
+      // but the phase's sentence never names fits the examples, not the sentence, and is refused with that reason (domain words the sentence
+      // names, like "queued", stay allowed).
+      { const exLits = new Set([].concat(typeof examples !== 'undefined' ? examples : []).flatMap((e) => [...String((e && (e.call || e.line || e)) || '').split('==')[0].matchAll(/"([^"\\]+)"/g)].map((m) => m[1])));
+        const words = String(ph.does || '') + ' ' + String(ph.proof || '');
+        const texts = []; const grab = (v) => { if (typeof v === 'string') texts.push(v); else if (v && typeof v === 'object') for (const x of Object.values(v)) grab(x); }; grab(f0); grab(fs2);
+        const fit = [...texts.join('\n').matchAll(/==\s*"([^"\\]+)"/g)].map((m) => m[1]).find((l) => exLits.has(l) && !words.includes(l));
+        if (fit) return { ok: false, why: `it compares an input to "${fit}", a value from the examples that the sentence never names: it fits the examples instead of doing what the sentence says. Write it for any input.` }; }
+      if (!EXT.forFile(plan, src.path)) return { ok: true, why: 'no expectation test for this file' }; const r = await EXT.run({ root: ROOT, plan, path: src.path, overlays: fs2 }); return r.ok ? { ok: true, why: `its expectation passed (${r.checks || 0} checks)` } : { ok: false, why: EXT.feedback(r, src.path) }; } });
   // 5. heal, then build again (his, 2026-11-21: "It needs to be fixing it. Nexus is an autonomous system ... Have it fix gaps when it enounters
   // them, then run the pipeline again"). A held gap is diagnosed by the strongest model on the ladder from its own refused tries, and the
   // diagnosis is kept in the gap's file as its first lesson: a mechanical repair (data, OS_D5 (c): applies on its own), never code. Bounded.

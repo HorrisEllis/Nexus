@@ -613,16 +613,21 @@ function gateTree(t, L, p) {
   for (const g of t.gates) if (g.blocks && by.has(g.blocks)) (kids.get(g.blocks) || kids.set(g.blocks, []).get(g.blocks)).push(g);
   const roots = [...t.order.filter((n) => by.has(n)).map((n) => by.get(n)), ...t.gates.filter((g) => !t.order.includes(g.name) && !(g.blocks && by.has(g.blocks)))];
   const col = (s) => s === 'passed' ? 'var(--ok)' : /held|failed/.test(s) ? 'var(--red, #f87171)' : s === 'blocked' ? 'var(--amber)' : 'var(--sky)';
-  const x0 = A ? A.x : 20; let out = '', y0 = A ? A.y + 84 + 56 : 420, maxY = y0; const box = (g, x, y, d) => { const c = col(g.status), now = g.name === t.now;
-    out += `<g><title>${esc(g.name)} · ${esc(g.status)} · ${g.tries} tries${g.blocks ? ' · unblocks ' + esc(g.blocks) : ''}</title><rect x="${x}" y="${y}" width="${W}" height="${H}" rx="9" fill="color-mix(in srgb, ${c} 12%, var(--bg2))" stroke="${now ? 'var(--bright)' : c}" stroke-width="${now ? 2.4 : 1.2}"${now ? ' stroke-dasharray="5 3"' : ''}/>`
+  // 2026-11-26 — James: "the green boxes need to move" (both: dragged, and the piece being worked on in front). A box keeps where he put it
+  // (per phase, in this browser), its helpers move with it, and the piece the 3b is on is drawn last, on top.
+  const OFF = S.pieceOff || (S.pieceOff = (() => { try { return JSON.parse(localStorage.getItem('pieceOff:' + t.phase) || '{}'); } catch (_) { return {}; } })()); S.pieceOffPhase = t.phase;
+  let front = '';
+  const x0 = A ? A.x : 20; let out = '', y0 = A ? A.y + 84 + 56 : 420, maxY = y0; const box = (g, x, y, d) => { const c = col(g.status), now = g.name === t.now; const o = OFF[g.name]; if (o) { x += o.dx; y += o.dy; }
+    const mk = `<g class="piece" data-piece="${esc(g.name)}" style="cursor:grab"><title>${esc(g.name)} · ${esc(g.status)} · ${g.tries} tries${g.blocks ? ' · unblocks ' + esc(g.blocks) : ''}</title><rect x="${x}" y="${y}" width="${W}" height="${H}" rx="9" fill="color-mix(in srgb, ${c} 12%, var(--bg2))" stroke="${now ? 'var(--bright)' : c}" stroke-width="${now ? 2.4 : 1.2}"${now ? ' stroke-dasharray="5 3"' : ''}/>`
       + `<text x="${x + 10}" y="${y + 18}" fill="var(--bright)" font-size="12" font-family="var(--mono)">${esc(g.name.length > 20 ? g.name.slice(0, 19) + '…' : g.name)}</text><text x="${x + 10}" y="${y + 34}" fill="${c}" font-size="10.5" font-family="var(--mono)">${esc(now ? 'the 3b is on it' : g.status)} · ${g.tries} tries</text></g>`;
+    if (now) front += mk; else out += mk;
     let yy = y + H + GY; for (const k of kids.get(g.name) || []) { out += `<path d="M${x + 14} ${y + H} V${yy + H / 2} H${x + 14 + d}" fill="none" stroke="var(--edge)" stroke-width="1.2"/>`; yy = box(k, x + 14 + d, yy, 0) ; } maxY = Math.max(maxY, yy); return yy; };
   roots.forEach((g, i) => { const rx = x0 + i * (W + GX), ry = y0 + 28;
     // each root wired to the step that builds it: the beginning
     if (A) out = `<path class="wire ${g.status === 'passed' ? 'done' : ''}" d="M${A.x + 107},${A.y + 84} C${A.x + 107},${ry - 20} ${rx + W / 2},${A.y + 84 + 20} ${rx + W / 2},${ry}"/>` + out;
     box(g, rx, ry, 0); });
   const passed = t.gates.filter((g) => g.status === 'passed').length;
-  return `<text x="${x0}" y="${y0 + 12}" fill="var(--text2)" font-size="12" font-family="var(--mono)">${esc(t.phase || '')} · ${passed} of ${t.gates.length} gates passed · grows as the build opens, breaks down and passes them</text>${out}`;
+  return `<text x="${x0}" y="${y0 + 12}" fill="var(--text2)" font-size="12" font-family="var(--mono)">${esc(t.phase || '')} · ${passed} of ${t.gates.length} gates passed · grows as the build opens, breaks down and passes them</text>${out}${front}`;
 }
 // PC26 (his, 2026-11-25: "Anything starts as the first step. Then everything branches from that one"): the steps a run grew (each naming
 // the step it grew from) are drawn as steps of the pipeline, wired to that step, so the canvas shows the run as it really went
@@ -664,7 +669,11 @@ function applyVp() { const v = $('vp'); if (v && S.vp) v.setAttribute('transform
 function select(t, id) { S.sel = id ? { t, id } : null; S.sig = ''; work(); dock(); }
 function bindCanvas() {
   const s = document.querySelector('svg.cv'); if (!s) return; let drag = null;
-  s.onmousedown = (e) => { if (e.button || e.target.closest('.node,.gate')) return; drag = { x: e.clientX, y: e.clientY, vx: S.vp.x, vy: S.vp.y }; s.classList.add('drag'); };
+  let pd = null;   // a piece box being dragged (gateTree)
+  s.addEventListener('mousedown', (e) => { const pc = !e.button && e.target.closest('.piece'); if (!pc) return; e.stopPropagation(); const n = pc.dataset.piece, o = (S.pieceOff || {})[n] || { dx: 0, dy: 0 }; pd = { n, el: pc, x: e.clientX, y: e.clientY, dx: o.dx, dy: o.dy }; pc.style.cursor = 'grabbing'; }, true);
+  addEventListener('mousemove', (e) => { if (!pd) return; const k = (S.vp && S.vp.k) || 1; pd.mx = (e.clientX - pd.x) / k; pd.my = (e.clientY - pd.y) / k; pd.el.setAttribute('transform', `translate(${pd.mx},${pd.my})`); });
+  addEventListener('mouseup', () => { if (!pd) return; const d = pd; pd = null; if (d.mx == null) return; (S.pieceOff || (S.pieceOff = {}))[d.n] = { dx: d.dx + d.mx, dy: d.dy + d.my }; try { localStorage.setItem('pieceOff:' + S.pieceOffPhase, JSON.stringify(S.pieceOff)); } catch (_) {} S.sig = ''; work(); });
+  s.onmousedown = (e) => { if (e.button || e.target.closest('.node,.gate,.piece')) return; drag = { x: e.clientX, y: e.clientY, vx: S.vp.x, vy: S.vp.y }; s.classList.add('drag'); };
   onmousemove = (e) => { if (!drag) return; S.vp.x = drag.vx + e.clientX - drag.x; S.vp.y = drag.vy + e.clientY - drag.y; applyVp(); };
   onmouseup = () => { drag = null; s.classList.remove('drag'); };
   s.onwheel = (e) => { e.preventDefault(); const r = s.getBoundingClientRect(); zoom(e.deltaY < 0 ? 1.1 : 1 / 1.1, e.clientX - r.left, e.clientY - r.top); };
