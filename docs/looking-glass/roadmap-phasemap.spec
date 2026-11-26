@@ -164,3 +164,7 @@ spec:
 # his call the same day: "everything in Emerge (the renderer too)"). emerge/emerge/lang/native/window.eg compiles window-screen.json into
 # window.exe, no JavaScript and no markup in it. Seen on his machine 2026-11-26. Next: its own window procedure (input), then the screen's
 # elements as data (P2) drawn by the same compiler. Shared with CIE12 (docs/2026-11-06-cie-eg-build-phasemap.spec).
+# · then to his spec's smallest slice word for word (SPEC v0.3 §4, DECIDED: "one borderless window that draws one rectangle from a data
+#   struct"; he sent the bundle 2026-11-26): WS_POPUP, the whole surface painted from the data (background, then the rectangle), Escape
+#   ends it (exit 0). Seen on his machine. The bundle (D:\Projects\4-Specs-Ideas\Glass Engine\looking-glass-bundle.zip) is v0.3, already
+#   here word for word; nothing new in it.

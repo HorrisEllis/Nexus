@@ -2,18 +2,21 @@
 // no markup in the program it writes. Run from lang/native: eg run window.eg  (writes window.exe from window-screen.json)
 // James, 2026-11-26: "Anyway you could get looking glass beginning? Emerge also needs emerge.exe" · earlier: "i am describing lookinglass"
 // · "everything in Emerge (the renderer too)". Looking Glass P1 (docs/looking-glass/roadmap-phasemap.spec: "Window + one rectangle from
-// data") and CIE12's first brick (imports from KERNEL32, USER32 and GDI32: pe.eg pe_libs). The window is Windows' own STATIC class, so no
-// callback is needed yet; it is painted each frame and the program ends when the window is closed.
+// data") and CIE12's first brick (imports from KERNEL32, USER32 and GDI32: pe.eg pe_libs). His spec's smallest slice (SPEC v0.3 §4,
+// DECIDED): "one borderless window that draws one rectangle from a data struct." The window is Windows' own STATIC class (no callback
+// yet), borderless (WS_POPUP); each frame paints the whole surface from the data, the background then the rectangle; Escape ends it.
 use "./x64.eg" as x
 use "./pe.eg" as pe
 
 let screen = parse_json(read_file("window-screen.json"))
 let w = screen.window
 let r = screen.rect
-let color = r.color[0] + r.color[1] * 256 + r.color[2] * 65536          // COLORREF: 0x00BBGGRR
+fn rgb(c) = c[0] + c[1] * 256 + c[2] * 65536                           // COLORREF: 0x00BBGGRR
+let color = rgb(r.color)
+let back = rgb(w.background)
 
 // the frame on the stack (rsp, 16-aligned after the sub): 0..31 shadow · 32..95 stack arguments · 96 MSG · 144 RECT · 160 hwnd
-// · 168 brush · 176 hdc
+// · 168 brush · 176 hdc · 184 the whole surface's RECT · 200 the background's brush
 fn d32(n) = x.le32(n)
 fn put_q(off, n) = [0x48, 0xC7, 0x84, 0x24] + d32(off) + d32(n)        // mov qword [rsp+off], imm32
 fn put_d(off, n) = [0xC7, 0x84, 0x24] + d32(off) + d32(n)              // mov dword [rsp+off], imm32
@@ -28,25 +31,31 @@ let code = [
   { label: "start" },
   x.sub_rsp(232),
   [0xB9] + d32(color), x.call_rip(), { rel32: "CreateSolidBrush" }, save_rax(168),
+  [0xB9] + d32(back), x.call_rip(), { rel32: "CreateSolidBrush" }, save_rax(200),
   [0x31, 0xC9],                                    // xor ecx, ecx        dwExStyle
   [0x48, 0x8D, 0x15], { rel32: "cls" },            // lea rdx, [rip+cls]  "STATIC"
   [0x4C, 0x8D, 0x05], { rel32: "title" },          // lea r8, [rip+title]
-  [0x41, 0xB9] + d32(0x10CF0000),                  // mov r9d, WS_OVERLAPPEDWINDOW | WS_VISIBLE
+  [0x41, 0xB9] + d32(0x90000000),                  // mov r9d, WS_POPUP | WS_VISIBLE (borderless)
   put_q(32, w.x), put_q(40, w.y), put_q(48, w.w), put_q(56, w.h),
   put_q(64, 0), put_q(72, 0), put_q(80, 0), put_q(88, 0),
   x.call_rip(), { rel32: "CreateWindowExA" }, save_rax(160),
   put_d(144, r.x), put_d(148, r.y), put_d(152, r.x + r.w), put_d(156, r.y + r.h),
+  put_d(184, 0), put_d(188, 0), put_d(192, w.w), put_d(196, w.h),
   { label: "pump" },
   rcx_lea(96), [0x31, 0xD2], [0x45, 0x31, 0xC0], [0x45, 0x31, 0xC9], put_q(32, 1),   // PeekMessageA(&msg, 0, 0, 0, PM_REMOVE)
   x.call_rip(), { rel32: "PeekMessageA" },
   [0x85, 0xC0], [0x0F, 0x84], { rel32: "draw" },   // test eax, eax · jz draw
+  [0x81, 0xBC, 0x24] + d32(104) + d32(0x100), [0x0F, 0x85], { rel32: "send" },     // msg.message == WM_KEYDOWN?
+  [0x48, 0x81, 0xBC, 0x24] + d32(112) + d32(0x1B), [0x0F, 0x84], { rel32: "done" }, // and wParam == VK_ESCAPE: end
+  { label: "send" },
   rcx_lea(96), x.call_rip(), { rel32: "DispatchMessageA" },
   [0xE9], { rel32: "pump" },
   { label: "draw" },
   rcx_at(160), x.call_rip(), { rel32: "IsWindow" },
   [0x85, 0xC0], [0x0F, 0x84], { rel32: "done" },   // closed: the program ends
   rcx_at(160), x.call_rip(), { rel32: "GetDC" }, save_rax(176),
-  [0x48, 0x89, 0xC1], rdx_lea(144), r8_at(168), x.call_rip(), { rel32: "FillRect" },       // FillRect(hdc, &rect, brush)
+  [0x48, 0x89, 0xC1], rdx_lea(184), r8_at(200), x.call_rip(), { rel32: "FillRect" },       // the background: FillRect(hdc, &surface, back)
+  rcx_at(176), rdx_lea(144), r8_at(168), x.call_rip(), { rel32: "FillRect" },              // the rectangle: FillRect(hdc, &rect, brush)
   rcx_at(160), rdx_at(176), x.call_rip(), { rel32: "ReleaseDC" },
   [0xB9] + d32(16), x.call_rip(), { rel32: "Sleep" },
   [0xE9], { rel32: "pump" },
