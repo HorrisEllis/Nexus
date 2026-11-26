@@ -12,7 +12,8 @@
   const { cg, h, call, toast, busy, pane, row, btn, section } = window.CGS;
 
   const HOW = {
-    electron: 'In the Nexus folder: npm install electron@latest, then restart Clear Glass.',
+    // 2026-11-26 — his "i dont do cli" · "add the pipeline so i can do it my self": a pipeline, not a command (cos/build/update-electron.js, CGE2)
+    electron: 'In COS › Automation, run "Update Electron (Clear Glass)", then close Clear Glass when it asks; it checks the new one and puts the old one back if it fails.',
     clearGlass: 'Pull the branch (git pull), or drop the change pack on a Nexus repo\'s Versionium tab and apply it.',
     nexus: 'Pull the branch (git pull), or drop the change pack on a Nexus repo\'s Versionium tab and apply it.',
   };
