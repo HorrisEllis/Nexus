@@ -16,6 +16,9 @@ fn args_for(file: string, s: map): list {
   if has(s, "gpu_layers") { a = push(push(a, "-ngl"), str(s.gpu_layers)) }
   if has(s, "threads") { a = push(push(a, "-t"), str(s.threads)) }
   if has(s, "slot_dir") { a = push(push(a, "--slot-save-path"), s.slot_dir) }
+  // 2026-11-25 (EMB12, his "three different 3b"): a reasoning model (smallthinker) at the requests' low temperature repeats one paragraph until
+  // its tokens run out and never answers; the engine's own repetition penalty, per model, his to set
+  if has(s, "repeat_penalty") { a = push(push(a, "--repeat-penalty"), str(s.repeat_penalty)) }
   return a
 }
 

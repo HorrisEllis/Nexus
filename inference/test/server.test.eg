@@ -6,6 +6,7 @@ test "each setting becomes the engine's option; one left out is the engine's own
   expect S.args_for("m.gguf", {}) == ["-m", "m.gguf", "--host", "127.0.0.1"]
   expect S.args_for("m.gguf", { port: 9931, slots: 3, ctx: 8192 }) == ["-m", "m.gguf", "--host", "127.0.0.1", "--port", "9931", "-np", "3", "-kvu", "-c", "8192"]
   expect S.args_for("m.gguf", { gpu_layers: 99, threads: 8, slot_dir: "d/slots" }) == ["-m", "m.gguf", "--host", "127.0.0.1", "-ngl", "99", "-t", "8", "--slot-save-path", "d/slots"]
+  expect S.args_for("m.gguf", { repeat_penalty: 1.15 }) == ["-m", "m.gguf", "--host", "127.0.0.1", "--repeat-penalty", "1.15"]
 }
 
 test "the 3b and the 16b each have their own: three slots for one, one for the other" {

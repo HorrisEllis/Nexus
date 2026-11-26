@@ -159,7 +159,9 @@ const _adv = (() => {
   const eq = (a, b) => JSON.stringify(a) === JSON.stringify(b);
   const same = (out, want) => { try { return eq(JSON.parse(out), lit(want)); } catch (_) { return false; } };
   const sameLit = (a, b) => { try { return eq(lit(a), lit(b)); } catch (_) { return false; } };
+  // a reader writes "call -> result" or "call => result" too (found 2026-11-25 on the three-model run: llama3.2 wrote ->, and every case read as unread)
   const clean = (text, name) => String(text || '').split('\n').map((s) => s.trim().replace(/^[-*•\d.)\s`]+/, '').replace(/`+$/, ''))
+    .map((l) => /\)\s*==/.test(l) ? l : l.replace(/^(.*\))\s*(?:->|=>|→|=)\s*(?=\S)/, '$1 == '))
     .filter((l) => l.startsWith(name + '(') && /\)\s*==\s*\S/.test(l));
   const readable = (l) => { try { args(l); lit(wantOf(l)); return true; } catch (_) { return false; } };
   // a case must fit the signature (found on the first real run: maps passed where models is a string, three arguments for two): its count of

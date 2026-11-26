@@ -82,6 +82,7 @@ fn problems(s: map): list {
     if type_of(m.port) != "num" or m.port < 1024 or m.port > 65535 { out = push(out, k + ": port must be 1024 to 65535") }
     if ports contains m.port { out = push(out, k + ": port " + str(m.port) + " is taken by another model") }
     ports = push(ports, m.port)
+    if has(m, "repeat_penalty") and (type_of(m.repeat_penalty) != "num" or m.repeat_penalty < 1 or m.repeat_penalty > 2) { out = push(out, k + ": repeat penalty must be 1 to 2") }
     for i in m.serves { if not (INTENTS contains i) { out = push(out, k + ": no intent called " + i) } }
   }
   if type_of(s.queue.batch) != "num" or s.queue.batch < 1 { out = push(out, "queue: pieces per call must be at least 1") }
