@@ -1850,6 +1850,22 @@ phases_addendum_2026_11_24_model_server:
         every event, step, decision and action in Nexus is a node with its parent, on one tree from the first step (a model call, a gate's
         verdict, RAID's yes or no, the supervisor's act, a failure mode); nothing happens that is not on it. PC28's cause and effect is this
         tree's edges; PG5's RAID decisions and reports are its decision nodes.
+        Then, his: "Everything is. Macros. Frameworks. All of it. Look at all the phases." The coder's census of all 261 maps (1,379 phases),
+        2026-11-25: 95 phases name a macro, framework, event, ledger, lineage, tree, trace, timeline, snapshot or record; 93 are not built. He
+        has said this before: L15 (2026-11-17) "Using the pipeline as a dicision tree. Like dynamic, like a lineage. A visual canvas ... like
+        the pipeline is everything", and L16's contract ledger "from the moment the compartment gets created". The open phases are pieces of
+        this one tree, by family:
+          the tree itself: L15, L16, KT1 (one semantic tree, observations at any node), FR7 (the causal record: phase → run → attempt →
+            change → test → version), PC24 (every request a timeline), TL3 (one timeline per work, a projection, never a second record)
+          events as nodes: SW3 (an event per call in each system's own ledger), VC1 (a change per event; shelved), CE5, MR2, MR9, OL9
+          macros and frameworks as steps: CM1 (the pipeline absorbs macros and automation), PC2 (procedures and frameworks as steps), Q2,
+            SF2, KB4, PL8, MR6, MG7, UM1, SN1, CM3, BM1
+          rewind, snapshot and branch: CP5a, CP5c, CP5d (rewind and branch a compartment), GW7, GW11, TL4, CV3, DBG5, IF4, OL8, L12, DK7, F2
+          decisions and provenance: PV1, EW1, RA1 (root cause through provenance), APV0, APV4, GW3, SE2, FI8, PS1
+          ledgers: PF0, JL1, MK1, MK2, GC6, SL11, IN2, CIE3, EQ2, EQ5, PIC2, OL10, FR1, FR6, CN11, VE1, VE4, VE6, GD5c, FX1, PD2, MT1, MT6, AC9
+        The rule that joins them, his and TL3's: one tree, every node a file with its parent (persistence), each system writing its own
+        nodes (sovereignty, AXIOMS §5.16), the canvas and every timeline a view of it, never a second record. Each family's phases are
+        expanded into this tree, not written again (phase-ledger covers).
       d_the_overlap: "parallel pipelines per domain on one problem; identical primitives, principles, patterns or invariants matched and joined; counted anomaly, coincidence, invariant; sigma and delta shown. Its proof is registered in FRAMEWORK-THREADS before it runs"
   PC27_each_output_measured_by_his_equations:
     status: OPEN
