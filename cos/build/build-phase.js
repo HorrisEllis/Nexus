@@ -15,6 +15,28 @@ const LADDER = inp.ladder || 'huihui_ai/qwen2.5-coder-abliterate:3b,hf.co/mrader
 const lastRun = () => fs.readdirSync(BUILD).filter((f) => /^cbuild-.*\.jsonl$/.test(f)).map((f) => ({ f, t: fs.statSync(path.join(BUILD, f)).mtimeMs })).sort((a, b) => b.t - a.t)[0];
 const rowsOf = (f) => fs.readFileSync(path.join(BUILD, f), 'utf8').split('\n').filter(Boolean).map((l) => { try { return JSON.parse(l); } catch (_) { return {}; } });
 const rounds = []; let best = -1;
+// 2026-11-26 — the queue (his: "What ever gets the pipeline building all of this the quickest. Once that happens, nexus can build in my sleep" ·
+// "what if we build per node. then we could have all of the phase nodes build one by one. bottom up?"). Idearium's own queue of ready phases
+// (GET /api/phases/next: dependencies closed, files named, no open decision; sorted by what each unlocks) is read by route; the phases the
+// Emerge builder can build (an .eg file of their own that is not a test) each become a branch that plans and builds itself piece by piece
+// (input.steps). They wait on nothing but this step, and the pipeline's parallel setting runs them one at a time: a phase that sticks files
+// its failure and grows its climb, and the next phase still runs.
+if (inp.queue) {
+  const http = require('http');
+  const get = (port, p) => new Promise((res) => { const q = http.get({ host: '127.0.0.1', port, path: p, timeout: 180000 }, (r) => { let t = ''; r.on('data', (c) => t += c); r.on('end', () => { try { res(JSON.parse(t)); } catch (_) { res(null); } }); }); q.on('timeout', () => { q.destroy(); res(null); }); q.on('error', () => res(null)); });
+  (async () => {
+    const q = await get(4800, '/api/phases/next');
+    if (!q || !Array.isArray(q.queue)) { console.log(JSON.stringify({ ok: false, why: 'Idearium did not give its queue of ready phases (GET /api/phases/next)' })); process.exit(1); }
+    const emerge = (x) => (x.files || []).some((f) => /\.eg$/.test(f) && !/(^|\/)test\//.test(f) && !/\.test\.eg$/.test(f));
+    const take = q.queue.filter(emerge).slice(0, Number(inp.limit) || 3);
+    const skipped = q.queue.filter((x) => !emerge(x)).slice(0, 10).map((x) => `${x.id} (no Emerge file of its own)`);
+    const SID = (s) => String(s).replace(/[^\w.:-]/g, '_');
+    const branches = take.map((x) => ({ id: `phase:${SID(x.id)}`, label: `build ${x.id}`, why: `ready, unlocks ${x.unlocks}: ${x.why}`, onFail: 'continue',
+      step: { type: 'script', config: { script: 'build-phase.js', input: { map: x.map, phase: x.id, steps: true, ladder: inp.ladder || LADDER, ...(inp.adversaries ? { adversaries: inp.adversaries } : {}) }, timeoutMs: 2700000 } } }));
+    console.log(JSON.stringify({ ok: true, ready: q.queue.length, building: take.map((x) => x.id), skipped, branches }));
+    process.exit(0);
+  })();
+} else
 // 2026-11-26 — one piece, one step (his: "it should not be one box. one box is one step. each step has to build upon the last"). With
 // input.steps, the first step plans: one branch per planned piece not yet passed, each waiting on the one before. A piece's step builds only
 // that piece (emerge-build --only); a helper it needs becomes its own step, then the piece again after it; held with nothing to break it into,
@@ -60,6 +82,7 @@ for (let i = 1; i <= ROUNDS; i++) {
   if (passed <= best) break; best = passed;
 }
 }
+if (inp.queue) return;   // the queue answers by itself, above (a module's top level may return)
 // 2026-11-25 (his: "Have it expand itself, fix itself, get it working using nexus to get it working if not ... This is meant to be autonoius"):
 // a build that made no progress says what to try next, as branches the pipeline grows (PC26): the failure filed with Cortex (evidence, never a
 // recovery), and the same build on the next model up (his: "a bigger model, only if we hit an actual wall" — a round with no progress is the
