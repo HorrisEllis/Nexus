@@ -348,12 +348,27 @@ async function endState({ ph, plan, src, mapText }) {
         const specFile = ph.spec || null; const cands = specFile ? [specFile] : [];
         for (const sf of cands) { const t = codeOf(sf) || ''; const at = t.indexOf('- id: ' + mod); if (at < 0) continue;
           const end = t.indexOf('\n    - id:', at + 5); const blk = t.slice(at, end < 0 ? t.length : end);
-          const ex = /exports:\s*\[(.*)\]\s*$/m.exec(blk);   // the whole line: an export's own text may hold brackets (GW0's "[{ id, … }]") desc = ((/description:\s*>?-?\s*\n?([\s\S]*?)\n\s{6}[a-z_]+:/.exec(blk) || [])[1] || '').replace(/\s+/g, ' ').trim();
+          const ex = /exports:\s*\[(.*)\]\s*$/m.exec(blk);   // the whole line: an export's own text may hold brackets (GW0's "[{ id, … }]")
+          desc =((/description:\s*>?-?\s*\n?([\s\S]*?)\n\s{6}[a-z_]+:/.exec(blk) || [])[1] || '').replace(/\s+/g, ' ').trim();
           if (ex) exps = (ex[1].match(/"(?:[^"\\]|\\.)*"/g) || []).map((s) => s.slice(1, -1)); }
       }
       const fromSpec = exps.map((s) => /^([A-Za-z_]\w*)\s*\(([^)]*)\)/.exec(s)).filter(Boolean).map((m) => ({ name: m[1], signature: `${m[1]}(${m[2]})`, params: m[2].split(',').map((x) => x.trim().split(/[:\s]/)[0]).filter(Boolean), does: desc || String(ph.does || '') }));
       const have = codeOf(target) || ''; const fromFile = [...have.matchAll(/^fn\s+([A-Za-z_]\w*)\s*\(([^)]*)\)/gm)].map((m) => ({ name: m[1], signature: `${m[1]}(${m[2]})`, params: m[2].split(',').map((x) => x.trim().split(/[:\s]/)[0]).filter(Boolean), does: String(ph.does || '') }));
-      const exports = fromSpec.length ? fromSpec : fromFile;
+      let exports = fromSpec.length ? fromSpec : fromFile;
+      // 2026-11-26 — James: "i want to be able to have the pipeline build specs" · "the pipeline is worthless until that happens end to end".
+      // No spec module and no file: the strongest reader proposes the functions from the phase's own words (a line each, Emerge fn shape),
+      // kept beside the build (<PHASE>.signatures.json, not confirmed by James) and said as a row; the examples and the test still judge them.
+      if (!exports.length && ph.does) {
+        const m = String(arg('spec-writer', 'hf.co/mradermacher/DeepSeek-Coder-V2-Lite-Instruct-abliterated-i1-GGUF:Q4_K_M'));
+        const q = ['A module to write in a small functional language. Its file: ' + target, 'What it must do: ' + String(ph.does).slice(0, 1500),
+          'Name the pure functions it needs (2 to 5), inputs in, result out, no files, no network.',
+          'One per line, exactly: name(param1, param2) — one sentence of what it returns. Only the lines.'].join('\n');
+        let said = ''; try { said = await ask(q, m, 'signatures', 1); } catch (e) { said = ''; }
+        exports = [...String(said || '').matchAll(/^\s*[-*\d.)\s]*`?([a-z_]\w*)\s*\(([^)]*)\)`?\s*[—–:-]+\s*(.+)$/gim)].slice(0, 5)
+          .map((x) => ({ name: x[1], signature: `${x[1]}(${x[2]})`, params: x[2].split(',').map((p) => p.trim().split(/[:\s]/)[0]).filter(Boolean), does: x[3].trim() + ' (part of: ' + String(ph.does).slice(0, 400) + ')' }));
+        if (exports.length) { try { fs.mkdirSync(TASKS, { recursive: true }); fs.writeFileSync(path.join(TASKS, `${PHASE}.signatures.json`), JSON.stringify({ phase: PHASE, map: MAP, target, by: m, confirmedByJames: false, at: Date.now(), exports }, null, 1)); } catch (_) {}
+          row('signatures-proposed', { note: `${target}: ${exports.map((e) => e.signature).join('; ')} — proposed by ${m} from the phase's words, not confirmed by James` }); }
+      }
       if (exports.length) { src = { path: target, exports }; PURE = true; row('planned-emerge', { note: `${target}: ${exports.length} function(s) from ${fromSpec.length ? 'its spec module (' + [].concat(ph.blocks || []).join(', ') + ')' : 'its own file'} (no model)` }); }
     }
   }
@@ -389,12 +404,20 @@ async function endState({ ph, plan, src, mapText }) {
   }
   if (!examples.length) {
     const three = ADVERSARIES.length >= 3 ? ADVERSARIES : ['huihui_ai/qwen2.5-coder-abliterate:3b', 'huihui_ai/llama3.2-abliterate:3b', 'huihui_ai/smallthinker-abliterated:3b'];
-    const readers = three.map((m) => ({ name: m, ask: (message, { gap } = {}) => ask(message, m, (gap || '') + ':examples', 1) }));
+    // 2026-11-26 — James: "cheap first, as long as thats noted" · "the pipeline is worthless until that happens end to end with something real".
+    // The small readers first; where they agree on nothing, the readers climb once (the strongest writes, two others check) and the climb is a row.
+    const STRONG = String(arg('strong-readers', 'hf.co/mradermacher/DeepSeek-Coder-V2-Lite-Instruct-abliterated-i1-GGUF:Q4_K_M,huihui_ai/qwen2.5-coder-abliterate:7b,huihui_ai/qwen2.5-coder-abliterate:3b')).split(',').map((x) => x.trim()).filter(Boolean);
+    const readersOf = (ms) => ms.map((m) => ({ name: m, ask: (message, { gap } = {}) => ask(message, m, (gap || '') + ':examples', 1) }));
     const agreed = [];
     for (const e of (src.exports || []).filter((x) => /\(/.test(x.signature || ''))) {
       const does = (String(e.does || ph.does || '').slice(0, 600) + (specText ? ' — its spec: ' + specText : '')).slice(0, 1400);   // the spec's contracts, his, before any model's guess
-      const r = await require(path.join(ROOT, 'idearium', 'lib', 'emerge-rung.cjs')).agreedExamples({ name: e.name, signature: e.signature, does, readers });
+      let r = await require(path.join(ROOT, 'idearium', 'lib', 'emerge-rung.cjs')).agreedExamples({ name: e.name, signature: e.signature, does, readers: readersOf(three) });
       row('examples-agreed', { gap: e.name, note: r.why, examples: r.examples, tension: r.tension.slice(0, 6) });
+      if (!r.examples.length && STRONG.length >= 3) {
+        row('climbed', { gap: e.name, note: `the small readers agreed on no case for ${e.name}; asked the stronger readers (${STRONG.join(', ')}), noted as a climb` });
+        r = await require(path.join(ROOT, 'idearium', 'lib', 'emerge-rung.cjs')).agreedExamples({ name: e.name, signature: e.signature, does, readers: readersOf(STRONG) });
+        row('examples-agreed', { gap: e.name, note: r.why + ' (after the climb)', examples: r.examples, tension: r.tension.slice(0, 6), climbed: true });
+      }
       agreed.push(...r.examples);
     }
     if (agreed.length) {
