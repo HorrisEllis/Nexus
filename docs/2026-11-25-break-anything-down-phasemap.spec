@@ -97,3 +97,33 @@ phases:
     depends_on: [UD3]
     does: >
       Each section of his Innovation Toolkit a pipeline step kind (Deconstruct, Find the gaps, Map the leverage, Horizontal contamination check, Rebuild, Hostile verification, Iterate and integrate, Failure mode detection), so any pipeline can run his framework on any input; PC2 procedures and frameworks as steps.
+
+  UD13_idearium_decomposition_moves_into_the_pipeline:
+    status: pending
+    depends_on: [UD3]
+    does: >
+      His 2026-11-26: "i feel like idearium has way too much that the pipeline should". Idearium splits a spec into chunks (spec-engine blocks.yaml and templates, compiler-t0, speceng.build) and dispatches each through chunk-dispatch (a retry ladder and a verifier from lib/seam/queue.js). Each of these becomes a pipeline step kind in COS, reached by route, so any pipeline decomposes and dispatches anything, not only Idearium builds. Corrected the same night, his: "no. idearium should be migrating all of its pipeline tools. then idearium uses cos not the other way around." So the tools move: COS owns them, Idearium calls COS for them, and nothing in COS reaches into Idearium. And his: "each step a node. instead of a step. that way it can be anything ... each pipeline would be a series of nodes. each gate knows whats needed for its node" · "first box should be the request. the last one the contract. each step either builds from the last or from the mulitidential dag for whats needed for each layer as a check list for each node" · "the intention is always the end-state ... working and planning backwards, building forward but nonlinear". Found already in Nexus (his "look at the phases before anything"): COS keeps each request as node files (cos/pipeline/runs.eg: run.run the request, the .contract booked with RAID, dag.dag, steps/*.step one node per step with its conditions, nodes/*, gates/*), and the associative lattice is the intelligence system's (intelligence/lattice/).
+
+  UD14_algebraic_gates_laws_checked_on_every_piece:
+    status: pending
+    depends_on: [UD3]
+    does: >
+      His 2026-11-26: "what about using algebra to test and verify outputs ... the most vital piece is quality assurance". Each piece gets laws as well as examples: identity, idempotence, monotonicity, inverse and round-trip, composition (served_by: the empty list serves any file; adding text to the list never unserves a file). Emerge checks them on generated inputs with no model and no known answers; a piece that breaks a law is refused with the law and the input that broke it. Laws come from the sentence (read by the three readers) and from crystallized invariants.
+
+  UD15_the_graph_substrate_every_piece_a_node_of_the_kn:
+    status: pending
+    depends_on: [UD3]
+    does: >
+      Emerge compiles a spec into a knowledge graph whose unfilled nodes (BLACK) are gaps (kg-builder, specDepth). The pipeline tree and that graph become one structure: a step is a node, its contract the node, its gaps the BLACK nodes, so a build is the graph filling in.
+
+  UD16_crystallization_in_the_loop_solved_pieces_reused:
+    status: pending
+    depends_on: [UD5]
+    does: >
+      WARP crystals and the intelligence crystallizer (three sightings is an invariant): a piece whose contract was solved before is served from its crystal before any model is asked; a pattern seen three times across runs is promoted to a component or a law.
+
+  UD17_raid_routes_bricks_chunk_size_chosen_by_measured:
+    status: pending
+    depends_on: [UD3]
+    does: >
+      Each step is a brick RAID routes (which model, which tool) with its proof; the chunk size is dynamic: a piece is split until its size is one the chosen model has passed before (its measured pass rate per size), so the smallest model gets pieces it can do.
