@@ -31,9 +31,14 @@ if (inp.queue) {
       if (going.length > 1) { console.log(JSON.stringify({ ok: true, skipped: true, why: `an earlier run is still going (${going.slice(1).map((r) => r.id.slice(0, 8)).join(', ')}): this one steps aside`, branches: [] })); process.exit(0); } }
     const q = await get(4800, '/api/phases/next');
     if (!q || !Array.isArray(q.queue)) { console.log(JSON.stringify({ ok: false, why: 'Idearium did not give its queue of ready phases (GET /api/phases/next)' })); process.exit(1); }
-    const emerge = (x) => (x.files || []).some((f) => /\.eg$/.test(f) && !/(^|\/)test\//.test(f) && !/\.test\.eg$/.test(f));
+    // buildable: an .eg file of its own, and examples the builder can test against, read by the builder's own reader (lib/test-first.js
+    // examplesFrom). Found on the first scheduled run (71eefa48): GW0, OL1 and OS3 had none, the builder refused all three, and OS3's 39
+    // "pieces" were a JavaScript file's constants
+    const TF = require(path.join(ROOT, 'lib', 'test-first.js')), mapText = {};
+    const hasExamples = (x) => { try { mapText[x.map] = mapText[x.map] || fs.readFileSync(path.join(ROOT, x.map), 'utf8'); return (TF.examplesFrom(mapText[x.map], x.id) || []).length > 0; } catch (_) { return false; } };
+    const emerge = (x) => (x.files || []).some((f) => /\.eg$/.test(f) && !/(^|\/)test\//.test(f) && !/\.test\.eg$/.test(f)) && hasExamples(x);
     const take = q.queue.filter(emerge).slice(0, Number(inp.limit) || 3);
-    const skipped = q.queue.filter((x) => !emerge(x)).slice(0, 10).map((x) => `${x.id} (no Emerge file of its own)`);
+    const skipped = q.queue.filter((x) => !emerge(x)).slice(0, 10).map((x) => `${x.id} (${(x.files || []).some((f) => /\.eg$/.test(f)) ? 'no examples to build against' : 'no Emerge file of its own'})`);
     const SID = (s) => String(s).replace(/[^\w.:-]/g, '_');
     const branches = take.map((x) => ({ id: `phase:${SID(x.id)}`, label: `build ${x.id}`, why: `ready, unlocks ${x.unlocks}: ${x.why}`, onFail: 'continue',
       step: { type: 'script', config: { script: 'build-phase.js', input: { map: x.map, phase: x.id, steps: true, ladder: inp.ladder || LADDER, ...(inp.adversaries ? { adversaries: inp.adversaries } : {}) }, timeoutMs: 2700000 } } }));
@@ -54,7 +59,11 @@ if (inp.steps) {
   const run1 = (piece) => spawnSync(process.execPath, [path.join(ROOT, 'cos', 'build', 'emerge-build.js'), '--map', MAP, '--phase', PHASE, '--ladder', LADDER, ...(piece ? ['--only', piece] : []), ...(inp.adversaries ? ['--adversaries', String(inp.adversaries)] : [])], { cwd: ROOT, stdio: 'ignore', timeout: 3 * 3600 * 1000 });
   if (!inp.piece) {
     let b = builds()[0]; if (!b || !b.rs.some((r) => r.state === 'planned')) { run1(null); b = builds()[0]; }
-    const rs = (b && b.rs) || [], planned = (((rs.find((r) => r.state === 'planned') || {}).exports) || []).map((x) => x.name);
+    const rs = (b && b.rs) || [];
+    // the builder refused the phase (no examples, no plan): said as a failure, never a silent "done" with nothing planned (71eefa48)
+    const refusedRow = rs.find((r) => r.state === 'refused');
+    if (refusedRow || !rs.some((r) => r.state === 'planned')) { console.log(JSON.stringify({ ok: false, phase: PHASE, why: refusedRow ? 'the builder refused it: ' + String(refusedRow.note || '').slice(0, 300) : 'the builder planned nothing' })); process.exit(1); }
+    const planned = (((rs.find((r) => r.state === 'planned') || {}).exports) || []).map((x) => x.name).filter((n) => !/^[A-Z][A-Z0-9_]*$/.test(n));   // a constant is no piece to build
     const pcs = ([...rs].reverse().find((r) => r.state === 'pieces') || {}).pieces || [], ok = new Set(pcs.filter((p) => p.status === 'passed').map((p) => p.name));
     const todo = planned.filter((n) => !ok.has(n)); let prev = null;
     const branches = todo.map((n, i) => { const s = pieceStep(n, i ? `after ${todo[i - 1]}` : 'the first piece not yet built', prev ? [prev] : null); prev = s.id; return s; });
@@ -62,6 +71,9 @@ if (inp.steps) {
     process.exit(0);
   }
   run1(inp.piece);
+  { const r0 = (builds()[0] || {}).rs || [], refusedRow = r0.find((r) => r.state === 'refused');
+    // refused before any model was asked (no examples): no model can fix that, so no climb and no failure filed per piece
+    if (refusedRow) { console.log(JSON.stringify({ ok: false, phase: PHASE, piece: inp.piece, why: 'the builder refused it: ' + String(refusedRow.note || '').slice(0, 300) })); process.exit(1); } }
   const rs = (builds()[0] || {}).rs || [], pcs = ([...rs].reverse().find((r) => r.state === 'pieces') || {}).pieces || [], me = pcs.find((p) => p.name === inp.piece) || {};
   if (me.status === 'passed') { console.log(JSON.stringify({ ok: true, phase: PHASE, piece: inp.piece, tries: me.tries, models: me.models })); process.exit(0); }
   const helpers = pcs.filter((p) => p.blocks === inp.piece && p.status !== 'passed').map((p) => p.name);
