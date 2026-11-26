@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-26-raid-queue-and-signal-field-phasemap.spec::RQ1_the_request_waits_in_raid_s_queue
+type: phase
+id: docs_2026-11-26-raid-queue-and-signal-field-phasemap.spec::RQ1_the_request_waits_in_raid_s_queue
+context: >-
+  pipeline phase RQ1_the_request_waits_in_raid_s_queue of
+  docs/2026-11-26-raid-queue-and-signal-field-phasemap.spec
+intent: null
+summary: RQ1_the_request_waits_in_raid_s_queue (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1795718818056
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795718818056
+lastSeenAt: 1795718818056
+fingerprint: null
+payload:
+  id: RQ1_the_request_waits_in_raid_s_queue
+  map: docs/2026-11-26-raid-queue-and-signal-field-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cortex/core/raid/request-queue.eg
+    - cortex/core/raid/test/request-queue.test.eg
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: fbd1721e19aa64dc

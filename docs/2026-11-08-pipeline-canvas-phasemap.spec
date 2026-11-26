@@ -2150,3 +2150,21 @@ phases_addendum_2026_11_24_model_server:
     depends_on: [PC26]
     does: >
       His 2026-11-26: "so have it build looking glass. i want to be able to have the pipeline build specs. no .md i told you that." A pipeline step turns a plan held as .md (a PHASEMAP.md, a ROADMAP.md, a phased SPEC.md) into a .spec phasemap through Idearium's roadmap import (idearium/repo/roadmap-import.js), for Nexus's own docs as well as an imported project's, so the queue can see its phases. First use: docs/looking-glass/PHASEMAP.md (his Looking Glass, phases 0-12) into docs/looking-glass/looking-glass-phasemap.spec. The import's gaps found on it: it refused Nexus's own repo, and it read only `## Phase N` headings (Looking Glass uses `### Phase N`).
+
+# ADDENDUM 2026-11-26 (later) — PC31 expanded, his words on the canvas (the build's pieces drawn loose under its step)
+# James: "what are they for? or in the nodes. also nodes need all the info inside of them. the first node should be deterministic and shows the
+# raid compartment created with each request. the worksurface for the pipeline. then the last node is the end state. each end state needs to
+# work backwards and make a dag from it, like a check list. for everything it might need to solve the problem or fulfill the request. all
+# context is held in each gate for the respective node. every step should be the next node, like an entire timeline, desicion tree, idea or
+# request lineage, thought process, agnostic, my framework the agent tools, macros and commansd with intent should be included per node, as a
+# process that can be used. like the automation engine, gates, all of it should be expanded. nodes, gates, endpoints, etc. replayable,
+# reversable, debuggable. get it working"
+# What Nexus already has for each (the coder's census, read before building, his "always use what nexus has"):
+#   first node, the request's RAID compartment: runs.eg (run.run, its .contract booked with RAID) · planPhase/request (cos/pipeline/index.js)
+#   last node and the DAG backward as a checklist: plan.eg (endState first) · backward.eg (UD24: start, propose, open_of, ready_of, as_contract_dag)
+#   context held in each gate: gate.eg (a .gate holds its context across runs; checks, asks, on open|closed|gap)
+#   every step the next node, lineage: PC26 (grown steps on the canvas), steps/<t>.step per node (runs.eg)
+#   replay, reverse, debug: PC3 (verified alone, resumed by recheck), FX1a resume, the flight recorder
+# The gap: the "Build one phase" pipeline is one script box; the build's pieces are drawn as a loose list (gateTree), not as nodes. The work:
+# a build runs as the planned .pipeline (plan.eg), its pieces grown as nodes between the RAID-request node and the end-state node, each node's
+# file holding its context, gate, tools and intent. Preview on live data first (his rule), then built.

@@ -1,0 +1,69 @@
+envelope: 1
+uuid: nexus-export-graph-phase:RQ7_adjustable_so_it_learns:173f4711983d14ea
+type: graph
+id: phase:RQ7_adjustable_so_it_learns:173f4711983d14ea
+context: dependency graph of phase RQ7_adjustable_so_it_learns
+intent: null
+summary: 2 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1795718798852
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795718798852
+lastSeenAt: 1795718798852
+fingerprint: null
+payload:
+  for: RQ7_adjustable_so_it_learns
+  kind: phase
+  repo: null
+  hash: 173f4711983d14ea
+  nodes:
+    - path: intelligence/field-weights.eg
+      role: changes
+      exists: false
+      system: intelligence
+    - path: intelligence/test/field-weights.test.eg
+      role: changes
+      exists: false
+      system: intelligence
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 5
+    deps:
+      - docs/2026-11-26-raid-queue-and-signal-field-phasemap.spec::RQ_D2_who_adjusts
+      - docs/2026-11-26-raid-queue-and-signal-field-phasemap.spec::RQ6_the_questions_that_matter
+      - docs/2026-10-30-compartment-metrics-and-learning-loop-phasemap.spec::ML3_learning_loop
+    dependents: []
+    upstream:
+      - docs/2026-10-30-compartment-metrics-and-learning-loop-phasemap.spec::ML1_metric_point
+      - docs/2026-10-30-compartment-metrics-and-learning-loop-phasemap.spec::ML3_learning_loop
+      - docs/2026-11-26-raid-queue-and-signal-field-phasemap.spec::RQ3_signal_metrics_of_an_input
+      - docs/2026-11-26-raid-queue-and-signal-field-phasemap.spec::RQ4_through_warp_2
+      - docs/2026-11-26-raid-queue-and-signal-field-phasemap.spec::RQ5_the_constraint_field_removes_the_noise
+      - docs/2026-11-26-raid-queue-and-signal-field-phasemap.spec::RQ6_the_questions_that_matter
+      - docs/2026-11-26-raid-queue-and-signal-field-phasemap.spec::RQ_D1_which_metrics
+      - docs/2026-11-26-raid-queue-and-signal-field-phasemap.spec::RQ_D2_who_adjusts
+    downstream: []
+    blockedBy:
+      - docs/2026-11-26-raid-queue-and-signal-field-phasemap.spec::RQ_D2_who_adjusts
+      - docs/2026-11-26-raid-queue-and-signal-field-phasemap.spec::RQ6_the_questions_that_matter
+      - docs/2026-10-30-compartment-metrics-and-learning-loop-phasemap.spec::ML3_learning_loop
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 5 · blocked by RQ_D2_who_adjusts, RQ6_the_questions_that_matter, ML3_learning_loop
+      - >-
+        depends on (3): RQ_D2_who_adjusts, RQ6_the_questions_that_matter, ML3_learning_loop · all
+        upstream 8
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-11-26-raid-queue-and-signal-field-phasemap.spec::RQ_D2_who_adjusts
+        kind: declared
+      - from: docs/2026-11-26-raid-queue-and-signal-field-phasemap.spec::RQ6_the_questions_that_matter
+        kind: declared
+      - from: docs/2026-10-30-compartment-metrics-and-learning-loop-phasemap.spec::ML3_learning_loop
+        kind: declared

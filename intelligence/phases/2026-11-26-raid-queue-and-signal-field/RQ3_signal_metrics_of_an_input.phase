@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-26-raid-queue-and-signal-field-phasemap.spec::RQ3_signal_metrics_of_an_input
+type: phase
+id: docs_2026-11-26-raid-queue-and-signal-field-phasemap.spec::RQ3_signal_metrics_of_an_input
+context: >-
+  pipeline phase RQ3_signal_metrics_of_an_input of
+  docs/2026-11-26-raid-queue-and-signal-field-phasemap.spec
+intent: null
+summary: RQ3_signal_metrics_of_an_input (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1795718798831
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795718798831
+lastSeenAt: 1795718798831
+fingerprint: null
+payload:
+  id: RQ3_signal_metrics_of_an_input
+  map: docs/2026-11-26-raid-queue-and-signal-field-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - intelligence/signal-metrics.eg
+    - intelligence/test/signal-metrics.test.eg
+  depends_on:
+    - RQ_D1_which_metrics
+    - ML1_metric_point
+  blocks: []
+  spec: null
+  graph: 25b4e7069a14ddbf

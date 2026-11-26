@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-26-raid-queue-and-signal-field-phasemap.spec::RQ4_through_warp_2
+type: phase
+id: docs_2026-11-26-raid-queue-and-signal-field-phasemap.spec::RQ4_through_warp_2
+context: pipeline phase RQ4_through_warp_2 of docs/2026-11-26-raid-queue-and-signal-field-phasemap.spec
+intent: null
+summary: RQ4_through_warp_2 (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1795718798838
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795718798838
+lastSeenAt: 1795718798838
+fingerprint: null
+payload:
+  id: RQ4_through_warp_2
+  map: docs/2026-11-26-raid-queue-and-signal-field-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - intelligence/warp2-pass.eg
+    - intelligence/test/warp2-pass.test.eg
+  depends_on:
+    - RQ3_signal_metrics_of_an_input
+  blocks: []
+  spec: null
+  graph: 7f664ee62f8eb9cb

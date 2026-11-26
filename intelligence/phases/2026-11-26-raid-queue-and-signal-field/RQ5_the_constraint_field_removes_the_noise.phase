@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-26-raid-queue-and-signal-field-phasemap.spec::RQ5_the_constraint_field_removes_the_noise
+type: phase
+id: docs_2026-11-26-raid-queue-and-signal-field-phasemap.spec::RQ5_the_constraint_field_removes_the_noise
+context: >-
+  pipeline phase RQ5_the_constraint_field_removes_the_noise of
+  docs/2026-11-26-raid-queue-and-signal-field-phasemap.spec
+intent: null
+summary: RQ5_the_constraint_field_removes_the_noise (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1795718798846
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795718798846
+lastSeenAt: 1795718798846
+fingerprint: null
+payload:
+  id: RQ5_the_constraint_field_removes_the_noise
+  map: docs/2026-11-26-raid-queue-and-signal-field-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - intelligence/constraint-field.eg
+    - intelligence/test/constraint-field.test.eg
+  depends_on:
+    - RQ4_through_warp_2
+  blocks: []
+  spec: null
+  graph: a09621874e4bda31

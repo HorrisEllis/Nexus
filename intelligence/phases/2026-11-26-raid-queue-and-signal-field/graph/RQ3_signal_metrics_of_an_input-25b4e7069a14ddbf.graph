@@ -1,0 +1,65 @@
+envelope: 1
+uuid: nexus-export-graph-phase:RQ3_signal_metrics_of_an_input:25b4e7069a14ddbf
+type: graph
+id: phase:RQ3_signal_metrics_of_an_input:25b4e7069a14ddbf
+context: dependency graph of phase RQ3_signal_metrics_of_an_input
+intent: null
+summary: 2 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1795718798830
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795718798830
+lastSeenAt: 1795718798830
+fingerprint: null
+payload:
+  for: RQ3_signal_metrics_of_an_input
+  kind: phase
+  repo: null
+  hash: 25b4e7069a14ddbf
+  nodes:
+    - path: intelligence/signal-metrics.eg
+      role: changes
+      exists: false
+      system: intelligence
+    - path: intelligence/test/signal-metrics.test.eg
+      role: changes
+      exists: false
+      system: intelligence
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-11-26-raid-queue-and-signal-field-phasemap.spec::RQ_D1_which_metrics
+      - docs/2026-10-30-compartment-metrics-and-learning-loop-phasemap.spec::ML1_metric_point
+    dependents:
+      - docs/2026-11-26-raid-queue-and-signal-field-phasemap.spec::RQ4_through_warp_2
+    upstream:
+      - docs/2026-10-30-compartment-metrics-and-learning-loop-phasemap.spec::ML1_metric_point
+      - docs/2026-11-26-raid-queue-and-signal-field-phasemap.spec::RQ_D1_which_metrics
+    downstream:
+      - docs/2026-11-26-raid-queue-and-signal-field-phasemap.spec::RQ4_through_warp_2
+      - docs/2026-11-26-raid-queue-and-signal-field-phasemap.spec::RQ5_the_constraint_field_removes_the_noise
+      - docs/2026-11-26-raid-queue-and-signal-field-phasemap.spec::RQ6_the_questions_that_matter
+      - docs/2026-11-26-raid-queue-and-signal-field-phasemap.spec::RQ7_adjustable_so_it_learns
+    blockedBy:
+      - docs/2026-11-26-raid-queue-and-signal-field-phasemap.spec::RQ_D1_which_metrics
+      - docs/2026-10-30-compartment-metrics-and-learning-loop-phasemap.spec::ML1_metric_point
+    unlocks:
+      - docs/2026-11-26-raid-queue-and-signal-field-phasemap.spec::RQ4_through_warp_2
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · blocked by RQ_D1_which_metrics, ML1_metric_point
+      - 'depends on (2): RQ_D1_which_metrics, ML1_metric_point'
+      - >-
+        needed by (1): RQ4_through_warp_2 · all downstream 4 · finishing it unlocks
+        RQ4_through_warp_2
+    edges:
+      - from: docs/2026-11-26-raid-queue-and-signal-field-phasemap.spec::RQ_D1_which_metrics
+        kind: declared
+      - from: docs/2026-10-30-compartment-metrics-and-learning-loop-phasemap.spec::ML1_metric_point
+        kind: declared

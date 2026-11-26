@@ -1,0 +1,61 @@
+envelope: 1
+uuid: nexus-export-graph-phase:RQ5_the_constraint_field_removes_the_noise:a09621874e4bda31
+type: graph
+id: phase:RQ5_the_constraint_field_removes_the_noise:a09621874e4bda31
+context: dependency graph of phase RQ5_the_constraint_field_removes_the_noise
+intent: null
+summary: 2 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1795718798846
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795718798846
+lastSeenAt: 1795718798846
+fingerprint: null
+payload:
+  for: RQ5_the_constraint_field_removes_the_noise
+  kind: phase
+  repo: null
+  hash: a09621874e4bda31
+  nodes:
+    - path: intelligence/constraint-field.eg
+      role: changes
+      exists: false
+      system: intelligence
+    - path: intelligence/test/constraint-field.test.eg
+      role: changes
+      exists: false
+      system: intelligence
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-11-26-raid-queue-and-signal-field-phasemap.spec::RQ4_through_warp_2
+    dependents:
+      - docs/2026-11-26-raid-queue-and-signal-field-phasemap.spec::RQ6_the_questions_that_matter
+    upstream:
+      - docs/2026-10-30-compartment-metrics-and-learning-loop-phasemap.spec::ML1_metric_point
+      - docs/2026-11-26-raid-queue-and-signal-field-phasemap.spec::RQ3_signal_metrics_of_an_input
+      - docs/2026-11-26-raid-queue-and-signal-field-phasemap.spec::RQ4_through_warp_2
+      - docs/2026-11-26-raid-queue-and-signal-field-phasemap.spec::RQ_D1_which_metrics
+    downstream:
+      - docs/2026-11-26-raid-queue-and-signal-field-phasemap.spec::RQ6_the_questions_that_matter
+      - docs/2026-11-26-raid-queue-and-signal-field-phasemap.spec::RQ7_adjustable_so_it_learns
+    blockedBy:
+      - docs/2026-11-26-raid-queue-and-signal-field-phasemap.spec::RQ4_through_warp_2
+    unlocks:
+      - docs/2026-11-26-raid-queue-and-signal-field-phasemap.spec::RQ6_the_questions_that_matter
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 3 · blocked by RQ4_through_warp_2
+      - 'depends on (1): RQ4_through_warp_2 · all upstream 4'
+      - >-
+        needed by (1): RQ6_the_questions_that_matter · all downstream 2 · finishing it unlocks
+        RQ6_the_questions_that_matter
+    edges:
+      - from: docs/2026-11-26-raid-queue-and-signal-field-phasemap.spec::RQ4_through_warp_2
+        kind: declared

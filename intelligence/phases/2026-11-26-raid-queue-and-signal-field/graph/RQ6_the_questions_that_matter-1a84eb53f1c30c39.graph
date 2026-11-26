@@ -1,0 +1,58 @@
+envelope: 1
+uuid: nexus-export-graph-phase:RQ6_the_questions_that_matter:1a84eb53f1c30c39
+type: graph
+id: phase:RQ6_the_questions_that_matter:1a84eb53f1c30c39
+context: dependency graph of phase RQ6_the_questions_that_matter
+intent: null
+summary: 2 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1795718798850
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795718798850
+lastSeenAt: 1795718798850
+fingerprint: null
+payload:
+  for: RQ6_the_questions_that_matter
+  kind: phase
+  repo: null
+  hash: 1a84eb53f1c30c39
+  nodes:
+    - path: intelligence/prereq-questions.eg
+      role: changes
+      exists: false
+      system: intelligence
+    - path: intelligence/test/prereq-questions.test.eg
+      role: changes
+      exists: false
+      system: intelligence
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 4
+    deps:
+      - docs/2026-11-26-raid-queue-and-signal-field-phasemap.spec::RQ5_the_constraint_field_removes_the_noise
+    dependents:
+      - docs/2026-11-26-raid-queue-and-signal-field-phasemap.spec::RQ7_adjustable_so_it_learns
+    upstream:
+      - docs/2026-10-30-compartment-metrics-and-learning-loop-phasemap.spec::ML1_metric_point
+      - docs/2026-11-26-raid-queue-and-signal-field-phasemap.spec::RQ3_signal_metrics_of_an_input
+      - docs/2026-11-26-raid-queue-and-signal-field-phasemap.spec::RQ4_through_warp_2
+      - docs/2026-11-26-raid-queue-and-signal-field-phasemap.spec::RQ5_the_constraint_field_removes_the_noise
+      - docs/2026-11-26-raid-queue-and-signal-field-phasemap.spec::RQ_D1_which_metrics
+    downstream:
+      - docs/2026-11-26-raid-queue-and-signal-field-phasemap.spec::RQ7_adjustable_so_it_learns
+    blockedBy:
+      - docs/2026-11-26-raid-queue-and-signal-field-phasemap.spec::RQ5_the_constraint_field_removes_the_noise
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 4 · blocked by RQ5_the_constraint_field_removes_the_noise
+      - 'depends on (1): RQ5_the_constraint_field_removes_the_noise · all upstream 5'
+      - 'needed by (1): RQ7_adjustable_so_it_learns'
+    edges:
+      - from: docs/2026-11-26-raid-queue-and-signal-field-phasemap.spec::RQ5_the_constraint_field_removes_the_noise
+        kind: declared

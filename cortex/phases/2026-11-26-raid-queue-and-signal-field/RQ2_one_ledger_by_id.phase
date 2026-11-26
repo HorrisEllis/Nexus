@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-26-raid-queue-and-signal-field-phasemap.spec::RQ2_one_ledger_by_id
+type: phase
+id: docs_2026-11-26-raid-queue-and-signal-field-phasemap.spec::RQ2_one_ledger_by_id
+context: pipeline phase RQ2_one_ledger_by_id of docs/2026-11-26-raid-queue-and-signal-field-phasemap.spec
+intent: null
+summary: RQ2_one_ledger_by_id (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1795718798824
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795718798824
+lastSeenAt: 1795718798824
+fingerprint: null
+payload:
+  id: RQ2_one_ledger_by_id
+  map: docs/2026-11-26-raid-queue-and-signal-field-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cortex/core/raid/id-ledger.eg
+    - cortex/core/raid/test/id-ledger.test.eg
+  depends_on:
+    - RQ1_the_request_waits_in_raid_s_queue
+  blocks: []
+  spec: null
+  graph: 4005d996c5db11bf

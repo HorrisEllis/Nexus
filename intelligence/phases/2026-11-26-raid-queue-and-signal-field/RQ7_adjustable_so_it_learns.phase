@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-26-raid-queue-and-signal-field-phasemap.spec::RQ7_adjustable_so_it_learns
+type: phase
+id: docs_2026-11-26-raid-queue-and-signal-field-phasemap.spec::RQ7_adjustable_so_it_learns
+context: >-
+  pipeline phase RQ7_adjustable_so_it_learns of
+  docs/2026-11-26-raid-queue-and-signal-field-phasemap.spec
+intent: null
+summary: RQ7_adjustable_so_it_learns (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1795718798852
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795718798852
+lastSeenAt: 1795718798852
+fingerprint: null
+payload:
+  id: RQ7_adjustable_so_it_learns
+  map: docs/2026-11-26-raid-queue-and-signal-field-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - intelligence/field-weights.eg
+    - intelligence/test/field-weights.test.eg
+  depends_on:
+    - RQ_D2_who_adjusts
+    - RQ6_the_questions_that_matter
+    - ML3_learning_loop
+  blocks: []
+  spec: null
+  graph: 173f4711983d14ea

@@ -1,0 +1,52 @@
+envelope: 1
+uuid: nexus-export-graph-phase:RQ2_one_ledger_by_id:4005d996c5db11bf
+type: graph
+id: phase:RQ2_one_ledger_by_id:4005d996c5db11bf
+context: dependency graph of phase RQ2_one_ledger_by_id
+intent: null
+summary: 2 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1795718818061
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795718818061
+lastSeenAt: 1795718818061
+fingerprint: null
+payload:
+  for: RQ2_one_ledger_by_id
+  kind: phase
+  repo: null
+  hash: 4005d996c5db11bf
+  nodes:
+    - path: cortex/core/raid/id-ledger.eg
+      role: changes
+      exists: false
+      system: cortex
+    - path: cortex/core/raid/test/id-ledger.test.eg
+      role: changes
+      exists: false
+      system: cortex
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-11-26-raid-queue-and-signal-field-phasemap.spec::RQ1_the_request_waits_in_raid_s_queue
+    dependents: []
+    upstream:
+      - docs/2026-11-26-raid-queue-and-signal-field-phasemap.spec::RQ1_the_request_waits_in_raid_s_queue
+    downstream: []
+    blockedBy:
+      - docs/2026-11-26-raid-queue-and-signal-field-phasemap.spec::RQ1_the_request_waits_in_raid_s_queue
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · blocked by RQ1_the_request_waits_in_raid_s_queue
+      - 'depends on (1): RQ1_the_request_waits_in_raid_s_queue'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-11-26-raid-queue-and-signal-field-phasemap.spec::RQ1_the_request_waits_in_raid_s_queue
+        kind: declared

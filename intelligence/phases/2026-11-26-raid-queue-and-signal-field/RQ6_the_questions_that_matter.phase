@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-26-raid-queue-and-signal-field-phasemap.spec::RQ6_the_questions_that_matter
+type: phase
+id: docs_2026-11-26-raid-queue-and-signal-field-phasemap.spec::RQ6_the_questions_that_matter
+context: >-
+  pipeline phase RQ6_the_questions_that_matter of
+  docs/2026-11-26-raid-queue-and-signal-field-phasemap.spec
+intent: null
+summary: RQ6_the_questions_that_matter (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1795718798850
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795718798850
+lastSeenAt: 1795718798850
+fingerprint: null
+payload:
+  id: RQ6_the_questions_that_matter
+  map: docs/2026-11-26-raid-queue-and-signal-field-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - intelligence/prereq-questions.eg
+    - intelligence/test/prereq-questions.test.eg
+  depends_on:
+    - RQ5_the_constraint_field_removes_the_noise
+  blocks: []
+  spec: null
+  graph: 1a84eb53f1c30c39
