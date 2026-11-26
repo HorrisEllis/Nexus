@@ -1836,6 +1836,16 @@ phases_addendum_2026_11_24_model_server:
       not_eravos_2026_11_25: >-
         His, the same day, shown a live-data preview of the canvas (the EMB10 run as boxes and threads, with lenses and add-a-step) after the
         coder suggested ERAVOS's canvas as its home: "Not eravos". The canvas is COS's own, in its Automation tab (PC8); ERAVOS stays apart.
+      grows_from_the_gates_2026_11_25: >-
+        His, after the coder drew a separate preview: "No. We have the canvas. What is hard to understand. Anything starts as the first step.
+        Then everything branches from that one, one by one from the gates." So no new view: COS's canvas (PC8) is the lineage. A run starts as
+        one step; each gate's decision adds the next step(s) to the running run as branches (a refusal adds a retry beside it, a split adds
+        its helpers below, the adversary adds its readers in parallel, a pass joins back), and the canvas draws them as it draws any step.
+        Found the same day: today a pipeline's steps are all declared before it runs, and a gate only takes or skips a branch already there
+        ("when", "onFail"); the build hides its branching (18 pieces, 110 tries, the helpers, the adversary) inside one script step, so the
+        canvas shows one box. The slices this makes: (1) a gate may add steps to its own running run (pipeline.js, saved to the run's file,
+        each with depends_on its parent: persistence); (2) the build reports each piece, try and helper as such a step instead of hiding them;
+        (3) the canvas draws added steps live. Backend first; nothing new to build in the UI if the canvas already draws any step.
       d_the_overlap: "parallel pipelines per domain on one problem; identical primitives, principles, patterns or invariants matched and joined; counted anomaly, coincidence, invariant; sigma and delta shown. Its proof is registered in FRAMEWORK-THREADS before it runs"
   PC27_each_output_measured_by_his_equations:
     status: OPEN
