@@ -667,6 +667,28 @@ if (require.main === module) {
         sup.note('duties', 'autopilot\'s duties run inside COS\'s manager: the wire, vitals, updates, the loom refresh, the snapshot, the ledger followed (SW5a)', { by: 'boot' }); }
       catch (e) { sup.note('duties', `autopilot's duties did not start: ${e.message} — COS still supervises; vitals, updates and snapshots do not run`, { by: 'boot' }); }
     }
+    // 2026-11-26 — James: "you need to add the ability to restart cos when needed. i am not here to restart it constantly." The code COS loads
+    // (its manager, automation engine, pipeline, view, and lib/) is read once at start; when it changes on disk and has settled two minutes,
+    // COS asks RAID, with the files as its proof, and restarts itself (rule:code-moved). Interrupted runs resume from their files. Refused,
+    // it waits ten minutes. --no-reload leaves it off.
+    if (!process.argv.includes('--no-reload')) {
+      const fs = require('fs'), START = Date.now(), DIRS = ['cos/manager', 'cos/automation', 'cos/pipeline', 'cos/ui/run-console-preview', 'lib'];
+      const moved = () => { const out = []; for (const d of DIRS) { let fsx = []; try { fsx = fs.readdirSync(path.join(root, d)); } catch (_) { continue; }
+        for (const f of fsx) { if (!/\.(js|cjs|eg|json)$/.test(f)) continue; try { const st = fs.statSync(path.join(root, d, f)); if (st.isFile() && st.mtimeMs > START) out.push({ f: `${d}/${f}`, t: st.mtimeMs }); } catch (_) {} } }
+        return out; };
+      let waitUntil = 0, asking = false;
+      const reload = setInterval(async () => {
+        if (asking || Date.now() < waitUntil) return;
+        const m = moved(); if (!m.length) return;
+        const newest = Math.max(...m.map((x) => x.t)); if (Date.now() - newest < 120000) return;   // settled: a release lands in several writes
+        asking = true;
+        const proof = { kind: 'measured', decidedBy: 'cos/manager/server.js', changed: m.map((x) => x.f).slice(0, 25), count: m.length, since: new Date(START).toISOString(), why: 'the code COS runs changed on disk since it started; it loads only at a restart; interrupted runs resume from their files', at: Date.now() };
+        let ok = null; try { ok = await require('../../lib/raid-port.js').approveTool('cos', 'cos.restart self', { action: 'restart', intent: { action: 'restart', target: 'cos' }, causedBy: 'rule:code-moved', proof }); } catch (e) { ok = { approved: false, reason: `RAID unreachable: ${e.message}` }; }
+        if (!ok || !ok.approved) { sup.note('raid-refused', `RAID did not approve COS restarting itself for ${m.length} changed file(s): ${(ok && ok.reason) || 'no answer'}; asked again in 10 min`, { by: 'rule:code-moved' }); waitUntil = Date.now() + 600000; asking = false; return; }
+        sup.note('restart', `${m.length} file(s) COS runs changed (${proof.changed.slice(0, 4).join(', ')}${m.length > 4 ? ' …' : ''}); RAID approved; COS restarts itself`, { by: 'rule:code-moved' });
+        restartCos({ by: 'rule:code-moved' });
+      }, 60000); if (reload.unref) reload.unref();
+    }
     // 2026-11-01 MG33 — James: "where is cos ui?". Nothing started the cockpit (cos/ui/serve.js) or linked to it: a screen with no way in. The
     // manager now starts it beside itself (COS_UI_PORT, default 7797; --no-ui to leave it off). Its port held → said once, the manager runs on.
     let ui = null;
