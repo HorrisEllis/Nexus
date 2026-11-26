@@ -49,13 +49,14 @@
     let open = {}; try { open = JSON.parse(localStorage.getItem('cos.navGroups') || '{}'); } catch (_) {}
     const best = (xs) => (['up', 'degraded', 'starting', 'idle', 'stopping', 'declared', 'stopped', 'circuit-open'].find(st => xs.some(x => x.state === st))) || (xs[0] && xs[0].state);
     const short = (n) => String(n).replace(/^model-/, '').replace(/^(huihui-ai-|hf-co-[a-z0-9]+-)/, '');
-    $('nav-systems').replaceChildren(...out.flatMap(x => {
-      if (!x.group) return [row(x)];
-      const xs = groups.get(x.group), isOpen = open[x.group] !== false, label = GROUP[x.group] || x.group;
-      const head = h('a', { href: '#', class: 'sys-group', 'data-group': x.group, 'aria-expanded': String(isOpen), title: `${label} — ${xs.length} process(es); ${xs.filter(s => s.state === 'up').length} up` },
-        h('span', { class: 'dot', 'data-s': best(xs) }), h('span', {}, `${isOpen ? '▾' : '▸'} ${label}`), h('span', { class: 'port' }, String(xs.length)));
-      head.addEventListener('click', (e) => { e.preventDefault(); open[x.group] = !isOpen; try { localStorage.setItem('cos.navGroups', JSON.stringify(open)); } catch (_) {} renderSystems(); });
-      return [head, ...(isOpen ? xs.map(s => row(s, short(s.name), 'sys-child')) : [])];
+    // 2026-11-26 (his: "the model server needs to be the system in the side panel. not a drop down. like don't show me the models as systems.
+    // the model server needs to be compartmentalized"): a system's own processes are inside its compartment, never rows of their own: one row,
+    // its state the best of them, opening the system itself
+    $('nav-systems').replaceChildren(...out.map(x => {
+      if (!x.group) return row(x);
+      const xs = groups.get(x.group), label = GROUP[x.group] || x.group;
+      return h('a', { href: `#/c/${encodeURIComponent(x.group)}`, 'data-sys': x.group, title: `${label} — ${xs.filter(s => s.state === 'up').length} of ${xs.length} engine(s) up, inside its compartment` },
+        h('span', { class: 'dot', 'data-s': best(xs) }), h('span', {}, label), h('span', { class: 'port' }, `${xs.filter(s => s.state === 'up').length}/${xs.length}`));
     }));
     markCurrent();
   }
