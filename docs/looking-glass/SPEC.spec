@@ -221,3 +221,8 @@ out of emerge." Asked the day before whether a screen can be built with no JavaS
 - **OPEN, his:** whether COS's Automation tab is written now as Looking Glass data and drawn first by a small renderer in COS's page until the
   native one exists, or waits for the native renderer (asked 2026-11-24).
 - Author: James Brooks (his idea, 2026-10-13; this purpose, 2026-11-25).
+- **DECIDED (his, 2026-11-26): everything in Emerge, the renderer too.** Asked "Rust renderer with Emerge apps, everything in Emerge, or
+  data with a small renderer first", he chose "Everything in Emerge". His words that day: "so have it build looking glass. i want to be able
+  to have the pipeline build specs. no .md i told you that." The phase map's Rust choices (Cargo, winit, wgpu; PHASEMAP.md phase 0) are
+  superseded: its phases are read into a .spec (PC36) and re-expressed in Emerge before building; what Emerge lacks for a window and
+  drawing is built into Emerge as its own capabilities (§17.13), not borrowed.
