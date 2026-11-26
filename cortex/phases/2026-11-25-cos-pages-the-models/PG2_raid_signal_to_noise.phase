@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-25-cos-pages-the-models-phasemap.spec::PG2_raid_signal_to_noise
+type: phase
+id: docs_2026-11-25-cos-pages-the-models-phasemap.spec::PG2_raid_signal_to_noise
+context: pipeline phase PG2_raid_signal_to_noise of docs/2026-11-25-cos-pages-the-models-phasemap.spec
+intent: null
+summary: PG2_raid_signal_to_noise (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1795651817184
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795651817184
+lastSeenAt: 1795651817184
+fingerprint: null
+payload:
+  id: PG2_raid_signal_to_noise
+  map: docs/2026-11-25-cos-pages-the-models-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cortex/raid/pager.eg
+    - lib/raid-port.js
+  depends_on:
+    - PG1_measure_each_engine
+  blocks: []
+  spec: null
+  graph: b8115f8927a7fc80
