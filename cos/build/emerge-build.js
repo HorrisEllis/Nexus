@@ -28,6 +28,18 @@ const OLLAMA = Number(arg('ollama-port', 3749)), TASKS = arg('tasks', path.join(
 if (!MAP || !PHASE) { console.error('usage: --map <docs/….spec> --phase <PHASE_ID> [--ladder a,b,c] [--land]'); process.exit(2); }
 
 const RUN = `cbuild-${Date.now().toString(36)}`, LOG = path.join(ROOT, 'cos', 'data', 'build', RUN + '.jsonl');
+// the phase, read the way Idearium reads it (2026-11-26, the first scheduled run: GW0's and OL1's maps each had one loose line elsewhere,
+// strict YAML refused the whole map, and the phase was never read): the whole map strictly first; failing that, Loom's phase reader finds
+// the phase's own lines and only that block is parsed; failing that, Loom's fields (its sentence, its files, its spec modules) stand in
+function readPhase(mapText) {
+  const Y = require('js-yaml');
+  try { const doc = Y.load(mapText); const ph = ((doc && (doc.spec || doc).phases) || (doc && doc.phases) || {})[PHASE]; if (ph) return ph; } catch (_) {}
+  let lp = null; try { lp = require(path.join(ROOT, 'loom', 'scanners', 'phasemap-map.js')).parsePhasemapText(mapText, MAP).find((p) => p.id === PHASE); } catch (_) {}
+  if (!lp) return null;
+  try { const lines = mapText.split(/\r?\n/).slice(lp.line - 1, lp.bodyEnd); const ind = (lines[0].match(/^\s*/) || [''])[0].length;
+    const doc = Y.load(lines.map((l) => l.slice(Math.min(ind, (l.match(/^\s*/) || [''])[0].length))).join('\n')); if (doc && doc[PHASE]) return doc[PHASE]; } catch (_) {}
+  return { does: lp.name || '', files: lp.files || [], blocks: lp.blocks || [], depends_on: lp.dependsOn || [], readBy: 'loom' };
+}
 fs.mkdirSync(path.dirname(LOG), { recursive: true });
 const row = (state, o = {}) => { const r = { run: RUN, map: MAP, phase: PHASE, state, ...o, ts: Date.now() }; fs.appendFileSync(LOG, JSON.stringify(r) + '\n'); console.log(`[${new Date().toLocaleTimeString()}] ${state}${o.note ? ' — ' + o.note : ''}`); };
 
@@ -113,7 +125,7 @@ function withContracts(exports) {
   // 2026-11-25: each piece's own sentence from its phase's does-text, when it has none: the 3b, told only a signature and examples full of JSON
   // text, tried to parse JSON (models.data, six parse_json helpers); the phase says served_by is true when the model list (its text) names the
   // file. The sentence runs from "name(" to where the next function's "name(" begins (a sentence may hold semicolons), or the paragraph's end.
-  try { const doc = require('js-yaml').load(fs.readFileSync(path.join(ROOT, MAP), 'utf8')), ph = ((doc.spec || doc).phases || doc.phases || {})[PHASE];
+  try { const ph = readPhase(fs.readFileSync(path.join(ROOT, MAP), 'utf8'));
     const t = String((ph && ph.does) || ''), names = exports.map((e) => e.name).filter(Boolean);
     const own = (n) => { const i = t.indexOf(n + '('); if (i < 0) return ''; let j = t.length;
       for (const m of names) { if (m === n) continue; const k = t.indexOf(m + '(', i + n.length); if (k > i && k < j) j = k; }
@@ -315,7 +327,7 @@ async function endState({ ph, plan, src, mapText }) {
 (async () => {
   row('started', { note: `ladder ${LADDER.join(' → ')}${LAND ? '; lands when the examples pass' : ''}`, ladder: LADDER });
   // 1. the phase, from its map
-  const mapText = fs.readFileSync(path.join(ROOT, MAP), 'utf8'), doc = require('js-yaml').load(mapText), ph = doc && doc.phases && doc.phases[PHASE];
+  const mapText = fs.readFileSync(path.join(ROOT, MAP), 'utf8'), ph = readPhase(mapText);
   if (!ph) { row('refused', { note: `no phase ${PHASE} in ${MAP}` }); process.exit(1); }
   const files = [].concat(ph.files || []), body = require('js-yaml').dump({ [PHASE]: ph });
   // 2. the plan: deterministic, from the phase's own words (Idearium's planner does the same first)
