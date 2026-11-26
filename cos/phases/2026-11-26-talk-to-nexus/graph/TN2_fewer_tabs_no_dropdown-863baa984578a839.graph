@@ -7,11 +7,11 @@ intent: null
 summary: 2 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1795718895791
+exported_at: 1795719208538
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1795718895791
-lastSeenAt: 1795718895791
+firstSeenAt: 1795719208538
+lastSeenAt: 1795719208538
 fingerprint: null
 payload:
   for: TN2_fewer_tabs_no_dropdown
@@ -86,12 +86,18 @@ payload:
     blockedBy:
       - docs/2026-11-26-talk-to-nexus-phasemap.spec::TN1_talk_to_copilot_on_the_canvas
     unlocks: []
-    conflicts: []
+    conflicts:
+      - with: docs/2026-11-26-talk-to-nexus-phasemap.spec::TN5_lineage_shows_file_changes
+        files:
+          - cos/ui/automation/index.html
     dangling: []
     lines:
       - layer 19 · blocked by TN1_talk_to_copilot_on_the_canvas
       - 'depends on (1): TN1_talk_to_copilot_on_the_canvas · all upstream 46'
       - 'needed by (0): —'
+      - >-
+        same files as TN5_lineage_shows_file_changes with no order between them:
+        cos/ui/automation/index.html
     edges:
       - from: docs/2026-11-26-talk-to-nexus-phasemap.spec::TN1_talk_to_copilot_on_the_canvas
         kind: inferred

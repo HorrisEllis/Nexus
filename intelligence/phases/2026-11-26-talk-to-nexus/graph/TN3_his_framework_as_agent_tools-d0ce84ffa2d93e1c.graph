@@ -7,11 +7,11 @@ intent: null
 summary: 2 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1795718895797
+exported_at: 1795719208540
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1795718895797
-lastSeenAt: 1795718895797
+firstSeenAt: 1795719208540
+lastSeenAt: 1795719208540
 fingerprint: null
 payload:
   for: TN3_his_framework_as_agent_tools
@@ -33,9 +33,11 @@ payload:
   dag:
     layer: 0
     deps: []
-    dependents: []
+    dependents:
+      - docs/2026-11-26-talk-to-nexus-phasemap.spec::TN6_a_hat_per_pipeline
     upstream: []
-    downstream: []
+    downstream:
+      - docs/2026-11-26-talk-to-nexus-phasemap.spec::TN6_a_hat_per_pipeline
     blockedBy: []
     unlocks: []
     conflicts: []
@@ -43,5 +45,5 @@ payload:
     lines:
       - layer 0 · ready
       - 'depends on (0): —'
-      - 'needed by (0): —'
+      - 'needed by (1): TN6_a_hat_per_pipeline'
     edges: []
