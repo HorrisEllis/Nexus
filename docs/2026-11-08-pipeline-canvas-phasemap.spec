@@ -2150,6 +2150,12 @@ phases_addendum_2026_11_24_model_server:
   PC35_mental_simulations_a_tab_in_the_pipeline_canvas_:
     status: pending
     depends_on: [PC26, PC34]
+    expanded_2026_11_26_a_node_is_a_compartment: >-
+      His 2026-11-26: "Okay but the nodes can be compartments also. Entire mental simulations. Can also be one zoomed out node." · "Sure" (to the
+      framework trial across domains: problem sets per domain, three agreeing readers scoring, his blind scores on a sample, predictions first).
+      A node can hold a whole compartment: a mental simulation is a node seen from above (one node, zoomed out) and a world inside it when opened
+      (the canvas's layers, recursive). The framework trial runs as simulations: one problem per node, each arm a branch, the trial a node of
+      its own on the timeline.
     does: >
       His 2026-11-26: "i said playground. like i want to play with the agents, have worlds/compartments for anything i want to do with agents. look at the templates. labs. torture chambers. like for doing what i want with the models." · "call it mental simulations. have it a tab in the pipeline canvas. everything needs to run through the canvas. i want to give it a problem and have it solve it, and iterate it over and over." · "nexus is domain agnostic, system agnostic, agent agnostic." A tab beside Canvas and Runs in COS's Automation (the pipeline canvas). He types a problem; it becomes the origin node, its end state is asked for or proposed (cos/pipeline/backward.eg plans the DAG from it), and the run is drawn on the canvas as the tree it grows. Each simulation is a world: a compartment from cos/playgrounds (isolated, mirrored, synthetic), started from a template (Lab: cos/playground/llm-lab.js hypothesis, conditions, head-to-head, feedback loops; Torture chamber: cos/spec/torture-chamber.spec stations in parallel branches; Head to head; Blank), with any agents and models in it (the model server first, Guardian last). Iterate: each pass is measured (gaps from the intelligence system's liminal detectors, sigma and delta from emerge/field/causal.eg) and the next pass is a branch from the last one (cos/playground/branch.js, compare.js), until the end state is met or he stops it; fork, compare, keep or discard (his miniworlds, CP_D2). No domain, system or agent is assumed. Every step through RAID, every part a node file. Preview inside COS first (his rule).
 
