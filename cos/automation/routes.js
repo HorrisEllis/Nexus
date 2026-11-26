@@ -85,6 +85,14 @@ async function handle(A, { method, url, body = {}, headers = {}, rawBody = '' },
       if (p[4] === 'tasks' && p[5] && p[6] === 'agents' && method === 'PATCH') return res(P.setAgents(id, decodeURIComponent(p[5]), body ? body.agents : null));   // IF22 0.60.602 a step's agent ladder
       if (p[4] === 'tasks' && p[5] && p[6] === 'gate' && method === 'PATCH') return res(P.setGate(id, decodeURIComponent(p[5]), { set: body && body.set, unset: body && body.unset, gate: body ? body.gate : undefined }));   // 0.60.590 edit a gate
       if (p[4] === 'archive' && method === 'POST') return res(P.archive(id, { archived: !(body && body.archived === false) }));
+      // PC29 (his, 2026-11-25: "Need copilot to orchastrate nexus" · "everything should be routing through raid"): a person runs a pipeline as
+      // before; an agent or a rule (by "agent:…" / "rule:…") runs one only with RAID's yes, its proof given (why, what it saw); refused, nothing runs
+      if (p[4] === 'run' && method === 'POST' && /^(agent|rule):/.test(String((body && body.by) || ''))) {
+        const pl = P.get(id); if (!pl) return ok({ ok: false, error: `no pipeline ${id}` }, 404);
+        let r = null; try { r = await (deps.raid || ((cmd, o) => require('../../lib/raid-port.js').approveTool('cos', cmd, o)))(`cos.pipeline-run ${pl.name || id}`, { action: 'pipeline-run', intent: { action: 'pipeline-run', target: id }, causedBy: body.by, proof: body.proof || null }); }
+        catch (e) { r = { approved: false, reason: `RAID unreachable: ${e.message}` }; }
+        if (!r || !r.approved) return ok({ ok: false, refused: true, error: `RAID did not approve running "${pl.name || id}" for ${body.by}: ${(r && r.reason) || 'no answer'}` }, 403);
+      }
       if (p[4] === 'run' && method === 'POST') return res(await P.run(id, { vars: (body && body.vars) || {}, wait: q('wait') === '1' || !!(body && body.wait), gates: body && body.gates === 'open' ? 'open' : null }));   // 0.60.589 gates open
       // 2026-10-30 PN2 — James: "export the .macro and .automation nodes to the .pipeline node". The pipeline as a node file with what it runs bundled;
       // save writes it into the node library (Settings › Automation › node files), beside the .macro and .workflow files

@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-08-pipeline-canvas-phasemap.spec::PC29_copilot_orchestrates_nexus
+type: phase
+id: docs_2026-11-08-pipeline-canvas-phasemap.spec::PC29_copilot_orchestrates_nexus
+context: pipeline phase PC29_copilot_orchestrates_nexus of docs/2026-11-08-pipeline-canvas-phasemap.spec
+intent: null
+summary: PC29_copilot_orchestrates_nexus (backend) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1795676381821
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795676381821
+lastSeenAt: 1795676381821
+fingerprint: null
+payload:
+  id: PC29_copilot_orchestrates_nexus
+  map: docs/2026-11-08-pipeline-canvas-phasemap.spec
+  repo: null
+  layer: backend
+  status: OPEN
+  files:
+    - copilot/tool-runtime.js
+    - copilot/server.js
+    - copilot/intents.js
+  depends_on:
+    - PC26_lineage_is_the_canvas
+  blocks: []
+  spec: null
+  graph: 38f0db1d6976d0b0

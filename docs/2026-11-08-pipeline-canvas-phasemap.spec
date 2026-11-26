@@ -1939,6 +1939,21 @@ phases_addendum_2026_11_24_model_server:
       His: a QEMU virtual machine as a COS compartment, a small Linux to develop COS-as-OS in (cgroups, freeze and thaw, its own swap), no dual
       boot. Recorded, not started: after the pipeline builds itself.
     proof: "an EMB10 run whose steps each hold their resource samples and model calls; a refused piece walked back through its causes to the event that started it; one failure mode filed by the run itself and counted by Cortex"
+  PC29_copilot_orchestrates_nexus:
+    status: OPEN
+    layer: backend
+    james: '"Need copilot to orchastrate nexus." (2026-11-25); asked which, he chose "Nexus''s Copilot" (the service on :3750, his, the pane in Clear Glass). Before it: "everything goes to the pipeline. each request." · "This is meant to be autonoius"'
+    depends_on: [PC26_lineage_is_the_canvas]
+    files: [copilot/tool-runtime.js, copilot/server.js, copilot/intents.js]
+    reuse: "COS's pipeline door (/api/cos/automation/pipelines, /pipeline-runs, run, continue, cancel), its event stream (/api/cos/events), RAID (every act with proof), the growing run (PC26 slices 1, 1b), Copilot's own intents and tool runtime; Copilot reaches COS only by route (§5.9-§5.16)"
+    does: >-
+      Copilot orchestrates Nexus through the pipeline. a) Its tools: list pipelines, run one (with its input), read a run as its tree (each
+      step, its parent, why, verdict), continue, cancel: COS's own routes, each act Copilot's, said as "agent:copilot". b) A request is a run:
+      what he asks Copilot (build a phase, fix a failure, "build EMB10") starts the matching pipeline in COS, the request its first step.
+      c) It watches: on COS's events, a run that failed and was not recovered is Copilot's to look at; it reads the tree, decides the next
+      branch (a different model, a diagnosis, a smaller piece) and asks RAID with the run's evidence before starting it; what it cannot
+      decide goes to him, with the readings.
+    proof: "a: from Copilot, list pipelines and read EMB10's last run as its tree; b: asking Copilot \"build EMB10\" starts the EMB10 pipeline in COS; c: an unrecovered failure seen and a next branch proposed through RAID, with its evidence"
   PC_D18_what_he_meant_2026_11_24:
     status: "OPEN — his"
     readings:

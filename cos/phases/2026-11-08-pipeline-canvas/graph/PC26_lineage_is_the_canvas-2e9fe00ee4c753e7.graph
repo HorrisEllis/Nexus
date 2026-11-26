@@ -7,11 +7,11 @@ intent: null
 summary: 3 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1795665335685
+exported_at: 1795676381806
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1795665335685
-lastSeenAt: 1795665335685
+firstSeenAt: 1795676381806
+lastSeenAt: 1795676381806
 fingerprint: null
 payload:
   for: PC26_lineage_is_the_canvas
@@ -43,6 +43,7 @@ payload:
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC8_operate_a_pipeline
     dependents:
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC27_each_output_measured_by_his_equations
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC29_copilot_orchestrates_nexus
     upstream:
       - docs/2026-10-28-first-principles-phasemap.spec::FP1_where_a_request_opens
       - docs/2026-10-28-first-principles-phasemap.spec::FP2_which_option_is_meant
@@ -89,18 +90,21 @@ payload:
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D8_options_not_neat_boxes
     downstream:
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC27_each_output_measured_by_his_equations
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC29_copilot_orchestrates_nexus
     blockedBy:
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC8_operate_a_pipeline
     unlocks:
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC27_each_output_measured_by_his_equations
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC29_copilot_orchestrates_nexus
     conflicts: []
     dangling: []
     lines:
       - layer 16 · blocked by PC8_operate_a_pipeline
       - 'depends on (1): PC8_operate_a_pipeline · all upstream 43'
       - >-
-        needed by (1): PC27_each_output_measured_by_his_equations · finishing it unlocks
-        PC27_each_output_measured_by_his_equations
+        needed by (2): PC27_each_output_measured_by_his_equations, PC29_copilot_orchestrates_nexus ·
+        finishing it unlocks PC27_each_output_measured_by_his_equations,
+        PC29_copilot_orchestrates_nexus
     edges:
       - from: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC8_operate_a_pipeline
         kind: declared

@@ -982,6 +982,19 @@ export const SPEC = [
     req: (a) => (a.flags.keep ? { system: 'cos', method: 'POST', path: '/api/cos/sovereign', body: { by: 'person' } } : { system: 'cos', method: 'GET', path: '/api/cos/sovereign' }),
     print: (d, a, h) => { for (const r of d.systems || []) console.log(`  ${(r.has === r.of ? h.c.mint : h.c.amber)(`${r.has}/${r.of}`)} ${String(r.system).padEnd(14)} ${h.c.dim(r.missing.length ? 'lacks ' + r.missing.join(', ') : 'whole')}`);
       const t = d.totals || {}; console.log(h.c.dim(`  ${t.whole} of ${t.systems} whole · ${t.has}/${t.of} parts`)); for (const w of d.worse || []) console.log(h.c.amber(`  worse: ${w}`)); } },
+  // PC29 (his, 2026-11-25: "Need copilot to orchastrate nexus", Nexus's Copilot): Copilot and every agent read runs as trees and start a run,
+  // the start RAID's to approve with its proof (the route asks RAID for any agent or rule); a person's start is free, as before
+  { key: 'cos.pipeline-runs', repo: false, usage: 'cos pipeline-runs <pipeline id> [--limit <n>]', about: 'a pipeline\'s latest runs: each run\'s state and its steps\' states',
+    req: (a) => ({ system: 'cos', method: 'GET', path: `/api/cos/automation/pipeline-runs?pipelineId=${encodeURIComponent(String((a.args || [])[0] || ''))}&limit=${Number(a.flags.limit) || 5}` }) },
+  { key: 'cos.pipeline-run-show', repo: false, usage: 'cos pipeline-run-show <run id>', about: 'one run as its tree: each step, the step it grew from and why, its state, its note or error, and whether a failure was recovered (PC26)',
+    req: (a) => ({ system: 'cos', method: 'GET', path: `/api/cos/automation/pipeline-runs/${encodeURIComponent(String((a.args || [])[0] || ''))}` }),
+    print: (d) => { const r = d.run || d; const t = r.tasks || {}; console.log(`${r.pipelineName || r.pipelineId} · ${r.status}${r.error ? ' · ' + r.error : ''}`);
+      const kids = (p) => Object.keys(t).filter((k) => (t[k].grownFrom || null) === p);
+      const walk = (k, d0) => { const x = t[k]; console.log(`${'  '.repeat(d0)}${k} · ${x.status}${x.recovered ? ' (recovered)' : ''}${x.why ? ' · ' + x.why : ''}${x.error ? ' · ' + String(x.error).slice(0, 160) : ''}`); for (const c of kids(k)) walk(c, d0 + 1); };
+      for (const k of kids(null)) walk(k, 0); } },
+  { key: 'cos.pipeline-start', repo: false, usage: 'cos pipeline-start <pipeline id> --why "<why, what you saw>"', about: 'start a pipeline run as the agent: RAID decides with the why as its proof; refused, nothing runs (a person starts runs in the Automation tab)',
+    need: (a) => (!(a.args || [])[0] ? 'the pipeline id' : !a.flags.why ? '--why (RAID\'s proof)' : null),
+    req: (a) => ({ system: 'cos', method: 'POST', path: `/api/cos/automation/pipelines/${encodeURIComponent(String(a.args[0]))}/run`, body: { by: 'agent', proof: { kind: 'stated', why: String(a.flags.why), at: Date.now() } } }) },
   { key: 'cos.pipeline-retry', repo: false, usage: 'cos pipeline-retry <engine run id> [--from <step>]', about: 'retry a failed pipeline run from its request\'s files: what was met is not run again; --from runs that step and every step after it again (PC8 slice b, his 2026-11-10 "execute, or manage the pipeline")',
     req: (a) => ({ system: 'cos', method: 'POST', path: `/api/cos/pipeline/runs/${encodeURIComponent(String((a.args || [])[0] || ''))}/retry`, body: { from: a.flags.from || null, by: 'person' } }),
     personOnly: () => 'retrying a run is the person\'s — an agent asks them' },
