@@ -443,7 +443,7 @@ class Pipelines {
         p.tasks.push(t); byId.set(nid, t);
         run.tasks[nid] = { label: t.label, status: 'waiting', attempts: 0, grownFrom: fromId, dependsOn: t.depends_on.slice(), why: t.why, events: [{ at: Date.now(), status: 'waiting', note: `grown from ${fromId}${t.why ? ': ' + t.why : ''}` }] };
         grown.push({ id: nid, from: fromId, at: Date.now(), why: t.why });
-        this._emit('automation.pipeline.grow', { pipelineId: p.id, runId: run.id, task: nid, label: t.label, from: fromId, why: t.why });
+        this._emit('automation.pipeline.grow', { pipelineId: p.id, runId: run.id, task: nid, label: t.label, from: fromId, why: t.why, dependsOn: t.depends_on.slice(), step: t.step, recovers: t.recovers });   // the request's node files take all of it (cos/pipeline/runs.eg)
       }
       const added = (run.grown || []).slice(before).map((g) => g.id);
       if (failed && added.length) for (const x of p.tasks) if ((x.depends_on || []).includes(fromId) && !added.includes(x.id)) x.depends_on = x.depends_on.filter((d) => d !== fromId).concat(added);
