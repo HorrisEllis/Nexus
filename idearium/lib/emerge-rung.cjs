@@ -604,8 +604,11 @@ function createRung({ root = path.resolve(__dirname, '..', '..'), ask, expect, m
       let why;
       if (b.ok && b.files && b.files['main.js']) {
         const esm = moduleTypeOf(root, f) === 'module';   // 0.60.621: in an ES-module folder the built CommonJS is .eg.cjs and the planned file imports it
-        const files = { [at(base + '.eg')]: source, [at(base + (esm ? '.eg.cjs' : '.eg.js'))]: b.files['main.js'], [f]: adapter(f, { esm, names: skel.fns.map(x => x.name) }) };
-        for (const [k, v] of Object.entries(b.files)) if (k.startsWith('_emerge/')) files[k] = v;
+        // 2026-11-26 (his: "get the pipeline working asap so it can build nexus"): a target that is itself an .eg file is pure Emerge: its source
+        // is the file, nothing else is written (no JavaScript build, no adapter over it); its test is Emerge's own (eg test)
+        const pure = /\.eg$/.test(f);
+        const files = pure ? { [f]: source } : { [at(base + '.eg')]: source, [at(base + (esm ? '.eg.cjs' : '.eg.js'))]: b.files['main.js'], [f]: adapter(f, { esm, names: skel.fns.map(x => x.name) }) };
+        if (!pure) for (const [k, v] of Object.entries(b.files)) if (k.startsWith('_emerge/')) files[k] = v;
         const x = typeof expect === 'function' ? await expect({ file: f, files }) : { ok: true, why: 'no expectation given' };
         if (x && x.ok) { tries.push({ n: round + 1, stage: 'pass', why: (x && x.why) || 'passed', ms: Date.now() - t0 }); console.log('[emerge-rung] ' + f + ': passed, skeleton first');
           for (const nm of Object.keys(recs)) if (recs[nm].status === 'passed') { recs[nm].gate = { ...(recs[nm].gate || {}), tested: true }; if (store) store.write(nm, recs[nm]); }

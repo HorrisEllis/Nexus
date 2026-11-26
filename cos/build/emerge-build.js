@@ -334,12 +334,34 @@ async function endState({ ph, plan, src, mapText }) {
   const PP = require(path.join(ROOT, 'lib', 'phase-plan.js')), codeOf = (p) => { try { return fs.readFileSync(path.join(ROOT, p), 'utf8'); } catch (_) { return null; } };
   const dv = PP.derivePlan({ phaseKey: PHASE, body, does: String(ph.does || ''), proof: String(ph.proof || ''), files, registry: [], system: 'idearium', codeOf });
   const plan = dv && (dv.plan || dv);
-  const src = plan && (plan.files || []).find((f) => f.path && !/\.test\.[cm]?js$/.test(f.path) && /\.[cm]?js$/.test(f.path));
-  if (!src) { row('refused', { note: 'the phase’s words gave no file with signatures: ' + JSON.stringify(dv).slice(0, 300) }); process.exit(1); }
+  let src = plan && (plan.files || []).find((f) => f.path && !/\.test\.[cm]?js$/.test(f.path) && /\.[cm]?js$/.test(f.path));
+  // 2026-11-26 — a pure Emerge phase (his: "get the pipeline working asap so it can build nexus"; GW0 and OL1 were refused: the planner
+  // only plans JavaScript). Its target is its own .eg file; its functions come from its spec module (exports, description) or, when the
+  // file exists, from its own fn lines. Built and judged in Emerge only (eg test), no JavaScript written.
+  let PURE = false;
+  if (!src) {
+    const target = files.find((f) => /\.eg$/.test(f) && !/(^|\/)test\//.test(f) && !/\.test\.eg$/.test(f));
+    if (target) {
+      let exps = [], desc = '';
+      for (const mod of [].concat(ph.blocks || [])) {
+        const specFile = ph.spec || null; const cands = specFile ? [specFile] : [];
+        for (const sf of cands) { const t = codeOf(sf) || ''; const at = t.indexOf('- id: ' + mod); if (at < 0) continue;
+          const end = t.indexOf('\n    - id:', at + 5); const blk = t.slice(at, end < 0 ? t.length : end);
+          const ex = /exports:\s*\[([^\]]*)\]/.exec(blk); desc = ((/description:\s*>?-?\s*\n?([\s\S]*?)\n\s{6}[a-z_]+:/.exec(blk) || [])[1] || '').replace(/\s+/g, ' ').trim();
+          if (ex) exps = (ex[1].match(/"([^"]+)"/g) || []).map((s) => s.slice(1, -1)); }
+      }
+      const fromSpec = exps.map((s) => /^([A-Za-z_]\w*)\s*\(([^)]*)\)/.exec(s)).filter(Boolean).map((m) => ({ name: m[1], signature: `${m[1]}(${m[2]})`, params: m[2].split(',').map((x) => x.trim().split(/[:\s]/)[0]).filter(Boolean), does: desc || String(ph.does || '') }));
+      const have = codeOf(target) || ''; const fromFile = [...have.matchAll(/^fn\s+([A-Za-z_]\w*)\s*\(([^)]*)\)/gm)].map((m) => ({ name: m[1], signature: `${m[1]}(${m[2]})`, params: m[2].split(',').map((x) => x.trim().split(/[:\s]/)[0]).filter(Boolean), does: String(ph.does || '') }));
+      const exports = fromSpec.length ? fromSpec : fromFile;
+      if (exports.length) { src = { path: target, exports }; PURE = true; row('planned-emerge', { note: `${target}: ${exports.length} function(s) from ${fromSpec.length ? 'its spec module (' + [].concat(ph.blocks || []).join(', ') + ')' : 'its own file'} (no model)` }); }
+    }
+  }
+  if (!src) { row('refused', { note: 'the phase’s words gave no file with signatures, and no Emerge file with a spec module or functions: ' + JSON.stringify(dv).slice(0, 300) }); process.exit(1); }
   row('planned', { note: `${src.path}: ${(src.exports || []).map((e) => e.signature || e.name).join('; ')} (no model)`, file: src.path, exports: src.exports });
   if (END_STATE) process.exit(await endState({ ph, plan, src, mapText }));
   // 3. the test, from the phase's examples (no model)
-  const TF = require(path.join(ROOT, 'lib', 'test-first.js')), testPath = TF.pathFor(plan, PHASE), moduleType = TF.moduleTypeFor(ROOT, src.path);
+  const TF = require(path.join(ROOT, 'lib', 'test-first.js')), moduleType = TF.moduleTypeFor(ROOT, src.path);
+  const testPath = PURE ? path.posix.join(path.posix.dirname(src.path), 'test', path.posix.basename(src.path).replace(/\.eg$/, '') + '.build.test.eg') : TF.pathFor(plan, PHASE);
   let examples = TF.examplesFrom(mapText, PHASE);
   // UD23 (his: "It needs to never need you at somepoint. Follows the axioms. Inside nexus first."): no examples in the map, so three readers
   // agree on them from each function's own sentence; only agreed ones are used, written down as agreed-not-confirmed (his yes may confirm)
@@ -379,7 +401,10 @@ async function endState({ ph, plan, src, mapText }) {
       try { fs.mkdirSync(TASKS, { recursive: true }); fs.writeFileSync(path.join(TASKS, `${PHASE}.examples.json`), JSON.stringify({ phase: PHASE, map: MAP, agreedBy: three, confirmedByJames: false, at: Date.now(), examples: agreed }, null, 1)); } catch (_) {}
     }
   }
-  const tf = TF.fromExamples({ plan, testPath, examples, moduleType }), testText = tf && (tf.content || tf.text || tf.test || (typeof tf === 'string' ? tf : null));
+  // a pure Emerge target is tested in Emerge: each example a line of one test block, its call made on the module (M.)
+  const egTest = () => { const names = new Set((src.exports || []).map((e) => e.name)); const lines = examples.map((l) => String(l).trim()).filter((l) => names.has((/^([A-Za-z_]\w*)\s*\(/.exec(l) || [])[1]));
+    if (!lines.length) return null; return `use "../${path.posix.basename(src.path)}" as M\n\ntest "${PHASE}: its examples (built by the pipeline)" {\n${lines.map((l) => '  expect M.' + l.replace(/"(?:[^"\\]|\\.)*"/g, (s) => s.replace(/[{}]/g, (m) => '\\' + m))).join('\n')}\n}\n`; };
+  const tf = PURE ? egTest() : TF.fromExamples({ plan, testPath, examples, moduleType }), testText = PURE ? tf : tf && (tf.content || tf.text || tf.test || (typeof tf === 'string' ? tf : null));
   if (!testText) { row('refused', { note: 'no test from the examples: ' + JSON.stringify(tf).slice(0, 300) }); process.exit(1); }
   row('test-written', { note: `${testPath} from ${examples.length} examples (no model)`, testPath, examples: examples.length });
   // 4. the code: the Emerge rung, its ladder smallest first, each call through the Ollama system
@@ -427,8 +452,12 @@ const ADVERSARIES = String(arg('adversaries', '')).split(',').map((x) => x.trim(
     // 6. the proof: the examples test, run against what the rung built, in a scratch copy (nothing in Nexus changes unless --land)
     T = fs.mkdtempSync(path.join(os.tmpdir(), 'cbuild-')); const put = (rel, c) => { const f = path.join(T, rel); fs.mkdirSync(path.dirname(f), { recursive: true }); fs.writeFileSync(f, c); };
     for (const pj of ['package.json', path.join(src.path.split('/')[0], 'package.json')]) { const c = codeOf(pj); if (c) put(pj, c); }
+    // a pure Emerge target: its neighbours (its folder and the one above, the .eg files it may use) copied in first, so its "use" lines resolve
+    if (PURE) { const d = path.posix.dirname(src.path); for (const dir of [d, path.posix.dirname(d)]) { let xs = []; try { xs = fs.readdirSync(path.join(ROOT, dir)); } catch (_) {}
+      for (const x of xs) if (/\.eg$/.test(x)) { const c = codeOf(path.posix.join(dir, x)); if (c != null) put(path.posix.join(dir, x), c); } } }
     for (const [rel, c] of Object.entries(res.files || {})) put(rel, c); put(testPath, testText);
-    t = spawnSync(process.execPath, [path.join(T, testPath)], { cwd: T, encoding: 'utf8', timeout: 120000 });
+    t = PURE ? spawnSync(process.execPath, [path.join(ROOT, 'emerge', 'emerge', 'lang', 'eg.js'), 'test', path.join(T, testPath)], { cwd: T, encoding: 'utf8', timeout: 120000 })
+      : spawnSync(process.execPath, [path.join(T, testPath)], { cwd: T, encoding: 'utf8', timeout: 120000 });
     out = ((t.stdout || '') + (t.stderr || '')).trim();
     row(t.status === 0 ? 'examples-passed' : 'examples-failed', { note: out.split('\n').slice(-6).join(' | ').slice(0, 600), exit: t.status, scratch: T, round });
     if (t.status === 0) break;
