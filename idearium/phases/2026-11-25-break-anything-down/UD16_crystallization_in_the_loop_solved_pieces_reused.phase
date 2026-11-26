@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-25-break-anything-down-phasemap.spec::UD16_crystallization_in_the_loop_solved_pieces_reused
+type: phase
+id: docs_2026-11-25-break-anything-down-phasemap.spec::UD16_crystallization_in_the_loop_solved_pieces_reused
+context: >-
+  pipeline phase UD16_crystallization_in_the_loop_solved_pieces_reused of
+  docs/2026-11-25-break-anything-down-phasemap.spec
+intent: null
+summary: UD16_crystallization_in_the_loop_solved_pieces_reused (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1795685012140
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795685012140
+lastSeenAt: 1795685012140
+fingerprint: null
+payload:
+  id: UD16_crystallization_in_the_loop_solved_pieces_reused
+  map: docs/2026-11-25-break-anything-down-phasemap.spec
+  repo: null
+  layer: null
+  status: pending
+  files: []
+  depends_on:
+    - UD5_invariants_across_pieces_become_components
+  blocks: []
+  spec: null
+  graph: bd01de107afdd8e2

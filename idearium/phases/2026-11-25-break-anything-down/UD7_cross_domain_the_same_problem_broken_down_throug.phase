@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-25-break-anything-down-phasemap.spec::UD7_cross_domain_the_same_problem_broken_down_throug
+type: phase
+id: docs_2026-11-25-break-anything-down-phasemap.spec::UD7_cross_domain_the_same_problem_broken_down_throug
+context: >-
+  pipeline phase UD7_cross_domain_the_same_problem_broken_down_throug of
+  docs/2026-11-25-break-anything-down-phasemap.spec
+intent: null
+summary: UD7_cross_domain_the_same_problem_broken_down_throug (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1795685012110
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795685012110
+lastSeenAt: 1795685012110
+fingerprint: null
+payload:
+  id: UD7_cross_domain_the_same_problem_broken_down_throug
+  map: docs/2026-11-25-break-anything-down-phasemap.spec
+  repo: null
+  layer: null
+  status: pending
+  files: []
+  depends_on:
+    - UD4_anything_in_every_input_read_into_the_same_tree_
+    - UD6_build_back_up_synthesis_toward_the_end_state
+  blocks: []
+  spec: null
+  graph: 19bc8d0173e1a0f1

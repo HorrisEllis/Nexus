@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-25-break-anything-down-phasemap.spec::UD14_algebraic_gates_laws_checked_on_every_piece
+type: phase
+id: docs_2026-11-25-break-anything-down-phasemap.spec::UD14_algebraic_gates_laws_checked_on_every_piece
+context: >-
+  pipeline phase UD14_algebraic_gates_laws_checked_on_every_piece of
+  docs/2026-11-25-break-anything-down-phasemap.spec
+intent: null
+summary: UD14_algebraic_gates_laws_checked_on_every_piece (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1795685012137
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795685012137
+lastSeenAt: 1795685012137
+fingerprint: null
+payload:
+  id: UD14_algebraic_gates_laws_checked_on_every_piece
+  map: docs/2026-11-25-break-anything-down-phasemap.spec
+  repo: null
+  layer: null
+  status: pending
+  files: []
+  depends_on:
+    - UD3_the_decompose_step_one_branch_per_piece_down_to_
+  blocks: []
+  spec: null
+  graph: 41fb84dc85729ea2

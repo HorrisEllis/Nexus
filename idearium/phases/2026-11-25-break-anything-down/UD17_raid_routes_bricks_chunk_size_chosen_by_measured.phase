@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-25-break-anything-down-phasemap.spec::UD17_raid_routes_bricks_chunk_size_chosen_by_measured
+type: phase
+id: docs_2026-11-25-break-anything-down-phasemap.spec::UD17_raid_routes_bricks_chunk_size_chosen_by_measured
+context: >-
+  pipeline phase UD17_raid_routes_bricks_chunk_size_chosen_by_measured of
+  docs/2026-11-25-break-anything-down-phasemap.spec
+intent: null
+summary: UD17_raid_routes_bricks_chunk_size_chosen_by_measured (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1795685012141
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795685012141
+lastSeenAt: 1795685012141
+fingerprint: null
+payload:
+  id: UD17_raid_routes_bricks_chunk_size_chosen_by_measured
+  map: docs/2026-11-25-break-anything-down-phasemap.spec
+  repo: null
+  layer: null
+  status: pending
+  files: []
+  depends_on:
+    - UD3_the_decompose_step_one_branch_per_piece_down_to_
+  blocks: []
+  spec: null
+  graph: 4d85c60a01847b88

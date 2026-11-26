@@ -1,0 +1,225 @@
+envelope: 1
+uuid: nexus-export-graph-phase:UD13_idearium_decomposition_moves_into_the_pipeline:5feb9b977e8f4978
+type: graph
+id: phase:UD13_idearium_decomposition_moves_into_the_pipeline:5feb9b977e8f4978
+context: dependency graph of phase UD13_idearium_decomposition_moves_into_the_pipeline
+intent: null
+summary: 26 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1795685012136
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795685012136
+lastSeenAt: 1795685012136
+fingerprint: null
+payload:
+  for: UD13_idearium_decomposition_moves_into_the_pipeline
+  kind: phase
+  repo: null
+  hash: 5feb9b977e8f4978
+  nodes:
+    - path: cos/pipeline/runs.eg
+      role: changes
+      exists: true
+      system: cos
+    - path: idearium/spec-engine/chunk-dispatch.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/spec-engine/compiler-t0.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: lib/end-state.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/seam/queue.js
+      role: changes
+      exists: true
+      system: lib
+    - path: guardian/server.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/spec-engine/guardian-extract.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/spec-engine/warp-build-dispatch.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/agent-build-loop.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/project-container.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/seam/index.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/lib/cos-seam-artifact-staging.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-agent-hat-agnostic.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/core/raid/index.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: idearium/lib/chunk-nodes.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/lib/config.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/spec-engine/index.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/spec-engine/manifest/graph.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: lib/agent-tools/tools/sandbox/cos-compartment.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/data-home.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/intake.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/seam/cos-seam-parser.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/seam/detector.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/seam/mode-reducer.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/seam/queue.js
+      to: lib/seam/detector.js
+      kind: requires
+    - from: lib/seam/queue.js
+      to: lib/seam/mode-reducer.js
+      kind: requires
+    - from: lib/seam/queue.js
+      to: lib/seam/cos-seam-parser.js
+      kind: requires
+    - from: lib/seam/queue.js
+      to: lib/data-home.js
+      kind: requires
+    - from: lib/seam/queue.js
+      to: lib/intake.js
+      kind: requires
+    - from: idearium/spec-engine/compiler-t0.js
+      to: idearium/spec-engine/manifest/graph.js
+      kind: requires
+    - from: idearium/spec-engine/compiler-t0.js
+      to: idearium/spec-engine/index.js
+      kind: requires
+    - from: idearium/spec-engine/compiler-t0.js
+      to: idearium/lib/config.js
+      kind: requires
+    - from: idearium/spec-engine/compiler-t0.js
+      to: idearium/lib/chunk-nodes.js
+      kind: requires
+    - from: idearium/spec-engine/compiler-t0.js
+      to: lib/agent-tools/tools/sandbox/cos-compartment.js
+      kind: requires
+    - from: idearium/spec-engine/chunk-dispatch.js
+      to: cortex/core/raid/index.js
+      kind: requires
+    - from: lib/end-state.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: guardian/server.js
+      to: lib/seam/queue.js
+      kind: requires
+    - from: lib/seam/index.js
+      to: lib/seam/queue.js
+      kind: requires
+    - from: tests/lib/cos-seam-artifact-staging.test.js
+      to: lib/seam/queue.js
+      kind: requires
+    - from: tests/modules/test-agent-hat-agnostic.test.js
+      to: lib/seam/queue.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: idearium/spec-engine/chunk-dispatch.js
+      kind: requires
+    - from: idearium/spec-engine/guardian-extract.js
+      to: idearium/spec-engine/chunk-dispatch.js
+      kind: requires
+    - from: idearium/spec-engine/warp-build-dispatch.js
+      to: idearium/spec-engine/chunk-dispatch.js
+      kind: requires
+    - from: lib/agent-build-loop.js
+      to: lib/end-state.js
+      kind: requires
+    - from: lib/project-container.js
+      to: lib/end-state.js
+      kind: requires
+  crossings:
+    - from: idearium/spec-engine/chunk-dispatch.js
+      to: cortex/core/raid/index.js
+      fromSystem: idearium
+      toSystem: cortex
+      kind: system
+      known: true
+    - from: lib/end-state.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD3_the_decompose_step_one_branch_per_piece_down_to_
+    dependents: []
+    upstream:
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD1_the_unit_a_piece_with_its_parent_contract_gate_a
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD2_is_it_even_a_framework_problem_the_gate_before_b
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD3_the_decompose_step_one_branch_per_piece_down_to_
+    downstream: []
+    blockedBy:
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD3_the_decompose_step_one_branch_per_piece_down_to_
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 3 · blocked by UD3_the_decompose_step_one_branch_per_piece_down_to_
+      - 'depends on (1): UD3_the_decompose_step_one_branch_per_piece_down_to_ · all upstream 3'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-11-25-break-anything-down-phasemap.spec::UD3_the_decompose_step_one_branch_per_piece_down_to_
+        kind: declared

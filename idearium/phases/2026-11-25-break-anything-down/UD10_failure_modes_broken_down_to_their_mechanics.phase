@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-25-break-anything-down-phasemap.spec::UD10_failure_modes_broken_down_to_their_mechanics
+type: phase
+id: docs_2026-11-25-break-anything-down-phasemap.spec::UD10_failure_modes_broken_down_to_their_mechanics
+context: >-
+  pipeline phase UD10_failure_modes_broken_down_to_their_mechanics of
+  docs/2026-11-25-break-anything-down-phasemap.spec
+intent: null
+summary: UD10_failure_modes_broken_down_to_their_mechanics (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1795685012116
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795685012116
+lastSeenAt: 1795685012116
+fingerprint: null
+payload:
+  id: UD10_failure_modes_broken_down_to_their_mechanics
+  map: docs/2026-11-25-break-anything-down-phasemap.spec
+  repo: null
+  layer: null
+  status: pending
+  files: []
+  depends_on:
+    - UD3_the_decompose_step_one_branch_per_piece_down_to_
+  blocks: []
+  spec: null
+  graph: 922b76d1e95af064

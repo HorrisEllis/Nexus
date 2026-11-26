@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-25-break-anything-down-phasemap.spec::UD13_idearium_decomposition_moves_into_the_pipeline
+type: phase
+id: docs_2026-11-25-break-anything-down-phasemap.spec::UD13_idearium_decomposition_moves_into_the_pipeline
+context: >-
+  pipeline phase UD13_idearium_decomposition_moves_into_the_pipeline of
+  docs/2026-11-25-break-anything-down-phasemap.spec
+intent: null
+summary: UD13_idearium_decomposition_moves_into_the_pipeline (?) — 5 file(s)
+system: idearium
+tags: []
+exported_at: 1795685012136
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795685012136
+lastSeenAt: 1795685012136
+fingerprint: null
+payload:
+  id: UD13_idearium_decomposition_moves_into_the_pipeline
+  map: docs/2026-11-25-break-anything-down-phasemap.spec
+  repo: null
+  layer: null
+  status: pending
+  files:
+    - lib/seam/queue.js
+    - cos/pipeline/runs.eg
+    - idearium/spec-engine/compiler-t0.js
+    - idearium/spec-engine/chunk-dispatch.js
+    - lib/end-state.js
+  depends_on:
+    - UD3_the_decompose_step_one_branch_per_piece_down_to_
+  blocks: []
+  spec: null
+  graph: 5feb9b977e8f4978

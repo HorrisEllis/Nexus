@@ -1,0 +1,105 @@
+envelope: 1
+uuid: nexus-export-graph-phase:UD3_the_decompose_step_one_branch_per_piece_down_to_:50bddc48a6f80e83
+type: graph
+id: phase:UD3_the_decompose_step_one_branch_per_piece_down_to_:50bddc48a6f80e83
+context: dependency graph of phase UD3_the_decompose_step_one_branch_per_piece_down_to_
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1795685012101
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795685012101
+lastSeenAt: 1795685012101
+fingerprint: null
+payload:
+  for: UD3_the_decompose_step_one_branch_per_piece_down_to_
+  kind: phase
+  repo: null
+  hash: 50bddc48a6f80e83
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD1_the_unit_a_piece_with_its_parent_contract_gate_a
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD2_is_it_even_a_framework_problem_the_gate_before_b
+    dependents:
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD4_anything_in_every_input_read_into_the_same_tree_
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD5_invariants_across_pieces_become_components
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD6_build_back_up_synthesis_toward_the_end_state
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD8_every_piece_attacked_and_measured
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD9_every_coder_intervention_broken_down_into_a_capa
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD10_failure_modes_broken_down_to_their_mechanics
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD12_his_framework_as_step_kinds
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD13_idearium_decomposition_moves_into_the_pipeline
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD14_algebraic_gates_laws_checked_on_every_piece
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD15_the_graph_substrate_every_piece_a_node_of_the_kn
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD17_raid_routes_bricks_chunk_size_chosen_by_measured
+    upstream:
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD1_the_unit_a_piece_with_its_parent_contract_gate_a
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD2_is_it_even_a_framework_problem_the_gate_before_b
+    downstream:
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD10_failure_modes_broken_down_to_their_mechanics
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD11_nexus_broken_down_into_itself
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD12_his_framework_as_step_kinds
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD13_idearium_decomposition_moves_into_the_pipeline
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD14_algebraic_gates_laws_checked_on_every_piece
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD15_the_graph_substrate_every_piece_a_node_of_the_kn
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD16_crystallization_in_the_loop_solved_pieces_reused
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD17_raid_routes_bricks_chunk_size_chosen_by_measured
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD4_anything_in_every_input_read_into_the_same_tree_
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD5_invariants_across_pieces_become_components
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD6_build_back_up_synthesis_toward_the_end_state
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD7_cross_domain_the_same_problem_broken_down_throug
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD8_every_piece_attacked_and_measured
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD9_every_coder_intervention_broken_down_into_a_capa
+    blockedBy:
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD1_the_unit_a_piece_with_its_parent_contract_gate_a
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD2_is_it_even_a_framework_problem_the_gate_before_b
+    unlocks:
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD4_anything_in_every_input_read_into_the_same_tree_
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD5_invariants_across_pieces_become_components
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD8_every_piece_attacked_and_measured
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD9_every_coder_intervention_broken_down_into_a_capa
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD10_failure_modes_broken_down_to_their_mechanics
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD12_his_framework_as_step_kinds
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD13_idearium_decomposition_moves_into_the_pipeline
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD14_algebraic_gates_laws_checked_on_every_piece
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD15_the_graph_substrate_every_piece_a_node_of_the_kn
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD17_raid_routes_bricks_chunk_size_chosen_by_measured
+    conflicts: []
+    dangling: []
+    lines:
+      - >-
+        layer 2 · blocked by UD1_the_unit_a_piece_with_its_parent_contract_gate_a,
+        UD2_is_it_even_a_framework_problem_the_gate_before_b
+      - >-
+        depends on (2): UD1_the_unit_a_piece_with_its_parent_contract_gate_a,
+        UD2_is_it_even_a_framework_problem_the_gate_before_b
+      - >-
+        needed by (11): UD4_anything_in_every_input_read_into_the_same_tree_,
+        UD5_invariants_across_pieces_become_components,
+        UD6_build_back_up_synthesis_toward_the_end_state, UD8_every_piece_attacked_and_measured,
+        UD9_every_coder_intervention_broken_down_into_a_capa,
+        UD10_failure_modes_broken_down_to_their_mechanics, UD12_his_framework_as_step_kinds,
+        UD13_idearium_decomposition_moves_into_the_pipeline,
+        UD14_algebraic_gates_laws_checked_on_every_piece,
+        UD15_the_graph_substrate_every_piece_a_node_of_the_kn,
+        UD17_raid_routes_bricks_chunk_size_chosen_by_measured · all downstream 14 · finishing it
+        unlocks UD4_anything_in_every_input_read_into_the_same_tree_,
+        UD5_invariants_across_pieces_become_components, UD8_every_piece_attacked_and_measured,
+        UD9_every_coder_intervention_broken_down_into_a_capa,
+        UD10_failure_modes_broken_down_to_their_mechanics, UD12_his_framework_as_step_kinds,
+        UD13_idearium_decomposition_moves_into_the_pipeline,
+        UD14_algebraic_gates_laws_checked_on_every_piece,
+        UD15_the_graph_substrate_every_piece_a_node_of_the_kn,
+        UD17_raid_routes_bricks_chunk_size_chosen_by_measured
+    edges:
+      - from: docs/2026-11-25-break-anything-down-phasemap.spec::UD1_the_unit_a_piece_with_its_parent_contract_gate_a
+        kind: declared
+      - from: docs/2026-11-25-break-anything-down-phasemap.spec::UD2_is_it_even_a_framework_problem_the_gate_before_b
+        kind: declared

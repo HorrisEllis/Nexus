@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-25-break-anything-down-phasemap.spec::UD4_anything_in_every_input_read_into_the_same_tree_
+type: phase
+id: docs_2026-11-25-break-anything-down-phasemap.spec::UD4_anything_in_every_input_read_into_the_same_tree_
+context: >-
+  pipeline phase UD4_anything_in_every_input_read_into_the_same_tree_ of
+  docs/2026-11-25-break-anything-down-phasemap.spec
+intent: null
+summary: UD4_anything_in_every_input_read_into_the_same_tree_ (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1795685012104
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795685012104
+lastSeenAt: 1795685012104
+fingerprint: null
+payload:
+  id: UD4_anything_in_every_input_read_into_the_same_tree_
+  map: docs/2026-11-25-break-anything-down-phasemap.spec
+  repo: null
+  layer: null
+  status: pending
+  files: []
+  depends_on:
+    - UD3_the_decompose_step_one_branch_per_piece_down_to_
+  blocks: []
+  spec: null
+  graph: 1e90daf989506614

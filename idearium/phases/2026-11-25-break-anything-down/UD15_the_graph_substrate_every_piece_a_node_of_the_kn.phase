@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-25-break-anything-down-phasemap.spec::UD15_the_graph_substrate_every_piece_a_node_of_the_kn
+type: phase
+id: docs_2026-11-25-break-anything-down-phasemap.spec::UD15_the_graph_substrate_every_piece_a_node_of_the_kn
+context: >-
+  pipeline phase UD15_the_graph_substrate_every_piece_a_node_of_the_kn of
+  docs/2026-11-25-break-anything-down-phasemap.spec
+intent: null
+summary: UD15_the_graph_substrate_every_piece_a_node_of_the_kn (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1795685012139
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795685012139
+lastSeenAt: 1795685012139
+fingerprint: null
+payload:
+  id: UD15_the_graph_substrate_every_piece_a_node_of_the_kn
+  map: docs/2026-11-25-break-anything-down-phasemap.spec
+  repo: null
+  layer: null
+  status: pending
+  files:
+    - idearium/spec-engine/spec-compiler/compiler/kg-builder.js
+  depends_on:
+    - UD3_the_decompose_step_one_branch_per_piece_down_to_
+  blocks: []
+  spec: null
+  graph: 7d59180d1da33421

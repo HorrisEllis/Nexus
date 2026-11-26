@@ -1,0 +1,127 @@
+envelope: 1
+uuid: nexus-export-graph-phase:UD15_the_graph_substrate_every_piece_a_node_of_the_kn:7d59180d1da33421
+type: graph
+id: phase:UD15_the_graph_substrate_every_piece_a_node_of_the_kn:7d59180d1da33421
+context: dependency graph of phase UD15_the_graph_substrate_every_piece_a_node_of_the_kn
+intent: null
+summary: 12 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1795685012139
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795685012139
+lastSeenAt: 1795685012139
+fingerprint: null
+payload:
+  for: UD15_the_graph_substrate_every_piece_a_node_of_the_kn
+  kind: phase
+  repo: null
+  hash: 7d59180d1da33421
+  nodes:
+    - path: idearium/spec-engine/spec-compiler/compiler/kg-builder.js
+      role: changes
+      exists: true
+      system: idearium
+    - path: idearium/spec-engine/spec-compiler/compiler/pipeline.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/spec-engine/spec-compiler/lib/compiler.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/spec-engine/spec-compiler/test/gap-field.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: idearium/spec-engine/spec-compiler/test/invariants.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: idearium/spec-engine/spec-compiler/test/kg.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: idearium/spec-engine/spec-compiler/test/propagation.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: idearium/spec-engine/spec-compiler/test/reply-engine.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: idearium/spec-engine/spec-compiler/test/target.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: idearium/spec-engine/spec-compiler/test/tier-contract.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: idearium/spec-engine/spec-compiler/chunk/index.js
+      role: uses
+      exists: true
+      system: idearium
+    - path: idearium/spec-engine/spec-compiler/siso/index.js
+      role: uses
+      exists: true
+      system: idearium
+  edges:
+    - from: idearium/spec-engine/spec-compiler/compiler/kg-builder.js
+      to: idearium/spec-engine/spec-compiler/siso/index.js
+      kind: requires
+    - from: idearium/spec-engine/spec-compiler/compiler/kg-builder.js
+      to: idearium/spec-engine/spec-compiler/chunk/index.js
+      kind: requires
+    - from: idearium/spec-engine/spec-compiler/compiler/pipeline.js
+      to: idearium/spec-engine/spec-compiler/compiler/kg-builder.js
+      kind: requires
+    - from: idearium/spec-engine/spec-compiler/lib/compiler.js
+      to: idearium/spec-engine/spec-compiler/compiler/kg-builder.js
+      kind: requires
+    - from: idearium/spec-engine/spec-compiler/test/gap-field.test.js
+      to: idearium/spec-engine/spec-compiler/compiler/kg-builder.js
+      kind: requires
+    - from: idearium/spec-engine/spec-compiler/test/invariants.test.js
+      to: idearium/spec-engine/spec-compiler/compiler/kg-builder.js
+      kind: requires
+    - from: idearium/spec-engine/spec-compiler/test/kg.test.js
+      to: idearium/spec-engine/spec-compiler/compiler/kg-builder.js
+      kind: requires
+    - from: idearium/spec-engine/spec-compiler/test/propagation.test.js
+      to: idearium/spec-engine/spec-compiler/compiler/kg-builder.js
+      kind: requires
+    - from: idearium/spec-engine/spec-compiler/test/reply-engine.test.js
+      to: idearium/spec-engine/spec-compiler/compiler/kg-builder.js
+      kind: requires
+    - from: idearium/spec-engine/spec-compiler/test/target.test.js
+      to: idearium/spec-engine/spec-compiler/compiler/kg-builder.js
+      kind: requires
+    - from: idearium/spec-engine/spec-compiler/test/tier-contract.test.js
+      to: idearium/spec-engine/spec-compiler/compiler/kg-builder.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD3_the_decompose_step_one_branch_per_piece_down_to_
+    dependents: []
+    upstream:
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD1_the_unit_a_piece_with_its_parent_contract_gate_a
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD2_is_it_even_a_framework_problem_the_gate_before_b
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD3_the_decompose_step_one_branch_per_piece_down_to_
+    downstream: []
+    blockedBy:
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD3_the_decompose_step_one_branch_per_piece_down_to_
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 3 · blocked by UD3_the_decompose_step_one_branch_per_piece_down_to_
+      - 'depends on (1): UD3_the_decompose_step_one_branch_per_piece_down_to_ · all upstream 3'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-11-25-break-anything-down-phasemap.spec::UD3_the_decompose_step_one_branch_per_piece_down_to_
+        kind: declared

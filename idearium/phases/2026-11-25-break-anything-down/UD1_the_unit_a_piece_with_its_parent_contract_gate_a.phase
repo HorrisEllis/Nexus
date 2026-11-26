@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-25-break-anything-down-phasemap.spec::UD1_the_unit_a_piece_with_its_parent_contract_gate_a
+type: phase
+id: docs_2026-11-25-break-anything-down-phasemap.spec::UD1_the_unit_a_piece_with_its_parent_contract_gate_a
+context: >-
+  pipeline phase UD1_the_unit_a_piece_with_its_parent_contract_gate_a of
+  docs/2026-11-25-break-anything-down-phasemap.spec
+intent: null
+summary: UD1_the_unit_a_piece_with_its_parent_contract_gate_a (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1795685012094
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795685012094
+lastSeenAt: 1795685012094
+fingerprint: null
+payload:
+  id: UD1_the_unit_a_piece_with_its_parent_contract_gate_a
+  map: docs/2026-11-25-break-anything-down-phasemap.spec
+  repo: null
+  layer: null
+  status: pending
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 57d06db798125a46

@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-25-break-anything-down-phasemap.spec::UD3_the_decompose_step_one_branch_per_piece_down_to_
+type: phase
+id: docs_2026-11-25-break-anything-down-phasemap.spec::UD3_the_decompose_step_one_branch_per_piece_down_to_
+context: >-
+  pipeline phase UD3_the_decompose_step_one_branch_per_piece_down_to_ of
+  docs/2026-11-25-break-anything-down-phasemap.spec
+intent: null
+summary: UD3_the_decompose_step_one_branch_per_piece_down_to_ (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1795685012102
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795685012102
+lastSeenAt: 1795685012102
+fingerprint: null
+payload:
+  id: UD3_the_decompose_step_one_branch_per_piece_down_to_
+  map: docs/2026-11-25-break-anything-down-phasemap.spec
+  repo: null
+  layer: null
+  status: pending
+  files: []
+  depends_on:
+    - UD1_the_unit_a_piece_with_its_parent_contract_gate_a
+    - UD2_is_it_even_a_framework_problem_the_gate_before_b
+  blocks: []
+  spec: null
+  graph: 50bddc48a6f80e83
