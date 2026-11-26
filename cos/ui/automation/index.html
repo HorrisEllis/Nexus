@@ -140,7 +140,7 @@ svg.cv.drag { cursor: grabbing; }
 .kv.row:hover { background: rgba(255,255,255,.03); }
 .pre { font: 11px/1.55 var(--mono); color: var(--text2); white-space: pre-wrap; word-break: break-word; background: var(--bg); border: 1px solid var(--edge); border-radius: 6px; padding: 8px 9px; max-height: 260px; overflow: auto; }
 .pre.bad { color: var(--coral); }
-#dock-rail { flex: none; display: flex; flex-direction: column; gap: 4px; justify-content: center; padding: 8px 0; background: var(--bg); border-left: 1px solid var(--edge); }
+#dock-rail { flex: none; display: flex; flex-direction: column; gap: 4px; justify-content: center; padding: 8px 0 8px 6px; background: var(--bg1, #0d1117); border-left: 1px solid var(--edge); box-shadow: inset 1px 0 0 rgba(255,255,255,.03); }
 #dock-rail .dk-tab { display: flex; flex-direction: column; align-items: center; gap: 5px; padding: 10px 5px 9px 6px; background: var(--nx-card, var(--bg2)); border: 1px solid var(--nx-rim, rgba(255,255,255,.12)); border-right: 0; border-radius: 8px 0 0 8px; color: var(--text2); font: 600 10px var(--mono); letter-spacing: .08em; cursor: pointer; box-shadow: -6px 0 18px rgba(0,0,0,.35); transition: padding-right .15s, color .15s, background .15s; }
 #dock-rail .dk-tab:hover { color: var(--text); padding-right: 9px; }
 #dock-rail .dk-tab.on { color: var(--text); background: var(--nx-card-hi, rgba(59,130,246,.18)); border-color: var(--accent, var(--sky)); }
@@ -290,7 +290,7 @@ const icon = (k) => `<svg class="i" viewBox="0 0 24 24">${ICONS[k] || ''}</svg>`
 
 // ── state ──
 const S = { view: (v => ['console', 'vars', 'settings'].includes(v) ? 'canvas' : v)(store.get('view', 'canvas')), max: false, stack: [], phases: null, comps: null, cat: null, cmds: {}, trig: {}, drafts: {}, edits: {}, rev: 0, lin: {}, logs: null, cli: [], draft: '', hist: [], hi: 0, pid: store.get('pid', null), sel: null, job: null, pinned: false, all: false, follow: true, wrap: true, think: false,
-  open: new Set(store.get('dock', ['inspector', 'activity'])), folded: new Set(store.get('folded', [])), split: store.get('split', .6), D: null, ok: 0, base: {}, vp: null, sig: '' };
+  open: new Set(store.get('dock', ['inspector', 'activity'])), folded: new Set(store.get('folded', [])), split: store.get('split', .6), callsShut: !!store.get('callsShut', 0), D: null, ok: 0, base: {}, vp: null, sig: '' };
 const pipe = () => S.drafts[S.pid] || (S.D && S.D.pipelines.find((p) => p.id === S.pid));
 const allPipes = () => [...(S.D ? S.D.pipelines : []), ...Object.values(S.drafts).filter((d) => !(S.D && S.D.pipelines.some((p) => p.id === d.id)))];
 // ── the draft: every edit changes a copy of the pipeline; Save writes it through COS once built, Discard drops it ──
@@ -756,6 +756,7 @@ function hl(line) { let o = '', i = 0, m; const re = /(\/\/.*$|#.*$)|('(?:\\.|[^
 function text(t, running) { const ls = String(t || '').split('\n'); let code = !/```/.test(t), h = ''; ls.forEach((ln, i) => { const c = i === ls.length - 1 && running ? '<span class="caret"></span>' : '';
   if (/^\s*```/.test(ln)) { code = !code; h += `<div class="l fence">${esc(ln)}${c}</div>`; } else h += code ? `<div class="l">${hl(ln)}${c}</div>` : `<div class="l prose">${esc(ln)}${c}</div>`; }); return h; }
 function consoleHtml(full) {
+  if (S.callsShut && !full) { const n = S.D ? jobs().filter((x) => /running|queued/.test(x.status)).length : 0; return `<div class="console" id="console" style="flex:0 0 30px;min-height:30px;display:flex;align-items:center;gap:8px;padding:0 12px;cursor:pointer;border-top:1px solid var(--edge)" data-calls-open title="Open the model calls"><span style="color:var(--sky)">▸</span><b style="font:11px var(--mono);letter-spacing:.08em;color:var(--text2)">MODEL CALLS</b><span style="font:11px var(--mono);color:var(--text3)">${n} running</span></div>`; }
   if (!S.D) return `<div class="console${full ? ' full' : ''}" id="console"><div class="empty">Reading…</div></div>`;
   const js = jobs(); if (!(S.pinned && job())) { const j = js.find((x) => x.status === 'running') || js[0]; S.job = j ? j.id : null; } const j = job();
   const act = js.filter((x) => /running|queued/.test(x.status)), done = js.filter((x) => !/running|queued/.test(x.status));
@@ -765,7 +766,7 @@ function consoleHtml(full) {
   const view = j ? `<div class="view"><div class="vh"><span class="sd ${j.status === 'running' ? 'running' : ''}" style="background:${j.status === 'running' ? '' : col(j.status)}"></span><b>${esc(jname(j))}</b><span class="sep">·</span>${esc(model(j.model))}<span class="sep">·</span>${dur(j.ms)}<span class="sep">·</span>${kfmt(j.chars)} chars${tps ? ` <span class="sep">·</span> ${tps} tok/s` : ''}${S.pinned ? ' <span class="sep">·</span> <span style="color:var(--sky)">pinned</span>' : ''}<span class="grow"></span><button class="icon-btn" id="callMenu">${icon('more')}</button></div>
       ${S.think && j.thinking ? `<div class="think">${esc(j.thinking)}</div>` : ''}<div class="code ${S.wrap ? '' : 'nowrap'}" id="code">${j.text ? text(j.text, j.status === 'running') : `<div class="l prose">${j.status === 'queued' ? 'Waiting for Ollama…' : j.status === 'running' ? 'Loading the model…' : j.error ? '✗ ' + esc(j.error) : '(no output)'}${j.status === 'running' ? '<span class="caret"></span>' : ''}</div>`}</div></div>`
     : '<div class="view"><div class="empty" style="margin:auto">Nothing to show.</div></div>';
-  return `<div class="console${full ? ' full' : ''}" id="console" style="${full ? '' : `flex-basis:${Math.round((1 - S.split) * 100)}%`}"><div class="calls"><div class="ph">Model calls</div><div class="list">${list}</div></div>${view}</div>`;
+  return `<div class="console${full ? ' full' : ''}" id="console" style="${full ? '' : `flex-basis:${Math.round((1 - S.split) * 100)}%`}"><div class="calls"><div class="ph" style="display:flex;align-items:center;gap:6px"><span data-calls-shut title="Collapse the model calls" style="cursor:pointer;color:var(--sky)">▾</span>Model calls</div><div class="list">${list}</div></div>${view}</div>`;
 }
 function bindConsole() {
   const w = $('work'), cm = (e) => { e.preventDefault(); menu(fromActions(MENUS.call), { x: e.clientX, y: e.clientY }); };
@@ -786,10 +787,11 @@ function work() {
     const grows = growsFrom(p), gsig = grows ? grows.gates.map((g) => g.name + g.status + g.tries).join('|') + (grows.now || '') : '';
     const sig = JSON.stringify([S.seek, p.id, p.tasks.length, last(p.id) && last(p.id).tasks, S.sel, !!S.base[p.id] && !S.base[p.id].loading, S.max, S.rev, !!(S.cat && S.cat.catalogue.length), gsig]);
     if (sig !== S.sig || !w.querySelector('svg.cv')) { S.sig = sig;
-      w.innerHTML = `<div class="canvas-wrap" style="${S.max ? 'display:none;' : ''}flex-basis:${Math.round(S.split * 100)}%"><svg class="cv">${canvasOf(p, grows)}</svg><div class="zoom"><button data-a="view.out" title="Zoom out">−</button><button data-a="view.fit" title="Fit (F)">⤢</button><button data-a="view.in" title="Zoom in">+</button></div>${playerHtml()}</div><div class="splitter" id="split" title="Drag to resize · double-click: console full height"></div>${consoleHtml(S.max)}`;
+      w.innerHTML = `<div class="canvas-wrap" style="${S.max ? 'display:none;' : ''}${S.callsShut ? 'flex:1 1 auto;' : `flex-basis:${Math.round(S.split * 100)}%`}"><svg class="cv">${canvasOf(p, grows)}</svg><div class="zoom"><button data-a="view.out" title="Zoom out">−</button><button data-a="view.fit" title="Fit (F)">⤢</button><button data-a="view.in" title="Zoom in">+</button></div>${playerHtml()}</div><div class="splitter" id="split" title="Drag to resize · double-click: console full height"></div>${consoleHtml(S.max)}`;
       if (!S.vp) requestAnimationFrame(fit); else applyVp(); bindCanvas(); bindSplit();
     } else { const c = $('console'); if (c) c.outerHTML = consoleHtml(false); }
     bindConsole(); drawPlayer();
+    { const o = w.querySelector('[data-calls-open]'), c = w.querySelector('[data-calls-shut]'); if (o) o.onclick = () => { S.callsShut = false; store.set('callsShut', 0); S.sig = ''; work(); }; if (c) c.onclick = () => { S.callsShut = true; store.set('callsShut', 1); S.sig = ''; work(); }; }
   } else if (S.view === 'console') { w.innerHTML = consoleHtml(true); bindConsole(); }
   else if (S.view === 'runs' && S.runsOf && S.timelineOf) { if (w.querySelector('[data-back]') && w.dataset.tl === S.timelineOf + ':' + JSON.stringify((runs(S.pid).find((x) => x.id === S.timelineOf) || {}).tasks)) return; w.dataset.tl = S.timelineOf + ':' + JSON.stringify((runs(S.pid).find((x) => x.id === S.timelineOf) || {}).tasks); timelineView(w); }
   else if (S.view === 'runs' && !S.runsOf) { if (w.querySelector('.lib-title input')) return; libraryView(w); }   /* not while a name is being typed */
