@@ -51,4 +51,24 @@ phases:
       its gate), read at use, editable by him and added to by the forge, never a list written into a .js file. The forge writes a tool as a row
       the registry reads at once (§5.16: each system's registry its own).
     proof: "a tool added as a row is offered to an agent without a restart; no tool name is written in Guardian's code"
-order: "TN2 (his preview) and TN1 first (talking to Nexus); TN3, TN4 beside them."
+  TN5_lineage_shows_file_changes:
+    status: OPEN
+    depends_on: [RQ2_one_ledger_by_id]
+    files: [cos/ui/automation/index.html, cortex/core/raid/id-ledger.eg]
+    james: '"lineage file change" (2026-11-26, on the canvas''s Lineage and Changes tabs)'
+    does: >-
+      Each node's lineage names the files it changed (path, before and after hashes, the diff), read from the id ledger (RQ2), so walking the
+      lineage from the request to the end state is also walking every file change, and any one can be replayed or reversed. His reading of
+      "lineage file change" is his to confirm: the file changes inside the lineage (this), or a Lineage tab that is the Changes tab.
+    proof: "from a node, the lineage lists the files that node changed, each with its diff, and reverting one is a node of its own"
+  TN6_a_hat_per_pipeline:
+    status: OPEN
+    depends_on: [TN1_talk_to_copilot_on_the_canvas, TN3_his_framework_as_agent_tools]
+    files: [copilot/hats/registry.json, copilot/lib/hat.eg]
+    james: '"also terminal should be copilot. maybe a hat per pipeline?" (2026-11-26)'
+    does: >-
+      The canvas's Terminal tab is Copilot (TN1). Copilot wears a hat per pipeline: a hat is data (the pipeline it serves, its intent, the
+      framework sections and tools it reaches for, what it watches for, how it speaks), picked by the pipeline he is on, editable by him, never
+      hardcoded (TN4). The same Copilot, a different hat on each pipeline.
+    proof: "on the build pipeline Copilot answers as its hat says (its tools, its watch-list); a hat edited as a row changes the next answer"
+order: "TN2 (his preview) and TN1 first (talking to Nexus, the Terminal tab becoming Copilot); TN3, TN4 beside them; TN5 after RQ2; TN6 after TN1 and TN3."

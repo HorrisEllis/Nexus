@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-26-talk-to-nexus-phasemap.spec::TN5_lineage_shows_file_changes
+type: phase
+id: docs_2026-11-26-talk-to-nexus-phasemap.spec::TN5_lineage_shows_file_changes
+context: pipeline phase TN5_lineage_shows_file_changes of docs/2026-11-26-talk-to-nexus-phasemap.spec
+intent: null
+summary: TN5_lineage_shows_file_changes (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1795719208544
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795719208544
+lastSeenAt: 1795719208544
+fingerprint: null
+payload:
+  id: TN5_lineage_shows_file_changes
+  map: docs/2026-11-26-talk-to-nexus-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/ui/automation/index.html
+    - cortex/core/raid/id-ledger.eg
+  depends_on:
+    - RQ2_one_ledger_by_id
+  blocks: []
+  spec: null
+  graph: 69904e6ddfa51fc4

@@ -1,0 +1,65 @@
+envelope: 1
+uuid: nexus-export-graph-phase:TN5_lineage_shows_file_changes:69904e6ddfa51fc4
+type: graph
+id: phase:TN5_lineage_shows_file_changes:69904e6ddfa51fc4
+context: dependency graph of phase TN5_lineage_shows_file_changes
+intent: null
+summary: 2 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1795719208544
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795719208544
+lastSeenAt: 1795719208544
+fingerprint: null
+payload:
+  for: TN5_lineage_shows_file_changes
+  kind: phase
+  repo: null
+  hash: 69904e6ddfa51fc4
+  nodes:
+    - path: cortex/core/raid/id-ledger.eg
+      role: changes
+      exists: false
+      system: cortex
+    - path: cos/ui/automation/index.html
+      role: changes
+      exists: true
+      system: cos
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-11-26-raid-queue-and-signal-field-phasemap.spec::RQ2_one_ledger_by_id
+    dependents: []
+    upstream:
+      - docs/2026-11-26-raid-queue-and-signal-field-phasemap.spec::RQ1_the_request_waits_in_raid_s_queue
+      - docs/2026-11-26-raid-queue-and-signal-field-phasemap.spec::RQ2_one_ledger_by_id
+    downstream: []
+    blockedBy:
+      - docs/2026-11-26-raid-queue-and-signal-field-phasemap.spec::RQ2_one_ledger_by_id
+    unlocks: []
+    conflicts:
+      - with: docs/2026-11-26-talk-to-nexus-phasemap.spec::TN1_talk_to_copilot_on_the_canvas
+        files:
+          - cos/ui/automation/index.html
+      - with: docs/2026-11-26-talk-to-nexus-phasemap.spec::TN2_fewer_tabs_no_dropdown
+        files:
+          - cos/ui/automation/index.html
+    dangling: []
+    lines:
+      - layer 2 · blocked by RQ2_one_ledger_by_id
+      - 'depends on (1): RQ2_one_ledger_by_id · all upstream 2'
+      - 'needed by (0): —'
+      - >-
+        same files as TN1_talk_to_copilot_on_the_canvas with no order between them:
+        cos/ui/automation/index.html
+      - >-
+        same files as TN2_fewer_tabs_no_dropdown with no order between them:
+        cos/ui/automation/index.html
+    edges:
+      - from: docs/2026-11-26-raid-queue-and-signal-field-phasemap.spec::RQ2_one_ledger_by_id
+        kind: declared

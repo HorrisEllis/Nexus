@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-26-talk-to-nexus-phasemap.spec::TN6_a_hat_per_pipeline
+type: phase
+id: docs_2026-11-26-talk-to-nexus-phasemap.spec::TN6_a_hat_per_pipeline
+context: pipeline phase TN6_a_hat_per_pipeline of docs/2026-11-26-talk-to-nexus-phasemap.spec
+intent: null
+summary: TN6_a_hat_per_pipeline (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1795719208546
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795719208546
+lastSeenAt: 1795719208546
+fingerprint: null
+payload:
+  id: TN6_a_hat_per_pipeline
+  map: docs/2026-11-26-talk-to-nexus-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - copilot/hats/registry.json
+    - copilot/lib/hat.eg
+  depends_on:
+    - TN1_talk_to_copilot_on_the_canvas
+    - TN3_his_framework_as_agent_tools
+  blocks: []
+  spec: null
+  graph: a45d4e15ca0213d9
