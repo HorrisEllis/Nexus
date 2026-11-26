@@ -290,7 +290,7 @@ const icon = (k) => `<svg class="i" viewBox="0 0 24 24">${ICONS[k] || ''}</svg>`
 
 // ── state ──
 const S = { view: (v => ['console', 'vars', 'settings'].includes(v) ? 'canvas' : v)(store.get('view', 'canvas')), max: false, stack: [], phases: null, comps: null, cat: null, cmds: {}, trig: {}, drafts: {}, edits: {}, rev: 0, lin: {}, logs: null, cli: [], draft: '', hist: [], hi: 0, pid: store.get('pid', null), sel: null, job: null, pinned: false, all: false, follow: true, wrap: true, think: false,
-  open: new Set(store.get('dock', ['inspector', 'activity'])), folded: new Set(store.get('folded', [])), split: store.get('split', .6), callsShut: !!store.get('callsShut', 0), D: null, ok: 0, base: {}, vp: null, sig: '' };
+  open: new Set(store.get('dock', ['inspector']).filter((x) => !['activity', 'build', 'outputs', 'lineage'].includes(x))), folded: new Set(store.get('folded', [])), split: store.get('split', .6), callsShut: !!store.get('callsShut', 0), D: null, ok: 0, base: {}, vp: null, sig: '' };
 const pipe = () => S.drafts[S.pid] || (S.D && S.D.pipelines.find((p) => p.id === S.pid));
 const allPipes = () => [...(S.D ? S.D.pipelines : []), ...Object.values(S.drafts).filter((d) => !(S.D && S.D.pipelines.some((p) => p.id === d.id)))];
 // ── the draft: every edit changes a copy of the pipeline; Save writes it through COS once built, Discard drops it ──
@@ -1000,26 +1000,26 @@ const PANELS = [
       return `<div class="fld"><label class="fl">Name</label><input type="text" data-pf="name" value="${esc(p.name || '')}"></div><div class="fld"><label class="fl">What it does</label><textarea data-pf="description" rows="3">${esc(p.description || '')}</textarea></div>`
         + sec('Inputs') + '<div class="dk-empty">What the pipeline is given when it starts, like which phase to build. A step uses one by naming it: {{vars.phase}}. Asked for when you press Run.</div>' + rows(p.vars, 'vars', 'Add an input')
         + sec('Settings') + rows(p.settings, 'settings', 'Add a setting') + sec('File') + kv('id', p.id) + kv('steps', p.tasks.length) + (S.edits[p.id] ? kv('draft', S.edits[p.id] + ' changes, not saved') : ''); } },
-  { id: 'activity', label: 'Activity', count: () => S.D ? S.D.jobs.filter((x) => /running|queued/.test(x.status)).length + S.D.runs.filter((x) => x.status === 'running').length || '' : '', live: () => S.D && S.D.jobs.some((x) => x.status === 'running'),
+  { id: 'activity', label: 'Activity', hidden: true, count: () => S.D ? S.D.jobs.filter((x) => /running|queued/.test(x.status)).length + S.D.runs.filter((x) => x.status === 'running').length || '' : '', live: () => S.D && S.D.jobs.some((x) => x.status === 'running'),
     render() { const D = S.D, rr = D.runs.filter((x) => /running|paused/.test(x.status)), jj = D.jobs.filter((x) => /running|queued/.test(x.status));
       return sec('Pipeline runs') + (rr.length ? rr.map((x) => kv(x.name || x.id, x.status + ' · ' + ago(x.at), `data-goto="${esc(x.pipelineId)}"`)).join('') : '<div class="dk-empty">None.</div>')
         + sec('Model calls') + (jj.length ? jj.map((x) => kv(jname(x), x.status + ' · ' + dur(x.ms), `data-call="${esc(x.id)}"`)).join('') : '<div class="dk-empty">None.</div>'); } },
   { id: 'context', label: 'Context', render() { const j = job(); return j ? `<div class="dk-empty">What ${esc(model(j.model))} was given · ${kfmt(j.promptChars)} chars${j.promptChars > 4000 ? ' (first 4k)' : ''}</div><div class="pre">${esc(j.prompt || '(none kept)')}</div>` : '<div class="dk-empty">Pick a model call.</div>'; } },
   // the build inside a step (2026-11-24): each function's state live, then the build's own last rows; read from its records on disk
-  { id: 'build', label: 'Build', live: () => S.D && S.D.build && !/passed|failed|held|error|landed/.test(S.D.build.last || ''), count: () => S.D && S.D.build ? S.D.build.gaps.filter((x) => x.state === 'passed').length + '/' + S.D.build.gaps.length : '',
+  { id: 'build', label: 'Build', hidden: true, live: () => S.D && S.D.build && !/passed|failed|held|error|landed/.test(S.D.build.last || ''), count: () => S.D && S.D.build ? S.D.build.gaps.filter((x) => x.state === 'passed').length + '/' + S.D.build.gaps.length : '',
     render() { const b = S.D && S.D.build; if (!b) return '<div class="dk-empty">No build has run yet.</div>';
       const c = (s) => s === 'passed' ? 'var(--ok)' : /refused|failed|held/.test(s) ? 'var(--red, #f87171)' : s === 'gap-asked' ? 'var(--sky)' : 'var(--text3)';
       const word = (s) => ({ 'gap-asked': 'writing…', 'gap-answered': 'checking', passed: 'passed', waiting: 'waiting' })[s] || s;
       return `<div class="dk-empty" style="text-align:left">${esc(b.phase || '')} · <code>${esc(b.run)}</code> · now: ${esc(b.last || '')}</div>`
         + b.gaps.map((x) => kv(`<span class="sd" style="background:${c(x.state)}"></span> ${esc(x.name)}${x.helper ? ' <i style="color:var(--violet)">broken down</i>' : ''}`, word(x.state) + ' · ' + x.asks + ' tries' + (x.model ? ' · ' + esc(String(x.model).replace(/^.*\//, '')) : ''))).join('')
         + '<div class="pg" style="margin:12px 0 4px">Its last rows</div>' + b.rows.slice().reverse().map((x) => `<div style="font:10.5px var(--mono);color:var(--text2);padding:2px 0"><span style="color:var(--text3)">${new Date(x.t).toLocaleTimeString()}</span> ${esc(x.state)}${x.gap ? ' <b>' + esc(x.gap) + '</b>' : ''}${x.note ? ' — ' + esc(x.note) : ''}</div>`).join(''); } },
-  { id: 'outputs', label: 'Outputs', count: () => S.D ? S.D.jobs.filter((x) => !bg(x) && x.status === 'complete').length || '' : '',
+  { id: 'outputs', label: 'Outputs', hidden: true, count: () => S.D ? S.D.jobs.filter((x) => !bg(x) && x.status === 'complete').length || '' : '',
     render() { const o = S.D.jobs.filter((x) => !bg(x) && x.status === 'complete').slice(0, 15); return o.length ? o.map((x) => kv(jname(x), kfmt(x.chars) + ' · ' + ago(x.end), `data-call="${esc(x.id)}"`)).join('') : '<div class="dk-empty">Nothing finished in this run yet. A run’s proposals land here for you to apply.</div>'; } },
   { id: 'terminal', label: 'Terminal', count: () => S.logs ? S.logs.filter((l) => l.stream === 'err').length || '' : '', warn: true, keepFocus: true,
     render() { const ls = (S.logs || []).slice(-250).concat(S.cli);
       return `<div class="term" id="term">${ls.length ? ls.map((l) => `<div class="tl ${esc(l.stream || '')}"><span class="tt">${l.ts ? new Date(l.ts).toLocaleTimeString([], { hour12: false }) : ''}</span><span class="ts">${esc(l.system || '')}</span><span class="tx">${esc(l.line)}</span></div>`).join('') : '<div class="dk-empty">Reading COS’s console…</div>'}</div>
         <form class="prompt" id="cliForm"><span>cos&gt;</span><input id="cliLine" autocomplete="off" spellcheck="false" placeholder="a command (help lists them)" value="${esc(S.draft)}"></form>`; } },
-  { id: 'lineage', label: 'Lineage', render() { const p = pipe(); if (!p) return '<div class="dk-empty">Choose a pipeline.</div>';
+  { id: 'lineage', label: 'Lineage', hidden: true, render() { const p = pipe(); if (!p) return '<div class="dk-empty">Choose a pipeline.</div>';
       const v = p.vars || {}, rs = runs(p.id), L = S.lin[p.id]; if (!L) loadLin(p);
       let h = sec('Provenance') + kv('pipeline', p.name) + (p.createdAt ? kv('made', new Date(p.createdAt).toLocaleString()) : '') + (p.updatedAt ? kv('changed', ago(p.updatedAt)) : '')
         + (v.map ? kv('map', String(v.map).replace(/^docs\//, '')) : '') + (v.phase ? kv('phase', v.phase) : '') + (v.repo ? kv('repo', v.repo) : '')
