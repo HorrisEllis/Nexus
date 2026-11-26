@@ -332,7 +332,7 @@ function catMenu(how) { if (!S.cat || !S.cat.catalogue.length) { loadCat(); retu
   return [...fromNexus(how), ...groups.flatMap((g) => [{ h: g }, ...S.cat.catalogue.filter((c) => c.group === g).map((c) => ({ label: c.label, glyph: c.icon, hint: c.type, run: () => addStep(c.type, how) }))])]; }
 const runs = (id) => S.D ? S.D.runs.filter((r) => r.pipelineId === id).sort((a, b) => (b.at || 0) - (a.at || 0)) : [];
 const last = (id) => runs(id)[0] || null;
-const st = (r, id) => r && r.tasks && r.tasks[id] ? r.tasks[id].status || 'pending' : 'pending';
+const st = (r, id) => { const t = r && r.tasks && r.tasks[id]; if (!t) return 'pending'; if (S.seek != null && r === last(r.pipelineId)) return seekStatus(t, S.seek) || 'pending'; return t.status || 'pending'; };   /* the player's moment, when seeking */
 const task = (id) => { const p = pipe(); return p && p.tasks.find((t) => t.id === id); };
 const kind = (t) => t.step ? t.step.type || 'step' : 'step';
 const target = (t) => { const u = t.step && t.step.config && t.step.config.url; const m = /^nexus:\/\/([a-z0-9-]+)(\/\S*)?/i.exec(String(u || '')); return m ? m[1] + (m[2] ? ' ' + m[2].replace(/^\/api/, '') : '') : (u || '—'); };
@@ -648,7 +648,9 @@ function gateTree(t, L, p) {
 }
 // PC26 (his, 2026-11-25: "Anything starts as the first step. Then everything branches from that one"): the steps a run grew (each naming
 // the step it grew from) are drawn as steps of the pipeline, wired to that step, so the canvas shows the run as it really went
-function withGrown(p) { if (p && p.noGrow) return p; const r = p && last(p.id); if (!r || !r.tasks) return p; const have = new Set((p.tasks || []).map((t) => t.id)), add = [];
+// seeking: a node grown after the moment is not there yet
+function withGrown(p) { const q = withGrown0(p); if (S.seek == null || !q || q === p) return q; const r = last(p.id); return { ...q, tasks: q.tasks.filter((t) => (p.tasks || []).some((o) => o.id === t.id) || (((r && r.tasks[t.id] && r.tasks[t.id].events) || [])[0] || { at: 0 }).at <= S.seek) }; }
+function withGrown0(p) { if (p && p.noGrow) return p; const r = p && last(p.id); if (!r || !r.tasks) return p; const have = new Set((p.tasks || []).map((t) => t.id)), add = [];
   for (const [id, x] of Object.entries(r.tasks)) if (!have.has(id) && x.grownFrom) add.push({ id, label: x.label || id, depends_on: Array.isArray(x.dependsOn) && x.dependsOn.length ? x.dependsOn : [x.grownFrom] /* each on the one it builds on */, step: { type: 'script', config: {} }, grown: true, why: x.why || null });
   return add.length ? { ...p, tasks: [...p.tasks, ...add] } : p; }
 // 2026-11-26 — James: "okay, the overlap. each node, has a zoom in to show the branches." Two layers: the pipeline (its steps, the request
@@ -782,12 +784,12 @@ function work() {
   if (S.view === 'canvas') {
     if (!p) { w.innerHTML = '<div class="empty" style="margin:auto">Choose a pipeline from the menu at the top.</div>'; return; }
     const grows = growsFrom(p), gsig = grows ? grows.gates.map((g) => g.name + g.status + g.tries).join('|') + (grows.now || '') : '';
-    const sig = JSON.stringify([p.id, p.tasks.length, last(p.id) && last(p.id).tasks, S.sel, !!S.base[p.id] && !S.base[p.id].loading, S.max, S.rev, !!(S.cat && S.cat.catalogue.length), gsig]);
+    const sig = JSON.stringify([S.seek, p.id, p.tasks.length, last(p.id) && last(p.id).tasks, S.sel, !!S.base[p.id] && !S.base[p.id].loading, S.max, S.rev, !!(S.cat && S.cat.catalogue.length), gsig]);
     if (sig !== S.sig || !w.querySelector('svg.cv')) { S.sig = sig;
-      w.innerHTML = `<div class="canvas-wrap" style="${S.max ? 'display:none;' : ''}flex-basis:${Math.round(S.split * 100)}%"><svg class="cv">${canvasOf(p, grows)}</svg><div class="zoom"><button data-a="view.out" title="Zoom out">−</button><button data-a="view.fit" title="Fit (F)">⤢</button><button data-a="view.in" title="Zoom in">+</button></div></div><div class="splitter" id="split" title="Drag to resize · double-click: console full height"></div>${consoleHtml(S.max)}`;
+      w.innerHTML = `<div class="canvas-wrap" style="${S.max ? 'display:none;' : ''}flex-basis:${Math.round(S.split * 100)}%"><svg class="cv">${canvasOf(p, grows)}</svg><div class="zoom"><button data-a="view.out" title="Zoom out">−</button><button data-a="view.fit" title="Fit (F)">⤢</button><button data-a="view.in" title="Zoom in">+</button></div>${playerHtml()}</div><div class="splitter" id="split" title="Drag to resize · double-click: console full height"></div>${consoleHtml(S.max)}`;
       if (!S.vp) requestAnimationFrame(fit); else applyVp(); bindCanvas(); bindSplit();
     } else { const c = $('console'); if (c) c.outerHTML = consoleHtml(false); }
-    bindConsole();
+    bindConsole(); drawPlayer();
   } else if (S.view === 'console') { w.innerHTML = consoleHtml(true); bindConsole(); }
   else if (S.view === 'runs' && S.runsOf && S.timelineOf) { if (w.querySelector('[data-back]') && w.dataset.tl === S.timelineOf + ':' + JSON.stringify((runs(S.pid).find((x) => x.id === S.timelineOf) || {}).tasks)) return; w.dataset.tl = S.timelineOf + ':' + JSON.stringify((runs(S.pid).find((x) => x.id === S.timelineOf) || {}).tasks); timelineView(w); }
   else if (S.view === 'runs' && !S.runsOf) { if (w.querySelector('.lib-title input')) return; libraryView(w); }   /* not while a name is being typed */
@@ -871,6 +873,41 @@ function timelineView(w) {
   w.querySelectorAll('[data-replay]').forEach((b) => b.onclick = () => { const at = ns.findIndex((n) => n.id === b.dataset.replay), redo = ns.slice(at).map((n) => n.id);
     if (!confirm('Replay from "' + (ns[at].label || ns[at].id) + '"? A new run keeps the ' + at + ' node(s) before it and does it and the ' + (redo.length - 1) + ' after it again. This run stays as it is.')) return;
     cos('POST', 'automation/pipeline-runs/' + r.id + '/resume', { by: 'person', redo }, 'Replaying from ' + (ns[at].label || ns[at].id)); });
+}
+// 2026-11-26 — James: "Okay like a timeline underneath the pipeline. Like a seeking bar with a play and fast forward and rewind. With color coding,
+// heat maps, etc. Skip back one, forward one. Like a video. But in real time?" The last run of the open pipeline as a video: a track from its
+// start to now (or its end), one lane per node coloured by its state over time, a heat strip of how much happened when, a playhead. Seeking draws
+// the canvas as it was at that moment (each node's state from its own events); LIVE follows now in real time. Nothing is changed by seeking.
+const PLAY = { speeds: [1, 10, 60, 600], i: 1, timer: null };
+function evOf(r) { const out = []; for (const [id, t] of Object.entries((r && r.tasks) || {})) for (const e of (t.events || [])) if (e && e.at) out.push({ id, at: e.at, status: e.status, label: t.label || id }); return out.sort((a, b) => a.at - b.at); }
+function seekStatus(t, at) { const es = (t && t.events) || []; let s = null; for (const e of es) { if (e.at <= at) s = e.status; else break; } return s; }
+function playerHtml() { return '<div id="player" style="position:absolute;left:120px;right:12px;bottom:8px;background:color-mix(in srgb,var(--bg1) 92%,transparent);border:1px solid var(--edge);border-radius:10px;padding:6px 10px;font:11px var(--mono);color:var(--text2)"></div>'; }
+function drawPlayer() { const el = $('player'), p = pipe(); if (!el || !p) return; const r = last(p.id);
+  if (!r || !r.at) { el.innerHTML = 'no run yet: press Run, and this plays it'; return; }
+  const live = /running|paused/.test(r.status || ''), a = r.at, b = Math.max(r.end || Date.now(), a + 1000), now = S.seek == null ? (live ? Date.now() : b) : S.seek, x = (t) => Math.max(0, Math.min(100, (t - a) / (b - a) * 100));
+  const tasks = Object.entries(r.tasks || {}).map(([id, t]) => ({ id, t, s: (t.events || [])[0] && t.events[0].at })).filter((n) => n.s).sort((m, n) => m.s - n.s);
+  const lane = (n) => { const es = n.t.events || []; let h = ''; for (let i = 0; i < es.length; i++) { const s = es[i].at, e = i + 1 < es.length ? es[i + 1].at : (/running|pending|waiting/.test(es[i].status || '') ? (r.end || Date.now()) : s + (b - a) * .004);
+      h += `<i title="${esc(n.t.label || n.id)}: ${esc(es[i].status || '')} at ${new Date(s).toLocaleTimeString()}" style="position:absolute;left:${x(s)}%;width:${Math.max(.3, x(e) - x(s))}%;top:0;bottom:0;background:${col(es[i].status)};opacity:.9"></i>`; } return h; };
+  const ev = evOf(r), B = 80, heat = new Array(B).fill(0); for (const e of ev) heat[Math.min(B - 1, Math.floor(x(e.at) / 100 * B))]++; const hm = Math.max(1, ...heat);
+  const btn = (k, label, tip, on) => `<button data-pl="${k}" title="${tip}" style="background:${on ? 'var(--sky)' : 'var(--bg2)'};color:${on ? 'var(--bg1)' : 'var(--text)'};border:1px solid var(--edge);border-radius:6px;padding:2px 7px;cursor:pointer;font:12px var(--mono)">${label}</button>`;
+  el.innerHTML = `<div style="display:flex;align-items:center;gap:5px;margin-bottom:5px">${btn('start', '⏮', 'To the start')}${btn('prev', '◂|', 'Back one node event')}${btn('play', PLAY.timer ? '⏸' : '▶', PLAY.timer ? 'Pause' : 'Play')}${btn('next', '|▸', 'Forward one node event')}${btn('speed', PLAY.speeds[PLAY.i] + '×', 'Playback speed')}${btn('live', '● LIVE', 'Follow now, in real time', S.seek == null)}`
+    + `<span style="flex:1"></span><span>${new Date(now).toLocaleTimeString()} · +${dur(now - a)} of ${dur(b - a)} · ${esc(r.status)} · ${tasks.length} nodes · ${ev.length} events</span></div>`
+    + `<div data-track style="position:relative;cursor:pointer">`
+    + `<div style="position:relative;height:${Math.min(48, Math.max(8, tasks.length * 5))}px;display:flex;flex-direction:column;gap:1px">${tasks.map((n) => `<div style="position:relative;flex:1;background:var(--edge);border-radius:1px">${lane(n)}</div>`).join('')}</div>`
+    + `<div style="display:flex;height:6px;margin-top:2px;gap:1px">${heat.map((v) => `<i style="flex:1;background:color-mix(in srgb,var(--coral) ${Math.round(v / hm * 100)}%,var(--bg2))"></i>`).join('')}</div>`
+    + `<i style="position:absolute;top:-3px;bottom:-3px;left:${x(now)}%;width:2px;background:var(--bright);box-shadow:0 0 6px var(--bright)"></i></div>`;
+  const seekTo = (t) => { S.seek = Math.max(a, Math.min(b, t)); if (S.seek >= b - 500 && live) S.seek = null; S.sig = ''; work(); };
+  el.querySelector('[data-track]').onclick = (e) => { const rc = e.currentTarget.getBoundingClientRect(); seekTo(a + (e.clientX - rc.left) / rc.width * (b - a)); };
+  el.querySelectorAll('[data-pl]').forEach((k) => k.onclick = () => { const cur = S.seek == null ? now : S.seek;
+    if (k.dataset.pl === 'start') return seekTo(a);
+    if (k.dataset.pl === 'prev') { const e = [...ev].reverse().find((v) => v.at < cur - 1); return seekTo(e ? e.at : a); }
+    if (k.dataset.pl === 'next') { const e = ev.find((v) => v.at > cur + 1); return e ? seekTo(e.at) : (S.seek = null, S.sig = '', work()); }
+    if (k.dataset.pl === 'live') { S.seek = null; clearInterval(PLAY.timer); PLAY.timer = null; S.sig = ''; return work(); }
+    if (k.dataset.pl === 'speed') { PLAY.i = (PLAY.i + 1) % PLAY.speeds.length; return drawPlayer(); }
+    if (k.dataset.pl === 'play') { if (PLAY.timer) { clearInterval(PLAY.timer); PLAY.timer = null; return drawPlayer(); }
+      if (S.seek == null || S.seek >= b - 500) S.seek = a;
+      PLAY.timer = setInterval(() => { const rr = last(pipe() && pipe().id), end = rr ? Math.max(rr.end || Date.now(), rr.at + 1000) : 0; S.seek = (S.seek || a) + 200 * PLAY.speeds[PLAY.i];
+        if (S.seek >= end) { clearInterval(PLAY.timer); PLAY.timer = null; S.seek = rr && /running|paused/.test(rr.status || '') ? null : end; } S.sig = ''; work(); }, 200); return drawPlayer(); } });
 }
 // the Phases and Components side tabs: everything Nexus holds, searchable, each one a box with + Add (drawn once; the search filters in place)
 function listView(w) {
