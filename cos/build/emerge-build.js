@@ -434,10 +434,16 @@ async function endState({ ph, plan, src, mapText }) {
       const does = (String(e.does || ph.does || '').slice(0, 600) + (specText ? ' — its spec: ' + specText : '')).slice(0, 1400);   // the spec's contracts, his, before any model's guess
       let r = await require(path.join(ROOT, 'idearium', 'lib', 'emerge-rung.cjs')).agreedExamples({ name: e.name, signature: e.signature, does, readers: readersOf(three) });
       row('examples-agreed', { gap: e.name, note: r.why, examples: r.examples, tension: r.tension.slice(0, 6) });
-      if (!r.examples.length && STRONG.length >= 3) {
-        row('climbed', { gap: e.name, note: `the small readers agreed on no case for ${e.name}; asked the stronger readers (${STRONG.join(', ')}), noted as a climb` });
-        r = await require(path.join(ROOT, 'idearium', 'lib', 'emerge-rung.cjs')).agreedExamples({ name: e.name, signature: e.signature, does, readers: readersOf(STRONG) });
-        row('examples-agreed', { gap: e.name, note: r.why + ' (after the climb)', examples: r.examples, tension: r.tension.slice(0, 6), climbed: true });
+      // 2026-11-26 — James: "why is it asking the deepseek model if the 3b is capable?" The climb went straight from the 3b readers to DeepSeek
+      // (6.6 GB on his 16 GB: memory fell to 0.3 GB and the run was interrupted), on "no readable case was written": an unread answer, not a
+      // wall. Now one rung at a time: the small readers again (warmer), then the 7b leading, DeepSeek only last. Each rung is a row.
+      const RUNGS = [{ id: 'small-again', ms: three }, { id: '7b', ms: ['huihui_ai/qwen2.5-coder-abliterate:7b', ...three.slice(0, 2)] }, { id: 'strongest', ms: STRONG }];
+      for (const rung of RUNGS) {
+        if (r.examples.length || rung.ms.length < 3) break;
+        row('climbed', { gap: e.name, rung: rung.id, note: `no case agreed for ${e.name} (${String(r.why || '').slice(0, 120)}); next rung ${rung.id}: ${rung.ms.join(', ')}` });
+        const rd = rung.id === 'small-again' ? rung.ms.map((m) => ({ name: m, ask: (message, { gap } = {}) => ask(message, m, (gap || '') + ':examples', 2) })) : readersOf(rung.ms);
+        r = await require(path.join(ROOT, 'idearium', 'lib', 'emerge-rung.cjs')).agreedExamples({ name: e.name, signature: e.signature, does, readers: rd });
+        row('examples-agreed', { gap: e.name, note: r.why + ` (rung ${rung.id})`, examples: r.examples, tension: r.tension.slice(0, 6), climbed: rung.id });
       }
       agreed.push(...r.examples);
     }
