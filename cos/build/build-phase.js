@@ -16,7 +16,7 @@ const lastRun = () => fs.readdirSync(BUILD).filter((f) => /^cbuild-.*\.jsonl$/.t
 const rowsOf = (f) => fs.readFileSync(path.join(BUILD, f), 'utf8').split('\n').filter(Boolean).map((l) => { try { return JSON.parse(l); } catch (_) { return {}; } });
 const rounds = []; let best = -1;
 for (let i = 1; i <= ROUNDS; i++) {
-  spawnSync(process.execPath, [path.join(ROOT, 'cos', 'build', 'emerge-build.js'), '--map', MAP, '--phase', PHASE, '--ladder', LADDER], { cwd: ROOT, stdio: 'ignore', timeout: 3 * 3600 * 1000 });
+  spawnSync(process.execPath, [path.join(ROOT, 'cos', 'build', 'emerge-build.js'), '--map', MAP, '--phase', PHASE, '--ladder', LADDER, ...(inp.adversaries ? ['--adversaries', String(inp.adversaries)] : [])], { cwd: ROOT, stdio: 'ignore', timeout: 3 * 3600 * 1000 });
   const run = lastRun(), rs = run ? rowsOf(run.f) : [], end = rs[rs.length - 1] || {}, pcs = ([...rs].reverse().find((r) => r.state === 'pieces') || {}).pieces || [];
   const planned = new Set((((rs.find((r) => r.state === 'planned') || {}).exports) || []).map((x) => x.name)),
     // 2026-11-25: progress is the planned functions that hold, not every piece: helpers the model invents (six parse_json helpers for EMB10's

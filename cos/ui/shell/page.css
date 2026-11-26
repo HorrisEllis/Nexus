@@ -38,6 +38,9 @@ body.shell {
    cut with "…"; the full name is the row's hover title. */
 .nav.systems a > span:not(.dot):not(.port) { flex: 1 1 auto; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .nav.systems a .port { flex: none; padding-left: 8px; }
+/* 2026-11-25: a system's own processes (the model server's engines) sit under one row, indented */
+.nav.systems a.sys-group { font-weight: 500; }
+.nav.systems a.sys-child { padding-left: 26px; height: 28px; font-size: 12px; opacity: .9; }
 .rail-foot { border-top: 1px solid var(--line-soft); padding-top: var(--s3); margin-top: var(--s3); display: grid; gap: var(--s2); }
 .bus-state { display: flex; align-items: center; gap: var(--s2); padding: var(--s2) var(--s3); font: 500 11.5px/1 var(--mono); color: var(--nx-dim); }
 .bus-state #bus-count { margin-left: auto; }

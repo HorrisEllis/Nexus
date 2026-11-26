@@ -184,6 +184,17 @@ let WORDS = ["contains", "starts_with", "ends_with", "and", "or", "not", "in", "
 // name is a parameter or a loop variable, never a piece (2026-11-25, EMB11 on the 3b: helpers named push and t were linked in and "passed")
 let BUILTINS = ["print", "eprint", "exit", "str", "num", "int", "floor", "sqrt", "min", "max", "len", "keys", "values", "has", "get", "slice", "range", "join", "split", "upper", "lower", "type_of", "freeze", "json", "parse_json", "random", "uid", "read_file", "write_file", "list_dir", "path_exists", "now_ms", "sleep_ms", "is_dir", "make_dir", "move_path", "remove_path", "bytes", "byte_len", "utf8", "sha256", "hex", "find_text", "repr", "push", "args", "raise", "truthy"]
 
+// adversary_verdict(agree, holds, answered) → what one adversary's case means (EMB12, his 2026-11-25: "another compiler ... the other one
+// treats success as a problem"): the second adversary did not answer → "unread"; the two adversaries read the sentence differently →
+// "ambiguous" (a tension in the spec, his to settle); they agree and the piece gives the same → "keep" (the case joins its examples); they
+// agree and the piece gives something else → "refuse" (the piece is wrong)
+fn adversary_verdict(agree: bool, holds: bool, answered: bool): string {
+  if not answered { return "unread" }
+  if not agree { return "ambiguous" }
+  if holds { return "keep" }
+  return "refuse"
+}
+
 // may_name(n) → can a helper carry this name? Not one of Emerge's words, not a builtin, not one letter (the rung asks this before it makes a
 // helper; link asks it too)
 fn may_name(n: string): bool {

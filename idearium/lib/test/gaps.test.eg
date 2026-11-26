@@ -109,6 +109,14 @@ test "a helper named after one of Emerge's own words is never linked in" {
   expect G.may_name("is_member") and not G.may_name("join") and not G.may_name("contains") and not G.may_name("t")
 }
 
+test "an adversary's case: refuse a piece the adversaries agree against, flag the spec when they disagree, keep what holds" {
+  expect G.adversary_verdict(true, false, true) == "refuse"
+  expect G.adversary_verdict(false, false, true) == "ambiguous"
+  expect G.adversary_verdict(false, true, true) == "ambiguous"
+  expect G.adversary_verdict(true, true, true) == "keep"
+  expect G.adversary_verdict(true, false, false) == "unread"
+}
+
 test "contains written as a call or a function name gets its own fix" {
   expect G.hint("main.eg:36:4: error: expected \"(\" to open the parameter list, found \"contains\"") contains "word between two values"
   expect G.hint("main.eg:29:10: error: expected an expression, found \"contains\"") contains "models contains file"

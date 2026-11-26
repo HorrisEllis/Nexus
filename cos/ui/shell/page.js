@@ -39,8 +39,24 @@
   }
   function renderSystems() {
     $('sys-count').textContent = S.systems.length ? `${S.systems.filter(s => s.state === 'up').length}/${S.systems.length}` : '';
-    $('nav-systems').replaceChildren(...S.systems.map(s => h('a', { href: `#/c/${encodeURIComponent(s.name)}`, 'data-sys': s.name, title: `${s.name} — ${COS.stateLabel(s.state)}` },
-      h('span', { class: 'dot', 'data-s': s.state }), h('span', {}, s.name), s.port ? h('span', { class: 'port' }, `:${s.port}`) : null)));
+    const row = (s, label, cls) => h('a', { href: `#/c/${encodeURIComponent(s.name)}`, 'data-sys': s.name, class: cls || '', title: `${s.name} — ${COS.stateLabel(s.state)}` },
+      h('span', { class: 'dot', 'data-s': s.state }), h('span', {}, label || s.name), s.port ? h('span', { class: 'port' }, `:${s.port}`) : null);
+    // 2026-11-25 (his: "the three models ... need to be under one system. the model server."): processes a system declares beyond its own name
+    // (the model server's engines, system "inference") are one row, opened to show them; every other system is a row of its own, as before
+    const GROUP = { inference: 'model server' }, groups = new Map(), out = [];
+    const per = {}; for (const s of S.systems) if (s.system && s.system !== s.name) per[s.system] = (per[s.system] || 0) + 1;   // one process alone stays a row (ollama-bridge)
+    for (const s of S.systems) { const g = s.system && s.system !== s.name && per[s.system] > 1 ? s.system : null; if (g) { if (!groups.has(g)) { groups.set(g, []); out.push({ group: g }); } groups.get(g).push(s); } else out.push(s); }
+    let open = {}; try { open = JSON.parse(localStorage.getItem('cos.navGroups') || '{}'); } catch (_) {}
+    const best = (xs) => (['up', 'degraded', 'starting', 'idle', 'stopping', 'declared', 'stopped', 'circuit-open'].find(st => xs.some(x => x.state === st))) || (xs[0] && xs[0].state);
+    const short = (n) => String(n).replace(/^model-/, '').replace(/^(huihui-ai-|hf-co-[a-z0-9]+-)/, '');
+    $('nav-systems').replaceChildren(...out.flatMap(x => {
+      if (!x.group) return [row(x)];
+      const xs = groups.get(x.group), isOpen = open[x.group] !== false, label = GROUP[x.group] || x.group;
+      const head = h('a', { href: '#', class: 'sys-group', 'data-group': x.group, 'aria-expanded': String(isOpen), title: `${label} — ${xs.length} process(es); ${xs.filter(s => s.state === 'up').length} up` },
+        h('span', { class: 'dot', 'data-s': best(xs) }), h('span', {}, `${isOpen ? '▾' : '▸'} ${label}`), h('span', { class: 'port' }, String(xs.length)));
+      head.addEventListener('click', (e) => { e.preventDefault(); open[x.group] = !isOpen; try { localStorage.setItem('cos.navGroups', JSON.stringify(open)); } catch (_) {} renderSystems(); });
+      return [head, ...(isOpen ? xs.map(s => row(s, short(s.name), 'sys-child')) : [])];
+    }));
     markCurrent();
   }
   function badge() { const b = document.querySelector('[data-page="proposals"] .badge'); if (b) { b.hidden = !S.proposals; b.textContent = S.proposals; } }

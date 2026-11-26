@@ -330,7 +330,10 @@ async function endState({ ph, plan, src, mapText }) {
   // 4. the code: the Emerge rung, its ladder smallest first, each call through the Ollama system
   const ER = require(path.join(ROOT, 'idearium', 'lib', 'emerge-rung.cjs')), EXT = require(path.join(ROOT, 'lib', 'expectation-tests.js'));
   const contract = `${REPO}/${MAP.split('/').pop().replace(/\.spec$/, '').replace(/[^A-Za-z0-9._-]/g, '_')}.${PHASE}`;
+  // EMB12: the adversary gate's readers, three different models (--adversaries a,b,c); none given, the building model reads
+const ADVERSARIES = String(arg('adversaries', '')).split(',').map((x) => x.trim()).filter(Boolean);
   const rung = ER.createRung({ root: ROOT, maxTries: 3, tasksDir: TASKS, model: LADDER[0], method: null,
+    adversaries: PIECES ? null : ADVERSARIES.map((m) => ({ name: m, ask: (message, { gap, tryNo } = {}) => ask(message, m, (gap || '') + ':adversary', tryNo) })),
     ladder: LADDER.map((m) => ({ name: PIECES ? 'the passed pieces' : m, ask: (message, { gap, tryNo } = {}) => (PIECES ? Promise.resolve(pieceBody(gap)) : ask(message, m, gap, tryNo)) })), ask: (message, { gap } = {}) => (PIECES ? Promise.resolve(pieceBody(gap)) : ask(message, LADDER[0], gap)),
     expect: async ({ files: fs2 }) => { if (!EXT.forFile(plan, src.path)) return { ok: true, why: 'no expectation test for this file' }; const r = await EXT.run({ root: ROOT, plan, path: src.path, overlays: fs2 }); return r.ok ? { ok: true, why: `its expectation passed (${r.checks || 0} checks)` } : { ok: false, why: EXT.feedback(r, src.path) }; } });
   // 5. heal, then build again (his, 2026-11-21: "It needs to be fixing it. Nexus is an autonomous system ... Have it fix gaps when it enounters

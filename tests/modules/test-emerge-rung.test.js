@@ -1,4 +1,6 @@
 'use strict';
+// EMB12 (2026-11-25): these tests count the exact model calls their fake models get; the adversary gate adds calls, so it is off here and proven on the real 3b
+process.env.EMERGE_RUNG_ADVERSARY = process.env.EMERGE_RUNG_ADVERSARY || '0';
 // run-all: timeout 240000
 /**
  * tests/modules/test-emerge-rung.test.js — EMB1 (0.60.421): Emerge writes the brick (docs/2026-10-17-pieces-not-order-phasemap.spec).

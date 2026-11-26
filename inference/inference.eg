@@ -34,7 +34,14 @@ fn base(home: string): map {
   }
   if has(mine, "stores") and len(mine.stores) > 0 { store = mine.stores[0] }
   if has(mine, "engines") and len(mine.engines) > 0 and has(mine.engines[0], "paths") { cands = mine.engines[0].paths }
-  let ms = M.models(store)
+  // every store in his settings, not only the first (2026-11-25, his: "three different 3b": the two new ones went to D:, C: had 4 GB free;
+  // his tiering, the HDD for models used less)
+  var ms = M.models(store)
+  if has(mine, "stores") {
+    for st in mine.stores {
+      if st != store { for m in M.models(st) { ms = push(ms, m) } }
+    }
+  }
   let e = M.engine(cands)
   return { models: ms, engine: e, defaults: S.defaults(ms, e, store) }
 }

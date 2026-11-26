@@ -140,6 +140,74 @@ function moduleTypeOf(root, file) {
 // ── the skeleton (0.60.607) ──
 let _gapsMod = null;
 function _gapsEg() { if (!_gapsMod) { const dir = path.join(__dirname, 'eg-build', 'gaps'); const { createRuntime } = require(path.join(dir, '_emerge', 'lang', 'runtime.js')); _gapsMod = require(path.join(dir, 'main.js'))(createRuntime({ file: 'gaps.eg' })); } return _gapsMod; }   // gaps.eg built standalone by Emerge's command line (lang-build --standalone): its own runtime, never emerge/emerge (AXIOMS 5.15, ER-05)
+// ── EMB12, the adversary gate (his, 2026-11-25: "using the intelligence system to debug. using it to find tension. like running the adversarial
+// system. like another compiler. like the other one treats success as a problem ... could even use another 3b" · "more tokens wasted on unstable
+// code than doing the work of critisizing it. thats the point of the adversarial system in raid"). After a piece passes its own examples, one 3b
+// writes new cases from its sentence (never its code), a second answers the same calls blind, Emerge runs the piece; gaps.eg's
+// adversary_verdict decides each case (refuse, ambiguous, keep). RAID's adversary-suite (lib/meta/adversary-suite.js) had no sandbox for
+// model-written code; Emerge's lang-run is that sandbox here.
+const _adv = (() => {
+  const vm = require('vm'), q = (x) => String(x == null ? '' : x);
+  const callOf = (l) => q(l).slice(0, q(l).search(/\)\s*==/) + 1), wantOf = (l) => q(l).replace(/^[\s\S]*?\)\s*==\s*/, '').trim();
+  // a small model writes Python's True/False/None too (found on the first real run: every case read as a disagreement); Emerge's are lower case
+  const norm = (t) => q(t).trim().replace(/\bTrue\b/g, 'true').replace(/\bFalse\b/g, 'false').replace(/\bNone\b/g, 'null');
+  const lit = (t) => { t = norm(t); try { return JSON.parse(t); } catch (_) { return vm.runInNewContext(`(${t})`, {}, { timeout: 50 }); } };
+  const egLit = (v) => typeof v === 'string' ? JSON.stringify(v).replace(/[{}]/g, (m) => '\\' + m) : Array.isArray(v) ? `[${v.map(egLit).join(', ')}]`
+    : v && typeof v === 'object' ? `{ ${Object.entries(v).map(([k, x]) => `${/^[A-Za-z_]\w*$/.test(k) ? k : JSON.stringify(k)}: ${egLit(x)}`).join(', ')} }` : JSON.stringify(v);
+  const args = (l) => { const c = callOf(l), at = c.indexOf('('); return vm.runInNewContext(`[${c.slice(at + 1, -1)}]`, {}, { timeout: 50 }); };
+  const egCall = (l) => { const c = callOf(l); return `${c.slice(0, c.indexOf('('))}(${args(l).map(egLit).join(', ')})`; };
+  const eq = (a, b) => JSON.stringify(a) === JSON.stringify(b);
+  const same = (out, want) => { try { return eq(JSON.parse(out), lit(want)); } catch (_) { return false; } };
+  const sameLit = (a, b) => { try { return eq(lit(a), lit(b)); } catch (_) { return false; } };
+  const clean = (text, name) => String(text || '').split('\n').map((s) => s.trim().replace(/^[-*•\d.)\s`]+/, '').replace(/`+$/, ''))
+    .filter((l) => l.startsWith(name + '(') && /\)\s*==\s*\S/.test(l));
+  const readable = (l) => { try { args(l); lit(wantOf(l)); return true; } catch (_) { return false; } };
+  // a case must fit the signature (found on the first real run: maps passed where models is a string, three arguments for two): its count of
+  // arguments, and each argument's kind where the signature names one (string, num, bool, list, map); a case that does not fit is dropped
+  const kindOf = (v) => Array.isArray(v) ? 'list' : v === null ? 'null' : typeof v === 'string' ? 'string' : typeof v === 'number' ? 'num' : typeof v === 'boolean' ? 'bool' : 'map';
+  const fits = (l, sig) => { try { const m = /\(([^)]*)\)/.exec(q(sig)); const ps = m ? m[1].split(',').map((s) => s.trim()).filter(Boolean) : null; const a = args(l);
+    if (!ps) return true; if (a.length !== ps.length) return false;
+    return ps.every((p, i) => { const t = (/:\s*(\w+)/.exec(p) || [])[1]; return !t || t === 'any' || kindOf(a[i]) === t; }); } catch (_) { return false; } };
+  return { callOf, wantOf, egCall, same, sameLit, clean, readable, fits, key: (l) => callOf(l).replace(/\s+/g, '') };
+})();
+async function adversaryCheck({ eg, render, skel, filled, name, body, who, sf, n, readers = null }) {
+  // three readers, three different models when given (his 2026-11-25: "three different 3b. i use abliterated so they are less bias"): the first writes the cases, the other two read them blind
+  const rA = (readers && readers[0]) || who, rB = (readers && readers[1]) || rA, rC = (readers && readers[2]) || rB;
+  const sig = sf.signature || name, does = sf.does || '', known = (sf.contract && sf.contract.examples) || [];
+  const askA = ['You are the adversary. A function that passes its examples is presumed wrong until it survives you.',
+    'Function: ' + sig, 'What it must do: ' + does, known.length ? 'Its examples (do not repeat these):\n' + known.join('\n') : '',
+    'Write 6 NEW cases that could break it: edge cases first (empty, one, many, at the start, in the middle, at the end, a near miss).',
+    // each argument's kind, from the signature (found on the real run: the adversary passed maps where models is a string, and every case was dropped)
+    (() => { const m = /\(([^)]*)\)/.exec(sig); const ps = m ? m[1].split(',').map((s) => s.trim()).filter(Boolean) : []; const say = { string: 'a string, in double quotes', num: 'a number', bool: 'true or false', list: 'a list [a, b]', map: 'a map { k: v }' };
+      return ps.length ? 'Exactly ' + ps.length + ' argument(s): ' + ps.map((p) => { const [nm, t] = p.split(':').map((x) => x.trim()); return nm + ' is ' + (say[t] || t || 'any value'); }).join('; ') + '. Never another kind.' : ''; })(),
+    'Each on its own line, exactly: ' + name + '(arguments) == expected, arguments and expected as literals (strings in double quotes, lists [a, b], maps { k: v }). Only the lines.'].filter(Boolean).join('\n');
+  let a = ''; try { a = await rA.ask(askA, { gap: name, adversary: 'a', tryNo: n }); } catch (_) { return null; }
+  const known1 = new Set(known.map(_adv.key));
+  const cases = _adv.clean(a, name).filter((l) => _adv.readable(l) && _adv.fits(l, sig) && !known1.has(_adv.key(l))).slice(0, 8);
+  if (!cases.length) return null;
+  const askB = ['Function: ' + sig, 'What it must do: ' + does,
+    'For each call below, write the result this description says. Each line exactly: call == result, the result as a literal. Only the lines.', ...cases.map(_adv.callOf)].join('\n');
+  let b = ''; try { b = await rB.ask(askB, { gap: name, adversary: 'b', tryNo: n }); } catch (_) { return null; }
+  const bWant = {}; for (const l of _adv.clean(b, name)) bWant[_adv.key(l)] = _adv.wantOf(l);
+  // a third adversary, blind as the second (found on the real run: two 3bs agreed on a wrong expected value, which would refuse a correct body);
+  // a case counts only when all three read the same result, so a refusal needs three independent readings (his: tokens are free, unstable code is not)
+  let c = ''; try { c = await rC.ask(askB, { gap: name, adversary: 'c', tryNo: n }); } catch (_) { c = ''; }
+  const cWant = {}; for (const l of _adv.clean(c, name)) cWant[_adv.key(l)] = _adv.wantOf(l);
+  // each case runs on its own, so one case that errors cannot take the others' results with it (found on the first real run)
+  const mod = render(skel, { ...filled, [name]: body }), outs = [], errs = [];
+  for (const l of cases) { const r = await eg('lang-run', mod + '\n' + `print(json(${_adv.egCall(l)}))`); const o = String((r && r.stdout) || '').replace(/\r/g, '').split('\n').filter(Boolean);
+    outs.push(o.length ? o[o.length - 1] : ''); if (r && !r.ok) errs.push(String(r.stderr || '').trim().split(/\r?\n/)[0]); }
+  const run = { ok: !errs.length, stderr: errs[0] || '' }, G = _gapsEg(), broke = [], tension = [], kept = [];
+  cases.forEach((l, i) => {
+    const wa = _adv.wantOf(l), wb = bWant[_adv.key(l)], wc = cWant[_adv.key(l)], answered = wb !== undefined && wc !== undefined;
+    const v = String(G.adversary_verdict(answered && _adv.sameLit(wa, wb) && _adv.sameLit(wa, wc), _adv.same(outs[i], wa), answered));
+    if (v === 'refuse') broke.push(`${_adv.callOf(l)} gave ${outs[i] === undefined || outs[i] === '' ? 'nothing' : outs[i]}, the description says ${wa}`);
+    else if (v === 'ambiguous') tension.push(`${_adv.callOf(l)}: the readings say ${wa}, ${wb}, ${wc}`);
+    else if (v === 'keep') kept.push(l);
+  });
+  return { cases: cases.length, broke, tension, kept, error: run && !run.ok ? String(run.stderr || '').trim().split(/\r?\n/)[0] : null };
+}
+
 /** an export's parameter names, from its plan signature "name(a: T, b?: T) -> R" (or e.params); null when it cannot be read */
 function paramsOf(e) {
   if (e && Array.isArray(e.params)) return e.params.map(p => String(p).replace(/[^A-Za-z0-9_]/g, '')).filter(Boolean);
@@ -293,7 +361,7 @@ function listGaps({ root = path.resolve(__dirname, '..', '..'), id = null, contr
     .filter(g => !status || g.status === status).sort((x, y) => String(y.at).localeCompare(String(x.at)));
 }
 
-function createRung({ root = path.resolve(__dirname, '..', '..'), ask, expect, maxTries = 3, timeoutMs = 60000, cli = null, tasksDir = path.join(root, 'idearium', 'data', 'tasks'), indexRoot = root, keep = 3, model = null, maxDepth = 1e9, maxGaps = 1e9, ladder = null, rounds = 1, method = null } = {}) {
+function createRung({ root = path.resolve(__dirname, '..', '..'), ask, expect, maxTries = 3, timeoutMs = 60000, cli = null, tasksDir = path.join(root, 'idearium', 'data', 'tasks'), indexRoot = root, keep = 3, model = null, maxDepth = 1e9, maxGaps = 1e9, ladder = null, rounds = 1, method = null, adversaries = null } = {}) {
   if (typeof ask !== 'function' && !(ladder && ladder.length)) throw new Error('ask(message) is required: the agent that writes the Emerge');
   // the ladder, smallest first: [{ name, ask }] — the first fills every gap; a gap held on it goes to the next, told every earlier try
   const L = ladder && ladder.length ? ladder.filter(x => x && typeof x.ask === 'function') : [{ name: model, ask }];
@@ -452,6 +520,18 @@ function createRung({ root = path.resolve(__dirname, '..', '..'), ask, expect, m
               const bad = exs.map((l, i) => (same(outs[i], wantOf(l)) ? null : `${callOf(l)} gave ${outs[i] === undefined || outs[i] === '' ? 'nothing' : outs[i]}, its contract says ${wantOf(l)}`)).filter(Boolean);
               if (bad.length) { seen.push({ body }); const said = 'compiles, but breaks its contract: ' + bad.slice(0, 3).join('; ') + (run && !run.ok ? ' (' + firstLines(run.stderr, 1) + ')' : '');
                 note({ body, said, fix: 'make every example of ' + name + ' hold: write the rule they share, not one case', ms: Date.now() - t0 }); tries.push({ n, stage: 'contract:' + name, why: said, ms: Date.now() - t0, gap, model: who.name }); continue; } } }
+          // EMB12 — the adversary gate: a piece that passed its examples is attacked from its sentence; one the two adversaries agree against is
+          // refused with their case; a case they read differently is a tension in the spec (kept on the gap, his to settle); a case that holds
+          // joins its examples, so the next try is held to it too
+          if (process.env.EMERGE_RUNG_ADVERSARY !== '0') { const sfA = skel.fns.find(x => x.name === name);
+            const adv = sfA && sfA.does ? await adversaryCheck({ eg, render, skel, filled, name, body, who, sf: sfA, n, readers: adversaries && adversaries.length ? adversaries.filter((x) => x && typeof x.ask === 'function') : null }) : null;
+            if (adv) {
+              rec.adversary = (rec.adversary || []).concat({ at: new Date().toISOString(), cases: adv.cases, broke: adv.broke, tension: adv.tension, kept: adv.kept.length });
+              if (adv.tension.length) tries.push({ n, stage: 'tension:' + name, why: adv.tension.slice(0, 2).join('; '), gap, model: who.name });
+              if (adv.broke.length) { seen.push({ body }); const said = 'passes its examples, but an adversary broke it: ' + adv.broke.slice(0, 3).join('; ');
+                note({ body, said, fix: 'hold every case its description implies, not only its examples', ms: Date.now() - t0 }); tries.push({ n, stage: 'adversary:' + name, why: said, ms: Date.now() - t0, gap, model: who.name }); continue; }
+              if (adv.kept.length) sfA.contract = { ...(sfA.contract || {}), examples: [...(((sfA.contract || {}).examples) || []), ...adv.kept].slice(0, 12) };
+            } }
           // his "as each gap passes, gets logged or tagged in the gate as passed and compiled"
           filled[name] = body; ok = true; rec.status = 'passed'; rec.body = body; { const sf = skel.fns.find(x => x.name === name); if (sf) { rec.params = sf.params; rec.signature = rec.signature || sf.signature; rec.does = rec.does || sf.does; } } /* EMB4: a piece carries its own shape, so a later run can take it */ rec.gate = { passed: true, compiled: true, by: "Emerge's compiler (lang-check)", model: who.name || model, at: new Date().toISOString() };
           if (rec.blockedBy && rec.blockedBy.length) rec.unblockedBy = rec.blockedBy.slice();   // the learning memory: what got it past its struggle
@@ -559,4 +639,4 @@ function createRung({ root = path.resolve(__dirname, '..', '..'), ask, expect, m
   return { build, eg };
 }
 
-module.exports = { MODULE_ID, VERSION: '1.5.0', CARD, brief, briefPiece, cardFor, briefTemplate, templateOf, TEMPLATE_MENU, extract, adapter, createRung, skeletonOf, paramsOf, bodyOf, briefGap, gapStore, taskDirOf, listGaps, moduleTypeOf };
+module.exports = { MODULE_ID, VERSION: '1.5.0', adversaryCheck, CARD, brief, briefPiece, cardFor, briefTemplate, templateOf, TEMPLATE_MENU, extract, adapter, createRung, skeletonOf, paramsOf, bodyOf, briefGap, gapStore, taskDirOf, listGaps, moduleTypeOf };
