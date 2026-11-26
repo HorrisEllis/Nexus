@@ -44,6 +44,11 @@ phases:
       signed-in chat by Clear Glass and the answer read back, so the ladder and Copilot's intent routing (CA5: "chatgpt=optimal-900tok-chunked")
       can ask it like any model, its limits and costs said.
     proof: "a build's gap asked of the ChatGPT engine is answered through Clear Glass and kept in the build's rows like a local model's"
+    expanded_2026_11_26: >-
+      His words, after ChatGPT's sign-in worked again: "only if it works. all of them." Every provider Clear Glass's login portal knows
+      (claude, chatgpt, gemini, perplexity, mistral, deepseek, grok, meta: accounts/login-portal.js) is an engine, and each counts only
+      once it works: a live probe (one short ask, answered and read back) passes before the ladder or Copilot may use it, and a provider
+      whose probe fails is said as down with the reason, never guessed at.
   CGE4_one_place_for_the_ports:
     status: OPEN
     depends_on: []
@@ -52,4 +57,15 @@ phases:
       Clear Glass reads where each system lives from COS's system registry, by route; the Connections page with its own copy of every port
       is removed (his: "this setting in the settings is redundant"), with what it showed (reachable or not) moved to COS's systems list.
     proof: "a port changed in COS is the one Clear Glass uses, with no setting of its own"
-order: "CGE1 first (it says what to fix); CGE2 if the engine is the cause; CGE3 after it; CGE4 any time."
+  CGE5_sign_in_buttons_like_app_passwords:
+    status: OPEN
+    depends_on: [CGE3_web_models_as_engines, TN4_tools_and_the_forge_are_data]
+    files: [inference/providers.json, clear-glass/src/accounts/login-portal.js, cos/ui/models/index.html]
+    james: '"with login to agent buttons in the model server like theyre app passwords that link straight to the login for the agents to login for guardian. like how the login with chatgpt, claude like its the login portals like app passwords but with the standard provider login" (2026-11-26)'
+    does: >-
+      In the model server's screen, one row per provider and account, like app passwords: its state (signed in, signed out, its probe's
+      last answer) and a Sign in button that opens Clear Glass's login portal straight at that provider's standard login page. He signs in
+      there as he normally would (nothing submits a form for him); the session is kept in the vault and shared, so Guardian's agents and the
+      model server's engines use it. The providers and their login pages are rows (inference/providers.json), not a list in code (TN4).
+    proof: "from the model server's screen he signs in to Claude by its button; the row turns signed in, its probe answers, and a Guardian agent's ask goes through that session"
+order: "CGE1 first (it says what to fix); CGE2 if the engine is the cause; CGE3 after it, every provider proven by its probe; CGE5 with CGE3; CGE4 any time."
