@@ -1846,6 +1846,10 @@ phases_addendum_2026_11_24_model_server:
         canvas shows one box. The slices this makes: (1) a gate may add steps to its own running run (pipeline.js, saved to the run's file,
         each with depends_on its parent: persistence); (2) the build reports each piece, try and helper as such a step instead of hiding them;
         (3) the canvas draws added steps live. Backend first; nothing new to build in the UI if the canvas already draws any step.
+        Then, his: "Like a tree of branches. Like each event, step, decision, action, like nothing in nexus wouldn't be explicit". So the rule:
+        every event, step, decision and action in Nexus is a node with its parent, on one tree from the first step (a model call, a gate's
+        verdict, RAID's yes or no, the supervisor's act, a failure mode); nothing happens that is not on it. PC28's cause and effect is this
+        tree's edges; PG5's RAID decisions and reports are its decision nodes.
       d_the_overlap: "parallel pipelines per domain on one problem; identical primitives, principles, patterns or invariants matched and joined; counted anomaly, coincidence, invariant; sigma and delta shown. Its proof is registered in FRAMEWORK-THREADS before it runs"
   PC27_each_output_measured_by_his_equations:
     status: OPEN
