@@ -1,4 +1,5 @@
 'use strict';
+let _viewAt = 0;   // the view's file time, read again when it changes
 /**
  * cos/manager/server.js — COS's manager as its own process: `node cos/manager/server.js [--boot]`.
  * Spec: cos/spec/cos-manager.spec MOD-MG-SERVER · Map: docs/2026-10-24-cos-manager-phasemap.spec MG15_the_supervisor_in_cos
@@ -565,7 +566,10 @@ function createServer(sup, opts = {}) {
       if (m === 'GET' && p === '/api/cos/hub') return send(res, 200, { ok: true, ...(await hub.read()) });
       // 2026-11-25 — the Automation tab's reads (his: "the automation build the same. not stripped. but built"): the pipeline screen's own handler
       // (cos/ui/run-console-preview/server.js), each answer from its owner's route; read only, except /cli, which is COS's own command line
-      if (p.startsWith('/api/cos/view/')) { req.viewUrl = req.url.slice('/api/cos/view'.length); req.cosBody = body; return require('../ui/run-console-preview/server.js').handle(req, res); }
+      if (p.startsWith('/api/cos/view/')) { req.viewUrl = req.url.slice('/api/cos/view'.length); req.cosBody = body;
+        // 2026-11-26: the view is read again when its file changes, so a screen's change needs no restart of COS (a restart interrupted running builds)
+        const vf = require.resolve('../ui/run-console-preview/server.js'), vt = require('fs').statSync(vf).mtimeMs; if (_viewAt !== vt) { delete require.cache[vf]; _viewAt = vt; }
+        return require(vf).handle(req, res); }
       // AE6 slice a — the automation engine's door: workflows, runs, log, pipelines, macros, triggers, webhooks (cos/automation/routes.js, 0.60.534 SW5i)
       if (p.startsWith('/api/cos/automation/')) {
         let out; try { out = await automation.handle({ method: m, url: '/automation' + req.url.slice('/api/cos/automation'.length), body, headers: req.headers, rawBody }); }
@@ -713,7 +717,7 @@ if (require.main === module) {
     // COS asks RAID, with the files as its proof, and restarts itself (rule:code-moved). Interrupted runs resume from their files. Refused,
     // it waits ten minutes. --no-reload leaves it off.
     if (!process.argv.includes('--no-reload')) {
-      const fs = require('fs'), START = Date.now(), DIRS = ['cos/manager', 'cos/automation', 'cos/pipeline', 'cos/ui/run-console-preview', 'lib'];
+      const fs = require('fs'), START = Date.now(), DIRS = ['cos/manager', 'cos/automation', 'cos/pipeline', 'lib'];   /* the view reloads itself (no restart) */
       const moved = () => { const out = []; for (const d of DIRS) { let fsx = []; try { fsx = fs.readdirSync(path.join(root, d)); } catch (_) { continue; }
         for (const f of fsx) { if (!/\.(js|cjs|eg|json)$/.test(f)) continue; try { const st = fs.statSync(path.join(root, d, f)); if (st.isFile() && st.mtimeMs > START) out.push({ f: `${d}/${f}`, t: st.mtimeMs }); } catch (_) {} } }
         return out; };

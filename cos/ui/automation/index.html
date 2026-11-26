@@ -978,7 +978,7 @@ async function savePipe() { const d = S.drafts[S.pid]; if (!d) return; const bod
 // the build shown is the open pipeline's own: its run's phase (vars, or its build step's input) from when that run started (2026-11-26)
 function buildScope() { const p = pipe(); if (!p) return ''; const r = last(p.id), bt = (p.tasks || []).find((t) => t.step && t.step.config && /build-phase/.test(String(t.step.config.script || ''))); if (!bt) return '?phase=&since=' + Date.now();
   const inp = bt.step.config.input || {}, ph = (r && r.vars && r.vars.phase) || (/\{\{/.test(String(inp.phase || '')) ? '' : (inp.phase || ''));
-  return `?phase=${encodeURIComponent(ph)}&since=${r && r.startedAt ? r.startedAt : Date.now()}`; }
+  return `?phase=${encodeURIComponent(ph)}&since=${r && (r.startedAt || r.at) ? (r.startedAt || r.at) : Date.now()}`; }
 async function tick() { try { const prev = S.D; S.D = await (await fetch('/api/cos/view/data' + buildScope(), { cache: 'no-store' })).json(); S.ok = Date.now(); watch(prev, S.D); } catch (_) {}
   if (S.D && !pipe() && S.D.pipelines[0]) { S.pid = S.D.pipelines[0].id; loadBase(S.pid); }
   await loadLogs();

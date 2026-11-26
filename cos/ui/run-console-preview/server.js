@@ -28,7 +28,7 @@ async function handle(q, r) {
         ms: j.durationMs || (j.startedAt ? Date.now() - j.startedAt : null), chars: text.length, text: tail(text, 12000), thinking: tail(j.partialThinking, 2000),
         prompt: head(j.prompt, 4000), promptChars: String(j.prompt || '').length, error: j.error || null };
     });
-    const rr = ((runs && runs.runs) || []).map((x) => ({ id: x.id, pipelineId: x.pipelineId, name: x.pipelineName, status: x.status, at: x.startedAt, end: x.finishedAt,
+    const rr = ((runs && runs.runs) || []).map((x) => ({ id: x.id, pipelineId: x.pipelineId, name: x.pipelineName, status: x.status, at: x.startedAt, startedAt: x.startedAt, vars: x.vars || null, by: x.by || null, end: x.finishedAt,
       error: x.error ? head(x.error, 300) : null, tasks: x.tasks || {} }));
     const pipes = ((pl && pl.pipelines) || []).filter((p) => !p.archived).map((p) => ({ id: p.id, name: p.name, description: p.description || '', vars: p.vars || {}, settings: p.settings || {},
       updatedAt: p.updatedAt, tasks: (p.tasks || []).map((t) => ({ id: t.id, label: t.label || t.id, depends_on: t.depends_on || t.dependsOn || [], step: t.step || null, gate: t.gate || null,
