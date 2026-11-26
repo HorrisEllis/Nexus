@@ -62,7 +62,7 @@ const TOOLBAR_COMMANDS = [
   // this at the source: unpinning picker-btn now hides its selector too.
   { id: 'picker-btn',      icon: '◎', label: 'Element Picker', glyph: 'target', desc: 'Point at an element to read it or assign a selector',         group: 'Tools',   pinnable: true, defaultPinned: false, pairsWith: ['picker-route', 'picker-api-url'] },
   { id: 'btn-mesh',        icon: '⬡', label: 'Agent Mesh', glyph: 'mesh', desc: 'Which agent answers Co-pilot, and its queue',             group: 'Tools',   pinnable: true, defaultPinned: false },
-  { id: 'copilot-toggle',  icon: '✦', label: 'Toggle Co-pilot', glyph: 'sparkle', desc: 'Show or hide the Co-pilot pane',        group: 'Session', pinnable: true, defaultPinned: true  },
+  { id: 'copilot-toggle',  icon: '✦', label: 'Toggle Co-pilot', glyph: 'sparkle', desc: 'Show or hide the Co-pilot pane',        group: 'Session', pinnable: true, defaultPinned: false },   // 2026-11-26 — James: "can you remove the copilot button in the taskbar. like using the floating cli instead."
   { id: 'btn-bookmark',    icon: '★', label: 'Bookmark this page', glyph: 'star', desc: 'Save this page to your bookmarks',     group: 'Session', pinnable: true, defaultPinned: true  },
   { id: 'btn-rewind',      icon: '⏮', label: 'Rewind session', glyph: 'undo', desc: 'Step back through this session\'s pages and actions',         group: 'Session', pinnable: true, defaultPinned: false },
   { id: 'btn-providers',   icon: '⟳', label: 'NCP Providers', glyph: 'link', desc: 'The agent tabs connected to Guardian, and their state',          group: 'Session', pinnable: true, defaultPinned: false },
