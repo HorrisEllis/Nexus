@@ -437,7 +437,11 @@ async function endState({ ph, plan, src, mapText }) {
       // 2026-11-26 — James: "why is it asking the deepseek model if the 3b is capable?" The climb went straight from the 3b readers to DeepSeek
       // (6.6 GB on his 16 GB: memory fell to 0.3 GB and the run was interrupted), on "no readable case was written": an unread answer, not a
       // wall. Now one rung at a time: the small readers again (warmer), then the 7b leading, DeepSeek only last. Each rung is a row.
-      const RUNGS = [{ id: 'small-again', ms: three }, { id: '7b', ms: ['huihui_ai/qwen2.5-coder-abliterate:7b', ...three.slice(0, 2)] }, { id: 'strongest', ms: STRONG }];
+      // James, 2026-11-26: "Should try another 3b. There is 3 for a reason." (EMB9: "no escalation until we know its possible or not"): each
+      // 3b writes in turn, the other two checking, before any bigger model is asked.
+      const turn = (k) => [...three.slice(k), ...three.slice(0, k)];
+      const RUNGS = [{ id: 'small-again', ms: three }, ...three.slice(1).map((m, i) => ({ id: '3b:' + m.split('/').pop(), ms: turn(i + 1) })),
+        { id: '7b', ms: ['huihui_ai/qwen2.5-coder-abliterate:7b', ...three.slice(0, 2)] }, { id: 'strongest', ms: STRONG }];
       for (const rung of RUNGS) {
         if (r.examples.length || rung.ms.length < 3) break;
         row('climbed', { gap: e.name, rung: rung.id, note: `no case agreed for ${e.name} (${String(r.why || '').slice(0, 120)}); next rung ${rung.id}: ${rung.ms.join(', ')}` });
