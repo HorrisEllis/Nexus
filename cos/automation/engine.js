@@ -1168,7 +1168,7 @@ class AutomationEngine {
       if (!this._runMacro) throw new Error('macro step: macros are not available here');
       const params = _kv(cfg.params);
       const r = await this._runMacro({ name: cfg.name, agentId: cfg.agentId || 'default', params });
-      if (r && (r.error || r.ok === false)) throw new Error(`macro "${cfg.name}": ${r.error || 'failed'}`);
+      if (r && (r.error || r.ok === false)) throw Object.assign(new Error(`macro "${cfg.name}": ${r.error || 'failed'}`), { output: r });   // its answer kept: a failure may say what to try next (PC26)
       return { note: `macro ${cfg.name}`, output: r === undefined ? null : r };
     }
 
@@ -1367,7 +1367,7 @@ class AutomationEngine {
       if (!STEPS.byType.has(step.type)) throw new Error(`unknown step type: "${step.type}"`);
       const r = await this._runStep({ id: step.id || 'adhoc', ...step }, wf, R);
       return { ok: true, output: r && r.output !== undefined ? r.output : null, note: (r && r.note) || null, log: R.run.log.map(l => l.msg), ...(r && r.decision ? { decision: r.decision } : {}) };
-    } catch (e) { return { ok: false, error: e.message }; }
+    } catch (e) { return { ok: false, error: e.message, ...(e && e.output !== undefined ? { output: e.output } : {}) }; }
   }
 
   // ── Portability ─────────────────────────────────────────────────────────

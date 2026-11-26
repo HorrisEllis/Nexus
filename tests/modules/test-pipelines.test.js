@@ -52,6 +52,9 @@ async function test(id, desc, fn) { try { await fn(); console.log(`  ✓ ${id} $
   const A = new AutomationEngine({
     runMacroFn: async ({ name }) => { if (name === 'flaky') { flaky++; return { ok: true, said: flaky < 3 ? 'not yet' : 'READY' }; }
       if (name === 'splits') return { ok: true, branches: [{ label: 'try again', step: { type: 'macro', config: { name: 'm' } }, why: 'refused: try again' }, { id: 'helper', label: 'a helper', step: { type: 'macro', config: { name: 'leaf' } }, why: 'split into a helper' }, { label: 'no step' }] };
+      if (name === 'breaks') return { ok: false, error: 'no progress', branches: [{ id: 'bigger', label: 'retry on a bigger model', step: { type: 'macro', config: { name: 'm' } }, why: 'the 3b made no progress' }] };
+      if (name === 'breaks-for-good') return { ok: false, error: 'no progress', branches: [{ id: 'also-breaks', label: 'retry', step: { type: 'macro', config: { name: 'dead' } }, why: 'try again' }] };
+      if (name === 'dead') return { ok: false, error: 'still nothing' };
       if (name === 'leaf') return { ok: true, branches: [{ id: 'leaf-of-helper', label: 'deeper', step: { type: 'macro', config: { name: 'm' } } }] };
       return { ok: true, macro: name, filled: 3 }; },
     askAgentFn: async ({ agentKey, prompt }) => { inFlight++; maxInFlight = Math.max(maxInFlight, inFlight); asked.push([agentKey, prompt]); await new Promise(r => setTimeout(r, 60)); inFlight--; return { text: `${agentKey}: ${prompt}` }; },
@@ -154,6 +157,16 @@ async function test(id, desc, fn) { try { await fn(); console.log(`  ✓ ${id} $
     assert.strictEqual(r.run.grown.length, 3);
     assert.strictEqual(P.get(c.pipeline.id).tasks.length, 1, 'the saved pipeline keeps its one step');
     assert.strictEqual(P.getRun(r.runId).tasks.helper.grownFrom, 'first', 'saved with the run');
+  });
+  await test('PL-03e', 'a failed step that grows branches recovers through them: what waited on it runs after them; unrecovered, the run fails', async () => {
+    const c = P.create({ name: 'Recovers', tasks: [{ id: 'build', step: macro('breaks') }, { id: 'after', depends_on: ['build'], step: macro('m') }] });
+    const r = await P.run(c.pipeline.id, { wait: true });
+    const t = r.run.tasks;
+    assert.deepStrictEqual([r.run.status, t.build.status, t.build.recovered, t.bigger.status, t.bigger.grownFrom, t.after.status], ['ok', 'failed', true, 'done', 'build', 'done'], JSON.stringify(t).slice(0, 600));
+    assert.match(t.build.note, /grew 1 branch/);
+    const d = P.create({ name: 'Does not recover', tasks: [{ id: 'build', step: macro('breaks-for-good') }, { id: 'after', depends_on: ['build'], step: macro('m') }] });
+    const r2 = await P.run(d.pipeline.id, { wait: true });
+    assert.deepStrictEqual([r2.run.status, r2.run.tasks['also-breaks'].status, r2.run.tasks.after.status], ['failed', 'failed', 'blocked'], JSON.stringify(r2.run.tasks).slice(0, 600));
   });
   await test('PL-04', 'the door: create, validate, get with layers, run, the run read back, archive', async () => {
     const R = require(path.join(ROOT, 'lib/automation/routes.js'));

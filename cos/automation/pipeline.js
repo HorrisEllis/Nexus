@@ -426,22 +426,30 @@ class Pipelines {
       if (Object.keys(e).length < 2) return; const ev = run.tasks[id].events || (run.tasks[id].events = []); ev.push(e); if (ev.length > 200) ev.splice(0, ev.length - 200); };
     // a branch: { id?, label, step, depends_on? (default: the step that grew it), gate?, retries?, onFail? (default continue), why }; at most 200
     // grown in a run; each named with its parent (grownFrom) and why, on the step's own ledger and in run.grown, saved before it runs
-    const grow = (fromId, out) => {
-      const bs = out && typeof out === 'object' && Array.isArray(out.branches) ? out.branches : null; if (!bs || !bs.length) return;
+    // a failed step's branches are its recovery (his: "Have it expand itself, fix itself"): they wait on nothing that failed, stay its children
+    // (grownFrom), and what waited on it waits on them; the run is ok only when each failure was recovered by a branch that passed
+    const grow = (fromId, out, failed = false) => {
+      const bs = out && typeof out === 'object' && Array.isArray(out.branches) ? out.branches : null; if (!bs || !bs.length) return 0;
+      const before = (run.grown || []).length;
       const grown = run.grown || (run.grown = []);
       for (const b of bs) {
         if (grown.length >= 200) break;
         if (!b || typeof b !== 'object' || !b.step || typeof b.step.type !== 'string') continue;
         let nid = String(b.id || `${fromId}.${grown.length + 1}`).replace(/[^\w.:-]/g, '_'); if (byId.has(nid)) nid = `${nid}.${grown.length + 1}`;
-        const deps = Array.isArray(b.depends_on) && b.depends_on.length ? b.depends_on.map(String).filter((d) => byId.has(d)) : [fromId];
-        const t = { id: nid, label: String(b.label || nid), depends_on: deps.length ? deps : [fromId], step: b.step, ...(b.gate ? { gate: b.gate } : {}), retries: Number(b.retries) || 0, onFail: ['stop', 'continue', 'hold'].includes(b.onFail) ? b.onFail : 'continue', grownFrom: fromId, why: b.why ? String(b.why).slice(0, 300) : null };
+        const deps = (Array.isArray(b.depends_on) && b.depends_on.length ? b.depends_on.map(String).filter((d) => byId.has(d)) : (failed ? [] : [fromId])).filter((d) => !(failed && d === fromId));
+        const t = { id: nid, label: String(b.label || nid), depends_on: deps, step: b.step, ...(b.gate ? { gate: b.gate } : {}), retries: Number(b.retries) || 0, onFail: ['stop', 'continue', 'hold'].includes(b.onFail) ? b.onFail : 'continue', grownFrom: fromId, why: b.why ? String(b.why).slice(0, 300) : null, recovers: b.recovers !== false };   // recovers false: it only informs (a failure filed), it is no recovery
         p.tasks.push(t); byId.set(nid, t);
         run.tasks[nid] = { label: t.label, status: 'waiting', attempts: 0, grownFrom: fromId, why: t.why, events: [{ at: Date.now(), status: 'waiting', note: `grown from ${fromId}${t.why ? ': ' + t.why : ''}` }] };
         grown.push({ id: nid, from: fromId, at: Date.now(), why: t.why });
         this._emit('automation.pipeline.grow', { pipelineId: p.id, runId: run.id, task: nid, label: t.label, from: fromId, why: t.why });
       }
+      const added = (run.grown || []).slice(before).map((g) => g.id);
+      if (failed && added.length) for (const x of p.tasks) if ((x.depends_on || []).includes(fromId) && !added.includes(x.id)) x.depends_on = x.depends_on.filter((d) => d !== fromId).concat(added);
       this._saveRun(run);
+      return added.length;
     };
+    const recovered = (id, seen = new Set()) => { if (seen.has(id)) return false; seen.add(id);
+      return p.tasks.some((c) => c.grownFrom === id && c.recovers !== false && (run.tasks[c.id].status === 'done' || (run.tasks[c.id].status === 'failed' && recovered(c.id, seen)))); };
     const set = (id, patch) => { ledger(id, patch); Object.assign(run.tasks[id], patch); if (patch.status === 'done') grow(id, full.has(id) ? full.get(id) : outputs[id]); this._saveRun(run); this._saveStep(p, run, id, full.has(id) ? full.get(id) : outputs[id]); this._emit('automation.pipeline.task', { pipelineId: p.id, pipeline: p.name, runId: run.id, task: id, label: (p.tasks.find(t => t.id === id) || {}).label || null, status: run.tasks[id].status, attempts: run.tasks[id].attempts, ...(run.tasks[id].status === 'failed' ? { error: run.tasks[id].error } : {}), ...(run.tasks[id].gate ? { gate: run.tasks[id].gate } : {}), ...(run.tasks[id].note ? { note: run.tasks[id].note } : {}), ...(run.tasks[id].output != null ? { output: run.tasks[id].output } : {}), ...(full.has(id) ? { value: full.get(id) } : {}) }); };   // PC4/PC5 2026-11-09: what passed (a preview; value: the whole of it, for the host's files) and what its gate decided   // GF6: a failed task's label and error, for the toast
     const block = (failedId) => {
       // every task downstream of a failure is blocked, said with the task that blocked it (PL-003)
@@ -504,7 +512,7 @@ class Pipelines {
           continue;
         }
         if (r && r.ok) { const g = gateOpen({ ...(t.gate || {}), element: undefined }, r.output); if (t.gate) run.tasks[t.id].gate = { type: 'keys', outcome: g.open ? 'open' : 'closed', why: g.why || null }; if (g.open) { outputs[t.id] = r.output; full.set(t.id, r.output); set(t.id, { status: 'done', ms: Date.now() - t0, finishedAt: Date.now(), output: _preview(r.output), error: null }); return true; } last = { error: `gate: ${g.why}`, output: r.output }; }
-        else last = { error: (r && r.error) || 'the step gave no answer' };
+        else last = { error: (r && r.error) || 'the step gave no answer', ...(r && r.output !== undefined ? { output: r.output } : {}) };   // a failed step's own words (and its branches) kept
         // 0.60.538 — his run of the Idearium build, 2026-11-14: Idearium restarted mid-build and "The build landed" spent its 6 attempts in 9 s
         // ("fetch failed (after 6 attempts)") while Idearium took about 13 s to boot. A system that does not answer (refused, reset, unreachable)
         // is waited for before the next attempt: 2, 4, 8, 16, 30 s, said on the step. Any other failure is retried at once, as before.
@@ -540,6 +548,9 @@ class Pipelines {
       }
       if (last.output !== undefined) full.set(t.id, last.output);
       set(t.id, { status: 'failed', ms: Date.now() - t0, finishedAt: Date.now(), error: last.error + (tries > 1 ? ` (after ${tries} attempts)` : ''), output: last.output !== undefined ? _preview(last.output) : null });
+      // it failed, and said what to try next: those branches are its recovery, so the run goes on
+      const grewN = run.cancelled ? 0 : grow(t.id, last.output, true);
+      if (grewN) { run.tasks[t.id].note = `failed; grew ${grewN} branch(es) to recover`; ledger(t.id, { note: run.tasks[t.id].note }); this._saveRun(run); return false; }
       if (t.onFail !== 'continue') stop = true;
       block(t.id);
       return false;
@@ -570,7 +581,8 @@ class Pipelines {
       if (!running.size) break;
       await Promise.race(running.values());
     }
-    const states = Object.values(run.tasks).map(x => x.status);
+    for (const t of p.tasks) if (run.tasks[t.id].status === 'failed' && recovered(t.id)) run.tasks[t.id].recovered = true;
+    const states = Object.values(run.tasks).map(x => x.status === 'failed' && x.recovered ? 'done' : x.status);
     run.status = run.cancelled ? 'cancelled' : states.every(s => s === 'done' || s === 'skipped') ? 'ok' : 'failed';
     if (run.status === 'ok' && (run.openFailures || []).length) { run.status = 'debugged'; run.error = `gates open: ${run.openFailures.length} step(s) would have stopped it — ${run.openFailures.map(x => x.task + ': ' + x.why).join(' · ').slice(0, 1500)}`; }   // 0.60.589: never read as met
     if (run.status !== 'ok' && run.status !== 'debugged') { const f = p.tasks.find(t => run.tasks[t.id].status === 'failed'); run.error = run.cancelled || (f ? `${f.id}: ${run.tasks[f.id].error}` : 'not every task ran'); }

@@ -27,7 +27,21 @@ for (let i = 1; i <= ROUNDS; i++) {
   if (done) { console.log(JSON.stringify({ ok: true, phase: PHASE, rounds })); process.exit(0); }
   if (passed <= best) break; best = passed;
 }
-console.log(JSON.stringify({ ok: false, phase: PHASE, why: 'a round made no progress', rounds }));
+// 2026-11-25 (his: "Have it expand itself, fix itself, get it working using nexus to get it working if not ... This is meant to be autonoius"):
+// a build that made no progress says what to try next, as branches the pipeline grows (PC26): the failure filed with Cortex (evidence, never a
+// recovery), and the same build on the next model up (his: "a bigger model, only if we hit an actual wall" — a round with no progress is the
+// wall). A retry that fails grows the next one; at the top of the ladder, nothing is left to try and the run fails, said.
+const CLIMB = (inp.climb || 'huihui_ai/qwen2.5-coder-abliterate:3b,huihui_ai/qwen2.5-coder-abliterate:7b,hf.co/mradermacher/DeepSeek-Coder-V2-Lite-Instruct-abliterated-i1-GGUF:Q4_K_M').split(',');
+const top = LADDER.split(',').map((m) => CLIMB.indexOf(m.trim())).reduce((a, b) => Math.max(a, b), -1), next = CLIMB[top + 1] || null;
+const short = (m) => String(m).split('/').pop().replace(/[^\w.:-]/g, '');
+const branches = [
+  { id: `${PHASE}:failure`, label: `file the failure: ${PHASE} made no progress`, recovers: false, why: 'the evidence goes to Cortex, counted (anomaly, coincidence, invariant)',
+    step: { type: 'http', config: { method: 'POST', url: 'http://127.0.0.1:3748/api/failure-modes', failOnHttpError: false,
+      body: JSON.stringify({ faultClass: 'no-progress', where: PHASE, system: 'cos/build', summary: `${PHASE}: a round made no progress on ${LADDER}`, evidence: rounds.map((r) => ({ run: r.run, passed: r.passed, of: r.of, note: r.note })) }) } } },
+  ...(next ? [{ id: `${PHASE}:on-${short(next)}`, label: `build ${PHASE} on ${short(next)}`, why: `no progress on ${short(LADDER.split(',').pop())}: the next model up`,
+    step: { type: 'script', config: { script: 'build-phase.js', input: { ...inp, ladder: next, climb: CLIMB.join(',') }, timeoutMs: 2700000 } } }] : []),
+];
+console.log(JSON.stringify({ ok: false, phase: PHASE, why: next ? `a round made no progress; next: ${short(next)}` : 'a round made no progress, and no model is left to climb to', rounds, branches }));
 // 2026-11-25 (his: "nothing in nexus wouldn't be explicit"): a phase not built is a failed step, so its gate holds and its retries run; it exited 0
 // and COS showed EMB10's run ff13a979 as done with served_by held
 process.exit(1);

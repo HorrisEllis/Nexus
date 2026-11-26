@@ -88,7 +88,8 @@ function run(d, name, { input = {}, timeoutMs = 60000, owner = null } = {}) {
     child.on('error', e => { if (done) return; done = true; clearTimeout(to); rej(e); });
     child.on('close', (code) => {
       if (done) return; done = true; clearTimeout(to);
-      if (code !== 0) return rej(new Error(`${path.basename(file)} exited with ${code}: ${stderr.trim().split('\n').slice(-3).join(' | ').slice(0, 400) || 'no error text'}`));
+      // a failing script's own last JSON line is kept (PC26: a failure may say what to try next, its branches)
+      if (code !== 0) return rej(Object.assign(new Error(`${path.basename(file)} exited with ${code}: ${stderr.trim().split('\n').slice(-3).join(' | ').slice(0, 400) || 'no error text'}`), { output: _parseOut(stdout) }));
       res({ output: _parseOut(stdout), stdout, stderr, code, ms: Date.now() - t0 });
     });
     try { child.stdin.end(json); } catch (_) {}
