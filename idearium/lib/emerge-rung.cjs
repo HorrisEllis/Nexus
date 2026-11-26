@@ -175,7 +175,7 @@ const _adv = (() => {
   const fits = (l, sig) => { try { const m = /\(([^)]*)\)/.exec(q(sig)); const ps = m ? m[1].split(',').map((s) => s.trim()).filter(Boolean) : null; const a = args(l);
     if (!ps) return true; if (a.length !== ps.length) return false;
     return ps.every((p, i) => { const t = (/:\s*(\w+)/.exec(p) || [])[1]; return !t || t === 'any' || kindOf(a[i]) === t; }); } catch (_) { return false; } };
-  return { callOf, wantOf, egCall, same, sameLit, clean, readable, fits, key: (l) => callOf(l).replace(/\s+/g, '') };
+  return { callOf, wantOf, egCall, same, sameLit, clean, readable, fits, lit, key: (l) => callOf(l).replace(/\s+/g, '') };
 })();
 async function adversaryCheck({ eg, render, skel, filled, name, body, who, sf, n, readers = null }) {
   // three readers, three different models when given (his 2026-11-25: "three different 3b. i use abliterated so they are less bias"): the first writes the cases, the other two read them blind
@@ -194,13 +194,23 @@ async function adversaryCheck({ eg, render, skel, filled, name, body, who, sf, n
   const cases = _adv.clean(a, name).filter((l) => _adv.readable(l) && _adv.fits(l, sig) && !known1.has(_adv.key(l)) && (known1.add(_adv.key(l)), true)).slice(0, 8);
   if (!cases.length) return null;
   const askB = ['Function: ' + sig, 'What it must do: ' + does,
-    'For each call below, write the result this description says. Each line exactly: call == result, the result as a literal. Only the lines.', ...cases.map(_adv.callOf)].join('\n');
+    'For each numbered call below, write the result this description says, by its number, one line each:  <number>. <result as a literal>  Only the lines.', ...cases.map((l, i) => (i + 1) + '. ' + _adv.callOf(l))].join('\n');
+  // answers read by number (EMB10 2026-11-25: the readers echoed each call in their own shapes, and its arguments were read as the result):
+  // a numbered line's last literal after "==", "->", "=>", "Result:" or the number itself; a reasoning reader's "Result:" line under its number
+  const byNumber = (text) => { const out = {}; let cur = null;
+    for (const raw of String(text || '').split('\n')) { const s = raw.trim().replace(/`/g, '');
+      const m = /^\**(\d+)\**[.):]\s*(.*)$/.exec(s); if (m) cur = Number(m[1]) - 1;
+      const r = /(?:==|->|=>|→|Result:|result\s*=|is)\s*([^=>]+?)\s*\.?$/i.exec(m ? m[2] : s);
+      const v = r ? r[1].trim() : (m ? m[2].trim() : null);
+      if (cur != null && cur >= 0 && cur < cases.length && v && out[cur] === undefined) { try { _adv.lit(v); out[cur] = v; } catch (_) {} } }
+    const want = {}; for (const [i, v] of Object.entries(out)) want[_adv.key(cases[i])] = v; return want; };
   let b = ''; try { b = await rB.ask(askB, { gap: name, adversary: 'b', tryNo: n }); } catch (_) { return null; }
-  const bWant = {}; for (const l of _adv.clean(b, name)) bWant[_adv.key(l)] = _adv.wantOf(l);
+  const readOne = (text) => { const w = byNumber(text); for (const l of _adv.clean(text, name)) { const k = _adv.key(l); if (w[k] === undefined && _adv.readable(l)) w[k] = _adv.wantOf(l); } return w; };
+  const bWant = readOne(b);
   // a third adversary, blind as the second (found on the real run: two 3bs agreed on a wrong expected value, which would refuse a correct body);
   // a case counts only when all three read the same result, so a refusal needs three independent readings (his: tokens are free, unstable code is not)
   let c = ''; try { c = await rC.ask(askB, { gap: name, adversary: 'c', tryNo: n }); } catch (_) { c = ''; }
-  const cWant = {}; for (const l of _adv.clean(c, name)) cWant[_adv.key(l)] = _adv.wantOf(l);
+  const cWant = readOne(c);
   // each case runs on its own, so one case that errors cannot take the others' results with it (found on the first real run)
   const mod = render(skel, { ...filled, [name]: body }), outs = [], errs = [];
   for (const l of cases) { const r = await eg('lang-run', mod + '\n' + `print(json(${_adv.egCall(l)}))`); const o = String((r && r.stdout) || '').replace(/\r/g, '').split('\n').filter(Boolean);
@@ -213,7 +223,7 @@ async function adversaryCheck({ eg, render, skel, filled, name, body, who, sf, n
     else if (v === 'ambiguous') tension.push(`${_adv.callOf(l)}: the readings say ${wa}, ${wb}, ${wc}`);
     else if (v === 'keep') kept.push(l);
   });
-  return { cases: cases.length, broke, tension, kept, error: run && !run.ok ? String(run.stderr || '').trim().split(/\r?\n/)[0] : null };
+  return { cases: cases.length, broke, tension, kept, said: { [rA.name || 'a']: String(a).slice(0, 1200), [rB.name || 'b']: String(b).slice(0, 1200), [rC.name || 'c']: String(c).slice(-1200) }, error: run && !run.ok ? String(run.stderr || '').trim().split(/\r?\n/)[0] : null };
 }
 
 /** an export's parameter names, from its plan signature "name(a: T, b?: T) -> R" (or e.params); null when it cannot be read */
@@ -405,13 +415,13 @@ function createRung({ root = path.resolve(__dirname, '..', '..'), ask, expect, m
     for (let k = 1; k <= 3 && !m; k++) {
       const again = k === 1 ? msg : msg + '\n\nThese names are taken, name a NEW one: ' + [...taken].join(', ') + (said ? '\nYou said: ' + said.split('\n')[0].slice(0, 120) : '');
       let text = ''; try { text = await who.ask(again, { gap: name, diagnose: true, tryNo: k }); } catch (_) { break; }
-      said = _q(text); const x = /fn\s+([A-Za-z_][A-Za-z0-9_]*)\s*\(([^)]*)\)\s*(?::\s*\w+)?\s*(?:—|--|-|:)?\s*(.*)/.exec(said);
+      said = _q(text); const x = /fn\s+([A-Za-z_][A-Za-z0-9_]*)\s*\(([^)]*)\)\s*(?:(?::|->)\s*\w+)?\s*(?:—|--|-|:)?\s*(.*)/.exec(said);   // "-> bool" too (EMB10 2026-11-25: the type was taken for the sentence)
       if (x && !taken.has(x[1]) && _gapsEg().may_name(x[1]) && x[2].split(',').map(s => s.trim().split(/[:\s=]/)[0]).filter(Boolean).every(p => ID.test(p))) m = x;
     }
     if (!m) return null;
     const params = m[2].split(',').map(s => s.trim().split(/[:\s=]/)[0]).filter(Boolean);
     if (!params.every(p => ID.test(p))) return null;
-    return { name: m[1], params, signature: m[1] + '(' + params.join(', ') + ')', does: _q(m[3]).trim().slice(0, 200) || 'what ' + name + ' needs', namedBy: (who.name || model || 'the model') + ', asked why ' + name + ' was stuck' };
+    return { name: m[1], params, signature: m[1] + '(' + params.join(', ') + ')', does: (() => { const t = _q(m[3]).trim().slice(0, 200); return t.split(/\s+/).length >= 3 ? t : 'what ' + name + ' needs'; /* a type word is no sentence */ })(), namedBy: (who.name || model || 'the model') + ', asked why ' + name + ' was stuck' };
   }
   const CLI = cli || path.join(root, 'emerge', 'emerge', 'cli.js');
   // Emerge's door, its command line: { ok, code, stdout, stderr, files }
@@ -497,6 +507,9 @@ function createRung({ root = path.resolve(__dirname, '..', '..'), ask, expect, m
           const seen = refused[name + '@' + r] || (refused[name + '@' + r] = []);
           if (r + 1 < L.length && G.repeats(seen, body)) { repeated = true; tries.push({ n, stage: 'gap:' + name, why: 'the same refused body again', ms: Date.now() - t0, gap, model: who.name }); break; }
           // 0.60.632 — a body that answers the examples instead of the rule is refused before it is compiled (gaps.eg copies_examples)
+          // 2026-11-25 (EMB10 with three adversaries): a loop named as a parameter, or a name compared with itself, refused before compiling (gaps.eg self_defeating)
+          { const sfP = skel.fns.find((x) => x.name === name); const sd = G.self_defeating(body, (sfP && sfP.params) || []);
+            if (sd && sd.found) { seen.push({ body }); note({ body, said: String(sd.why), fix: String(sd.fix), ms: Date.now() - t0 }); tries.push({ n, stage: 'gap:' + name, why: sd.why + '\nThe fix: ' + sd.fix, ms: Date.now() - t0, gap, model: who.name }); continue; } }
           const cx = G.copies_examples(body); if (cx.copies) { note({ body, said: cx.why, fix: cx.fix, ms: Date.now() - t0 }); tries.push({ n, stage: 'gap:' + name, why: cx.why + '\nThe fix: ' + cx.fix, ms: Date.now() - t0, gap, model: who.name }); continue; }
           let ck = await eg('lang-check', render(skel, { ...filled, [name]: body }));
           // EMB4: what the compiler refused is first given to autocorrect (the 3b's own EMB3); its repair is kept only if it compiles, or if only a parameter is left to copy
@@ -534,9 +547,9 @@ function createRung({ root = path.resolve(__dirname, '..', '..'), ask, expect, m
           // on only with its readers named (three different models, his): one model reading three times agreed on wrong answers and could refuse a
           // correct body (measured 2026-11-25), so with none named the gate stays off unless asked for (EMERGE_RUNG_ADVERSARY=1)
           if (process.env.EMERGE_RUNG_ADVERSARY !== '0' && ((adversaries && adversaries.length >= 3) || process.env.EMERGE_RUNG_ADVERSARY === '1')) { const sfA = skel.fns.find(x => x.name === name);
-            const adv = sfA && sfA.does ? await adversaryCheck({ eg, render, skel, filled, name, body, who, sf: sfA, n, readers: adversaries && adversaries.length ? adversaries.filter((x) => x && typeof x.ask === 'function') : null }) : null;
+            const adv = sfA && sfA.does && String(sfA.does).split(/\s+/).length >= 3 && !/^what \w+ needs$/.test(String(sfA.does)) ? await adversaryCheck({ eg, render, skel, filled, name, body, who, sf: sfA, n, readers: adversaries && adversaries.length ? adversaries.filter((x) => x && typeof x.ask === 'function') : null }) : null;
             if (adv) {
-              rec.adversary = (rec.adversary || []).concat({ at: new Date().toISOString(), cases: adv.cases, broke: adv.broke, tension: adv.tension, kept: adv.kept.length });
+              rec.adversary = (rec.adversary || []).concat({ at: new Date().toISOString(), cases: adv.cases, broke: adv.broke, tension: adv.tension, kept: adv.kept.length, said: adv.said });
               if (adv.tension.length) tries.push({ n, stage: 'tension:' + name, why: adv.tension.slice(0, 2).join('; '), gap, model: who.name });
               if (adv.broke.length) { seen.push({ body }); const said = 'passes its examples, but an adversary broke it: ' + adv.broke.slice(0, 3).join('; ');
                 note({ body, said, fix: 'hold every case its description implies, not only its examples', ms: Date.now() - t0 }); tries.push({ n, stage: 'adversary:' + name, why: said, ms: Date.now() - t0, gap, model: who.name }); continue; }

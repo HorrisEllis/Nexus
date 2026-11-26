@@ -157,6 +157,28 @@ fn copies_examples(body: string): map {
   return { copies: false, why: "", fix: "" }
 }
 
+// 2026-11-25, the EMB10 run with three adversaries (his: "Compiler is supposed to debug its own code"): two helpers passed with
+// "for key in obj { if key == key ...": the loop's name took the parameter's, and a name compared with itself is always true. Both are
+// read from the body alone, no model asked.
+fn self_defeating(body: string, params: list): map {
+  for line in split(body, "\n") {
+    let w = split(line, " ")
+    var i = 0
+    while i < len(w) {
+      if w[i] == "for" and i + 2 < len(w) and w[i + 2] == "in" and (params contains w[i + 1]) {
+        return { found: true, why: "the loop's name " + w[i + 1] + " is also a parameter's: inside the loop the parameter is gone", fix: "Name the loop's item something else (for each in ...), and compare it with the parameter " + w[i + 1] + "." }
+      }
+      if i + 2 < len(w) and (w[i + 1] == "==" or w[i + 1] == "!=") and w[i] == w[i + 2] and w[i] != "" {
+        var always = "true"
+        if w[i + 1] == "!=" { always = "false" }
+        return { found: true, why: "it compares " + w[i] + " with itself, which is always " + always, fix: "Compare two different things: the item with the value asked for." }
+      }
+      i = i + 1
+    }
+  }
+  return { found: false, why: "", fix: "" }
+}
+
 fn struggle(attempts: list): map {
   var kinds = []
   var missing = []

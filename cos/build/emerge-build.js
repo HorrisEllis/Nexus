@@ -42,7 +42,8 @@ const COS_PORT = Number(arg('cos-port', 7799));
 const cosCall = (method, p, body) => new Promise((res) => { const b = body ? JSON.stringify(body) : null; const q = http.request({ host: '127.0.0.1', port: COS_PORT, path: p, method, timeout: 60000, headers: b ? { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(b) } : {} }, (r) => { let t = ''; r.on('data', (c) => t += c); r.on('end', () => { try { res(JSON.parse(t)); } catch (_) { res(null); } }); }); q.on('error', () => res(null)); q.on('timeout', () => { q.destroy(); res(null); }); if (b) q.write(b); q.end(); });
 async function wakeOllama() {
   if (await call('GET', '/health', null, 3000).catch(() => null)) return true;
-  await cosCall('POST', '/api/cos/systems/ollama-bridge/start', { by: 'rule:emerge-build' });
+  // the on-demand door (touch), not start: RAID refuses a start without proof, and the bridge stayed down mid-run (EMB10 run e1968c61, 2026-11-25)
+  await cosCall('POST', '/api/cos/systems/ollama-bridge/touch', { by: 'rule:emerge-build' });
   for (let i = 0; i < 30; i++) { await new Promise((r) => setTimeout(r, 2000)); if (await call('GET', '/health', null, 3000).catch(() => null)) { row('ollama-woken', { note: 'the Ollama system was asleep; woken through COS' }); return true; } }
   return false;
 }
