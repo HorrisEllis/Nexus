@@ -2108,3 +2108,27 @@ phases_addendum_2026_11_24_model_server:
 # takes a request (the bridge's jobs, Copilot, Idearium's Code tab, RAID's queue): it becomes a pipeline run, so nothing is thought outside it.
 # Not built: today only builds run as pipelines; the other doors are named for their own phases. Cost, said: the pipeline becomes the one
 # path, so its speed and its uptime become everything's (a request that waited a second waits a run's start).
+
+  PC30_the_library_of_pipelines_renamable_not_a_drop_do:
+    status: pending
+    depends_on: [PC8]
+    does: >
+      His 2026-11-26: "the pipelines need to be renamable. a library not a drop down." The Automation tab opens on its Library (built, hidden today): every pipeline as a card with its name (renamed in place), its origin, its end state, its last run and its schedule; the drop-down goes. Preview first (his rule).
+
+  PC31_origin_first_end_state_last_on_every_pipeline:
+    status: pending
+    depends_on: [PC26, PC30]
+    does: >
+      His 2026-11-26: "the raid compartment created with the request, needs to be the beginning of each pipeline. where it originates from, and the end state need to be shown on each. like it needs to all be explicit." Every pipeline's first node is the RAID request it came from (its .input, its compartment, who asked and why) and its last node is the contract (the end state and its conditions, RAID's verdict); the canvas draws both, and a run's tree hangs between them.
+
+  PC32_axioms_conditions_triggers_schedule_and_retries_:
+    status: pending
+    depends_on: [PC30]
+    does: >
+      His 2026-11-26: "we need axioms per node, pipeline, conditions, triggers, and a ability to schedule. edit retry logic." Each node and each pipeline carries its axioms (constraints checked before it runs: WARP 2's link through the field's constraints), its conditions (when), its triggers and schedule (the engine's own, the Schedule page made visible), and its retry logic (how many, how long between, what changes on each try: a bigger model, a smaller piece), all editable on the canvas and saved in the pipeline's node file.
+
+  PC33_the_pipeline_moves_idearium_s_pipeline_features_:
+    status: pending
+    depends_on: [PC30]
+    does: >
+      His 2026-11-26: "can we have it work on moving the idearium pipeline features and agent components and stuff to automation engine and the pipeline" (DB1; UD13: Idearium hands its tools to COS and calls COS). A pipeline whose nodes are the migration: a census node lists each Idearium pipeline feature and agent component; each becomes a node that moves one, proven by its own tests before the old one is retired. Said plainly: the pipeline cannot yet move JavaScript or UI by itself (it builds Emerge pieces); the nodes it cannot do are filed as needed-the-coder, each the next capability to give.
