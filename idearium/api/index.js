@@ -772,7 +772,11 @@ async function _phaseMapStart(repo, opts = {}) {
   const PH = await import('../repo/phases.js');
   const PMx = await import('../repo/phase-mapping.js');
   const dir = _repoDiskDir(repo.uuid);
-  const { maps, scope, snapshot } = PH.mapsFor({ repo, repoDir: dir });
+  const all = PH.mapsFor({ repo, repoDir: dir }); const { scope, snapshot } = all;
+  // 2026-11-25 (his: "everytime you need to step in, you need to give capability"): one map can be mapped on its own (opts.map), so a map
+  // Idearium just wrote gets its files without remapping all 265; asked for and not found, it is said
+  const maps = opts.map ? all.maps.filter((m) => m.path === String(opts.map)) : all.maps;
+  if (opts.map && !maps.length) return { ok: false, status: 404, error: `no phasemap ${opts.map} in this repo` };
   if (!maps.length) return { ok: false, status: 404, error: 'this repo has no phasemaps' };
   const root = scope.source === 'nexus' ? _require('../../lib/nexus-self/systems.js').ROOT : dir;
   if (!root) return { ok: false, status: 409, error: 'this repo has no files on disk to map against' };
