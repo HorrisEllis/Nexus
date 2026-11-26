@@ -373,7 +373,12 @@ async function endState({ ph, plan, src, mapText }) {
             if (SKIP.has(x[1].toLowerCase()) || seen.has(x[1])) continue; seen.add(x[1]); out.push(x); }
           return out.slice(0, 5); };
         const base = ['A module to write in a small functional language. Its file: ' + target, 'What it must do: ' + String(ph.does).slice(0, 1500),
-          'Name the pure functions it needs (2 to 5), inputs in, result out, no files, no network.',
+          // 2026-11-26: OL6's first answer was scoreChunk(chunk, tree, tape) "returns a decision": whole structures in, a vague result out,
+          // and no reader of any size could write one literal case for it (every rung: "no readable case was written"). EMB9, his "always
+          // break it down": small functions, one idea each, plain inputs a test can write, the result said exactly.
+          'Break it into small pure functions (2 to 5), one idea each, inputs in, result out, no files, no network.',
+          'Every input is a number, a string, a list of numbers or strings, or a small map with named fields; never a whole tree, file or object.',
+          'Say exactly what each returns (a number, true/false, a list ...), so a test can be written as one line: name(literals) == literal.',
           'One per line, exactly: name(param1, param2) — one sentence of what it returns. Only the lines.'].join('\n');
         let found = [], said = '', m = writers[0];
         for (let t = 0; t < writers.length && !found.length; t++) {
