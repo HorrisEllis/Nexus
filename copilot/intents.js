@@ -53,6 +53,8 @@ const LANDING_PATHS = Object.freeze({
 const PATTERNS = [
   { intent: 'navigate', re: /\b(take me to|go to|open|navigate to|show me)\s+(the\s+)?(\w[\w-]*)/i },
   { intent: 'note',     re: /^\s*(note|remember|log)(\s+that)?[:\s]/i },
+  // PC29 b (his, 2026-11-25: "Need copilot to orchastrate nexus" · "everything goes to the pipeline. each request."): "build EMB10" is a run
+  { intent: 'pipeline', re: /^\s*(build|run|start)\s+(the\s+)?([A-Z]{1,6}\d+[a-z]?)\b/ },
   { intent: 'action',   re: /^\s*(run|execute)\s+(forge\s+\w+|the\s+\w+\s+pipeline)/i },
   { intent: 'tool',     re: /\b(read|open|show)\s+(the\s+)?file\b|\bread_file\b|\bwhat('s| is) in\s+\S+\.(js|json|md|spec)\b|\b(what can you do|list (your |all )?tools|(what|which) tools|your (real )?tools|show (your |me your )?(capabilit(y|ies)|tools|commands)|help( me)?( with)? what you can do)\b/i },
 ];
@@ -203,8 +205,29 @@ async function route(prompt, deps = {}) {
     case 'note':     return handleNote(prompt, deps);
     case 'tool':     return handleTool(prompt, deps);
     case 'action':   return handleAction(prompt, deps);
+    case 'pipeline': return handlePipeline(prompt, deps);
     default:         return null; // ask/build/diagnose — existing pipeline owns these
   }
 }
 
-module.exports = { classifyIntent, route, handleNavigate, handleNote, handleTool, handleAction, LANDING_PATHS };
+// PC29 b: the request becomes a run. The phase named ("EMB10") finds the COS pipeline that builds it (a step whose input names that phase),
+// and Copilot starts it through the one command table (cos pipeline-start), his words as RAID's proof; RAID decides. Nothing else is guessed:
+// no pipeline, or more than one, is said with what was found.
+async function handlePipeline(prompt, deps = {}) {
+  const m = /^\s*(build|run|start)\s+(the\s+)?([A-Z]{1,6}\d+[a-z]?)\b/.exec(prompt); const id = m && m[3];
+  const C = deps.command || require('../lib/agent-tools/tools/nexus/command.js').command;
+  const ctx = { agent: 'copilot' };
+  const list = await C.execute({ command: 'cos pipelines' }, ctx);
+  const ps = (list && list.result && list.result.pipelines) || [];
+  const named = (t) => { const ph = String(((t.step || {}).config || {}).input && t.step.config.input.phase || ''); return ph === id || ph.startsWith(id + '_'); };
+  const hits = ps.filter((p) => !p.archived && (p.tasks || []).some(named));
+  if (!hits.length) return { ok: true, intent: 'pipeline', text: `No pipeline in COS builds ${id} yet (${ps.length} looked at).` };
+  if (hits.length > 1) return { ok: true, intent: 'pipeline', text: `${hits.length} pipelines build ${id}: ${hits.map((p) => `"${p.name}" (${p.id})`).join(', ')}. Which one?` };
+  const p = hits[0];
+  const r = await C.execute({ command: 'cos pipeline-start', args: [p.id], flags: { why: `his request to Copilot: "${String(prompt).slice(0, 300)}"` } }, ctx);
+  if (r && (r.error || r.refused)) return { ok: false, intent: 'pipeline', text: `I did not start "${p.name}": ${r.error || r.reason}` };
+  const runId = r && r.result && (r.result.runId || (r.result.run && r.result.run.id));
+  return { ok: true, intent: 'pipeline', text: `Started "${p.name}" in COS (run ${runId || '?'}), RAID approved. Watch it in COS › Automation.`, runId, pipelineId: p.id };
+}
+
+module.exports = { classifyIntent, route, handleNavigate, handleNote, handleTool, handleAction, handlePipeline, LANDING_PATHS };
