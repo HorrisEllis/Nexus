@@ -236,6 +236,7 @@ table.t .nm { font-weight: 500; color: var(--bright); } table.t .sub { margin-to
 #toasts .toast.bad { border-color: color-mix(in srgb, var(--coral) 40%, var(--rim)); } #toasts .toast.warn { border-color: color-mix(in srgb, var(--amber) 40%, var(--rim)); }
 .toast { position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%); padding: 8px 14px; border-radius: 7px; background: var(--panel); border: 1px solid var(--rim); color: var(--text); font-size: 12px; box-shadow: 0 10px 30px rgba(0,0,0,.5); z-index: 1001; }
 ::-webkit-scrollbar { width: 9px; height: 9px; } ::-webkit-scrollbar-thumb { background: var(--rim); border-radius: 5px; border: 2px solid transparent; background-clip: padding-box; } ::-webkit-scrollbar-track { background: transparent; }
+.lib-b{font:12px var(--sans,inherit);padding:5px 10px;border-radius:7px;border:1px solid var(--edge);background:var(--bg1);color:var(--text);cursor:pointer}.lib-b:hover:not([disabled]){border-color:var(--sky);color:var(--bright)}.lib-b[disabled]{opacity:.4;cursor:default}
 </style>
 </head>
 <body>
@@ -787,13 +788,55 @@ function work() {
     } else { const c = $('console'); if (c) c.outerHTML = consoleHtml(false); }
     bindConsole();
   } else if (S.view === 'console') { w.innerHTML = consoleHtml(true); bindConsole(); }
+  else if (S.view === 'runs' && !S.runsOf) { if (w.querySelector('.lib-title input')) return; libraryView(w); }   /* not while a name is being typed */
   else if (S.view === 'runs') { const rs = p ? runs(p.id) : [];
-    w.innerHTML = `<div class="page"><h2>Runs <span style="color:var(--text3);font:12px var(--mono)">${rs.length}</span></h2>${rs.length ? `<table class="t"><thead><tr><th>Status</th><th>Started</th><th>Took</th><th>Steps</th><th>Error</th></tr></thead><tbody>${rs.map((r) => `<tr data-run="${esc(r.id)}"><td><span class="pill" style="color:${col(r.status)}"><span class="sd" style="background:${col(r.status)}"></span>${esc(r.status)}</span></td><td class="m">${r.at ? new Date(r.at).toLocaleString() : '—'}</td><td class="m">${r.at ? dur((r.end || Date.now()) - r.at) : '—'}</td><td><div class="mini">${p.tasks.map((t) => `<i title="${esc(t.label)}: ${esc(st(r, t.id))}" style="background:${col(st(r, t.id))}"></i>`).join('')}</div></td><td class="m" style="color:var(--coral)">${esc((r.error || '').slice(0, 120))}</td></tr>`).join('')}</tbody></table>` : '<div class="empty">No runs yet.</div>'}</div>`;
+    w.innerHTML = `<div class="page"><h2><a href="#" data-lib style="color:var(--sky);text-decoration:none;font-size:12px">◂ all pipelines</a> · ${esc((p && p.name) || '')} · Runs <span style="color:var(--text3);font:12px var(--mono)">${rs.length}</span></h2>${rs.length ? `<table class="t"><thead><tr><th>Status</th><th>Started</th><th>Took</th><th>Steps</th><th>Error</th></tr></thead><tbody>${rs.map((r) => `<tr data-run="${esc(r.id)}"><td><span class="pill" style="color:${col(r.status)}"><span class="sd" style="background:${col(r.status)}"></span>${esc(r.status)}</span></td><td class="m">${r.at ? new Date(r.at).toLocaleString() : '—'}</td><td class="m">${r.at ? dur((r.end || Date.now()) - r.at) : '—'}</td><td><div class="mini">${p.tasks.map((t) => `<i title="${esc(t.label)}: ${esc(st(r, t.id))}" style="background:${col(st(r, t.id))}"></i>`).join('')}</div></td><td class="m" style="color:var(--coral)">${esc((r.error || '').slice(0, 120))}</td></tr>`).join('')}</tbody></table>` : '<div class="empty">No runs yet.</div>'}</div>`;
+    { const lb = w.querySelector('[data-lib]'); if (lb) lb.onclick = (e) => { e.preventDefault(); S.runsOf = null; draw(); }; }
     w.querySelectorAll('[data-run]').forEach((tr) => tr.oncontextmenu = (e) => { e.preventDefault(); menu([{ label: 'Copy run id', icon: 'copy', run: () => copy(tr.dataset.run) }, { label: 'Retry this run', icon: 'retry', disabled: later }, { label: 'Open its flight record', icon: 'flight', disabled: 'Joins with the Flight view.' }], { x: e.clientX, y: e.clientY }); });
   } else if (S.view === 'vars' || S.view === 'settings') { const e = Object.entries((p && (S.view === 'vars' ? p.vars : p.settings)) || {});
     w.innerHTML = `<div class="page"><h2>${S.view === 'vars' ? 'Variables' : 'Settings'}</h2>${e.length ? `<table class="t"><thead><tr><th>Name</th><th>Value</th></tr></thead><tbody>${e.map(([k, x]) => `<tr><td class="m" style="color:var(--text)">${esc(k)}</td><td class="m">${esc(typeof x === 'string' ? x : JSON.stringify(x))}</td></tr>`).join('')}</tbody></table>` : '<div class="empty">None set.</div>'}</div>`;
   } else w.innerHTML = `<div class="empty" style="margin:auto;max-width:440px;text-align:center"><b style="font-size:14px;color:var(--bright)">${esc(v.label)}</b>${esc(v.proposed)}<br><span style="color:var(--violet)">Proposed · yours to choose</span></div>`;
   const c = $('code'); if (c) c.scrollTop = (S.follow && bottom) || !pc ? c.scrollHeight : ptop; const nl = w.querySelector('.calls .list'); if (nl) nl.scrollTop = ltop;
+}
+// 2026-11-26 — James: "Also not a dropdown. A list for the pipelines in raid. Update the runs tab with the list of pipelines, with the pieces as a
+// progress bar. Ability it edit, rename, deleted, create, pause, stop, completely manage. Title is what it is. UUID or node id is meta data".
+// Every pipeline a row: its title as it is, its progress (the last run's steps done of all, grown ones too; the open one's build nodes passed),
+// what it is doing, and its acts through COS's own routes as a person: open, run, pause, continue, stop, rename, delete (archives: kept, restored
+// from "show deleted"), runs. Its id is metadata, small, under the title.
+function libraryView(w) {
+  const ps = (S.D ? allPipes() : []).filter((x) => !x.archived || S.showArchived);
+  const row = (x) => { const rs = runs(x.id), r = rs[0], live = rs.find((y) => /running|paused/.test(y.status || '')), tk = r && r.tasks ? Object.values(r.tasks) : [];
+    const done = tk.filter((t) => /done|complete|passed|recovered|skipped/.test(t.status || '')).length, all = Math.max(tk.length, (x.tasks || []).length);
+    const b = S.pid === x.id && S.D && S.D.build && S.D.build.gates ? S.D.build : null, bp = b ? b.gates.filter((g) => g.status === 'passed').length : 0;
+    const bar = (n, of, c, label) => `<div style="display:flex;align-items:center;gap:8px;margin-top:6px"><div style="flex:1;height:6px;border-radius:3px;background:var(--edge);overflow:hidden"><div style="height:100%;width:${of ? Math.round(n / of * 100) : 0}%;background:${c}"></div></div><span class="m" style="font-size:11px;color:var(--text2);white-space:nowrap">${label}</span></div>`;
+    const btn = (a, label, dis) => `<button class="lib-b" data-act="${a}" data-id="${esc(x.id)}"${dis ? ' disabled title="' + esc(dis) + '"' : ''}>${label}</button>`;
+    return `<div class="lib-row" data-pid="${esc(x.id)}" style="border:1px solid var(--edge);border-radius:10px;padding:12px 14px;margin-bottom:10px;background:var(--bg2)${x.archived ? ';opacity:.55' : ''}">`
+      + `<div style="display:flex;align-items:flex-start;gap:12px"><div style="flex:1;min-width:0">`
+      + `<div class="lib-title" data-id="${esc(x.id)}" style="font-size:14px;color:var(--bright);font-weight:600">${esc(x.name || 'untitled')}</div>`
+      + `<div class="m" style="font-size:10.5px;color:var(--text3);margin-top:2px">${esc(x.id)} · ${(x.tasks || []).length} steps${x.archived ? ' · deleted (archived)' : ''}</div>`
+      + `<div style="font-size:12px;color:var(--text2);margin-top:4px"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:${col(r && r.status)};margin-right:6px"></span>${r ? esc(r.status) + ' · ' + ago(r.at) : 'never run'}</div></div>`
+      + `<div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;max-width:440px">${btn('open', 'Open')}${btn('run', 'Run', live ? 'It is running.' : x.archived ? 'Deleted: restore it first.' : null)}${live && live.status === 'paused' ? btn('continue', 'Continue') : btn('pause', 'Pause', live ? null : 'Nothing running.')}${btn('stop', 'Stop', live ? null : 'Nothing running.')}${btn('rename', 'Rename')}${btn('runs', 'Runs')}${x.archived ? btn('restore', 'Restore') : btn('archive', 'Delete')}</div></div>`
+      + bar(done, all, 'var(--sky)', `steps ${done} of ${all}`) + (b ? bar(bp, b.gates.length, 'var(--ok)', `${esc(b.phase || '')} · nodes ${bp} of ${b.gates.length}`) : '') + `</div>`; };
+  w.innerHTML = `<div class="page"><h2 style="display:flex;align-items:center;gap:10px">Pipelines <span style="color:var(--text3);font:12px var(--mono)">${ps.length}</span><span style="flex:1"></span>`
+    + `<label style="font-size:12px;color:var(--text2)"><input type="checkbox" data-arch ${S.showArchived ? 'checked' : ''}> show deleted</label><button class="lib-b" data-act="new">+ New pipeline</button></h2>${ps.map(row).join('') || '<div class="empty">No pipelines yet.</div>'}</div>`;
+  const by = (id) => allPipes().find((x) => x.id === id), liveOf = (id) => runs(id).find((y) => /running|paused/.test(y.status || ''));
+  w.querySelector('[data-arch]').onchange = (e) => { S.showArchived = e.target.checked; draw(); };
+  w.querySelectorAll('[data-act]').forEach((b) => b.onclick = async () => { const id = b.dataset.id, x = id && by(id), lv = id && liveOf(id);
+    switch (b.dataset.act) {
+      case 'new': return ACTIONS['pipe.new'].run();
+      case 'open': S.view = 'canvas'; return choose(id);
+      case 'runs': S.runsOf = id; return choose(id);
+      case 'run': return cos('POST', 'automation/pipelines/' + id + '/run', { by: 'person' }, 'Started');
+      case 'pause': return lv && cos('POST', 'automation/pipeline-runs/' + lv.id + '/pause', { by: 'person' }, 'Paused');
+      case 'continue': return lv && cos('POST', 'automation/pipeline-runs/' + lv.id + '/continue', { by: 'person' }, 'Continued');
+      case 'stop': if (lv && confirm('Stop the run of "' + ((x && x.name) || '') + '"? Its steps so far are kept.')) return cos('POST', 'automation/pipeline-runs/' + lv.id + '/cancel', { by: 'person' }, 'Stopped'); return;
+      case 'archive': if (confirm('Delete "' + ((x && x.name) || '') + '"? It is archived, not erased: "show deleted" lists it and Restore brings it back.')) return cos('POST', 'automation/pipelines/' + id + '/archive', { archived: true, by: 'person' }, 'Deleted (archived)'); return;
+      case 'restore': return cos('POST', 'automation/pipelines/' + id + '/archive', { archived: false, by: 'person' }, 'Restored');
+      case 'rename': { const t = w.querySelector('.lib-title[data-id="' + CSS.escape(id) + '"]'); if (!t) return; const old = (x && x.name) || '';
+        t.innerHTML = '<input style="font-size:14px;width:100%;background:var(--bg1);color:var(--bright);border:1px solid var(--sky);border-radius:6px;padding:3px 6px">'; const i = t.querySelector('input'); i.value = old; i.focus(); i.select();
+        const fin = async (save) => { i.onblur = null; if (save && i.value.trim() && i.value.trim() !== old) await cos('PUT', 'automation/pipelines/' + id, { name: i.value.trim() }, 'Renamed'); draw(); };
+        i.onkeydown = (e) => { if (e.key === 'Enter') fin(true); else if (e.key === 'Escape') fin(false); }; i.onblur = () => fin(true); return; }
+    } });
 }
 // the Phases and Components side tabs: everything Nexus holds, searchable, each one a box with + Add (drawn once; the search filters in place)
 function listView(w) {
