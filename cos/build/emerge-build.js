@@ -362,13 +362,30 @@ async function endState({ ph, plan, src, mapText }) {
       // No spec module and no file: the strongest reader proposes the functions from the phase's own words (a line each, Emerge fn shape),
       // kept beside the build (<PHASE>.signatures.json, not confirmed by James) and said as a row; the examples and the test still judge them.
       if (!exports.length && ph.does) {
-        const m = String(arg('spec-writer', 'hf.co/mradermacher/DeepSeek-Coder-V2-Lite-Instruct-abliterated-i1-GGUF:Q4_K_M'));
-        const q = ['A module to write in a small functional language. Its file: ' + target, 'What it must do: ' + String(ph.does).slice(0, 1500),
+        // 2026-11-26 — James: "have it fix it if possible" (OL6 refused 20 times: DeepSeek answered 10,469 characters and not one line read as
+        // name(params) — description). The builder repairs an unread answer itself: any shape is read (fn/def/function, bullets, backticks, bold,
+        // a description or none); when nothing reads, the model is asked again with its own answer shown and the form it missed, climbing from
+        // the smallest model (his: "a bigger model, only if we hit an actual wall"). Each unread answer is kept on disk as the evidence.
+        const writers = [...new Set(['huihui_ai/qwen2.5-coder-abliterate:3b', 'huihui_ai/qwen2.5-coder-abliterate:7b', String(arg('spec-writer', 'hf.co/mradermacher/DeepSeek-Coder-V2-Lite-Instruct-abliterated-i1-GGUF:Q4_K_M'))])];
+        const SKIP = new Set(['if', 'for', 'while', 'return', 'print', 'len', 'range', 'map', 'filter', 'sum', 'max', 'min', 'example', 'name']);
+        const readSigs = (t) => { const seen = new Set(), out = [];
+          for (const x of String(t || '').matchAll(/^[ \t]*(?:[-*•]|\d+[.)])?[ \t]*[`*]*[ \t]*(?:(?:pub[ \t]+)?(?:fn|def|function|export[ \t]+function)[ \t]+)?([a-z_]\w*)[ \t]*\(([^)\n]*)\)[ \t]*[`*]*[ \t]*(?:->[^—–:\n]*)?[ \t]*(?:[—–:-]+[ \t]*(.*))?$/gim)) {
+            if (SKIP.has(x[1].toLowerCase()) || seen.has(x[1])) continue; seen.add(x[1]); out.push(x); }
+          return out.slice(0, 5); };
+        const base = ['A module to write in a small functional language. Its file: ' + target, 'What it must do: ' + String(ph.does).slice(0, 1500),
           'Name the pure functions it needs (2 to 5), inputs in, result out, no files, no network.',
           'One per line, exactly: name(param1, param2) — one sentence of what it returns. Only the lines.'].join('\n');
-        let said = ''; try { said = await ask(q, m, 'signatures', 1); } catch (e) { said = ''; }
-        exports = [...String(said || '').matchAll(/^\s*[-*\d.)\s]*`?([a-z_]\w*)\s*\(([^)]*)\)`?\s*[—–:-]+\s*(.+)$/gim)].slice(0, 5)
-          .map((x) => ({ name: x[1], signature: `${x[1]}(${x[2]})`, params: x[2].split(',').map((p) => p.trim().split(/[:\s]/)[0]).filter(Boolean), does: x[3].trim() + ' (part of: ' + String(ph.does).slice(0, 400) + ')' }));
+        let found = [], said = '', m = writers[0];
+        for (let t = 0; t < writers.length && !found.length; t++) {
+          m = writers[t];
+          const q = t === 0 ? base : base + '\n\nYour last answer could not be read; it began:\n' + String(said).slice(0, 300) +
+            '\nAnswer again with only lines like this one:\nscore(items, weights) — the score of each item';
+          try { said = await ask(q, m, 'signatures', t + 1); } catch (e) { said = ''; }
+          found = readSigs(said);
+          if (!found.length) { try { fs.mkdirSync(TASKS, { recursive: true }); fs.appendFileSync(path.join(TASKS, `${PHASE}.signatures.unread.txt`), `--- ${new Date().toISOString()} ${m}\n${String(said).slice(0, 4000)}\n`); } catch (_) {}
+            row('signatures-unread', { note: `${m} answered ${String(said).length} characters and no line read as name(params); ${t + 1 < writers.length ? 'asked again, its answer shown, on ' + writers[t + 1] : 'no writer left'}`, model: m }); }
+        }
+        exports = found.map((x) => ({ name: x[1], signature: `${x[1]}(${x[2]})`, params: x[2].split(',').map((p) => p.trim().split(/[:\s]/)[0]).filter(Boolean), does: String(x[3] || x[1]).trim() + ' (part of: ' + String(ph.does).slice(0, 400) + ')' }));
         if (exports.length) { try { fs.mkdirSync(TASKS, { recursive: true }); fs.writeFileSync(path.join(TASKS, `${PHASE}.signatures.json`), JSON.stringify({ phase: PHASE, map: MAP, target, by: m, confirmedByJames: false, at: Date.now(), exports }, null, 1)); } catch (_) {}
           row('signatures-proposed', { note: `${target}: ${exports.map((e) => e.signature).join('; ')} — proposed by ${m} from the phase's words, not confirmed by James` }); }
       }

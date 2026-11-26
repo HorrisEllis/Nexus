@@ -71,7 +71,10 @@ function createResources(sup, { root = sup.root, store = null, sampleMs = 30000,
   // 2026-11-01 CP6b — James: "cos backend, and hooking into idearium and raid. cos resource manager per compartment". An act COS takes by rule
   // on a compartment is RAID's to approve (§9.1 the only write authority for the system's own decisions, §5.2): lib/raid-port.js approveTool,
   // which fails closed (RAID unreachable → not approved). A proposal held for him stays his (USER_AUTONOMY): RAID gates rules, not him.
-  const askRaid = approve || ((command, opts) => require('../../lib/raid-port.js').approveTool('cos', command, opts));
+  // 2026-11-26: every ask carries its measured proof (the reading behind it). Without one RAID refused each balance ("proof required, none
+  // supplied for 'balance'") at 2.6% memory free, and COS's manager went down six minutes later with a build running.
+  const askRaw = approve || ((command, opts) => require('../../lib/raid-port.js').approveTool('cos', command, opts));
+  const askRaid = (command, opts = {}) => askRaw(command, { ...opts, proof: opts.proof || { kind: 'measured', decidedBy: 'cos/manager/resources.js', why: opts.why || null, intent: opts.intent || null, at: Date.now() } });
   const FILE = store || path.join(process.env.COS_MANAGER_DATA || path.join(root, 'cos', 'data', 'manager'), 'caps.json');
   const reader = read || require('./usage.js').readAsync;
   let his = {}; try { his = JSON.parse(fs.readFileSync(FILE, 'utf8')) || {}; } catch (_) {}
