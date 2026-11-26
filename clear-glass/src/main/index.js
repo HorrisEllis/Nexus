@@ -1167,10 +1167,11 @@ async function _startWire() {
         // §HC2 0.60.260 — a human check (captcha, Turnstile, PerimeterX …) is met with the engine's own identity, never a persona: a Firefox
         // persona on Chromium is exactly what makes "Press & Hold" fail (James, 2026-10-26: "i can't get passed this"). It is his to pass.
         const challenge = /captcha|turnstile|cloudflare|perimeterx|datadome|challenge/i.test(String(type || ''));
-        if (challenge) emit('context.fp.switch', { agentId: tabId, mode: 'engine', options: { reason: `hostile:${type}` } });
-        else if (level === 'high' || level === 'critical') {
-          emit('context.fp.switch', { agentId: tabId, mode: 'firefox', reason: `hostile:${type}`, options: { reason: `hostile:${type}` } });
-        }
+        // 2026-11-26 — James: "it should not be loading the login page ... it wont even load google it loops". Any other hostile reading (high or
+        // critical) switched the tab TO the Firefox persona: a Chromium claiming Firefox over a Firefox TLS handshake, the very mismatch Google's
+        // sign-in and Cloudflare read as a bot, so the page stayed hostile, was switched again and reloaded: the loop. A hostile page is met with
+        // the truth too: the engine's own identity, Chromium's own TLS, never a persona.
+        if (challenge || level === 'high' || level === 'critical') emit('context.fp.switch', { agentId: tabId, mode: 'engine', options: { reason: `hostile:${type}` } });
         _postEvent('eros.hostile.detected', { level, type, tabId, recommendation });
         return res.end(JSON.stringify({ ok: true }));
       }
