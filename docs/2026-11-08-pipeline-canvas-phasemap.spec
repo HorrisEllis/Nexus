@@ -2039,3 +2039,13 @@ phases_addendum_2026_11_24_model_server:
 # that compound"); piece by piece (the engine decisions, then Idearium's Code tab tools, then the rest) Nexus is written by its own smallest model
 # and kept running by its own pipeline: the end-game he named (PC13), reached by repetition. Proof log entries need this: his words, the piece, the
 # code it replaced, and a run anyone can repeat.
+
+# ADDENDUM 2026-11-25 — the pipeline is the mind (his)
+# James, 2026-11-25: "everything goes to the pipeline. each request. the pipeline will be everything for thinking, reasoning, memory, choices,
+# the pipeline will be the mind. think of that." Before it, the same day: "everything should be routing through raid" · "the pipeline is the
+# end-goal". Read with his framework: a request is a node; its steps are the thought (PC26's yarn: diverge, converge, oscillate, collide);
+# RAID's yes with proof is the choice (PG5, the build's wake); the run's own record is the memory (PC28: every event, its cause); the
+# equations measure each output (PC27); the failures feed back to the root (his "Iterate & Integrate"). The direction for every door that
+# takes a request (the bridge's jobs, Copilot, Idearium's Code tab, RAID's queue): it becomes a pipeline run, so nothing is thought outside it.
+# Not built: today only builds run as pipelines; the other doors are named for their own phases. Cost, said: the pipeline becomes the one
+# path, so its speed and its uptime become everything's (a request that waited a second waits a run's start).
