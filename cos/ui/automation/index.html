@@ -623,7 +623,7 @@ function gateTree(t, L, p) {
   let front = '';
   const SP = 46, x0 = A ? A.x + 107 : 40; let out = '', y = A ? A.y + 84 + 64 : 420, prevX = x0, prevY = A ? A.y + 84 : y - SP;
   const gate = (g, x, gy, fromX, fromY) => { const c = col(g.status), now = g.name === t.now, sel = S.sel && S.sel.t === 'piece' && S.sel.id === g.name; const o = OFF[g.name]; if (o) { x += o.dx; gy += o.dy; }
-    out += `<path class="wire ${g.status === 'passed' ? 'done' : ''}" d="M${fromX},${fromY + 9} L${x},${gy - 9}"/>`;
+    out += `<path class="wire ${g.status === 'passed' ? 'done' : ''}" d="${x === fromX ? `M${fromX},${fromY + 9} V${gy - 9}` : `M${fromX},${fromY + 9} V${gy} H${x - 10}`}"/>`;
     const mk = `<g class="piece ${sel ? 'sel' : ''}" data-piece="${esc(g.name)}" style="cursor:pointer"><title>${esc(g.name)} · ${esc(g.status)} · ${g.tries} tries · click for its context</title>`
       + `<rect x="${x - 8}" y="${gy - 8}" width="16" height="16" rx="2" transform="rotate(45 ${x} ${gy})" fill="color-mix(in srgb, ${c} 22%, var(--bg2))" stroke="${now || sel ? 'var(--bright)' : c}" stroke-width="${now || sel ? 2.2 : 1.4}"${now ? ' stroke-dasharray="4 2"' : ''}/>`
       + `<text x="${x + 18}" y="${gy + 4}" fill="var(--text)" font-size="11.5" font-family="var(--mono)">${esc(g.name.length > 34 ? g.name.slice(0, 33) + '…' : g.name)} <tspan fill="${c}">${esc(now ? 'being built' : g.status)}</tspan></text></g>`;
