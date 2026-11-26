@@ -331,12 +331,33 @@ async function endState({ ph, plan, src, mapText }) {
   let examples = TF.examplesFrom(mapText, PHASE);
   // UD23 (his: "It needs to never need you at somepoint. Follows the axioms. Inside nexus first."): no examples in the map, so three readers
   // agree on them from each function's own sentence; only agreed ones are used, written down as agreed-not-confirmed (his yes may confirm)
+  // the spec before any model (his, 2026-11-26: "the specs are what the examples should be i feel like. spec engin"): the spec module whose
+  // path is this file (or its .eg twin) gives its acceptance, behavioral contracts and error paths; a line already in example form is an
+  // example, used as it is; the rest is the sentence the readers work from, so their examples come from his spec, not the phase's summary
+  let specText = '';
+  if (!examples.length) {
+    try {
+      const want = [src.path, src.path.replace(/\.[cm]?js$/, '.eg')];
+      const hits = require('child_process').spawnSync('git', ['grep', '-l', '-E', `^\\s+path:\\s+(${want.map((w) => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')})\\s*$`, '--', '*.spec', ':!_archive'], { cwd: ROOT, encoding: 'utf8', timeout: 30000 }).stdout.split('\n').filter(Boolean);
+      for (const sf of hits.slice(0, 2)) {
+        const t = fs.readFileSync(path.join(ROOT, sf), 'utf8'), at = t.search(new RegExp(`^\\s+path:\\s+(${want.map((w) => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')})\\s*$`, 'm'));
+        if (at < 0) continue;
+        const start = t.lastIndexOf('\n    - id:', at), end = t.indexOf('\n    - id:', at); const block = t.slice(start < 0 ? at : start, end < 0 ? t.length : end);
+        const lines = block.split('\n').map((l) => l.replace(/^\s*-\s*/, '').replace(/^["']|["'],?$/g, '').trim());
+        const asExamples = lines.filter((l) => /^[A-Za-z_]\w*\(.*\)\s*==\s*\S/.test(l));
+        if (asExamples.length) { examples = asExamples; row('examples-from-spec', { note: `${asExamples.length} example(s) from ${sf}`, examples: asExamples }); }
+        specText = (block.match(/(acceptance|behavioral_contracts|error_paths|description):[\s\S]*?(?=\n\s{6}[a-z_]+:|$)/g) || []).join('\n').replace(/\s+/g, ' ').slice(0, 900);
+        if (specText) row('spec-read', { note: `${sf}: the module for ${src.path}; its contracts are the readers' sentence` });
+        break;
+      }
+    } catch (_) {}
+  }
   if (!examples.length) {
     const three = ADVERSARIES.length >= 3 ? ADVERSARIES : ['huihui_ai/qwen2.5-coder-abliterate:3b', 'huihui_ai/llama3.2-abliterate:3b', 'huihui_ai/smallthinker-abliterated:3b'];
     const readers = three.map((m) => ({ name: m, ask: (message, { gap } = {}) => ask(message, m, (gap || '') + ':examples', 1) }));
     const agreed = [];
     for (const e of (src.exports || []).filter((x) => /\(/.test(x.signature || ''))) {
-      const does = String(e.does || ph.does || '').slice(0, 600);
+      const does = (String(e.does || ph.does || '').slice(0, 600) + (specText ? ' — its spec: ' + specText : '')).slice(0, 1400);   // the spec's contracts, his, before any model's guess
       const r = await require(path.join(ROOT, 'idearium', 'lib', 'emerge-rung.cjs')).agreedExamples({ name: e.name, signature: e.signature, does, readers });
       row('examples-agreed', { gap: e.name, note: r.why, examples: r.examples, tension: r.tension.slice(0, 6) });
       agreed.push(...r.examples);
