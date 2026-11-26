@@ -626,7 +626,7 @@ function gateTree(t, L, p) {
 function withGrown(p) { const r = p && last(p.id); if (!r || !r.tasks) return p; const have = new Set((p.tasks || []).map((t) => t.id)), add = [];
   for (const [id, x] of Object.entries(r.tasks)) if (!have.has(id) && x.grownFrom) add.push({ id, label: x.label || id, depends_on: [x.grownFrom], step: { type: 'script', config: {} }, grown: true, why: x.why || null });
   return add.length ? { ...p, tasks: [...p.tasks, ...add] } : p; }
-function svgOf(p) {
+function svgOf(p, under = '') {   // under: drawn in the same view (pan and zoom), e.g. the build's tree under its step
   p = withGrown(p);
   const r = last(p.id), base = (S.base[p.id] && S.base[p.id].steps) || {}, { pos, gpos, mode } = layout(p); let wires = '', gates = '', nodes = '';
   for (const t of p.tasks) for (const d of (t.depends_on || [])) { const a = pos[d], b = pos[t.id], g = gpos[d]; if (!a || !b) continue;
@@ -653,7 +653,7 @@ function svgOf(p) {
       <text class="ty" x="14" y="18">${catOf(kind(t)) ? esc(catOf(kind(t)).icon + ' ' + catOf(kind(t)).label.toUpperCase()) : esc(kind(t).toUpperCase())}${t.method ? ' · ' + esc(String(t.method).toUpperCase()) : ''}</text><circle class="dotc" cx="${W - 14}" cy="15" r="4" fill="${c}"/>
       <text class="lb" x="14" y="37">${esc(t.label.length > 27 ? t.label.slice(0, 26) + '…' : t.label)}</text><text class="ds" x="14" y="54">${esc((d => d.length > 38 ? d.slice(0, 37) + '…' : d)(describe(t) || ''))}</text><text class="sb" x="14" y="72">${esc(s)}${ms != null ? ' · ' + dur(ms) : ''}${b && b.n ? ' · usual ' + dur(b.mean_ms) : ''}</text>
       ${pct != null ? `<rect x="14" y="${H - 7}" width="${W - 28}" height="2" rx="1" fill="var(--edge)"/><rect x="14" y="${H - 7}" width="${(W - 28) * pct / 100}" height="2" rx="1" fill="${pct >= 100 ? 'var(--coral)' : 'var(--sky)'}"/>` : ''}</g>`; }
-  return `<g id="vp">${wires}${gates}${nodes}</g>`;
+  return `<g id="vp">${wires}${gates}${nodes}${under}</g>`;
 }
 function fit() { const p = withGrown(pipe()), w = document.querySelector('.canvas-wrap'); if (!p || !w) return; const L = layout(p), r = w.getBoundingClientRect(), k = Math.max(.15, Math.min(1.2, (r.width - 40) / L.w, (r.height - 30) / L.h)); S.vp = { k, x: (r.width - L.w * k) / 2, y: Math.max(10, (r.height - L.h * k) / 2) }; applyVp(); }
 function zoom(f, cx, cy) { const s = document.querySelector('svg.cv'); if (!s || !S.vp) return; const r = s.getBoundingClientRect(); cx = cx == null ? r.width / 2 : cx; cy = cy == null ? r.height / 2 : cy; const k = Math.min(2.5, Math.max(.2, S.vp.k * f)); S.vp.x = cx - (cx - S.vp.x) * k / S.vp.k; S.vp.y = cy - (cy - S.vp.y) * k / S.vp.k; S.vp.k = k; applyVp(); }
@@ -714,7 +714,7 @@ function work() {
     const grows = growsFrom(p), gsig = grows ? grows.gates.map((g) => g.name + g.status + g.tries).join('|') + (grows.now || '') : '';
     const sig = JSON.stringify([p.id, p.tasks.length, last(p.id) && last(p.id).tasks, S.sel, !!S.base[p.id] && !S.base[p.id].loading, S.max, S.rev, !!(S.cat && S.cat.catalogue.length), gsig]);
     if (sig !== S.sig || !w.querySelector('svg.cv')) { S.sig = sig;
-      w.innerHTML = `<div class="canvas-wrap" style="${S.max ? 'display:none;' : ''}flex-basis:${Math.round(S.split * 100)}%"><svg class="cv">${svgOf(p)}${grows ? gateTree(grows, layout(withGrown(p)), p) : ''}</svg><div class="zoom"><button data-a="view.out" title="Zoom out">−</button><button data-a="view.fit" title="Fit (F)">⤢</button><button data-a="view.in" title="Zoom in">+</button></div></div><div class="splitter" id="split" title="Drag to resize · double-click: console full height"></div>${consoleHtml(S.max)}`;
+      w.innerHTML = `<div class="canvas-wrap" style="${S.max ? 'display:none;' : ''}flex-basis:${Math.round(S.split * 100)}%"><svg class="cv">${svgOf(p, grows ? gateTree(grows, layout(withGrown(p)), p) : '')}</svg><div class="zoom"><button data-a="view.out" title="Zoom out">−</button><button data-a="view.fit" title="Fit (F)">⤢</button><button data-a="view.in" title="Zoom in">+</button></div></div><div class="splitter" id="split" title="Drag to resize · double-click: console full height"></div>${consoleHtml(S.max)}`;
       if (!S.vp) requestAnimationFrame(fit); else applyVp(); bindCanvas(); bindSplit();
     } else { const c = $('console'); if (c) c.outerHTML = consoleHtml(false); }
     bindConsole();
