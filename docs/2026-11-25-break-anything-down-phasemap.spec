@@ -188,3 +188,9 @@ phases:
     depends_on: [UD26]
     does: >
       His 2026-11-26, pointing at D:\Projects\2-Products\Mastermind\MASTERMIND-v0_1_50-username-required.zip. Mastermind (his): the Voice Lattice (107 functions), ALM (cognitive functions, 8 human models, experiments, heuristics, frameworks, feedback loops), horizon planning with its epistemic register, the synthesis lab, the brain map, the insight vault, the Notion/Obsidian/text import, the playground; unintegrated: spatial v2 (resonance engine, signal topology, invariant baseline), Pendulum Swing, CrystalBall, Rheon Voice. Its own phasemap/COMPONENTS.md already decomposed the old 11,125-line file. Imported through Idearium, each component converted to Emerge by recorded behaviour (the existing JavaScript run, its outputs recorded as examples, the Emerge version held to them), its SISO and WARP 1 replaced by WARP 2, each faculty a tool behind its drawbridge.
+
+  UD28_the_builder_learns_what_ol6_load_score_needed:
+    status: pending
+    depends_on: []
+    does: >
+      Found by the pipeline, 2026-11-26 loop (his: "fix itself each time and return to the original request, and retry, until it either does it or figures out how"). OL6_load_score (docs/2026-11-18-ollama-local-agent-phasemap.spec) was not built after 4 attempts (strong-readers, fresh-plan, top-model). The last reason: no progress at the top of the ladder (DeepSeek-Coder-V2-Lite-Instruct-abliterated-i1-GGUF:Q4_K_M): refused the phase’s words gave no file with signatures, and no Emerge file with a spec module or functions: {"ok":true,"plan":{"system":"idearium","read":["the files the phase names","the component registry","the files it edits, as they are"],"intent":"A score for each primitive, dependency and chunk of how. The builder gains what this names; then OL6_load_score is built again from its request.
