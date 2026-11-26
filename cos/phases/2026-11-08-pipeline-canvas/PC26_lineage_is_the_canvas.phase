@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-08-pipeline-canvas-phasemap.spec::PC26_lineage_is_the_canvas
+type: phase
+id: docs_2026-11-08-pipeline-canvas-phasemap.spec::PC26_lineage_is_the_canvas
+context: pipeline phase PC26_lineage_is_the_canvas of docs/2026-11-08-pipeline-canvas-phasemap.spec
+intent: null
+summary: PC26_lineage_is_the_canvas (ui) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1795664773991
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795664773991
+lastSeenAt: 1795664773991
+fingerprint: null
+payload:
+  id: PC26_lineage_is_the_canvas
+  map: docs/2026-11-08-pipeline-canvas-phasemap.spec
+  repo: null
+  layer: ui
+  status: OPEN
+  files:
+    - cos/ui/run-console-preview/server.js
+    - cos/ui/automation/index.html
+  depends_on:
+    - PC8_operate_a_pipeline
+  blocks: []
+  spec: null
+  graph: 2e9fe00ee4c753e7

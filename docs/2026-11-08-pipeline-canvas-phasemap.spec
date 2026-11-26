@@ -1863,6 +1863,32 @@ phases_addendum_2026_11_24_model_server:
       outputs, and the data decides which predicts best (which ranks the gaps that pass first; which scores the outputs the adversary later
       refuses lowest). Every form and its prediction is registered in FRAMEWORK-THREADS before the run. His original framework, when he gives it,
       is the source the forms are checked against.
+    his_original_2026_11_25: >-
+      He gave it the same day, with: "None of this is an undeniable fact that can't be scrutinized, in fact, I welcome the opportunity to adjust
+      my models" · "These are consistent patterns, invariants, and methods that I have tested" · "truth and epistemology are what expand
+      humanity". The repo copy (docs/innovation-toolkit-addendum.md) matched it but for two lines, added there. Only the framework went into
+      the repo; what he shared of his life stays his.
+    equations: >-
+      Each of his, its variables as measurements on a pipeline output, and the claim that tests it (registered before use; the coder's reading
+      of each variable is marked as the coder's and is itself under test).
+      (1) Signal = Alignment + Fidelity + Expansion (Part 5): Alignment = its parent passes with it; Fidelity = examples and agreed adversary
+      cases passed / all; Expansion = cases it added + pieces reusing it. Claim: higher Signal, fewer later refusals. Forms: sum, Fidelity × (A+E), product.
+      (2) Flow = Expansion × Contraction × Balance (Part 2): distinct bodies tried; refusals acted on (the next try changes what was refused);
+      1 − |E − C| / (E + C). Claim: higher Flow, fewer tries to pass.
+      (3) Gap counting (Part 3): a failure mode seen once an anomaly, twice a coincidence, three times an invariant, its deviation in sigmas, the
+      gap in deltas. Claim: an invariant failure mode, once fixed, removes more later failures than an anomaly fixed. Already code: the crystallizer.
+      (4) Idea Vector = Direction × Magnitude = Tension × Emergence: per try, Direction = toward or away from passing (Fidelity's sign of change),
+      Magnitude = its size; Tension = readers' disagreement; Emergence = new cases. Leverage of a Node = Σ(vector contributions × f(slope) × weight):
+      a piece's leverage over the tries and pieces that touch it. Claim: high-leverage nodes are the ones whose fix unblocks most.
+      (5) Priority = (Efficiency + Effectiveness) / Urgency and Weighting = Urgency × Importance × Fidelity × Slope (Part 6): Efficiency = pieces
+      unblocked per token; Effectiveness = pieces downstream of it; Urgency = its depth on the critical path; Importance = what depends on it;
+      Slope = Fidelity's change per try. Claim: ordering gaps by it finishes a phase in fewer tries than the order today. Both forms, side by side.
+      (6) Leverage = Tension × Weight × f(Slope), f rising then inverting past a threshold (Section 6); Novel Leverage = that − tolerance; slope
+      tolerance = certainty + structure. Claim: the threshold is findable: tries past it stop gaining. friction.js is checked against it.
+      (7) Data leverage gradient = Discomfort + epistemic questioning (Section 10): the adversary's refusals and tensions per output. Claim:
+      outputs that drew more of them and then passed break less later.
+      (8) Creativity space = slopes + gaps/free space (Part 1) and Meaning = T × effort = E1 × G × E2 × C2 (Section 6): not measured until he
+      says what E1, G, E2 and C2 are.
   PC_D18_what_he_meant_2026_11_24:
     status: "OPEN — his"
     readings:

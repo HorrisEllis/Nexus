@@ -593,7 +593,15 @@ $Meaning <-> urgency(2) <-> Tension = leverage x fslope$
 
 $Leverage = Tension×Weight×f(Slope)$
 
+$Intent x impact = Leverage = Tension×Weight×f(Slope)$
+
 $Leverage=Redirect -Tension×Weight×f(Slope)$
+
+$Meaning = T x effort = E1 x G x E2 x C2$
+
+*(The two lines above, "Intent x impact" and "Meaning = T x effort", were added 2026-11-25 from James Brooks's original, which he gave that day:
+"These are consistent patterns, invariants, and methods that I have tested ... None of this is an undeniable fact that can't be scrutinized".
+E1, G, E2 and C2 are not defined in the original; his to say.)*
 
 **Redirect** potential =  Judo moves. Can the problem’s own energy be redirected?
 
