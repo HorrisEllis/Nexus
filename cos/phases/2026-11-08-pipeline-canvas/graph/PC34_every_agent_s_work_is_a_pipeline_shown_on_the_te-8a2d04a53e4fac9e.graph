@@ -7,11 +7,11 @@ intent: null
 summary: 0 node(s), 0 crossing(s) — not ready
 system: idearium
 tags: []
-exported_at: 1795706802657
+exported_at: 1795708594435
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1795706802657
-lastSeenAt: 1795706802657
+firstSeenAt: 1795708594435
+lastSeenAt: 1795708594435
 fingerprint: null
 payload:
   for: PC34_every_agent_s_work_is_a_pipeline_shown_on_the_te
@@ -26,7 +26,8 @@ payload:
     layer: 17
     deps:
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC26_lineage_is_the_canvas
-    dependents: []
+    dependents:
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC35_mental_simulations_a_tab_in_the_pipeline_canvas_
     upstream:
       - docs/2026-10-28-first-principles-phasemap.spec::FP1_where_a_request_opens
       - docs/2026-10-28-first-principles-phasemap.spec::FP2_which_option_is_meant
@@ -72,7 +73,8 @@ payload:
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D1_gates_as_compartments
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D4_language
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D8_options_not_neat_boxes
-    downstream: []
+    downstream:
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC35_mental_simulations_a_tab_in_the_pipeline_canvas_
     blockedBy:
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC26_lineage_is_the_canvas
     unlocks: []
@@ -81,7 +83,7 @@ payload:
     lines:
       - layer 17 · blocked by PC26_lineage_is_the_canvas
       - 'depends on (1): PC26_lineage_is_the_canvas · all upstream 44'
-      - 'needed by (0): —'
+      - 'needed by (1): PC35_mental_simulations_a_tab_in_the_pipeline_canvas_'
     edges:
       - from: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC26_lineage_is_the_canvas
         kind: declared

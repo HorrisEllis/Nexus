@@ -1,0 +1,206 @@
+envelope: 1
+uuid: nexus-export-graph-phase:PC35_mental_simulations_a_tab_in_the_pipeline_canvas_:d122f4adcee4a917
+type: graph
+id: phase:PC35_mental_simulations_a_tab_in_the_pipeline_canvas_:d122f4adcee4a917
+context: dependency graph of phase PC35_mental_simulations_a_tab_in_the_pipeline_canvas_
+intent: null
+summary: 14 node(s), 4 crossing(s)
+system: idearium
+tags: []
+exported_at: 1795708594441
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795708594441
+lastSeenAt: 1795708594441
+fingerprint: null
+payload:
+  for: PC35_mental_simulations_a_tab_in_the_pipeline_canvas_
+  kind: phase
+  repo: null
+  hash: d122f4adcee4a917
+  nodes:
+    - path: cos/pipeline/backward.eg
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/playground/branch.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/playground/llm-lab.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/spec/torture-chamber.spec
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/cli/commands/branch.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/playground/compare.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/playground/index.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/playground/sandbox.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: guardian/server.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: lib/agent-tools/tools/sandbox/cos-simulate.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/cos-run.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/nexus-self/branch.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: cos/foundation/axioms.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/foundation/constants.js
+      role: uses
+      exists: true
+      system: cos
+  edges:
+    - from: cos/playground/branch.js
+      to: cos/foundation/constants.js
+      kind: requires
+    - from: cos/playground/branch.js
+      to: cos/foundation/axioms.js
+      kind: requires
+    - from: guardian/server.js
+      to: cos/playground/llm-lab.js
+      kind: requires
+    - from: lib/agent-tools/tools/sandbox/cos-simulate.js
+      to: cos/playground/llm-lab.js
+      kind: requires
+    - from: cos/cli/commands/branch.js
+      to: cos/playground/branch.js
+      kind: requires
+    - from: cos/playground/compare.js
+      to: cos/playground/branch.js
+      kind: requires
+    - from: cos/playground/index.js
+      to: cos/playground/branch.js
+      kind: requires
+    - from: cos/playground/sandbox.js
+      to: cos/playground/branch.js
+      kind: requires
+    - from: lib/cos-run.js
+      to: cos/playground/branch.js
+      kind: requires
+    - from: lib/nexus-self/branch.js
+      to: cos/playground/branch.js
+      kind: requires
+  crossings:
+    - from: guardian/server.js
+      to: cos/playground/llm-lab.js
+      fromSystem: guardian
+      toSystem: cos
+      kind: system
+      known: true
+    - from: lib/agent-tools/tools/sandbox/cos-simulate.js
+      to: cos/playground/llm-lab.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+    - from: lib/cos-run.js
+      to: cos/playground/branch.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+    - from: lib/nexus-self/branch.js
+      to: cos/playground/branch.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 18
+    deps:
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC26_lineage_is_the_canvas
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC34_every_agent_s_work_is_a_pipeline_shown_on_the_te
+    dependents: []
+    upstream:
+      - docs/2026-10-28-first-principles-phasemap.spec::FP1_where_a_request_opens
+      - docs/2026-10-28-first-principles-phasemap.spec::FP2_which_option_is_meant
+      - docs/2026-10-28-first-principles-phasemap.spec::FP3_is_the_gate_open
+      - docs/2026-10-28-gated-flows-phasemap.spec::FG2_dropdown_choose
+      - docs/2026-10-28-gated-flows-phasemap.spec::FG_D1_gate_is_a_step_field
+      - docs/2026-10-28-gated-flows-phasemap.spec::FG_D2_choice_is_read_back
+      - docs/2026-10-28-gated-flows-phasemap.spec::GF1_every_field_found_by_its_section
+      - docs/2026-10-28-gated-flows-phasemap.spec::GF2_every_editor_page_known
+      - docs/2026-10-28-gated-flows-phasemap.spec::GF3_text_and_lists_filled_and_read_back
+      - docs/2026-10-28-gated-flows-phasemap.spec::GF4_friction_goes_to_his_site_keys
+      - docs/2026-10-28-gated-flows-phasemap.spec::GG1_every_part_gated
+      - docs/2026-10-28-gated-flows-phasemap.spec::GM1_the_fill_menu_model
+      - docs/2026-10-28-gated-flows-phasemap.spec::GM2_fill_only_what_is_ticked
+      - docs/2026-10-28-gated-flows-phasemap.spec::KB1_choose_waits_and_keys
+      - docs/2026-10-28-gated-flows-phasemap.spec::KB2_site_keys
+      - docs/2026-10-28-gated-flows-phasemap.spec::KB3_site_keys_ui
+      - docs/2026-10-28-gated-flows-phasemap.spec::KB4_gates_on_macro_steps
+      - docs/2026-10-28-gated-flows-phasemap.spec::UG1_one_gate_for_every_element
+      - docs/2026-10-29-pipelines-phasemap.spec::PA4_a_gate_after_every_step
+      - docs/2026-10-29-pipelines-phasemap.spec::PL1_pipeline_core
+      - docs/2026-10-29-pipelines-phasemap.spec::PL6_the_gate_step
+      - docs/2026-10-29-pipelines-phasemap.spec::PL_D1_a_task_is_one_engine_step
+      - docs/2026-10-29-pipelines-phasemap.spec::PL_D2_pipelines_live_in_the_engine_that_runs_them
+      - docs/2026-10-29-pipelines-phasemap.spec::PL_D4_a_gate_is_a_pipeline_block
+      - docs/2026-11-01-macro-blocks-phasemap.spec::MB1_the_gate_between
+      - docs/2026-11-01-macro-blocks-phasemap.spec::MB2_the_blocks_ui
+      - docs/2026-11-01-macro-blocks-phasemap.spec::MB3_one_shape_with_pipelines
+      - docs/2026-11-01-macro-blocks-phasemap.spec::MB_D0_blocks_and_gates
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC12_the_survey
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC1_task_nodes
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC4_deploy_to_any_system
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC_D0_one_console_in_cos
+      - docs/2026-11-01-procedures-phasemap.spec::PD1_procedure_nodes_and_commands
+      - docs/2026-11-01-procedures-phasemap.spec::PD_D0_a_procedure_is_a_node_file
+      - docs/2026-11-01-procedures-phasemap.spec::PD_D0_addendum_one_procedure_type
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC1_one_box_shape
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC26_lineage_is_the_canvas
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC34_every_agent_s_work_is_a_pipeline_shown_on_the_te
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC5_programmable_gate_types
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC8_operate_a_pipeline
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D0_reuse_first
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D13_the_pipeline_works_first_then_cos_optimised
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D1_gates_as_compartments
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D4_language
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D8_options_not_neat_boxes
+    downstream: []
+    blockedBy:
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC26_lineage_is_the_canvas
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC34_every_agent_s_work_is_a_pipeline_shown_on_the_te
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - >-
+        layer 18 · blocked by PC26_lineage_is_the_canvas,
+        PC34_every_agent_s_work_is_a_pipeline_shown_on_the_te
+      - >-
+        depends on (2): PC26_lineage_is_the_canvas,
+        PC34_every_agent_s_work_is_a_pipeline_shown_on_the_te · all upstream 45
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC26_lineage_is_the_canvas
+        kind: declared
+      - from: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC34_every_agent_s_work_is_a_pipeline_shown_on_the_te
+        kind: declared

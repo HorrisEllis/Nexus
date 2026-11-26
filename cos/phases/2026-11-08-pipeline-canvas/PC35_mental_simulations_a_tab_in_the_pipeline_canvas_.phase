@@ -1,0 +1,34 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-08-pipeline-canvas-phasemap.spec::PC35_mental_simulations_a_tab_in_the_pipeline_canvas_
+type: phase
+id: docs_2026-11-08-pipeline-canvas-phasemap.spec::PC35_mental_simulations_a_tab_in_the_pipeline_canvas_
+context: >-
+  pipeline phase PC35_mental_simulations_a_tab_in_the_pipeline_canvas_ of
+  docs/2026-11-08-pipeline-canvas-phasemap.spec
+intent: null
+summary: PC35_mental_simulations_a_tab_in_the_pipeline_canvas_ (?) — 4 file(s)
+system: idearium
+tags: []
+exported_at: 1795708594441
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795708594441
+lastSeenAt: 1795708594441
+fingerprint: null
+payload:
+  id: PC35_mental_simulations_a_tab_in_the_pipeline_canvas_
+  map: docs/2026-11-08-pipeline-canvas-phasemap.spec
+  repo: null
+  layer: null
+  status: pending
+  files:
+    - cos/pipeline/backward.eg
+    - cos/playground/llm-lab.js
+    - cos/spec/torture-chamber.spec
+    - cos/playground/branch.js
+  depends_on:
+    - PC26_lineage_is_the_canvas
+    - PC34_every_agent_s_work_is_a_pipeline_shown_on_the_te
+  blocks: []
+  spec: null
+  graph: d122f4adcee4a917

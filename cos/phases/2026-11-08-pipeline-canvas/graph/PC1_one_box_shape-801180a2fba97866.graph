@@ -7,11 +7,11 @@ intent: null
 summary: 7 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1795706802396
+exported_at: 1795708594169
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1795706802396
-lastSeenAt: 1795706802396
+firstSeenAt: 1795708594169
+lastSeenAt: 1795708594169
 fingerprint: null
 payload:
   for: PC1_one_box_shape
@@ -94,6 +94,8 @@ payload:
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC32_axioms_conditions_triggers_schedule_and_retries_
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC33_the_pipeline_moves_idearium_s_pipeline_features_
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC34_every_agent_s_work_is_a_pipeline_shown_on_the_te
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC35_mental_simulations_a_tab_in_the_pipeline_canvas_
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC36_the_pipeline_writes_specs_never_md_any_plan_read
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC3_the_build_request_step
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC4_the_box_kinds_on_the_canvas
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC5_programmable_gate_types
@@ -120,7 +122,7 @@ payload:
       - >-
         needed by (6): AE9_each_tool_carries_its_dag, PC2_procedures_and_frameworks_as_steps,
         PC3_the_build_request_step, PC4_the_box_kinds_on_the_canvas, PC5_programmable_gate_types,
-        PC6_intelligence_watches_the_runs · all downstream 24 · finishing it unlocks
+        PC6_intelligence_watches_the_runs · all downstream 26 · finishing it unlocks
         AE9_each_tool_carries_its_dag
     edges:
       - from: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D0_reuse_first
