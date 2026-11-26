@@ -1342,6 +1342,8 @@ async function bootstrap() {
 
   // 8.5. Nexus options — window behavior + defaults, bus + UI controllable
   nexusOptions = new NexusOptions();
+  // 2026-11-26 — his identity switch, read live by every sign-in page and new window (contexts/google-signin.js setIdentity)
+  try { require('../contexts/google-signin').setIdentity(() => ((nexusOptions.get() || {}).identity || {}).mode || 'engine'); } catch (_) {}
   // §0.39.265 — page-listener decay: once at start, then hourly.
   try { const d = nexusOptions.decayListeners(); if (d.disabled.length || d.removed.length) console.log(`[listeners] decay: ${d.disabled.length} switched off, ${d.removed.length} removed`); } catch (e) { console.warn(`[listeners] decay failed: ${e.message}`); }
   setInterval(() => { try { nexusOptions.decayListeners(); } catch (_) {} }, 3600000).unref();

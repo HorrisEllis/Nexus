@@ -1,0 +1,125 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CGE8_logins_by_id_into_the_mesh_and_guardian:c6551056f8956533
+type: graph
+id: phase:CGE8_logins_by_id_into_the_mesh_and_guardian:c6551056f8956533
+context: dependency graph of phase CGE8_logins_by_id_into_the_mesh_and_guardian
+intent: null
+summary: 11 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1795723461971
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795723461971
+lastSeenAt: 1795723461971
+fingerprint: null
+payload:
+  for: CGE8_logins_by_id_into_the_mesh_and_guardian
+  kind: phase
+  repo: null
+  hash: c6551056f8956533
+  nodes:
+    - path: clear-glass/src/accounts/login-portal.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: guardian/lib/provider-routing.js
+      role: changes
+      exists: true
+      system: guardian
+    - path: inference/providers.json
+      role: changes
+      exists: false
+      system: null
+    - path: clear-glass/src/main/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/test/login-portal-elsewhere.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: clear-glass/test/signin-window-quiet.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: guardian/lib/dispatcher.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: guardian/lib/index.js
+      role: used-by
+      exists: true
+      system: guardian
+    - path: tests/modules/test-dispatcher-deepseek-ncp.js
+      role: used-by
+      exists: true
+      system: null
+    - path: clear-glass/src/cookies/session-hub.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: guardian/lib/code-artifact.js
+      role: uses
+      exists: true
+      system: guardian
+  edges:
+    - from: clear-glass/src/accounts/login-portal.js
+      to: clear-glass/src/cookies/session-hub.js
+      kind: requires
+    - from: guardian/lib/provider-routing.js
+      to: guardian/lib/code-artifact.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/accounts/login-portal.js
+      kind: requires
+    - from: clear-glass/test/login-portal-elsewhere.test.js
+      to: clear-glass/src/accounts/login-portal.js
+      kind: requires
+    - from: clear-glass/test/signin-window-quiet.test.js
+      to: clear-glass/src/accounts/login-portal.js
+      kind: requires
+    - from: guardian/lib/dispatcher.js
+      to: guardian/lib/provider-routing.js
+      kind: requires
+    - from: guardian/lib/index.js
+      to: guardian/lib/provider-routing.js
+      kind: requires
+    - from: tests/modules/test-dispatcher-deepseek-ncp.js
+      to: guardian/lib/provider-routing.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 4
+    deps:
+      - docs/2026-11-26-clear-glass-engine-phasemap.spec::CGE5_sign_in_buttons_like_app_passwords
+      - docs/2026-11-26-raid-queue-and-signal-field-phasemap.spec::RQ2_one_ledger_by_id
+    dependents: []
+    upstream:
+      - docs/2026-11-26-clear-glass-engine-phasemap.spec::CGE1_why_chatgpt_shows_the_login_page
+      - docs/2026-11-26-clear-glass-engine-phasemap.spec::CGE3_web_models_as_engines
+      - docs/2026-11-26-clear-glass-engine-phasemap.spec::CGE5_sign_in_buttons_like_app_passwords
+      - docs/2026-11-26-cos-service-and-resources-phasemap.spec::SR1_the_supervisor_is_the_service
+      - docs/2026-11-26-cos-service-and-resources-phasemap.spec::SR2_engines_beneath_the_supervisor
+      - docs/2026-11-26-raid-queue-and-signal-field-phasemap.spec::RQ1_the_request_waits_in_raid_s_queue
+      - docs/2026-11-26-raid-queue-and-signal-field-phasemap.spec::RQ2_one_ledger_by_id
+      - docs/2026-11-26-talk-to-nexus-phasemap.spec::TN4_tools_and_the_forge_are_data
+    downstream: []
+    blockedBy:
+      - docs/2026-11-26-clear-glass-engine-phasemap.spec::CGE5_sign_in_buttons_like_app_passwords
+      - docs/2026-11-26-raid-queue-and-signal-field-phasemap.spec::RQ2_one_ledger_by_id
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 4 · blocked by CGE5_sign_in_buttons_like_app_passwords, RQ2_one_ledger_by_id
+      - >-
+        depends on (2): CGE5_sign_in_buttons_like_app_passwords, RQ2_one_ledger_by_id · all upstream
+        8
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-11-26-clear-glass-engine-phasemap.spec::CGE5_sign_in_buttons_like_app_passwords
+        kind: declared
+      - from: docs/2026-11-26-raid-queue-and-signal-field-phasemap.spec::RQ2_one_ledger_by_id
+        kind: declared

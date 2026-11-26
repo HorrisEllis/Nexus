@@ -1,0 +1,33 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-26-clear-glass-engine-phasemap.spec::CGE8_logins_by_id_into_the_mesh_and_guardian
+type: phase
+id: docs_2026-11-26-clear-glass-engine-phasemap.spec::CGE8_logins_by_id_into_the_mesh_and_guardian
+context: >-
+  pipeline phase CGE8_logins_by_id_into_the_mesh_and_guardian of
+  docs/2026-11-26-clear-glass-engine-phasemap.spec
+intent: null
+summary: CGE8_logins_by_id_into_the_mesh_and_guardian (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1795723461971
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795723461971
+lastSeenAt: 1795723461971
+fingerprint: null
+payload:
+  id: CGE8_logins_by_id_into_the_mesh_and_guardian
+  map: docs/2026-11-26-clear-glass-engine-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/src/accounts/login-portal.js
+    - guardian/lib/provider-routing.js
+    - inference/providers.json
+  depends_on:
+    - CGE5_sign_in_buttons_like_app_passwords
+    - RQ2_one_ledger_by_id
+  blocks: []
+  spec: null
+  graph: c6551056f8956533

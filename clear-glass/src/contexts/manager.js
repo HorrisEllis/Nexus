@@ -29,7 +29,10 @@ class ContextManager {
     if (this.contexts.has(id)) return this.contexts.get(id);
 
     // Firefox fingerprint profile
-    const profile = this.fp.getOrGenerate(id);
+    let profile = this.fp.getOrGenerate(id);
+    // 2026-11-26 — his "show the true identity, with the option to change it at anytime" (options.identity.mode, google-signin.js truthful):
+    // with the truth, a context is the engine itself: its UA, client hints and Chromium's own TLS (no Firefox layer, no persona headers)
+    if (require('./google-signin').truthful()) { const eu = require('./human-check').engineUserAgent(session); if (eu) profile = { ...profile, ua: eu, engine: true }; }
 
     // Isolated Chromium session partition
     // SF3 (0.60.178) — a window opened through a route (via) is a compartment: an in-memory partition its page shares (main passes it to the
@@ -52,7 +55,7 @@ class ContextManager {
     // §0.60.109 TLS3 — a Firefox persona routes its direct https/wss through the TLS layer (cg-tls-helper), so its handshake is
     // Firefox's too; it trusts that layer's local CA, and only for certificates that CA issued (src/tls/helper.js verifyProc).
     // James: "fix it. i don't want the trouble again"
-    const firefox = /\bFirefox\//.test(this.fp.getOrGenerate(id).ua || '');
+    const firefox = /\bFirefox\//.test(profile.ua || '');   // 2026-11-26: the profile as set above, so the truth routes direct (Chromium's own TLS)
     if (firefox) { try { ses.setCertificateVerifyProc(require('../tls/helper').verifyProc()); } catch (e) { console.warn(`[contexts] TLS layer trust not set on ${id}: ${e.message}`); } }
     try { require('../net/service').service().register(`persist:agent-${id}`, ses, { provider: null, caller: 'person-tab', firefox, ...(via ? { via } : {}) }).catch(() => {}); } catch (_) { /* routing is optional */ }
 

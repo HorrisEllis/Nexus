@@ -69,7 +69,8 @@ const DEFAULTS = {
   // today's constant (decision SP_D2), so nothing changes until he changes it. A site's own value (Site settings) wins over these.
   driver:   { navTimeoutMs: 30000, waitTimeoutMs: 10000, agentsMayDrive: true },   // src/driver/index.js (through the site resolver)
   mesh:     { retriesPerStrategy: 2, backoffMs: [1000, 3000, 8000, 15000] },       // src/mesh/agent-mesh.js drain: retries per strategy, backoff per tier
-  guardian: { listen: true, capture: true },                                        // options.findListenersForUrl, downloads/chat-ledger.js
+  guardian: { listen: true, capture: true },
+  identity: { mode: 'engine' },   // 2026-11-26 — his: "show the true identity. with the option to change it at anytime": 'engine' (the truth) | 'persona' (Firefox)                                        // options.findListenersForUrl, downloads/chat-ledger.js
   // 2026-11-13 — James: "can you add an autostart option with erosmanceros?" A real, persisted setting for whether
   // Clear Glass starts ErosmancerOS with itself on boot (src/main/index.js §14.4). Default true matches
   // today's behaviour (the EROS_AUTOSTART env var, when set, still overrides this either way — see that file).

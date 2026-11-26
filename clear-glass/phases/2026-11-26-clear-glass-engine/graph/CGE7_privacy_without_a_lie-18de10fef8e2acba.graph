@@ -1,0 +1,80 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CGE7_privacy_without_a_lie:18de10fef8e2acba
+type: graph
+id: phase:CGE7_privacy_without_a_lie:18de10fef8e2acba
+context: dependency graph of phase CGE7_privacy_without_a_lie
+intent: null
+summary: 6 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1795723461969
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795723461969
+lastSeenAt: 1795723461969
+fingerprint: null
+payload:
+  for: CGE7_privacy_without_a_lie
+  kind: phase
+  repo: null
+  hash: 18de10fef8e2acba
+  nodes:
+    - path: clear-glass/src/net/compartment.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/tls/helper.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/contexts/human-check.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/contexts/manager.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/net/https-only.js
+      role: uses
+      exists: true
+      system: clear-glass
+  edges:
+    - from: clear-glass/src/net/compartment.js
+      to: clear-glass/src/net/https-only.js
+      kind: requires
+    - from: clear-glass/src/contexts/human-check.js
+      to: clear-glass/src/net/compartment.js
+      kind: requires
+    - from: clear-glass/src/contexts/manager.js
+      to: clear-glass/src/net/compartment.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/net/compartment.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-11-26-clear-glass-engine-phasemap.spec::CGE6_the_true_identity_by_default
+    dependents: []
+    upstream:
+      - docs/2026-11-26-clear-glass-engine-phasemap.spec::CGE1_why_chatgpt_shows_the_login_page
+      - docs/2026-11-26-clear-glass-engine-phasemap.spec::CGE6_the_true_identity_by_default
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2 · ready
+      - 'depends on (1): CGE6_the_true_identity_by_default · all upstream 2'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-11-26-clear-glass-engine-phasemap.spec::CGE6_the_true_identity_by_default
+        kind: declared

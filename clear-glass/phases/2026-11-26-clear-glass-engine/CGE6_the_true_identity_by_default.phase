@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-26-clear-glass-engine-phasemap.spec::CGE6_the_true_identity_by_default
+type: phase
+id: docs_2026-11-26-clear-glass-engine-phasemap.spec::CGE6_the_true_identity_by_default
+context: >-
+  pipeline phase CGE6_the_true_identity_by_default of
+  docs/2026-11-26-clear-glass-engine-phasemap.spec
+intent: null
+summary: CGE6_the_true_identity_by_default (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1795723461966
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795723461966
+lastSeenAt: 1795723461966
+fingerprint: null
+payload:
+  id: CGE6_the_true_identity_by_default
+  map: docs/2026-11-26-clear-glass-engine-phasemap.spec
+  repo: null
+  layer: null
+  status: BUILT 2026-11-26 (slice a)
+  files:
+    - clear-glass/src/contexts/google-signin.js
+    - clear-glass/src/contexts/manager.js
+    - clear-glass/src/options/store.js
+  depends_on:
+    - CGE1_why_chatgpt_shows_the_login_page
+  blocks: []
+  spec: null
+  graph: 489fb5973e20c3f5

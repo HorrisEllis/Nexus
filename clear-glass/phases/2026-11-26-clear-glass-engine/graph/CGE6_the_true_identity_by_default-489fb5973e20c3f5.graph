@@ -1,0 +1,199 @@
+envelope: 1
+uuid: nexus-export-graph-phase:CGE6_the_true_identity_by_default:489fb5973e20c3f5
+type: graph
+id: phase:CGE6_the_true_identity_by_default:489fb5973e20c3f5
+context: dependency graph of phase CGE6_the_true_identity_by_default
+intent: null
+summary: 23 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1795723461966
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795723461966
+lastSeenAt: 1795723461966
+fingerprint: null
+payload:
+  for: CGE6_the_true_identity_by_default
+  kind: phase
+  repo: null
+  hash: 489fb5973e20c3f5
+  nodes:
+    - path: clear-glass/src/contexts/google-signin.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/contexts/manager.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/options/store.js
+      role: changes
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/main/index.pre-userscripts.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/page/semantic-tree.js
+      role: used-by
+      exists: true
+      system: clear-glass
+    - path: clear-glass/test/google-signin.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/clear-glass-accounts.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/clear-glass-eros-autostart.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/nexus-options-autoboot.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-eros-hooks.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: clear-glass/src/contexts/human-check.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/contexts/session-headers.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/fingerprint/firefox-version.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/net/compartment.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/net/service.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/profiles/built/_emerge/lang/runtime.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/profiles/built/profiles.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/shortcuts/registry.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/storage/jaa.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/tls/helper.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: clear-glass/src/toolbar/commands.js
+      role: uses
+      exists: true
+      system: clear-glass
+    - path: lib/versionium-record.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: clear-glass/src/contexts/google-signin.js
+      to: clear-glass/src/contexts/session-headers.js
+      kind: requires
+    - from: clear-glass/src/contexts/google-signin.js
+      to: clear-glass/src/fingerprint/firefox-version.js
+      kind: requires
+    - from: clear-glass/src/contexts/manager.js
+      to: clear-glass/src/contexts/human-check.js
+      kind: requires
+    - from: clear-glass/src/contexts/manager.js
+      to: clear-glass/src/net/compartment.js
+      kind: requires
+    - from: clear-glass/src/contexts/manager.js
+      to: clear-glass/src/net/service.js
+      kind: requires
+    - from: clear-glass/src/contexts/manager.js
+      to: clear-glass/src/tls/helper.js
+      kind: requires
+    - from: clear-glass/src/options/store.js
+      to: clear-glass/src/storage/jaa.js
+      kind: requires
+    - from: clear-glass/src/options/store.js
+      to: clear-glass/src/toolbar/commands.js
+      kind: requires
+    - from: clear-glass/src/options/store.js
+      to: lib/versionium-record.js
+      kind: requires
+    - from: clear-glass/src/options/store.js
+      to: clear-glass/src/profiles/built/profiles.js
+      kind: requires
+    - from: clear-glass/src/options/store.js
+      to: clear-glass/src/profiles/built/_emerge/lang/runtime.js
+      kind: requires
+    - from: clear-glass/src/options/store.js
+      to: clear-glass/src/shortcuts/registry.js
+      kind: requires
+    - from: clear-glass/src/main/index.js
+      to: clear-glass/src/contexts/google-signin.js
+      kind: requires
+    - from: clear-glass/src/page/semantic-tree.js
+      to: clear-glass/src/contexts/google-signin.js
+      kind: requires
+    - from: clear-glass/test/google-signin.test.js
+      to: clear-glass/src/contexts/google-signin.js
+      kind: requires
+    - from: clear-glass/src/main/index.pre-userscripts.js
+      to: clear-glass/src/contexts/manager.js
+      kind: requires
+    - from: tests/modules/clear-glass-accounts.test.js
+      to: clear-glass/src/options/store.js
+      kind: requires
+    - from: tests/modules/clear-glass-eros-autostart.test.js
+      to: clear-glass/src/options/store.js
+      kind: requires
+    - from: tests/modules/nexus-options-autoboot.test.js
+      to: clear-glass/src/options/store.js
+      kind: requires
+    - from: tests/modules/test-eros-hooks.test.js
+      to: clear-glass/src/options/store.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-11-26-clear-glass-engine-phasemap.spec::CGE1_why_chatgpt_shows_the_login_page
+    dependents:
+      - docs/2026-11-26-clear-glass-engine-phasemap.spec::CGE7_privacy_without_a_lie
+    upstream:
+      - docs/2026-11-26-clear-glass-engine-phasemap.spec::CGE1_why_chatgpt_shows_the_login_page
+    downstream:
+      - docs/2026-11-26-clear-glass-engine-phasemap.spec::CGE7_privacy_without_a_lie
+    blockedBy:
+      - docs/2026-11-26-clear-glass-engine-phasemap.spec::CGE1_why_chatgpt_shows_the_login_page
+    unlocks:
+      - docs/2026-11-26-clear-glass-engine-phasemap.spec::CGE7_privacy_without_a_lie
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · blocked by CGE1_why_chatgpt_shows_the_login_page
+      - 'depends on (1): CGE1_why_chatgpt_shows_the_login_page'
+      - 'needed by (1): CGE7_privacy_without_a_lie · finishing it unlocks CGE7_privacy_without_a_lie'
+    edges:
+      - from: docs/2026-11-26-clear-glass-engine-phasemap.spec::CGE1_why_chatgpt_shows_the_login_page
+        kind: declared

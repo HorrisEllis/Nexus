@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-26-clear-glass-engine-phasemap.spec::CGE7_privacy_without_a_lie
+type: phase
+id: docs_2026-11-26-clear-glass-engine-phasemap.spec::CGE7_privacy_without_a_lie
+context: pipeline phase CGE7_privacy_without_a_lie of docs/2026-11-26-clear-glass-engine-phasemap.spec
+intent: null
+summary: CGE7_privacy_without_a_lie (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1795723461969
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795723461969
+lastSeenAt: 1795723461969
+fingerprint: null
+payload:
+  id: CGE7_privacy_without_a_lie
+  map: docs/2026-11-26-clear-glass-engine-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - clear-glass/src/net/compartment.js
+    - clear-glass/src/tls/helper.js
+  depends_on:
+    - CGE6_the_true_identity_by_default
+  blocks: []
+  spec: null
+  graph: 18de10fef8e2acba

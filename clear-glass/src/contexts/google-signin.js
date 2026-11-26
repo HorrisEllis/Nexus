@@ -39,6 +39,14 @@ const SIGNIN_HOST_RE = /^accounts\.google\.[a-z]{2,3}(?:\.[a-z]{2})?$|^accounts\
 const REFUSED_RE = /\/(?:v3\/)?signin\/rejected|\/signin\/v2\/deniedsigninrejected|CookieMismatch/i;
 const PRELOAD = path.join(__dirname, '..', 'preload', 'google-signin.js');
 
+// 2026-11-26 — James: "yes, show the true identity. with the option to change it at anytime." (Google now refuses the Firefox persona:
+// "Couldn't sign you in ... This browser or app may not be secure"). The identity is an option (options.identity.mode): "engine", the
+// default, is the truth (Chromium's own UA, client hints and TLS, nothing rewritten); "persona" is the Firefox presentation below. Read
+// live: a change applies to the next sign-in page (and the next window for the preload).
+let _mode = () => 'engine';
+function setIdentity(fn) { if (typeof fn === 'function') _mode = fn; }
+function truthful() { try { return _mode() !== 'persona'; } catch (_) { return true; } }
+
 function _host(url) { try { return new URL(url).hostname; } catch (_) { return ''; } }
 function isSignin(url) { return SIGNIN_HOST_RE.test(_host(url)); }
 
@@ -73,7 +81,8 @@ function inSignin(id) { return id != null && _signin.has(id); }
 function applySession(ses) {
   if (!ses || ses.__cgGoogleSignin) return;
   ses.__cgGoogleSignin = true;
-  requestHook(ses, 'google-signin', (details, headers) => rewriteHeaders(details, headers, { inSignin }), { order: 100 });   // last: its UA wins
+  requestHook(ses, 'google-signin', (details, headers) => truthful() ? null : rewriteHeaders(details, headers, { inSignin }), { order: 100 });   // last: its UA wins
+  if (truthful()) return;   // the truth: no preload hides navigator.userAgentData or window.chrome
   try {
     if (typeof ses.registerPreloadScript === 'function') ses.registerPreloadScript({ type: 'frame', id: 'cg-google-signin', filePath: PRELOAD });
     else if (typeof ses.setPreloads === 'function') ses.setPreloads([...(ses.getPreloads ? ses.getPreloads() : []).filter(p => p !== PRELOAD), PRELOAD]);
@@ -89,7 +98,7 @@ function attach(contents, { log = (m) => console.log(m) } = {}) {
   const id = () => { try { return contents.id; } catch (_) { return null; } };
 
   const enter = () => {
-    if (_signin.has(id())) return;
+    if (_signin.has(id()) || truthful()) return;
     _signin.add(id());
     try {
       st.own = contents.getUserAgent();
@@ -125,4 +134,4 @@ function attach(contents, { log = (m) => console.log(m) } = {}) {
   return true;
 }
 
-module.exports = { isSignin, firefoxUA, rewriteHeaders, applySession, attach, inSignin, SIGNIN_HOST_RE, REFUSED_RE, PRELOAD, _signin };
+module.exports = { setIdentity, truthful, isSignin, firefoxUA, rewriteHeaders, applySession, attach, inSignin, SIGNIN_HOST_RE, REFUSED_RE, PRELOAD, _signin };

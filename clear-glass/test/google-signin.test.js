@@ -56,6 +56,12 @@ function fakeSession() {
   ok(GS.rewriteHeaders({ url: 'https://accounts.google.com/', resourceType: 'mainFrame' }, { ...H, 'User-Agent': persona })['User-Agent'] === persona, 'a context already presenting a current Firefox keeps its own (one Firefox, not two)');
   ok(GS.rewriteHeaders({ url: 'https://accounts.google.com/', resourceType: 'mainFrame' }, { ...H, 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:122.0) Gecko/20100101 Firefox/122.0' })['User-Agent'] === FF, 'an outdated Firefox is replaced by a current one');
 
+  // ── 2026-11-26 his identity switch: the truth by default, nothing rewritten, no preload; the Firefox persona when he picks it ──
+  ok(GS.truthful() === true, 'the default identity is the truth (engine)');
+  { const t = fakeSession(); GS.applySession(t); ok(t.preloads.length === 0, 'with the truth, no preload hides the engine'); }
+  GS.setIdentity(() => 'persona');
+  ok(GS.truthful() === false, 'persona chosen: the Firefox presentation below is on');
+
   // ── requestHook: one listener per session, hooks composed in order; the sign-in hook last; the preload registered ──
   const ses = fakeSession();
   applyCspBypass(ses);
