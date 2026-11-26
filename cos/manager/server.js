@@ -516,7 +516,18 @@ function createServer(sup, opts = {}) {
       // PC34 (2026-11-26) — James: "everything that the agents are doing should be in that bench. like everything should be using the pipleine".
       // An agent session kept as node files (cos/data/agents/<id>/session.json + steps/<n>.step): origin (the ask), each step, end state (its report).
       // Record only: it starts no workflow, so an agent may send it. Slice b puts RAID before each step (UD25).
-      if (p === '/api/cos/agents/activity' && m === 'POST') {
+      // the Claude Code plugin's door (PC34): its hook payload translated here and nowhere else, so COS's own shape stays its own
+      if (p === '/api/cos/agents/activity/claude-code' && m === 'POST') {
+        const ev = String(body.hook_event_name || ''), short = (v) => (typeof v === 'string' ? v : JSON.stringify(v || '')).slice(0, 2000);
+        const t = body.tool_input || {}, resp = body.tool_response || {};
+        const mapped = { session: 'claude-' + String(body.session_id || 'unknown').slice(0, 40), who: 'agent:claude-code' + (body.agent_type ? ':' + body.agent_type : '') };
+        if (ev === 'UserPromptSubmit') mapped.ask = String(body.prompt || '');
+        else if (ev === 'PostToolUse') mapped.step = { tool: String(body.tool_name || ''), input: short(t.command || t.file_path || t.pattern || t.url || t.prompt || t.description || t), outcome: short(resp.stdout || resp.error || resp.filePath || resp.message || resp), ok: !(resp.is_error || resp.interrupted) };
+        else if (ev === 'Stop' || ev === 'SubagentStop') mapped.end = String(body.last_assistant_message || 'stopped');
+        else return send(res, 200, { ok: true, ignored: ev });
+        body = mapped;
+      }
+      if ((p === '/api/cos/agents/activity' || p === '/api/cos/agents/activity/claude-code') && m === 'POST') {
         const fsx = require('fs'), id = String(body.session || '').replace(/[^\w.-]/g, '').slice(0, 80);
         if (!id) return send(res, 400, { ok: false, error: 'say which session: { "session": "<id>", "who": "...", "ask"|"step"|"end": ... }' });
         const dir = path.join(root, 'cos', 'data', 'agents', id), sf = path.join(dir, 'session.json'); fsx.mkdirSync(path.join(dir, 'steps'), { recursive: true });
