@@ -7,11 +7,11 @@ intent: null
 summary: 9 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1795676381669
+exported_at: 1795706802445
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1795676381669
-lastSeenAt: 1795676381669
+firstSeenAt: 1795706802445
+lastSeenAt: 1795706802445
 fingerprint: null
 payload:
   for: PC5_programmable_gate_types
@@ -144,6 +144,11 @@ payload:
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC28_the_pipeline_observes_itself
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC29_copilot_orchestrates_nexus
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC2_procedures_and_frameworks_as_steps
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC30_the_library_of_pipelines_renamable_not_a_drop_do
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC31_origin_first_end_state_last_on_every_pipeline
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC32_axioms_conditions_triggers_schedule_and_retries_
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC33_the_pipeline_moves_idearium_s_pipeline_features_
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC34_every_agent_s_work_is_a_pipeline_shown_on_the_te
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC4_the_box_kinds_on_the_canvas
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC6_intelligence_watches_the_runs
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC7_iterate_to_the_end_state
@@ -194,7 +199,7 @@ payload:
         all upstream 40
       - >-
         needed by (4): PC4_the_box_kinds_on_the_canvas, PC6_intelligence_watches_the_runs,
-        PC8_operate_a_pipeline, PC2_procedures_and_frameworks_as_steps · all downstream 16 ·
+        PC8_operate_a_pipeline, PC2_procedures_and_frameworks_as_steps · all downstream 21 ·
         finishing it unlocks PC6_intelligence_watches_the_runs, PC8_operate_a_pipeline
       - >-
         same files as PC3_the_build_request_step with no order between them: cos/manager/server.js,

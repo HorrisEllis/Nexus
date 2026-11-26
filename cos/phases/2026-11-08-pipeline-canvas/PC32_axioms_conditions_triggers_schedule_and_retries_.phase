@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-08-pipeline-canvas-phasemap.spec::PC32_axioms_conditions_triggers_schedule_and_retries_
+type: phase
+id: docs_2026-11-08-pipeline-canvas-phasemap.spec::PC32_axioms_conditions_triggers_schedule_and_retries_
+context: >-
+  pipeline phase PC32_axioms_conditions_triggers_schedule_and_retries_ of
+  docs/2026-11-08-pipeline-canvas-phasemap.spec
+intent: null
+summary: PC32_axioms_conditions_triggers_schedule_and_retries_ (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1795706802645
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795706802645
+lastSeenAt: 1795706802645
+fingerprint: null
+payload:
+  id: PC32_axioms_conditions_triggers_schedule_and_retries_
+  map: docs/2026-11-08-pipeline-canvas-phasemap.spec
+  repo: null
+  layer: null
+  status: pending
+  files: []
+  depends_on:
+    - PC30_the_library_of_pipelines_renamable_not_a_drop_do
+  blocks: []
+  spec: null
+  graph: 2c50daa2e4f493c6

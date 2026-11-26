@@ -7,11 +7,11 @@ intent: null
 summary: 3 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1795676381806
+exported_at: 1795706802606
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1795676381806
-lastSeenAt: 1795676381806
+firstSeenAt: 1795706802606
+lastSeenAt: 1795706802606
 fingerprint: null
 payload:
   for: PC26_lineage_is_the_canvas
@@ -44,6 +44,8 @@ payload:
     dependents:
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC27_each_output_measured_by_his_equations
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC29_copilot_orchestrates_nexus
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC31_origin_first_end_state_last_on_every_pipeline
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC34_every_agent_s_work_is_a_pipeline_shown_on_the_te
     upstream:
       - docs/2026-10-28-first-principles-phasemap.spec::FP1_where_a_request_opens
       - docs/2026-10-28-first-principles-phasemap.spec::FP2_which_option_is_meant
@@ -91,20 +93,25 @@ payload:
     downstream:
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC27_each_output_measured_by_his_equations
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC29_copilot_orchestrates_nexus
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC31_origin_first_end_state_last_on_every_pipeline
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC34_every_agent_s_work_is_a_pipeline_shown_on_the_te
     blockedBy:
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC8_operate_a_pipeline
     unlocks:
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC27_each_output_measured_by_his_equations
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC29_copilot_orchestrates_nexus
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC34_every_agent_s_work_is_a_pipeline_shown_on_the_te
     conflicts: []
     dangling: []
     lines:
       - layer 16 · blocked by PC8_operate_a_pipeline
       - 'depends on (1): PC8_operate_a_pipeline · all upstream 43'
       - >-
-        needed by (2): PC27_each_output_measured_by_his_equations, PC29_copilot_orchestrates_nexus ·
-        finishing it unlocks PC27_each_output_measured_by_his_equations,
-        PC29_copilot_orchestrates_nexus
+        needed by (4): PC27_each_output_measured_by_his_equations, PC29_copilot_orchestrates_nexus,
+        PC31_origin_first_end_state_last_on_every_pipeline,
+        PC34_every_agent_s_work_is_a_pipeline_shown_on_the_te · finishing it unlocks
+        PC27_each_output_measured_by_his_equations, PC29_copilot_orchestrates_nexus,
+        PC34_every_agent_s_work_is_a_pipeline_shown_on_the_te
     edges:
       - from: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC8_operate_a_pipeline
         kind: declared

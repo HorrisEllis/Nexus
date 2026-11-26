@@ -513,6 +513,30 @@ function createServer(sup, opts = {}) {
         const issues = []; try { const t = fsx.readFileSync(path.join(root, 'docs', 'PROOF-OF-COMPETENCY.md'), 'utf8'), i = t.indexOf('issues and his solutions, graded'); for (const ln of (i < 0 ? '' : t.slice(i, i + 12000)).split('\n')) { const c = ln.split('|').map((x) => x.trim()); if (/^I\d+$/.test(c[1] || '')) issues.push({ id: c[1], issue: c[2], his: c[3], result: c[4], grade: (c[6] || '').replace(/\*\*/g, '').split(':')[0] }); } } catch (_) {}
         return send(res, 200, { ok: true, at: Date.now(), requests: await pipeline.runs.list({ state: 'active' }), builds: builds.slice(0, 60), issues, systems: sup.list().map((v) => ({ name: v.name, state: v.state })) });
       }
+      // PC34 (2026-11-26) — James: "everything that the agents are doing should be in that bench. like everything should be using the pipleine".
+      // An agent session kept as node files (cos/data/agents/<id>/session.json + steps/<n>.step): origin (the ask), each step, end state (its report).
+      // Record only: it starts no workflow, so an agent may send it. Slice b puts RAID before each step (UD25).
+      if (p === '/api/cos/agents/activity' && m === 'POST') {
+        const fsx = require('fs'), id = String(body.session || '').replace(/[^\w.-]/g, '').slice(0, 80);
+        if (!id) return send(res, 400, { ok: false, error: 'say which session: { "session": "<id>", "who": "...", "ask"|"step"|"end": ... }' });
+        const dir = path.join(root, 'cos', 'data', 'agents', id), sf = path.join(dir, 'session.json'); fsx.mkdirSync(path.join(dir, 'steps'), { recursive: true });
+        let s = { id, who: String(body.who || 'agent'), ask: '', state: 'working', at: Date.now(), steps: 0, end: null }; try { s = JSON.parse(fsx.readFileSync(sf, 'utf8')); } catch (_) {}
+        if (body.ask && !s.ask) s.ask = String(body.ask).slice(0, 4000);
+        if (body.step) { s.steps += 1; const st = { n: s.steps, at: Date.now(), tool: String(body.step.tool || ''), input: String(body.step.input || '').slice(0, 2000), outcome: String(body.step.outcome || '').slice(0, 2000), ok: body.step.ok !== false };
+          fsx.writeFileSync(path.join(dir, 'steps', String(s.steps).padStart(5, '0') + '.step'), JSON.stringify(st, null, 1)); }
+        if (body.end) { s.end = String(body.end).slice(0, 8000); s.state = 'done'; }
+        s.last = Date.now(); fsx.writeFileSync(sf, JSON.stringify(s, null, 1));
+        return send(res, 200, { ok: true, id, steps: s.steps, state: s.state });
+      }
+      if (m === 'GET' && (p === '/api/cos/agents/sessions' || p.startsWith('/api/cos/agents/sessions/'))) {
+        const fsx = require('fs'), base = path.join(root, 'cos', 'data', 'agents'), one = p.split('/')[5];
+        const read = (i) => { try { return JSON.parse(fsx.readFileSync(path.join(base, i, 'session.json'), 'utf8')); } catch (_) { return null; } };
+        if (one) { const s = read(one.replace(/[^\w.-]/g, '')); if (!s) return send(res, 404, { ok: false, error: `no agent session "${one}"` });
+          const sd = path.join(base, s.id, 'steps'); const steps = (fsx.existsSync(sd) ? fsx.readdirSync(sd) : []).sort().map((f) => { try { return JSON.parse(fsx.readFileSync(path.join(sd, f), 'utf8')); } catch (_) { return null; } }).filter(Boolean);
+          return send(res, 200, { ok: true, ...s, steps }); }
+        const sessions = (fsx.existsSync(base) ? fsx.readdirSync(base) : []).map(read).filter(Boolean).sort((a, b) => (b.last || b.at) - (a.last || a.at)).slice(0, 100);
+        return send(res, 200, { ok: true, sessions });
+      }
       if (m === 'GET' && p === '/api/cos/pipeline/requests') return send(res, 200, { ok: true, state: u.searchParams.get('state') || 'active', requests: await pipeline.runs.list({ state: u.searchParams.get('state') || 'active' }) });
       { const rm = /^\/api\/cos\/pipeline\/requests\/([\w.-]+)(\/resume)?$/.exec(p);
         if (rm && m === 'GET' && !rm[2]) { const r = await pipeline.runs.read(rm[1]); return send(res, r ? 200 : 404, r ? { ok: true, ...r } : { ok: false, error: `no request "${rm[1]}"` }); }

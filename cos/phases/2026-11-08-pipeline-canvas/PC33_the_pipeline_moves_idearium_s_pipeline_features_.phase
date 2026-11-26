@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-08-pipeline-canvas-phasemap.spec::PC33_the_pipeline_moves_idearium_s_pipeline_features_
+type: phase
+id: docs_2026-11-08-pipeline-canvas-phasemap.spec::PC33_the_pipeline_moves_idearium_s_pipeline_features_
+context: >-
+  pipeline phase PC33_the_pipeline_moves_idearium_s_pipeline_features_ of
+  docs/2026-11-08-pipeline-canvas-phasemap.spec
+intent: null
+summary: PC33_the_pipeline_moves_idearium_s_pipeline_features_ (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1795706802651
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795706802651
+lastSeenAt: 1795706802651
+fingerprint: null
+payload:
+  id: PC33_the_pipeline_moves_idearium_s_pipeline_features_
+  map: docs/2026-11-08-pipeline-canvas-phasemap.spec
+  repo: null
+  layer: null
+  status: pending
+  files: []
+  depends_on:
+    - PC30_the_library_of_pipelines_renamable_not_a_drop_do
+  blocks: []
+  spec: null
+  graph: db4946b6f0121648

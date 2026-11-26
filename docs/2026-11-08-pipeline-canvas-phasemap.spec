@@ -2132,3 +2132,9 @@ phases_addendum_2026_11_24_model_server:
     depends_on: [PC30]
     does: >
       His 2026-11-26: "can we have it work on moving the idearium pipeline features and agent components and stuff to automation engine and the pipeline" (DB1; UD13: Idearium hands its tools to COS and calls COS). A pipeline whose nodes are the migration: a census node lists each Idearium pipeline feature and agent component; each becomes a node that moves one, proven by its own tests before the old one is retired. Said plainly: the pipeline cannot yet move JavaScript or UI by itself (it builds Emerge pieces); the nodes it cannot do are filed as needed-the-coder, each the next capability to give.
+
+  PC34_every_agent_s_work_is_a_pipeline_shown_on_the_te:
+    status: pending
+    depends_on: [PC26]
+    does: >
+      His 2026-11-26: "can you have the agents build me a ui preview. i need to be able to test all of this myself." · "everything that the agents are doing should be in that bench. like everything should be using the pipleine". Each agent session (a coder agent, a Guardian agent, a local model working a phase) is a request kept as node files under cos/data/agents/<id>/ (session.json: who, the ask it started from, state; steps/<n>.step: each tool or model call, its input in short, its outcome); its end state is its report. COS records it through POST /api/cos/agents/activity (record only: it starts no workflow, so an agent may send it) and reads it through GET /api/cos/agents/sessions[/<id>]. The coder's sessions reach it through one plugin (a Claude Code hook, per the external-dependency-is-a-plugin rule), never by coupling. The test bench preview (cos/ui/test-bench-preview/) opens on an Agents tab: origin, then each step, then the end state. Slice b: each step goes through RAID before it runs, not only recorded after (UD25).

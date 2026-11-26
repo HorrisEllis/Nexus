@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-08-pipeline-canvas-phasemap.spec::PC31_origin_first_end_state_last_on_every_pipeline
+type: phase
+id: docs_2026-11-08-pipeline-canvas-phasemap.spec::PC31_origin_first_end_state_last_on_every_pipeline
+context: >-
+  pipeline phase PC31_origin_first_end_state_last_on_every_pipeline of
+  docs/2026-11-08-pipeline-canvas-phasemap.spec
+intent: null
+summary: PC31_origin_first_end_state_last_on_every_pipeline (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1795706802639
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795706802639
+lastSeenAt: 1795706802639
+fingerprint: null
+payload:
+  id: PC31_origin_first_end_state_last_on_every_pipeline
+  map: docs/2026-11-08-pipeline-canvas-phasemap.spec
+  repo: null
+  layer: null
+  status: pending
+  files: []
+  depends_on:
+    - PC26_lineage_is_the_canvas
+    - PC30_the_library_of_pipelines_renamable_not_a_drop_do
+  blocks: []
+  spec: null
+  graph: 0514436631e86c9b

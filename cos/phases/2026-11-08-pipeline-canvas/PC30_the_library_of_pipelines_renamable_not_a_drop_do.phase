@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-08-pipeline-canvas-phasemap.spec::PC30_the_library_of_pipelines_renamable_not_a_drop_do
+type: phase
+id: docs_2026-11-08-pipeline-canvas-phasemap.spec::PC30_the_library_of_pipelines_renamable_not_a_drop_do
+context: >-
+  pipeline phase PC30_the_library_of_pipelines_renamable_not_a_drop_do of
+  docs/2026-11-08-pipeline-canvas-phasemap.spec
+intent: null
+summary: PC30_the_library_of_pipelines_renamable_not_a_drop_do (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1795706802631
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795706802631
+lastSeenAt: 1795706802631
+fingerprint: null
+payload:
+  id: PC30_the_library_of_pipelines_renamable_not_a_drop_do
+  map: docs/2026-11-08-pipeline-canvas-phasemap.spec
+  repo: null
+  layer: null
+  status: pending
+  files: []
+  depends_on:
+    - PC8_operate_a_pipeline
+  blocks: []
+  spec: null
+  graph: 4d607590bb478c90
