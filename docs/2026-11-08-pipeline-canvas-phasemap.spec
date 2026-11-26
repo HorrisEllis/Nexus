@@ -1799,6 +1799,20 @@ phases_addendum_2026_11_24_model_server:
         lib/vector-memory, the Orchestrator's loop) reaches it through its routes instead, one system at a time (§5.9–§5.16); "ollama-bridge"
         renamed where it names the model server's process.
     proof: "a: the bridge's own tests pass from inference/bridge/, COS starts it from inference/compartment.json, :3749/health answers; b: a job on the 3b through :3749/api/jobs answers from llama-server, and one build round of build-phase.js runs on it; c: per system, its tests pass with no require of inference/bridge/"
+  PC26_lineage_is_the_canvas:
+    status: OPEN
+    layer: ui
+    james: '"looking better so far. it is supposed to show choices as branches, like lineage is meant to be a part of the canvas like branching into new steps, new paths, parrell processes" (2026-11-25, on the EMB10 run with three adversaries)'
+    depends_on: [PC8_operate_a_pipeline]
+    files: [cos/ui/run-console-preview/server.js, cos/ui/automation/index.html]
+    reuse: "the build record (cos/data/build/cbuild-*.jsonl: each piece, its tries, the model of each, its helpers, its verdicts), the gap tree the canvas already draws (served_by → contains_key_in_obj → contains_key), the Lineage panel's routes (/api/cos/view/lineage); no new store"
+    does: >-
+      Lineage drawn on the canvas itself, not in a side panel: from each step, its choices branch. A try refused is a branch that ends (its
+      verdict on it, red); the next try grows beside it, its model named; a piece split into helpers is a new path down; the adversary's three
+      readers and parallel steps are side by side, joined where they merge; the path that passed is the trunk, lit. The panel keeps the
+      ledger history and repo lineage as text.
+    order: "backend first (the record's tries and helpers as a tree from /api/cos/view), then a live-data preview shown to him, built only on his yes (preview before build)"
+    proof: "the EMB10 run e1968c61 drawn: served_by's 60 tries as branches by model, its helpers as paths, contains_key's adversary readers in parallel; each branch opens its try (prompt, body, verdict)"
   PC_D18_what_he_meant_2026_11_24:
     status: "OPEN — his"
     readings:

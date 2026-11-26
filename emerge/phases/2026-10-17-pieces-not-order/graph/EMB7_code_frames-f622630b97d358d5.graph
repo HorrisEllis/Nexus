@@ -7,11 +7,11 @@ intent: null
 summary: 13 node(s), 1 crossing(s)
 system: idearium
 tags: []
-exported_at: 1795598050195
+exported_at: 1795649875068
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1795598050195
-lastSeenAt: 1795598050195
+firstSeenAt: 1795649875068
+lastSeenAt: 1795649875068
 fingerprint: null
 payload:
   for: EMB7_code_frames
@@ -146,6 +146,9 @@ payload:
       - with: docs/2026-10-17-pieces-not-order-phasemap.spec::EMB9_break_down_before_climbing
         files:
           - idearium/lib/emerge-rung.cjs
+      - with: docs/2026-10-17-pieces-not-order-phasemap.spec::EMB12_the_adversary_gate
+        files:
+          - idearium/lib/emerge-rung.cjs
     dangling: []
     lines:
       - layer 6 · blocked by EMB6_the_end_state_first
@@ -162,6 +165,9 @@ payload:
         idearium/lib/emerge-rung.cjs, tests/modules/test-emerge-rung.test.js
       - >-
         same files as EMB9_break_down_before_climbing with no order between them:
+        idearium/lib/emerge-rung.cjs
+      - >-
+        same files as EMB12_the_adversary_gate with no order between them:
         idearium/lib/emerge-rung.cjs
     edges:
       - from: docs/2026-10-17-pieces-not-order-phasemap.spec::EMB6_the_end_state_first
