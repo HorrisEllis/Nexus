@@ -347,8 +347,8 @@ async function endState({ ph, plan, src, mapText }) {
         const specFile = ph.spec || null; const cands = specFile ? [specFile] : [];
         for (const sf of cands) { const t = codeOf(sf) || ''; const at = t.indexOf('- id: ' + mod); if (at < 0) continue;
           const end = t.indexOf('\n    - id:', at + 5); const blk = t.slice(at, end < 0 ? t.length : end);
-          const ex = /exports:\s*\[([^\]]*)\]/.exec(blk); desc = ((/description:\s*>?-?\s*\n?([\s\S]*?)\n\s{6}[a-z_]+:/.exec(blk) || [])[1] || '').replace(/\s+/g, ' ').trim();
-          if (ex) exps = (ex[1].match(/"([^"]+)"/g) || []).map((s) => s.slice(1, -1)); }
+          const ex = /exports:\s*\[(.*)\]\s*$/m.exec(blk);   // the whole line: an export's own text may hold brackets (GW0's "[{ id, … }]") desc = ((/description:\s*>?-?\s*\n?([\s\S]*?)\n\s{6}[a-z_]+:/.exec(blk) || [])[1] || '').replace(/\s+/g, ' ').trim();
+          if (ex) exps = (ex[1].match(/"(?:[^"\\]|\\.)*"/g) || []).map((s) => s.slice(1, -1)); }
       }
       const fromSpec = exps.map((s) => /^([A-Za-z_]\w*)\s*\(([^)]*)\)/.exec(s)).filter(Boolean).map((m) => ({ name: m[1], signature: `${m[1]}(${m[2]})`, params: m[2].split(',').map((x) => x.trim().split(/[:\s]/)[0]).filter(Boolean), does: desc || String(ph.does || '') }));
       const have = codeOf(target) || ''; const fromFile = [...have.matchAll(/^fn\s+([A-Za-z_]\w*)\s*\(([^)]*)\)/gm)].map((m) => ({ name: m[1], signature: `${m[1]}(${m[2]})`, params: m[2].split(',').map((x) => x.trim().split(/[:\s]/)[0]).filter(Boolean), does: String(ph.does || '') }));
