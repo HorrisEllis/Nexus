@@ -7,11 +7,11 @@ intent: null
 summary: 48 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1795583463246
+exported_at: 1795665335575
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1795583463246
-lastSeenAt: 1795583463246
+firstSeenAt: 1795665335575
+lastSeenAt: 1795665335575
 fingerprint: null
 payload:
   for: PC8_operate_a_pipeline
@@ -306,6 +306,7 @@ payload:
     dependents:
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC12_every_pipeline_in_cos
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC13_his_request_built_by_the_pipeline
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC26_lineage_is_the_canvas
       - docs/2026-11-15-the-factory-phasemap.spec::IF18_the_visual_debugger
       - docs/2026-11-17-nexus-codes-itself-phasemap.spec::NX2_nexus_codes_itself_toward_a_dynamic_end_state
     upstream:
@@ -354,12 +355,15 @@ payload:
     downstream:
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC12_every_pipeline_in_cos
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC13_his_request_built_by_the_pipeline
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC26_lineage_is_the_canvas
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC27_each_output_measured_by_his_equations
       - docs/2026-11-15-the-factory-phasemap.spec::IF18_the_visual_debugger
       - docs/2026-11-17-nexus-codes-itself-phasemap.spec::NX2_nexus_codes_itself_toward_a_dynamic_end_state
     blockedBy:
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC5_programmable_gate_types
     unlocks:
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC12_every_pipeline_in_cos
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC26_lineage_is_the_canvas
     conflicts:
       - with: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC2_procedures_and_frameworks_as_steps
         files:
@@ -427,9 +431,10 @@ payload:
         depends on (2): PC_D13_the_pipeline_works_first_then_cos_optimised,
         PC5_programmable_gate_types · all upstream 42
       - >-
-        needed by (4): PC12_every_pipeline_in_cos, PC13_his_request_built_by_the_pipeline,
-        IF18_the_visual_debugger, NX2_nexus_codes_itself_toward_a_dynamic_end_state · finishing it
-        unlocks PC12_every_pipeline_in_cos
+        needed by (5): PC12_every_pipeline_in_cos, PC13_his_request_built_by_the_pipeline,
+        PC26_lineage_is_the_canvas, IF18_the_visual_debugger,
+        NX2_nexus_codes_itself_toward_a_dynamic_end_state · all downstream 6 · finishing it unlocks
+        PC12_every_pipeline_in_cos, PC26_lineage_is_the_canvas
       - >-
         same files as PC2_procedures_and_frameworks_as_steps with no order between them:
         lib/automation/engine.js, idearium/api/index.js, cos/manager/automation-door.js,

@@ -1856,6 +1856,13 @@ phases_addendum_2026_11_24_model_server:
       failed. A failed one is kept and its variables re-examined (his: "as long as we have the math, and the variables for the equations correct").
       Known mismatch to settle first: friction.js's slope only amplifies, his f(Slope) inverts past a threshold (toolkit × intelligence, row 34).
     proof: "EMB10 run e1968c61's pieces each with Fidelity, Alignment, Expansion, Signal, Tension, Slope and cost; the prediction registered before, and its result on the next run"
+    decided_2026_11_25: >-
+      Asked which reading of Priority (÷ Urgency, or Weighting's × Urgency, or a typo) and of Signal (sum as written, Fidelity as a gate, or a
+      product) he meant, he answered: "we can test these. nexus is my mind externalized. the entire project is a projection" · "we are figuring
+      these out. i can give you the original framework". So no reading is chosen: each is a competing form, all computed side by side on the same
+      outputs, and the data decides which predicts best (which ranks the gaps that pass first; which scores the outputs the adversary later
+      refuses lowest). Every form and its prediction is registered in FRAMEWORK-THREADS before the run. His original framework, when he gives it,
+      is the source the forms are checked against.
   PC_D18_what_he_meant_2026_11_24:
     status: "OPEN — his"
     readings:
