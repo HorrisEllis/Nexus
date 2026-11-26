@@ -741,6 +741,10 @@ if (require.main === module) {
         for (const v of sup.list()) {
           if (v.state !== 'up' || !v.startedAt || Date.now() < (sysWait.get(v.name) || 0)) continue;
           const m = sysMoved(v.name, v.startedAt); if (!m.length || Date.now() - Math.max(...m.map((x) => x.t)) < 120000) continue;
+          // 2026-11-26 — James, signing in to ChatGPT in Clear Glass when it closed: "it crashed. right when i signed in". It was this rule: Clear
+          // Glass's code had moved, and COS restarted it under him. A system with a window, in his session, is never restarted for moved code:
+          // it loads the new code when he next opens it, said once.
+          if (v.inYourSession !== undefined || v.wallVia === 'NODE_OPTIONS') { if (!sysWait.has(v.name + ':said')) { sysWait.set(v.name + ':said', 1); sup.note('restart-held', `${m.length} file(s) ${v.name} runs changed; it has a window in your session, so it is not restarted under you: the new code loads when you next open it`, { by: 'rule:code-moved' }); } sysWait.set(v.name, Date.now() + 600000); continue; }
           sysAsking = true;
           const proof = { kind: 'measured', decidedBy: 'cos/manager/server.js', system: v.name, changed: m.map((x) => x.f).slice(0, 25), count: m.length, since: new Date(v.startedAt).toISOString(), why: `the code ${v.name} runs changed on disk since it started; it loads only at a restart`, at: Date.now() };
           let ok = null; try { ok = await require('../../lib/raid-port.js').approveTool('cos', `cos.restart ${v.name}`, { action: 'restart', intent: { action: 'restart', target: v.name }, causedBy: 'rule:code-moved', proof }); } catch (e) { ok = { approved: false, reason: `RAID unreachable: ${e.message}` }; }
