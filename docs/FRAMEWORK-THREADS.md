@@ -658,6 +658,17 @@ by the focus.
   4. Nexus diagnosing its own infrastructure faults and writing its own maps is not reached by these levers: no estimate is made (no data;
      his "Don't over-engineer a low-slope problem" read the other way: a claim with no fidelity is noise).
   5. The coder's interventions per phase, counted from the next phase on, fall phase over phase; the first count is the baseline.
+- **Revised the same day, on new evidence (prediction 4 kept above, not rewritten):** he pointed at Idearium: "You said because you need a
+  map ... but then I told you about Iderium and how I already systematized that." Measured: Idearium wrote the 12 phases of
+  docs/2026-11-25-break-anything-down-phasemap.spec through its own route; its His request pipeline (words → intent → phase → build) exists,
+  never run. So "writing its own maps" was counted as missing when it was built: the coder's error, a census not run first. New predictions:
+  6. Maps from his words need no coder within days, once His request has run once end to end (its first run is the test).
+  7. Running, watching, retrying and releasing a buildable phase with no coder: within about a week of COS's restart (PC29 c, the release as
+     a pipeline, the canvas drawing grown steps).
+  8. Emerge phases built end to end by the local models: unknown until EMB10 runs with the climb; if it completes, phases like it within
+     weeks at no more than 2 interventions each; if it does not, the grammar and the autocorrect come first.
+  9. Nexus diagnosing its own infrastructure faults stays the long pole: no date, only the count of needed-the-coder falling (10 filed
+     2026-11-25).
 - **Evidence:** open.
 
 ## EMB8 measured, the contract per piece (2026-11-24, his: "yes like constraints, need to be acknowledged also. my framework does all of this. at every level across any domain")
