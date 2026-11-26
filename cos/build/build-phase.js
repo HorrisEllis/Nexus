@@ -99,6 +99,16 @@ if (inp.steps) {
     const pcs = ([...rs].reverse().find((r) => r.state === 'pieces') || {}).pieces || [], ok = new Set(pcs.filter((p) => p.status === 'passed').map((p) => p.name));
     const todo = planned.filter((n) => !ok.has(n)); let prev = null;
     const branches = todo.map((n, i) => { const s = pieceStep(n, i ? `after ${todo[i - 1]}` : 'the first piece not yet built', prev ? [prev] : null); prev = s.id; return s; });
+    // 2026-11-26 — James: "The compiler needs to be a step also in the pipeline." After the last piece, Emerge's own door compiles the module
+    // and runs its test: two nodes on the canvas, each its own pass or fail (POST :4900/lang/check and /lang/test, { path }).
+    const file = (rs.find((r) => r.state === 'planned') || {}).file;
+    if (file && /\.eg$/.test(file)) {
+      const testFile = file.replace(/([^/]+)\.eg$/, 'test/$1.test.eg');
+      const door = (verb, p, label, why, deps) => ({ id: `${PHASE}:${verb}`, label, why, ...(deps ? { depends_on: deps } : {}),
+        step: { type: 'http', config: { method: 'POST', url: `http://127.0.0.1:4900/lang/${verb}`, body: JSON.stringify({ path: p }), timeoutMs: 600000 } } });
+      const c = door('check', file, `compile ${file}`, 'Emerge\'s compiler checks the module the pieces made', prev ? [prev] : null);
+      branches.push(c, door('test', testFile, `test ${testFile}`, 'the phase\'s own test, run by Emerge', [c.id]));
+    }
     console.log(JSON.stringify({ ok: true, phase: PHASE, planned, passed: [...ok].filter((n) => planned.includes(n)), branches }));
     process.exit(0);
   }

@@ -35,12 +35,12 @@ function _files(dir, base = dir, out = {}) {
 }
 
 /** run eg with argv in a fresh work folder; prepare(work) writes the request's files first; collect names the folder whose files come back */
-function _eg(argv, { args, ctx, prepare, collect }) {
+function _eg(argv, { args, ctx, prepare, collect, cwd }) {
   const work = fs.mkdtempSync(path.join(os.tmpdir(), 'emerge-lang-'));
   const t0 = Date.now();
   if (prepare) prepare(work);
   return new Promise((resolve) => {
-    execFile(process.execPath, [EG, ...argv], { cwd: work, timeout: _timeout(args, ctx), maxBuffer: 16 * 1024 * 1024, windowsHide: true },
+    execFile(process.execPath, [EG, ...argv], { cwd: cwd || work, timeout: _timeout(args, ctx), maxBuffer: 16 * 1024 * 1024, windowsHide: true },
       (err, stdout, stderr) => {
         const timedOut = !!(err && err.killed);
         const code = err ? (typeof err.code === 'number' ? err.code : null) : 0;
@@ -51,11 +51,26 @@ function _eg(argv, { args, ctx, prepare, collect }) {
   });
 }
 
-const _source = (args) => { if (typeof args.source !== 'string' || !args.source) throw _bad('source (Emerge source text)'); return args.source; };
+// 2026-11-26 — James: "The compiler needs to be a step also in the pipeline." A pipeline step names the file ({ path }, an .eg inside Nexus,
+// relative to its root); the door reads it, so the compiler is a node on the canvas with no new code of its own.
+const NEXUS_ROOT = path.resolve(__dirname, '..', '..', '..');
+const _source = (args) => {
+  if (typeof args.path === 'string' && args.path) {
+    const abs = path.resolve(NEXUS_ROOT, args.path);
+    if (!/\.eg$/.test(abs) || path.relative(NEXUS_ROOT, abs).startsWith('..')) throw Object.assign(new Error('path must be an .eg file inside Nexus'), { status: 400 });
+    if (!fs.existsSync(abs)) throw Object.assign(new Error(`no file ${args.path}`), { status: 404 });
+    return fs.readFileSync(abs, 'utf8');
+  }
+  if (typeof args.source !== 'string' || !args.source) throw _bad('source (Emerge source text) or path (an .eg file in Nexus)'); return args.source;
+};
 const _main = (src) => (work) => fs.writeFileSync(path.join(work, 'main.eg'), src);
 
 /** POST /lang/check { source } — parse and check; errors with line and column, nothing runs */
-function check(args, ctx) { return _eg(['check', 'main.eg'], { args, ctx, prepare: _main(_source(args)) }); }
+// a pipeline step ({ path }) is judged by its HTTP status: a failed check or test answers 422 with the compiler's own words
+const _judged = (args, p) => (typeof args.path === 'string' && args.path) ? p.then((r) => { if (r && r.ok === false) throw Object.assign(new Error(`${args.path}: ${String(r.stderr || r.stdout || '').trim().slice(0, 1500)}`), { status: 422 }); return r; }) : p;
+// a named file is checked where it lives (its imports are its neighbours), read only
+const _at = (verb, args, ctx) => { _source(args); const abs = path.resolve(NEXUS_ROOT, args.path); return _eg([verb, abs], { args, ctx, cwd: path.dirname(abs) }); };
+function check(args, ctx) { return _judged(args, args.path ? _at('check', args, ctx) : _eg(['check', 'main.eg'], { args, ctx, prepare: _main(_source(args)) })); }
 
 /** POST /lang/run { source, args? } — interpret the program */
 function run(args, ctx) {
@@ -64,7 +79,7 @@ function run(args, ctx) {
 }
 
 /** POST /lang/test { source } — its test "…" blocks */
-function test(args, ctx) { return _eg(['test', 'main.eg'], { args, ctx, prepare: _main(_source(args)) }); }
+function test(args, ctx) { return _judged(args, args.path ? _at('test', args, ctx) : _eg(['test', 'main.eg'], { args, ctx, prepare: _main(_source(args)) })); }
 
 /** POST /lang/build { source, standalone? } — compile to CommonJS; files are the built modules */
 function build(args, ctx) {
