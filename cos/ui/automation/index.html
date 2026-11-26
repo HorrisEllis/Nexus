@@ -616,18 +616,23 @@ function gateTree(t, L, p) {
   // 2026-11-26 — James: "the green boxes need to move" (both: dragged, and the piece being worked on in front). A box keeps where he put it
   // (per phase, in this browser), its helpers move with it, and the piece the 3b is on is drawn last, on top.
   const OFF = S.pieceOff || (S.pieceOff = (() => { try { return JSON.parse(localStorage.getItem('pieceOff:' + t.phase) || '{}'); } catch (_) { return {}; } })()); S.pieceOffPhase = t.phase;
+  // 2026-11-26 — James: "those blue boxes and green boxes. need to go. nodes and gates only, context is in the gates, that i can look at. look at
+  // the phases" (PC1: a step is the one box; PC5: a gate holds what its node needs). Each piece is a gate on the line from the step that builds
+  // it, one after the other; a helper's gate hangs beside the gate it unblocks. A gate shows its name and state only; clicked, the Inspector shows
+  // its context (status, tries, what it unblocks, the model, its last note and what was said in it).
   let front = '';
-  const x0 = A ? A.x : 20; let out = '', y0 = A ? A.y + 84 + 56 : 420, maxY = y0; const box = (g, x, y, d) => { const c = col(g.status), now = g.name === t.now; const o = OFF[g.name]; if (o) { x += o.dx; y += o.dy; }
-    const mk = `<g class="piece" data-piece="${esc(g.name)}" style="cursor:grab"><title>${esc(g.name)} · ${esc(g.status)} · ${g.tries} tries${g.blocks ? ' · unblocks ' + esc(g.blocks) : ''}</title><rect x="${x}" y="${y}" width="${W}" height="${H}" rx="9" fill="color-mix(in srgb, ${c} 12%, var(--bg2))" stroke="${now ? 'var(--bright)' : c}" stroke-width="${now ? 2.4 : 1.2}"${now ? ' stroke-dasharray="5 3"' : ''}/>`
-      + `<text x="${x + 10}" y="${y + 18}" fill="var(--bright)" font-size="12" font-family="var(--mono)">${esc(g.name.length > 20 ? g.name.slice(0, 19) + '…' : g.name)}</text><text x="${x + 10}" y="${y + 34}" fill="${c}" font-size="10.5" font-family="var(--mono)">${esc(now ? 'the 3b is on it' : g.status)} · ${g.tries} tries</text></g>`;
+  const SP = 46, x0 = A ? A.x + 107 : 40; let out = '', y = A ? A.y + 84 + 64 : 420, prevX = x0, prevY = A ? A.y + 84 : y - SP;
+  const gate = (g, x, gy, fromX, fromY) => { const c = col(g.status), now = g.name === t.now, sel = S.sel && S.sel.t === 'piece' && S.sel.id === g.name; const o = OFF[g.name]; if (o) { x += o.dx; gy += o.dy; }
+    out += `<path class="wire ${g.status === 'passed' ? 'done' : ''}" d="M${fromX},${fromY + 9} L${x},${gy - 9}"/>`;
+    const mk = `<g class="piece ${sel ? 'sel' : ''}" data-piece="${esc(g.name)}" style="cursor:pointer"><title>${esc(g.name)} · ${esc(g.status)} · ${g.tries} tries · click for its context</title>`
+      + `<rect x="${x - 8}" y="${gy - 8}" width="16" height="16" rx="2" transform="rotate(45 ${x} ${gy})" fill="color-mix(in srgb, ${c} 22%, var(--bg2))" stroke="${now || sel ? 'var(--bright)' : c}" stroke-width="${now || sel ? 2.2 : 1.4}"${now ? ' stroke-dasharray="4 2"' : ''}/>`
+      + `<text x="${x + 18}" y="${gy + 4}" fill="var(--text)" font-size="11.5" font-family="var(--mono)">${esc(g.name.length > 34 ? g.name.slice(0, 33) + '…' : g.name)} <tspan fill="${c}">${esc(now ? 'being built' : g.status)}</tspan></text></g>`;
     if (now) front += mk; else out += mk;
-    let yy = y + H + GY; for (const k of kids.get(g.name) || []) { out += `<path d="M${x + 14} ${y + H} V${yy + H / 2} H${x + 14 + d}" fill="none" stroke="var(--edge)" stroke-width="1.2"/>`; yy = box(k, x + 14 + d, yy, 0) ; } maxY = Math.max(maxY, yy); return yy; };
-  roots.forEach((g, i) => { const rx = x0 + i * (W + GX), ry = y0 + 28;
-    // each root wired to the step that builds it: the beginning
-    if (A) out = `<path class="wire ${g.status === 'passed' ? 'done' : ''}" d="M${A.x + 107},${A.y + 84} C${A.x + 107},${ry - 20} ${rx + W / 2},${A.y + 84 + 20} ${rx + W / 2},${ry}"/>` + out;
-    box(g, rx, ry, 0); });
+    let ky = gy; for (const k of kids.get(g.name) || []) { ky += SP; const kx = x + 40; gate(k, kx, ky, x, gy); }
+    return ky; };
+  for (const g of roots) { const end = gate(g, x0, y, prevX, prevY); prevX = x0; prevY = y; y = end + SP; }
   const passed = t.gates.filter((g) => g.status === 'passed').length;
-  return `<text x="${x0}" y="${y0 + 12}" fill="var(--text2)" font-size="12" font-family="var(--mono)">${esc(t.phase || '')} · ${passed} of ${t.gates.length} gates passed · grows as the build opens, breaks down and passes them</text>${out}${front}`;
+  return `<text x="${x0 + 18}" y="${(A ? A.y + 84 : 400) + 34}" fill="var(--text2)" font-size="11" font-family="var(--mono)">${esc(t.phase || '')} · ${passed} of ${t.gates.length} gates passed</text>${out}${front}`;
 }
 // PC26 (his, 2026-11-25: "Anything starts as the first step. Then everything branches from that one"): the steps a run grew (each naming
 // the step it grew from) are drawn as steps of the pipeline, wired to that step, so the canvas shows the run as it really went
@@ -672,7 +677,7 @@ function bindCanvas() {
   let pd = null;   // a piece box being dragged (gateTree)
   s.addEventListener('mousedown', (e) => { const pc = !e.button && e.target.closest('.piece'); if (!pc) return; e.stopPropagation(); const n = pc.dataset.piece, o = (S.pieceOff || {})[n] || { dx: 0, dy: 0 }; pd = { n, el: pc, x: e.clientX, y: e.clientY, dx: o.dx, dy: o.dy }; pc.style.cursor = 'grabbing'; }, true);
   addEventListener('mousemove', (e) => { if (!pd) return; const k = (S.vp && S.vp.k) || 1; pd.mx = (e.clientX - pd.x) / k; pd.my = (e.clientY - pd.y) / k; pd.el.setAttribute('transform', `translate(${pd.mx},${pd.my})`); });
-  addEventListener('mouseup', () => { if (!pd) return; const d = pd; pd = null; if (d.mx == null) return; (S.pieceOff || (S.pieceOff = {}))[d.n] = { dx: d.dx + d.mx, dy: d.dy + d.my }; try { localStorage.setItem('pieceOff:' + S.pieceOffPhase, JSON.stringify(S.pieceOff)); } catch (_) {} S.sig = ''; work(); });
+  addEventListener('mouseup', () => { if (!pd) return; const d = pd; pd = null; if (d.mx == null || Math.abs(d.mx) + Math.abs(d.my) < 4) { d.el.removeAttribute('transform'); select('piece', d.n); openPanel('inspector'); return; }   /* a click on a piece's gate: its context */ (S.pieceOff || (S.pieceOff = {}))[d.n] = { dx: d.dx + d.mx, dy: d.dy + d.my }; try { localStorage.setItem('pieceOff:' + S.pieceOffPhase, JSON.stringify(S.pieceOff)); } catch (_) {} S.sig = ''; work(); });
   s.onmousedown = (e) => { if (e.button || e.target.closest('.node,.gate,.piece')) return; drag = { x: e.clientX, y: e.clientY, vx: S.vp.x, vy: S.vp.y }; s.classList.add('drag'); };
   onmousemove = (e) => { if (!drag) return; S.vp.x = drag.vx + e.clientX - drag.x; S.vp.y = drag.vy + e.clientY - drag.y; applyVp(); };
   onmouseup = () => { drag = null; s.classList.remove('drag'); };
@@ -783,6 +788,15 @@ const PANELS = [
   { id: 'inspector', label: 'Inspector', render() { const p = pipe();
       if (!S.cat) loadCat();
       if (!S.sel || !p) return '<div class="dk-empty">Click a step or a gate to change it. Add steps with <b>Add step</b> at the top, the <b>Steps</b> panel, or right-click.</div>';
+      // a piece's gate (gateTree): its context, read from the build's own files (2026-11-26, his: "context is in the gates, that i can look at")
+      if (S.sel.t === 'piece') { const b = S.D && S.D.build, g = b && (b.gates || []).find((x) => x.name === S.sel.id), gp = b && (b.gaps || []).find((x) => x.name === S.sel.id);
+        if (!g && !gp) return '<div class="dk-empty">That gate is gone from the build.</div>';
+        const rows = ((b && b.rows) || []).filter((x) => x.gap === S.sel.id).slice(-6);
+        return sec('Gate: ' + S.sel.id) + kv('phase', b.phase || '—') + kv('status', (g && g.status) || (gp && gp.state) || '—') + kv('tries', g ? g.tries : (gp ? gp.asks : '—'))
+          + (g && g.blocks ? kv('unblocks', g.blocks) : '') + (gp && gp.model ? kv('model', gp.model) : '') + (gp && gp.helper ? kv('kind', 'a helper the build broke out') : '')
+          + (gp && gp.note ? sec('Last note') + `<div class="pre">${esc(gp.note)}</div>` : '')
+          + (g && g.said ? sec('What was said in it') + `<div class="pre">${esc(g.said)}</div>` : '')
+          + (rows.length ? sec('Its record') + `<div class="pre">${rows.map((x) => `${new Date(x.t).toLocaleTimeString()} ${x.state}${x.note ? ' · ' + x.note : ''}`).map(esc).join('\n')}</div>` : ''); }
       const t = task(S.sel.id); if (!t) return '<div class="dk-empty">That step is gone.</div>';
       const r = last(p.id), tr = r && r.tasks[t.id], b = S.base[p.id] && S.base[p.id].steps && S.base[p.id].steps[t.id], cfg = (t.step && t.step.config) || {}, others = p.tasks.filter((x) => x.id !== t.id);
       const runInfo = sec('Last run') + kv('status', tr ? tr.status : '—') + kv('took', tr && tr.ms != null ? dur(tr.ms) : '—') + (b ? kv('usual', dur(b.mean_ms) + ' ± ' + dur(b.sigma_ms) + ' over ' + b.n) : '')

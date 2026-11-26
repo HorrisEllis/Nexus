@@ -34,7 +34,11 @@ async function handle(q, r) {
       updatedAt: p.updatedAt, tasks: (p.tasks || []).map((t) => ({ id: t.id, label: t.label || t.id, depends_on: t.depends_on || t.dependsOn || [], step: t.step || null, gate: t.gate || null,
         retries: t.retries, onFail: t.onFail, when: t.when || null, method: t.method || null })), createdAt: p.createdAt || null }));
     for (const s of rr) for (const k of Object.keys(s.tasks)) { const v = s.tasks[k] || {}; s.tasks[k] = { status: v.status, ms: v.ms, ...(v.grownFrom ? { grownFrom: v.grownFrom, dependsOn: v.dependsOn || null, label: v.label || null, why: v.why || null, recovered: !!v.recovered } : {}), error: v.error ? head(v.error, 300) : null, out: v.output ? head(typeof v.output === 'string' ? v.output : JSON.stringify(v.output), 1500) : null }; }
-    const up = ((sys && (sys.systems || sys)) || []).map((s) => ({ name: s.name, state: s.state, port: s.port }));
+    // 2026-11-26 — James: "these are not systems. inference/model server is. remove them from the list." Each model COS runs is part of the
+    // model server: one row for it, up while any model is up, with how many are up
+    const all = ((sys && (sys.systems || sys)) || []), models = all.filter((s) => /^model-/.test(s.name));
+    const up = all.filter((s) => !/^model-/.test(s.name)).map((s) => ({ name: s.name, state: s.state, port: s.port }));
+    if (models.length) up.push({ name: 'model server', state: models.some((s) => s.state === 'up') ? 'up' : 'stopped', port: null, models: `${models.filter((s) => s.state === 'up').length}/${models.length}` });
     const host = use && use.usage ? use.usage.host : null;
     const loaded = ((ps && ps.models) || []).map((m) => ({ name: m.name, vramMB: Math.round((m.size_vram || 0) / 1048576), sizeMB: Math.round((m.size || 0) / 1048576) }));
     // the build a pipeline step runs (cos/build/emerge-build.js): its own rows on disk, so nothing in the step is invisible (James, 2026-11-24:
@@ -51,7 +55,7 @@ async function handle(q, r) {
         try { const T = path.join(ROOT, 'idearium', 'data', 'tasks'), ph = build.phase; let dir = null;
           for (const r of fs.readdirSync(T)) { let es = []; try { es = fs.readdirSync(path.join(T, r)); } catch (_) { continue; } const d = es.find((x) => x.endsWith('.' + ph)); if (d) { dir = path.join(T, r, d); break; } }
           if (dir) build.gates = fs.readdirSync(dir).filter((x) => x.endsWith('.gap')).map((x) => { const t = fs.readFileSync(path.join(dir, x), 'utf8');
-            return { name: x.replace(/^.*#/, '').replace(/\.gap$/, ''), status: ((/^\s*status:\s*([\w-]+)/m.exec(t) || [])[1]) || 'open', blocks: ((/^\s*blocks:\s*([\w$]+)/m.exec(t) || [])[1]) || null, tries: (t.match(/^\s*said:/gm) || []).length, at: fs.statSync(path.join(dir, x)).mtimeMs }; }); } catch (_) {} } } catch (_) {}
+            return { name: x.replace(/^.*#/, '').replace(/\.gap$/, ''), status: ((/^\s*status:\s*([\w-]+)/m.exec(t) || [])[1]) || 'open', blocks: ((/^\s*blocks:\s*([\w$]+)/m.exec(t) || [])[1]) || null, tries: (t.match(/^\s*said:/gm) || []).length, at: fs.statSync(path.join(dir, x)).mtimeMs, said: tail(t, 1500) }; }); } catch (_) {} } } catch (_) {}
     return json(r, { at: Date.now(), jobs: out, runs: rr, pipelines: pipes, systems: up, host, loaded, build });
   }
   // the side panel's terminal: COS's console lines, and its command line (the same route COS's Console page uses; what is typed there is his)

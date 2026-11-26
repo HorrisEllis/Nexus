@@ -76,7 +76,9 @@
     }
     st.replaceChildren(...lines);
     const ps = u.perSystem || {}; const rows = [];
-    for (const n of ps.restart || []) rows.push(h('li', {}, h('span', {}, n), h('span', {}, 'restarts by itself')));
+    // 2026-11-26 (his: "these are not systems. inference/model server is"): the models restart as the model server, one row
+    const rs = [...new Set((ps.restart || []).map((n) => (/^model-/.test(n) ? 'model server' : n)))];
+    for (const n of rs) rows.push(h('li', {}, h('span', {}, n), h('span', {}, 'restarts by itself')));
     for (const n of ps.waitForHim || []) rows.push(h('li', { class: 'wait' }, h('span', {}, n), h('span', {}, 'waits for you')));
     if (ps.kernelChanged || ps.cosChanged) rows.push(h('li', { class: 'wait' }, h('span', {}, ps.cosChanged ? 'cos' : 'lib'), h('span', {}, 'COS asks to restart')));   // CE2b: was 'loads at COS\'s next start'
     $('files').textContent = behind ? `${u.files || 0} files · ${(u.systems || []).join(', ')}` : '';

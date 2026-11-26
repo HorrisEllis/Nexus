@@ -59,6 +59,9 @@
     if (r.status === 502 && j.down) throw new Down(j.error);
     if (!r.ok || j.ok === false) { const e = new Error(j.error || `${method} ${p} answered ${r.status}`); e.status = r.status; e.body = j; throw e; }
     j._legacy = r.headers.get('X-Nexus-Legacy');
+    // 2026-11-26 — James: "these are not systems. inference/model server is. remove them from the list." A model COS runs is part of the
+    // model server, which has its own page (models) and sidebar row: every other page's list of systems leaves the models out
+    if (method === 'GET' && p === '/api/cos/systems' && Array.isArray(j.systems) && !/\/(models|shell)\//.test(location.pathname)) j.systems = j.systems.filter((s) => !/^model-/.test(s.name || ''));
     return j;
   }
 

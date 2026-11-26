@@ -38,7 +38,9 @@
     renderSystems(); markCurrent();
   }
   function renderSystems() {
-    $('sys-count').textContent = S.systems.length ? `${S.systems.filter(s => s.state === 'up').length}/${S.systems.length}` : '';
+    // the models count as one system, the model server (his, 2026-11-26: "these are not systems. inference/model server is")
+    { const own = S.systems.filter(s => !/^model-/.test(s.name)), ms = S.systems.filter(s => /^model-/.test(s.name)), n = own.length + (ms.length ? 1 : 0), up = own.filter(s => s.state === 'up').length + (ms.some(s => s.state === 'up') ? 1 : 0);
+      $('sys-count').textContent = n ? `${up}/${n}` : ''; }
     const row = (s, label, cls) => h('a', { href: `#/c/${encodeURIComponent(s.name)}`, 'data-sys': s.name, class: cls || '', title: `${s.name} — ${COS.stateLabel(s.state)}` },
       h('span', { class: 'dot', 'data-s': s.state }), h('span', {}, label || s.name), s.port ? h('span', { class: 'port' }, `:${s.port}`) : null);
     // 2026-11-25 (his: "the three models ... need to be under one system. the model server."): processes a system declares beyond its own name
