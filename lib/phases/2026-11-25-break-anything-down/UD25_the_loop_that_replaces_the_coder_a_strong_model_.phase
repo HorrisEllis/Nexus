@@ -1,0 +1,32 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-25-break-anything-down-phasemap.spec::UD25_the_loop_that_replaces_the_coder_a_strong_model_
+type: phase
+id: docs_2026-11-25-break-anything-down-phasemap.spec::UD25_the_loop_that_replaces_the_coder_a_strong_model_
+context: >-
+  pipeline phase UD25_the_loop_that_replaces_the_coder_a_strong_model_ of
+  docs/2026-11-25-break-anything-down-phasemap.spec
+intent: null
+summary: UD25_the_loop_that_replaces_the_coder_a_strong_model_ (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1795726806749
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795726806749
+lastSeenAt: 1795726806749
+fingerprint: null
+payload:
+  id: UD25_the_loop_that_replaces_the_coder_a_strong_model_
+  map: docs/2026-11-25-break-anything-down-phasemap.spec
+  repo: null
+  layer: null
+  status: pending
+  files:
+    - lib/agent-reach.js
+    - lib/repo-agent.js
+    - lib/proposal-evidence.js
+  depends_on:
+    - UD9_every_coder_intervention_broken_down_into_a_capa
+  blocks: []
+  spec: null
+  graph: c9c45d882c04ac32

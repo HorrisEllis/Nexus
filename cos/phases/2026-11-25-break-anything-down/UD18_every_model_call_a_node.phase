@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-25-break-anything-down-phasemap.spec::UD18_every_model_call_a_node
+type: phase
+id: docs_2026-11-25-break-anything-down-phasemap.spec::UD18_every_model_call_a_node
+context: pipeline phase UD18_every_model_call_a_node of docs/2026-11-25-break-anything-down-phasemap.spec
+intent: null
+summary: UD18_every_model_call_a_node (?) — 1 file(s)
+system: idearium
+tags: []
+exported_at: 1795726806733
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795726806733
+lastSeenAt: 1795726806733
+fingerprint: null
+payload:
+  id: UD18_every_model_call_a_node
+  map: docs/2026-11-25-break-anything-down-phasemap.spec
+  repo: null
+  layer: null
+  status: pending
+  files:
+    - cos/pipeline/runs.eg
+  depends_on:
+    - UD3_the_decompose_step_one_branch_per_piece_down_to_
+  blocks: []
+  spec: null
+  graph: 0d4d3afce5f25c6f

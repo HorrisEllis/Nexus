@@ -1,0 +1,233 @@
+envelope: 1
+uuid: nexus-export-graph-phase:UD25_the_loop_that_replaces_the_coder_a_strong_model_:c9c45d882c04ac32
+type: graph
+id: phase:UD25_the_loop_that_replaces_the_coder_a_strong_model_:c9c45d882c04ac32
+context: dependency graph of phase UD25_the_loop_that_replaces_the_coder_a_strong_model_
+intent: null
+summary: 27 node(s), 1 crossing(s)
+system: idearium
+tags: []
+exported_at: 1795726806749
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795726806749
+lastSeenAt: 1795726806749
+fingerprint: null
+payload:
+  for: UD25_the_loop_that_replaces_the_coder_a_strong_model_
+  kind: phase
+  repo: null
+  hash: c9c45d882c04ac32
+  nodes:
+    - path: lib/agent-reach.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/proposal-evidence.js
+      role: changes
+      exists: true
+      system: lib
+    - path: lib/repo-agent.js
+      role: changes
+      exists: true
+      system: lib
+    - path: idearium/api/build-surface.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: idearium/api/index.js
+      role: used-by
+      exists: true
+      system: idearium
+    - path: lib/code-edit.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/expectation-tests.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/gate-context.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/repo-agent-node.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/repo-inject.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: lib/test-first.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: products/flight-recorder/lib/project.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-agent-confidence-gate.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-registry-harness.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: tests/modules/test-repo-agent-provider.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cortex/memory/jaa-db.js
+      role: uses
+      exists: true
+      system: cortex
+    - path: lib/agent-providers.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tool-guide.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/idearium/code.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/agent-tools/tools/nexus/tool-layers.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/code-intel/index.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/context-atlas.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/nexus-client.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/registry-harness.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/repo-context.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/repo-hat-memory.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/repo-hat.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: lib/repo-agent.js
+      to: lib/repo-hat.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/repo-hat-memory.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: cortex/memory/jaa-db.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/agent-providers.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/agent-tools/tools/idearium/code.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/agent-tools/tools/nexus/tool-layers.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/agent-tools/tool-guide.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/repo-context.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/registry-harness.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/code-intel/index.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/context-atlas.js
+      kind: requires
+    - from: lib/repo-agent.js
+      to: lib/nexus-client.js
+      kind: requires
+    - from: idearium/api/build-surface.js
+      to: lib/repo-agent.js
+      kind: requires
+    - from: idearium/api/index.js
+      to: lib/repo-agent.js
+      kind: requires
+    - from: lib/gate-context.js
+      to: lib/repo-agent.js
+      kind: requires
+    - from: lib/repo-agent-node.js
+      to: lib/repo-agent.js
+      kind: requires
+    - from: tests/modules/test-agent-confidence-gate.test.js
+      to: lib/repo-agent.js
+      kind: requires
+    - from: tests/modules/test-registry-harness.test.js
+      to: lib/repo-agent.js
+      kind: requires
+    - from: tests/modules/test-repo-agent-provider.js
+      to: lib/repo-agent.js
+      kind: requires
+    - from: lib/code-edit.js
+      to: lib/proposal-evidence.js
+      kind: requires
+    - from: lib/expectation-tests.js
+      to: lib/proposal-evidence.js
+      kind: requires
+    - from: lib/repo-inject.js
+      to: lib/proposal-evidence.js
+      kind: requires
+    - from: lib/test-first.js
+      to: lib/proposal-evidence.js
+      kind: requires
+    - from: products/flight-recorder/lib/project.js
+      to: lib/proposal-evidence.js
+      kind: requires
+  crossings:
+    - from: lib/repo-agent.js
+      to: cortex/memory/jaa-db.js
+      fromSystem: lib
+      toSystem: cortex
+      kind: upward
+      known: true
+  ready: true
+  dag:
+    layer: 4
+    deps:
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD9_every_coder_intervention_broken_down_into_a_capa
+    dependents: []
+    upstream:
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD1_the_unit_a_piece_with_its_parent_contract_gate_a
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD2_is_it_even_a_framework_problem_the_gate_before_b
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD3_the_decompose_step_one_branch_per_piece_down_to_
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD9_every_coder_intervention_broken_down_into_a_capa
+    downstream: []
+    blockedBy:
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD9_every_coder_intervention_broken_down_into_a_capa
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 4 · blocked by UD9_every_coder_intervention_broken_down_into_a_capa
+      - 'depends on (1): UD9_every_coder_intervention_broken_down_into_a_capa · all upstream 4'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-11-25-break-anything-down-phasemap.spec::UD9_every_coder_intervention_broken_down_into_a_capa
+        kind: declared

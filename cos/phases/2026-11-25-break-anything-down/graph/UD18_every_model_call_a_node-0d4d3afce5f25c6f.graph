@@ -1,0 +1,62 @@
+envelope: 1
+uuid: nexus-export-graph-phase:UD18_every_model_call_a_node:0d4d3afce5f25c6f
+type: graph
+id: phase:UD18_every_model_call_a_node:0d4d3afce5f25c6f
+context: dependency graph of phase UD18_every_model_call_a_node
+intent: null
+summary: 1 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1795726806733
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795726806733
+lastSeenAt: 1795726806733
+fingerprint: null
+payload:
+  for: UD18_every_model_call_a_node
+  kind: phase
+  repo: null
+  hash: 0d4d3afce5f25c6f
+  nodes:
+    - path: cos/pipeline/runs.eg
+      role: changes
+      exists: true
+      system: cos
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD3_the_decompose_step_one_branch_per_piece_down_to_
+    dependents:
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD19_the_phases_built_bottom_up_node_by_node
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD21_each_piece_built_through_warp_2_behind_its_own_s
+    upstream:
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD1_the_unit_a_piece_with_its_parent_contract_gate_a
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD2_is_it_even_a_framework_problem_the_gate_before_b
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD3_the_decompose_step_one_branch_per_piece_down_to_
+    downstream:
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD19_the_phases_built_bottom_up_node_by_node
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD21_each_piece_built_through_warp_2_behind_its_own_s
+    blockedBy:
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD3_the_decompose_step_one_branch_per_piece_down_to_
+    unlocks: []
+    conflicts:
+      - with: docs/2026-11-25-break-anything-down-phasemap.spec::UD13_idearium_decomposition_moves_into_the_pipeline
+        files:
+          - cos/pipeline/runs.eg
+    dangling: []
+    lines:
+      - layer 3 · blocked by UD3_the_decompose_step_one_branch_per_piece_down_to_
+      - 'depends on (1): UD3_the_decompose_step_one_branch_per_piece_down_to_ · all upstream 3'
+      - >-
+        needed by (2): UD19_the_phases_built_bottom_up_node_by_node,
+        UD21_each_piece_built_through_warp_2_behind_its_own_s
+      - >-
+        same files as UD13_idearium_decomposition_moves_into_the_pipeline with no order between
+        them: cos/pipeline/runs.eg
+    edges:
+      - from: docs/2026-11-25-break-anything-down-phasemap.spec::UD3_the_decompose_step_one_branch_per_piece_down_to_
+        kind: declared

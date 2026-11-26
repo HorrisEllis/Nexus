@@ -7,11 +7,11 @@ intent: null
 summary: 4 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1795720534539
+exported_at: 1795723461959
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1795720534539
-lastSeenAt: 1795720534539
+firstSeenAt: 1795723461959
+lastSeenAt: 1795723461959
 fingerprint: null
 payload:
   for: CGE3_web_models_as_engines
@@ -49,12 +49,15 @@ payload:
     deps:
       - docs/2026-11-26-clear-glass-engine-phasemap.spec::CGE1_why_chatgpt_shows_the_login_page
       - docs/2026-11-26-cos-service-and-resources-phasemap.spec::SR2_engines_beneath_the_supervisor
-    dependents: []
+    dependents:
+      - docs/2026-11-26-clear-glass-engine-phasemap.spec::CGE5_sign_in_buttons_like_app_passwords
     upstream:
       - docs/2026-11-26-clear-glass-engine-phasemap.spec::CGE1_why_chatgpt_shows_the_login_page
       - docs/2026-11-26-cos-service-and-resources-phasemap.spec::SR1_the_supervisor_is_the_service
       - docs/2026-11-26-cos-service-and-resources-phasemap.spec::SR2_engines_beneath_the_supervisor
-    downstream: []
+    downstream:
+      - docs/2026-11-26-clear-glass-engine-phasemap.spec::CGE5_sign_in_buttons_like_app_passwords
+      - docs/2026-11-26-clear-glass-engine-phasemap.spec::CGE8_logins_by_id_into_the_mesh_and_guardian
     blockedBy:
       - docs/2026-11-26-clear-glass-engine-phasemap.spec::CGE1_why_chatgpt_shows_the_login_page
       - docs/2026-11-26-cos-service-and-resources-phasemap.spec::SR2_engines_beneath_the_supervisor
@@ -68,7 +71,7 @@ payload:
       - >-
         depends on (2): CGE1_why_chatgpt_shows_the_login_page, SR2_engines_beneath_the_supervisor ·
         all upstream 3
-      - 'needed by (0): —'
+      - 'needed by (1): CGE5_sign_in_buttons_like_app_passwords · all downstream 2'
     edges:
       - from: docs/2026-11-26-clear-glass-engine-phasemap.spec::CGE1_why_chatgpt_shows_the_login_page
         kind: declared

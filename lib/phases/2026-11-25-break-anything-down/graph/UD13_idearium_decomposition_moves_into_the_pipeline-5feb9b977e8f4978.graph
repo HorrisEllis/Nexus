@@ -7,11 +7,11 @@ intent: null
 summary: 26 node(s), 2 crossing(s)
 system: idearium
 tags: []
-exported_at: 1795685012136
+exported_at: 1795726806722
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1795685012136
-lastSeenAt: 1795685012136
+firstSeenAt: 1795726806722
+lastSeenAt: 1795726806722
 fingerprint: null
 payload:
   for: UD13_idearium_decomposition_moves_into_the_pipeline
@@ -214,12 +214,22 @@ payload:
     blockedBy:
       - docs/2026-11-25-break-anything-down-phasemap.spec::UD3_the_decompose_step_one_branch_per_piece_down_to_
     unlocks: []
-    conflicts: []
+    conflicts:
+      - with: docs/2026-11-25-break-anything-down-phasemap.spec::UD18_every_model_call_a_node
+        files:
+          - cos/pipeline/runs.eg
+      - with: docs/2026-11-25-break-anything-down-phasemap.spec::UD24_the_dag_from_the_end_state_backwards
+        files:
+          - lib/end-state.js
     dangling: []
     lines:
       - layer 3 · blocked by UD3_the_decompose_step_one_branch_per_piece_down_to_
       - 'depends on (1): UD3_the_decompose_step_one_branch_per_piece_down_to_ · all upstream 3'
       - 'needed by (0): —'
+      - 'same files as UD18_every_model_call_a_node with no order between them: cos/pipeline/runs.eg'
+      - >-
+        same files as UD24_the_dag_from_the_end_state_backwards with no order between them:
+        lib/end-state.js
     edges:
       - from: docs/2026-11-25-break-anything-down-phasemap.spec::UD3_the_decompose_step_one_branch_per_piece_down_to_
         kind: declared

@@ -31,6 +31,7 @@ phases:
     depends_on: []
     does: >
       A piece of anything is a node: its parent, its contract (the end state it must reach), its gate (what checks it) and its builder (who or what fills it). It is the smallest unit when one gate can check it and the smallest model can fill it; above that it is broken down again. Agnostic: a code phase, a document, a plan, a song, a conversation, a framework.
+      Expanded 2026-11-26, his: "Okay but it's running a phasemap. Like each node is one unit of something, which can break down into its. Like an idea can be created into a spec, then in phases, then in phase nodes, dag per gate for a check list of what's needed. Like each node can be an end state and broken down." · "like each node is a chunk, its own piece in the progress bar". The same unit at every level: an idea becomes a spec, the spec its phases, a phase its phase nodes (.phase node files under it, each persisted), and any node breaks down again the same way. Every node is an end state; its gate holds a DAG, the checklist of what that node needs, and the node is met when its checklist is. Each node is one chunk of its parent's progress (the pipeline list's increments, 2026-11-26), and opens into its own layer on the canvas.
 
   UD2_is_it_even_a_framework_problem_the_gate_before_b:
     status: pending
