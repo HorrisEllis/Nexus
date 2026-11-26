@@ -365,7 +365,7 @@ const ADVERSARIES = String(arg('adversaries', '')).split(',').map((x) => x.trim(
   let res = null, t = null, out = '', T = null;
   for (let round = 1; round <= ROUNDS; round++) {
     row('round', { note: `round ${round} of ${ROUNDS}`, round });
-    try { res = await rung.build({ file: src.path, exports: PIECES ? PIECES.map((p) => ({ name: p.name, signature: `${p.name}(${p.sig}) -> ${p.ret}`, does: p.does })) : withContracts(withParams(src.path, src.exports || [])), expectation: testText, context: String(ph.does || ''), contract }); } catch (e) { res = { ok: false, why: e.message, tries: [] }; }
+    try { res = await rung.build({ file: src.path, exports: PIECES ? PIECES.map((p) => ({ name: p.name, signature: `${p.name}(${p.sig}) -> ${p.ret}`, does: p.does })) : withContracts(withParams(src.path, src.exports || [])), expectation: testText, context: String(ph.does || ''), contract, only: arg('only', null) || null }); } catch (e) { res = { ok: false, why: e.message, tries: [] }; }
     row(res.ok ? 'emerge-passed' : 'emerge-held', { note: res.why, tries: (res.tries || []).length, gapFiles: res.gapFiles || [], round });
     // the lab view (his "i need to see pipeline"): each piece's outcome kept in this build's own rows, so COS shows it without reading Idearium's files
     try { const pre = require(path.join(ROOT, 'lib', 'node-export.js')).fileIdOf(src.path + '#'), ps = [];

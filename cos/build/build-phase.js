@@ -15,6 +15,38 @@ const LADDER = inp.ladder || 'huihui_ai/qwen2.5-coder-abliterate:3b,hf.co/mrader
 const lastRun = () => fs.readdirSync(BUILD).filter((f) => /^cbuild-.*\.jsonl$/.test(f)).map((f) => ({ f, t: fs.statSync(path.join(BUILD, f)).mtimeMs })).sort((a, b) => b.t - a.t)[0];
 const rowsOf = (f) => fs.readFileSync(path.join(BUILD, f), 'utf8').split('\n').filter(Boolean).map((l) => { try { return JSON.parse(l); } catch (_) { return {}; } });
 const rounds = []; let best = -1;
+// 2026-11-26 — one piece, one step (his: "it should not be one box. one box is one step. each step has to build upon the last"). With
+// input.steps, the first step plans: one branch per planned piece not yet passed, each waiting on the one before. A piece's step builds only
+// that piece (emerge-build --only); a helper it needs becomes its own step, then the piece again after it; held with nothing to break it into,
+// the step fails and grows its recovery (the failure filed, the next model up), as a whole build does.
+if (inp.steps) {
+  const SID = (s) => String(s).replace(/[^\w.:-]/g, '_');
+  const builds = () => fs.readdirSync(BUILD).filter((f) => /^cbuild-.*\.jsonl$/.test(f)).map((f) => ({ f, t: fs.statSync(path.join(BUILD, f)).mtimeMs })).sort((a, b) => b.t - a.t)
+    .map((x) => ({ f: x.f, rs: rowsOf(x.f) })).filter((b) => (b.rs[0] || {}).phase === PHASE);
+  const pieceStep = (name, why, deps) => ({ id: `${PHASE}:${SID(name)}`, label: `build ${name}`, why, ...(deps ? { depends_on: deps } : {}),
+    step: { type: 'script', config: { script: 'build-phase.js', input: { ...inp, piece: name }, timeoutMs: 2700000 } } });
+  const run1 = (piece) => spawnSync(process.execPath, [path.join(ROOT, 'cos', 'build', 'emerge-build.js'), '--map', MAP, '--phase', PHASE, '--ladder', LADDER, ...(piece ? ['--only', piece] : []), ...(inp.adversaries ? ['--adversaries', String(inp.adversaries)] : [])], { cwd: ROOT, stdio: 'ignore', timeout: 3 * 3600 * 1000 });
+  if (!inp.piece) {
+    let b = builds()[0]; if (!b || !b.rs.some((r) => r.state === 'planned')) { run1(null); b = builds()[0]; }
+    const rs = (b && b.rs) || [], planned = (((rs.find((r) => r.state === 'planned') || {}).exports) || []).map((x) => x.name);
+    const pcs = ([...rs].reverse().find((r) => r.state === 'pieces') || {}).pieces || [], ok = new Set(pcs.filter((p) => p.status === 'passed').map((p) => p.name));
+    const todo = planned.filter((n) => !ok.has(n)); let prev = null;
+    const branches = todo.map((n, i) => { const s = pieceStep(n, i ? `after ${todo[i - 1]}` : 'the first piece not yet built', prev ? [prev] : null); prev = s.id; return s; });
+    console.log(JSON.stringify({ ok: true, phase: PHASE, planned, passed: [...ok].filter((n) => planned.includes(n)), branches }));
+    process.exit(0);
+  }
+  run1(inp.piece);
+  const rs = (builds()[0] || {}).rs || [], pcs = ([...rs].reverse().find((r) => r.state === 'pieces') || {}).pieces || [], me = pcs.find((p) => p.name === inp.piece) || {};
+  if (me.status === 'passed') { console.log(JSON.stringify({ ok: true, phase: PHASE, piece: inp.piece, tries: me.tries, models: me.models })); process.exit(0); }
+  const helpers = pcs.filter((p) => p.blocks === inp.piece && p.status !== 'passed').map((p) => p.name);
+  if (helpers.length) {
+    const hs = helpers.map((h) => pieceStep(h, `${inp.piece} needs it first`));
+    const again = { ...pieceStep(inp.piece, `again, with ${helpers.join(', ')}`, hs.map((h) => h.id)), id: `${PHASE}:${SID(inp.piece)}:again` };
+    console.log(JSON.stringify({ ok: false, phase: PHASE, piece: inp.piece, why: `${inp.piece} needs ${helpers.join(', ')} first`, branches: [...hs, again] }));
+    process.exit(1);
+  }
+  rounds.push({ round: 1, run: null, last: me.status || 'held', passed: 0, of: 1, note: String(me.last || '').slice(0, 300) });
+} else {
 for (let i = 1; i <= ROUNDS; i++) {
   spawnSync(process.execPath, [path.join(ROOT, 'cos', 'build', 'emerge-build.js'), '--map', MAP, '--phase', PHASE, '--ladder', LADDER, ...(inp.adversaries ? ['--adversaries', String(inp.adversaries)] : [])], { cwd: ROOT, stdio: 'ignore', timeout: 3 * 3600 * 1000 });
   const run = lastRun(), rs = run ? rowsOf(run.f) : [], end = rs[rs.length - 1] || {}, pcs = ([...rs].reverse().find((r) => r.state === 'pieces') || {}).pieces || [];
@@ -26,6 +58,7 @@ for (let i = 1; i <= ROUNDS; i++) {
   console.log(`round ${i}: ${end.state} · ${passed} of ${pcs.length} pieces passed`);
   if (done) { console.log(JSON.stringify({ ok: true, phase: PHASE, rounds })); process.exit(0); }
   if (passed <= best) break; best = passed;
+}
 }
 // 2026-11-25 (his: "Have it expand itself, fix itself, get it working using nexus to get it working if not ... This is meant to be autonoius"):
 // a build that made no progress says what to try next, as branches the pipeline grows (PC26): the failure filed with Cortex (evidence, never a

@@ -444,7 +444,7 @@ function createRung({ root = path.resolve(__dirname, '..', '..'), ask, expect, m
   const templTried = new Set();   // EMB7: one template try per gap per run
   const firstLines = (s, n = 8) => _q(s).split('\n').map(l => l.trim()).filter(Boolean).slice(0, n).join('\n');
 
-  async function build({ file, exports = [], expectation = null, context = '', skeleton = true, contract = null } = {}) {
+  async function build({ file, exports = [], expectation = null, context = '', skeleton = true, contract = null, only = null } = {}) {
     const f = _q(file).replace(/\\/g, '/'); const dir = path.posix.dirname(f); const base = path.posix.basename(f).replace(/\.[cm]?js$/, '');
     const at = (x) => (dir === '.' ? x : `${dir}/${x}`);
     const names = exports.map(e => (typeof e === 'string' ? e : e.name)).filter(Boolean);
@@ -474,10 +474,15 @@ function createRung({ root = path.resolve(__dirname, '..', '..'), ask, expect, m
       // 0.60.613 — the ladder, smallest model first (his "the smaller we can get llms in ollama coding the better"; PC_D16 "ollama first"); his
       // framework per gate (his "My whole framework"): the brief of each gate carries his framework's steps for it, read from his .framework.
       const fillMethod = M('fill'), diagnoseMethod = M('diagnose'), testMethod = M('test');
-      let roundsAt = 0, refused = {};   // this run's compiler refusals, per gap and rung; cleared when a helper changes what can compile
+      let roundsAt = 0, refused = {}, onlyStop = false;   // this run's compiler refusals, per gap and rung; cleared when a helper changes what can compile
       for (let round = 0; ; round++) {
+      // 2026-11-26 (his: "it should not be one box. one box is one step. each step has to build upon the last"): o.only builds that one piece,
+      // a pipeline step of its own; it stops when the piece passed, was held, or needs a helper first (the helper is the next step, named)
+      if (onlyStop) break;
+      if (only && round === 0) chain = [only, ...chain.filter(x => x !== only)];
       while (chain.some(x => filled[x] == null) && !held) {
         const name = chain.find(x => filled[x] == null);
+        if (only && name !== only) { onlyStop = true; tries.push({ n: 0, stage: 'only', why: filled[only] != null ? `${only} passed` : `${only} needs ${name} first`, gap: name }); break; }
         const gap = G.as_gap({ id: name, missingVariable: 'the body of ' + name, affectedConstraint: f + ' compiles in Emerge and passes its expectation', source: 'emerge-rung' });
         const rec = recs[name] || (store && store.read(name)) || { ...gap, status: 'open', attempts: [] }; recs[name] = rec;
         if (!Array.isArray(rec.attempts)) rec.attempts = [];
