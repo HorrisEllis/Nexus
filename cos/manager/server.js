@@ -391,6 +391,12 @@ function createServer(sup, opts = {}) {
           if (!offered) return send(res, 404, { ok: false, error: `${sys} offers no in hook ${db[3]}`, hooks: (reg.value && reg.value.hooks) || [] });
           const q = body && typeof body === 'object' ? { ...body } : {};   // the body is read once, above, for every /api/cos write
           if (q.home == null) q.home = require('os').homedir().replace(/\\/g, '/');
+          // 2026-11-26 — James: "raid needs to connect to each drawbridge." Every call through a drawbridge is RAID's to decide and record,
+          // with what it carries; RAID out of reach, an agent's or a rule's call is refused (fail closed) and a person's goes on, said
+          { const by = String(q.by || 'person'), proof = { kind: 'stated', system: sys, hook: db[3], by, carries: Object.keys(q).filter((k) => k !== 'home').slice(0, 12), at: Date.now() };
+            let v = null; try { v = await require('../../lib/raid-port.js').approveTool(sys, `${sys}.${db[3]}`, { action: db[3], intent: { action: db[3], target: sys }, causedBy: by, proof }); } catch (e) { v = { approved: null, reason: `RAID unreachable: ${e.message}` }; }
+            if (v && v.approved === false) return send(res, 403, { ok: false, refused: true, error: `RAID did not approve ${sys}.${db[3]} for ${by}: ${v.reason || 'no reason'}` });
+            if (!v || v.approved == null) { if (/^(agent|rule):/.test(by)) return send(res, 503, { ok: false, error: `RAID could not be asked about ${sys}.${db[3]} for ${by}: ${(v && v.reason) || 'no answer'}` }); sup.note('raid-unasked', `${sys}.${db[3]} for ${by} went on without RAID: ${(v && v.reason) || 'no answer'}`, { by }); } }
           return send(res, 200, run(db[3], q));
         } }
       { const lm = /^\/api\/cos\/systems\/([^/]+)\/location$/.exec(p);
