@@ -671,3 +671,11 @@ related:
 #   compiles, not passed, until the piece that needed it passes.
 # Next, the coder's reading, his to order: (1) the mechanical fixes above in the autocorrect, ranked by this census; (2) F8; (3) his pinned
 # base model trained on Emerge, from these records (each refused try, its refusal, its fix, the right body).
+
+# ADDENDUM 0.60.664 (2026-11-25) — EMB12 on real work, EMB10 with three adversaries (T17)
+# James: "test the pipeline while testing them, while building the pipeline ... So why are you wasting it on garbage?". Two EMB10 runs with
+# the adversary on qwen2.5-coder, llama3.2 and smallthinker (abliterated 3b). The adversary caught nothing; two wrong helpers passed
+# ("if key == key"): their sentence was the type word "bool" and the readers' answers were misread. Fixed: gaps.eg self_defeating (the
+# compiler side, no model: it refused one on the next run), a helper's sentence never a type word, numbered cases with raw replies kept, the
+# bridge woken through RAID with proof, a step that did not build its phase fails. 13 of 18 pieces; served_by held at 110 tries: the 3b
+# parses JSON where its sentence says read as text. T17 judged in docs/FRAMEWORK-THREADS.md.

@@ -28,3 +28,6 @@ for (let i = 1; i <= ROUNDS; i++) {
   if (passed <= best) break; best = passed;
 }
 console.log(JSON.stringify({ ok: false, phase: PHASE, why: 'a round made no progress', rounds }));
+// 2026-11-25 (his: "nothing in nexus wouldn't be explicit"): a phase not built is a failed step, so its gate holds and its retries run; it exited 0
+// and COS showed EMB10's run ff13a979 as done with served_by held
+process.exit(1);

@@ -614,7 +614,18 @@ by the focus.
   4. Three engines run at once without an engine failing to load or crashing. Measured: COS's records of each engine.
   5. EMB10 does not complete in this run either (served_by holds again), and the run is slower than the baseline by at least 2×, the cost of
      criticism (his: "more tokens wasted on unstable code than doing the work of critisizing it"). Measured: pieces passed, wall time.
-- **Evidence:** open.
+- **Evidence (2026-11-25, runs e1968c61 and ff13a979; judged by the coder who predicted, so post-hoc risk stands):**
+  1. **Held, but empty.** The gate refused nothing at all (0 refusals on 3 pieces read), so it refused nothing correct; that is not a test.
+  2. **Failed.** The gate caught nothing. Two wrong helpers passed it ("for key in obj { if key == key ...}", "item == item": always true).
+     Why: the helpers' sentence was the type word "bool", so there was nothing to judge against; and the readers' answers were misread
+     (their arguments taken for results). What caught them instead was the compiler side, no model asked: gaps.eg self_defeating, added
+     after, which refused contains_item_in_array on the next run with "the loop's name item is also a parameter's".
+  3. **Failed.** Every tension recorded was a misread answer, not an ambiguity in a sentence.
+  4. **Held.** All three engines answered every adversary call on both runs; none failed to load.
+  5. **Held in part.** EMB10 did not complete (13 of 18, served_by held at 110 tries). The 2× slowdown was not measured: the baseline's wall
+     time was not kept. Also found: the run reported done while the phase was not built (the step exited 0); fixed in 0.60.664.
+  What the run taught, the point of running it on real work (his "why are you wasting it on garbage?"): four integration faults a toy could
+  not show (the bridge's wake refused by RAID, the self-defeating bodies, helpers without a sentence, misread readers), all fixed in 0.60.664.
 
 ## EMB8 measured, the contract per piece (2026-11-24, his: "yes like constraints, need to be acknowledged also. my framework does all of this. at every level across any domain")
 
