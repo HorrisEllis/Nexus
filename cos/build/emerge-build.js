@@ -25,6 +25,7 @@ const LADDER = String(arg('ladder', 'huihui_ai/qwen2.5-coder-abliterate:3b,hf.co
 // James, 2026-11-23: "each step builds upon the last". --pieces <file.json>: the phase's small pieces, each [{ name, sig, ret, does, body }], already written and passed: no model is asked again
 const PIECES = arg('pieces') ? JSON.parse(fs.readFileSync(arg('pieces'), 'utf8')) : null, pieceBody = (gap) => { const p = (PIECES || []).find((x) => x.name === gap); if (!p) throw new Error('no piece ' + gap); return p.body; };
 const OLLAMA = Number(arg('ollama-port', 3749)), TASKS = arg('tasks', path.join(ROOT, 'idearium', 'data', 'tasks'));
+const ADVERSARIES = String(arg('adversaries', '')).split(',').map((x) => x.trim()).filter(Boolean);
 if (!MAP || !PHASE) { console.error('usage: --map <docs/….spec> --phase <PHASE_ID> [--ladder a,b,c] [--land]'); process.exit(2); }
 
 const RUN = `cbuild-${Date.now().toString(36)}`, LOG = path.join(ROOT, 'cos', 'data', 'build', RUN + '.jsonl');
@@ -411,7 +412,6 @@ async function endState({ ph, plan, src, mapText }) {
   const ER = require(path.join(ROOT, 'idearium', 'lib', 'emerge-rung.cjs')), EXT = require(path.join(ROOT, 'lib', 'expectation-tests.js'));
   const contract = `${REPO}/${MAP.split('/').pop().replace(/\.spec$/, '').replace(/[^A-Za-z0-9._-]/g, '_')}.${PHASE}`;
   // EMB12: the adversary gate's readers, three different models (--adversaries a,b,c); none given, the building model reads
-const ADVERSARIES = String(arg('adversaries', '')).split(',').map((x) => x.trim()).filter(Boolean);
   const rung = ER.createRung({ root: ROOT, maxTries: 3, tasksDir: TASKS, model: LADDER[0], method: null,
     adversaries: PIECES ? null : ADVERSARIES.map((m) => ({ name: m, ask: (message, { gap, tryNo } = {}) => ask(message, m, (gap || '') + ':adversary', tryNo) })),
     ladder: LADDER.map((m) => ({ name: PIECES ? 'the passed pieces' : m, ask: (message, { gap, tryNo } = {}) => (PIECES ? Promise.resolve(pieceBody(gap)) : ask(message, m, gap, tryNo)) })), ask: (message, { gap } = {}) => (PIECES ? Promise.resolve(pieceBody(gap)) : ask(message, LADDER[0], gap)),
