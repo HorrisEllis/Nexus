@@ -289,7 +289,7 @@ payload:
       emerge/lib/envelope.js: 31818d4ae1dec65f2c3ac3f4b4714812beb26af85d72b42d97d501d9b87b6c55
       emerge/lib/handoff.js: 7a9b2e6e19a2c80a304e2d6f5e64cecf5c77c38a65e33d8e1009f541ab92e430
       emerge/lib/heartbeat.js: 11bffecbc28656510b630cff49f96ba3618fb142cf847e74b06f8fb4abb379e9
-      emerge/lib/lang.js: 872ab3381fa3ed2ee1ed944756f016398d5824d96fc4b4b41d8692b6ac27cf02
+      emerge/lib/lang.js: 21cbf19e101cb997c32785a18a933ac87d9ec749ddc85996a4df421dc86cb4be
       emerge/lib/ledger.js: ef0f7b2e871612811dc13c88441aa04887a762d833ab33eb3109f9b83924e01e
       emerge/lib/listener.js: fdbcd76168e6e1b54ed99be09ac9b49b8a9309327e4f23837867aa76c462cdeb
       emerge/lib/modules.js: 73b74f559645475b452604037ad952c85ffdc3236b5f0ae58ac511610df570b5
