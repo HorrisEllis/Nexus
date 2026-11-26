@@ -328,7 +328,25 @@ async function endState({ ph, plan, src, mapText }) {
   if (END_STATE) process.exit(await endState({ ph, plan, src, mapText }));
   // 3. the test, from the phase's examples (no model)
   const TF = require(path.join(ROOT, 'lib', 'test-first.js')), testPath = TF.pathFor(plan, PHASE), moduleType = TF.moduleTypeFor(ROOT, src.path);
-  const examples = TF.examplesFrom(mapText, PHASE), tf = TF.fromExamples({ plan, testPath, examples, moduleType }), testText = tf && (tf.content || tf.text || tf.test || (typeof tf === 'string' ? tf : null));
+  let examples = TF.examplesFrom(mapText, PHASE);
+  // UD23 (his: "It needs to never need you at somepoint. Follows the axioms. Inside nexus first."): no examples in the map, so three readers
+  // agree on them from each function's own sentence; only agreed ones are used, written down as agreed-not-confirmed (his yes may confirm)
+  if (!examples.length) {
+    const three = ADVERSARIES.length >= 3 ? ADVERSARIES : ['huihui_ai/qwen2.5-coder-abliterate:3b', 'huihui_ai/llama3.2-abliterate:3b', 'huihui_ai/smallthinker-abliterated:3b'];
+    const readers = three.map((m) => ({ name: m, ask: (message, { gap } = {}) => ask(message, m, (gap || '') + ':examples', 1) }));
+    const agreed = [];
+    for (const e of (src.exports || []).filter((x) => /\(/.test(x.signature || ''))) {
+      const does = String(e.does || ph.does || '').slice(0, 600);
+      const r = await require(path.join(ROOT, 'idearium', 'lib', 'emerge-rung.cjs')).agreedExamples({ name: e.name, signature: e.signature, does, readers });
+      row('examples-agreed', { gap: e.name, note: r.why, examples: r.examples, tension: r.tension.slice(0, 6) });
+      agreed.push(...r.examples);
+    }
+    if (agreed.length) {
+      examples = agreed;
+      try { fs.mkdirSync(TASKS, { recursive: true }); fs.writeFileSync(path.join(TASKS, `${PHASE}.examples.json`), JSON.stringify({ phase: PHASE, map: MAP, agreedBy: three, confirmedByJames: false, at: Date.now(), examples: agreed }, null, 1)); } catch (_) {}
+    }
+  }
+  const tf = TF.fromExamples({ plan, testPath, examples, moduleType }), testText = tf && (tf.content || tf.text || tf.test || (typeof tf === 'string' ? tf : null));
   if (!testText) { row('refused', { note: 'no test from the examples: ' + JSON.stringify(tf).slice(0, 300) }); process.exit(1); }
   row('test-written', { note: `${testPath} from ${examples.length} examples (no model)`, testPath, examples: examples.length });
   // 4. the code: the Emerge rung, its ladder smallest first, each call through the Ollama system

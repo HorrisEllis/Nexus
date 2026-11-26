@@ -36,8 +36,10 @@ if (inp.queue) {
     // "pieces" were a JavaScript file's constants
     const TF = require(path.join(ROOT, 'lib', 'test-first.js')), mapText = {};
     const hasExamples = (x) => { try { mapText[x.map] = mapText[x.map] || fs.readFileSync(path.join(ROOT, x.map), 'utf8'); return (TF.examplesFrom(mapText[x.map], x.id) || []).length > 0; } catch (_) { return false; } };
-    const emerge = (x) => (x.files || []).some((f) => /\.eg$/.test(f) && !/(^|\/)test\//.test(f) && !/\.test\.eg$/.test(f)) && hasExamples(x);
-    const take = q.queue.filter(emerge).slice(0, Number(inp.limit) || 3);
+    // UD23: a phase without examples is taken too now: the builder has three readers agree on them first (examples-agreed); those with
+    // examples of his go first
+    const emerge = (x) => (x.files || []).some((f) => /\.eg$/.test(f) && !/(^|\/)test\//.test(f) && !/\.test\.eg$/.test(f));
+    const take = q.queue.filter(emerge).sort((a, b) => Number(hasExamples(b)) - Number(hasExamples(a))).slice(0, Number(inp.limit) || 3);
     const skipped = q.queue.filter((x) => !emerge(x)).slice(0, 10).map((x) => `${x.id} (${(x.files || []).some((f) => /\.eg$/.test(f)) ? 'no examples to build against' : 'no Emerge file of its own'})`);
     const SID = (s) => String(s).replace(/[^\w.:-]/g, '_');
     const branches = take.map((x) => ({ id: `phase:${SID(x.id)}`, label: `build ${x.id}`, why: `ready, unlocks ${x.unlocks}: ${x.why}`, onFail: 'continue',

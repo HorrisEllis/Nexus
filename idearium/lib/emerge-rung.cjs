@@ -667,4 +667,29 @@ function createRung({ root = path.resolve(__dirname, '..', '..'), ask, expect, m
   return { build, eg };
 }
 
-module.exports = { MODULE_ID, VERSION: '1.5.0', adversaryCheck, CARD, brief, briefPiece, cardFor, briefTemplate, templateOf, TEMPLATE_MENU, extract, adapter, createRung, skeletonOf, paramsOf, bodyOf, briefGap, gapStore, taskDirOf, listGaps, moduleTypeOf };
+// UD23 (his, 2026-11-26: "It needs to never need you at somepoint. Follows the axioms. Inside nexus first."): examples for a function that has
+// none, by three readers agreeing. One writes cases from the function's own sentence (never from code: there is none yet); two others read
+// the calls blind and give the result the sentence says; only cases all three agree on are kept, each marked agreed, not confirmed by him.
+async function agreedExamples({ name, signature, does, readers }) {
+  if (!does || !readers || readers.length < 3) return { examples: [], tension: [], why: !does ? 'no sentence to read' : 'three readers are needed' };
+  const [rA, rB, rC] = readers, sf = { signature: signature || name, does, contract: { examples: [] } };
+  const askA = ['Function: ' + (signature || name), 'What it must do: ' + does,
+    'Write 6 examples that show exactly what it must do: ordinary cases first, then the edges (empty, one, many, a near miss).',
+    'Each on its own line, exactly: ' + name + '(arguments) == expected, arguments and expected as literals (strings in double quotes, lists [a, b], maps { k: v }). Only the lines.'].join('\n');
+  let a = ''; try { a = await rA.ask(askA, { gap: name, examples: 'a' }); } catch (_) { return { examples: [], tension: [], why: 'the first reader did not answer' }; }
+  const cases = [...new Set(_adv.clean(a, name).filter((l) => _adv.readable(l) && _adv.fits(l, sf.signature)))].slice(0, 8);
+  if (!cases.length) return { examples: [], tension: [], why: 'no readable case was written' };
+  const askB = ['Function: ' + (signature || name), 'What it must do: ' + does,
+    'For each numbered call below, write the result this description says, by its number, one line each:  <number>. <result as a literal>  Only the lines.', ...cases.map((l, i) => (i + 1) + '. ' + _adv.callOf(l))].join('\n');
+  const byNum = (text) => { const out = {}; let cur = null; for (const raw of String(text || '').split('\n')) { const s = raw.trim().replace(/`/g, ''); const m = /^\**(\d+)\**[.):]\s*(.*)$/.exec(s); if (m) cur = Number(m[1]) - 1;
+    const r = /(?:==|->|=>|→|Result:|result\s*=)\s*([^=>]+?)\s*\.?$/i.exec(m ? m[2] : s); const v = r ? r[1].trim() : (m ? m[2].trim() : null);
+    if (cur != null && cur >= 0 && cur < cases.length && v && out[cur] === undefined) { try { _adv.lit(v); out[cur] = v; } catch (_) {} } } return out; };
+  let b = '', c = ''; try { b = await rB.ask(askB, { gap: name, examples: 'b' }); } catch (_) {} try { c = await rC.ask(askB, { gap: name, examples: 'c' }); } catch (_) {}
+  const wb = byNum(b), wc = byNum(c), examples = [], tension = [];
+  cases.forEach((l, i) => { const wa = _adv.wantOf(l);
+    if (wb[i] !== undefined && wc[i] !== undefined && _adv.sameLit(wa, wb[i]) && _adv.sameLit(wa, wc[i])) examples.push(l);
+    else tension.push(`${_adv.callOf(l)}: the readings say ${wa}, ${wb[i] === undefined ? '(none)' : wb[i]}, ${wc[i] === undefined ? '(none)' : wc[i]}`); });
+  return { examples, tension, why: `${examples.length} of ${cases.length} cases agreed by three readers (${readers.map((r) => r.name).join(', ')}), not confirmed by James` };
+}
+
+module.exports = { MODULE_ID, VERSION: '1.5.0', adversaryCheck, agreedExamples, CARD, brief, briefPiece, cardFor, briefTemplate, templateOf, TEMPLATE_MENU, extract, adapter, createRung, skeletonOf, paramsOf, bodyOf, briefGap, gapStore, taskDirOf, listGaps, moduleTypeOf };
