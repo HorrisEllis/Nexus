@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-26-talk-to-nexus-phasemap.spec::TN2_fewer_tabs_no_dropdown
+type: phase
+id: docs_2026-11-26-talk-to-nexus-phasemap.spec::TN2_fewer_tabs_no_dropdown
+context: pipeline phase TN2_fewer_tabs_no_dropdown of docs/2026-11-26-talk-to-nexus-phasemap.spec
+intent: null
+summary: TN2_fewer_tabs_no_dropdown (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1795718895791
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795718895791
+lastSeenAt: 1795718895791
+fingerprint: null
+payload:
+  id: TN2_fewer_tabs_no_dropdown
+  map: docs/2026-11-26-talk-to-nexus-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/ui/shell/index.html
+    - cos/ui/automation/index.html
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 863baa984578a839

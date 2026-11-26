@@ -1,0 +1,47 @@
+envelope: 1
+uuid: nexus-export-graph-phase:TN3_his_framework_as_agent_tools:d0ce84ffa2d93e1c
+type: graph
+id: phase:TN3_his_framework_as_agent_tools:d0ce84ffa2d93e1c
+context: dependency graph of phase TN3_his_framework_as_agent_tools
+intent: null
+summary: 2 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1795718895797
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795718895797
+lastSeenAt: 1795718895797
+fingerprint: null
+payload:
+  for: TN3_his_framework_as_agent_tools
+  kind: phase
+  repo: null
+  hash: d0ce84ffa2d93e1c
+  nodes:
+    - path: intelligence/framework-tools.eg
+      role: changes
+      exists: false
+      system: intelligence
+    - path: intelligence/test/framework-tools.test.eg
+      role: changes
+      exists: false
+      system: intelligence
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+    edges: []

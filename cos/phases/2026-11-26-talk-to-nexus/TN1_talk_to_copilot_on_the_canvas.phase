@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-26-talk-to-nexus-phasemap.spec::TN1_talk_to_copilot_on_the_canvas
+type: phase
+id: docs_2026-11-26-talk-to-nexus-phasemap.spec::TN1_talk_to_copilot_on_the_canvas
+context: pipeline phase TN1_talk_to_copilot_on_the_canvas of docs/2026-11-26-talk-to-nexus-phasemap.spec
+intent: null
+summary: TN1_talk_to_copilot_on_the_canvas (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1795718895784
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795718895784
+lastSeenAt: 1795718895784
+fingerprint: null
+payload:
+  id: TN1_talk_to_copilot_on_the_canvas
+  map: docs/2026-11-26-talk-to-nexus-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/ui/automation/index.html
+    - copilot/routes/pipeline-assist.js
+  depends_on:
+    - PC29_copilot_orchestrates_nexus
+  blocks: []
+  spec: null
+  graph: 2b0eb3a4584b457a

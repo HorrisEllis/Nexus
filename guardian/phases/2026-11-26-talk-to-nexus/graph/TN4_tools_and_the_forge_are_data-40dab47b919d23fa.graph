@@ -1,0 +1,47 @@
+envelope: 1
+uuid: nexus-export-graph-phase:TN4_tools_and_the_forge_are_data:40dab47b919d23fa
+type: graph
+id: phase:TN4_tools_and_the_forge_are_data:40dab47b919d23fa
+context: dependency graph of phase TN4_tools_and_the_forge_are_data
+intent: null
+summary: 2 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1795718895802
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795718895802
+lastSeenAt: 1795718895802
+fingerprint: null
+payload:
+  for: TN4_tools_and_the_forge_are_data
+  kind: phase
+  repo: null
+  hash: 40dab47b919d23fa
+  nodes:
+    - path: guardian/lib/tool-registry.eg
+      role: changes
+      exists: false
+      system: guardian
+    - path: guardian/tools/registry.json
+      role: changes
+      exists: false
+      system: guardian
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+    edges: []

@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-26-talk-to-nexus-phasemap.spec::TN4_tools_and_the_forge_are_data
+type: phase
+id: docs_2026-11-26-talk-to-nexus-phasemap.spec::TN4_tools_and_the_forge_are_data
+context: pipeline phase TN4_tools_and_the_forge_are_data of docs/2026-11-26-talk-to-nexus-phasemap.spec
+intent: null
+summary: TN4_tools_and_the_forge_are_data (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1795718895802
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795718895802
+lastSeenAt: 1795718895802
+fingerprint: null
+payload:
+  id: TN4_tools_and_the_forge_are_data
+  map: docs/2026-11-26-talk-to-nexus-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - guardian/tools/registry.json
+    - guardian/lib/tool-registry.eg
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 40dab47b919d23fa

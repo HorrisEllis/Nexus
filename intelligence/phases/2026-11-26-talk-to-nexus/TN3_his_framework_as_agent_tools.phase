@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-26-talk-to-nexus-phasemap.spec::TN3_his_framework_as_agent_tools
+type: phase
+id: docs_2026-11-26-talk-to-nexus-phasemap.spec::TN3_his_framework_as_agent_tools
+context: pipeline phase TN3_his_framework_as_agent_tools of docs/2026-11-26-talk-to-nexus-phasemap.spec
+intent: null
+summary: TN3_his_framework_as_agent_tools (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1795718895797
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795718895797
+lastSeenAt: 1795718895797
+fingerprint: null
+payload:
+  id: TN3_his_framework_as_agent_tools
+  map: docs/2026-11-26-talk-to-nexus-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - intelligence/framework-tools.eg
+    - intelligence/test/framework-tools.test.eg
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: d0ce84ffa2d93e1c

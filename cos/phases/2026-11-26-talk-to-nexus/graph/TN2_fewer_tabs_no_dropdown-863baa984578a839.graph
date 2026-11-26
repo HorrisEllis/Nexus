@@ -1,0 +1,97 @@
+envelope: 1
+uuid: nexus-export-graph-phase:TN2_fewer_tabs_no_dropdown:863baa984578a839
+type: graph
+id: phase:TN2_fewer_tabs_no_dropdown:863baa984578a839
+context: dependency graph of phase TN2_fewer_tabs_no_dropdown
+intent: null
+summary: 2 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1795718895791
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795718895791
+lastSeenAt: 1795718895791
+fingerprint: null
+payload:
+  for: TN2_fewer_tabs_no_dropdown
+  kind: phase
+  repo: null
+  hash: 863baa984578a839
+  nodes:
+    - path: cos/ui/automation/index.html
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/ui/shell/index.html
+      role: changes
+      exists: true
+      system: cos
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 19
+    deps:
+      - docs/2026-11-26-talk-to-nexus-phasemap.spec::TN1_talk_to_copilot_on_the_canvas
+    dependents: []
+    upstream:
+      - docs/2026-10-28-first-principles-phasemap.spec::FP1_where_a_request_opens
+      - docs/2026-10-28-first-principles-phasemap.spec::FP2_which_option_is_meant
+      - docs/2026-10-28-first-principles-phasemap.spec::FP3_is_the_gate_open
+      - docs/2026-10-28-gated-flows-phasemap.spec::FG2_dropdown_choose
+      - docs/2026-10-28-gated-flows-phasemap.spec::FG_D1_gate_is_a_step_field
+      - docs/2026-10-28-gated-flows-phasemap.spec::FG_D2_choice_is_read_back
+      - docs/2026-10-28-gated-flows-phasemap.spec::GF1_every_field_found_by_its_section
+      - docs/2026-10-28-gated-flows-phasemap.spec::GF2_every_editor_page_known
+      - docs/2026-10-28-gated-flows-phasemap.spec::GF3_text_and_lists_filled_and_read_back
+      - docs/2026-10-28-gated-flows-phasemap.spec::GF4_friction_goes_to_his_site_keys
+      - docs/2026-10-28-gated-flows-phasemap.spec::GG1_every_part_gated
+      - docs/2026-10-28-gated-flows-phasemap.spec::GM1_the_fill_menu_model
+      - docs/2026-10-28-gated-flows-phasemap.spec::GM2_fill_only_what_is_ticked
+      - docs/2026-10-28-gated-flows-phasemap.spec::KB1_choose_waits_and_keys
+      - docs/2026-10-28-gated-flows-phasemap.spec::KB2_site_keys
+      - docs/2026-10-28-gated-flows-phasemap.spec::KB3_site_keys_ui
+      - docs/2026-10-28-gated-flows-phasemap.spec::KB4_gates_on_macro_steps
+      - docs/2026-10-28-gated-flows-phasemap.spec::UG1_one_gate_for_every_element
+      - docs/2026-10-29-pipelines-phasemap.spec::PA4_a_gate_after_every_step
+      - docs/2026-10-29-pipelines-phasemap.spec::PL1_pipeline_core
+      - docs/2026-10-29-pipelines-phasemap.spec::PL6_the_gate_step
+      - docs/2026-10-29-pipelines-phasemap.spec::PL_D1_a_task_is_one_engine_step
+      - docs/2026-10-29-pipelines-phasemap.spec::PL_D2_pipelines_live_in_the_engine_that_runs_them
+      - docs/2026-10-29-pipelines-phasemap.spec::PL_D4_a_gate_is_a_pipeline_block
+      - docs/2026-11-01-macro-blocks-phasemap.spec::MB1_the_gate_between
+      - docs/2026-11-01-macro-blocks-phasemap.spec::MB2_the_blocks_ui
+      - docs/2026-11-01-macro-blocks-phasemap.spec::MB3_one_shape_with_pipelines
+      - docs/2026-11-01-macro-blocks-phasemap.spec::MB_D0_blocks_and_gates
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC12_the_survey
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC1_task_nodes
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC4_deploy_to_any_system
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC_D0_one_console_in_cos
+      - docs/2026-11-01-procedures-phasemap.spec::PD1_procedure_nodes_and_commands
+      - docs/2026-11-01-procedures-phasemap.spec::PD_D0_a_procedure_is_a_node_file
+      - docs/2026-11-01-procedures-phasemap.spec::PD_D0_addendum_one_procedure_type
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC1_one_box_shape
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC26_lineage_is_the_canvas
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC29_copilot_orchestrates_nexus
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC5_programmable_gate_types
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC8_operate_a_pipeline
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D0_reuse_first
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D13_the_pipeline_works_first_then_cos_optimised
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D1_gates_as_compartments
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D4_language
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D8_options_not_neat_boxes
+      - docs/2026-11-26-talk-to-nexus-phasemap.spec::TN1_talk_to_copilot_on_the_canvas
+    downstream: []
+    blockedBy:
+      - docs/2026-11-26-talk-to-nexus-phasemap.spec::TN1_talk_to_copilot_on_the_canvas
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 19 · blocked by TN1_talk_to_copilot_on_the_canvas
+      - 'depends on (1): TN1_talk_to_copilot_on_the_canvas · all upstream 46'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-11-26-talk-to-nexus-phasemap.spec::TN1_talk_to_copilot_on_the_canvas
+        kind: inferred
