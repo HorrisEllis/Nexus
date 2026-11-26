@@ -1833,6 +1833,9 @@ phases_addendum_2026_11_24_model_server:
       a_the_yarn_record: "the agnostic record (nodes, vectors with his six kinds, why) as an Emerge contract; the build record read into it first (tries diverge, helpers converge, the adversary collides); /api/cos/view/yarn"
       b_drawn_on_the_canvas: "the yarn drawn on the canvas, each kind its own line; the trunk (the path that passed) lit; a node opens its content and its why. Preview first, on e1968c61"
       c_more_sources: "pipeline runs, RAID's decisions, Idearium's ideas, a framework trial: each a plugin writing the same record"
+      not_eravos_2026_11_25: >-
+        His, the same day, shown a live-data preview of the canvas (the EMB10 run as boxes and threads, with lenses and add-a-step) after the
+        coder suggested ERAVOS's canvas as its home: "Not eravos". The canvas is COS's own, in its Automation tab (PC8); ERAVOS stays apart.
       d_the_overlap: "parallel pipelines per domain on one problem; identical primitives, principles, patterns or invariants matched and joined; counted anomaly, coincidence, invariant; sigma and delta shown. Its proof is registered in FRAMEWORK-THREADS before it runs"
   PC27_each_output_measured_by_his_equations:
     status: OPEN
