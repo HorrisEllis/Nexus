@@ -160,7 +160,12 @@ const _adv = (() => {
   const same = (out, want) => { try { return eq(JSON.parse(out), lit(want)); } catch (_) { return false; } };
   const sameLit = (a, b) => { try { return eq(lit(a), lit(b)); } catch (_) { return false; } };
   // a reader writes "call -> result" or "call => result" too (found 2026-11-25 on the three-model run: llama3.2 wrote ->, and every case read as unread)
-  const clean = (text, name) => String(text || '').split('\n').map((s) => s.trim().replace(/^[-*•\d.)\s`]+/, '').replace(/`+$/, ''))
+  // a reasoning reader (smallthinker, the same run) reasons in prose: each call in backticks, then "Result: `True`"; the pair is its answer
+  const pairs = (text, name) => { const out = []; let call = null;
+    for (const s of String(text || '').split('\n')) { const c = new RegExp('`(' + name + '\\(.*\\))`').exec(s); if (c) call = c[1];
+      const r = /^\s*[-*]?\s*\**Result\**:\s*`?([^`]+?)`?\s*\.?\s*$/i.exec(s); if (r && call) { out.push(call + ' == ' + r[1].trim()); call = null; } }
+    return out.join('\n'); };
+  const clean = (text, name) => (String(text || '') + '\n' + pairs(text, name)).split('\n').map((s) => s.trim().replace(/^[-*•\d.)\s`]+/, '').replace(/`+$/, ''))
     .map((l) => /\)\s*==/.test(l) ? l : l.replace(/^(.*\))\s*(?:->|=>|→|=)\s*(?=\S)/, '$1 == '))
     .filter((l) => l.startsWith(name + '(') && /\)\s*==\s*\S/.test(l));
   const readable = (l) => { try { args(l); lit(wantOf(l)); return true; } catch (_) { return false; } };
@@ -185,7 +190,8 @@ async function adversaryCheck({ eg, render, skel, filled, name, body, who, sf, n
     'Each on its own line, exactly: ' + name + '(arguments) == expected, arguments and expected as literals (strings in double quotes, lists [a, b], maps { k: v }). Only the lines.'].filter(Boolean).join('\n');
   let a = ''; try { a = await rA.ask(askA, { gap: name, adversary: 'a', tryNo: n }); } catch (_) { return null; }
   const known1 = new Set(known.map(_adv.key));
-  const cases = _adv.clean(a, name).filter((l) => _adv.readable(l) && _adv.fits(l, sig) && !known1.has(_adv.key(l))).slice(0, 8);
+  // each case once (the three-model run: the writer wrote one case three times, and it counted three times)
+  const cases = _adv.clean(a, name).filter((l) => _adv.readable(l) && _adv.fits(l, sig) && !known1.has(_adv.key(l)) && (known1.add(_adv.key(l)), true)).slice(0, 8);
   if (!cases.length) return null;
   const askB = ['Function: ' + sig, 'What it must do: ' + does,
     'For each call below, write the result this description says. Each line exactly: call == result, the result as a literal. Only the lines.', ...cases.map(_adv.callOf)].join('\n');

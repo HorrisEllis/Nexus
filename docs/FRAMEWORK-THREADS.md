@@ -596,6 +596,26 @@ by the focus.
 - **Evidence:** **failed.** 8 of 24 with and without, 2.8 s against 1.9 s. The model also wrote Go and Python shapes the gate's list missed. The
   stronger form, a grammar of Emerge applied while each token is chosen, is untested.
 
+## T17 — "the other one treats success as a problem": the adversary, tested on the pipeline building itself, registered 2026-11-25 before the run
+
+- **His words:** 2026-11-25, "like another compiler. like the other one treats success as a problem" · "yes. three different 3b. i use
+  abliterated so they are less bias" · and on how to test it: "test the pipeline while testing them, while building the pipeline ... Then you'd
+  be testing my framework. You'd be benchmarking a merge [Emerge]. You'd be extending the pipeline. And then you would also be testing the agents
+  and the model server at once. So why are you wasting it on garbage?"
+- **What the coder did with it:** **executed** (pending output): the adversary gate (EMB12) on in COS's EMB10 pipeline, the one that rebuilds the
+  bridge's engine decisions in Emerge. One run tests five things at once: the pipeline (it builds itself), the three models (qwen2.5-coder,
+  llama3.2, smallthinker, all abliterated 3b), the model server (three engines at once on a 4 GB GPU), the agents (the bridge's jobs) and Emerge.
+  The coder's earlier trial on two hand-written served_by bodies is set aside, as he said: a toy, not the work.
+- **Baseline:** EMB10's last run (cbuild-mwwvkc3h, the 3b alone, no adversary): 9 of 10 pieces passed, held at served_by.
+- **Predictions (the coder's, written and committed before the run; judged by the same hands, so post-hoc risk is named):**
+  1. The gate refuses no piece that is correct: every refusal names a case all three readers agree on, and the coder reading it agrees. Measured: each refusal read by hand.
+  2. The gate catches at least one piece that passed its own examples but breaks a case three readers agree on. Measured: refusals with a valid case, count.
+  3. The gate raises at least one tension (the readers disagree) that is a real ambiguity in a phase's sentence, his to settle. Measured: tensions listed.
+  4. Three engines run at once without an engine failing to load or crashing. Measured: COS's records of each engine.
+  5. EMB10 does not complete in this run either (served_by holds again), and the run is slower than the baseline by at least 2×, the cost of
+     criticism (his: "more tokens wasted on unstable code than doing the work of critisizing it"). Measured: pieces passed, wall time.
+- **Evidence:** open.
+
 ## EMB8 measured, the contract per piece (2026-11-24, his: "yes like constraints, need to be acknowledged also. my framework does all of this. at every level across any domain")
 
 - **Registered prediction:** add_kind (EMB3), the one piece the 3b could not fill from its name, passes on the 3b once its brief carries its own recorded examples, with no hand-written description.
