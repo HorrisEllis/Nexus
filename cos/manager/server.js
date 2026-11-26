@@ -729,6 +729,27 @@ if (require.main === module) {
         sup.note('restart', `${m.length} file(s) COS runs changed (${proof.changed.slice(0, 4).join(', ')}${m.length > 4 ? ' …' : ''}); RAID approved; COS restarts itself`, { by: 'rule:code-moved' });
         restartCos({ by: 'rule:code-moved' });
       }, 60000); if (reload.unref) reload.unref();
+      // PC36 (2026-11-26) — the same rule for each system COS runs: its own folder's code (two levels, not data/, tests or node_modules) changed
+      // after it started and settled two minutes → RAID asked with the files as proof → that system restarted (rule:code-moved). One at a time.
+      const sysWait = new Map(); let sysAsking = false;
+      const sysMoved = (name, since) => { const out = []; const walk = (rel, depth) => { let es = []; try { es = fs.readdirSync(path.join(root, rel), { withFileTypes: true }); } catch (_) { return; }
+          for (const e of es) { if (e.isDirectory()) { if (depth < 2 && !/^(data|node_modules|tests?|\.git|\.nex|backups?)$/i.test(e.name)) walk(`${rel}/${e.name}`, depth + 1); continue; }
+            if (!/\.(js|cjs|mjs|eg)$/.test(e.name)) continue; try { const t = fs.statSync(path.join(root, rel, e.name)).mtimeMs; if (t > since) out.push({ f: `${rel}/${e.name}`, t }); } catch (_) {} } };
+        walk(name, 0); return out; };
+      const sysReload = setInterval(async () => {
+        if (sysAsking) return;
+        for (const v of sup.list()) {
+          if (v.state !== 'up' || !v.startedAt || Date.now() < (sysWait.get(v.name) || 0)) continue;
+          const m = sysMoved(v.name, v.startedAt); if (!m.length || Date.now() - Math.max(...m.map((x) => x.t)) < 120000) continue;
+          sysAsking = true;
+          const proof = { kind: 'measured', decidedBy: 'cos/manager/server.js', system: v.name, changed: m.map((x) => x.f).slice(0, 25), count: m.length, since: new Date(v.startedAt).toISOString(), why: `the code ${v.name} runs changed on disk since it started; it loads only at a restart`, at: Date.now() };
+          let ok = null; try { ok = await require('../../lib/raid-port.js').approveTool('cos', `cos.restart ${v.name}`, { action: 'restart', intent: { action: 'restart', target: v.name }, causedBy: 'rule:code-moved', proof }); } catch (e) { ok = { approved: false, reason: `RAID unreachable: ${e.message}` }; }
+          if (!ok || !ok.approved) { sup.note('raid-refused', `RAID did not approve restarting ${v.name} for ${m.length} changed file(s): ${(ok && ok.reason) || 'no answer'}; asked again in 10 min`, { by: 'rule:code-moved' }); sysWait.set(v.name, Date.now() + 600000); sysAsking = false; return; }
+          sup.note('restart', `${m.length} file(s) ${v.name} runs changed (${proof.changed.slice(0, 3).join(', ')}${m.length > 3 ? ' …' : ''}); RAID approved; COS restarts it`, { by: 'rule:code-moved' });
+          try { sup.restart(v.name, { by: 'rule:code-moved' }); } catch (e) { sup.note('restart', `${v.name} did not restart: ${e.message}`, { by: 'rule:code-moved' }); }
+          sysWait.set(v.name, Date.now() + 300000); sysAsking = false; return;
+        }
+      }, 60000); if (sysReload.unref) sysReload.unref();
     }
     // 2026-11-01 MG33 — James: "where is cos ui?". Nothing started the cockpit (cos/ui/serve.js) or linked to it: a screen with no way in. The
     // manager now starts it beside itself (COS_UI_PORT, default 7797; --no-ui to leave it off). Its port held → said once, the manager runs on.
