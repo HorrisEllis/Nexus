@@ -624,10 +624,10 @@ function gateTree(t, L, p) {
   // gate after it), one after the other down from the step that builds them; a helper is a step branching right from the gate of the one it
   // unblocks. Clicked, a step or its gate shows its context in the Inspector.
   let front = '';
-  const BW = 214, BH = 62, SP = 34, IN = 250, x0 = A ? A.x : 40; let out = '', y = A ? A.y + 84 + 70 : 420, prev = A ? { x: A.x + 107, y: A.y + 84 } : null;
+  const BW = 214, BH = 62, SP = 34, IN = 250, x0 = A ? A.x : 40; let out = '', y = A ? A.y + 84 + 70 : 420, G0 = bt && L && L.gpos && L.gpos[bt.id], prev = G0 ? { x: G0.x, y: G0.y } : null;   /* each node branches off the gate before it (his, 2026-11-26) */
   const step = (g, x, sy, from) => { const c = col(g.status), now = g.name === t.now, sel = S.sel && S.sel.t === 'piece' && S.sel.id === g.name; const o = OFF[g.name]; if (o) { x += o.dx; sy += o.dy; }
     const gx = x + BW + 22, gy = sy + BH / 2;
-    if (from) out += `<path class="wire ${g.status === 'passed' ? 'done' : ''}" d="${from.side ? `M${from.x + 9},${from.y} H${x - 18} Q${x - 8},${from.y} ${x - 8},${from.y + 10} V${gy - 8} Q${x - 8},${gy} ${x},${gy}` : `M${from.x},${from.y + 9} V${sy}`}"/>`;
+    if (from) out += `<path class="wire ${g.status === 'passed' ? 'done' : ''}" d="${from.side ? `M${from.x + 9},${from.y} H${x - 18} Q${x - 8},${from.y} ${x - 8},${from.y + 10} V${gy - 8} Q${x - 8},${gy} ${x},${gy}` : `M${from.x},${from.y + 9} V${sy - 16} H${x + BW / 2} V${sy}`}"/>`;
     const mk = `<g class="piece ${sel ? 'sel' : ''}" data-piece="${esc(g.name)}" style="cursor:pointer"><title>${esc(g.name)} · ${esc(g.status)} · ${g.tries} tries · click for its context</title>`
       + `<rect x="${x}" y="${sy}" width="${BW}" height="${BH}" rx="9" fill="var(--bg2)" stroke="${now || sel ? 'var(--bright)' : 'var(--edge)'}" stroke-width="${now || sel ? 1.8 : 1}"${now ? ' stroke-dasharray="5 3"' : ''}/>`
       + `<rect x="${x}" y="${sy + 9}" width="3" height="${BH - 18}" rx="1.5" fill="${c}"/>`
@@ -639,7 +639,8 @@ function gateTree(t, L, p) {
     if (now) front += mk; else out += mk;
     let end = sy + BH; for (const k of kids.get(g.name) || []) { end = step(k, x + IN, end + SP - (end === sy + BH ? BH + SP : 0), { x: gx, y: gy, side: true }) - 0; }
     return Math.max(end, sy + BH); };
-  for (const g of roots) { const end = step(g, x0, y, prev); prev = { x: x0 + BW / 2, y: y + BH - 9 }; y = end + SP; }
+  for (const g of roots) { const end = step(g, x0, y, prev); prev = { x: x0 + BW + 22, y: y + BH / 2 }; y = end + SP; }
+  S.treeEnd = { x: x0, y, from: prev };   /* PC31: the end state hangs after the last node */
   const passed = t.gates.filter((g) => g.status === 'passed').length;
   return `<text x="${x0}" y="${(A ? A.y + 84 : 400) + 40}" fill="var(--text2)" font-size="11" font-family="var(--mono)">${esc(t.phase || '')} · ${passed} of ${t.gates.length} nodes passed</text>${out}${front}`;
 }
@@ -675,7 +676,31 @@ function svgOf(p, under = '') {   // under: drawn in the same view (pan and zoom
       <text class="ty" x="14" y="18">${catOf(kind(t)) ? esc(catOf(kind(t)).icon + ' ' + catOf(kind(t)).label.toUpperCase()) : esc(kind(t).toUpperCase())}${t.method ? ' · ' + esc(String(t.method).toUpperCase()) : ''}</text><circle class="dotc" cx="${W - 14}" cy="15" r="4" fill="${c}"/>
       <text class="lb" x="14" y="37">${esc(t.label.length > 27 ? t.label.slice(0, 26) + '…' : t.label)}</text><text class="ds" x="14" y="54">${esc((d => d.length > 38 ? d.slice(0, 37) + '…' : d)(describe(t) || ''))}</text><text class="sb" x="14" y="72">${esc(s)}${ms != null ? ' · ' + dur(ms) : ''}${b && b.n ? ' · usual ' + dur(b.mean_ms) : ''}</text>
       ${pct != null ? `<rect x="14" y="${H - 7}" width="${W - 28}" height="2" rx="1" fill="var(--edge)"/><rect x="14" y="${H - 7}" width="${(W - 28) * pct / 100}" height="2" rx="1" fill="${pct >= 100 ? 'var(--coral)' : 'var(--sky)'}"/>` : ''}</g>`; }
-  return `<g id="vp">${wires}${under}${gates}${nodes}</g>`;
+  // PC31 (his, 2026-11-26: "the raid compartment created with the request, needs to be the beginning of each pipeline. where it originates
+  // from, and the end state need to be shown on each" · "the first step is the worksurface for the request, the one raid creates. like
+  // everything is a node. wouldn't it branch off at the gate?"): the request is the first node, the end state the last; each branches at a gate
+  let ends = '';
+  const ids = p.tasks.map((t) => t.id).filter((id) => pos[id]);
+  if (ids.length) {
+    const card = (x, y, ty, lb, sb, c, id, tip) => { const sel = S.sel && S.sel.t === 'piece' && S.sel.id === id, gx = x + W + 22, gy = y + H / 2;
+      return `<g class="piece ${sel ? 'sel' : ''}" data-piece="${id}" style="cursor:pointer"><title>${esc(tip)}</title><rect x="${x}" y="${y}" width="${W}" height="${H}" rx="9" fill="var(--bg2)" stroke="${sel ? 'var(--bright)' : c}" stroke-width="1.4"/>`
+        + `<rect x="${x}" y="${y + 9}" width="3" height="${H - 18}" rx="1.5" fill="${c}"/><text x="${x + 14}" y="${y + 18}" fill="var(--text2)" font-size="9.5" font-family="var(--mono)" letter-spacing=".08em">${ty}</text>`
+        + `<text x="${x + 14}" y="${y + 38}" fill="var(--bright)" font-size="12.5" font-family="var(--mono)">${esc(lb.length > 27 ? lb.slice(0, 26) + '…' : lb)}</text><text x="${x + 14}" y="${y + 58}" fill="var(--text2)" font-size="10.5" font-family="var(--mono)">${esc(sb.length > 36 ? sb.slice(0, 35) + '…' : sb)}</text>`
+        + `<path d="M${x + W},${gy} H${gx - 9}" class="wire"/><rect x="${gx - 7}" y="${gy - 7}" width="14" height="14" rx="2" transform="rotate(45 ${gx} ${gy})" fill="var(--bg2)" stroke="${c}" stroke-width="1.3"/></g>`; };
+    const roots = p.tasks.filter((t) => pos[t.id] && !(t.depends_on || []).some((d) => pos[d]));
+    const minX = Math.min(...ids.map((id) => pos[id].x)), y0 = Math.min(...roots.map((t) => pos[t.id].y));
+    const vars = r && r.vars ? Object.entries(r.vars).filter(([, v]) => v !== '' && v != null).map(([k, v]) => `${k} ${v}`).join(' · ') : '';
+    const ox = minX - W - 90, ogx = ox + W + 22, ogy = y0 + H / 2;
+    ends += card(ox, y0, 'REQUEST · RAID', vars || p.name || 'the request', r ? `${r.by || 'asked'} · ${new Date(r.startedAt || Date.now()).toLocaleTimeString()}` : 'not run yet', 'var(--violet, #a78bfa)', '__origin', 'Where this run comes from: the request RAID let through. Click for it.');
+    for (const t of roots) { const b = pos[t.id]; wires += `<path class="wire" d="M${ogx + 9},${ogy} C${ogx + 50},${ogy} ${b.x - 50},${b.y + H / 2} ${b.x - 2},${b.y + H / 2}"/>`; }
+    const met = r && /done|complete|passed|recovered/.test(r.status || ''), ec = met ? 'var(--ok)' : r && /failed|error|interrupted/.test(r.status || '') ? 'var(--coral)' : 'var(--sky)';
+    let ex, ey, from = null;
+    if (under && S.treeEnd) { ex = S.treeEnd.x; ey = S.treeEnd.y; from = S.treeEnd.from; if (from) wires += `<path class="wire ${met ? 'done' : ''}" d="M${from.x},${from.y + 9} V${ey - 16} H${ex + W / 2} V${ey}"/>`; }
+    else { const leaves = p.tasks.filter((t) => pos[t.id] && !p.tasks.some((u) => (u.depends_on || []).includes(t.id))); ex = Math.max(...ids.map((id) => pos[id].x)) + W + 90; ey = pos[leaves[0] ? leaves[0].id : ids[0]].y;
+      for (const t of leaves) { const g = gpos[t.id]; wires += `<path class="wire ${met ? 'done' : ''}" d="M${g.x + 9},${g.y} C${g.x + 50},${g.y} ${ex - 50},${ey + H / 2} ${ex - 2},${ey + H / 2}"/>`; } }
+    ends += card(ex, ey, 'END STATE · CONTRACT', met ? 'met' : (r ? 'not met yet' : 'not run yet'), r ? `run ${r.status || '—'}` : '', ec, '__end', 'The end state: what this run must reach, and whether it has. Click for it.');
+  }
+  return `<g id="vp">${wires}${under}${gates}${nodes}${ends}</g>`;
 }
 function fit() { const p = withGrown(pipe()), w = document.querySelector('.canvas-wrap'); if (!p || !w) return; const L = layout(p), r = w.getBoundingClientRect(), k = Math.max(.15, Math.min(1.2, (r.width - 40) / L.w, (r.height - 30) / L.h)); S.vp = { k, x: (r.width - L.w * k) / 2, y: Math.max(10, (r.height - L.h * k) / 2) }; applyVp(); }
 function zoom(f, cx, cy) { const s = document.querySelector('svg.cv'); if (!s || !S.vp) return; const r = s.getBoundingClientRect(); cx = cx == null ? r.width / 2 : cx; cy = cy == null ? r.height / 2 : cy; const k = Math.min(2.5, Math.max(.2, S.vp.k * f)); S.vp.x = cx - (cx - S.vp.x) * k / S.vp.k; S.vp.y = cy - (cy - S.vp.y) * k / S.vp.k; S.vp.k = k; applyVp(); }
@@ -798,6 +823,11 @@ const PANELS = [
       if (!S.cat) loadCat();
       if (!S.sel || !p) return '<div class="dk-empty">Click a step or a gate to change it. Add steps with <b>Add step</b> at the top, the <b>Steps</b> panel, or right-click.</div>';
       // a piece's gate (gateTree): its context, read from the build's own files (2026-11-26, his: "context is in the gates, that i can look at")
+      if (S.sel.t === 'piece' && (S.sel.id === '__origin' || S.sel.id === '__end')) { const r = last(p.id), b = S.D && S.D.build;
+        if (S.sel.id === '__origin') return sec('The request') + kv('pipeline', p.name || p.id) + kv('asked by', (r && r.by) || '—') + kv('started', r && r.startedAt ? new Date(r.startedAt).toLocaleString() : 'not run yet')
+          + (r && r.vars ? sec('What it was given') + Object.entries(r.vars).map(([k, v]) => kv(k, String(v))).join('') : '') + (p.description ? sec('Why') + `<div class="pre">${esc(p.description)}</div>` : '');
+        return sec('The end state') + kv('run', (r && r.status) || 'not run yet') + (b && b.phase ? kv('phase', b.phase) + kv('build', b.last || '—') + kv('nodes passed', `${(b.gates || []).filter((g) => g.status === 'passed').length} of ${(b.gates || []).length}`) : '')
+          + `<div class="dk-empty">Met when the phase's own examples pass in Emerge (examples-passed) and it lands. Until then the run goes back to the request and tries the next way.</div>`; }
       if (S.sel.t === 'piece') { const b = S.D && S.D.build, g = b && (b.gates || []).find((x) => x.name === S.sel.id), gp = b && (b.gaps || []).find((x) => x.name === S.sel.id);
         if (!g && !gp) return '<div class="dk-empty">That gate is gone from the build.</div>';
         const rows = ((b && b.rows) || []).filter((x) => x.gap === S.sel.id).slice(-6);
