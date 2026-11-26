@@ -1,0 +1,46 @@
+use "../field.eg" as F
+use "../warp.eg" as W
+
+fn too_big(n: map): any {
+  if has(n, "piece") and has(n.piece, "size") and n.piece.size > 10 { return "too big for the smallest model" }
+  return null
+}
+let small = { id: "small", hard: true, check: too_big }
+let f0 = F.field({}, [small])
+
+test "nothing exists without its cause, except a root" {
+  expect W.link(f0, null, "request", { text: "build EMB10" }).verdict.admitted == false
+  let r = W.link(f0, null, "request", { root: true, text: "build EMB10" })
+  expect r.verdict.admitted == true
+  let p = W.link(r.field, "request", "plan", { type: "plan" })
+  expect p.verdict.admitted == true
+  expect len(p.field.relations) == 1, "the link is causal"
+}
+
+test "every link passes the constraints first" {
+  let r = W.link(f0, null, "request", { root: true }).field
+  let big = W.link(r, "request", "piece", { size: 50 })
+  expect big.verdict.admitted == false
+  expect find_text(big.verdict.why, "too big") >= 0
+  expect W.link(r, "request", "piece", { size: 5 }).verdict.admitted == true
+}
+
+test "an expectation is declared first, fulfilled by its link, broken past its time" {
+  let r = W.link(f0, null, "request", { root: true }).field
+  let e = W.expecting(r, "request", "contract", 60, 0)
+  expect len(W.open_of(e)) == 1
+  expect len(W.broken(e, 30)) == 0, "still in time"
+  let gaps = W.broken(e, 90)
+  expect len(gaps) == 1
+  expect gaps[0].caused_by == "request"
+  let done = W.link(e, "request", "met", { type: "contract" }).field
+  expect len(W.open_of(done)) == 0, "the link fulfilled it"
+}
+
+test "an existing pipeline is read as links: each step caused by what it waits on, or what grew it" {
+  let ls = W.adapt({ tasks: [{ id: "plan" }, { id: "served_by", grownFrom: "plan" }, { id: "next_act", depends_on: ["served_by"] }] })
+  expect len(ls) == 3
+  expect ls[0].root == true
+  expect ls[1].cause == "plan"
+  expect ls[2].cause == "served_by"
+}

@@ -19,7 +19,7 @@ payload:
   repo:
     url: https://github.com/HorrisEllis/emerge
     commit: f02324025d60b9fe8a38e201f65770e2f13f0079
-    lockedAt: '2026-11-25'
+    lockedAt: '2026-11-26'
     path: emerge/
     note: >-
       the snapshot changes only by a new lock (scripts/emerge-lock.js --write). Since 2026-11-05 (EAS_D6, his "A": Emerge is a system in Nexus, emerge/ its
@@ -164,8 +164,12 @@ payload:
       emerge/emerge.config.json: dd8ad7e5e50e6a288cbbed0ee28ecf1003df4f6225d2435762e2cd1885dd70b1
       emerge/emerge.spec: 56874d7a97bf442f42641461e004b99fed405fd8969a513f388b40edc7b3e2cd
       emerge/event-taxonomy.js: 1a68d1f0b550a9cbc57f3d2b1c21f9e96660b8833371f35e3b697992165f9389
+      emerge/field/causal.eg: 7b2e84ae0d297cf7b276ad557e5e49280911177370f95d976e4c5873e7386474
       emerge/field/field.eg: 0ea980b61e1f37e0851fc644b68471e7264b3b377c82a68b4bbba675b7259537
+      emerge/field/test/causal.test.eg: c8066a699f7761f41b19c4d9452c1920544b2c83cfc0ea78c8be028d41e8decc
       emerge/field/test/field.test.eg: ebd16060deef35b7b9f572c890524f5b2a777dd4a641c999ca5f4d2a8668aeef
+      emerge/field/test/warp.test.eg: 59806e2f0df51ab9907a9963511269d2a1b9bd341e5c4712e93fac7124a9523c
+      emerge/field/warp.eg: c8d696241ca653d97f5421aa40afcd806b3fc1a9f2178c9ec1afaa2dd8a341da
       emerge/ide-contract.json: 0bb84515e6a3e05b12df7e682fd58e9236ec6c095d0986a8c3c5f0c2bb0ea4b2
       emerge/ide-registry.js: a13479d5eaf5b9e8b3a8504595db6d96a30f56b39c7c413e6d2e5f0479c8a9f7
       emerge/interaction-contract.json: 0579212e16f31d08b9ff922fd382609afc9a400e422843b03fb21aa84d8b62bc
@@ -351,8 +355,8 @@ payload:
       phases/2026-10-02-emerge-field-memory-build/graph/_superseded/CRF1_the_axioms_as_constraints-697fc41691bf6a2f.graph: 818f006e869aecb05e669cc3a626d7ae88af7c98f81565307cc8fe378aab75c5
       phases/2026-10-17-pieces-not-order/EMB2_ollama_writes_emerge_for_the_pipeline.phase: b81c2e86faf8467b4ca181cdba485878c6cc011e442b83d9a0cb8282973a2586
       phases/2026-10-17-pieces-not-order/EMB7_code_frames.phase: c5b8f599c308105645d5317040d9fe8b7adc660c260db2ad9dd6f25f3a703b33
-      phases/2026-10-17-pieces-not-order/graph/EMB2_ollama_writes_emerge_for_the_pipeline-bb1edf7c6fc5cf89.graph: 639b7d194627fd52bf5a91686ef10a413817ceec104ffa043cb2ccbcc73d9595
-      phases/2026-10-17-pieces-not-order/graph/EMB7_code_frames-f622630b97d358d5.graph: 8bba6d30f6b0dc682804144f05a0890506707ff4b16bb01ec60de8096f59879b
+      phases/2026-10-17-pieces-not-order/graph/EMB2_ollama_writes_emerge_for_the_pipeline-bb1edf7c6fc5cf89.graph: 6734be7fff28662642e76b3bcfccee7d9c372f7b895eb0ef9d413d0dd0861f93
+      phases/2026-10-17-pieces-not-order/graph/EMB7_code_frames-f622630b97d358d5.graph: 6bbcfa4d2aba0ecc749d59b896e1dc25374ffe3ff251311283643e04a3618dea
       phases/2026-10-17-pieces-not-order/graph/_superseded/EMB2_ollama_writes_emerge_for_the_pipeline-1445f35f70f564f1.graph: 920c92b78fb0caa828537f03f6663736d8794848e183790904f4ba36cd1235f7
       phases/2026-10-17-pieces-not-order/graph/_superseded/EMB2_ollama_writes_emerge_for_the_pipeline-579a25f18ba2e73f.graph: 365ed44933ef1d28b3e79172a79987821af0ff75ac35aab8f643e9547fdc3b67
       phases/2026-10-31-emerge-as-a-system/EAS4a_L0_evaluate.phase: 56625f30bc93e53c2d659c7b692e7ad13995404b13d00d466f37f805eecb4d70
@@ -445,6 +449,30 @@ payload:
       phases/2026-11-18-ollama-local-agent/OL14_benchmark_sweep.phase: c76e08f8eab1659fcb04915d61ce8bac76c00ee7fc1ea59025898e048fe2e169
       phases/2026-11-18-ollama-local-agent/graph/OL14_benchmark_sweep-ebbc1b4275aa43cf.graph: 406fe4c22175f8ece6f62ed51778bab3c951be0442bf34775c947df0cada308a
       phases/2026-11-18-ollama-local-agent/graph/_superseded/OL14_benchmark_sweep-64db6f1577748f01.graph: ad54136958e2ce5cb87649f827e5d9c0528bf6213fce77c78c22682faf606255
+      phases/2026-11-25-break-anything-down/UD10_failure_modes_broken_down_to_their_mechanics.phase: f0ea1e82733790f3d4a49a3faad8cd36d071602718cb9bd5ed1a3a2d66db8bbb
+      phases/2026-11-25-break-anything-down/UD11_nexus_broken_down_into_itself.phase: f09207116f032d54f0d6b05ac341cfe573432b0b58b77b558248f478f77ae162
+      phases/2026-11-25-break-anything-down/UD12_his_framework_as_step_kinds.phase: 607ae4d13be2fb2c536b2c2c2ab8948a0e8cb7d51ddc62030081e3446c574432
+      phases/2026-11-25-break-anything-down/UD1_the_unit_a_piece_with_its_parent_contract_gate_a.phase: 57d4fe265af62269df2660ab8d81ede62407783f22b166a45602c9f3ee086031
+      phases/2026-11-25-break-anything-down/UD2_is_it_even_a_framework_problem_the_gate_before_b.phase: d4ef469c52a9e5c44d64a83d5dab5115ccd98d35297d3cf36d5a4555dc2f5389
+      phases/2026-11-25-break-anything-down/UD3_the_decompose_step_one_branch_per_piece_down_to_.phase: 736369e17803c1148423b15af6e47890105432c182c65f2c00ba57c903600d81
+      phases/2026-11-25-break-anything-down/UD4_anything_in_every_input_read_into_the_same_tree_.phase: d040690376233ea5f93fd4897af5dc64cb9de2509f7dacc1bed17ee883ebd369
+      phases/2026-11-25-break-anything-down/UD5_invariants_across_pieces_become_components.phase: 9bdeaae7b831813d476394e134343aa4f42c54ab59b0431ca5503a8485f9f5b7
+      phases/2026-11-25-break-anything-down/UD6_build_back_up_synthesis_toward_the_end_state.phase: 2f297fb988f7c6f2bcc435df8b5a51e5eb086fd8212abfe8519f706f25d327eb
+      phases/2026-11-25-break-anything-down/UD7_cross_domain_the_same_problem_broken_down_throug.phase: adb193e418b4015d676f131a751db16d1f01a963a12fa445c9a45cbe44abca0c
+      phases/2026-11-25-break-anything-down/UD8_every_piece_attacked_and_measured.phase: d6a86f343aabf3a8610e6ceb3f46df0cd0bbdd69b42a00c506bae94102265ee7
+      phases/2026-11-25-break-anything-down/UD9_every_coder_intervention_broken_down_into_a_capa.phase: cd5d86c26dfd7ec1be9191d8550a8772aa22720e9ceef2351d88afcf9e010941
+      phases/2026-11-25-break-anything-down/graph/UD10_failure_modes_broken_down_to_their_mechanics-922b76d1e95af064.graph: 94bd57a9ae5496a9e383a698793d323b126b06f10b67377ee8169c4122b6861e
+      phases/2026-11-25-break-anything-down/graph/UD11_nexus_broken_down_into_itself-2f06790b9611f7e5.graph: f73be537ebfe8e69e6ec0900fc4f82b980090e16cacb73ae4d790e0b8a5ba0f9
+      phases/2026-11-25-break-anything-down/graph/UD12_his_framework_as_step_kinds-d5a017f11bb144eb.graph: c27894166e4362508950594c31f2d98291c6ed30554df87b9726b3280d84e6ff
+      phases/2026-11-25-break-anything-down/graph/UD1_the_unit_a_piece_with_its_parent_contract_gate_a-57d06db798125a46.graph: 7da7b260def986d5b7d694461735e8c77611f480bb6c60765958cf633ede09c5
+      phases/2026-11-25-break-anything-down/graph/UD2_is_it_even_a_framework_problem_the_gate_before_b-a4b6435118cce1ad.graph: 075e2501c7c46a5f1be93bc406de32d767051c0adb9dad4134dae3e0f3b42d70
+      phases/2026-11-25-break-anything-down/graph/UD3_the_decompose_step_one_branch_per_piece_down_to_-50bddc48a6f80e83.graph: b9feb97cae26f415692b7e73b3dc8b0a9f87027ebe655d892aa83c130bb6aade
+      phases/2026-11-25-break-anything-down/graph/UD4_anything_in_every_input_read_into_the_same_tree_-1e90daf989506614.graph: 66cd069d09a2ba69bb2b208efc99923bc9440dbe3edd4d0d5648c81281cf8375
+      phases/2026-11-25-break-anything-down/graph/UD5_invariants_across_pieces_become_components-3989f34fa93dedf1.graph: 12cecb287aaf3a3b5ff4ec4c7c6e6e08bae05445f5143c38534fed96d3d9e08f
+      phases/2026-11-25-break-anything-down/graph/UD6_build_back_up_synthesis_toward_the_end_state-aa6882d7d77fdbaf.graph: 0458f6b0b7c8158d14aaa3036740949b3cdb96b1f0b0ca487b90bb5ac0a8b539
+      phases/2026-11-25-break-anything-down/graph/UD7_cross_domain_the_same_problem_broken_down_throug-19bc8d0173e1a0f1.graph: 55a2e66fa6e146bd3369245a478e205b8ebb7485a5063fb0d017cf9bf5b8face
+      phases/2026-11-25-break-anything-down/graph/UD8_every_piece_attacked_and_measured-58849edb140274ef.graph: 7234ffd04c32de2464302696ced479c567d505f842560d47e43b9a8a4f513c6c
+      phases/2026-11-25-break-anything-down/graph/UD9_every_coder_intervention_broken_down_into_a_capa-67c4a5df92848c5a.graph: c7c46b0365a0fbff8f95793495dd920b9688509394fd2ade3e0a4325793a8143
   runtime:
     process:
       name: emerge

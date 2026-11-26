@@ -1,0 +1,77 @@
+// emerge/emerge/field/causal.eg — the field's causal layer (MOD-CRF-CAUSAL, phase CF1_cfr_improved_with_rfr2; emerge/emerge/spec/field.spec).
+// James Brooks's design (CFR on RFR2's discipline); built 2026-11-26 as the ground WARP 2 stands on. James, 2026-11-26: "Warp should be
+// replaced by warp 2.0. Replace siso".
+// A causal relation is typed when it is made: its basis is explicit (a declared causedBy), a rule, or an adapter's lifecycle pair. Time order
+// alone is observational and never causal (CF1's known flaw: a 2-second guess made an edge). A cause that closes a cycle, or that would make a
+// second path between two nodes already joined (a diamond), is refused and named.
+//   cause(f, a, b, basis) → { field, verdict }     the field's relations gain { from: a, to: b, kind: "causes", basis }
+//   causes_of(f, b) → list                         the direct causes of b
+//   chain(f, b) → list                             b's causes back to a root, nearest first
+//   reaches(f, a, b) → bool                        a causes b, directly or through others
+//   sigma(values, x) → num                         x's deviation from the values' mean, in standard deviations (0 when they do not vary)
+//   delta(expected, actual) → num                  a gap's distance
+use "./field.eg" as F
+
+let CAUSAL = ["explicit", "rule", "adapter"]
+
+fn causes_of(f: map, b: any): list = map(filter(f.relations, fn(r) = r.kind == "causes" and r.to == b), fn(r) = r.from)
+
+fn reaches(f: map, a: any, b: any): bool {
+  var seen = []
+  var todo = [b]
+  while len(todo) > 0 {
+    let x = todo[0]
+    todo = slice(todo, 1, len(todo))
+    if x == a { return true }
+    if not (seen contains x) {
+      seen = push(seen, x)
+      for c in causes_of(f, x) { todo = push(todo, c) }
+    }
+  }
+  return false
+}
+
+fn cause(f: map, a: any, b: any, basis: string): map {
+  var why = ""
+  if not (CAUSAL contains basis) { why = "observational, not causal: the basis " + basis + " is not explicit, a rule or an adapter" }
+  else if a == b { why = "refused: " + str(a) + " cannot cause itself" }
+  else if reaches(f, b, a) { why = "refused: a cycle (" + str(b) + " already causes " + str(a) + ")" }
+  else if reaches(f, a, b) { why = "refused: a diamond (" + str(a) + " already causes " + str(b) + " another way)" }
+  let ok = why == ""
+  if ok { why = str(a) + " causes " + str(b) + " (" + basis + ")" }
+  var g = clone(f)
+  g.history = push(f.history, { kind: "cause", from: a, to: b, basis: basis, admitted: ok, why: why })
+  if ok { g.relations = push(f.relations, { from: a, to: b, kind: "causes", basis: basis }) }
+  return { field: g, verdict: { admitted: ok, refused: [], gaps: [], why: why } }
+}
+
+fn chain(f: map, b: any): list {
+  var out = []
+  var x = b
+  var n = 0
+  while n < 1000 {
+    let cs = causes_of(f, x)
+    if len(cs) == 0 { return out }
+    out = push(out, cs[0])
+    x = cs[0]
+    n = n + 1
+  }
+  return out
+}
+
+fn sigma(values: list, x: num): num {
+  if len(values) == 0 { return 0 }
+  var sum = 0
+  for v in values { sum = sum + v }
+  let mean = sum / len(values)
+  var sq = 0
+  for v in values { sq = sq + (v - mean) * (v - mean) }
+  let sd = sqrt(sq / len(values))
+  if sd == 0 { return 0 }
+  return (x - mean) / sd
+}
+
+fn delta(expected: num, actual: num): num {
+  if actual > expected { return actual - expected }
+  return expected - actual
+}

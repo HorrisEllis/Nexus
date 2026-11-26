@@ -1,0 +1,77 @@
+// emerge/emerge/field/warp.eg — WARP 2, James Brooks's own (MOD-CRF-WARP, phase EM2_warp_his_own; emerge/emerge/spec/field.spec).
+// James, 2026-11-26: "Warp should be replaced by warp 2.0. Replace siso". Earlier (EM2): "okay but siso is taken. by someone. its identicle.
+// i need my own" · "still i want to make warp mine". Written fresh on the field's primitives, not edited from the SISO-shaped files (SISO is
+// his mentor's, Jonathan Bailey's; it stays attributed where it is, and is replaced here).
+// The atom is the LINK: a cause and its effect, the effect carrying its values. Nothing exists without its cause except a root, marked as one.
+// EXPECTATIONS are declared before anything happens ("this must cause that within n") and held open until a link fulfils them; one past its
+// time is broken, a gap naming both ends. Every link passes the field's constraints first (field.eg propose) and its cause is typed and
+// checked (causal.eg: no cycle, no diamond). The history is causal by construction: the parent is written when the link is.
+//   link(f, cause, effect, values) → { field, verdict }       cause null with values.root == true: a root; otherwise refused
+//   expecting(f, cause, effect_type, within, at) → field      an open expectation ("expect" is Emerge's test word)
+//   broken(f, now) → list                                     the expectations past their time: gaps { variable, constraint, caused_by }
+//   open_of(f) → list                                         the expectations still open
+//   as_gate(c) → a constraint { id, hard, check }              a gate is a pure constraint on a transition
+//   adapt(pipeline) → list                                     an existing pipeline read as links (each step caused by what it waits on)
+use "./field.eg" as F
+use "./causal.eg" as C
+
+fn expectations_of(f: map): list = get(f, "expectations", [])
+
+fn link(f: map, cause: any, effect: string, values: map): map {
+  let root = get(values, "root", false) == true
+  if cause == null and not root {
+    return { field: f, verdict: { admitted: false, refused: [{ id: "cause", why: "nothing exists without its cause" }], gaps: [], why: "refused: " + effect + " has no cause and is not marked a root" } }
+  }
+  var set = {}
+  set[effect] = values
+  let p = F.propose(f, { id: effect, set: set, cause: cause })
+  if not p.verdict.admitted { return p }
+  var g = p.field
+  if cause != null {
+    let c = C.cause(g, cause, effect, "explicit")
+    if not c.verdict.admitted { return { field: f, verdict: c.verdict } }
+    g = c.field
+  }
+  // the expectations this link fulfils: same cause, the effect of the type expected
+  let t = get(values, "type", effect)
+  var es = []
+  for e in expectations_of(g) {
+    if e.state == "open" and e.cause == cause and e.type == t {
+      var d = clone(e)
+      d.state = "fulfilled"
+      d.by = effect
+      es = push(es, d)
+    } else { es = push(es, e) }
+  }
+  g.expectations = es
+  return { field: g, verdict: p.verdict }
+}
+
+fn expecting(f: map, cause: any, effect_type: string, within: num, at: num): map {
+  var g = clone(f)
+  g.expectations = push(expectations_of(f), { cause: cause, type: effect_type, within: within, at: at, state: "open" })
+  return g
+}
+
+fn open_of(f: map): list = filter(expectations_of(f), fn(e) = e.state == "open")
+
+fn broken(f: map, now: num): list {
+  var out = []
+  for e in open_of(f) {
+    if now > e.at + e.within { out = push(out, { variable: e.type, constraint: "expected within " + str(e.within), caused_by: e.cause }) }
+  }
+  return out
+}
+
+fn as_gate(c: map): map = { id: get(c, "id", "gate"), hard: get(c, "hard", true), check: c.check }
+
+fn adapt(pipeline: map): list {
+  var out = []
+  for t in get(pipeline, "tasks", []) {
+    let deps = get(t, "depends_on", [])
+    var cause = get(t, "grownFrom", null)
+    if cause == null and len(deps) > 0 { cause = deps[0] }
+    out = push(out, { effect: t.id, cause: cause, root: cause == null, basis: "adapter", label: get(t, "label", t.id) })
+  }
+  return out
+}
