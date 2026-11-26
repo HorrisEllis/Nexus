@@ -100,7 +100,7 @@ export function parsePhasesJson(text) {
 
 /** parseRoadmapMd(text) — one item per `## <ID> — TITLE …` heading; the "Critical path" tree's chains */
 export function parseRoadmapMd(text, opts = {}) {
-  if (/^##\s+Phase\s+\d+(?:\.\d+)?\s*[—–-]/m.test(String(text))) return parsePhasedSpecMd(text, opts);
+  if (/^#{2,3}\s+Phase\s+\d+(?:\.\d+)?\s*[—–-]/m.test(String(text))) return parsePhasedSpecMd(text, opts);
   if (/^#\s+(open\s+issues|issues|known\s+issues)\b/im.test(String(text))) return parseIssuesMd(text);
   const lines = String(text).split(/\r?\n/);
   const items = []; let cur = null;
@@ -159,12 +159,17 @@ export function parsePhasedSpecMd(text, { statusTables = [] } = {}) {
   const idOf = (n) => `P${String(n).replace('.', '-')}`;
   for (const l of lines) {
     if (/^##\s+completed phases/i.test(l)) { inTable = true; cur = null; continue; }
-    const h = l.match(/^##\s+Phase\s+(\d+(?:\.\d+)?)\s*[—–-]\s*(.+)$/);
-    if (h) { inTable = false; cur = { srcId: idOf(h[1]), name: h[2].replace(/\*\*/g, '').trim(), subtitle: null, stateText: null, exit: null, goal: '', paths: [], added: [], order: Number(h[1]) }; items.push(cur); sect = null; goal = false; continue; }
+    // PC36 (2026-11-26, his: "i want to be able to have the pipeline build specs. no .md"): `### Phase N —` too (Looking Glass's PHASEMAP.md)
+    const h = l.match(/^#{2,3}\s+Phase\s+(\d+(?:\.\d+)?)\s*[—–-]\s*(.+)$/);
+    if (h) { inTable = false; cur = { srcId: idOf(h[1]), name: h[2].replace(/\*\*/g, '').trim(), subtitle: null, stateText: null, exit: null, goal: '', paths: [], added: [], order: Number(h[1]), deps: null }; items.push(cur); sect = null; goal = false; continue; }
     if (/^##\s/.test(l)) { cur = null; inTable = false; continue; }
     if (inTable) { const r = l.match(/^\|\s*(\d+(?:\.\d+)?)\s*\|\s*(.+?)\s*\|\s*$/); if (r) items.push({ srcId: idOf(r[1]), name: r[2].split('—')[0].trim(), subtitle: r[2].includes('—') ? r[2].split('—').slice(1).join('—').trim() : null, stateText: 'done (Completed Phases table)', exit: null, goal: r[2], paths: [], added: [], order: Number(r[1]) }); continue; }
     if (!cur) continue;
-    const g = l.match(/^\*\*Goal:\*\*\s*(.*)$/); if (g) { cur.goal = g[1].trim(); goal = true; continue; }
+    // PC36: a phase's own **Depends on:** (its numbers), **Files:** (its backticked paths) and **Exit test:** are read as written
+    const dp = l.match(/^\*\*Depends on:\*\*\s*(.*)$/i); if (dp) { cur.deps = /nothing|none/i.test(dp[1]) ? [] : (dp[1].match(/\d+(?:\.\d+)?/g) || []).map(idOf); goal = false; continue; }
+    const fl = l.match(/^\*\*Files:\*\*\s*(.*)$/i); if (fl) { for (const m of fl[1].matchAll(/`([^`\s]+)`/g)) if (cur.paths.length < 40 && !cur.paths.includes(m[1])) cur.paths.push(m[1]); goal = false; continue; }
+    const xt = l.match(/^\*\*Exit(?: test)?:\*\*\s*(.*)$/i); if (xt) { cur.exit = xt[1].trim(); goal = false; continue; }
+    const g = l.match(/^\*\*(?:Goal|Do):\*\*\s*(.*)$/); if (g) { cur.goal = g[1].trim(); goal = true; continue; }
     if (goal) { if (l.trim() && !/^#/.test(l)) { cur.goal += ' ' + l.trim(); continue; } goal = false; }
     const sh = l.match(/^###\s+(.+)$/); if (sh) { sect = /changelog/i.test(sh[1]) ? 'changelog' : /manifest/i.test(sh[1]) ? 'manifest' : /what to build/i.test(sh[1]) ? 'build' : 'other'; continue; }
     const add = (p, isAdded) => { if (!p || cur.paths.includes(p)) { if (isAdded && p && !cur.added.includes(p)) cur.added.push(p); return; } if (cur.paths.length < 40) cur.paths.push(p); if (isAdded && !cur.added.includes(p)) cur.added.push(p); };
@@ -190,8 +195,10 @@ export function parsePhasedSpecMd(text, { statusTables = [] } = {}) {
     }
   }
   const list = [...byId.values()].sort((a, b) => a.order - b.order);
-  const chains = []; for (let i = 1; i < list.length; i++) chains.push([list[i - 1].srcId, list[i].srcId]);
-  return { items: list.map(({ order, ...x }) => ({ ...x, subtitle: x.subtitle || null })), chains, chainWhy: 'the phases are numbered in order' , shape: 'phased-spec' };
+  const own = list.some((x) => Array.isArray(x.deps)), chains = [];
+  if (own) { for (const x of list) for (const d of (x.deps || [])) if (byId.has(d)) chains.push([d, x.srcId]); }   // PC36: the phases' own dependencies, not the numbering
+  else for (let i = 1; i < list.length; i++) chains.push([list[i - 1].srcId, list[i].srcId]);
+  return { items: list.map(({ order, deps, ...x }) => ({ ...x, subtitle: x.subtitle || null })), chains, chainWhy: own ? 'each phase\'s own **Depends on:**' : 'the phases are numbered in order', shape: 'phased-spec' };
 }
 
 /**

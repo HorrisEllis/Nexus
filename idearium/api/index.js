@@ -10288,7 +10288,9 @@ async function handle(req, res, route, query, body) {
       const ranked = RIm.rankRoadmaps(RIm.findRoadmaps((repo.files || []).map(f => f.path)), readOf);
       const found = ranked.roadmaps.map(r => ({ ...r, imported: maps.some(m => m.path === r.target) }));
       if (action === 'repo.roadmaps') return ok(res, { repoUuid: params.uuid, roadmaps: found, ignored: ranked.ignored });
-      if (scope.source === 'nexus') return err(res, 400, 'Nexus\'s own phases are already phasemaps; the import is for a project\'s roadmap');
+      // PC36 (2026-11-26, his: "i want to be able to have the pipeline build specs. no .md"): a plan inside Nexus kept as .md (docs/looking-glass/
+      // PHASEMAP.md) is read into a .spec beside it too; the refusal stays only for a roadmap that is not named (Nexus holds many)
+      if (scope.source === 'nexus' && body.dir == null && action !== 'repo.roadmaps') return err(res, 400, 'name the folder of the plan to read into a .spec (dir), e.g. docs/looking-glass');
       const pick = body.dir != null ? found.find(r => r.dir === String(body.dir)) : (found.find(r => r.primary) || null);
       if (!pick) return err(res, found.length ? 400 : 404, found.length ? `this repo has ${found.length} roadmaps — name one (dir): ${found.map(r => r.dir || '.').join(', ')}` : 'no roadmap in this repo (phases.json, roadmap.json, PHASEMAP.md or ROADMAP.md)', { code: found.length ? 'WHICH_ROADMAP' : 'NO_ROADMAP' });
       if (pick.imported && body.replace !== true) return err(res, 409, `${pick.target} already exists — imported before; replace:true imports it again over it (the old one stays in the repo's versions)`, { code: 'EXISTS', map: pick.target });
