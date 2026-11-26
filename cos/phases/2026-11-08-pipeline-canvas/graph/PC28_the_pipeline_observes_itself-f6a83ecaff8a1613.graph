@@ -1,0 +1,257 @@
+envelope: 1
+uuid: nexus-export-graph-phase:PC28_the_pipeline_observes_itself:f6a83ecaff8a1613
+type: graph
+id: phase:PC28_the_pipeline_observes_itself:f6a83ecaff8a1613
+context: dependency graph of phase PC28_the_pipeline_observes_itself
+intent: null
+summary: 24 node(s), 2 crossing(s)
+system: idearium
+tags: []
+exported_at: 1795666132986
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795666132986
+lastSeenAt: 1795666132986
+fingerprint: null
+payload:
+  for: PC28_the_pipeline_observes_itself
+  kind: phase
+  repo: null
+  hash: f6a83ecaff8a1613
+  nodes:
+    - path: cortex/boot.js
+      role: changes
+      exists: true
+      system: cortex
+    - path: cos/automation/pipeline.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cos/manager/resources.js
+      role: changes
+      exists: true
+      system: cos
+    - path: cortex/cortex-service.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cortex/server.js
+      role: used-by
+      exists: true
+      system: cortex
+    - path: cos/automation/engine.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/automation/nodes.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/automation/routes.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/manager/automation-door.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/manager/server.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: lib/automation/pipeline.js
+      role: used-by
+      exists: true
+      system: lib
+    - path: tests/modules/cortex-sse-broadcast.test.js
+      role: used-by
+      exists: true
+      system: null
+    - path: cos/automation/eg-build/ladder.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/automation/eg-build/method.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/automation/eg-build/reuse.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/automation/engine.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/automation/scripts.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/automation/steps.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/automation/template.js
+      role: uses
+      exists: true
+      system: cos
+    - path: cos/manager/usage.js
+      role: uses
+      exists: true
+      system: cos
+    - path: emerge/emerge/lang/runtime.js
+      role: uses
+      exists: true
+      system: emerge
+    - path: lib/node-export.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/raid-port.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/versionium-record.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: cos/automation/pipeline.js
+      to: cos/automation/template.js
+      kind: requires
+    - from: cos/automation/pipeline.js
+      to: emerge/emerge/lang/runtime.js
+      kind: requires
+    - from: cos/automation/pipeline.js
+      to: cos/automation/eg-build/reuse.js
+      kind: requires
+    - from: cos/automation/pipeline.js
+      to: cos/automation/eg-build/method.js
+      kind: requires
+    - from: cos/automation/pipeline.js
+      to: cos/automation/eg-build/ladder.js
+      kind: requires
+    - from: cos/automation/pipeline.js
+      to: cos/automation/steps.js
+      kind: requires
+    - from: cos/automation/pipeline.js
+      to: cos/automation/engine.js
+      kind: requires
+    - from: cos/automation/pipeline.js
+      to: lib/node-export.js
+      kind: requires
+    - from: cos/automation/pipeline.js
+      to: lib/versionium-record.js
+      kind: requires
+    - from: cos/automation/pipeline.js
+      to: cos/automation/scripts.js
+      kind: requires
+    - from: cos/manager/resources.js
+      to: lib/raid-port.js
+      kind: requires
+    - from: cos/manager/resources.js
+      to: cos/manager/usage.js
+      kind: requires
+    - from: cos/automation/engine.js
+      to: cos/automation/pipeline.js
+      kind: requires
+    - from: cos/automation/nodes.js
+      to: cos/automation/pipeline.js
+      kind: requires
+    - from: cos/automation/routes.js
+      to: cos/automation/pipeline.js
+      kind: requires
+    - from: cos/manager/automation-door.js
+      to: cos/automation/pipeline.js
+      kind: requires
+    - from: lib/automation/pipeline.js
+      to: cos/automation/pipeline.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/resources.js
+      kind: requires
+    - from: cortex/cortex-service.js
+      to: cortex/boot.js
+      kind: requires
+    - from: cortex/server.js
+      to: cortex/boot.js
+      kind: requires
+    - from: tests/modules/cortex-sse-broadcast.test.js
+      to: cortex/boot.js
+      kind: requires
+  crossings:
+    - from: cos/automation/pipeline.js
+      to: emerge/emerge/lang/runtime.js
+      fromSystem: cos
+      toSystem: emerge
+      kind: system
+      known: false
+    - from: lib/automation/pipeline.js
+      to: cos/automation/pipeline.js
+      fromSystem: lib
+      toSystem: cos
+      kind: upward
+      known: false
+  ready: true
+  dag:
+    layer: 16
+    deps:
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC8_operate_a_pipeline
+    dependents: []
+    upstream:
+      - docs/2026-10-28-first-principles-phasemap.spec::FP1_where_a_request_opens
+      - docs/2026-10-28-first-principles-phasemap.spec::FP2_which_option_is_meant
+      - docs/2026-10-28-first-principles-phasemap.spec::FP3_is_the_gate_open
+      - docs/2026-10-28-gated-flows-phasemap.spec::FG2_dropdown_choose
+      - docs/2026-10-28-gated-flows-phasemap.spec::FG_D1_gate_is_a_step_field
+      - docs/2026-10-28-gated-flows-phasemap.spec::FG_D2_choice_is_read_back
+      - docs/2026-10-28-gated-flows-phasemap.spec::GF1_every_field_found_by_its_section
+      - docs/2026-10-28-gated-flows-phasemap.spec::GF2_every_editor_page_known
+      - docs/2026-10-28-gated-flows-phasemap.spec::GF3_text_and_lists_filled_and_read_back
+      - docs/2026-10-28-gated-flows-phasemap.spec::GF4_friction_goes_to_his_site_keys
+      - docs/2026-10-28-gated-flows-phasemap.spec::GG1_every_part_gated
+      - docs/2026-10-28-gated-flows-phasemap.spec::GM1_the_fill_menu_model
+      - docs/2026-10-28-gated-flows-phasemap.spec::GM2_fill_only_what_is_ticked
+      - docs/2026-10-28-gated-flows-phasemap.spec::KB1_choose_waits_and_keys
+      - docs/2026-10-28-gated-flows-phasemap.spec::KB2_site_keys
+      - docs/2026-10-28-gated-flows-phasemap.spec::KB3_site_keys_ui
+      - docs/2026-10-28-gated-flows-phasemap.spec::KB4_gates_on_macro_steps
+      - docs/2026-10-28-gated-flows-phasemap.spec::UG1_one_gate_for_every_element
+      - docs/2026-10-29-pipelines-phasemap.spec::PA4_a_gate_after_every_step
+      - docs/2026-10-29-pipelines-phasemap.spec::PL1_pipeline_core
+      - docs/2026-10-29-pipelines-phasemap.spec::PL6_the_gate_step
+      - docs/2026-10-29-pipelines-phasemap.spec::PL_D1_a_task_is_one_engine_step
+      - docs/2026-10-29-pipelines-phasemap.spec::PL_D2_pipelines_live_in_the_engine_that_runs_them
+      - docs/2026-10-29-pipelines-phasemap.spec::PL_D4_a_gate_is_a_pipeline_block
+      - docs/2026-11-01-macro-blocks-phasemap.spec::MB1_the_gate_between
+      - docs/2026-11-01-macro-blocks-phasemap.spec::MB2_the_blocks_ui
+      - docs/2026-11-01-macro-blocks-phasemap.spec::MB3_one_shape_with_pipelines
+      - docs/2026-11-01-macro-blocks-phasemap.spec::MB_D0_blocks_and_gates
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC12_the_survey
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC1_task_nodes
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC4_deploy_to_any_system
+      - docs/2026-11-01-orchestration-console-phasemap.spec::OC_D0_one_console_in_cos
+      - docs/2026-11-01-procedures-phasemap.spec::PD1_procedure_nodes_and_commands
+      - docs/2026-11-01-procedures-phasemap.spec::PD_D0_a_procedure_is_a_node_file
+      - docs/2026-11-01-procedures-phasemap.spec::PD_D0_addendum_one_procedure_type
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC1_one_box_shape
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC5_programmable_gate_types
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC8_operate_a_pipeline
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D0_reuse_first
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D13_the_pipeline_works_first_then_cos_optimised
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D1_gates_as_compartments
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D4_language
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC_D8_options_not_neat_boxes
+    downstream: []
+    blockedBy:
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC8_operate_a_pipeline
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 16 · blocked by PC8_operate_a_pipeline
+      - 'depends on (1): PC8_operate_a_pipeline · all upstream 43'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-11-08-pipeline-canvas-phasemap.spec::PC8_operate_a_pipeline
+        kind: declared

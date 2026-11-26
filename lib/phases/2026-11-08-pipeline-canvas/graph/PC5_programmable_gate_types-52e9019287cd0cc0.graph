@@ -7,11 +7,11 @@ intent: null
 summary: 9 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1795665335556
+exported_at: 1795666132856
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1795665335556
-lastSeenAt: 1795665335556
+firstSeenAt: 1795666132856
+lastSeenAt: 1795666132856
 fingerprint: null
 payload:
   for: PC5_programmable_gate_types
@@ -141,6 +141,7 @@ payload:
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC13_his_request_built_by_the_pipeline
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC26_lineage_is_the_canvas
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC27_each_output_measured_by_his_equations
+      - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC28_the_pipeline_observes_itself
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC2_procedures_and_frameworks_as_steps
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC4_the_box_kinds_on_the_canvas
       - docs/2026-11-08-pipeline-canvas-phasemap.spec::PC6_intelligence_watches_the_runs
@@ -192,7 +193,7 @@ payload:
         all upstream 40
       - >-
         needed by (4): PC4_the_box_kinds_on_the_canvas, PC6_intelligence_watches_the_runs,
-        PC8_operate_a_pipeline, PC2_procedures_and_frameworks_as_steps · all downstream 14 ·
+        PC8_operate_a_pipeline, PC2_procedures_and_frameworks_as_steps · all downstream 15 ·
         finishing it unlocks PC6_intelligence_watches_the_runs, PC8_operate_a_pipeline
       - >-
         same files as PC3_the_build_request_step with no order between them: cos/manager/server.js,

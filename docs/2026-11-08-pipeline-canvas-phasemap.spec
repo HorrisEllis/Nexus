@@ -1889,6 +1889,23 @@ phases_addendum_2026_11_24_model_server:
       outputs that drew more of them and then passed break less later.
       (8) Creativity space = slopes + gaps/free space (Part 1) and Meaning = T × effort = E1 × G × E2 × C2 (Section 6): not measured until he
       says what E1, G, E2 and C2 are.
+  PC28_the_pipeline_observes_itself:
+    status: OPEN
+    layer: backend
+    james: '"just getting the pipeline built. we can have everhing in the pipleline. the resource monitor. events in the event ledger, failure mode reports. cause and effect from the event." (2026-11-25) · before it: "not duel boot. also we can use qumu in cos for the development."'
+    depends_on: [PC8_operate_a_pipeline]
+    files: [cos/automation/pipeline.js, cos/manager/resources.js, cortex/boot.js]
+    reuse: "each step's own event ledger (runs/<run>/<step>.process_step, 0.60.538, his 'need an event ledger per step'); resources.js's per-compartment samples with baseline and sigma; Cortex's failure-mode intake (POST /api/failure-modes); the automation.pipeline.task events already emitted"
+    does: >-
+      Everything a run does is in its own record. Each step's ledger also carries the resources while it ran (RAM, VRAM, CPU, each model
+      engine's, from resources.js) and every model call (model, tokens, seconds, verdict). A failed step files its failure mode with Cortex,
+      with the step's ledger as its evidence, and Cortex's count (anomaly, coincidence, invariant) comes back onto the step. Cause and effect:
+      each event names the event that caused it (a refusal names the try, the next try names the refusal it answers, a slow call names the
+      memory pressure it ran under), so any outcome can be walked back to its causes; the canvas draws these as PC26's threads.
+    later: >-
+      His: a QEMU virtual machine as a COS compartment, a small Linux to develop COS-as-OS in (cgroups, freeze and thaw, its own swap), no dual
+      boot. Recorded, not started: after the pipeline builds itself.
+    proof: "an EMB10 run whose steps each hold their resource samples and model calls; a refused piece walked back through its causes to the event that started it; one failure mode filed by the run itself and counted by Cortex"
   PC_D18_what_he_meant_2026_11_24:
     status: "OPEN — his"
     readings:
