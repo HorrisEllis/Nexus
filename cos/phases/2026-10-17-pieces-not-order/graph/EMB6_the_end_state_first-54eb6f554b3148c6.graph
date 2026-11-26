@@ -7,11 +7,11 @@ intent: null
 summary: 29 node(s), 0 crossing(s)
 system: idearium
 tags: []
-exported_at: 1795598050192
+exported_at: 1795649875065
 source: nexus.lib.node-export
 occurrences: 1
-firstSeenAt: 1795598050192
-lastSeenAt: 1795598050192
+firstSeenAt: 1795649875065
+lastSeenAt: 1795649875065
 fingerprint: null
 payload:
   for: EMB6_the_end_state_first
@@ -232,6 +232,7 @@ payload:
       - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D2_two_contracts_two_names
       - docs/2026-10-31-emerge-as-a-system-phasemap.spec::EAS_D3_handlers_run_the_cli
     downstream:
+      - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB12_the_adversary_gate
       - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB4_torrent_pieces
       - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB5_trials_start_at_raid
       - docs/2026-10-17-pieces-not-order-phasemap.spec::EMB7_code_frames
@@ -249,7 +250,7 @@ payload:
       - 'depends on (1): EMB3_the_autocorrect · all upstream 12'
       - >-
         needed by (3): EMB4_torrent_pieces, EMB7_code_frames, EMB8_the_contract_at_every_level · all
-        downstream 5 · finishing it unlocks EMB4_torrent_pieces, EMB7_code_frames,
+        downstream 6 · finishing it unlocks EMB4_torrent_pieces, EMB7_code_frames,
         EMB8_the_contract_at_every_level
     edges:
       - from: docs/2026-10-17-pieces-not-order-phasemap.spec::EMB3_the_autocorrect

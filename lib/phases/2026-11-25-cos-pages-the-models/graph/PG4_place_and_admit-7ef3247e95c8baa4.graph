@@ -1,0 +1,62 @@
+envelope: 1
+uuid: nexus-export-graph-phase:PG4_place_and_admit:7ef3247e95c8baa4
+type: graph
+id: phase:PG4_place_and_admit:7ef3247e95c8baa4
+context: dependency graph of phase PG4_place_and_admit
+intent: null
+summary: 3 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1795651817188
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795651817188
+lastSeenAt: 1795651817188
+fingerprint: null
+payload:
+  for: PG4_place_and_admit
+  kind: phase
+  repo: null
+  hash: 7ef3247e95c8baa4
+  nodes:
+    - path: cos/ui/models/page.js
+      role: changes
+      exists: true
+      system: cos
+    - path: inference/server.eg
+      role: changes
+      exists: true
+      system: null
+    - path: inference/settings.eg
+      role: changes
+      exists: true
+      system: null
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 2
+    deps:
+      - docs/2026-11-25-cos-pages-the-models-phasemap.spec::PG2_raid_signal_to_noise
+      - docs/2026-11-25-cos-pages-the-models-phasemap.spec::PG3_hibernate_and_wake
+    dependents: []
+    upstream:
+      - docs/2026-11-25-cos-pages-the-models-phasemap.spec::PG1_measure_each_engine
+      - docs/2026-11-25-cos-pages-the-models-phasemap.spec::PG2_raid_signal_to_noise
+      - docs/2026-11-25-cos-pages-the-models-phasemap.spec::PG3_hibernate_and_wake
+    downstream: []
+    blockedBy:
+      - docs/2026-11-25-cos-pages-the-models-phasemap.spec::PG2_raid_signal_to_noise
+      - docs/2026-11-25-cos-pages-the-models-phasemap.spec::PG3_hibernate_and_wake
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 2 · blocked by PG2_raid_signal_to_noise, PG3_hibernate_and_wake
+      - 'depends on (2): PG2_raid_signal_to_noise, PG3_hibernate_and_wake · all upstream 3'
+      - 'needed by (0): —'
+    edges:
+      - from: docs/2026-11-25-cos-pages-the-models-phasemap.spec::PG2_raid_signal_to_noise
+        kind: declared
+      - from: docs/2026-11-25-cos-pages-the-models-phasemap.spec::PG3_hibernate_and_wake
+        kind: declared

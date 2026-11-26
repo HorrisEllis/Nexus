@@ -1,0 +1,30 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-25-cos-pages-the-models-phasemap.spec::PG3_hibernate_and_wake
+type: phase
+id: docs_2026-11-25-cos-pages-the-models-phasemap.spec::PG3_hibernate_and_wake
+context: pipeline phase PG3_hibernate_and_wake of docs/2026-11-25-cos-pages-the-models-phasemap.spec
+intent: null
+summary: PG3_hibernate_and_wake (?) — 3 file(s)
+system: idearium
+tags: []
+exported_at: 1795651817186
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795651817186
+lastSeenAt: 1795651817186
+fingerprint: null
+payload:
+  id: PG3_hibernate_and_wake
+  map: docs/2026-11-25-cos-pages-the-models-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - inference/inference.eg
+    - inference/server.eg
+    - cos/manager/supervisor.js
+  depends_on:
+    - PG1_measure_each_engine
+  blocks: []
+  spec: null
+  graph: 57e644728646396b

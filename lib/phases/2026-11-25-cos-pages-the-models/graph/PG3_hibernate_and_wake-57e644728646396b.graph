@@ -1,0 +1,72 @@
+envelope: 1
+uuid: nexus-export-graph-phase:PG3_hibernate_and_wake:57e644728646396b
+type: graph
+id: phase:PG3_hibernate_and_wake:57e644728646396b
+context: dependency graph of phase PG3_hibernate_and_wake
+intent: null
+summary: 5 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1795651817186
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795651817186
+lastSeenAt: 1795651817186
+fingerprint: null
+payload:
+  for: PG3_hibernate_and_wake
+  kind: phase
+  repo: null
+  hash: 57e644728646396b
+  nodes:
+    - path: cos/manager/supervisor.js
+      role: changes
+      exists: true
+      system: cos
+    - path: inference/inference.eg
+      role: changes
+      exists: true
+      system: null
+    - path: inference/server.eg
+      role: changes
+      exists: true
+      system: null
+    - path: cos/manager/server.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/manager/suspend.js
+      role: uses
+      exists: true
+      system: cos
+  edges:
+    - from: cos/manager/supervisor.js
+      to: cos/manager/suspend.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/supervisor.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 1
+    deps:
+      - docs/2026-11-25-cos-pages-the-models-phasemap.spec::PG1_measure_each_engine
+    dependents:
+      - docs/2026-11-25-cos-pages-the-models-phasemap.spec::PG4_place_and_admit
+    upstream:
+      - docs/2026-11-25-cos-pages-the-models-phasemap.spec::PG1_measure_each_engine
+    downstream:
+      - docs/2026-11-25-cos-pages-the-models-phasemap.spec::PG4_place_and_admit
+    blockedBy:
+      - docs/2026-11-25-cos-pages-the-models-phasemap.spec::PG1_measure_each_engine
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 1 · blocked by PG1_measure_each_engine
+      - 'depends on (1): PG1_measure_each_engine'
+      - 'needed by (1): PG4_place_and_admit'
+    edges:
+      - from: docs/2026-11-25-cos-pages-the-models-phasemap.spec::PG1_measure_each_engine
+        kind: declared

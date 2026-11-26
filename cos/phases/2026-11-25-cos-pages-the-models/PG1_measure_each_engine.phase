@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-25-cos-pages-the-models-phasemap.spec::PG1_measure_each_engine
+type: phase
+id: docs_2026-11-25-cos-pages-the-models-phasemap.spec::PG1_measure_each_engine
+context: pipeline phase PG1_measure_each_engine of docs/2026-11-25-cos-pages-the-models-phasemap.spec
+intent: null
+summary: PG1_measure_each_engine (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1795651817181
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795651817181
+lastSeenAt: 1795651817181
+fingerprint: null
+payload:
+  id: PG1_measure_each_engine
+  map: docs/2026-11-25-cos-pages-the-models-phasemap.spec
+  repo: null
+  layer: null
+  status: OPEN
+  files:
+    - cos/manager/resources.js
+    - inference/inference.eg
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: cf7af48d44641b6e

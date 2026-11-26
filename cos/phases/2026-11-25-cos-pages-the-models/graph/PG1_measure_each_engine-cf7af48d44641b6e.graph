@@ -1,0 +1,84 @@
+envelope: 1
+uuid: nexus-export-graph-phase:PG1_measure_each_engine:cf7af48d44641b6e
+type: graph
+id: phase:PG1_measure_each_engine:cf7af48d44641b6e
+context: dependency graph of phase PG1_measure_each_engine
+intent: null
+summary: 6 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1795651817180
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795651817180
+lastSeenAt: 1795651817180
+fingerprint: null
+payload:
+  for: PG1_measure_each_engine
+  kind: phase
+  repo: null
+  hash: cf7af48d44641b6e
+  nodes:
+    - path: cos/manager/resources.js
+      role: changes
+      exists: true
+      system: cos
+    - path: inference/inference.eg
+      role: changes
+      exists: true
+      system: null
+    - path: cos/manager/server.js
+      role: used-by
+      exists: true
+      system: cos
+    - path: cos/manager/usage.js
+      role: uses
+      exists: true
+      system: cos
+    - path: lib/raid-port.js
+      role: uses
+      exists: true
+      system: lib
+    - path: lib/versionium-record.js
+      role: uses
+      exists: true
+      system: lib
+  edges:
+    - from: cos/manager/resources.js
+      to: lib/raid-port.js
+      kind: requires
+    - from: cos/manager/resources.js
+      to: cos/manager/usage.js
+      kind: requires
+    - from: cos/manager/resources.js
+      to: lib/versionium-record.js
+      kind: requires
+    - from: cos/manager/server.js
+      to: cos/manager/resources.js
+      kind: requires
+  crossings: []
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-11-25-cos-pages-the-models-phasemap.spec::PG2_raid_signal_to_noise
+      - docs/2026-11-25-cos-pages-the-models-phasemap.spec::PG3_hibernate_and_wake
+    upstream: []
+    downstream:
+      - docs/2026-11-25-cos-pages-the-models-phasemap.spec::PG2_raid_signal_to_noise
+      - docs/2026-11-25-cos-pages-the-models-phasemap.spec::PG3_hibernate_and_wake
+      - docs/2026-11-25-cos-pages-the-models-phasemap.spec::PG4_place_and_admit
+    blockedBy: []
+    unlocks:
+      - docs/2026-11-25-cos-pages-the-models-phasemap.spec::PG2_raid_signal_to_noise
+      - docs/2026-11-25-cos-pages-the-models-phasemap.spec::PG3_hibernate_and_wake
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0 · ready
+      - 'depends on (0): —'
+      - >-
+        needed by (2): PG2_raid_signal_to_noise, PG3_hibernate_and_wake · all downstream 3 ·
+        finishing it unlocks PG2_raid_signal_to_noise, PG3_hibernate_and_wake
+    edges: []
