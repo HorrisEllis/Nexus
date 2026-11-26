@@ -1981,3 +1981,42 @@ design to one rule, and applied it recursively, while learning the vocabulary as
 - **Self-assessment at the top** (Kruger & Dunning, 1999, "Unskilled and Unaware of It"). The top quartile placed themselves around the 70th–75th percentile while scoring around the 87th. Seeing how peers did partly corrected them. Caveat: part of this pattern is argued to be a statistical artefact (regression to the mean), and the debate is open. It is a lens, not a diagnosis.
 - **Tacit knowledge** (Polanyi, *The Tacit Dimension*, 1966: "we can know more than we can tell"). "It's implicit" is tacit knowing. An entry like this one is the move from tacit to explicit (codification). His specs, axioms and this ledger do it for his own mind.
 - **Kept out on purpose:** names of the people in his life, and personal details beyond the above. This is a portfolio that buyers and mentors read.
+
+
+### 2026-11-26 — "return to the original request, and retry, until it either does it or figures out how": the pipeline as a mind that fails forward
+
+**His words, in order (2026-11-26):**
+- "okay so the pipeline is worthless until that happens end to end with something real"
+- "it needs to run end to end, fix itself each time and return to the original request, and retry, until it either does it or figures out how."
+- "should be using end state first reasoning for debugging right?"
+- "those blue boxes and green boxes. need to go. nodes and gates only, context is in the gates, that i can look at." · "not gates, steps." · "nodes i mean"
+- "the first step is the worksurface for the request, the one raid creates. like everything is a node. wouldn't it branch off at the gate?"
+- "okay, the overlap. each node, has a zoom in to show the branches." · "Yes recursive. And meta."
+- "i want increments ... pieces as the progress not one long connected piece" · "like each node is a chunk, its own piece in the progress bar"
+- "an idea can be created into a spec, then in phases, then in phase nodes, dag per gate for a check list of what's needed. Like each node can be an end state and broken down."
+- "No matter what it is. A new node for any next step. Then we can have a timeline to replay and reuse the pipeline. Then use them to learn and optimize. It's the idearium pipeline, the idea pipeline."
+
+**The calls against the alternatives.**
+- *A failure goes back to the request*, not to a dead end. Before: the build climbed the model ladder and, at the top, stopped with "no model is left". His rule: file it, return to the original request, try the next way, and when every way is tried, write what was missing. The alternative he rejected is the usual one: retry the same thing, then give up.
+- *Every next step is a new node*, never an edit of an old one. So a run is a timeline that can be replayed from any node, and a replay is a new timeline beside the old one. The alternative is a run that is overwritten as it retries (what most job runners keep).
+- *Nodes and gates only*, the context inside the gate, each node opening into its own layer (recursive), the list of pipelines the layer above (meta). The alternative he removed: piece boxes hung on one plane under their step, overlapping.
+- *Progress in chunks*, one per node, each its own state. The alternative: one percentage bar that hides which piece is stuck.
+- *One shape at every level*: idea → spec → phases → phase nodes, each node an end state with a checklist (a DAG) at its gate, broken down the same way. He placed it himself as Idearium's idea pipeline, run by COS.
+
+**What is built and runnable (the coder's code, from his calls):**
+- The loop: `NEXUS_STEP_INPUT='{"map":"docs/2026-11-18-ollama-local-agent-phasemap.spec","phase":"NOPE","rounds":1,"ladder":"hf.co/mradermacher/DeepSeek-Coder-V2-Lite-Instruct-abliterated-i1-GGUF:Q4_K_M"}' node cos/build/build-phase.js` prints its last line as JSON: a failure to file, and a branch back to the request (attempt 2) with the next way. With `"tried":["strong-readers","fresh-plan","top-model"]` the branch is "figure out how", a phase written through Idearium.
+- It ran by itself on real phases. OL6 (a load score): every way tried, then it wrote UD28 ("the builder learns what OL6 needed") into docs/2026-11-25-break-anything-down-phasemap.spec through Idearium's own route, with no one asking. RQ1 (the request waits in RAID's queue): 45 builds on disk (cos/data/build); its pieces compile and pass in Emerge (emerge-passed), and the last gate, its own examples, still fails on one expectation; the loop keeps going back to the request.
+- The canvas (COS → Automation): the request first (REQUEST · RAID), the end state last (END STATE · CONTRACT), each node branching off the gate before it, each build step opening into its own layer (double-click; Esc back), the context of any node or gate in the Inspector.
+- The list of pipelines (Runs tab): title as it is, its id as metadata, progress in chunks, open, run, pause, continue, stop, rename, delete (archived, restorable), new.
+- The Timeline (Runs → a pipeline's runs → a run): its nodes in the order they happened, each with what grew it, why, when, how long and what it gave; "Replay from here" starts a new run through COS's resume (nodes before kept, this one and those after done again).
+
+**Predictions, registered before the results (his rule):**
+- **P1.** Of the next 10 phases the loop runs on its own, each ends either built (examples-passed) or with a "how" phase written; none ends silently. *Measure:* the build records and the maps' new UD phases. *Falsified by* one run that stops with neither.
+- **P2.** Replay from a node reaches the same verdict at that node when nothing it depends on changed (determinism of the gate side). *Measure:* replay three finished runs from their middle node; compare verdicts. *Falsified by* a different verdict with the same inputs.
+- **Not predicted:** how many phases the loop finishes per day. There is no baseline yet.
+
+**What it does not prove.** No phase has yet been built end to end by the loop alone: RQ1 stops at its last gate. The "how" it wrote for OL6 is a named gap, not a fix. The loop's ways are a fixed list today; his "end state first reasoning for debugging" (diagnose backwards from the end state to the first unmet condition) is the next step, not yet built. The loop wrote the same "how" twice once (two runs reached it); the duplicate was dropped by hand.
+
+**Skill shown:** design by correction, in real time. Each message moved one piece (gates → steps → nodes; one plane → layers; one bar → chunks; a dead end → the request), and each was checked against the screen he was looking at. He named the general shape (one unit at every level, every step a node, the timeline as memory) from the particulars.
+
+**His part / the coder's part:** every rule and call above is his, in his words. The code (build-phase.js's loop, the builder's fixes, the canvas, the list, the Timeline), the reading of the build records, and the prediction wording are the coder's.
