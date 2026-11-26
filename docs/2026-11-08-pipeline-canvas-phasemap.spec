@@ -1834,6 +1834,28 @@ phases_addendum_2026_11_24_model_server:
       b_drawn_on_the_canvas: "the yarn drawn on the canvas, each kind its own line; the trunk (the path that passed) lit; a node opens its content and its why. Preview first, on e1968c61"
       c_more_sources: "pipeline runs, RAID's decisions, Idearium's ideas, a framework trial: each a plugin writing the same record"
       d_the_overlap: "parallel pipelines per domain on one problem; identical primitives, principles, patterns or invariants matched and joined; counted anomaly, coincidence, invariant; sigma and delta shown. Its proof is registered in FRAMEWORK-THREADS before it runs"
+  PC27_each_output_measured_by_his_equations:
+    status: OPEN
+    layer: backend
+    james: '"I was thinking, we need metrics for each output. so then we could mathmatically quantify each output. thats simple to understand if its incorrect, as long as we have the math, and the variables for the equations correct in relation to the metrics. look at the intelligence system and my framework. some expiremental equations, i have worked on a bit" (2026-11-25)'
+    depends_on: [PC26_lineage_is_the_canvas]
+    files: [intelligence/equations.eg, intelligence/test/equations.test.eg, cos/ui/run-console-preview/server.js]
+    reuse: "his equations (innovation toolkit addendum Parts 2, 3, 5, 6 and Section 6); the intelligence system's measures (rfr2 delta and sigma, baseline.js, the crystallizer's three-and-lift, snr.js fidelity, adversarial.js, friction.js); the build record and the adversary gate's verdicts as the data; no new store"
+    does: >-
+      Every output (a node of the yarn, PC26) carries its metrics, each variable of his equations defined as one measurement, so a wrong output
+      and a wrong equation can both be seen. For a piece the pipeline builds: Fidelity = the share of its contract's examples and the adversary's
+      agreed cases it passes; Alignment = its parent passes with it (it serves the sentence it was written for); Expansion = the new cases it
+      added to its contract, and the pieces that reuse it; Signal = Alignment + Fidelity + Expansion (his Part 5). Tension = the readers'
+      disagreement, tensions over cases (his Part 4). Slope = the change in Fidelity from one try to the next (the learning gradient). Flow =
+      Expansion × Contraction × Balance (Part 2): distinct bodies tried, refusals acted on, and how even the two are. Weighting = Urgency ×
+      Importance × Fidelity × Slope and Leverage = Tension × Weight × f(Slope) (Part 6, Section 6) rank which gap is worked next. Cost beside
+      them: tokens, seconds, the model's size (his "the smallest model to complete the task"). The equations live in Emerge, one function each.
+    rule: >-
+      An equation is a claim: it is tested, not trusted. Each is registered in FRAMEWORK-THREADS with a prediction before it is used to decide
+      anything (for example: pieces with higher Signal are refused less by the adversary afterwards), measured on real runs, and marked held or
+      failed. A failed one is kept and its variables re-examined (his: "as long as we have the math, and the variables for the equations correct").
+      Known mismatch to settle first: friction.js's slope only amplifies, his f(Slope) inverts past a threshold (toolkit × intelligence, row 34).
+    proof: "EMB10 run e1968c61's pieces each with Fidelity, Alignment, Expansion, Signal, Tension, Slope and cost; the prediction registered before, and its result on the next run"
   PC_D18_what_he_meant_2026_11_24:
     status: "OPEN — his"
     readings:
