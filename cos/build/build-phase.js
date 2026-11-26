@@ -11,7 +11,7 @@ const BUILD = path.join(ROOT, 'cos', 'data', 'build');
 // James, 2026-11-24: "3b needs to do it's pices": the 3b alone; what it cannot do is broken down and asked of Nexus, not of a bigger model
 // James, 2026-11-24: "a bigger model, only if we hit an actual wall." The rung climbs only when a piece cannot be broken down any further (no new
 // smaller piece can be named, or it loops); each climb is a row in the build's record, a wall to look at.
-const LADDER = inp.ladder || 'huihui_ai/qwen2.5-coder-abliterate:3b,hf.co/mradermacher/DeepSeek-Coder-V2-Lite-Instruct-abliterated-i1-GGUF:Q4_K_M';
+const LADDER = inp.ladder || 'huihui_ai/qwen2.5-coder-abliterate:3b,huihui_ai/qwen2.5-coder-abliterate:7b';
 const lastRun = () => fs.readdirSync(BUILD).filter((f) => /^cbuild-.*\.jsonl$/.test(f)).map((f) => ({ f, t: fs.statSync(path.join(BUILD, f)).mtimeMs })).sort((a, b) => b.t - a.t)[0];
 const rowsOf = (f) => fs.readFileSync(path.join(BUILD, f), 'utf8').split('\n').filter(Boolean).map((l) => { try { return JSON.parse(l); } catch (_) { return {}; } });
 const rounds = []; let best = -1;
@@ -20,7 +20,7 @@ const rounds = []; let best = -1;
 // to the original request: the same map and phase, built again with the next way not yet tried (stronger readers, a fresh plan, the strongest
 // model). When every way is tried, the last branch figures out how: what the builder lacked is written as a phase of the builder's own map
 // through Idearium, with the evidence, so the next build has it. Each attempt is a node grown from the one before, on the canvas.
-const STRONG = 'hf.co/mradermacher/DeepSeek-Coder-V2-Lite-Instruct-abliterated-i1-GGUF:Q4_K_M,huihui_ai/qwen2.5-coder-abliterate:7b,huihui_ai/qwen2.5-coder-abliterate:3b';
+const STRONG = 'huihui_ai/qwen2.5-coder-abliterate:7b,huihui_ai/llama3.2-abliterate:3b,huihui_ai/qwen2.5-coder-abliterate:3b';
 const WAYS = [
   { id: 'strong-readers', what: 'the stronger readers write and check its examples first', input: { readers: STRONG } },
   { id: 'fresh-plan', what: 'planned again from nothing: its functions read again, its examples asked again', input: { fresh: true } },
@@ -145,7 +145,7 @@ if (inp.queue) return;   // the queue answers by itself, above (a module's top l
 // a build that made no progress says what to try next, as branches the pipeline grows (PC26): the failure filed with Cortex (evidence, never a
 // recovery), and the same build on the next model up (his: "a bigger model, only if we hit an actual wall" — a round with no progress is the
 // wall). A retry that fails grows the next one; at the top of the ladder, nothing is left to try and the run fails, said.
-const CLIMB = (inp.climb || 'huihui_ai/qwen2.5-coder-abliterate:3b,huihui_ai/qwen2.5-coder-abliterate:7b,hf.co/mradermacher/DeepSeek-Coder-V2-Lite-Instruct-abliterated-i1-GGUF:Q4_K_M').split(',');
+const CLIMB = (inp.climb || 'huihui_ai/qwen2.5-coder-abliterate:3b,huihui_ai/qwen2.5-coder-abliterate:7b').split(',');
 const top = LADDER.split(',').map((m) => CLIMB.indexOf(m.trim())).reduce((a, b) => Math.max(a, b), -1), next = CLIMB[top + 1] || null;
 const short = (m) => String(m).split('/').pop().replace(/[^\w.:-]/g, '');
 // at the top of the ladder: back to the original request, the next way not yet tried (2026-11-26), never a dead end

@@ -21,7 +21,7 @@ const { spawnSync } = require('child_process');
 const ROOT = path.resolve(__dirname, '..', '..');
 const arg = (k, d = null) => { const i = process.argv.indexOf('--' + k); return i < 0 ? d : (process.argv[i + 1] && !process.argv[i + 1].startsWith('--') ? process.argv[i + 1] : true); };
 const MAP = arg('map'), PHASE = arg('phase'), REPO = arg('repo', 'nexus-id-repo-50f0890c'), LAND = !!arg('land');
-const LADDER = String(arg('ladder', 'huihui_ai/qwen2.5-coder-abliterate:3b,hf.co/mradermacher/DeepSeek-Coder-V2-Lite-Instruct-abliterated-i1-GGUF:Q4_K_M')).split(',').map((s) => s.trim()).filter(Boolean);
+const LADDER = String(arg('ladder', 'huihui_ai/qwen2.5-coder-abliterate:3b,huihui_ai/qwen2.5-coder-abliterate:7b')).split(',').map((s) => s.trim()).filter(Boolean);
 // James, 2026-11-23: "each step builds upon the last". --pieces <file.json>: the phase's small pieces, each [{ name, sig, ret, does, body }], already written and passed: no model is asked again
 const PIECES = arg('pieces') ? JSON.parse(fs.readFileSync(arg('pieces'), 'utf8')) : null, pieceBody = (gap) => { const p = (PIECES || []).find((x) => x.name === gap); if (!p) throw new Error('no piece ' + gap); return p.body; };
 const OLLAMA = Number(arg('ollama-port', 3749)), TASKS = arg('tasks', path.join(ROOT, 'idearium', 'data', 'tasks'));
@@ -380,7 +380,7 @@ async function endState({ ph, plan, src, mapText }) {
         // name(params) — description). The builder repairs an unread answer itself: any shape is read (fn/def/function, bullets, backticks, bold,
         // a description or none); when nothing reads, the model is asked again with its own answer shown and the form it missed, climbing from
         // the smallest model (his: "a bigger model, only if we hit an actual wall"). Each unread answer is kept on disk as the evidence.
-        const writers = [...new Set(['huihui_ai/qwen2.5-coder-abliterate:3b', 'huihui_ai/qwen2.5-coder-abliterate:7b', String(arg('spec-writer', 'hf.co/mradermacher/DeepSeek-Coder-V2-Lite-Instruct-abliterated-i1-GGUF:Q4_K_M'))])];
+        const writers = [...new Set(['huihui_ai/qwen2.5-coder-abliterate:3b', 'huihui_ai/qwen2.5-coder-abliterate:7b', String(arg('spec-writer', 'huihui_ai/qwen2.5-coder-abliterate:7b'))])];
         const SKIP = new Set(['if', 'for', 'while', 'return', 'print', 'len', 'range', 'map', 'filter', 'sum', 'max', 'min', 'example', 'name']);
         const readSigs = (t) => { const seen = new Set(), out = [];
           for (const x of String(t || '').matchAll(/^[ \t]*(?:[-*•]|\d+[.)])?[ \t]*[`*]*[ \t]*(?:(?:pub[ \t]+)?(?:fn|def|function|export[ \t]+function)[ \t]+)?([a-z_]\w*)[ \t]*\(([^)\n]*)\)[ \t]*[`*]*[ \t]*(?:->[^—–:\n]*)?[ \t]*(?:[—–:-]+[ \t]*(.*))?$/gim)) {
@@ -457,7 +457,7 @@ async function endState({ ph, plan, src, mapText }) {
     const three = READERS.length >= 3 ? READERS : ADVERSARIES.length >= 3 ? ADVERSARIES : ['huihui_ai/qwen2.5-coder-abliterate:3b', 'huihui_ai/llama3.2-abliterate:3b', 'huihui_ai/smallthinker-abliterated:3b'];
     // 2026-11-26 — James: "cheap first, as long as thats noted" · "the pipeline is worthless until that happens end to end with something real".
     // The small readers first; where they agree on nothing, the readers climb once (the strongest writes, two others check) and the climb is a row.
-    const STRONG = String(arg('strong-readers', 'hf.co/mradermacher/DeepSeek-Coder-V2-Lite-Instruct-abliterated-i1-GGUF:Q4_K_M,huihui_ai/qwen2.5-coder-abliterate:7b,huihui_ai/qwen2.5-coder-abliterate:3b')).split(',').map((x) => x.trim()).filter(Boolean);
+    const STRONG = String(arg('strong-readers', 'huihui_ai/qwen2.5-coder-abliterate:7b,huihui_ai/llama3.2-abliterate:3b,huihui_ai/qwen2.5-coder-abliterate:3b')).split(',').map((x) => x.trim()).filter(Boolean);
     const readersOf = (ms) => ms.map((m) => ({ name: m, ask: (message, { gap } = {}) => ask(message, m, (gap || '') + ':examples', 1) }));
     const agreed = [];
     for (const e of (src.exports || []).filter((x) => /\(/.test(x.signature || ''))) {
