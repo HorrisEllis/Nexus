@@ -25,6 +25,10 @@ if (inp.queue) {
   const http = require('http');
   const get = (port, p) => new Promise((res) => { const q = http.get({ host: '127.0.0.1', port, path: p, timeout: 180000 }, (r) => { let t = ''; r.on('data', (c) => t += c); r.on('end', () => { try { res(JSON.parse(t)); } catch (_) { res(null); } }); }); q.on('timeout', () => { q.destroy(); res(null); }); q.on('error', () => res(null)); });
   (async () => {
+    // a scheduled run steps aside while an earlier run of the same pipeline is still going (two at once would double the memory it needs)
+    if (inp.pipelineId) { const rs = await get(7799, `/api/cos/automation/pipeline-runs?pipelineId=${encodeURIComponent(inp.pipelineId)}&limit=5`);
+      const going = ((rs && rs.runs) || []).filter((r) => r.status === 'running' || r.status === 'paused');
+      if (going.length > 1) { console.log(JSON.stringify({ ok: true, skipped: true, why: `an earlier run is still going (${going.slice(1).map((r) => r.id.slice(0, 8)).join(', ')}): this one steps aside`, branches: [] })); process.exit(0); } }
     const q = await get(4800, '/api/phases/next');
     if (!q || !Array.isArray(q.queue)) { console.log(JSON.stringify({ ok: false, why: 'Idearium did not give its queue of ready phases (GET /api/phases/next)' })); process.exit(1); }
     const emerge = (x) => (x.files || []).some((f) => /\.eg$/.test(f) && !/(^|\/)test\//.test(f) && !/\.test\.eg$/.test(f));
