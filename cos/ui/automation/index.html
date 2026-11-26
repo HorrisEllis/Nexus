@@ -789,10 +789,12 @@ function work() {
     } else { const c = $('console'); if (c) c.outerHTML = consoleHtml(false); }
     bindConsole();
   } else if (S.view === 'console') { w.innerHTML = consoleHtml(true); bindConsole(); }
+  else if (S.view === 'runs' && S.runsOf && S.timelineOf) { if (w.querySelector('[data-back]') && w.dataset.tl === S.timelineOf + ':' + JSON.stringify((runs(S.pid).find((x) => x.id === S.timelineOf) || {}).tasks)) return; w.dataset.tl = S.timelineOf + ':' + JSON.stringify((runs(S.pid).find((x) => x.id === S.timelineOf) || {}).tasks); timelineView(w); }
   else if (S.view === 'runs' && !S.runsOf) { if (w.querySelector('.lib-title input')) return; libraryView(w); }   /* not while a name is being typed */
   else if (S.view === 'runs') { const rs = p ? runs(p.id) : [];
     w.innerHTML = `<div class="page"><h2><a href="#" data-lib style="color:var(--sky);text-decoration:none;font-size:12px">◂ all pipelines</a> · ${esc((p && p.name) || '')} · Runs <span style="color:var(--text3);font:12px var(--mono)">${rs.length}</span></h2>${rs.length ? `<table class="t"><thead><tr><th>Status</th><th>Started</th><th>Took</th><th>Steps</th><th>Error</th></tr></thead><tbody>${rs.map((r) => `<tr data-run="${esc(r.id)}"><td><span class="pill" style="color:${col(r.status)}"><span class="sd" style="background:${col(r.status)}"></span>${esc(r.status)}</span></td><td class="m">${r.at ? new Date(r.at).toLocaleString() : '—'}</td><td class="m">${r.at ? dur((r.end || Date.now()) - r.at) : '—'}</td><td><div class="mini">${p.tasks.map((t) => `<i title="${esc(t.label)}: ${esc(st(r, t.id))}" style="background:${col(st(r, t.id))}"></i>`).join('')}</div></td><td class="m" style="color:var(--coral)">${esc((r.error || '').slice(0, 120))}</td></tr>`).join('')}</tbody></table>` : '<div class="empty">No runs yet.</div>'}</div>`;
     { const lb = w.querySelector('[data-lib]'); if (lb) lb.onclick = (e) => { e.preventDefault(); S.runsOf = null; draw(); }; }
+    w.querySelectorAll('[data-run]').forEach((tr) => { tr.style.cursor = 'pointer'; tr.title = 'Open its timeline'; tr.onclick = () => { S.timelineOf = tr.dataset.run; delete w.dataset.tl; draw(); }; });
     w.querySelectorAll('[data-run]').forEach((tr) => tr.oncontextmenu = (e) => { e.preventDefault(); menu([{ label: 'Copy run id', icon: 'copy', run: () => copy(tr.dataset.run) }, { label: 'Retry this run', icon: 'retry', disabled: later }, { label: 'Open its flight record', icon: 'flight', disabled: 'Joins with the Flight view.' }], { x: e.clientX, y: e.clientY }); });
   } else if (S.view === 'vars' || S.view === 'settings') { const e = Object.entries((p && (S.view === 'vars' ? p.vars : p.settings)) || {});
     w.innerHTML = `<div class="page"><h2>${S.view === 'vars' ? 'Variables' : 'Settings'}</h2>${e.length ? `<table class="t"><thead><tr><th>Name</th><th>Value</th></tr></thead><tbody>${e.map(([k, x]) => `<tr><td class="m" style="color:var(--text)">${esc(k)}</td><td class="m">${esc(typeof x === 'string' ? x : JSON.stringify(x))}</td></tr>`).join('')}</tbody></table>` : '<div class="empty">None set.</div>'}</div>`;
@@ -840,6 +842,35 @@ function libraryView(w) {
         const fin = async (save) => { i.onblur = null; if (save && i.value.trim() && i.value.trim() !== old) await cos('PUT', 'automation/pipelines/' + id, { name: i.value.trim() }, 'Renamed'); draw(); };
         i.onkeydown = (e) => { if (e.key === 'Enter') fin(true); else if (e.key === 'Escape') fin(false); }; i.onblur = () => fin(true); return; }
     } });
+}
+// 2026-11-26 — James: "No matter what it is. A new node for any next step. Then we can have a timeline to replay and reuse the pipeline. Then use
+// them to learn and optimize." (PC26, expanded). A run's nodes in the order they happened: each with what grew it and why, its status, when, how
+// long, what it gave or its error. "Replay from here" starts a new run through COS's resume: the nodes before this one kept, this one and every
+// one after it done again, so a replay is a new timeline beside the old one, never a change to it.
+function timelineView(w) {
+  const p = pipe(), r = p && runs(p.id).find((x) => x.id === S.timelineOf); if (!r) { S.timelineOf = null; return work(); }
+  const first = (t) => (t.events && t.events[0] && t.events[0].at) || t.startedAt || t.at || 0;
+  const ns = Object.entries(r.tasks || {}).map(([id, t]) => ({ id, ...t, t0: first(t) })).sort((a, b) => (a.t0 || Infinity) - (b.t0 || Infinity));
+  const t0 = r.at || (ns[0] && ns[0].t0) || 0, live = /running|paused/.test(r.status || '');
+  const out = (v) => { const s = typeof v === 'string' ? v : v == null ? '' : JSON.stringify(v); return s.length > 400 ? s.slice(0, 400) + '…' : s; };
+  w.innerHTML = `<div class="page"><h2><a href="#" data-back style="color:var(--sky);text-decoration:none;font-size:12px">◂ runs of ${esc(p.name || '')}</a> · Timeline</h2>`
+    + `<div class="m" style="font-size:11px;color:var(--text3);margin:-6px 0 12px">${esc(r.id)} · ${esc(r.status)} · started ${r.at ? new Date(r.at).toLocaleString() : '—'}${r.by ? ' · asked by ' + esc(r.by) : ''} · ${ns.length} nodes</div>`
+    + `<div style="position:relative;padding-left:22px;border-left:2px solid var(--edge);margin-left:8px">`
+    + `<div style="position:relative;margin-bottom:14px"><span style="position:absolute;left:-30px;top:2px;width:14px;height:14px;border-radius:50%;background:var(--violet,#a78bfa)"></span><b style="color:var(--bright)">The request</b> <span class="m" style="color:var(--text2);font-size:11px">${r.vars ? esc(Object.entries(r.vars).filter(([, v]) => v !== '' && v != null).map(([k, v]) => k + ' ' + v).join(' · ')) : ''}</span></div>`
+    + ns.map((n, i) => `<div style="position:relative;margin-bottom:14px;padding:10px 12px;border:1px solid var(--edge);border-radius:9px;background:var(--bg2)">`
+      + `<span style="position:absolute;left:-31px;top:12px;width:12px;height:12px;transform:rotate(45deg);border-radius:2px;background:${col(n.status)}"></span>`
+      + `<div style="display:flex;gap:10px;align-items:baseline"><b style="color:var(--bright);font-size:13px">${i + 1}. ${esc(n.label || n.id)}</b><span style="color:${col(n.status)};font-size:12px">${esc(n.status || 'waiting')}</span><span style="flex:1"></span>`
+      + `<span class="m" style="font-size:11px;color:var(--text2)">${n.t0 ? '+' + dur(n.t0 - t0) : ''}${n.ms != null ? ' · took ' + dur(n.ms) : ''}${n.attempts > 1 ? ' · ' + n.attempts + ' tries' : ''}</span>`
+      + `<button class="lib-b" data-replay="${esc(n.id)}" ${live ? 'disabled title="Wait until the run ends (or stop it)."' : ''}>Replay from here</button></div>`
+      + `<div class="m" style="font-size:10.5px;color:var(--text3);margin-top:2px">${esc(n.id)}${n.grownFrom ? ' · grew from ' + esc(n.grownFrom) : ''}${n.dependsOn && n.dependsOn.length ? ' · after ' + esc(n.dependsOn.join(', ')) : ''}</div>`
+      + (n.why ? `<div style="font-size:12px;color:var(--text2);margin-top:4px">why: ${esc(n.why)}</div>` : '')
+      + (n.error ? `<div class="pre bad" style="margin-top:6px">${esc(out(n.error))}</div>` : n.output != null && n.output !== '' ? `<div class="pre" style="margin-top:6px">${esc(out(n.output))}</div>` : '')
+      + `</div>`).join('')
+    + `<div style="position:relative"><span style="position:absolute;left:-30px;top:2px;width:14px;height:14px;border-radius:50%;background:${/done|complete|passed|recovered/.test(r.status || '') ? 'var(--ok)' : 'var(--edge)'}"></span><b style="color:var(--bright)">The end state</b> <span style="color:var(--text2);font-size:12px">${/done|complete|passed|recovered/.test(r.status || '') ? 'met' : live ? 'not met yet' : 'not met: ' + esc(r.status || '')}</span></div></div></div>`;
+  w.querySelector('[data-back]').onclick = (e) => { e.preventDefault(); S.timelineOf = null; draw(); };
+  w.querySelectorAll('[data-replay]').forEach((b) => b.onclick = () => { const at = ns.findIndex((n) => n.id === b.dataset.replay), redo = ns.slice(at).map((n) => n.id);
+    if (!confirm('Replay from "' + (ns[at].label || ns[at].id) + '"? A new run keeps the ' + at + ' node(s) before it and does it and the ' + (redo.length - 1) + ' after it again. This run stays as it is.')) return;
+    cos('POST', 'automation/pipeline-runs/' + r.id + '/resume', { by: 'person', redo }, 'Replaying from ' + (ns[at].label || ns[at].id)); });
 }
 // the Phases and Components side tabs: everything Nexus holds, searchable, each one a box with + Add (drawn once; the search filters in place)
 function listView(w) {
