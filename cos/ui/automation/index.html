@@ -646,9 +646,20 @@ function gateTree(t, L, p) {
 }
 // PC26 (his, 2026-11-25: "Anything starts as the first step. Then everything branches from that one"): the steps a run grew (each naming
 // the step it grew from) are drawn as steps of the pipeline, wired to that step, so the canvas shows the run as it really went
-function withGrown(p) { const r = p && last(p.id); if (!r || !r.tasks) return p; const have = new Set((p.tasks || []).map((t) => t.id)), add = [];
+function withGrown(p) { if (p && p.noGrow) return p; const r = p && last(p.id); if (!r || !r.tasks) return p; const have = new Set((p.tasks || []).map((t) => t.id)), add = [];
   for (const [id, x] of Object.entries(r.tasks)) if (!have.has(id) && x.grownFrom) add.push({ id, label: x.label || id, depends_on: Array.isArray(x.dependsOn) && x.dependsOn.length ? x.dependsOn : [x.grownFrom] /* each on the one it builds on */, step: { type: 'script', config: {} }, grown: true, why: x.why || null });
   return add.length ? { ...p, tasks: [...p.tasks, ...add] } : p; }
+// 2026-11-26 — James: "okay, the overlap. each node, has a zoom in to show the branches." Two layers: the pipeline (its steps, the request
+// first, the end state last) and, opened from a step by double-click, that step's own layer: the request, the step, its nodes, its end. Esc or
+// "back" returns. The step that builds says what is inside it.
+function canvasOf(p, grows) {
+  if (S.inside && grows) { const bt = (withGrown(p).tasks || []).find((t) => t.id === S.inside); if (bt) { const p1 = { ...p, tasks: [{ ...bt, depends_on: [] }], noGrow: true }, L1 = layout(p1);
+      return svgOf(p1, gateTree(grows, L1, p1)).replace('<g id="vp">', '<g id="vp"><text class="cv-back" x="40" y="22" style="cursor:pointer;fill:var(--sky)" font-size="12" font-family="var(--mono)">◂ back to the pipeline · inside “' + esc(bt.label || bt.id) + '”</text>'); }
+    S.inside = null; }
+  const pg = withGrown(p), L = layout(pg), bt = grows && (pg.tasks || []).find((t) => t.step && t.step.config && /build-phase/.test(String(t.step.config.script || ''))), a = bt && L.pos[bt.id];
+  const passed = grows ? grows.gates.filter((g) => g.status === 'passed').length : 0;
+  const badge = a ? '<text class="cv-open" data-open="' + esc(bt.id) + '" x="' + a.x + '" y="' + (a.y + H + 18) + '" style="cursor:pointer;fill:var(--sky)" font-size="11" font-family="var(--mono)">▸ ' + passed + ' of ' + grows.gates.length + ' nodes inside · double-click to open</text>' : '';
+  return svgOf(p, badge); }
 function svgOf(p, under = '') {   // under: drawn in the same view (pan and zoom), e.g. the build's tree under its step
   p = withGrown(p);
   const r = last(p.id), base = (S.base[p.id] && S.base[p.id].steps) || {}, { pos, gpos, mode } = layout(p); let wires = '', gates = '', nodes = '';
@@ -702,7 +713,11 @@ function svgOf(p, under = '') {   // under: drawn in the same view (pan and zoom
   }
   return `<g id="vp">${wires}${under}${gates}${nodes}${ends}</g>`;
 }
-function fit() { const p = withGrown(pipe()), w = document.querySelector('.canvas-wrap'); if (!p || !w) return; const L = layout(p), r = w.getBoundingClientRect(), k = Math.max(.15, Math.min(1.2, (r.width - 40) / L.w, (r.height - 30) / L.h)); S.vp = { k, x: (r.width - L.w * k) / 2, y: Math.max(10, (r.height - L.h * k) / 2) }; applyVp(); }
+function fit() { const p = withGrown(pipe()), w = document.querySelector('.canvas-wrap'); if (!p || !w) return; const r = w.getBoundingClientRect();
+  // what is drawn (the request, the steps, a layer's nodes, the end state), measured; the layout's size when nothing is drawn yet
+  let b = null; try { const v = $('vp'); if (v) { b = v.getBBox(); if (!b.width || !b.height) b = null; } } catch (_) {}
+  if (!b) { const L = layout(p); b = { x: 0, y: 0, width: L.w, height: L.h }; }
+  const k = Math.max(.15, Math.min(1.2, (r.width - 40) / b.width, (r.height - 30) / b.height)); S.vp = { k, x: (r.width - b.width * k) / 2 - b.x * k, y: Math.max(10, (r.height - b.height * k) / 2) - b.y * k }; applyVp(); }
 function zoom(f, cx, cy) { const s = document.querySelector('svg.cv'); if (!s || !S.vp) return; const r = s.getBoundingClientRect(); cx = cx == null ? r.width / 2 : cx; cy = cy == null ? r.height / 2 : cy; const k = Math.min(2.5, Math.max(.2, S.vp.k * f)); S.vp.x = cx - (cx - S.vp.x) * k / S.vp.k; S.vp.y = cy - (cy - S.vp.y) * k / S.vp.k; S.vp.k = k; applyVp(); }
 function applyVp() { const v = $('vp'); if (v && S.vp) v.setAttribute('transform', `translate(${S.vp.x},${S.vp.y}) scale(${S.vp.k})`); }
 function select(t, id) { S.sel = id ? { t, id } : null; S.sig = ''; work(); dock(); }
@@ -716,9 +731,11 @@ function bindCanvas() {
   onmousemove = (e) => { if (!drag) return; S.vp.x = drag.vx + e.clientX - drag.x; S.vp.y = drag.vy + e.clientY - drag.y; applyVp(); };
   onmouseup = () => { drag = null; s.classList.remove('drag'); };
   s.onwheel = (e) => { e.preventDefault(); const r = s.getBoundingClientRect(); zoom(e.deltaY < 0 ? 1.1 : 1 / 1.1, e.clientX - r.left, e.clientY - r.top); };
-  s.onclick = (e) => { const n = e.target.closest('.node'), g = e.target.closest('.gate'); if (n) select('step', n.dataset.step); else if (g) select('gate', g.dataset.gate); else if (S.sel) select(null); };
+  s.onclick = (e) => { if (e.target.closest('.cv-back')) { S.inside = null; S.sig = ''; work(); setTimeout(fit, 60); return; } const op = e.target.closest('.cv-open'); if (op) { S.inside = op.dataset.open; S.sig = ''; work(); setTimeout(fit, 60); return; }
+    const n = e.target.closest('.node'), g = e.target.closest('.gate'); if (n) select('step', n.dataset.step); else if (g) select('gate', g.dataset.gate); else if (S.sel) select(null); };
   // a pipeline box opens into its own canvas and back (PC4: "A pipeline or procedure box opens into its own canvas and back (recursive)")
-  s.ondblclick = (e) => { const n = e.target.closest('.node'); if (n) { const t = task(n.dataset.step), cfg = (t && t.step && t.step.config) || {};
+  s.ondblclick = (e) => { const n = e.target.closest('.node'); if (n) { const t = task(n.dataset.step) || (withGrown(pipe()).tasks || []).find((x) => x.id === n.dataset.step), cfg = (t && t.step && t.step.config) || {};
+      if (t && /build-phase/.test(String(cfg.script || '')) && !S.inside) { S.inside = t.id; S.sig = ''; work(); setTimeout(fit, 60); return; }   /* a step's own layer */
       if (t && kind(t) === 'pipeline') { const q = allPipes().find((x) => x.id === cfg.pipeline || x.name === cfg.pipeline); if (q) { S.stack.push(S.pid); return choose(q.id, true); } toast('That pipeline is not in COS: ' + (cfg.pipeline || '?')); } }
     if (e.target.closest('.node,.gate')) openPanel('inspector'); };
   s.oncontextmenu = (e) => { e.preventDefault(); const n = e.target.closest('.node'), g = e.target.closest('.gate');
@@ -765,7 +782,7 @@ function work() {
     const grows = growsFrom(p), gsig = grows ? grows.gates.map((g) => g.name + g.status + g.tries).join('|') + (grows.now || '') : '';
     const sig = JSON.stringify([p.id, p.tasks.length, last(p.id) && last(p.id).tasks, S.sel, !!S.base[p.id] && !S.base[p.id].loading, S.max, S.rev, !!(S.cat && S.cat.catalogue.length), gsig]);
     if (sig !== S.sig || !w.querySelector('svg.cv')) { S.sig = sig;
-      w.innerHTML = `<div class="canvas-wrap" style="${S.max ? 'display:none;' : ''}flex-basis:${Math.round(S.split * 100)}%"><svg class="cv">${svgOf(p, grows ? gateTree(grows, layout(withGrown(p)), p) : '')}</svg><div class="zoom"><button data-a="view.out" title="Zoom out">−</button><button data-a="view.fit" title="Fit (F)">⤢</button><button data-a="view.in" title="Zoom in">+</button></div></div><div class="splitter" id="split" title="Drag to resize · double-click: console full height"></div>${consoleHtml(S.max)}`;
+      w.innerHTML = `<div class="canvas-wrap" style="${S.max ? 'display:none;' : ''}flex-basis:${Math.round(S.split * 100)}%"><svg class="cv">${canvasOf(p, grows)}</svg><div class="zoom"><button data-a="view.out" title="Zoom out">−</button><button data-a="view.fit" title="Fit (F)">⤢</button><button data-a="view.in" title="Zoom in">+</button></div></div><div class="splitter" id="split" title="Drag to resize · double-click: console full height"></div>${consoleHtml(S.max)}`;
       if (!S.vp) requestAnimationFrame(fit); else applyVp(); bindCanvas(); bindSplit();
     } else { const c = $('console'); if (c) c.outerHTML = consoleHtml(false); }
     bindConsole();
@@ -976,6 +993,7 @@ addEventListener('keydown', (e) => {
     else if (e.key === 'Enter') { e.preventDefault(); const x = MENU.pick[MENU.act()]; closeMenu(); if (x && x.run) x.run(); } return; }
   if (/input|textarea/i.test((e.target.tagName || ''))) return;
   const k = e.key === '=' ? '+' : e.key === '-' ? '−' : e.key.toUpperCase(); const hit = Object.values(ACTIONS).find((a) => a.kbd === k && a.run && !(a.off && a.off())); if (hit) { e.preventDefault(); hit.run(); }
+  if (e.key === 'Escape' && S.inside && !S.sel) { S.inside = null; S.sig = ''; work(); setTimeout(fit, 60); return; }   /* out of a step's layer */
   if (e.key === 'Escape' && S.sel) select(null);
 });
 addEventListener('mousedown', (e) => { if (MENU && !e.target.closest('.menu') && !(MENU.anchor && MENU.anchor.contains(e.target))) closeMenu(); });
