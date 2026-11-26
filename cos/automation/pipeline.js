@@ -429,6 +429,8 @@ class Pipelines {
     // a failed step's branches are its recovery (his: "Have it expand itself, fix itself"): they wait on nothing that failed, stay its children
     // (grownFrom), and what waited on it waits on them; the run is ok only when each failure was recovered by a branch that passed
     const grow = (fromId, out, failed = false) => {
+      // an output kept as its text (a run resumed from its file) is read again: found 2026-11-26, EMB10's resumed run lost its branches
+      if (typeof out === 'string' && /^\s*\{/.test(out)) { try { out = JSON.parse(out); } catch (_) { out = null; } }
       const bs = out && typeof out === 'object' && Array.isArray(out.branches) ? out.branches : null; if (!bs || !bs.length) return 0;
       const before = (run.grown || []).length;
       const grown = run.grown || (run.grown = []);
@@ -451,6 +453,9 @@ class Pipelines {
     const recovered = (id, seen = new Set()) => { if (seen.has(id)) return false; seen.add(id);
       return p.tasks.some((c) => c.grownFrom === id && c.recovers !== false && (run.tasks[c.id].status === 'done' || (run.tasks[c.id].status === 'failed' && recovered(c.id, seen)))); };
     const set = (id, patch) => { ledger(id, patch); Object.assign(run.tasks[id], patch); if (patch.status === 'done') grow(id, full.has(id) ? full.get(id) : outputs[id]); this._saveRun(run); this._saveStep(p, run, id, full.has(id) ? full.get(id) : outputs[id]); this._emit('automation.pipeline.task', { pipelineId: p.id, pipeline: p.name, runId: run.id, task: id, label: (p.tasks.find(t => t.id === id) || {}).label || null, status: run.tasks[id].status, attempts: run.tasks[id].attempts, ...(run.tasks[id].status === 'failed' ? { error: run.tasks[id].error } : {}), ...(run.tasks[id].gate ? { gate: run.tasks[id].gate } : {}), ...(run.tasks[id].note ? { note: run.tasks[id].note } : {}), ...(run.tasks[id].output != null ? { output: run.tasks[id].output } : {}), ...(full.has(id) ? { value: full.get(id) } : {}) }); };   // PC4/PC5 2026-11-09: what passed (a preview; value: the whole of it, for the host's files) and what its gate decided   // GF6: a failed task's label and error, for the toast
+    // a resumed run (done: the steps met before the restart) grows again what those steps grew, so the run goes on where it was (found
+    // 2026-11-26: COS's 0.60.664 handover cut EMB10's run off, and its resume ended "ok" after the plan step, its pieces gone)
+    for (const id of Object.keys(done || {})) if (run.tasks[id] && run.tasks[id].status === 'done') grow(id, done[id]);
     const block = (failedId) => {
       // every task downstream of a failure is blocked, said with the task that blocked it (PL-003)
       let changed = true;

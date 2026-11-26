@@ -168,6 +168,13 @@ async function test(id, desc, fn) { try { await fn(); console.log(`  ✓ ${id} $
     const r2 = await P.run(d.pipeline.id, { wait: true });
     assert.deepStrictEqual([r2.run.status, r2.run.tasks['also-breaks'].status, r2.run.tasks.after.status], ['failed', 'failed', 'blocked'], JSON.stringify(r2.run.tasks).slice(0, 600));
   });
+  await test('PL-03f', 'a resumed run grows again what its done steps grew, even from an output kept as text', async () => {
+    const c = P.create({ name: 'Resumes', tasks: [{ id: 'plan', step: macro('m') }] });
+    const kept = JSON.stringify({ ok: true, branches: [{ id: 'piece-a', label: 'a', step: macro('m') }, { id: 'piece-b', label: 'b', step: macro('m'), depends_on: ['piece-a'] }] });
+    const r = await P.run(c.pipeline.id, { wait: true, done: { plan: kept } });
+    const t = r.run.tasks;
+    assert.deepStrictEqual([r.run.status, t.plan.status, t['piece-a'] && t['piece-a'].status, t['piece-b'] && t['piece-b'].status, t['piece-b'] && t['piece-b'].grownFrom], ['ok', 'done', 'done', 'done', 'plan'], JSON.stringify(t).slice(0, 500));
+  });
   await test('PL-04', 'the door: create, validate, get with layers, run, the run read back, archive', async () => {
     const R = require(path.join(ROOT, 'lib/automation/routes.js'));
     const call = (method, url, body) => R.handle(A, { method, url, body: body || {} }, {});

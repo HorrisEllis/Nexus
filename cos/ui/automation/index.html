@@ -599,6 +599,9 @@ function describe(t) { const k = kind(t), c = catOf(k), cfg = (t.step && t.step.
 // static boxes"): a pipeline that builds a phase draws that build's gates under its own boxes, live. Each function of the plan is a column; a
 // piece the build broke down hangs under the gate it unblocks; colour is the gate's state, the number its tries; the gate being asked is ringed.
 function growsFrom(p) { const b = S.D && S.D.build; if (!b || !b.gates || !b.gates.length) return null;
+  // 2026-11-26 (his: "one piece to the next ... each step should build on the last. not that shit in the last image"): a pipeline built piece
+  // by piece (its step's input.steps) has each piece as a node of its own, so the list of gates under one box is not drawn
+  if ((p.tasks || []).some((t) => t.step && t.step.config && t.step.config.input && t.step.config.input.steps)) return null;
   const builds = (p.tasks || []).some((t) => t.step && t.step.config && /build-phase/.test(String(t.step.config.script || ''))); if (!builds) return null;
   const asking = [...(b.rows || [])].reverse().find((r) => r.state === 'gap-asked' || r.state === 'gap-answered');
   return { gates: b.gates, order: (b.gaps || []).filter((g) => !g.helper).map((g) => g.name), now: asking && asking.state === 'gap-asked' ? asking.gap : null, phase: b.phase }; }
