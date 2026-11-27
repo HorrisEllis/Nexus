@@ -226,7 +226,7 @@ async function checkOllama() {
 // Ollama's real /api/chat (not /api/generate — that endpoint has no
 // tools param) with tools declared. qwen2.5-coder confirmed to support
 // Ollama's native tool-calling before this was built, not assumed.
-function callOllamaChatWithTools(model, messages, toolSchemas, timeoutMs, caller = 'ollama-bridge.tools') {
+function callOllamaChatWithTools(model, messages, toolSchemas, timeoutMs, caller = 'ollama-bridge.tools', known = null) {
   // §0.39.266 — num_ctx sized to the conversation + tool schemas; every call recorded (lib/ollama-activity.js)
   const OA = require('../../lib/ollama-activity.js');
   const chars = JSON.stringify(messages || []).length + JSON.stringify(toolSchemas || []).length;
@@ -281,7 +281,7 @@ function callOllamaChatWithTools(model, messages, toolSchemas, timeoutMs, caller
             // 2026-11-26: a small model often WRITES its call ({"name": "read_file", "arguments": {...}}, in a code block or <tool_call>) instead
             // of the engine's structured call. A written call to a tool this run offered is read as the call (any shape read: today's rule)
             if (!out.toolCalls.length && out.text) {
-              const offered = new Set((toolSchemas || []).map((s) => (s.function && s.function.name) || s.name));
+              const offered = new Set([...(toolSchemas || []).map((s) => (s.function && s.function.name) || s.name), ...(known || [])]);
               const found = [];
               for (const m of String(out.text).matchAll(/\{[\s\S]*?"name"\s*:\s*"([A-Za-z_][\w.-]*)"[\s\S]*?\}\s*\}/g)) {
                 if (!offered.has(m[1])) continue; try { const j = JSON.parse(m[0]); found.push({ id: `written_${found.length}`, name: j.name, arguments: j.arguments || j.parameters || {} }); } catch (_) {}
@@ -429,11 +429,20 @@ async function callOllamaRaw(model, prompt, maxTokens, timeoutMs, caller = 'olla
 // round-trips possible), a caller opts into that explicitly via
 // POST /api/jobs/tools rather than a silent mode switch.
 async function dispatchWithTools(prompt, model, maxIterations, extra = {}) {
+  // 2026-11-26 — James: "make a tool or command for listing the tools to the model, with a hierchy, as little at a time, or key word search".
+  // discover: the model is offered only the two layers (categories, then one category's tools) plus any tools named, and may call any tool
+  // it finds there by name; every call is still recorded (RAID) and a wall-refused tool is simply not there (notOffered)
+  if (extra.discover) {
+    const layers = ['nexus.tools.tool', 'nexus.tools_expand.tool'];
+    extra = { ...extra, offer: [...new Set([...layers, ...(Array.isArray(extra.tools) ? extra.tools : [])])], tools: null,
+      known: require('../../lib/agent-tools/index.js').getToolSchemas().map((s) => (s.function && s.function.name) || s.name),
+      system: extra.system || 'You can use tools. To find one, call nexus.tools.tool for the categories, then nexus.tools_expand.tool with a category id to see its tools and their parameters; then call the tool you need by its name.' };
+  }
   const { runToolLoop } = require('../../lib/agent-tools/index.js');
   const systemPrompt = 'You are a coding assistant with access to a read_file tool for reading real files in this project. Use it when you need to see a file\'s actual content before answering.';
   return runToolLoop(
-    (messages, toolSchemas) => callOllamaChatWithTools(model, messages, toolSchemas),
-    extra.system || systemPrompt, prompt, { maxIterations: maxIterations || 6, ...(Array.isArray(extra.tools) && extra.tools.length ? { allowedTools: extra.tools } : {}), ...(extra.agent ? { agent: extra.agent } : {}) }
+    (messages, toolSchemas) => callOllamaChatWithTools(model, messages, toolSchemas, undefined, undefined, extra.known),
+    extra.system || systemPrompt, prompt, { maxIterations: maxIterations || 6, ...(Array.isArray(extra.tools) && extra.tools.length ? { allowedTools: extra.tools } : {}), ...(extra.offer ? { offer: extra.offer } : {}), ...(extra.agent ? { agent: extra.agent } : {}) }
   );
 }
 

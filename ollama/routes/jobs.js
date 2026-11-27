@@ -19,7 +19,7 @@ async function handle(req, res, { method, url, pathname }) {
     if (!body.prompt) { json(res, 400, { ok: false, error: 'prompt required' }); return true; }
     try {
       // 2026-11-26: the caller names its tools (offered and allowed: only these) and may give its own system words
-      const result = await dispatchWithTools(body.prompt, body.model || state.defaultModel, body.maxIterations, { tools: body.tools, system: body.system, agent: body.agent });
+      const result = await dispatchWithTools(body.prompt, body.model || state.defaultModel, body.maxIterations, { tools: body.tools, system: body.system, agent: body.agent, discover: !!body.discover });
       json(res, 200, { ok: true, text: result.text, iterations: result.iterations, toolCallLog: result.toolCallLog });
     } catch (e) {
       json(res, 500, { ok: false, error: e.message });
