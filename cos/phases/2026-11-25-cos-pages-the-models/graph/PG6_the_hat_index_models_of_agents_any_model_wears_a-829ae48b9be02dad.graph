@@ -1,0 +1,49 @@
+envelope: 1
+uuid: nexus-export-graph-phase:PG6_the_hat_index_models_of_agents_any_model_wears_a:829ae48b9be02dad
+type: graph
+id: phase:PG6_the_hat_index_models_of_agents_any_model_wears_a:829ae48b9be02dad
+context: dependency graph of phase PG6_the_hat_index_models_of_agents_any_model_wears_a
+intent: null
+summary: 0 node(s), 0 crossing(s) — not ready
+system: idearium
+tags: []
+exported_at: 1795758777374
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795758777374
+lastSeenAt: 1795758777374
+fingerprint: null
+payload:
+  for: PG6_the_hat_index_models_of_agents_any_model_wears_a
+  kind: phase
+  repo: null
+  hash: 829ae48b9be02dad
+  nodes: []
+  edges: []
+  crossings: []
+  ready: false
+  dag:
+    layer: 0
+    deps: []
+    dependents:
+      - docs/2026-11-25-cos-pages-the-models-phasemap.spec::PG7_the_personality_editor_every_behaviour_of_a_hat_
+      - docs/2026-11-25-cos-pages-the-models-phasemap.spec::PG8_data_stream_injection_nodes_live_data_put_into_a
+    upstream: []
+    downstream:
+      - docs/2026-11-25-cos-pages-the-models-phasemap.spec::PG7_the_personality_editor_every_behaviour_of_a_hat_
+      - docs/2026-11-25-cos-pages-the-models-phasemap.spec::PG8_data_stream_injection_nodes_live_data_put_into_a
+    blockedBy: []
+    unlocks:
+      - docs/2026-11-25-cos-pages-the-models-phasemap.spec::PG7_the_personality_editor_every_behaviour_of_a_hat_
+      - docs/2026-11-25-cos-pages-the-models-phasemap.spec::PG8_data_stream_injection_nodes_live_data_put_into_a
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0 · ready
+      - 'depends on (0): —'
+      - >-
+        needed by (2): PG7_the_personality_editor_every_behaviour_of_a_hat_,
+        PG8_data_stream_injection_nodes_live_data_put_into_a · finishing it unlocks
+        PG7_the_personality_editor_every_behaviour_of_a_hat_,
+        PG8_data_stream_injection_nodes_live_data_put_into_a
+    edges: []

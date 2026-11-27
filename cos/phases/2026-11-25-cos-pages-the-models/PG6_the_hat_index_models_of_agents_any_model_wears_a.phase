@@ -1,0 +1,28 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-25-cos-pages-the-models-phasemap.spec::PG6_the_hat_index_models_of_agents_any_model_wears_a
+type: phase
+id: docs_2026-11-25-cos-pages-the-models-phasemap.spec::PG6_the_hat_index_models_of_agents_any_model_wears_a
+context: >-
+  pipeline phase PG6_the_hat_index_models_of_agents_any_model_wears_a of
+  docs/2026-11-25-cos-pages-the-models-phasemap.spec
+intent: null
+summary: PG6_the_hat_index_models_of_agents_any_model_wears_a (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1795758777374
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795758777374
+lastSeenAt: 1795758777374
+fingerprint: null
+payload:
+  id: PG6_the_hat_index_models_of_agents_any_model_wears_a
+  map: docs/2026-11-25-cos-pages-the-models-phasemap.spec
+  repo: null
+  layer: null
+  status: pending
+  files: []
+  depends_on: []
+  blocks: []
+  spec: null
+  graph: 829ae48b9be02dad

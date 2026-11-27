@@ -72,3 +72,27 @@ phases:
     proof: "on his PC: an idle model engine's stop shows RAID's approval with its proof on the ledger; a fake RAID that refuses leaves it running; a refused restart report holds the next restart; Cortex restarts with RAID down"
 
 build_order: [PG5, PG1, PG2, PG3, PG4]
+
+  PG6_the_hat_index_models_of_agents_any_model_wears_a:
+    status: pending
+    depends_on: []
+    does: >
+      His 2026-11-26: "i want a hat index which are models of agents. then i want each model to be able to wear any hat, like a drop down for selecting their hat." A hat is a node file in the model server's own data (inference/data/hats/<id>.hat): who the agent is, its purpose, its rules, its voice, the tools it may call, its gates, its sampling settings. The hat index lists them; each model in the model server has a hat picker; a call names model and hat, and the hat is applied as the call's system part and settings. Guardian's createJob hat suggestion and RAID's intent routing read the same index. Agnostic: a hat for any role.
+
+  PG7_the_personality_editor_every_behaviour_of_a_hat_:
+    status: pending
+    depends_on: [PG6_the_hat_index_models_of_agents_any_model_wears_a]
+    does: >
+      His 2026-11-26: "i want a full behavorial personality editor." Every part of a hat editable on one screen (traits, tone, rules, refusals, examples of how it answers, the sampling settings), each change a new version (Versionium), and a test bench: the same question asked with the hat before and after, side by side, scored by three readers, so a change is measured, not guessed.
+
+  PG8_data_stream_injection_nodes_live_data_put_into_a:
+    status: pending
+    depends_on: [PG6_the_hat_index_models_of_agents_any_model_wears_a]
+    does: >
+      His 2026-11-26: "data stream injection nodes." A node on the canvas that takes a stream (a system's events, a file, a page Clear Glass reads, the lattice, the ledger) and injects it into a model call's context at a named place, with a budget (how many tokens) and a filter; each injection recorded with the call, so what the model saw is replayable.
+
+  PG9_the_highest_leverage_llama_server_features_upstr:
+    status: pending
+    depends_on: []
+    does: >
+      His 2026-11-26: "all the ollama hacks upstream with the highest leverage." The model server runs llama-server; its own features, each a setting per model with its effect measured: (1) grammar-constrained output (GBNF): the model can only write valid Emerge, so a small model stops failing on syntax; (2) speculative decoding: the 3b drafts, the 7b checks, faster with the same answers; (3) prompt and slot caching: a hat's fixed part is computed once and reused; (4) KV cache quantization (q8_0) and flash attention: more context in the same memory; (5) parallel slots: several calls at once on one loaded model; (6) logit bias and stop sequences per hat. Measured with the benchmark per model (time, tokens per second, pass rate) before and after each.

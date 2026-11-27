@@ -1,0 +1,29 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-25-cos-pages-the-models-phasemap.spec::PG7_the_personality_editor_every_behaviour_of_a_hat_
+type: phase
+id: docs_2026-11-25-cos-pages-the-models-phasemap.spec::PG7_the_personality_editor_every_behaviour_of_a_hat_
+context: >-
+  pipeline phase PG7_the_personality_editor_every_behaviour_of_a_hat_ of
+  docs/2026-11-25-cos-pages-the-models-phasemap.spec
+intent: null
+summary: PG7_the_personality_editor_every_behaviour_of_a_hat_ (?) — 0 file(s)
+system: idearium
+tags: []
+exported_at: 1795758777376
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795758777376
+lastSeenAt: 1795758777376
+fingerprint: null
+payload:
+  id: PG7_the_personality_editor_every_behaviour_of_a_hat_
+  map: docs/2026-11-25-cos-pages-the-models-phasemap.spec
+  repo: null
+  layer: null
+  status: pending
+  files: []
+  depends_on:
+    - PG6_the_hat_index_models_of_agents_any_model_wears_a
+  blocks: []
+  spec: null
+  graph: 832bd59705e30026
