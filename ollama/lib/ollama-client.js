@@ -244,35 +244,51 @@ function callOllamaChatWithTools(model, messages, toolSchemas, timeoutMs, caller
   const rp = Tape.replay('chat+tools', model, req, options);
   if (rp && rp.miss) return Promise.reject(new Error(rp.error));
   if (rp && rp.hit) { OA.record({ caller: `${caller} (replayed)`, op: 'chat+tools', model, promptChars: chars, numCtx: ctx.numCtx, ms: 0, ok: true }); return Promise.resolve({ text: rp.res.text, toolCalls: rp.res.toolCalls || [] }); }
-  return new Promise((resolve, reject) => {
-    const u = new URL(`${OLLAMA_HOST}/api/chat`);
-    const req = http.request({
-      hostname: u.hostname, port: u.port || 11434, path: u.pathname, method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(body) },
-      timeout: timeoutMs || config.CHAT_TOOLS_TIMEOUT_MS,
-    }, r => {
-      let d = '';
-      r.on('data', c => d += c);
-      r.on('end', () => {
-        try {
-          const parsed = JSON.parse(d);
-          const msg = parsed.message || {};
-          const out = {
-            text: msg.content || '',
-            toolCalls: (msg.tool_calls || []).map(tc => ({
-              id: tc.id, name: tc.function?.name, arguments: tc.function?.arguments,
-            })),
-          };
-          done(true, null, out, parsed);
-          resolve(out);
-        } catch (e) { done(false, e.message); reject(e); }
+  // 2026-11-26 — James: "Yes. Inference. All the model and agent tools and components." Tool calls went to Ollama's /api/chat, and Ollama was
+  // uninstalled when COS's model server replaced it (2026-11-24): every agent's tools were wired to an engine that was gone. They now go to the
+  // model's own server (llama-server, started with --jinja by inference/server.eg), OpenAI style: a call's arguments travel as a JSON string
+  // and come back to the loop as an object; a tool's result names the call it answers. Unused: `body` above (Ollama's shape, kept for the tape).
+  void body;
+  const asOpenAI = (ms) => { const ids = []; return (ms || []).map((m, i) => {
+    if (m.role === 'assistant' && Array.isArray(m.tool_calls) && m.tool_calls.length) {
+      const calls = m.tool_calls.map((c, k) => { const id = c.id || `call_${i}_${k}`; ids.push(id); return { id, type: 'function', function: { name: c.name || (c.function && c.function.name), arguments: typeof c.arguments === 'string' ? c.arguments : JSON.stringify(c.arguments || (c.function && c.function.arguments) || {}) } }; });
+      return { role: 'assistant', content: m.content || '', tool_calls: calls };
+    }
+    if (m.role === 'tool') return { role: 'tool', tool_call_id: m.tool_call_id || ids.shift() || `call_${i}`, content: String(m.content || '') };
+    return { role: m.role, content: m.content || '' };
+  }); };
+  return (async () => {
+    const port = await _msPort(model);
+    if (!port) { done(false, 'no model server for this model'); throw new Error(`the model server has no engine for "${model}" (tool calls go to the model server since Ollama was replaced)`); }
+    const oaBody = JSON.stringify({ model, messages: asOpenAI(messages), tools: toolSchemas, stream: false, temperature: options.temperature != null ? options.temperature : 0.2, ...(options.seed != null ? { seed: options.seed } : {}) });
+    return new Promise((resolve, reject) => {
+      const req = http.request({
+        hostname: '127.0.0.1', port, path: '/v1/chat/completions', method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(oaBody) },
+        timeout: timeoutMs || config.CHAT_TOOLS_TIMEOUT_MS,
+      }, r => {
+        let d = '';
+        r.on('data', c => d += c);
+        r.on('end', () => {
+          try {
+            const parsed = JSON.parse(d);
+            if (parsed.error) throw new Error(`model server: ${parsed.error.message || JSON.stringify(parsed.error).slice(0, 200)}`);
+            const msg = ((parsed.choices || [])[0] || {}).message || {};
+            const out = {
+              text: msg.content || '',
+              toolCalls: (msg.tool_calls || []).map(tc => { let a = tc.function && tc.function.arguments; if (typeof a === 'string') { try { a = JSON.parse(a); } catch (_) { a = { _raw: a }; } } return { id: tc.id, name: tc.function && tc.function.name, arguments: a || {} }; }),
+            };
+            done(true, null, out, parsed);
+            resolve(out);
+          } catch (e) { done(false, e.message); reject(e); }
+        });
       });
+      req.on('error', (e) => { done(false, e.message); reject(e); });
+      req.on('timeout', () => { req.destroy(); done(false, 'timeout'); reject(new Error('model server tool call timed out')); });
+      req.write(oaBody);
+      req.end();
     });
-    req.on('error', (e) => { done(false, e.message); reject(e); });
-    req.on('timeout', () => { req.destroy(); done(false, 'timeout'); reject(new Error('ollama chat request timeout')); });
-    req.write(body);
-    req.end();
-  });
+  })();
 }
 
 // §0.39.289 — James: "ollama has been known to cut off blocks … if it gets cut off, what about injecting the cut off

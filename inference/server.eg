@@ -19,6 +19,9 @@ fn args_for(file: string, s: map): list {
   // 2026-11-25 (EMB12, his "three different 3b"): a reasoning model (smallthinker) at the requests' low temperature repeats one paragraph until
   // its tokens run out and never answers; the engine's own repetition penalty, per model, his to set
   if has(s, "repeat_penalty") { a = push(push(a, "--repeat-penalty"), str(s.repeat_penalty)) }
+  // 2026-11-26 — James: "Yes. Inference. All the model and agent tools and components." The engine answers tool calls only with its chat
+  // templates on (--jinja); on unless a model's settings say tools: false
+  if not has(s, "tools") or s.tools { a = push(a, "--jinja") }
   return a
 }
 
