@@ -65,7 +65,22 @@ async function wakeOllama() {
 }
 // 2026-11-26: a short answer is asked for with a cap (DeepSeek wrote 29,776 characters for "one line per function" and held the build 20 minutes)
 const SHORT = /(^|:)(signatures|examples)$/;
+// 2026-11-26 — James: "Yes, wire the build" (after the 3b found and used read_file through inference). A piece's question goes through the
+// model server's tool door in discover mode: the model may search the tools ("read file", "axiom") and read what it needs, up to 4 steps,
+// before it answers. Short asks (signatures, examples) and diagnoses stay plain; a tool run that fails or answers nothing falls back to the
+// plain ask, said, so a build is never worse off. --tools off turns it off.
+const TOOLS_ON = String(arg('tools', 'on')) !== 'off';
 async function ask(prompt, model, gap, tryNo = 1, again = 0) {
+  if (TOOLS_ON && !SHORT.test(String(gap || '')) && !/^diagnose:/.test(String(gap || '')) && !again) {
+    row('gap-asked', { gap, model, promptChars: prompt.length, tools: 'discover' });
+    if (await wakeOllama()) {
+      const t0 = Date.now();
+      const r = await call('POST', '/api/jobs/tools', { prompt, model, maxIterations: 4, discover: true, agent: 'cos.emerge-build' }, 900000).catch((e) => ({ ok: false, error: e.message }));
+      const used = ((r && r.toolCallLog) || []).map((c) => c.name + (c.result && c.result.error ? ' (error)' : ''));
+      if (r && r.ok && String(r.text || '').trim()) { row('gap-answered', { gap, model, ms: Date.now() - t0, chars: String(r.text).length, tools: used }); return String(r.text); }
+      row('tools-fell-back', { gap, model, note: `the tool run gave no answer (${(r && r.error) || 'empty'}${used.length ? '; used ' + used.join(', ') : ''}); asked plainly`, tools: used });
+    }
+  }
   row('gap-asked', { gap, model, promptChars: prompt.length });
   if (!(await wakeOllama())) throw new Error('the Ollama system is not up and COS could not wake it');
   const capped = SHORT.test(String(gap || '')) ? { num_predict: 600, repeat_penalty: 1.15 } : {};
