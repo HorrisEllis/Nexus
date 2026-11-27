@@ -569,6 +569,12 @@ function createRung({ root = path.resolve(__dirname, '..', '..'), ask, expect, m
         if (ok || held) continue;
         // understand why it is struggling, then link the gap that stops it in between (bounded: §14.4), with the same small model first
         const st = G.struggle(rec.attempts); rec.struggle = st;
+        // James, 2026-11-26: "needs to stop creating more pieces unless it has completed all of the so far". No helper, no climb, while a piece the
+        // plan named is still untried: the struggling piece waits at the back of the line and the untried one goes first (RQ1 grew 18 helpers
+        // under move while take_next and enqueue stayed placeholders)
+        { const untried = (o.order || []).filter((x) => x !== name && filled[x] == null && !((recs[x] || (store && store.read(x)) || {}).attempts || []).length);
+          if (untried.length && !rec.waitedFor) { rec.waitedFor = untried.slice(); if (store) store.write(name, rec); chain = chain.filter((x) => x !== name).concat(name);
+            tries.push({ n: 0, stage: 'breadth', why: name + ' waits: ' + untried.join(', ') + ' not tried yet (no new piece until every named piece is tried)' }); continue; } }
         // James, 2026-11-24: "always break it down. i told you that. as retry logic before escalating." The bound (§14.4) counts the helpers
         // this module has linked in, not the module's own functions: a 13-function module may still break a gap down before it climbs the ladder
         // James, 2026-11-24: "i dont see any reason why breaking it down would hit a limit. there isn't really an end to increments. or layers of
