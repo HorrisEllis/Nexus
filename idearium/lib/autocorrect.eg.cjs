@@ -14,6 +14,9 @@ module.exports = function load($) {
   $.fn("step_of", 2, v_step_of);
   $.fn("add_kind", 2, v_add_kind);
   $.fn("fixes_in", 1, v_fixes_in);
+  $.fn("declared_reserved", 1, v_declared_reserved);
+  $.fn("rename_word", 3, v_rename_word);
+  $.fn("rename_outside", 2, v_rename_outside);
   $.fn("autocorrect", 1, v_autocorrect);
   function v_replace_all(v_t, v_a, v_b) {
     v_t = $.ty(v_t, "any", false, "parameter t of replace_all");
@@ -258,10 +261,120 @@ module.exports = function load($) {
     return $.ty(v_out, "any", false, "return value of fixes_in");
     return $.ty(null, "any", false, "return value of fixes_in");
   }
+  $.at(133, F);
+  let v_RESERVED = $.list([$.str(["matches"]), $.str(["contains"]), $.str(["starts_with"]), $.str(["ends_with"]), $.str(["record"]), $.str(["gap"]), $.str(["state"]), $.str(["test"]), $.str(["expect"]), $.str(["try"]), $.str(["emit"]), $.str(["send"]), $.str(["with"]), $.str(["promote"]), $.str(["whatif"]), $.str(["axiom"]), $.str(["invariant"]), $.str(["constraint"]), $.str(["template"]), $.str(["component"]), $.str(["spawn"]), $.str(["wire"]), $.str(["on"]), $.str(["use"]), $.str(["as"]), $.str(["skip"])]);
+  $.at(134, F);
+  let v_WORD = $.str(["abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_"]);
+  function v_declared_reserved(v_t) {
+    v_t = $.ty(v_t, "any", false, "parameter t of declared_reserved");
+    $.at(138, F);
+    let v_out = $.list([]);
+    $.at(139, F);
+    for (const v_w of $.iter(v_RESERVED, false)) {
+      $.at(140, F);
+      if ($.truth($.or($.or($.or($.or($.contains(v_t, $.add($.add($.str(["let "]), v_w), $.str([" "]))), () => $.contains(v_t, $.add($.add($.str(["let "]), v_w), $.str(["="])))), () => $.contains(v_t, $.add($.add($.str(["var "]), v_w), $.str([" "])))), () => $.contains(v_t, $.add($.add($.str(["var "]), v_w), $.str(["="])))), () => $.contains(v_t, $.add($.add($.str(["for "]), v_w), $.str([" "])))), "if")) {
+        $.at(141, F);
+        v_out = $.call($.b["push"], [v_out, v_w]);
+      }
+    }
+    $.at(144, F);
+    return $.ty(v_out, "any", false, "return value of declared_reserved");
+    return $.ty(null, "any", false, "return value of declared_reserved");
+  }
+  function v_rename_word(v_t, v_w, v_to) {
+    v_t = $.ty(v_t, "any", false, "parameter t of rename_word");
+    v_w = $.ty(v_w, "any", false, "parameter w of rename_word");
+    v_to = $.ty(v_to, "any", false, "parameter to of rename_word");
+    $.at(149, F);
+    let v_out = $.str([""]);
+    $.at(150, F);
+    let v_run = $.str([""]);
+    $.at(151, F);
+    let v_i = 0;
+    $.at(152, F);
+    for (;;) {
+      $.at(152, F);
+      if (!$.truth($.cmp("<", v_i, $.call($.b["len"], [v_t])), "while")) break;
+      {
+        $.at(153, F);
+        let v_c = $.index(v_t, v_i);
+        $.at(154, F);
+        if ($.truth($.contains(v_WORD, v_c), "if")) {
+          $.at(155, F);
+          v_run = $.add(v_run, v_c);
+        } else {
+          $.at(157, F);
+          if ($.truth($.eq(v_run, v_w), "if")) {
+            $.at(157, F);
+            v_out = $.add(v_out, v_to);
+          } else {
+            $.at(157, F);
+            v_out = $.add(v_out, v_run);
+          }
+          $.at(158, F);
+          v_run = $.str([""]);
+          $.at(159, F);
+          v_out = $.add(v_out, v_c);
+        }
+        $.at(161, F);
+        v_i = $.add(v_i, 1);
+      }
+    }
+    $.at(163, F);
+    if ($.truth($.eq(v_run, v_w), "if")) {
+      $.at(163, F);
+      v_out = $.add(v_out, v_to);
+    } else {
+      $.at(163, F);
+      v_out = $.add(v_out, v_run);
+    }
+    $.at(164, F);
+    return $.ty(v_out, "any", false, "return value of rename_word");
+    return $.ty(null, "any", false, "return value of rename_word");
+  }
+  function v_rename_outside(v_t, v_ws) {
+    v_t = $.ty(v_t, "any", false, "parameter t of rename_outside");
+    v_ws = $.ty(v_ws, "any", false, "parameter ws of rename_outside");
+    $.at(169, F);
+    if ($.truth($.eq($.call($.b["len"], [v_ws]), 0), "if")) {
+      $.at(169, F);
+      return $.ty(v_t, "any", false, "return value of rename_outside");
+    }
+    $.at(170, F);
+    let v_parts = $.call($.b["split"], [v_t, $.str(["\""])]);
+    $.at(171, F);
+    let v_out = $.list([]);
+    $.at(172, F);
+    let v_i = 0;
+    $.at(173, F);
+    for (;;) {
+      $.at(173, F);
+      if (!$.truth($.cmp("<", v_i, $.call($.b["len"], [v_parts])), "while")) break;
+      {
+        $.at(174, F);
+        let v_part = $.index(v_parts, v_i);
+        $.at(175, F);
+        if ($.truth($.eq($.mod(v_i, 2), 0), "if")) {
+          $.at(176, F);
+          for (const v_w of $.iter(v_ws, false)) {
+            $.at(176, F);
+            v_part = $.call(v_rename_word, [v_part, v_w, $.add(v_w, $.str(["_"]))]);
+          }
+        }
+        $.at(178, F);
+        v_out = $.call($.b["push"], [v_out, v_part]);
+        $.at(179, F);
+        v_i = $.add(v_i, 1);
+      }
+    }
+    $.at(181, F);
+    return $.ty($.call($.b["join"], [v_out, $.str(["\""])]), "any", false, "return value of rename_outside");
+    return $.ty(null, "any", false, "return value of rename_outside");
+  }
   function v_autocorrect(v_body) {
     v_body = $.ty(v_body, "any", false, "parameter body of autocorrect");
-    $.at(132, F);
-    return $.ty($.map(["body", $.call(v_fix_outside, [v_body]), "fixes", $.call(v_fixes_in, [v_body])]), "any", false, "return value of autocorrect");
+    $.at(186, F);
+    return $.ty($.map(["body", $.call(v_rename_outside, [$.call(v_fix_outside, [v_body]), $.call(v_declared_reserved, [v_body])]), "fixes", $.call(v_fixes_in, [v_body])]), "any", false, "return value of autocorrect");
     return $.ty(null, "any", false, "return value of autocorrect");
   }
   return Object.assign(Object.create(null), {
@@ -277,9 +390,14 @@ module.exports = function load($) {
     "step_of": v_step_of,
     "add_kind": v_add_kind,
     "fixes_in": v_fixes_in,
+    "RESERVED": v_RESERVED,
+    "WORD": v_WORD,
+    "declared_reserved": v_declared_reserved,
+    "rename_word": v_rename_word,
+    "rename_outside": v_rename_outside,
     "autocorrect": v_autocorrect,
   });
 };
 if (require.main === module) {
-  process.exitCode = require("./_emerge/lang/runtime.js").runCompiled(module.exports, { file: F });
+  process.exitCode = require("D:/Backups/Downloads/nexus-0.60.356/nexus-model-server/emerge/emerge/lang/runtime.js").runCompiled(module.exports, { file: F });
 }

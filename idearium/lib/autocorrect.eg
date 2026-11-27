@@ -127,7 +127,61 @@ fn fixes_in(t: any): any {
   return out
 }
 
-// autocorrect(body: string) -> map — return { body: fix_outside(body), fixes: fixes_in(body) }
+// 2026-11-26 — EMB13's overfit was held 39 tries on one compiler error: `expected a variable name after let, found "matches"`. Emerge reserves
+// words a small model reaches for as names (matches, contains, record, gap, state, test). A reserved word the body declares as a name
+// (let w, var w, for w in) is renamed everywhere it stands as a whole word outside strings: w becomes w_.
+let RESERVED = ["matches", "contains", "starts_with", "ends_with", "record", "gap", "state", "test", "expect", "try", "emit", "send", "with", "promote", "whatif", "axiom", "invariant", "constraint", "template", "component", "spawn", "wire", "on", "use", "as", "skip"]
+let WORD = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_"
+
+// declared_reserved(t: string) -> list — the reserved words t declares as names (after "let ", "var " or "for ")
+fn declared_reserved(t: any): any {
+  var out = []
+  for w in RESERVED {
+    if t contains ("let " + w + " ") or t contains ("let " + w + "=") or t contains ("var " + w + " ") or t contains ("var " + w + "=") or t contains ("for " + w + " ") {
+      out = push(out, w)
+    }
+  }
+  return out
+}
+
+// rename_word(t: string, w: string, to: string) -> string — every whole-word w in t (not part of a longer name) becomes to
+fn rename_word(t: any, w: any, to: any): any {
+  var out = ""
+  var run = ""
+  var i = 0
+  while i < len(t) {
+    var c = t[i]
+    if WORD contains c {
+      run = run + c
+    } else {
+      if run == w { out = out + to } else { out = out + run }
+      run = ""
+      out = out + c
+    }
+    i += 1
+  }
+  if run == w { out = out + to } else { out = out + run }
+  return out
+}
+
+// rename_outside(t: string, ws: list) -> string — rename_word for each w in ws, only in the parts of t outside strings
+fn rename_outside(t: any, ws: any): any {
+  if len(ws) == 0 { return t }
+  var parts = split(t, "\"")
+  var out = []
+  var i = 0
+  while i < len(parts) {
+    var part = parts[i]
+    if i % 2 == 0 {
+      for w in ws { part = rename_word(part, w, w + "_") }
+    }
+    out = push(out, part)
+    i += 1
+  }
+  return join(out, "\"")
+}
+
+// autocorrect(body: string) -> map — return { body: fix_outside(body) with reserved names renamed, fixes: fixes_in(body) }
 fn autocorrect(body: any): any {
-  return { body: fix_outside(body), fixes: fixes_in(body) }
+  return { body: rename_outside(fix_outside(body), declared_reserved(body)), fixes: fixes_in(body) }
 }
