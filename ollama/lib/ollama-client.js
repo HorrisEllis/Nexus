@@ -278,6 +278,16 @@ function callOllamaChatWithTools(model, messages, toolSchemas, timeoutMs, caller
               text: msg.content || '',
               toolCalls: (msg.tool_calls || []).map(tc => { let a = tc.function && tc.function.arguments; if (typeof a === 'string') { try { a = JSON.parse(a); } catch (_) { a = { _raw: a }; } } return { id: tc.id, name: tc.function && tc.function.name, arguments: a || {} }; }),
             };
+            // 2026-11-26: a small model often WRITES its call ({"name": "read_file", "arguments": {...}}, in a code block or <tool_call>) instead
+            // of the engine's structured call. A written call to a tool this run offered is read as the call (any shape read: today's rule)
+            if (!out.toolCalls.length && out.text) {
+              const offered = new Set((toolSchemas || []).map((s) => (s.function && s.function.name) || s.name));
+              const found = [];
+              for (const m of String(out.text).matchAll(/\{[\s\S]*?"name"\s*:\s*"([A-Za-z_][\w.-]*)"[\s\S]*?\}\s*\}/g)) {
+                if (!offered.has(m[1])) continue; try { const j = JSON.parse(m[0]); found.push({ id: `written_${found.length}`, name: j.name, arguments: j.arguments || j.parameters || {} }); } catch (_) {}
+              }
+              if (found.length) { out.toolCalls = found; out.text = ''; }
+            }
             done(true, null, out, parsed);
             resolve(out);
           } catch (e) { done(false, e.message); reject(e); }
