@@ -1,0 +1,47 @@
+envelope: 1
+uuid: nexus-export-graph-phase:EMB13_fits_the_sentence_in_emerge:6909ae1d0359c836
+type: graph
+id: phase:EMB13_fits_the_sentence_in_emerge:6909ae1d0359c836
+context: dependency graph of phase EMB13_fits_the_sentence_in_emerge
+intent: null
+summary: 2 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1795740882049
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795740882049
+lastSeenAt: 1795740882049
+fingerprint: null
+payload:
+  for: EMB13_fits_the_sentence_in_emerge
+  kind: phase
+  repo: null
+  hash: 6909ae1d0359c836
+  nodes:
+    - path: cos/build/fits.eg
+      role: changes
+      exists: false
+      system: cos
+    - path: cos/build/test/fits.test.eg
+      role: changes
+      exists: false
+      system: cos
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 0
+    deps: []
+    dependents: []
+    upstream: []
+    downstream: []
+    blockedBy: []
+    unlocks: []
+    conflicts: []
+    dangling: []
+    lines:
+      - layer 0 · ready
+      - 'depends on (0): —'
+      - 'needed by (0): —'
+    edges: []

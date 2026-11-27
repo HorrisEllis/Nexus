@@ -378,6 +378,21 @@ phases:
       A helper is attacked the same way from its own sentence, so a body like "return method" cannot pass (F8).
     proof: "on EMB10's pieces: a wrong served_by that passes its three examples is broken by an adversary's case; a right one survives every case; a helper whose body is 'return method' is refused; two adversaries reading the sentence differently flag the spec. Then EMB10 built through it, and Nexus runs on it (PC13's rule)."
     axioms: "§8.6 (RAID's adversary-suite and the contract gate reused), his dialectic (thesis: the builder; antithesis: the adversary; Emerge judges; Intelligence measures the tension), §17.13 (the arbitration in Emerge)"
+  EMB13_fits_the_sentence_in_emerge:
+    status: OPEN
+    depends_on: []
+    james: '"i was saying continue but stop writing js, only emerge." · "can we start migrating?" (2026-11-26). The first migration: the check the coder wrote in JavaScript that day (cos/build/emerge-build.js expect), moved into Emerge by the pipeline, then the JavaScript removed.'
+    files: [cos/build/fits.eg, cos/build/test/fits.test.eg]
+    does: >-
+      A pure module that says whether a function body fits its examples instead of its sentence. overfit(body, example_values, sentence)
+      returns the first value the body compares an input to (in an == "..." test) that is one of the example values and that the sentence
+      never names, or "" when there is none. example_values is a list of strings; sentence is a string.
+    examples:
+      - 'overfit("if a.id == \"r1\" { return 1 }", ["r1", "queued"], "where it stands: queued, met") == "r1"'
+      - 'overfit("if r.state == \"queued\" { return r }", ["r1", "queued"], "where it stands: queued, met") == ""'
+      - 'overfit("return a", ["r1"], "anything") == ""'
+      - 'overfit("if x == \"b\" and y == \"r1\" { }", ["r1", "b"], "") == "b"'
+    proof: "its test from these examples passes, built by the pipeline on the 3b; then emerge-build.js's expect asks fits.eg and its own JavaScript check is removed"
   PC6_assembled_and_checked_whole:
     status: OPEN
     systems: [cortex]
