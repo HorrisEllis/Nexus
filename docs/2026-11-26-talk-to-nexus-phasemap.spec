@@ -51,6 +51,15 @@ phases:
       its gate), read at use, editable by him and added to by the forge, never a list written into a .js file. The forge writes a tool as a row
       the registry reads at once (§5.16: each system's registry its own).
     proof: "a tool added as a row is offered to an agent without a restart; no tool name is written in Guardian's code"
+    expanded_2026_11_26: >-
+      His words: "agent tools for my framework? also do they have all the agent tools?" · "yeah guardian and idearium and copilot, and lib,
+      copilot and ollama. why not move to inference? as plugins we can manage and gate?" Found: Guardian offers 134 tools; the build's models
+      get none (a plain prompt). Inference (the model server) keeps a plugin registry: one row per tool, naming the system and the route that
+      runs it (each tool stays in its own system, offered through its drawbridge: sovereignty §5.9-§5.16), its intent, what it takes, and its
+      RAID gate. Any model asked through inference is given the tools its caller's set allows: a build the "understand first" set (read a
+      file, the axioms, Intelligence, the phase's DAG), Copilot its hat's set (TN6), his framework's sections (TN3). lib's tools get a home
+      system first. The bridge's tool-calling (callOllamaChatWithTools) carries them.
+    files_expanded: [inference/plugins.json, inference/plugins.eg]
   TN5_lineage_shows_file_changes:
     status: OPEN
     depends_on: [RQ2_one_ledger_by_id]
