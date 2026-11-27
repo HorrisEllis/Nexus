@@ -418,12 +418,12 @@ async function callOllamaRaw(model, prompt, maxTokens, timeoutMs, caller = 'olla
 // request has a genuinely different cost/latency profile (multiple model
 // round-trips possible), a caller opts into that explicitly via
 // POST /api/jobs/tools rather than a silent mode switch.
-async function dispatchWithTools(prompt, model, maxIterations) {
+async function dispatchWithTools(prompt, model, maxIterations, extra = {}) {
   const { runToolLoop } = require('../../lib/agent-tools/index.js');
   const systemPrompt = 'You are a coding assistant with access to a read_file tool for reading real files in this project. Use it when you need to see a file\'s actual content before answering.';
   return runToolLoop(
     (messages, toolSchemas) => callOllamaChatWithTools(model, messages, toolSchemas),
-    systemPrompt, prompt, { maxIterations: maxIterations || 6 }
+    extra.system || systemPrompt, prompt, { maxIterations: maxIterations || 6, ...(Array.isArray(extra.tools) && extra.tools.length ? { allowedTools: extra.tools } : {}), ...(extra.agent ? { agent: extra.agent } : {}) }
   );
 }
 
