@@ -1,0 +1,60 @@
+envelope: 1
+uuid: nexus-export-graph-phase:UD29_every_piece_placed_in_the_constraint_field_meani:ad83680369a5b919
+type: graph
+id: phase:UD29_every_piece_placed_in_the_constraint_field_meani:ad83680369a5b919
+context: dependency graph of phase UD29_every_piece_placed_in_the_constraint_field_meani
+intent: null
+summary: 2 node(s), 0 crossing(s)
+system: idearium
+tags: []
+exported_at: 1795760113314
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795760113314
+lastSeenAt: 1795760113314
+fingerprint: null
+payload:
+  for: UD29_every_piece_placed_in_the_constraint_field_meani
+  kind: phase
+  repo: null
+  hash: ad83680369a5b919
+  nodes:
+    - path: docs/cfr.spec
+      role: changes
+      exists: true
+      system: null
+    - path: emerge/emerge/field/warp.eg
+      role: changes
+      exists: true
+      system: emerge
+  edges: []
+  crossings: []
+  ready: true
+  dag:
+    layer: 3
+    deps:
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD24_the_dag_from_the_end_state_backwards
+    dependents: []
+    upstream:
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD1_the_unit_a_piece_with_its_parent_contract_gate_a
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD24_the_dag_from_the_end_state_backwards
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD2_is_it_even_a_framework_problem_the_gate_before_b
+    downstream: []
+    blockedBy:
+      - docs/2026-11-25-break-anything-down-phasemap.spec::UD24_the_dag_from_the_end_state_backwards
+    unlocks: []
+    conflicts:
+      - with: docs/2026-11-25-break-anything-down-phasemap.spec::UD21_each_piece_built_through_warp_2_behind_its_own_s
+        files:
+          - emerge/emerge/field/warp.eg
+    dangling: []
+    lines:
+      - layer 3 · blocked by UD24_the_dag_from_the_end_state_backwards
+      - 'depends on (1): UD24_the_dag_from_the_end_state_backwards · all upstream 3'
+      - 'needed by (0): —'
+      - >-
+        same files as UD21_each_piece_built_through_warp_2_behind_its_own_s with no order between
+        them: emerge/emerge/field/warp.eg
+    edges:
+      - from: docs/2026-11-25-break-anything-down-phasemap.spec::UD24_the_dag_from_the_end_state_backwards
+        kind: declared

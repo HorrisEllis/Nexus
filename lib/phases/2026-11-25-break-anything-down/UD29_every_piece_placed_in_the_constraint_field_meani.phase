@@ -1,0 +1,31 @@
+envelope: 1
+uuid: nexus-export-phase-docs_2026-11-25-break-anything-down-phasemap.spec::UD29_every_piece_placed_in_the_constraint_field_meani
+type: phase
+id: docs_2026-11-25-break-anything-down-phasemap.spec::UD29_every_piece_placed_in_the_constraint_field_meani
+context: >-
+  pipeline phase UD29_every_piece_placed_in_the_constraint_field_meani of
+  docs/2026-11-25-break-anything-down-phasemap.spec
+intent: null
+summary: UD29_every_piece_placed_in_the_constraint_field_meani (?) — 2 file(s)
+system: idearium
+tags: []
+exported_at: 1795760113314
+source: nexus.lib.node-export
+occurrences: 1
+firstSeenAt: 1795760113314
+lastSeenAt: 1795760113314
+fingerprint: null
+payload:
+  id: UD29_every_piece_placed_in_the_constraint_field_meani
+  map: docs/2026-11-25-break-anything-down-phasemap.spec
+  repo: null
+  layer: null
+  status: pending
+  files:
+    - docs/cfr.spec
+    - emerge/emerge/field/warp.eg
+  depends_on:
+    - UD24_the_dag_from_the_end_state_backwards
+  blocks: []
+  spec: null
+  graph: ad83680369a5b919
