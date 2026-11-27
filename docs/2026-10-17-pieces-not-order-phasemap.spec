@@ -393,6 +393,10 @@ phases:
       - 'overfit("return a", ["r1"], "anything") == ""'
       - 'overfit("if x == \"b\" and y == \"r1\" { }", ["r1", "b"], "") == "b"'
     proof: "its test from these examples passes, built by the pipeline on the 3b; then emerge-build.js's expect asks fits.eg and its own JavaScript check is removed"
+    expanded_2026_11_26: >-
+      His "its saving those pieces right? so also it is worthless": a saved piece that passed before a check existed is reused forever
+      (RQ1's move.gap was saved as passed with `a.id == "r1"`, and every run since failed its examples on it; re-marked held by hand that
+      day). Every saved passed piece is re-judged by fits.eg before it is reused; one that fails is held, with the reason, kept as evidence.
   PC6_assembled_and_checked_whole:
     status: OPEN
     systems: [cortex]
