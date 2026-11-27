@@ -744,7 +744,7 @@ if (require.main === module) {
         if (sysAsking) return;
         for (const v of sup.list()) {
           if (v.state !== 'up' || !v.startedAt || Date.now() < (sysWait.get(v.name) || 0)) continue;
-          const m = sysMoved(v.name, v.startedAt); if (!m.length || Date.now() - Math.max(...m.map((x) => x.t)) < 120000) continue;
+          const m = sysMoved(v.system || v.name, v.startedAt);   /* its own folder (ollama-bridge's is ollama) */ if (!m.length || Date.now() - Math.max(...m.map((x) => x.t)) < 120000) continue;
           // 2026-11-26 — James, signing in to ChatGPT in Clear Glass when it closed: "it crashed. right when i signed in". It was this rule: Clear
           // Glass's code had moved, and COS restarted it under him. A system with a window, in his session, is never restarted for moved code:
           // it loads the new code when he next opens it, said once.
