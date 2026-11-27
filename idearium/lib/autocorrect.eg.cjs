@@ -373,8 +373,17 @@ module.exports = function load($) {
   }
   function v_autocorrect(v_body) {
     v_body = $.ty(v_body, "any", false, "parameter body of autocorrect");
-    $.at(186, F);
-    return $.ty($.map(["body", $.call(v_rename_outside, [$.call(v_fix_outside, [v_body]), $.call(v_declared_reserved, [v_body])]), "fixes", $.call(v_fixes_in, [v_body])]), "any", false, "return value of autocorrect");
+    $.at(187, F);
+    let v_ws = $.call(v_declared_reserved, [v_body]);
+    $.at(188, F);
+    let v_fixes = $.call(v_fixes_in, [v_body]);
+    $.at(189, F);
+    for (const v_w of $.iter(v_ws, false)) {
+      $.at(189, F);
+      v_fixes = $.call($.b["push"], [v_fixes, $.add($.str(["reserved:"]), v_w)]);
+    }
+    $.at(190, F);
+    return $.ty($.map(["body", $.call(v_rename_outside, [$.call(v_fix_outside, [v_body]), v_ws]), "fixes", v_fixes]), "any", false, "return value of autocorrect");
     return $.ty(null, "any", false, "return value of autocorrect");
   }
   return Object.assign(Object.create(null), {

@@ -183,5 +183,9 @@ fn rename_outside(t: any, ws: any): any {
 
 // autocorrect(body: string) -> map — return { body: fix_outside(body) with reserved names renamed, fixes: fixes_in(body) }
 fn autocorrect(body: any): any {
-  return { body: rename_outside(fix_outside(body), declared_reserved(body)), fixes: fixes_in(body) }
+  // the rename is said as a fix ("reserved:matches"): the rung uses a corrected body only when its fixes are named (emerge-rung.cjs)
+  let ws = declared_reserved(body)
+  var fixes = fixes_in(body)
+  for w in ws { fixes = push(fixes, "reserved:" + w) }
+  return { body: rename_outside(fix_outside(body), ws), fixes: fixes }
 }
