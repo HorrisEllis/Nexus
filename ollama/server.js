@@ -27,7 +27,7 @@ const fs   = require('fs');
 const config = require('./config.js');
 const { state, startChannelSweep } = require('./lib/state.js');
 const { checkOllama } = require('./lib/ollama-client.js');
-const { pump } = require('./lib/dispatch.js');
+const { pump, loadQueue } = require('./lib/dispatch.js');
 const { json } = require('./lib/http-utils.js');
 
 const PORT      = config.PORT;
@@ -117,6 +117,7 @@ server.listen(PORT, async () => {
   await checkOllama();
   console.log(`[ollama-bridge] :${PORT} — ollama ${state.ollamaOnline ? 'online' : 'offline'} at ${config.OLLAMA_HOST}`);
   setTimeout(register, 1000);
+  loadQueue();   // the physical queue: jobs that waited through a restart are taken again (2026-11-27)
   pump();
   // 0.60.123 MP — under memory pressure, an idle loaded model is unloaded (ollama/lib/idle-unload.js)
   try { require('./lib/idle-unload.js').startIdleUnload({ state, config }); } catch (e) { console.warn(`[ollama-bridge] idle-unload not started: ${e.message}`); }
@@ -127,6 +128,7 @@ setInterval(async () => {
   const was = state.ollamaOnline;
   await checkOllama();
   if (was !== state.ollamaOnline) broadcast(state.ollamaOnline ? 'ollama.health.ok' : 'ollama.health.degraded', {});
+  if (state.queue.length) pump();   // waiting jobs: retried every check, run the moment the host answers (2026-11-27)
 }, 10000);
 
 module.exports = { server };

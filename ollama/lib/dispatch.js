@@ -164,10 +164,25 @@ function finishJob(job) {
   pump();
 }
 
+// 2026-11-27 — James: "hook it into resource manager, load balancer, the models. we have the tools. fix it. have a physical queue. like it needs
+// to wait and retry". The queue is physical (ollama/data/queue.json, read back at start); while the model host does not answer, jobs wait and
+// the bridge asks COS (RAID, with what it measured) to start the model the next job needs, at most once a minute per model; the health check
+// pumps again the moment the host answers.
+const _qfile = require('path').join(__dirname, '..', 'data', 'queue.json'), _woke = {};
+function saveQueue() { try { require('fs').mkdirSync(require('path').dirname(_qfile), { recursive: true }); require('fs').writeFileSync(_qfile, JSON.stringify(state.queue.map((j) => ({ ...j, _timer: undefined })))); } catch (_) {} }
+function loadQueue() { try { const q = JSON.parse(require('fs').readFileSync(_qfile, 'utf8')); if (Array.isArray(q)) for (const j of q) if (j && j.uuid && !state.queue.some((x) => x.uuid === j.uuid)) { j.status = 'queued'; state.queue.push(j); } } catch (_) {} }
+function wakeFor(model) {
+  const sys = 'model-' + String(model || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, ''); if (!model || Date.now() - (_woke[sys] || 0) < 60000) return; _woke[sys] = Date.now();
+  const proof = { kind: 'measured', decidedBy: 'ollama/lib/dispatch.js', health: 'the model host did not answer the bridge', waiting: state.queue.length + ' job(s) queued', model, at: Date.now() };
+  const body = JSON.stringify({ by: 'rule:model-queue', reason: `${state.queue.length} job(s) wait for ${model}`, proof });
+  try { const rq = require('http').request({ host: '127.0.0.1', port: 7799, path: `/api/cos/systems/${encodeURIComponent(sys)}/start`, method: 'POST', headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(body) }, timeout: 15000 }, (r) => r.resume()); rq.on('error', () => {}); rq.on('timeout', () => rq.destroy()); rq.end(body); } catch (_) {}
+}
 function pump() {
+  if (!state.ollamaOnline) { if (state.queue.length) { for (const j of state.queue) j.waitingFor = 'the model host to answer'; wakeFor(state.queue[0].model); } saveQueue(); broadcast('ollama.queue.depth', { depth: state.queue.length, running: state.running.size, waiting: !!state.queue.length }); return; }
   while (state.running.size < MAX_CONCURRENT && state.queue.length > 0) {
-    dispatchJob(state.queue.shift());
+    const j = state.queue.shift(); delete j.waitingFor; dispatchJob(j);
   }
+  saveQueue();
   broadcast('ollama.queue.depth', { depth: state.queue.length, running: state.running.size });
 }
 
@@ -204,4 +219,4 @@ function writeToCortex(job) {
   } catch (_) {}
 }
 
-module.exports = { dispatchJob, pump, writeToCortex, _remember, _grow };
+module.exports = { dispatchJob, pump, loadQueue, writeToCortex, _remember, _grow };

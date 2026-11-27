@@ -36,7 +36,8 @@ async function handle(req, res, { method, url, pathname }) {
     const owner = (body.componentId && body.componentId !== 'ollama.jobs.dispatch' && body.componentId)
       || (body.meta && body.meta.source) || body.agentId || (body.repoUuid && `repo ${body.repoUuid}`) || (body.sessionId && `session ${body.sessionId}`) || null;
     if (!owner) { json(res, 400, { ok: false, error: 'a job must name its owner (componentId, agentId, repoUuid, sessionId or meta.source) — an ownerless job cannot be traced (RC6)' }); return true; }
-    if (!state.ollamaOnline) { json(res, 503, { ok: false, error: 'Ollama host unreachable' }); return true; }
+    // 2026-11-27 — James: "have a physical queue. like it needs to wait and retry". Offline is no refusal: the job waits in the queue (kept on
+    // disk, ollama/lib/dispatch.js) and runs when the model is up; the bridge asks COS to start it (54 builds were refused here on 2026-11-26)
 
     // A job can reference an uploadId from POST /api/upload; the file's
     // plaintext is prepended as real context, not silently dropped if the
