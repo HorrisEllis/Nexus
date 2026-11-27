@@ -1,0 +1,43 @@
+// cos/build/names.eg — a function's parameter names, read from the phase's own sentence (pure, no model).
+// 2026-11-26 — James: "yes, in emerge. we need to get this working." EMB13's overfit was read from its examples as overfit(a, b, c), and the 3b
+// wrote `for a in a` (76 tries): the sentence already named them, overfit(body, example_values, sentence). When the sentence writes the
+// function's call with as many names as the examples pass, those names are used; otherwise the list is empty and a, b, c stay.
+let WORD = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_"
+let DIGITS = "0123456789"
+
+// is_name(s: string) -> bool — letters, digits and _, not starting with a digit, not empty
+fn is_name(s: any): any {
+  if len(s) == 0 { return false }
+  if DIGITS contains s[0] { return false }
+  var i = 0
+  while i < len(s) {
+    if not (WORD contains s[i]) { return false }
+    i += 1
+  }
+  return true
+}
+
+// names_from(sentence: string, name: string, arity: num) -> list — the names inside "name(...)" in the sentence when there are exactly
+// arity of them and each is a name ("x: string" gives x); else []
+fn names_from(sentence: any, name: any, arity: any): any {
+  let parts = split(str(sentence), name + "(")
+  if len(parts) < 2 { return [] }
+  let inside = split(parts[1], ")")[0]
+  if trim(inside) == "" { if arity == 0 { return [] } else { return [] } }
+  var out = []
+  for a in split(inside, ",") {
+    let n = trim(split(trim(a), ":")[0])
+    if not is_name(n) { return [] }
+    out = push(out, n)
+  }
+  if len(out) != arity { return [] }
+  return out
+}
+
+test "names from the sentence" {
+  expect names_from("overfit(body, example_values, sentence) returns the first value", "overfit", 3) == ["body", "example_values", "sentence"]
+  expect names_from("move(item: map, to: string) moves it", "move", 2) == ["item", "to"]
+  expect names_from("overfit(body, values) returns", "overfit", 3) == []
+  expect names_from("no call here", "overfit", 3) == []
+  expect names_from("f(1x, y)", "f", 2) == []
+}

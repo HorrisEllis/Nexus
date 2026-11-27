@@ -369,7 +369,10 @@ async function endState({ ph, plan, src, mapText }) {
             if ('([{'.includes(c)) { depth++; any = true; } else if (')]}'.includes(c)) depth--; else if (c === ',' && depth === 1) n++; else if (!/\s/.test(c)) any = true; }
           if (!arity.has(m[1])) arity.set(m[1], any ? n + 1 : 0); }
         if (arity.size) { const P = ['a', 'b', 'c', 'd', 'e', 'f'];
-          exports = [...arity].map(([name, k]) => ({ name, signature: `${name}(${P.slice(0, k).join(', ')})`, params: P.slice(0, k), does: String(ph.does || '') }));
+          // 2026-11-26 — the names come from the sentence when it writes the call (cos/build/names.eg, Emerge): a, b, c only when it does not
+          const NM = (() => { try { const { createRuntime } = require(path.join(ROOT, '_emerge', 'lang', 'runtime.js')); return require('./names.eg.cjs')(createRuntime({ file: 'names.eg', loadModule: () => null })); } catch (_) { return null; } })();
+          const namesOf = (name, k) => { try { const n = NM ? Array.from(NM.names_from(String(ph.does || ''), name, k)).map(String) : []; return n.length === k ? n : P.slice(0, k); } catch (_) { return P.slice(0, k); } };
+          exports = [...arity].map(([name, k]) => { const ps = namesOf(name, k); return { name, signature: `${name}(${ps.join(', ')})`, params: ps, does: String(ph.does || '') }; });
           row('signatures-from-examples', { note: `${target}: ${exports.map((x) => x.signature).join('; ')}, read from its ${exs.length} examples (no model)` }); }
       }
       // 2026-11-26 — James: "i want to be able to have the pipeline build specs" · "the pipeline is worthless until that happens end to end".
