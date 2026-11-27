@@ -474,13 +474,13 @@ function createRung({ root = path.resolve(__dirname, '..', '..'), ask, expect, m
       // 0.60.613 — the ladder, smallest model first (his "the smaller we can get llms in ollama coding the better"; PC_D16 "ollama first"); his
       // framework per gate (his "My whole framework"): the brief of each gate carries his framework's steps for it, read from his .framework.
       const fillMethod = M('fill'), diagnoseMethod = M('diagnose'), testMethod = M('test');
-      let roundsAt = 0, refused = {}, onlyStop = false;   // this run's compiler refusals, per gap and rung; cleared when a helper changes what can compile
+      let roundsAt = 0, refused = {}, onlyStop = false, S_held = null;   /* S_held: pieces held while others were still to try (2026-11-27) */   // this run's compiler refusals, per gap and rung; cleared when a helper changes what can compile
       for (let round = 0; ; round++) {
       // 2026-11-26 (his: "it should not be one box. one box is one step. each step has to build upon the last"): o.only builds that one piece,
       // a pipeline step of its own; it stops when the piece passed, was held, or needs a helper first (the helper is the next step, named)
       if (onlyStop) break;
       if (only && round === 0) chain = [only, ...chain.filter(x => x !== only)];
-      while (chain.some(x => filled[x] == null) && !held) {
+      while (!held && (chain.some(x => filled[x] == null) || (S_held && S_held.length && !(held = 'held after every named piece was tried: ' + S_held.join(', '))))) {
         const name = chain.find(x => filled[x] == null);
         if (only && name !== only) { onlyStop = true; tries.push({ n: 0, stage: 'only', why: filled[only] != null ? `${only} passed` : `${only} needs ${name} first`, gap: name }); break; }
         const gap = G.as_gap({ id: name, missingVariable: 'the body of ' + name, affectedConstraint: f + ' compiles in Emerge and passes its expectation', source: 'emerge-rung' });
@@ -590,7 +590,12 @@ function createRung({ root = path.resolve(__dirname, '..', '..'), ask, expect, m
             console.log('[emerge-rung] ' + f + ': ' + name + ' escalated to ' + (L[r + 1].name || 'rung ' + (r + 2)));
             continue;
           }
-          rec.status = 'held'; if (store) store.write(name, rec); held = 'gap ' + name + ' did not fill on any rung' + (g.ok ? ', and no gap in between could be named' : '; ' + g.why); break;
+          rec.status = 'held'; if (store) store.write(name, rec);
+          { // 2026-11-27 (his rule, "stop creating more pieces unless it has completed all of the so far"): a held piece steps aside while a named
+            // piece is still untried; the run ends held only when every named piece was tried (RQ1: take_next held, enqueue never tried)
+            const rest = (o.order || []).filter((x) => x !== name && filled[x] == null && !((recs[x] || (store && store.read(x)) || {}).attempts || []).length);
+            if (rest.length) { chain = chain.filter((x) => x !== name); (S_held || (S_held = [])).push(name); tries.push({ n: 0, stage: 'breadth', why: name + ' held; ' + rest.join(', ') + ' still to try first' }); continue; } }
+          held = 'gap ' + name + ' did not fill on any rung' + (g.ok ? ', and no gap in between could be named' : '; ' + g.why) + (S_held && S_held.length ? '; also held: ' + S_held.join(', ') : ''); break;
         }
         const at2 = skel.fns.findIndex(x => x.name === name); const fns = skel.fns.slice(); fns.splice(at2, 0, helper);
         skel = skeletonOf(fns.map(x => ({ name: x.name, params: x.params, does: x.does, signature: x.signature, contract: x.contract || null })));
